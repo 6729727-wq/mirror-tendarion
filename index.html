@@ -187,11 +187,23 @@ footer .fg a,footer .fg div{display:block;color:var(--muted);font-size:13.5px;ma
 footer .fb{display:flex!important;align-items:center;gap:10px;font-weight:900;color:var(--text)!important;font-size:18px!important}
 footer .fb img{width:34px;height:34px}
 @media(max-width:760px){footer .fg{grid-template-columns:1fr 1fr}}
+
+/* монохром: чёрно-белый бренд, цвет — только у статусов */
+:root{--mal:#fafafa;--mal2:#d4d4d4;--mal3:#ffffff;--gold:#bdbdbd;--gold2:#e5e5e5;--on:#000}
+:root[data-theme="light"]{--mal:#0a0a0a;--mal2:#262626;--mal3:#0a0a0a;--gold:#525252;--gold2:#404040;--on:#fff}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--mal:#0a0a0a;--mal2:#262626;--mal3:#0a0a0a;--gold:#525252;--gold2:#404040;--on:#fff}}
+.btn.pri{background:var(--text);color:var(--bg);border-color:transparent}
+.lgm{display:inline-block;flex:none;background:var(--text);-webkit-mask:url(brand/mark-mask.svg) center/contain no-repeat;mask:url(brand/mark-mask.svg) center/contain no-repeat}
+.brand .lgm{width:30px;height:30px}
+footer .fb .lgm{width:34px;height:34px}
+.emb .lgm{position:relative;display:block;width:72%;height:72%;margin:14%;animation:float 7s ease-in-out infinite}
+.emb::before{background:radial-gradient(circle,color-mix(in srgb,var(--text) 14%,transparent),transparent 65%)!important}
+.pill.live .ld{background:#2ee6a0}
 </style>
 </head>
 <body>
 <nav class="top"><div class="wrap">
-  <a class="brand" href="#"><img src="brand/logo.svg" width="32" height="32" alt="">Tendarion<em>DUBAI · DMCC</em></a>
+  <a class="brand" href="#"><i class="lgm" aria-hidden="true"></i>Tendarion<em>DUBAI · DMCC</em></a>
   <div class="links">
     <a href="#live" data-en="Live demos" data-ru="Живые демо"></a>
     <a href="#apps" data-en="Apps" data-ru="Приложения"></a>
@@ -217,7 +229,7 @@ footer .fb img{width:34px;height:34px}
     </div>
     <div class="hq"><span>🏛 <b>Dubai · DMCC</b> HQ</span><span data-en="Middle East · Europe · Americas · Asia-Pacific" data-ru="Ближний Восток · Европа · Америка · Азия"></span><span>UNGM · World Bank · SAM.gov · TED · Etimad</span></div>
   </div>
-  <div class="emb"><img src="brand/logo.svg" width="512" height="512" alt="Tendarion emblem"></div>
+  <div class="emb"><i class="lgm" role="img" aria-label="Tendarion"></i></div>
   </div>
     <div class="stats">
       <div class="stat"><div class="n" data-count="76">0</div><div class="l" data-en="working prototypes" data-ru="рабочих прототипов"></div></div>
@@ -310,7 +322,7 @@ footer .fb img{width:34px;height:34px}
 
 <footer><div class="wrap" style="flex-direction:column;align-items:stretch">
   <div class="fg">
-    <div><div class="fb"><img src="brand/logo.svg" alt="">Tendarion</div><div data-en="Working systems for the world's largest government and enterprise IT tenders." data-ru="Работающие системы для крупнейших государственных и корпоративных IT-тендеров мира."></div><div>Dubai · DMCC · UAE</div></div>
+    <div><div class="fb"><i class="lgm" aria-hidden="true"></i>Tendarion</div><div data-en="Working systems for the world's largest government and enterprise IT tenders." data-ru="Работающие системы для крупнейших государственных и корпоративных IT-тендеров мира."></div><div>Dubai · DMCC · UAE</div></div>
     <div><h6 data-en="Solutions" data-ru="Решения"></h6><a href="#live" data-en="Live demos" data-ru="Живые демо"></a><a href="#apps" data-en="Mobile apps" data-ru="Приложения"></a><a href="#catalog" data-en="Tender catalogue" data-ru="Каталог тендеров"></a><a href="#mega" data-en="Largest worldwide" data-ru="Крупнейшие в мире"></a></div>
     <div><h6 data-en="Company" data-ru="Компания"></h6><a href="#global" data-en="Global presence" data-ru="Где работаем"></a><a href="#tech" data-en="Technology" data-ru="Технологии"></a><a href="https://rasnex.com" target="_blank" rel="noopener">Rasnex</a></div>
     <div><h6 data-en="Standards" data-ru="Стандарты"></h6><div>ISO 27001 · SOC 2</div><div>NIST 800-63 · WCAG 2.2</div><div>PCI DSS · GDPR · PDPL</div></div>

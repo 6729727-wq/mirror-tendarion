@@ -44,7 +44,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* demo top bar (injected by demo.js) */
 .ptbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:10px;padding:8px 14px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);font-size:13px}
 .ptbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);letter-spacing:.02em}
-.ptbar .logo i{width:22px;height:22px;border-radius:6px;background:url(/brand/logo.svg) center/cover;display:inline-block}
+.ptbar .logo i{width:22px;height:22px;display:inline-block;background:var(--text);-webkit-mask:url(/brand/mark-mask.svg) center/contain no-repeat;mask:url(/brand/mark-mask.svg) center/contain no-repeat}
 .ptbar .sep{color:var(--dim)} .ptbar .name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ptbar .sp{flex:1}
 .ptbar .tg{white-space:nowrap;flex-shrink:0;border:1px solid var(--line2);background:transparent;border-radius:999px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700}
