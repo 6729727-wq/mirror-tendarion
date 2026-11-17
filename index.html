@@ -11,7 +11,7 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#071A16">
+<meta name="theme-color" content="#000000">
 <meta property="og:type" content="website">
 <meta property="og:url" content="/">
 <meta property="og:image" content="/brand/og.jpg">
@@ -30,8 +30,7 @@ nav.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 
 nav.top .wrap{display:flex;align-items:center;gap:22px;height:62px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:19px;letter-spacing:-.01em;color:var(--text)}
 .brand:hover{text-decoration:none}
-.brand i{width:28px;height:28px;border-radius:9px;background:conic-gradient(from 210deg,var(--mal),var(--gold),var(--mal3),var(--mal));box-shadow:0 0 24px color-mix(in srgb,var(--mal) 50%,transparent);position:relative}
-.brand i::after{content:"";position:absolute;inset:7px;border-radius:4px;background:var(--bg)}
+.brand i{width:28px;height:28px;border-radius:8px;background:url(brand/logo.svg) center/cover}
 nav.top .links{display:flex;gap:20px;font-size:14px;font-weight:500}
 nav.top .links a{color:var(--muted)} nav.top .links a:hover{color:var(--text);text-decoration:none}
 nav.top .sp{flex:1}
@@ -147,12 +146,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}h1 .g{animation:none}}
 
 /* premium 17.11 */
-.brand img{width:32px;height:32px;filter:drop-shadow(0 0 14px color-mix(in srgb,var(--mal3) 45%,transparent))}
+.brand img{width:30px;height:30px;border-radius:8px}
 .brand em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.16em;color:var(--gold2);border-left:1px solid var(--line2);padding-left:10px;margin-left:2px}
 @media(max-width:420px){.brand em{display:none}}
 .hgrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);gap:40px;align-items:center}
 .emb{position:relative;aspect-ratio:1;max-width:420px;justify-self:end;width:100%}
-.emb img{position:relative;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 30px 60px rgba(0,0,0,.45));animation:float 7s ease-in-out infinite}
+.emb img{position:relative;width:72%;height:72%;margin:14%;object-fit:contain;filter:drop-shadow(0 24px 48px rgba(0,0,0,.35));animation:float 7s ease-in-out infinite}
 .emb::before{content:"";position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--mal3) 38%,transparent),transparent 65%);filter:blur(20px)}
 .emb::after{content:"";position:absolute;inset:-2%;border-radius:50%;border:1px dashed color-mix(in srgb,var(--gold) 45%,transparent);animation:spin 60s linear infinite}
 @keyframes float{50%{transform:translateY(-12px)}}@keyframes spin{to{transform:rotate(360deg)}}
@@ -192,7 +191,7 @@ footer .fb img{width:34px;height:34px}
 </head>
 <body>
 <nav class="top"><div class="wrap">
-  <a class="brand" href="#"><img src="brand/emblem-64.png" width="32" height="32" alt="">Tendarion<em>DUBAI · DMCC</em></a>
+  <a class="brand" href="#"><img src="brand/logo.svg" width="32" height="32" alt="">Tendarion<em>DUBAI · DMCC</em></a>
   <div class="links">
     <a href="#live" data-en="Live demos" data-ru="Живые демо"></a>
     <a href="#apps" data-en="Apps" data-ru="Приложения"></a>
@@ -218,7 +217,7 @@ footer .fb img{width:34px;height:34px}
     </div>
     <div class="hq"><span>🏛 <b>Dubai · DMCC</b> HQ</span><span data-en="Middle East · Europe · Americas · Asia-Pacific" data-ru="Ближний Восток · Европа · Америка · Азия"></span><span>UNGM · World Bank · SAM.gov · TED · Etimad</span></div>
   </div>
-  <div class="emb"><img src="brand/emblem-512.png" width="512" height="512" alt="Tendarion emblem"></div>
+  <div class="emb"><img src="brand/logo.svg" width="512" height="512" alt="Tendarion emblem"></div>
   </div>
     <div class="stats">
       <div class="stat"><div class="n" data-count="76">0</div><div class="l" data-en="working prototypes" data-ru="рабочих прототипов"></div></div>
@@ -311,7 +310,7 @@ footer .fb img{width:34px;height:34px}
 
 <footer><div class="wrap" style="flex-direction:column;align-items:stretch">
   <div class="fg">
-    <div><div class="fb"><img src="brand/emblem-64.png" alt="">Tendarion</div><div data-en="Working systems for the world's largest government and enterprise IT tenders." data-ru="Работающие системы для крупнейших государственных и корпоративных IT-тендеров мира."></div><div>Dubai · DMCC · UAE</div></div>
+    <div><div class="fb"><img src="brand/logo.svg" alt="">Tendarion</div><div data-en="Working systems for the world's largest government and enterprise IT tenders." data-ru="Работающие системы для крупнейших государственных и корпоративных IT-тендеров мира."></div><div>Dubai · DMCC · UAE</div></div>
     <div><h6 data-en="Solutions" data-ru="Решения"></h6><a href="#live" data-en="Live demos" data-ru="Живые демо"></a><a href="#apps" data-en="Mobile apps" data-ru="Приложения"></a><a href="#catalog" data-en="Tender catalogue" data-ru="Каталог тендеров"></a><a href="#mega" data-en="Largest worldwide" data-ru="Крупнейшие в мире"></a></div>
     <div><h6 data-en="Company" data-ru="Компания"></h6><a href="#global" data-en="Global presence" data-ru="Где работаем"></a><a href="#tech" data-en="Technology" data-ru="Технологии"></a><a href="https://rasnex.com" target="_blank" rel="noopener">Rasnex</a></div>
     <div><h6 data-en="Standards" data-ru="Стандарты"></h6><div>ISO 27001 · SOC 2</div><div>NIST 800-63 · WCAG 2.2</div><div>PCI DSS · GDPR · PDPL</div></div>
@@ -411,7 +410,7 @@ let cat='all',reg='all',q='';
 function renderShow(){
   const el=document.getElementById('show');
   if(!el.dataset.built){
-    el.innerHTML=DEMOS.map(d=>`<a class="tile reveal" href="demo/${d.s}/"><div class="pv"><div class="ph">${d.i}</div><span class="pill ok live">● LIVE</span><iframe data-src="demo/${d.s}/" tabindex="-1" aria-hidden="true" title="${d.n}"></iframe></div><div class="bd"><div class="cat" data-c></div><h3>${d.n}</h3><p data-d></p><div class="go" data-g></div></div></a>`).join('');
+    el.innerHTML=DEMOS.map(d=>`<a class="tile reveal" href="demo/${d.s}/"><div class="pv"><div class="ph">${d.i}</div><span class="pill ok live"><i class="ld"></i>LIVE</span><iframe data-src="demo/${d.s}/" tabindex="-1" aria-hidden="true" title="${d.n}"></iframe></div><div class="bd"><div class="cat" data-c></div><h3>${d.n}</h3><p data-d></p><div class="go" data-g></div></div></a>`).join('');
     el.dataset.built=1;
     const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const f=e.target.querySelector('iframe');if(f&&!f.src&&innerWidth>640){f.src=f.dataset.src;f.onload=()=>{const ph=f.parentNode.querySelector('.ph');if(ph)ph.style.display='none'}}io.unobserve(e.target)}}),{rootMargin:'200px'});
     el.querySelectorAll('.tile').forEach(t=>io.observe(t));
