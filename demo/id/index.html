@@ -554,7 +554,7 @@ function claimRows(p){const r=[[T('Subject (pairwise)','Субъект (парн
 function bindIdp(){
   $$('#idpBody [data-m]').forEach(b=>b.onclick=()=>{A.tab=b.dataset.m;stopQr();renderIdp()});
   const on=(id,fn)=>{const e=$('#'+id);if(e)e.onclick=fn};
-  on('pkStart',()=>{A.screen='pk';A.pk={challenge:rnd(32),ph:0,cnt:40+Math.floor(Math.random()*30),cred:rnd(16)};renderIdp();setTimeout(()=>{const b=$('#fpb');if(b)b.focus()},50)});
+  on('pkStart',()=>{A.screen='pk';A.pk={challenge:rnd(32),ph:0,cnt:40+Math.floor(Math.random()*30),cred:rnd(16)};renderIdp();setTimeout(()=>{const b=$('#fpb');if(b)b.focus()},50);realPk()});
   on('pkCancel',()=>{A.screen='login';renderIdp();log('signin','Passkey ceremony cancelled by user','Пользователь отменил вход по passkey','warn')});
   const fb=$('#fpb');if(fb&&A.pk.ph<1)bindHold(fb);
   $$('#idpBody [data-ch]').forEach(b=>b.onclick=()=>{A.ch=b.dataset.ch;A.otp=null;renderIdp()});
@@ -572,8 +572,35 @@ function bindHold(b){let st=0,raf=0;const ring=$('#fpRing'),C=345.6;
   const reset=msg=>{cancelAnimationFrame(raf);st=0;b.classList.remove('hold');ring.style.strokeDashoffset=C;if(msg)$('#fpTxt').textContent=msg};
   const tick=()=>{const p=Math.min(1,(performance.now()-st)/1100);ring.style.strokeDashoffset=C*(1-p);if(p>=1){b.classList.remove('hold');pkDone();return}raf=requestAnimationFrame(tick)};
   b.onpointerdown=e=>{e.preventDefault();if(A.pk.ph>=1)return;try{b.setPointerCapture(e.pointerId)}catch(_){}st=performance.now();b.classList.add('hold');$('#fpTxt').textContent=T('Reading fingerprint…','Считываем отпечаток…');tick()};
-  b.onpointerup=b.onpointercancel=()=>{if(st&&A.pk.ph<1)reset(T('Hold a little longer','Подержите чуть дольше'))};
+  b.onpointerup=b.onpointercancel=()=>{if(st&&A.pk.ph<1){const short=performance.now()-st<350;reset(T('Hold a little longer','Подержите чуть дольше'));if(short)realPk()}};
   b.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&A.pk.ph<1){e.preventDefault();ring.style.strokeDashoffset=0;pkDone()}};
+}
+/* Настоящий passkey: Touch ID / Windows Hello / телефон через WebAuthn. Нет поддержки или отмена — остаётся удержание круга. */
+const _u8b=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const _b8u=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((s.length+3)%4)),c=>c.charCodeAt(0));
+let pkBusy=0;
+async function realPk(){
+  if(pkBusy||!window.PublicKeyCredential||!navigator.credentials||!window.isSecureContext)return false;
+  try{if(!(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()))return false}catch(_){return false}
+  pkBusy=1;const tx=$('#fpTxt');if(tx)tx.textContent=T('Confirm with Touch ID / Face ID on your device…','Подтвердите Touch ID / Face ID на устройстве…');
+  const ch=crypto.getRandomValues(new Uint8Array(32));let id=null;try{id=localStorage.getItem('nd_pk_id')}catch(_){}
+  try{
+    if(!id){
+      const c=await navigator.credentials.create({publicKey:{challenge:ch,rp:{name:'Nordania ID · Tendarion',id:location.hostname},
+        user:{id:crypto.getRandomValues(new Uint8Array(16)),name:USER.email,displayName:USER.email},
+        pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+        authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required',residentKey:'preferred'},attestation:'none',timeout:60000}});
+      try{localStorage.setItem('nd_pk_id',_u8b(c.rawId))}catch(_){}
+      A.pk.cred=_u8b(c.rawId).slice(0,22);
+    }else{
+      const a=await navigator.credentials.get({publicKey:{challenge:ch,rpId:location.hostname,allowCredentials:[{type:'public-key',id:_b8u(id)}],userVerification:'required',timeout:60000}});
+      const ad=new Uint8Array(a.response.authenticatorData);const n=(ad[33]<<24|ad[34]<<16|ad[35]<<8|ad[36])>>>0;if(n)A.pk.cnt=n;A.pk.cred=id.slice(0,22);
+    }
+    pkBusy=0;A.pk.real=1;if(A.screen==='pk'){const r=$('#fpRing');if(r)r.style.strokeDashoffset=0;pkDone()}return true;
+  }catch(e){
+    pkBusy=0;if(e&&e.name==='NotAllowedError'&&id){/* ключ мог быть удалён в системе — создать заново при следующей попытке */try{localStorage.removeItem('nd_pk_id')}catch(_){}}
+    const t=$('#fpTxt');if(t&&A.pk.ph<1)t.textContent=T('No device passkey — touch and hold the circle','Без ключа устройства — нажмите и удерживайте круг');return false;
+  }
 }
 async function pkDone(){if(A.pk.ph>=1)return;A.busy=1;A.pk.ph=1;renderIdp();await sleep(450);A.pk.ph=2;renderIdp();await sleep(750);A.pk.ph=3;renderIdp();await sleep(650);A.pk.ph=4;renderIdp();await sleep(500);A.busy=0;if(A.screen==='pk')authDone('passkey')}
 /* OTP */
