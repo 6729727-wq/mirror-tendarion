@@ -1,7 +1,7 @@
-/* Tendarion — shared design tokens. Malachite + gold, dark by default. */
+/* Tendarion — shared design tokens. Pure black / pure white themes, malachite + gold accents. */
 :root{
-  --bg:#060d0b; --bg2:#0a1612; --panel:#0e1d18; --panel2:#132620; --line:#1f3a31; --line2:#2a4d41;
-  --text:#e8f1ec; --muted:#8fa89d; --dim:#5f786d;
+  --bg:#000000; --bg2:#0a0a0a; --panel:#111111; --panel2:#171717; --line:#262626; --line2:#333333;
+  --text:#f5f5f5; --muted:#a3a3a3; --dim:#6b6b6b;
   --mal:#17b58a; --mal2:#0f7a5c; --mal3:#36e0ae; --gold:#d8b46a; --gold2:#f3d79a;
   --red:#ef5a5a; --amber:#f0a83a; --blue:#4ea4ff; --violet:#a78bfa;
   --r:14px; --r2:22px; --shadow:0 20px 60px rgba(0,0,0,.45);
@@ -10,15 +10,15 @@
   color-scheme:dark;
 }
 :root[data-theme="light"]{
-  --bg:#f5f7f4; --bg2:#ecf1ed; --panel:#ffffff; --panel2:#f2f6f3; --line:#dbe5df; --line2:#c6d6cd;
-  --text:#0d1f19; --muted:#557064; --dim:#8aa094;
+  --bg:#ffffff; --bg2:#f6f6f6; --panel:#ffffff; --panel2:#f5f5f5; --line:#e6e6e6; --line2:#d4d4d4;
+  --text:#0a0a0a; --muted:#5c5c5c; --dim:#9a9a9a;
   --mal:#0e9a72; --mal2:#0b7a5a; --mal3:#0e9a72; --gold:#a8812c; --gold2:#8a6820;
   --shadow:0 14px 40px rgba(20,50,40,.12); color-scheme:light;
 }
 @media (prefers-color-scheme: light){
   :root:not([data-theme="dark"]){
-    --bg:#f5f7f4; --bg2:#ecf1ed; --panel:#ffffff; --panel2:#f2f6f3; --line:#dbe5df; --line2:#c6d6cd;
-    --text:#0d1f19; --muted:#557064; --dim:#8aa094;
+    --bg:#ffffff; --bg2:#f6f6f6; --panel:#ffffff; --panel2:#f5f5f5; --line:#e6e6e6; --line2:#d4d4d4;
+    --text:#0a0a0a; --muted:#5c5c5c; --dim:#9a9a9a;
     --mal:#0e9a72; --mal2:#0b7a5a; --mal3:#0e9a72; --gold:#a8812c; --gold2:#8a6820;
     --shadow:0 14px 40px rgba(20,50,40,.12); color-scheme:light;
   }
@@ -44,7 +44,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* demo top bar (injected by demo.js) */
 .ptbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:10px;padding:8px 14px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);font-size:13px}
 .ptbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);letter-spacing:.02em}
-.ptbar .logo i{width:22px;height:22px;display:inline-block;background:linear-gradient(140deg,var(--gold2) 0%,var(--gold) 45%,color-mix(in srgb,var(--gold) 55%,#000) 100%);-webkit-mask:url(/brand/mark-mask.svg) center/contain no-repeat;mask:url(/brand/mark-mask.svg) center/contain no-repeat}
+.ptbar .logo i{width:22px;height:22px;display:inline-block;background:var(--text);-webkit-mask:url(/brand/mark-mask.svg) center/contain no-repeat;mask:url(/brand/mark-mask.svg) center/contain no-repeat}
 .ptbar .sep{color:var(--dim)} .ptbar .name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ptbar .sp{flex:1}
 .ptbar .tg{white-space:nowrap;flex-shrink:0;border:1px solid var(--line2);background:transparent;border-radius:999px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700}
@@ -52,7 +52,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .ptbar .badge{font-size:11px;color:var(--gold2);border:1px solid color-mix(in srgb,var(--gold) 50%,transparent);border-radius:999px;padding:2px 8px}
 @media (max-width:640px){.ptbar .badge,.ptbar .sep,.ptbar .hidem{display:none}.ptbar{gap:6px;padding:8px 10px}.ptbar .name{min-width:0;flex:1 1 auto}.ptbar .sp{flex:0 0 0}}
 
+/* LIVE badge: solid dark pill, readable on any preview and theme */
 .pill.live{background:rgba(10,10,10,.78);color:#fff;border-color:rgba(255,255,255,.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-weight:800;letter-spacing:.06em;box-shadow:0 2px 10px rgba(0,0,0,.25)}
-.pill.live .ld{width:7px;height:7px;border-radius:50%;background:#2ee6a0;display:inline-block;margin-right:6px;animation:ldp 1.8s ease-out infinite}
+.pill.live .ld{width:7px;height:7px;border-radius:50%;background:#2ee6a0;animation:ldp 1.8s ease-out infinite}
 @keyframes ldp{0%{box-shadow:0 0 0 0 rgba(46,230,160,.7)}70%{box-shadow:0 0 0 7px rgba(46,230,160,0)}100%{box-shadow:0 0 0 0 rgba(46,230,160,0)}}
 @media(prefers-reduced-motion:reduce){.pill.live .ld{animation:none}}

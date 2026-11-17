@@ -11,7 +11,7 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#071A16">
+<meta name="theme-color" content="#000000">
 <meta property="og:type" content="website">
 <meta property="og:url" content="/">
 <meta property="og:image" content="/brand/og.jpg">
@@ -30,8 +30,7 @@ nav.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 
 nav.top .wrap{display:flex;align-items:center;gap:22px;height:62px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:19px;letter-spacing:-.01em;color:var(--text)}
 .brand:hover{text-decoration:none}
-.brand i{width:28px;height:28px;border-radius:9px;background:conic-gradient(from 210deg,var(--mal),var(--gold),var(--mal3),var(--mal));box-shadow:0 0 24px color-mix(in srgb,var(--mal) 50%,transparent);position:relative}
-.brand i::after{content:"";position:absolute;inset:7px;border-radius:4px;background:var(--bg)}
+.brand i{width:28px;height:28px;border-radius:8px;background:url(brand/logo.svg) center/cover}
 nav.top .links{display:flex;gap:20px;font-size:14px;font-weight:500}
 nav.top .links a{color:var(--muted)} nav.top .links a:hover{color:var(--text);text-decoration:none}
 nav.top .sp{flex:1}
@@ -147,12 +146,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}h1 .g{animation:none}}
 
 /* premium 17.11 */
-.brand img{width:32px;height:32px;filter:drop-shadow(0 0 14px color-mix(in srgb,var(--mal3) 45%,transparent))}
+.brand img{width:30px;height:30px;border-radius:8px}
 .brand em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.16em;color:var(--gold2);border-left:1px solid var(--line2);padding-left:10px;margin-left:2px}
 @media(max-width:420px){.brand em{display:none}}
 .hgrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);gap:40px;align-items:center}
 .emb{position:relative;aspect-ratio:1;max-width:420px;justify-self:end;width:100%}
-.emb img{position:relative;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 30px 60px rgba(0,0,0,.45));animation:float 7s ease-in-out infinite}
+.emb img{position:relative;width:72%;height:72%;margin:14%;object-fit:contain;filter:drop-shadow(0 24px 48px rgba(0,0,0,.35));animation:float 7s ease-in-out infinite}
 .emb::before{content:"";position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--mal3) 38%,transparent),transparent 65%);filter:blur(20px)}
 .emb::after{content:"";position:absolute;inset:-2%;border-radius:50%;border:1px dashed color-mix(in srgb,var(--gold) 45%,transparent);animation:spin 60s linear infinite}
 @keyframes float{50%{transform:translateY(-12px)}}@keyframes spin{to{transform:rotate(360deg)}}
@@ -188,10 +187,18 @@ footer .fg a,footer .fg div{display:block;color:var(--muted);font-size:13.5px;ma
 footer .fb{display:flex!important;align-items:center;gap:10px;font-weight:900;color:var(--text)!important;font-size:18px!important}
 footer .fb img{width:34px;height:34px}
 @media(max-width:760px){footer .fg{grid-template-columns:1fr 1fr}}
-.lgm{display:inline-block;flex:none;background:linear-gradient(140deg,var(--gold2) 0%,var(--gold) 45%,color-mix(in srgb,var(--gold) 55%,#000) 100%);-webkit-mask:url(brand/mark-mask.svg) center/contain no-repeat;mask:url(brand/mark-mask.svg) center/contain no-repeat}
-.brand i.lgm{width:30px;height:30px;border-radius:0;box-shadow:none;background:linear-gradient(140deg,var(--gold2) 0%,var(--gold) 45%,color-mix(in srgb,var(--gold) 55%,#000) 100%)}
+
+/* монохром: чёрно-белый бренд, цвет — только у статусов */
+:root{--mal:#fafafa;--mal2:#d4d4d4;--mal3:#ffffff;--gold:#bdbdbd;--gold2:#e5e5e5;--on:#000}
+:root[data-theme="light"]{--mal:#0a0a0a;--mal2:#262626;--mal3:#0a0a0a;--gold:#525252;--gold2:#404040;--on:#fff}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--mal:#0a0a0a;--mal2:#262626;--mal3:#0a0a0a;--gold:#525252;--gold2:#404040;--on:#fff}}
+.btn.pri{background:var(--text);color:var(--bg);border-color:transparent}
+.lgm{display:inline-block;flex:none;background:var(--text);-webkit-mask:url(brand/mark-mask.svg) center/contain no-repeat;mask:url(brand/mark-mask.svg) center/contain no-repeat}
+.brand .lgm{width:30px;height:30px}
 footer .fb .lgm{width:34px;height:34px}
-.emb .lgm{position:relative;display:block;width:72%;height:72%;margin:14%;filter:drop-shadow(0 30px 60px rgba(0,0,0,.45)) drop-shadow(0 0 40px color-mix(in srgb,var(--gold) 30%,transparent));animation:float 7s ease-in-out infinite}
+.emb .lgm{position:relative;display:grid;place-items:center;width:64%;height:64%;margin:18%;border-radius:23%;background:linear-gradient(160deg,color-mix(in srgb,var(--text) 10%,var(--bg)),color-mix(in srgb,var(--text) 3%,var(--bg)));border:1px solid color-mix(in srgb,var(--text) 16%,transparent);box-shadow:0 30px 70px -20px rgba(0,0,0,.45),inset 0 1px 0 color-mix(in srgb,var(--text) 18%,transparent);-webkit-mask:none;mask:none;backdrop-filter:blur(14px);animation:float 7s ease-in-out infinite}.emb .lgm::before{content:"";width:74%;height:74%;background:linear-gradient(170deg,var(--text) 20%,color-mix(in srgb,var(--text) 45%,var(--bg)));-webkit-mask:url(brand/t-mask.svg) center/contain no-repeat;mask:url(brand/t-mask.svg) center/contain no-repeat}
+.emb::before{background:radial-gradient(circle,color-mix(in srgb,var(--text) 14%,transparent),transparent 65%)!important}
+.pill.live .ld{background:#2ee6a0}
 </style>
 </head>
 <body>
