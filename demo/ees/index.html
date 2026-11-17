@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Frontier EES</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px;line-height:1.2}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center;margin-top:8px}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+.who span{color:var(--muted)}
+.sidebtns{display:flex;gap:6px;margin-top:8px}
+.sidebtns .btn{flex:1;justify-content:center}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.intro.hide{display:none}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.card{min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h3 .x{font-size:12px;color:var(--muted);font-weight:500}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fgrid .full{grid-column:1/-1}
+.f{min-width:0}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px;display:none}
+.f.bad .input{border-color:var(--red)} .f.bad .err{display:block}
+select.input{appearance:auto}
+textarea.input{resize:vertical}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row .sp{flex:1}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 9px;font-size:12px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)} .blue-t{color:var(--blue)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.prog.gold i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.prog.red i{background:var(--red)} .prog.amber i{background:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;overflow-wrap:anywhere}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack>*+*{margin-top:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.risk{display:inline-block;min-width:38px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:8px;padding:2px 6px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;min-width:0}
+.li:last-child{border-bottom:0}
+.li>.grow{min-width:0}
+.li small{display:block;color:var(--muted);font-size:12px}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:100px;max-height:240px;overflow:auto;overflow-wrap:anywhere}
+.log div{padding:2px 0} .log .t{color:var(--dim)}
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 10%,transparent);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.alert.warn{border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.alert.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.alert b{display:block}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow:auto;padding:20px;animation:fade .2s}
+.modal .box h3{margin:0 0 14px;font-size:17px;display:flex;gap:8px;align-items:center}
+.modal .box h3 .sp{flex:1}
+.mclose{border:0;background:none;font-size:20px;cursor:pointer;color:var(--muted);padding:0 4px}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.lg-hero{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 60%),radial-gradient(90% 80% at 100% 100%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 60%),var(--bg2);border-right:1px solid var(--line);padding:48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.lg-hero .bigb{display:flex;align-items:center;gap:14px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+.lg-hero .bigb b{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:26px}
+.lg-hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em;max-width:560px}
+.lg-hero p{color:var(--muted);margin:0;max-width:520px}
+.lg-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px}
+.lg-feats div{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 70%,transparent);border-radius:12px;padding:10px 12px;font-size:13px}
+.lg-feats div b{display:block;font-size:13.5px}
+.lg-form{display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-form .card{width:100%;max-width:420px;padding:26px}
+.lg-form h3{font-size:20px;margin:0 0 4px}
+.lg-form .f{margin-top:12px}
+.lg-demo{border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-top:14px;color:var(--muted)}
+.lg-demo b{color:var(--gold2)}
+.lg-sec{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--dim);margin-top:14px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.split,.intro,.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .lg-hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .lg-hero h2{font-size:24px}
+  .lg-form{padding:20px 14px 40px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.fgrid.c3,.opts,.lg-feats{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.step span{font-size:10px}.lg-form .card{padding:18px}.modal .box{padding:16px}}
+.btn.xs{padding:3px 10px;font-size:11.5px;min-height:28px}
+#headx{min-width:0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;border:1px solid var(--line2);color:var(--muted)}
+.mt{margin-top:14px}
+
+.cg{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}@media(max-width:900px){.cg{grid-template-columns:1fr}}
+.bio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}@media(max-width:520px){.bio{grid-template-columns:1fr}}
+.bstep{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:5px;align-items:flex-start;min-width:0}
+.bstep.ok{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 8%,transparent)}.bstep small{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.bi{font-size:22px;font-weight:700;color:var(--mal)}.fps{display:flex;gap:5px;height:28px;align-items:flex-end}.fps i{width:11px;height:22px;border-radius:6px 6px 3px 3px;border:2px solid var(--line)}.fps i.on{background:var(--mal);border-color:var(--mal)}
+.tcard{border:1px solid var(--line);border-radius:12px;padding:14px}.av3{width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.span .spl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.mono{font-family:ui-monospace,Menlo,monospace}.grow{flex:1;min-width:0}.muted{color:var(--muted)}
+.bad-t{color:var(--red)}.warn-t{color:var(--amber)}.ok-t{color:var(--mal)}
+.fgrid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:520px){.fgrid.c3{grid-template-columns:1fr}}
+.tl{display:grid;grid-template-columns:repeat(120,1fr);gap:1px;margin-top:12px}.tl i{height:22px;background:var(--line);border-radius:2px}.tl i.in{background:var(--blue)}.tl i.fut{opacity:.45}.tl i.ref{background:var(--gold);opacity:1}
+.kgrid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px}@media(max-width:900px){.kgrid{grid-template-columns:1fr}}
+.kiosk{border-radius:22px;padding:34px 22px;text-align:center;background:linear-gradient(160deg,color-mix(in srgb,var(--blue) 18%,var(--panel)),var(--panel));border:1px solid var(--line);min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.kiosk h2{font-size:28px;margin:10px 0 6px}.kiosk p{color:var(--muted);font-size:16px;margin:0}.kic{font-size:64px}
+.kbar{display:flex;gap:6px;margin-bottom:16px}.kbar i{width:34px;height:6px;border-radius:3px;background:var(--line)}.kbar i.on{background:var(--blue)}
+.kbtn{font:inherit;font-size:18px;padding:14px 26px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;margin:4px}.kbtn.pri,.kbtn.on{background:var(--blue);color:#fff;border-color:var(--blue)}.kbtn:disabled{opacity:.5}
+.kq{display:flex;flex-wrap:wrap;justify-content:center;margin-top:14px}.kprog{width:70%;height:8px;border-radius:4px;background:var(--line);margin-top:18px;overflow:hidden}.kprog i{display:block;height:100%;width:0;background:var(--mal)}
+@media(max-width:420px){.kiosk h2{font-size:22px}.kbtn{font-size:16px;padding:12px 18px}}
+
+</style>
+</head>
+<body data-demo-en="Frontier EES — entry/exit system for external borders" data-demo-ru="Frontier EES — система въезда/выезда на внешних границах">
+<div class="login" id="login" hidden></div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side"></aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <div id="headx" class="row"></div>
+      <button class="btn sm" id="showIntro" hidden title="How to try it">?</button>
+    </div>
+    <div class="intro" id="intro"></div>
+    <section class="view on" id="view"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div class="modal" id="modal"></div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const TT=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtDS=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+const fmtN=(n,dg=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:dg,maximumFractionDigits:dg});
+const pct=(n,dg=0)=>fmtN(n,dg)+'%';
+const uid=(p)=>(p||'')+Math.random().toString(36).slice(2,8).toUpperCase();
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body,mount){const m=$('#modal');m.innerHTML=`<div class="box" role="dialog"><h3><span>${title}</span><span class="sp"></span><button class="mclose" aria-label="Close">×</button></h3>${body}</div>`;m.classList.add('on');$('.mclose',m).onclick=closeModal;m.onclick=e=>{if(e.target===m)closeModal()};if(mount)mount($('.box',m))}
+function closeModal(){const m=$('#modal');m.classList.remove('on');m.innerHTML=''}
+/* form validation: fields = [[id, test(v)->bool, [en,ru] message]] ; returns true if ok */
+function validate(fields,root){let ok=true;fields.forEach(([id,test,msg])=>{const el=$('#'+id,root||document);if(!el)return;const f=el.closest('.f');const good=test(el.type==='checkbox'?el.checked:el.value.trim());if(f){f.classList.toggle('bad',!good);let e=$('.err',f);if(!e){e=document.createElement('div');e.className='err';f.append(e)}e.textContent=TT(msg)}if(!good)ok=false});if(!ok)toast(T('Please fix the highlighted fields','Исправьте выделенные поля'),'bad');return ok}
+const fld=(id,label,inner,cls)=>`<div class="f ${cls||''}"><label for="${id}">${label}</label>${inner}</div>`;
+const inp=(id,label,val,cls,type,attrs)=>fld(id,label,`<input class="input" id="${id}" type="${type||'text'}" value="${esc(val==null?'':val)}" ${attrs||''}>`,cls);
+const sel=(id,label,opts,val,cls)=>fld(id,label,`<select class="input" id="${id}">${opts.map(o=>`<option value="${esc(o[0])}" ${String(o[0])===String(val)?'selected':''}>${esc(o.length>2?T(o[1],o[2]):o[1])}</option>`).join('')}</select>`,cls);
+const pill=(txt,cls)=>`<span class="pill ${cls||''}">${txt}</span>`;
+const kpi=(l,v,d,cls)=>`<div class="card kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}</div>${d!=null?`<div class="d">${d}</div>`:''}</div>`;
+const chipsH=(items,cur,attr)=>items.map(x=>`<button class="chip ${String(cur)===String(x[0])?'on':''}" data-${attr}="${esc(x[0])}">${x.length>2?T(x[1],x[2]):x[1]}</button>`).join('');
+const bind=(root,attr,fn)=>$$('[data-'+attr+']',root).forEach(b=>b.onclick=e=>{e.stopPropagation();fn(b.dataset[attr.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())],b,e)});
+const tbl=(heads,rows,empty)=>`<div class="tw"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${heads.length}" class="muted">${empty||T('Nothing here yet','Пока пусто')}</td></tr>`}</tbody></table></div>`;
+function dl(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type||'text/plain'}));a.download=name;document.body.append(a);a.click();a.remove()}catch(e){}}
+/* ---- inline SVG charts (theme-aware via CSS vars in style attrs) ---- */
+const C=['var(--mal)','var(--gold)','var(--blue)','var(--violet)','var(--amber)','var(--red)','var(--mal3)'];
+function lineChart(o){/* o:{series:[{name,data:[...],color,dash,area}], labels:[...], w,h, yfmt, min,max, band:[y0,y1,color]} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=12,pt=14,pb=28;const all=o.series.flatMap(s=>s.data).filter(v=>v!=null);
+  let mn=o.min!=null?o.min:Math.min(...all),mx=o.max!=null?o.max:Math.max(...all);if(mx===mn)mx=mn+1;const pad=(mx-mn)*.08;if(o.min==null)mn-=pad;if(o.max==null)mx+=pad;
+  const n=Math.max(...o.series.map(s=>s.data.length));const X=i=>pl+(n<2?0:i*(W-pl-pr)/(n-1)),Y=v=>pt+(1-(v-mn)/(mx-mn))*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  if(o.band){s+=`<rect x="${pl}" y="${Y(o.band[1])}" width="${W-pl-pr}" height="${Math.max(0,Y(o.band[0])-Y(o.band[1]))}" style="fill:${o.band[2]||'var(--mal)'};opacity:.1"/>`}
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/8);(o.labels||[]).forEach((l,i)=>{if(i%step===0||i===n-1)s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  o.series.forEach((se,k)=>{const col=se.color||C[k%C.length];const pts=se.data.map((v,i)=>v==null?null:[X(i),Y(v)]).filter(Boolean);if(!pts.length)return;const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+    if(se.area)s+=`<path d="${d}L${pts[pts.length-1][0]} ${H-pb}L${pts[0][0]} ${H-pb}Z" style="fill:${col};opacity:.14"/>`;
+    s+=`<path d="${d}" fill="none" style="stroke:${col}" stroke-width="${se.width||2.2}" stroke-linejoin="round" stroke-linecap="round" ${se.dash?'stroke-dasharray="6 5"':''}/>`;
+    if(se.dots!==false&&pts.length<=40)pts.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${se.dots===true?3.2:2.4}" style="fill:${col}"><title>${esc((o.labels||[])[i]||'')} · ${yf(se.data[i])}</title></circle>`})});
+  return s+'</svg>'}
+function barChart(o){/* o:{labels,series:[{name,data,color}],stacked,w,h,yfmt,hl:index} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=10,pt=16,pb=30;const n=o.labels.length;const sums=o.labels.map((_,i)=>o.stacked?o.series.reduce((a,s)=>a+(s.data[i]||0),0):Math.max(...o.series.map(s=>s.data[i]||0)));
+  const mx=(o.max||Math.max(...sums,1))*1.08;const bw=(W-pl-pr)/n;const Y=v=>pt+(1-v/mx)*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let i=0;i<=4;i++){const v=mx*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/12);
+  o.labels.forEach((l,i)=>{const x0=pl+i*bw;let acc=0;const ns=o.series.length;
+    o.series.forEach((se,k)=>{const v=se.data[i]||0;const col=se.color||C[k%C.length];
+      if(o.stacked){const y=Y(acc+v),h=Y(acc)-y;s+=`<rect x="${x0+bw*.18}" y="${y}" width="${bw*.64}" height="${Math.max(0,h)}" rx="3" style="fill:${col}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`;acc+=v}
+      else{const w=bw*.7/ns;const y=Y(v);s+=`<rect x="${x0+bw*.15+k*w}" y="${y}" width="${Math.max(1,w-2)}" height="${Math.max(0,H-pb-y)}" rx="3" style="fill:${col};opacity:${o.hl!=null&&o.hl!==i?.45:1}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`}});
+    if(i%step===0)s+=`<text x="${x0+bw/2}" y="${H-10}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  return s+'</svg>'}
+function hbars(items,o){/* items:[[label,value,color?]] */o=o||{};const mx=o.max||Math.max(...items.map(x=>x[1]),1);const f=o.fmt||(v=>fmtN(v));
+  return items.map(x=>`<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:7px"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x[0]}</span><div class="prog" style="width:${o.w||110}px;flex:none"><i style="width:${x[1]/mx*100}%;${x[2]?'background:'+x[2]:''}"></i></div><span class="mono" style="width:${o.vw||48}px;text-align:right;flex:none">${f(x[1])}</span></div>`).join('')}
+function donut(parts,o){/* parts:[[label,value,color]] */o=o||{};const sz=o.size||140,r=sz/2-12,c=2*Math.PI*r;const tot=parts.reduce((a,p)=>a+p[1],0)||1;let off=0;
+  let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" style="flex:none"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="16"/>`;
+  parts.forEach((p,i)=>{const L=c*p[1]/tot;s+=`<circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:${p[2]||C[i%C.length]}" stroke-width="16" stroke-dasharray="${L} ${c-L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${sz/2} ${sz/2})"><title>${esc(p[0])}: ${fmtN(p[1])}</title></circle>`;off+=L});
+  s+=`<text x="${sz/2}" y="${sz/2+2}" text-anchor="middle" font-size="${o.fs||20}" font-weight="800" style="fill:var(--text)">${o.center!=null?o.center:fmtN(tot)}</text>${o.sub?`<text x="${sz/2}" y="${sz/2+18}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(o.sub)}</text>`:''}</svg>`;
+  const leg=`<div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;min-width:0">${parts.map((p,i)=>`<div style="display:flex;gap:8px;align-items:center"><i style="width:10px;height:10px;border-radius:3px;background:${p[2]||C[i%C.length]};flex:none"></i><span style="flex:1;min-width:0">${p[0]}</span><b class="mono">${o.fmt?o.fmt(p[1]):fmtN(p[1])}</b></div>`).join('')}</div>`;
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${s}${leg}</div>`}
+function gauge(p,o){o=o||{};const r=50,c=Math.PI*r;const col=o.color||(p>=90?'var(--red)':p>=75?'var(--amber)':'var(--mal)');
+  return `<svg viewBox="0 0 120 70" style="width:${o.w||150}px;max-width:100%"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:var(--line)" stroke-width="11" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${c*clamp(p,0,100)/100} ${c}"/><text x="60" y="58" text-anchor="middle" font-size="19" font-weight="800" style="fill:var(--text)">${o.label!=null?o.label:Math.round(p)+'%'}</text></svg>`}
+function spark(data,col){const W=110,H=30,mn=Math.min(...data),mx=Math.max(...data)||1;const d=data.map((v,i)=>(i?'L':'M')+(i*W/(data.length-1)).toFixed(1)+' '+(H-3-(v-mn)/((mx-mn)||1)*(H-6)).toFixed(1)).join('');return `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;flex:none"><path d="${d}" fill="none" style="stroke:${col||'var(--mal)'}" stroke-width="2"/></svg>`}
+
+//@demo Frontier EES|entry/exit system for external borders|система въезда/выезда на внешних границах
+const NAT=[['USA','United States','США'],['GBR','United Kingdom','Великобритания'],['CAN','Canada','Канада'],['BRA','Brazil','Бразилия'],['JPN','Japan','Япония'],['AUS','Australia','Австралия'],['MEX','Mexico','Мексика'],['ARG','Argentina','Аргентина'],['KOR','South Korea','Южная Корея'],['UKR','Ukraine','Украина'],['SRB','Serbia','Сербия'],['ISR','Israel','Израиль']];
+const BCP=[['HEL','Port Arvel — air','Порт Арвель — аэропорт'],['KST','Kestrel ferry terminal','Паромный терминал Кестрел'],['VLM','Valmo road crossing','Автопереход Валмо'],['NRD','Nordgate rail','Ж/д переход Нордгейт']];
+const FN=['JOHN','EMMA','LUCAS','SOFIA','HIRO','OLIVIA','MATEO','CHLOE','MIN-JUN','OLEKSANDR','MILOS','NOA','LIAM','ISABELLA','DAVID','AVA'];
+const LN=['WALKER','BROWN','TREMBLAY','SANTOS','SATO','KELLY','HERNANDEZ','FERNANDEZ','PARK','KOVALENKO','JOVANOVIC','LEVI','MURPHY','GOMEZ','NOVAK','REID'];
+let BCPsel='HEL',TR=null,OVF='all',KST=0,KT=null,CALC={ent:[]};
+const APP={slug:'ees',ver:1,icon:'🛃',name:'Frontier EES',sub:['Entry/Exit System · Schengen-class border','Система въезда/выезда · граница шенгенского типа'],
+login:{user:'bg.officer.2207',pass:'frontier-demo',name:'Sgt. Lena Virtanen',role:['Border guard, first line','Пограничник, первая линия'],
+roles:[['bcp','Border guard — first line','Пограничник — первая линия'],['sup','Shift supervisor','Начальник смены']],tag:['Biometric, stamp-free borders','Биометрия вместо штампов'],
+hero:['Every short stay counted to the day','Каждый день краткого пребывания на счету'],
+heroP:['Replaces passport stamps with a biometric register of entries and exits. Border guards scan the passport, capture face and fingerprints, and the system computes the rolling 90/180-day allowance automatically — flagging overstayers.','Заменяет штампы биометрическим реестром въездов и выездов. Пограничник сканирует паспорт, снимает лицо и отпечатки, а система сама считает лимит 90/180 дней и отмечает нарушителей.'],
+feats:[['🛂','Guard console','Пульт пограничника','Scan + biometrics','Скан и биометрия'],['📅','90/180 calculator','Калькулятор 90/180','Rolling window timeline','Скользящее окно'],['🚨','Overstayers','Нарушители','Automatic alerts','Автооповещения'],['🖥','Self-service kiosk','Киоск самообслуживания','Pre-enrolment','Предрегистрация']]},
+how:[['In <b>Border console</b> press <b>Scan passport</b>, then capture <b>face</b> and <b>4 fingerprints</b>; the stay allowance appears before you decide.','В <b>Пульте</b> нажмите <b>Сканировать паспорт</b>, снимите <b>лицо</b> и <b>4 отпечатка</b> — до решения увидите остаток дней.'],
+['Open <b>90/180 calculator</b>, add trips and watch the rolling window on the timeline.','Откройте <b>калькулятор 90/180</b>, добавьте поездки и смотрите скользящее окно.'],
+['Try <b>Kiosk mode</b> — the traveller-facing self-service flow in large touch UI.','Попробуйте <b>режим киоска</b> — самообслуживание путешественника с крупным интерфейсом.']],
+facts:[['Tender','Тендер','Entry/Exit System for external borders (EU EES class)','Система въезда/выезда на внешних границах (класс EU EES)'],['Year · budget','Год · бюджет','2022 · €480M'],['Client','Заказчик','Border Agency, Republic of Nordania (fictional)','Пограничное агентство, Республика Нордания (вымышл.)'],['Stack','Стек','Biometric matching · Central register · Kiosks']],
+groups:[['op','Operations','Операции'],['an','Oversight','Контроль']],
+views:[['con','🛂','Border console','Пульт пограничника','op'],['calc','📅','90/180 calculator','Калькулятор 90/180','op'],['kiosk','🖥','Kiosk mode','Режим киоска','op'],['ovs','🚨','Overstayers','Нарушители','an'],['stats','📊','Statistics','Статистика','an']],
+badge(id){if(id==='ovs'){const n=S.tr.filter(t=>t.in&&used(t.ent,today())>90&&!t.ack).length;return n?[n,1]:null}return null},
+head(){return `<select class="input" id="bcpSel" style="width:auto;max-width:220px;padding:6px 10px">${BCP.map(b=>`<option value="${b[0]}" ${BCPsel===b[0]?'selected':''}>📍 ${T(b[1],b[2])}</option>`).join('')}</select>`},
+bindHead(){$('#bcpSel').onchange=e=>{BCPsel=e.target.value;S.bcp=BCPsel;save();rerender()}},
+onLogin(){BCPsel=S.bcp||'HEL'},
+leave(){if(KT){clearTimeout(KT);KT=null}},
+seed(){const R=rng(52);const tr=[];for(let i=0;i<70;i++){const ent=[];let d=-(170+(R()*200|0));const pat=R();while(d<0){const len=pat<.1?40+(R()*40|0):3+(R()*21|0);const e=addDays(today(),d);const x=addDays(today(),d+len);ent.push([e,x<today()?x:null]);d+=len+5+(R()*60|0)}
+const last=ent[ent.length-1];const inN=last[1]==null;if(!inN&&R()<.3){const e2=addDays(last[1],2+(R()*6|0));if(e2<=today())ent.push([e2,null])}
+tr.push({id:'TCN'+(70000+i*13),fn:FN[R()*16|0],ln:LN[R()*16|0],nat:NAT[R()*12|0][0],pp:String.fromCharCode(65+(R()*26|0))+(1e7+R()*9e7|0),dob:(1955+(R()*50|0))+'-0'+(1+(R()*9|0))+'-2'+(R()*8|0),ent,in:ent[ent.length-1][1]==null,bio:R()<.8,bcp:BCP[R()*4|0][0]})}
+for(let k=0;k<4;k++){const t=tr[k*7];t.ent=[[addDays(today(),-(95+k*4)),null]];t.in=true}
+const hist=[];for(let i=13;i>=0;i--){const b=4200+R()*900+(i%7>4?900:0);hist.push({d:addDays(today(),-i),ent:Math.round(b),ex:Math.round(b*(.9+R()*.15)),ref:Math.round(b*.004*R()),kiosk:Math.round(b*(.32+i*.004+R()*.05)),wt:+(6+R()*9).toFixed(1)})}
+return{tr,hist,log:[],bcp:'HEL',kq:0}},
+R:{}
+};
+
+const dnum=s=>Math.round(new Date(s+'T00:00:00Z')/864e5);
+function used(ent,ref){const r=dnum(ref),from=r-179;let n=0;ent.forEach(([a,b])=>{const s=Math.max(dnum(a),from),e=Math.min(b?dnum(b):r,r);if(e>=s)n+=e-s+1});return n}
+function maxStay(ent,from){let d=0;while(d<120){const ref=addDays(from,d);if(used(ent.concat([[from,ref]]),ref)>90)break;d++}return d}
+const nat=c=>{const n=NAT.find(x=>x[0]===c);return n?T(n[1],n[2]):c};
+const ppl=t=>esc(t.fn+' '+t.ln);
+
+
+APP.R.con=el=>{const t=TR?S.tr.find(x=>x.id===TR.id):null;const st=TR||{};
+el.innerHTML=`<div class="kpis">${kpi(T('Crossings today at this post','Пересечений сегодня на посту'),fmtN(S.hist[S.hist.length-1].ent+S.log.length))}${kpi(T('Avg. processing','Среднее оформление'),fmtN(S.hist[S.hist.length-1].wt,1)+T(' s',' с'))}${kpi(T('In territory now','Сейчас на территории'),S.tr.filter(x=>x.in).length,T('of tracked sample','из выборки'))}${kpi(T('Refusals today','Отказов сегодня'),S.log.filter(l=>l.d==='ref').length,'','bad-t')}</div>
+<div class="cg"><div class="card"><div class="row"><h3 style="margin:0">${T('Traveller check','Проверка путешественника')}</h3><div class="sp"></div>${sel('dir','',[['in','Entry','Въезд'],['out','Exit','Выезд']],st.dir||'in')}</div>
+<div class="bio mt"><div class="bstep ${st.pp?'ok':''}"><div class="bi">📘</div><b>${T('Passport','Паспорт')}</b><small>${st.pp?esc(t.pp):T('not read','не прочитан')}</small><button class="btn sm ${st.pp?'':'pri'}" id="bScan">${st.pp?'↻':T('Scan passport','Сканировать паспорт')}</button></div>
+<div class="bstep ${st.face?'ok':''}"><div class="bi">${st.face?st.face+'%':'🙂'}</div><b>${T('Face','Лицо')}</b><small>${st.face?T('match vs register','совпадение с реестром'):T('not captured','не снято')}</small><button class="btn sm ${st.pp&&!st.face?'pri':''}" id="bFace" ${st.pp?'':'disabled'}>${T('Capture face','Снять лицо')}</button></div>
+<div class="bstep ${st.fp>=4?'ok':''}"><div class="fps">${[0,1,2,3].map(i=>`<i class="${(st.fp||0)>i?'on':''}"></i>`).join('')}</div><b>${T('Fingerprints','Отпечатки')}</b><small>${(st.fp||0)}/4 · ${T('right hand','правая рука')}</small><button class="btn sm ${st.face&&(st.fp||0)<4?'pri':''}" id="bFp" ${st.face?'':'disabled'}>${T('Capture finger','Снять палец')}</button></div></div>
+${t?travCard(t,st):`<div class="empty mt">${T('Scan a passport to begin. Each check pulls the traveller’s full entry/exit history from the central register.','Сканируйте паспорт. Каждая проверка подтягивает всю историю въездов/выездов из центрального реестра.')}</div>`}</div>
+<div class="card"><h3>${T('Recent at this post','Недавние на посту')}</h3>${S.log.filter(l=>l.bcp===BCPsel).slice(0,10).map(l=>`<div class="li"><span>${l.d==='ok'?(l.dir==='in'?'⬇':'⬆'):'⛔'}</span><div class="grow"><b>${esc(l.n)}</b><small>${fmtT(l.t)} · ${l.dir==='in'?T('entry','въезд'):T('exit','выезд')} · ${l.nat}</small></div>${pill(l.d==='ok'?T('Cleared','Пропущен'):T('Refused','Отказ'),l.d==='ok'?'ok':'bad')}</div>`).join('')||`<div class="muted">${T('No crossings logged yet','Пересечений ещё нет')}</div>`}</div></div>`;
+$('#dir').onchange=e=>{if(TR){TR.dir=e.target.value;APP.R.con(el)}};
+$('#bScan').onclick=async()=>{const b=$('#bScan');const dv=$('#dir').value;b.disabled=true;b.textContent=T('Reading chip…','Чтение чипа…');await wait(600);if(!document.body.contains(b))return;const pool=S.tr.filter(x=>(dv==='in')!==x.in);const p=pool[Math.random()*pool.length|0]||S.tr[0];TR={id:p.id,pp:1,dir:dv,fp:0};APP.R.con(el);toast(T('Chip verified · history loaded','Чип проверен · история загружена'),'ok')};
+$('#bFace').onclick=async()=>{const b=$('#bFace');b.disabled=true;b.textContent='…';await wait(450);if(!TR)return;TR.face=t.bio?88+(Math.random()*11|0):0;if(!t.bio){TR.face=T('new','новый');TR.enrol=1}APP.R.con(el)};
+$('#bFp').onclick=()=>{TR.fp=(TR.fp||0)+1;if(TR.fp===4)toast(T('Fingerprints matched (4/4)','Отпечатки совпали (4/4)'),'ok');APP.R.con(el)};
+if(t){bind(el,'dec',d=>{const ok=d==='ok';if(TR.dir==='in'&&ok)t.ent.push([today(),null]),t.in=true;else if(TR.dir==='out'&&ok){t.ent[t.ent.length-1][1]=today();t.in=false}if(TR.enrol)t.bio=true;
+S.log.unshift({t:Date.now(),n:t.fn+' '+t.ln,nat:t.nat,dir:TR.dir,d:ok?'ok':'ref',bcp:BCPsel});audit(`${t.id} ${TR.dir} ${ok?'cleared':'refused'} at ${BCPsel}`,`${t.id} ${TR.dir==='in'?'въезд':'выезд'} ${ok?'пропущен':'отказ'} — ${BCPsel}`,'bcp');TR=null;save();rerender();toast(ok?T('Crossing recorded','Пересечение записано'):T('Refusal recorded','Отказ записан'),ok?'ok':'bad')});
+$$('[data-tl]',el).forEach(b=>b.onclick=()=>{CALC={ent:t.ent.map(x=>[x[0],x[1]||today()]),who:t.fn+' '+t.ln};go('calc')})}
+};
+function travCard(t,st){const u=used(t.ent.map(x=>[x[0],x[1]||today()]),today());const left=90-u;const ready=st.pp&&st.face&&st.fp>=4;const ovs=st.dir==='in'?false:left<0;const noroom=st.dir==='in'&&left<=0;
+return `<div class="tcard mt"><div class="row"><div class="av3">${t.fn[0]}${t.ln[0]}</div><div class="grow"><b>${ppl(t)}</b><div class="muted" style="font-size:12.5px">${nat(t.nat)} · ${fmtD(t.dob)} · <span class="mono">${t.id}</span></div></div>${t.bio?pill(T('Biometrics on file','Биометрия в реестре'),'ok'):pill(T('First enrolment','Первая регистрация'),'gold')}</div>
+<div class="grid2 mt"><div style="text-align:center">${gauge(Math.min(100,u/90*100),{label:u+'/90',color:u>90?'var(--red)':u>75?'var(--amber)':'var(--mal)'})}<div class="muted" style="font-size:12px">${T('Days used in last 180','Дней за последние 180')}</div></div>
+<div><div class="li"><span>📅</span><div class="grow"><b>${left>=0?left+T(' days left',' дн. осталось'):(-left)+T(' days OVERSTAY',' дн. ПРЕВЫШЕНИЯ')}</b><small>${T('rolling window ','окно ')}${fmtDS(addDays(today(),-179))} – ${fmtDS(today())}</small></div></div>
+<div class="li"><span>🧾</span><div class="grow"><b>${t.ent.length} ${T('stays on record','пребываний в реестре')}</b><small>${T('last entry ','последний въезд ')}${fmtD(t.ent[t.ent.length-1][0])}</small></div><button class="btn xs" data-tl="1">${T('Timeline','Шкала')}</button></div></div></div>
+${spanBar(t.ent)}
+${ovs?`<div class="alert mt" style="border-color:var(--red)"><span>🚨</span><div><b>${T('Overstayer','Нарушитель срока')}</b> — ${T('exceeded the 90-day limit by ','превысил лимит 90 дней на ')}${-left}${T(' days. Record and notify immigration.',' дн. Зафиксируйте и уведомите миграционную службу.')}</div></div>`:''}
+${noroom?`<div class="alert warn mt"><span>⚠</span><div>${T('No days left in the current 180-day window — entry must be refused unless a visa/residence permit applies.','В текущем окне 180 дней дней не осталось — во въезде отказать, если нет визы/ВНЖ.')}</div></div>`:''}
+<div class="row mt"><span class="muted" style="font-size:12.5px">${ready?'✅ '+T('All checks complete','Все проверки пройдены'):T('Complete face and 4 fingerprints to decide','Снимите лицо и 4 отпечатка для решения')}</span><div class="sp"></div><button class="btn danger" data-dec="ref" ${ready?'':'disabled'}>${T('Refuse','Отказать')}</button><button class="btn pri" data-dec="ok" ${ready?'':'disabled'}>${st.dir==='in'?T('Allow entry','Разрешить въезд'):T('Record exit','Оформить выезд')}</button></div></div>`}
+function spanBar(ent){const W=180,from=dnum(today())-179;return `<div class="span mt"><div class="spl"><span>−180</span><span>${T('today','сегодня')}</span></div><svg viewBox="0 0 ${W} 14" preserveAspectRatio="none" style="width:100%;height:16px"><rect x="0" y="3" width="${W}" height="8" rx="3" style="fill:var(--line)"/>${ent.map(([a,b])=>{const s=Math.max(dnum(a),from)-from,e=Math.min(b?dnum(b):dnum(today()),dnum(today()))-from;return e>=s&&e>=0?`<rect x="${s}" y="3" width="${e-s+1}" height="8" style="fill:var(--blue)"/>`:''}).join('')}</svg></div>`}
+
+
+APP.R.calc=el=>{const E=CALC.ent;const ref=CALC.ref||today();const u=used(E,ref);const plan=CALC.plan||addDays(today(),14);const ms=maxStay(E.filter(x=>x[0]<plan),plan);
+const days=[];for(let i=-179;i<=60;i++)days.push(addDays(ref,i));
+el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Stays','Пребывания')}${CALC.who?` · <span class="muted">${esc(CALC.who)}</span>`:''}</h3>
+${E.map((x,i)=>`<div class="li"><span class="mono">${i+1}</span><div class="grow"><b>${fmtD(x[0])} → ${fmtD(x[1])}</b><small>${dnum(x[1])-dnum(x[0])+1} ${T('days','дн.')}</small></div><button class="btn xs" data-rm="${i}">✕</button></div>`).join('')||`<div class="empty">${T('No stays — add one below','Нет пребываний — добавьте ниже')}</div>`}
+<div class="fgrid c3 mt">${inp('cA',T('Entry','Въезд'),addDays(today(),-60),'','date')}${inp('cB',T('Exit','Выезд'),addDays(today(),-40),'','date')}<div class="f"><label>&nbsp;</label><button class="btn pri" id="cAdd">+ ${T('Add stay','Добавить')}</button></div></div>
+<div class="row mt"><button class="btn sm" id="cEx">${T('Load example','Пример')}</button><button class="btn sm" id="cClr">${T('Clear','Очистить')}</button></div></div>
+<div class="card"><h3>${T('Result','Результат')}</h3><div class="kpis" style="grid-template-columns:1fr 1fr">${kpi(T('Used on ','Использовано на ')+fmtDS(ref),u+' / 90',T('days in 180-day window','дней в окне 180'),u>90?'bad-t':u>75?'warn-t':'ok-t')}${kpi(T('Max stay if entering ','Макс. срок при въезде ')+fmtDS(plan),ms+T(' days',' дн.'),'',ms<14?'warn-t':'ok-t')}</div>
+<div class="fgrid">${inp('cR',T('Check date','Дата проверки'),ref,'','date')}${inp('cP',T('Planned entry','Плановый въезд'),plan,'','date')}</div>
+${u>90?`<div class="alert mt" style="border-color:var(--red)"><span>🚨</span><div>${T('Overstay of ','Превышение на ')}${u-90}${T(' days on the check date.',' дн. на дату проверки.')}</div></div>`:`<div class="alert ok mt"><span>✓</span><div>${T('Within the limit. ','В пределах лимита. ')}${90-u}${T(' days remain.',' дн. осталось.')}</div></div>`}</div></div>
+<div class="card mt"><h3>${T('Rolling window timeline','Скользящее окно')}</h3><div class="chart">${lineChart({labels:days.filter((_,i)=>i%3===0).map(fmtDS),series:[{name:T('days used','дней использовано'),data:days.filter((_,i)=>i%3===0).map(d=>used(E.filter(x=>x[0]<=d),d)),color:'var(--blue)',area:1}],min:0,max:Math.max(100,u+10),hlines:[{v:90,label:'90',color:'var(--red)'}]})}</div>
+<div class="tl">${days.filter((_,i)=>i%2===0).map(d=>{const inS=E.some(x=>x[0]<=d&&x[1]>=d);const isRef=d===ref;return `<i class="${inS?'in':''} ${isRef?'ref':''} ${d>today()?'fut':''}" title="${fmtD(d)}"></i>`}).join('')}</div><div class="legend"><span><i style="background:var(--blue)"></i>${T('In territory','На территории')}</span><span><i style="background:var(--gold)"></i>${T('Check date','Дата проверки')}</span><span><i style="background:var(--line)"></i>${T('Outside','Вне территории')}</span></div></div>`;
+bind(el,'rm',i=>{E.splice(+i,1);APP.R.calc(el)});
+$('#cAdd').onclick=()=>{if(!validate([['cB',v=>v>=$('#cA').value,['Exit must be after entry','Выезд позже въезда']]],el))return;const a=$('#cA').value,b=$('#cB').value;if(E.some(x=>!(b<x[0]||a>x[1]))){toast(T('Overlaps an existing stay','Пересекается с другим пребыванием'),'bad');return}E.push([a,b]);E.sort((x,y)=>x[0].localeCompare(y[0]));APP.R.calc(el)};
+$('#cEx').onclick=()=>{CALC={ent:[[addDays(today(),-170),addDays(today(),-140)],[addDays(today(),-100),addDays(today(),-70)],[addDays(today(),-30),addDays(today(),-5)]],who:T('Example','Пример')};APP.R.calc(el)};
+$('#cClr').onclick=()=>{CALC={ent:[]};APP.R.calc(el)};
+$('#cR').onchange=e=>{CALC.ref=e.target.value;APP.R.calc(el)};$('#cP').onchange=e=>{CALC.plan=e.target.value;APP.R.calc(el)};
+};
+
+
+const KS=[['Welcome','Добро пожаловать','Touch to start · Choose your language','Нажмите, чтобы начать'],['Place your passport','Положите паспорт','Photo page down on the reader','Страницей с фото вниз'],['Look at the camera','Посмотрите в камеру','Remove glasses and hat','Снимите очки и головной убор'],['Place 4 fingers','Приложите 4 пальца','Right hand on the scanner','Правой рукой на сканер'],['Answer 3 questions','Ответьте на 3 вопроса','Purpose · length · funds','Цель · срок · средства'],['Done — go to the officer','Готово — к пограничнику','Your data is pre-registered','Данные предзаполнены']];
+APP.R.kiosk=el=>{const k=KS[KST];
+el.innerHTML=`<div class="kgrid"><div class="kiosk"><div class="kbar">${KS.map((_,i)=>`<i class="${i<=KST?'on':''}"></i>`).join('')}</div><div class="kic">${['👋','📘','📷','🖐','❓','✅'][KST]}</div><h2>${T(k[0],k[1])}</h2><p>${T(k[2],k[3])}</p>
+${KST===4?`<div class="kq">${[['Tourism','Туризм'],['Business','Бизнес'],['Family','Семья']].map((x,i)=>`<button class="kbtn ${S.kq===i?'on':''}" data-kq="${i}">${T(x[0],x[1])}</button>`).join('')}</div>`:''}
+${KST===2||KST===3||KST===1?`<div class="kprog"><i id="kp"></i></div>`:''}
+<div class="row" style="justify-content:center;margin-top:18px">${KST>0&&KST<5?`<button class="kbtn" id="kBack">← ${T('Back','Назад')}</button>`:''}<button class="kbtn pri" id="kNext">${KST===0?T('Start','Начать'):KST===5?T('Next traveller','Следующий'):KST>=1&&KST<=3?T('Capture','Считать'):T('Continue','Далее')}</button></div></div>
+<div class="card"><h3>${T('Kiosk fleet','Парк киосков')}</h3>${[['K-01','online',412],['K-02','online',388],['K-03','paper',201],['K-04','online',455],['K-05','offline',0],['K-06','online',367]].map(x=>`<div class="li"><span>🖥</span><div class="grow"><b>${x[0]} · ${T(...BCP.find(b=>b[0]===BCPsel).slice(1))}</b><small>${x[2]} ${T('travellers today','путешественников сегодня')}</small></div>${pill(x[1]==='online'?T('Online','В сети'):x[1]==='paper'?T('Low paper','Мало бумаги'):T('Offline','Нет связи'),x[1]==='online'?'ok':x[1]==='paper'?'warn':'bad')}</div>`).join('')}
+<div class="muted mt" style="font-size:12.5px">${T('Kiosk share of entries rose to ','Доля киосков выросла до ')}${pct(S.hist[S.hist.length-1].kiosk/S.hist[S.hist.length-1].ent*100)}</div></div></div>`;
+bind(el,'kq',i=>{S.kq=+i;save();APP.R.kiosk(el)});
+const b=$('#kBack');if(b)b.onclick=()=>{KST--;APP.R.kiosk(el)};
+$('#kNext').onclick=async()=>{if(KST>=1&&KST<=3){const p=$('#kp');const nb=$('#kNext');nb.disabled=true;for(let i=0;i<=100;i+=10){p.style.width=i+'%';await wait(40)}if(!document.body.contains(nb))return}
+if(KST===5){KST=0;S.hist[S.hist.length-1].kiosk++;audit('Kiosk pre-registration completed','Предрегистрация в киоске завершена','kiosk');save()}else KST++;APP.R.kiosk(el)};
+};
+
+
+APP.R.ovs=el=>{const L=S.tr.filter(t=>t.in).map(t=>({t,u:used(t.ent.map(x=>[x[0],x[1]||today()]),today())})).filter(x=>OVF==='all'?x.u>75:OVF==='o'?x.u>90:x.u>75&&x.u<=90).sort((a,b)=>b.u-a.u);
+el.innerHTML=`<div class="kpis">${kpi(T('Overstaying now','Превысили срок'),S.tr.filter(t=>t.in&&used(t.ent.map(x=>[x[0],x[1]||today()]),today())>90).length,'','bad-t')}${kpi(T('Within 15 days of limit','До лимита ≤ 15 дн.'),S.tr.filter(t=>{const u=used(t.ent.map(x=>[x[0],x[1]||today()]),today());return t.in&&u>75&&u<=90}).length,'','warn-t')}${kpi(T('Notified to immigration','Передано в миграционную'),S.tr.filter(t=>t.ack).length,'','ok-t')}</div>
+<div class="card"><div class="chips" style="margin-bottom:10px">${chipsH([['all','All alerts','Все'],['o','Overstay','Превышение'],['w','Approaching','Приближаются']],OVF,'of')}</div>
+${tbl([T('Traveller','Путешественник'),T('Nationality','Гражданство'),T('Days used','Дней'),T('Last entry','Последний въезд'),T('Must leave by','Выехать до'),T('Status','Статус'),''],L.map(({t,u})=>{const by=addDays(today(),90-u);return `<tr><td><b>${ppl(t)}</b><div class="mono muted" style="font-size:11px">${t.id}</div></td><td>${t.nat}</td><td><b class="${u>90?'bad-t':'warn-t'}">${u}</b> / 90</td><td>${fmtDS(t.ent[t.ent.length-1][0])}</td><td>${u>90?pill(T('overdue ','просрочено ')+(u-90)+T(' d',' дн.'),'bad'):fmtDS(by)}</td><td>${t.ack?pill(T('Notified','Передано'),'ok'):u>90?pill(T('Open','Открыто'),'bad'):pill(T('Watch','Наблюдение'),'warn')}</td><td><button class="btn xs" data-cal="${t.id}">📅</button> ${!t.ack&&u>90?`<button class="btn xs pri" data-ntf="${t.id}">${T('Notify','Передать')}</button>`:''}</td></tr>`}),T('No alerts','Оповещений нет'))}</div>`;
+bind(el,'of',v=>{OVF=v;APP.R.ovs(el)});
+bind(el,'cal',id=>{const t=S.tr.find(x=>x.id===id);CALC={ent:t.ent.map(x=>[x[0],x[1]||today()]),who:t.fn+' '+t.ln};go('calc')});
+bind(el,'ntf',id=>{const t=S.tr.find(x=>x.id===id);t.ack=Date.now();audit(`${id} overstay notified to immigration`,`${id} передан в миграционную службу`,'ovs');save();rerender();toast(T('Case sent to immigration enforcement','Дело передано в миграционную службу'),'ok')});
+};
+
+
+APP.R.stats=el=>{const h=S.hist;const L=h.map(x=>fmtDS(x.d));const byN=NAT.map(n=>[T(n[1],n[2]),S.tr.filter(t=>t.nat===n[0]).length]).sort((a,b)=>b[1]-a[1]).slice(0,7);
+el.innerHTML=`<div class="kpis">${kpi(T('Entries, 14 days','Въездов за 14 дней'),fmtN(h.reduce((a,x)=>a+x.ent,0)))}${kpi(T('Exits, 14 days','Выездов за 14 дней'),fmtN(h.reduce((a,x)=>a+x.ex,0)))}${kpi(T('Refusals','Отказы'),fmtN(h.reduce((a,x)=>a+x.ref,0)),'','bad-t')}${kpi(T('Avg. processing','Среднее время'),fmtN(h.reduce((a,x)=>a+x.wt,0)/h.length,1)+T(' s',' с'))}</div>
+<div class="grid2"><div class="card"><h3>${T('Entries and exits','Въезды и выезды')}</h3><div class="chart">${lineChart({labels:L,series:[{name:T('Entries','Въезды'),data:h.map(x=>x.ent),color:'var(--mal)',area:1},{name:T('Exits','Выезды'),data:h.map(x=>x.ex),color:'var(--blue)'}]})}</div><div class="legend"><span><i style="background:var(--mal)"></i>${T('Entries','Въезды')}</span><span><i style="background:var(--blue)"></i>${T('Exits','Выезды')}</span></div></div>
+<div class="card"><h3>${T('Kiosk vs manual lanes','Киоски и ручные кабины')}</h3><div class="chart">${barChart({labels:L,series:[{name:T('Kiosk','Киоск'),data:h.map(x=>x.kiosk),color:'var(--gold)'},{name:T('Manual','Вручную'),data:h.map(x=>x.ent-x.kiosk),color:'var(--dim)'}],stacked:1})}</div><div class="legend"><span><i style="background:var(--gold)"></i>${T('Kiosk','Киоск')}</span><span><i style="background:var(--dim)"></i>${T('Manual','Вручную')}</span></div></div></div>
+<div class="grid2 mt"><div class="card"><h3>${T('Processing time, seconds','Время оформления, с')}</h3><div class="chart">${lineChart({labels:L,series:[{name:'s',data:h.map(x=>x.wt),color:'var(--amber)',dots:1}],min:0,hlines:[{v:12,label:T('SLA 12 s','SLA 12 с'),color:'var(--red)'}]})}</div></div>
+<div class="card"><h3>${T('Register sample by nationality','Выборка реестра по гражданству')}</h3>${hbars(byN)}</div></div>`;
+};
+
+/* ---- boot: state, login, shell, router ---- */
+const KEY='pt_'+APP.slug+'_state';
+let S=null;
+function fresh(){const s=APP.seed();s.v=APP.ver||1;s.view=APP.views[0][0];s.user=null;s.intro=true;s.audit=s.audit||[];return s}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||S.v!==(APP.ver||1))S=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function audit(en,ru,kind){S.audit=S.audit||[];S.audit.unshift({t:Date.now(),en,ru,k:kind||'',u:S.user?S.user.name:'system'});if(S.audit.length>300)S.audit.length=300;save()}
+const auditTxt=a=>PT.lang==='ru'?a.ru:a.en;
+let lgVals=null;
+function rerender(){if(!S.user){renderLogin();return}renderShell();renderView()}
+function go(id){S.view=id;save();closeSide();renderShell();renderView();window.scrollTo(0,0)}
+function closeSide(){const s=$('#side');if(s)s.classList.remove('open')}
+function renderLogin(){
+  $('#app').hidden=true;const L=$('#login');L.hidden=false;const lg=APP.login;
+  const v=lgVals||{u:lg.user,p:lg.pass,r:(lg.roles||[[0]])[0][0]};
+  L.innerHTML=`<div class="lg-hero">
+    <div class="bigb"><b>${APP.icon}</b><div>${esc(APP.name)}<div style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0">${TT(APP.sub)}</div></div></div>
+    <h2>${TT(lg.hero)}</h2><p>${TT(lg.heroP)}</p>
+    <div class="lg-feats">${lg.feats.map(f=>`<div><b>${f[0]} ${T(f[1],f[2])}</b>${T(f[3],f[4])}</div>`).join('')}</div>
+  </div>
+  <div class="lg-form"><div class="card">
+    <h3>${T('Sign in to','Вход в')} ${esc(APP.name)}</h3><div class="muted" style="font-size:13px">${TT(lg.tag)}</div>
+    ${inp('lgU',T('User ID','Логин'),v.u,'','text','autocomplete="username"')}
+    ${inp('lgP',T('Password','Пароль'),v.p,'','password','autocomplete="current-password"')}
+    ${lg.roles?sel('lgR',T('Sign in as','Войти как'),lg.roles.map(r=>[r[0],r[1],r[2]]),v.r):''}
+    <button class="btn pri" id="lgGo" style="width:100%;justify-content:center;margin-top:16px;padding:12px">${T('Sign in','Войти')} →</button>
+    <div class="lg-demo">${T('<b>Demo access.</b> Credentials are prefilled — press <b>Sign in</b>. All data is synthetic and stays in this browser.','<b>Демо-доступ.</b> Логин и пароль уже введены — нажмите <b>Войти</b>. Все данные вымышленные и хранятся только в этом браузере.')}</div>
+    <div class="lg-sec">🔒 <span>${TT(lg.secure||['Demo environment · MFA simulated · session in local storage','Демо-среда · MFA имитируется · сессия в локальном хранилище'])}</span></div>
+  </div></div>`;
+  const keep=()=>{lgVals={u:$('#lgU').value,p:$('#lgP').value,r:$('#lgR')?$('#lgR').value:v.r}};
+  $$('input,select',L).forEach(i=>i.oninput=keep);
+  const go2=()=>{keep();if(!validate([['lgU',x=>x.length>=3,['Enter your user ID','Введите логин']],['lgP',x=>x.length>=4,['Enter the password','Введите пароль']]],L))return;
+    const role=lg.roles?lg.roles.find(r=>String(r[0])===String(lgVals.r)):null;
+    S.user={id:lgVals.u,name:lg.name,role:role?[role[1],role[2]]:lg.role,rk:role?role[0]:null};
+    if(APP.onLogin)APP.onLogin(role?role[0]:null);
+    audit('Signed in as '+lgVals.u,'Вход: '+lgVals.u,'auth');save();
+    toast(T('Welcome, ','Добро пожаловать, ')+esc(lg.name.split(' ')[0]),'ok');lgVals=null;rerender()};
+  $('#lgGo').onclick=go2;$$('input',L).forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')go2()});
+}
+function renderShell(){
+  $('#login').hidden=true;$('#app').hidden=false;const u=S.user;
+  const groups=APP.groups||[[null]];
+  $('#side').innerHTML=`<div class="brand"><b>${APP.icon}</b><div>${esc(APP.name)}<small>${TT(APP.sub)}</small></div></div>
+    ${groups.map(g=>`${g[0]!=null&&g[1]?`<div class="sec">${T(g[1],g[2])}</div>`:''}${APP.views.filter(v=>(v[4]||null)===g[0]&&(!APP.visible||APP.visible(v[0]))).map(v=>{const b=APP.badge?APP.badge(v[0]):null;return `<button class="nav ${S.view===v[0]?'on':''}" data-go="${v[0]}"><span class="ic">${v[1]}</span><span>${T(v[2],v[3])}</span>${b&&b[0]?`<span class="cnt ${b[1]?'r':''}">${b[0]}</span>`:''}</button>`}).join('')}`).join('')}
+    <div class="grow"></div>
+    ${APP.sideExtra?APP.sideExtra():''}
+    <div class="who"><div class="av">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</div><div style="min-width:0"><b>${esc(u.name)}</b><span>${TT(u.role)}</span></div></div>
+    <div class="sidebtns"><button class="btn sm" id="sOut">${T('Sign out','Выйти')}</button><button class="btn sm" id="sReset">${T('Reset demo','Сбросить демо')}</button></div>`;
+  bind($('#side'),'go',id=>go(id));
+  if(APP.bindSide)APP.bindSide($('#side'));
+  $('#sOut').onclick=()=>{audit('Signed out','Выход','auth');S.user=null;save();closeModal();rerender()};
+  $('#sReset').onclick=()=>{if(!confirmReset())return;try{Object.keys(localStorage).filter(k=>k.indexOf('pt_'+APP.slug+'_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}const u=S.user;S=fresh();S.user=u;if(APP.onLogin)APP.onLogin(u.rk);save();closeModal();rerender();toast(T('Demo data reset','Демо-данные сброшены'),'ok')};
+  const cur=APP.views.find(v=>v[0]===S.view)||APP.views[0];
+  const g=groups.find(x=>x[0]===(cur[4]||null));
+  $('#crumb').innerHTML=esc(APP.name)+(g&&g[1]?' · '+T(g[1],g[2]):'');
+  $('#title').innerHTML=T(cur[2],cur[3]);
+  $('#headx').innerHTML=APP.head?APP.head():'';
+  if(APP.bindHead)APP.bindHead($('#headx'));
+  const I=$('#intro');
+  if(S.intro){I.className='intro';I.innerHTML=`<div class="card"><h3><span>${T('How to try it','Как попробовать')}</span><span class="sp"></span><button class="btn xs" id="introX">${T('Hide','Скрыть')}</button></h3><div class="how">${APP.how.map((h,i)=>`<div><b>${i+1}</b><span>${TT(h)}</span></div>`).join('')}</div></div>
+    <div class="card"><dl class="facts">${APP.facts.map(f=>`<dt>${T(f[0],f[1])}</dt><dd>${f.length>3?T(f[2],f[3]):f[2]}</dd>`).join('')}</dl></div>`;
+    $('#introX').onclick=()=>{S.intro=false;save();renderShell()}}
+  else{I.className='intro hide';I.innerHTML=''}
+  $('#showIntro').hidden=S.intro;
+}
+let confirmReset=()=>true;
+function renderView(){
+  if(!APP.views.find(v=>v[0]===S.view))S.view=APP.views[0][0];
+  const el=$('#view');el.className='view on';el.dataset.v=S.view;
+  if(APP.leave)APP.leave();
+  try{APP.R[S.view](el)}catch(e){console.error(e);el.innerHTML='<div class="card">'+esc(e.message)+'</div>'}
+}
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+$('#showIntro').onclick=()=>{S.intro=true;save();renderShell()};
+document.addEventListener('click',e=>{const s=$('#side');if(s&&s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+let booted=false;
+PT.onLang(()=>{booted=true;rerender()});
+if(document.readyState!=='loading')setTimeout(()=>{if(!booted)rerender()},0);
+
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

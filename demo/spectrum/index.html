@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spectra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;gap:10px;align-items:center}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff;font-weight:800;font-size:13px;flex:none}
+.who small{display:block;color:var(--muted);font-size:11.5px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:3px}
+.input.bad{border-color:var(--red)}
+select.input{appearance:auto}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:5px 11px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text)}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.chip i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr.clk{cursor:pointer} tr.clk:hover td{background:var(--panel2)}
+tr.sel td{background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.login .hero{padding:48px;background:radial-gradient(circle at 20% 20%,color-mix(in srgb,var(--blue) 24%,transparent),transparent 60%),radial-gradient(circle at 80% 90%,color-mix(in srgb,var(--gold) 20%,transparent),transparent 55%),var(--bg2);display:flex;flex-direction:column;justify-content:center;gap:16px;border-right:1px solid var(--line)}
+.login .hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em}
+.login .hero ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:14px}
+.login .hero li{display:flex;gap:10px}.login .hero li b{color:var(--mal3)}
+.login .box{display:grid;place-items:center;padding:30px 18px}
+.login .card{width:100%;max-width:400px;display:grid;gap:12px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%;color:var(--text)}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block;font-size:14px} .opt span{font-size:12px;color:var(--muted)}
+.alloc{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg2)}
+.alloc svg{display:block;min-width:760px;width:100%;height:auto}
+.alloc rect.b{cursor:pointer}
+.alloc rect.b:hover{stroke:var(--text);stroke-width:1.5}
+.dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:13.5px;margin:0}
+.dl dt{color:var(--muted)} .dl dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--mal);border-radius:99px}
+.map svg{width:100%;height:auto;display:block;border-radius:12px;background:var(--bg2);border:1px solid var(--line);cursor:crosshair;touch-action:manipulation}
+.chk{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:13px;display:flex;gap:10px;align-items:flex-start;background:var(--bg2)}
+.chk b{display:block}
+.chk.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent)} .chk.warn{border-color:color-mix(in srgb,var(--amber) 60%,transparent)} .chk.bad{border-color:color-mix(in srgb,var(--red) 60%,transparent)}
+.fee{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.fee.tot{border-bottom:0;font-size:17px;font-weight:800;padding-top:12px}
+input[type=range]{width:100%;accent-color:var(--mal)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2500;display:grid;place-items:center;padding:16px}
+.modal .card{width:100%;max-width:520px;max-height:86vh;overflow:auto}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.intro{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .login .hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .login .hero h2{font-size:24px}
+}
+@media (max-width:560px){.how,.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}}
+</style>
+</head>
+<body data-demo-en="Spectra — radio spectrum management & licensing" data-demo-ru="Spectra — управление радиочастотным спектром">
+<div id="loginScr"></div>
+<div class="app" id="app" style="display:none">
+  <aside class="side" id="side">
+    <div class="brand"><b>≋</b><div>Spectra<small data-en="Telecom Regulator · Valdoria" data-ru="Регулятор связи · Вальдория"></small></div></div>
+    <div class="sec" data-en="Spectrum" data-ru="Спектр"></div>
+    <div id="navA"></div>
+    <div class="sec" data-en="Licensing & finance" data-ru="Лицензии и финансы"></div>
+    <div id="navB"></div>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="logout" style="flex:1;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    </div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill" id="hdrPill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Open the <b>Allocation chart</b>, click any band or type a frequency to see who may use it." data-ru="Откройте <b>Таблицу распределения</b>, нажмите на полосу или введите частоту — увидите, кому она отведена."></span></div>
+          <div><b>2</b><span data-en="File a <b>licence application</b> — live checks test the band, interference and fee before you submit." data-ru="Подайте <b>заявку на лицензию</b> — проверки полосы, помех и сбора идут на лету."></span></div>
+          <div><b>3</b><span data-en="On the <b>Interference map</b> tap to place a test transmitter, then review <b>Auctions</b> and pay <b>Fees</b>." data-ru="На <b>Карте помех</b> нажмите, чтобы поставить тестовый передатчик, затем — <b>Аукционы</b> и <b>Сборы</b>."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Radio spectrum management & licensing" data-ru="Управление радиочастотным спектром"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $45M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Telecom Regulatory Authority, Republic of Valdoria (fictional)" data-ru="Регулятор связи, Республика Вальдория (вымышл.)"></dd>
+        <dt data-en="Source" data-ru="Источник"></dt><dd>ITU / UNGM</dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>Propagation · licensing · e-auction</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-alloc"></section>
+    <section class="view" id="v-map"></section>
+    <section class="view" id="v-lic"></section>
+    <section class="view" id="v-apply"></section>
+    <section class="view" id="v-auc"></section>
+    <section class="view" id="v-fees"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div id="modal"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY='pt_spectrum_state';
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const nf=(n,d=0)=>(+n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const money=n=>'V$ '+nf(Math.round(n));
+const mM=n=>n>=1e6?'V$ '+nf(n/1e6,1)+(PT.lang==='ru'?' млн':'M'):money(n);
+const fmtD=d=>new Date(d).toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'});
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+const fq=f=>{const g=f>=1000;return (+(g?f/1000:f).toFixed(4)).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US',{maximumFractionDigits:4})+(g?T(' GHz',' ГГц'):T(' MHz',' МГц'))};
+
+/* services & allocations */
+const SV={imt:['Mobile (IMT)','Подвижная (IMT)','#14b886'],bc:['Broadcasting','Радиовещание','#d9a441'],mob:['Land mobile / PMR','Сухопутная подвижная','#4f8ff7'],fix:['Fixed links','Фиксированная','#9b7bf2'],sat:['Satellite','Спутниковая','#38bdf8'],aero:['Aeronautical & radar','Авиационная и радары','#f59e0b'],mar:['Maritime','Морская','#2dd4bf'],ama:['Amateur','Любительская','#ec7fb0'],ism:['Licence-exempt (ISM/RLAN)','Без лицензии (ISM/RLAN)','#94a3b8'],ast:['Radio astronomy (protected)','Радиоастрономия (охрана)','#ef4444']};
+const SVK=Object.keys(SV);
+const B=(a,b,s,en,ru,p)=>({a,b,s,en,ru,p:p||'P'});
+const BANDS=[B(30,87.5,'mob','VHF low land mobile','Сухопутная подвижная ОВЧ-низ'),B(87.5,108,'bc','FM sound broadcasting','ЧМ-радиовещание'),B(108,117.975,'aero','VOR / ILS navigation','Навигация VOR/ILS'),B(118,137,'aero','Aeronautical mobile (VHF voice)','Авиационная подвижная'),B(137,138,'sat','Meteorological satellite','Метеоспутники'),B(144,146,'ama','2 m amateur band','Любительский 2 м'),B(146,156,'mob','VHF PMR','ОВЧ ПМР'),B(156,162.05,'mar','Maritime VHF','Морская ОВЧ'),B(174,230,'bc','Digital audio broadcasting','Цифровое радио DAB'),B(380,400,'mob','Public safety TETRA','Службы безопасности TETRA'),B(406,406.1,'sat','Distress beacons (COSPAS)','Аварийные маяки'),B(406.1,410,'ast','Radio astronomy','Радиоастрономия'),B(430,440,'ama','70 cm amateur','Любительский 70 см','S'),B(433.05,434.79,'ism','ISM 433 MHz','ISM 433 МГц'),B(450,470,'mob','UHF PMR','УВЧ ПМР'),B(470,694,'bc','Digital terrestrial TV','Цифровое ТВ'),B(694,790,'imt','IMT 700','IMT 700'),B(790,862,'imt','IMT 800','IMT 800'),B(863,870,'ism','Short-range devices','Устройства малого радиуса'),B(880,960,'imt','IMT 900','IMT 900'),B(960,1215,'aero','DME / SSR radar','DME / вторичные РЛС'),B(1215,1300,'sat','GNSS L2/L5','ГНСС L2/L5'),B(1400,1427,'ast','Hydrogen line (all emissions prohibited)','Линия водорода (излучения запрещены)'),B(1427,1518,'imt','IMT L-band','IMT L-диапазон'),B(1525,1559,'sat','Mobile satellite','Подвижная спутниковая'),B(1710,1880,'imt','IMT 1800','IMT 1800'),B(1920,2170,'imt','IMT 2100','IMT 2100'),B(2400,2483.5,'ism','ISM 2.4 GHz / Wi-Fi','ISM 2,4 ГГц / Wi-Fi'),B(2500,2690,'imt','IMT 2600','IMT 2600'),B(2700,3100,'aero','Air traffic radar','РЛС УВД'),B(3400,3800,'imt','IMT 3.5 GHz (5G)','IMT 3,5 ГГц (5G)'),B(3800,4200,'sat','C-band satellite downlink','C-диапазон спутник'),B(5150,5850,'ism','RLAN 5 GHz Wi-Fi','RLAN 5 ГГц Wi-Fi'),B(5925,7125,'fix','6 GHz fixed links','РРЛ 6 ГГц'),B(7125,8500,'fix','7/8 GHz fixed links','РРЛ 7/8 ГГц'),B(10700,12750,'sat','Ku satellite TV','Спутниковое ТВ Ku'),B(14250,14500,'fix','14 GHz fixed','РРЛ 14 ГГц','S'),B(17700,19700,'fix','18 GHz fixed links','РРЛ 18 ГГц'),B(22000,23600,'fix','23 GHz fixed links','РРЛ 23 ГГц'),B(23600,24000,'ast','Radio astronomy 24 GHz','Радиоастрономия 24 ГГц'),B(24250,27500,'imt','IMT 26 GHz (mmWave)','IMT 26 ГГц'),B(27500,30000,'sat','Ka satellite uplink','Ka спутник вверх'),B(37000,40000,'imt','IMT 40 GHz','IMT 40 ГГц')];
+const bandOf=f=>BANDS.filter(b=>f>=b.a&&f<=b.b);
+
+const CITIES={vd:['Valdor',300,215],np:['Northport',395,72],rv:['Riverton',160,305],em:['Eastmere',510,245],wf:['Westfield',85,150],sb:['Southbay',335,360],hc:['Highcrest',230,118]};
+const OPS=['NovaTel','Volt Mobile','Aurora Net','Kestrel Wireless','Valdor Public Radio','Radio Meridian','City Taxi Co-op','Port Authority','Northport Water','Valdor Police'];
+const PRICE=f=>f<1000?52000:f<3000?26000:f<6000?9000:f<24000?1800:900;
+const COV={nat:[1,'National','Национальная'],reg:[.35,'Regional','Региональная'],loc:[.08,'Single site','Один объект']};
+function feeOf(l){const ann=l.svc==='fix'?1200+40*l.bw:l.svc==='bc'&&l.f<200?2400+0.4*l.p:PRICE(l.f)*l.bw*COV[l.cov][0];const rural=l.rural?.75:1;return{ann:Math.round(ann*rural),tot:Math.round(ann*rural*l.yrs),app:500}}
+
+function seed(){
+  const L=(id,op,svc,f,bw,p,h,site,cov,yrs,st,iss)=>({id,op,svc,f,bw,p,h,site,cov,yrs,st,iss,rural:false});
+  const lic=[
+   L('VL-1001',4,'bc',101.2,.2,10000,150,'vd','reg',8,'active','2022-03-01'),
+   L('VL-1002',5,'bc',101.2,.2,8000,120,'hc','reg',8,'active','2024-06-12'),
+   L('VL-1003',4,'bc',94.6,.2,5000,140,'np','reg',8,'active','2021-09-20'),
+   L('VL-1004',5,'bc',88.9,.2,3000,90,'em','reg',8,'active','2023-01-15'),
+   L('VL-1005',6,'mob',452.3,.0125,25,30,'rv','loc',5,'active','2023-05-02'),
+   L('VL-1006',6,'mob',452.3,.0125,25,35,'sb','loc',5,'active','2025-02-11'),
+   L('VL-1007',9,'mob',390.5,1.4,40,45,'vd','reg',10,'active','2020-11-30'),
+   L('VL-1008',7,'mar',156.8,.025,25,60,'sb','loc',10,'active','2019-04-08'),
+   L('VL-1009',8,'mob',462.9,.0125,5,20,'np','loc',5,'active','2024-08-19'),
+   L('VL-1010',0,'fix',6175,30,1,40,'wf','loc',10,'active','2022-07-07'),
+   L('VL-1011',1,'fix',18200,55,.5,35,'em','loc',10,'active','2023-10-10'),
+   L('VL-1012',0,'imt',750,10,0,0,null,'nat',15,'active','2021-01-01'),
+   L('VL-1013',1,'imt',1840,20,0,0,null,'nat',15,'active','2021-01-01'),
+   L('VL-1014',2,'imt',3600,80,0,0,null,'nat',15,'active','2025-11-20'),
+   L('VL-1015',0,'imt',3500,100,0,0,null,'nat',15,'active','2025-11-20'),
+   L('VL-1016',3,'fix',18200,55,.5,30,'np','loc',10,'pending','2026-11-12'),
+   L('VL-1017',6,'mob',152.4,.0125,25,40,'wf','loc',5,'pending','2026-11-14')];
+  const inv=lic.filter(l=>l.st==='active').map((l,i)=>({id:'INV-26-'+(400+i),lic:l.id,amt:feeOf(l).ann,due:'2026-'+String(1+i%11).padStart(2,'0')+'-28',st:i%5===2?'overdue':i<9?'paid':'open',kind:'annual'}));
+  inv.push({id:'INV-26-430',lic:'VL-1016',amt:500,due:'2026-12-12',st:'open',kind:'app'},{id:'INV-26-431',lic:'VL-1017',amt:500,due:'2026-12-14',st:'paid',kind:'app'});
+  return{user:null,role:'reg',view:'alloc',lic,inv,band:30,look:'',svcOn:SVK.slice(),probe:{x:270,y:180,f:101.2,p:2000,h:80,on:true},mapSvc:'all',aucR:99,fee:{f:3500,bw:40,cov:'nat',yrs:15,rural:false,svc:'imt'},
+    form:{op:3,svc:'mob',f:452.3,bw:.0125,p:25,h:30,site:'em',cov:'loc',yrs:5,rural:false,dec:false},next:1018,nextInv:432,invF:'all',licF:'all'};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+
+const VIEWS=[['alloc','📊','Allocation chart','Таблица распределения','A'],['map','🗺','Interference map','Карта помех','A'],['lic','📜','Licences','Лицензии','B'],['apply','➕','Apply for licence','Заявка на лицензию','B'],['auc','🔨','Auction results','Итоги аукционов','B'],['fees','💳','Fees & invoices','Сборы и счета','B']];
+function nav(){
+  const pend=S.lic.filter(l=>l.st==='pending').length,conf=conflicts().length,due=S.inv.filter(i=>i.st!=='paid').length;
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';
+    if(v[0]==='lic'&&pend)x=`<span class="cnt">${pend}</span>`;if(v[0]==='map'&&conf)x=`<span class="cnt r">${conf}</span>`;if(v[0]==='fees'&&due)x=`<span class="cnt">${due}</span>`;
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navA').innerHTML=mk('A');$('#navB').innerHTML=mk('B');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  if(!S.user){$('#app').style.display='none';$('#loginScr').style.display='';rLogin();return}
+  $('#loginScr').style.display='none';$('#app').style.display='';
+  nav();const v=VIEWS.find(x=>x[0]===S.view);
+  $('#title').textContent=T(v[2],v[3]);
+  $('#crumb').textContent=S.role==='reg'?T('Regulator workspace','Кабинет регулятора'):T('Operator portal · Kestrel Wireless','Портал оператора · Kestrel Wireless');
+  $('#hdrPill').className='pill '+(S.role==='reg'?'gold':'ok');
+  $('#hdrPill').textContent=T(S.lic.filter(l=>l.st==='active').length+' active licences',S.lic.filter(l=>l.st==='active').length+' действующих лицензий');
+  $('#who').innerHTML=S.role==='reg'?`<div class="av">IK</div><div>Irina Kask<small>${T('Spectrum engineer · TRA','Инженер спектра · Регулятор')}</small></div>`:`<div class="av">TB</div><div>Tom Bell<small>${T('Licensing lead · Kestrel','Лицензирование · Kestrel')}</small></div>`;
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+S.view));
+  ({alloc:rAlloc,map:rMap,lic:rLic,apply:rApply,auc:rAuc,fees:rFees})[S.view]();
+}
+
+/* login */
+let lrole='reg';
+function rLogin(){
+  const cr=lrole==='reg'?['i.kask@tra.gov.vd','Spectrum-26']:['t.bell@kestrel.vd','Kestrel-26'];
+  $('#loginScr').innerHTML=`<div class="login"><div class="hero">
+    <span class="pill gold" style="align-self:flex-start">${T('Telecom Regulatory Authority','Регулятор связи')}</span>
+    <h2>${T('The national spectrum, managed in one place','Национальный спектр — в одном месте')}</h2>
+    <p class="muted" style="margin:0;max-width:520px">${T('Allocation table aligned with ITU Radio Regulations, e-licensing with automatic interference checks, clock auctions and fee billing for 2,300 licensees.','Таблица распределения по Регламенту радиосвязи МСЭ, электронные лицензии с автоматической проверкой помех, аукционы и биллинг сборов для 2 300 владельцев лицензий.')}</p>
+    <ul><li><b>✓</b>${T('Licence decisions in 9 days instead of 60','Решения по лицензиям за 9 дней вместо 60')}</li><li><b>✓</b>${T('Propagation model checks every application','Модель распространения проверяет каждую заявку')}</li><li><b>✓</b>${T('V$ 95.6M raised in the 3.5 GHz auction','V$ 95,6 млн на аукционе 3,5 ГГц')}</li></ul>
+  </div><div class="box"><div class="card">
+    <h3 style="margin:0">${T('Sign in to Spectra','Вход в Spectra')}</h3>
+    <div class="roles"><button class="opt ${lrole==='reg'?'on':''}" data-r="reg"><b>${T('Regulator','Регулятор')}</b><span>${T('Assign & approve','Назначение и решения')}</span></button><button class="opt ${lrole==='op'?'on':''}" data-r="op"><b>${T('Operator','Оператор')}</b><span>${T('Apply & pay','Заявки и оплата')}</span></button></div>
+    <div class="f"><label>${T('Email','Почта')}</label><input class="input" id="lMail" value="${cr[0]}"></div>
+    <div class="f"><label>${T('Password','Пароль')}</label><input class="input" id="lPw" type="password" value="${cr[1]}"></div>
+    <button class="btn pri" id="lGo" style="justify-content:center">${T('Sign in with demo account','Войти демо-аккаунтом')}</button>
+    <p class="muted" style="font-size:12px;margin:0">${T('Demo credentials are prefilled. Regulators approve applications; operators apply and pay fees.','Демо-данные уже введены. Регулятор утверждает заявки, оператор подаёт и платит.')}</p>
+  </div></div></div>`;
+  $$('[data-r]').forEach(b=>b.onclick=()=>{lrole=b.dataset.r;rLogin()});
+  $('#lGo').onclick=()=>{if(!/@/.test($('#lMail').value)||$('#lPw').value.length<4){toast(T('Enter email and password','Введите почту и пароль'),'bad');return}
+    S.user=$('#lMail').value.trim();S.role=lrole;save();render();toast(T('Signed in as ','Вход выполнен: ')+esc(S.user))};
+}
+
+/* ---------- ALLOCATION CHART ---------- */
+const LMIN=Math.log10(30),LMAX=Math.log10(40000);
+function rAlloc(){
+  const el=$('#v-alloc');const used=S.lic.filter(l=>l.st==='active');
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row" style="margin-bottom:12px">
+    <input class="input" id="aLook" style="flex:1;min-width:160px;max-width:260px" placeholder="${T('Frequency, e.g. 3600 or 2.4G','Частота, напр. 3600 или 2.4G')}" value="${esc(S.look)}">
+    <button class="btn sm pri" id="aGo">${T('Look up','Найти')}</button><span class="muted" style="font-size:12.5px" id="aRes"></span></div>
+    <div class="chips" id="aSv">${SVK.map(k=>`<button class="chip ${S.svcOn.includes(k)?'on':''}" data-sv="${k}"><i style="background:${SV[k][2]}"></i>${T(SV[k][0],SV[k][1])}</button>`).join('')}</div></div>
+    <div class="card chart" style="margin-bottom:14px"><h3>${T('National frequency allocation table, 30 MHz – 40 GHz (log scale)','Национальная таблица распределения, 30 МГц – 40 ГГц (лог. шкала)')}</h3><div class="alloc" id="aChart"></div>
+    <p class="muted" style="font-size:12px;margin:8px 0 0">${T('Tap a band for details. Hatched = secondary allocation. Scroll sideways on small screens.','Нажмите полосу для подробностей. Штриховка — вторичное распределение. На телефоне листайте вбок.')}</p></div>
+    <div class="grid2"><div class="card" id="aDet"></div><div class="card chart"><h3>${T('Share of spectrum by service','Доля спектра по службам')}</h3>${shareChart()}</div></div>`;
+  drawAlloc();bandDet();
+  $$('[data-sv]').forEach(b=>b.onclick=()=>{const k=b.dataset.sv,i=S.svcOn.indexOf(k);if(i>=0)S.svcOn.splice(i,1);else S.svcOn.push(k);b.classList.toggle('on');save();drawAlloc()});
+  const look=()=>{const v=$('#aLook').value.trim().toLowerCase().replace(',', '.');S.look=v;let f=parseFloat(v);if(isNaN(f)){$('#aRes').textContent=T('Enter a number','Введите число');return}
+    if(/g/.test(v))f*=1000;else if(/k/.test(v))f/=1000;
+    if(f<30||f>40000){$('#aRes').textContent=T('Range is 30 MHz – 40 GHz','Диапазон 30 МГц – 40 ГГц');S.lookF=null;drawAlloc();return}
+    S.lookF=f;const bs=bandOf(f);if(bs.length)S.band=BANDS.indexOf(bs[0]);save();drawAlloc();bandDet();
+    $('#aRes').innerHTML=bs.length?fq(f)+' → '+bs.map(b=>`<b>${T(b.en,b.ru)}</b>`).join(', '):fq(f)+' — '+T('not allocated (reserve)','не распределено (резерв)')};
+  $('#aGo').onclick=look;$('#aLook').onkeydown=e=>{if(e.key==='Enter')look()};
+}
+function drawAlloc(){
+  const W=900,lw=150,rh=24,top=26,rows=SVK.filter(k=>S.svcOn.includes(k));const Hh=top+rows.length*rh+30;
+  const x=f=>lw+(Math.log10(f)-LMIN)/(LMAX-LMIN)*(W-lw-10);
+  const ticks=[30,100,300,1000,3000,10000,30000];
+  let s=`<svg viewBox="0 0 ${W} ${Hh}" role="img"><defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="${cssv('--bg')}" stroke-width="2.5"/></pattern></defs>`;
+  [[30,300,'VHF'],[300,3000,'UHF'],[3000,30000,'SHF'],[30000,40000,'EHF']].forEach((r,i)=>{s+=`<rect x="${x(r[0])}" y="0" width="${x(r[1])-x(r[0])}" height="${Hh-24}" fill="${i%2?cssv('--panel'):'transparent'}" opacity=".6"/><text x="${(x(r[0])+x(r[1]))/2}" y="15" text-anchor="middle" font-size="11" font-weight="700" fill="${cssv('--dim')}">${r[2]}</text>`});
+  ticks.forEach(t=>{s+=`<line x1="${x(t)}" x2="${x(t)}" y1="${top-4}" y2="${Hh-24}" stroke="${cssv('--line')}"/><text x="${x(t)}" y="${Hh-8}" text-anchor="middle" font-size="11" fill="${cssv('--muted')}">${fq(t)}</text>`});
+  rows.forEach((k,ri)=>{const y=top+ri*rh;s+=`<text x="6" y="${y+16}" font-size="11.5" fill="${cssv('--text')}">${T(SV[k][0],SV[k][1]).slice(0,22)}</text><line x1="${lw}" x2="${W-10}" y1="${y+rh}" y2="${y+rh}" stroke="${cssv('--line')}" opacity=".5"/>`;
+    BANDS.forEach((b,bi)=>{if(b.s!==k)return;const x0=x(b.a),w=Math.max(3,x(b.b)-x0);const sel=bi===S.band;
+      s+=`<rect class="b" data-b="${bi}" x="${x0}" y="${y+4}" width="${w}" height="${rh-8}" rx="2" fill="${SV[k][2]}" opacity="${sel?1:.82}" ${sel?`stroke="${cssv('--text')}" stroke-width="2"`:''}><title>${T(b.en,b.ru)} · ${fq(b.a)}–${fq(b.b)}</title></rect>${b.p==='S'?`<rect x="${x0}" y="${y+4}" width="${w}" height="${rh-8}" fill="url(#hatch)" pointer-events="none"/>`:''}`});});
+  S.lic.filter(l=>l.st==='active'&&S.svcOn.includes(l.svc)).forEach(l=>{const ri=rows.indexOf(l.svc);s+=`<circle cx="${x(l.f)}" cy="${top+ri*rh+rh/2}" r="2.6" fill="${cssv('--text')}" pointer-events="none"/>`});
+  if(S.lookF){const lx=x(S.lookF);s+=`<line x1="${lx}" x2="${lx}" y1="${top-6}" y2="${Hh-24}" stroke="${cssv('--red')}" stroke-width="2" stroke-dasharray="4 3"/><text x="${Math.min(lx+4,W-80)}" y="${top-8}" font-size="11" font-weight="700" fill="${cssv('--red')}">${fq(S.lookF)}</text>`}
+  s+='</svg>';$('#aChart').innerHTML=s;
+  $$('#aChart rect.b').forEach(r=>r.addEventListener('click',()=>{S.band=+r.dataset.b;save();drawAlloc();bandDet()}));
+}
+function bandDet(){
+  const b=BANDS[S.band]||BANDS[0],ls=S.lic.filter(l=>l.st==='active'&&l.f>=b.a&&l.f<=b.b);
+  const used=Math.min(b.b-b.a,ls.reduce((a,l)=>a+l.bw*(l.site?.1:1),0)),pct=Math.min(100,used/(b.b-b.a)*100);
+  $('#aDet').innerHTML=`<h3><i style="width:12px;height:12px;border-radius:3px;background:${SV[b.s][2]};display:inline-block"></i>${T(b.en,b.ru)}<span class="sp"></span><span class="pill ${b.s==='ast'?'bad':b.p==='P'?'ok':'warn'}">${b.p==='P'?T('Primary','Первичное'):T('Secondary','Вторичное')}</span></h3>
+   <dl class="dl"><dt>${T('Range','Полоса')}</dt><dd class="mono">${fq(b.a)} – ${fq(b.b)}</dd><dt>${T('Width','Ширина')}</dt><dd>${fq(+(b.b-b.a).toFixed(3))}</dd><dt>${T('Service','Служба')}</dt><dd>${T(SV[b.s][0],SV[b.s][1])}</dd><dt>${T('ITU footnote','Примечание МСЭ')}</dt><dd class="mono">5.${150+S.band*7}</dd><dt>${T('Licensing regime','Режим')}</dt><dd>${b.s==='ism'?T('Licence-exempt, class licence','Без лицензии, общий режим'):b.s==='ast'?T('No emissions permitted','Излучения запрещены'):b.s==='imt'?T('Auctioned national blocks','Аукцион, национальные блоки'):T('Individual site licence','Индивидуальная лицензия на объект')}</dd></dl>
+   <div style="margin:14px 0 6px;font-size:12.5px" class="muted">${T('Assigned in this band','Назначено в полосе')}: <b>${nf(pct,1)}%</b></div><div class="bar"><i style="width:${pct}%"></i></div>
+   <div class="tw" style="margin-top:12px"><table><thead><tr><th>${T('Licence','Лицензия')}</th><th>${T('Holder','Владелец')}</th><th>${T('Freq.','Частота')}</th><th>${T('BW','Полоса')}</th></tr></thead><tbody>${ls.map(l=>`<tr><td class="mono">${l.id}</td><td>${OPS[l.op]}</td><td class="mono">${fq(l.f)}</td><td class="mono">${fq(l.bw)}</td></tr>`).join('')||`<tr><td colspan="4" class="muted">${T('No assignments','Назначений нет')}</td></tr>`}</tbody></table></div>
+   ${b.s!=='ism'&&b.s!=='ast'?`<button class="btn sm pri" id="aApply" style="margin-top:12px">${T('Apply in this band','Подать заявку в этой полосе')}</button>`:''}`;
+  if($('#aApply'))$('#aApply').onclick=()=>{const fm=S.form;fm.svc=b.s==='bc'?'bc':b.s==='imt'?'imt':b.s==='fix'?'fix':b.s==='mar'?'mar':'mob';fm.f=+((b.a+b.b)/2).toFixed(3);fm.bw=fm.svc==='imt'?10:fm.svc==='fix'?28:fm.svc==='bc'?.2:.0125;if(fm.svc==='imt'){fm.cov='nat';fm.site=''}save();go('apply')};
+}
+function shareChart(){
+  const tot={};BANDS.forEach(b=>{tot[b.s]=(tot[b.s]||0)+Math.log10(b.b/b.a)});
+  const sum=Object.values(tot).reduce((a,b)=>a+b,0);const R=70,cx=90,cy=90;let a0=-Math.PI/2,s=`<svg viewBox="0 0 340 180">`;
+  const ks=SVK.filter(k=>tot[k]).sort((a,b)=>tot[b]-tot[a]);
+  ks.forEach((k,i)=>{const a1=a0+tot[k]/sum*Math.PI*2;const lg=a1-a0>Math.PI?1:0;
+    s+=`<path d="M${cx+R*Math.cos(a0)},${cy+R*Math.sin(a0)} A${R},${R} 0 ${lg} 1 ${cx+R*Math.cos(a1)},${cy+R*Math.sin(a1)}" fill="none" stroke="${SV[k][2]}" stroke-width="26"/>`;a0=a1;
+    if(i<8)s+=`<rect x="190" y="${12+i*20}" width="10" height="10" rx="2" fill="${SV[k][2]}"/><text x="206" y="${21+i*20}" font-size="11" fill="${cssv('--muted')}">${T(SV[k][0],SV[k][1]).split(' ')[0]} ${Math.round(tot[k]/sum*100)}%</text>`});
+  return s+`<text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="13" font-weight="800" fill="${cssv('--text')}">${BANDS.length}</text><text x="${cx}" y="${cy+20}" text-anchor="middle" font-size="10" fill="${cssv('--muted')}">${T('bands','полос')}</text></svg><p class="muted" style="font-size:11.5px;margin:4px 0 0">${T('Weighted by octaves of spectrum (log width).','Вес — по октавам спектра (лог. ширина).')}</p>`;
+}
+
+/* ---------- PROPAGATION ---------- */
+const radius=l=>Math.max(8,Math.min(140,(3.57*Math.sqrt(l.h)+11.3)*(0.6+Math.log10(Math.max(1,l.p))/5)));
+const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+const pos=l=>{const c=CITIES[l.site];return[c[1],c[2]]};
+const ovl=(a,b)=>Math.abs(a.f-b.f)<(a.bw+b.bw)/2;
+function conflicts(){const L=S.lic.filter(l=>l.site&&l.st!=='rejected'),out=[];
+  for(let i=0;i<L.length;i++)for(let j=i+1;j<L.length;j++){const a=L[i],b=L[j];if(!ovl(a,b))continue;const d=dist(pos(a),pos(b)),r=radius(a)+radius(b);if(d<r)out.push({a,b,d,sev:(r-d)/r})}
+  return out}
+function pathLoss(dkm,f){const d=Math.max(.5,dkm);return 32.44+20*Math.log10(f)+20*Math.log10(d)+(d>1?15*Math.log10(d):0)}
+function probeCalc(){const p=S.probe,pr={f:p.f,bw:p.f<200?.2:p.f<1000?.0125:10};
+  return S.lic.filter(l=>l.site&&l.st!=='rejected').map(l=>{const off=Math.abs(l.f-pr.f),half=(l.bw+pr.bw)/2;const acl=off<half?0:off<half*3?30:off<half*8?55:null;if(acl===null)return null;
+    const d=dist([p.x,p.y],pos(l));const I=10*Math.log10(p.p)+30+6-pathLoss(d,p.f)-acl;const N=-174+10*Math.log10(l.bw*1e6)+5;const IN=I-N;
+    return{l,d,I,IN,acl}}).filter(Boolean).sort((a,b)=>b.IN-a.IN)}
+function rMap(){
+  const el=$('#v-map'),cf=conflicts(),p=S.probe,pc=probeCalc(),harm=pc.filter(x=>x.IN>-6).length;
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Site licences on map','Объектов на карте')}</div><div class="v">${S.lic.filter(l=>l.site&&l.st!=='rejected').length}</div><div class="d">${T('pending included','с заявками')}</div></div>
+   <div class="card kpi"><div class="l">${T('Co-channel conflicts','Конфликты в канале')}</div><div class="v" style="color:${cf.length?'var(--red)':'var(--mal3)'}">${cf.length}</div><div class="d">${T('overlapping service areas','пересечение зон')}</div></div>
+   <div class="card kpi"><div class="l">${T('Test transmitter','Тестовый передатчик')}</div><div class="v" style="font-size:20px">${fq(p.f)}</div><div class="d">${nf(p.p)} W · ${p.h} m</div></div>
+   <div class="card kpi"><div class="l">${T('Harmful interference (I/N > −6 dB)','Вредные помехи (I/N > −6 дБ)')}</div><div class="v" style="color:${harm?'var(--red)':'var(--mal3)'}">${harm}</div><div class="d">${T('victim receivers','затронуто приёмников')}</div></div></div>
+  <div class="grid2"><div class="card map"><h3>${T('Service areas & interference','Зоны обслуживания и помехи')}<span class="sp"></span><select class="input" id="mSvc" style="width:auto;padding:5px 8px">${['all','bc','mob','fix','mar'].map(k=>`<option value="${k}" ${S.mapSvc===k?'selected':''}>${k==='all'?T('All services','Все службы'):T(SV[k][0],SV[k][1])}</option>`).join('')}</select></h3>
+   <div id="mSvg"></div><p class="muted" style="font-size:12px;margin:8px 0 0">${T('Tap the map to move the ◆ test transmitter. Red lines join co-channel stations whose coverage overlaps. 1 grid square = 50 km.','Нажмите на карту, чтобы переставить ◆ тестовый передатчик. Красные линии — станции на одном канале с пересекающимися зонами. Клетка = 50 км.')}</p></div>
+   <div class="card"><h3>${T('Test transmitter','Тестовый передатчик')}</h3><div class="fgrid">
+    <div class="f"><label>${T('Frequency, MHz','Частота, МГц')}</label><input class="input mono" id="pF" type="number" step="0.1" value="${p.f}"></div>
+    <div class="f"><label>${T('Power, W (ERP)','Мощность, Вт (ЭИИМ)')}</label><input class="input mono" id="pP" type="number" value="${p.p}"></div>
+    <div class="f full"><label>${T('Antenna height','Высота антенны')}: <b id="pHv">${p.h} m</b></label><input type="range" id="pH" min="10" max="300" step="5" value="${p.h}"></div></div>
+    <div class="row" style="margin:6px 0 12px">${[[101.2,'FM 101.2'],[452.3,'PMR 452.3'],[18200,'18 GHz link']].map(q=>`<button class="chip" data-pf="${q[0]}">${q[1]}</button>`).join('')}</div>
+    <h3 style="margin-top:4px">${T('Predicted interference','Прогноз помех')}<span class="sp"></span><span class="pill ${harm?'bad':'ok'}">${harm?T('Would be refused','Будет отказ'):T('Compatible','Совместимо')}</span></h3>
+    <div class="tw"><table><thead><tr><th>${T('Victim','Приёмник')}</th><th>${T('Dist.','Расст.')}</th><th>ACL</th><th>I/N</th></tr></thead><tbody>${pc.slice(0,6).map(x=>`<tr><td><span class="mono">${x.l.id}</span> ${OPS[x.l.op]}</td><td class="mono">${nf(x.d)} km</td><td class="mono">${x.acl} dB</td><td><span class="pill ${x.IN>-6?'bad':x.IN>-20?'warn':'ok'}">${nf(x.IN,1)} dB</span></td></tr>`).join('')||`<tr><td colspan="4" class="muted">${T('No receivers within 8 channels','Нет приёмников в пределах 8 каналов')}</td></tr>`}</tbody></table></div>
+    <p class="muted" style="font-size:11.5px;margin:8px 0 0">${T('Model: free-space + 15 log d terrain term, 6 dBi antenna, noise −174 dBm/Hz + 5 dB NF; adjacent-channel rejection 30/55 dB.','Модель: свободное пространство + 15 log d рельеф, антенна 6 дБи, шум −174 дБм/Гц + КШ 5 дБ; подавление соседнего канала 30/55 дБ.')}</p></div></div>
+  <div class="card" style="margin-top:14px"><h3>${T('Conflict register','Реестр конфликтов')}</h3><div class="tw"><table><thead><tr><th>${T('Station A','Станция A')}</th><th>${T('Station B','Станция B')}</th><th>${T('Channel','Канал')}</th><th>${T('Distance','Расстояние')}</th><th>${T('Overlap','Пересечение')}</th><th></th></tr></thead><tbody>${cf.map((c,i)=>`<tr><td><span class="mono">${c.a.id}</span> ${CITIES[c.a.site][0]}</td><td><span class="mono">${c.b.id}</span> ${CITIES[c.b.site][0]}${c.b.st==='pending'?' <span class="pill warn">'+T('pending','заявка')+'</span>':''}</td><td class="mono">${fq(c.a.f)}</td><td class="mono">${nf(c.d)} km</td><td><span class="pill ${c.sev>.3?'bad':'warn'}">${Math.round(c.sev*100)}%</span></td><td>${S.role==='reg'?`<button class="btn sm" data-fix="${i}">${T('Retune B','Перенастроить B')}</button>`:''}</td></tr>`).join('')||`<tr><td colspan="6" class="muted">${T('No conflicts — all co-channel stations are separated.','Конфликтов нет — станции разнесены.')}</td></tr>`}</tbody></table></div></div>`;
+  drawMap(cf);
+  $('#mSvc').onchange=e=>{S.mapSvc=e.target.value;save();drawMap(conflicts())};
+  const upd=()=>{p.f=Math.max(30,+$('#pF').value||p.f);p.p=Math.max(.1,+$('#pP').value||p.p);save();rMap()};
+  $('#pF').onchange=upd;$('#pP').onchange=upd;
+  $('#pH').oninput=e=>{$('#pHv').textContent=e.target.value+' m'};$('#pH').onchange=e=>{p.h=+e.target.value;save();rMap()};
+  $$('[data-pf]').forEach(b=>b.onclick=()=>{p.f=+b.dataset.pf;p.p=p.f>10000?1:p.f>400?25:2000;save();rMap()});
+  $$('[data-fix]').forEach(b=>b.onclick=()=>{const c=cf[+b.dataset.fix],l=c.b;const step=l.svc==='bc'?.4:l.svc==='fix'?l.bw*2:l.bw*2;let nfq=l.f,k=0;
+    do{k++;nfq=+(l.f+step*k).toFixed(4);const t={...l,f:nfq};if(!S.lic.some(o=>o!==l&&o.site&&ovl(o,t)&&dist(pos(o),pos(t))<radius(o)+radius(t)))break}while(k<20);
+    toast(`${l.id}: ${fq(l.f)} → <b>${fq(nfq)}</b>`,'gold');l.f=nfq;save();rMap();nav()});
+}
+function drawMap(cf){
+  const W=600,H=420,p=S.probe,vis=l=>l.site&&l.st!=='rejected'&&(S.mapSvc==='all'||l.svc===S.mapSvc);
+  let s=`<svg viewBox="0 0 ${W} ${H}" id="mapS">`;
+  for(let g=50;g<W;g+=50)s+=`<line x1="${g}" x2="${g}" y1="0" y2="${H}" stroke="${cssv('--line')}" opacity=".5"/>`;
+  for(let g=50;g<H;g+=50)s+=`<line x1="0" x2="${W}" y1="${g}" y2="${g}" stroke="${cssv('--line')}" opacity=".5"/>`;
+  s+=`<path d="M40,120 L120,50 L260,40 L360,30 L470,60 L560,140 L575,250 L520,340 L420,395 L300,400 L190,370 L90,330 L35,240 Z" fill="${cssv('--panel')}" stroke="${cssv('--line2')}" stroke-width="2"/>`;
+  s+=`<path d="M60,250 Q200,230 300,215 T560,200" fill="none" stroke="${cssv('--blue')}" stroke-width="2" opacity=".45"/>`;
+  S.lic.filter(vis).forEach(l=>{const[x,y]=pos(l),r=radius(l),c=SV[l.svc][2];s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}" fill-opacity=".13" stroke="${c}" stroke-width="1.4" ${l.st==='pending'?'stroke-dasharray="5 4"':''}/>`});
+  cf.filter(c=>vis(c.a)&&vis(c.b)).forEach(c=>{const a=pos(c.a),b=pos(c.b);s+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${cssv('--red')}" stroke-width="2.5" stroke-dasharray="6 4"/><text x="${(a[0]+b[0])/2}" y="${(a[1]+b[1])/2-6}" text-anchor="middle" font-size="11" font-weight="700" fill="${cssv('--red')}">⚠ ${fq(c.a.f)}</text>`});
+  Object.values(CITIES).forEach(c=>{s+=`<circle cx="${c[1]}" cy="${c[2]}" r="4" fill="${cssv('--text')}"/><text x="${c[1]+7}" y="${c[2]+14}" font-size="11.5" font-weight="600" fill="${cssv('--text')}">${c[0]}</text>`});
+  if(p.on){const pr={f:p.f,h:p.h,p:p.p},r=radius(pr);s+=`<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${cssv('--gold')}" fill-opacity=".12" stroke="${cssv('--gold')}" stroke-width="2" stroke-dasharray="3 3"/><path d="M${p.x},${p.y-9} L${p.x+8},${p.y} L${p.x},${p.y+9} L${p.x-8},${p.y} Z" fill="${cssv('--gold')}" stroke="${cssv('--bg')}" stroke-width="1.5"/>`}
+  s+=`<g transform="translate(18,${H-22})"><line x1="0" x2="100" y1="0" y2="0" stroke="${cssv('--text')}" stroke-width="2"/><text x="50" y="-5" text-anchor="middle" font-size="10" fill="${cssv('--muted')}">100 km</text></g></svg>`;
+  $('#mSvg').innerHTML=s;
+  $('#mapS').addEventListener('click',e=>{const svg=$('#mapS'),r=svg.getBoundingClientRect();p.x=Math.round((e.clientX-r.left)/r.width*W);p.y=Math.round((e.clientY-r.top)/r.height*H);save();rMap();toast(T('Test transmitter moved','Передатчик перемещён'))});
+}
+
+/* ---------- LICENCES ---------- */
+const STL={active:['Active','Действует','ok'],pending:['Under review','На рассмотрении','warn'],rejected:['Refused','Отказ','bad'],expired:['Expired','Истекла','']};
+function rLic(){
+  const el=$('#v-lic'),f=S.licF;const ls=S.lic.filter(l=>f==='all'||l.st===f);
+  el.innerHTML=`<div class="row" style="margin-bottom:12px"><div class="chips">${['all','active','pending','rejected'].map(k=>`<button class="chip ${f===k?'on':''}" data-lf="${k}">${k==='all'?T('All','Все'):T(STL[k][0],STL[k][1])} (${k==='all'?S.lic.length:S.lic.filter(l=>l.st===k).length})</button>`).join('')}</div><span class="grow"></span><button class="btn sm pri" id="lNew">+ ${T('New application','Новая заявка')}</button><button class="btn sm" id="lCsv">${T('Export CSV','Выгрузить CSV')}</button></div>
+  <div class="tw"><table><thead><tr><th>${T('Licence','Лицензия')}</th><th>${T('Holder','Владелец')}</th><th>${T('Service','Служба')}</th><th>${T('Frequency','Частота')}</th><th>${T('BW','Полоса')}</th><th>${T('Site','Объект')}</th><th>${T('Annual fee','Сбор в год')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+  ${ls.map(l=>`<tr class="clk" data-l="${l.id}"><td class="mono">${l.id}</td><td>${OPS[l.op]}</td><td><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${SV[l.svc][2]};margin-right:6px"></i>${T(SV[l.svc][0],SV[l.svc][1])}</td><td class="mono">${fq(l.f)}</td><td class="mono">${fq(l.bw)}</td><td>${l.site?CITIES[l.site][0]:T('Nationwide','Вся страна')}</td><td class="mono">${money(feeOf(l).ann)}</td><td><span class="pill ${STL[l.st][2]}">${T(STL[l.st][0],STL[l.st][1])}</span></td><td>${l.st==='pending'&&S.role==='reg'?`<button class="btn sm pri" data-ap="${l.id}">${T('Decide','Решить')}</button>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+  $$('[data-lf]').forEach(b=>b.onclick=()=>{S.licF=b.dataset.lf;save();rLic()});
+  $('#lNew').onclick=()=>go('apply');
+  $('#lCsv').onclick=()=>{const csv='id,holder,service,freq_mhz,bw_mhz,site,status\n'+S.lic.map(l=>[l.id,OPS[l.op],l.svc,l.f,l.bw,l.site||'national',l.st].join(',')).join('\n');try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='spectra-licences.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}catch(e){}toast(T('CSV exported','CSV выгружен'))};
+  $$('tr.clk').forEach(r=>r.onclick=e=>{if(e.target.closest('button'))return;licModal(r.dataset.l)});
+  $$('[data-ap]').forEach(b=>b.onclick=()=>licModal(b.dataset.ap));
+}
+function checks(l){
+  const out=[];const bs=bandOf(l.f);const okB=bs.some(b=>b.s===l.svc||(l.svc==='mob'&&b.s==='mar'&&false));
+  if(bs.some(b=>b.s==='ast'))out.push(['bad',T('Radio astronomy band — emissions prohibited','Полоса радиоастрономии — излучения запрещены')]);
+  else if(okB)out.push(['ok',T('Frequency is in a band allocated to ','Частота в полосе, отведённой для ')+T(SV[l.svc][0],SV[l.svc][1])]);
+  else out.push(['bad',T('Not allocated to this service: ','Не отведено этой службе: ')+(bs.map(b=>T(b.en,b.ru)).join(', ')||T('unallocated','не распределено'))]);
+  if(l.site){const c=S.lic.filter(o=>o!==l&&o.site&&o.st!=='rejected'&&ovl(o,l)&&dist(pos(o),pos(l))<radius(o)+radius(l));
+    out.push(c.length?['bad',T('Co-channel conflict with ','Конфликт в канале с ')+c.map(o=>o.id+' ('+CITIES[o.site][0]+')').join(', ')]:['ok',T('No co-channel overlap · service radius ','Нет пересечений · радиус ')+nf(radius(l))+' km']);}
+  else{const c=S.lic.filter(o=>o!==l&&!o.site&&o.st!=='rejected'&&ovl(o,l));out.push(c.length?['bad',T('Block already assigned to ','Блок уже назначен: ')+c.map(o=>OPS[o.op]).join(', ')]:['ok',T('National block is free','Национальный блок свободен')])}
+  if(l.svc==='imt'&&l.cov!=='nat')out.push(['warn',T('IMT blocks are normally national','Блоки IMT обычно национальные')]);
+  if(l.p>50000)out.push(['warn',T('Power above 50 kW requires a site inspection','Мощность выше 50 кВт — нужна инспекция')]);
+  return out;
+}
+function licModal(id){
+  const l=S.lic.find(x=>x.id===id),fe=feeOf(l),ck=checks(l);
+  $('#modal').innerHTML=`<div class="modal"><div class="card"><h3><span class="mono">${l.id}</span><span class="pill ${STL[l.st][2]}">${T(STL[l.st][0],STL[l.st][1])}</span><span class="sp"></span><button class="btn sm" id="mx">✕</button></h3>
+   <dl class="dl"><dt>${T('Holder','Владелец')}</dt><dd>${OPS[l.op]}</dd><dt>${T('Service','Служба')}</dt><dd>${T(SV[l.svc][0],SV[l.svc][1])}</dd><dt>${T('Frequency','Частота')}</dt><dd class="mono">${fq(l.f)} ± ${fq(l.bw/2)}</dd>${l.site?`<dt>${T('Site','Объект')}</dt><dd>${CITIES[l.site][0]} · ${nf(l.p)} W · ${l.h} m</dd>`:''}<dt>${T('Coverage','Покрытие')}</dt><dd>${T(COV[l.cov][1],COV[l.cov][2])}</dd><dt>${T('Term','Срок')}</dt><dd>${l.yrs} ${T('years from ','лет с ')+fmtD(l.iss)}</dd><dt>${T('Fees','Сборы')}</dt><dd>${money(fe.ann)} / ${T('yr','год')} · ${money(fe.tot)} ${T('total','всего')}</dd></dl>
+   <h3 style="margin-top:14px">${T('Automatic checks','Автопроверки')}</h3>${ck.map(c=>`<div class="chk ${c[0]}">${c[0]==='ok'?'✅':c[0]==='warn'?'⚠️':'⛔'}<span>${c[1]}</span></div>`).join('')}
+   <div class="row" style="margin-top:16px;justify-content:flex-end">${l.st==='pending'&&S.role==='reg'?`<button class="btn sm danger" id="mRej">${T('Refuse','Отказать')}</button><button class="btn sm pri" id="mOk">${T('Grant licence','Выдать лицензию')}</button>`:''}${l.st==='active'?`<button class="btn sm" id="mPdf">${T('Download certificate','Скачать свидетельство')}</button>`:''}</div></div></div>`;
+  const close=()=>$('#modal').innerHTML='';$('#mx').onclick=close;$('.modal').onclick=e=>{if(e.target.classList.contains('modal'))close()};
+  if($('#mOk'))$('#mOk').onclick=()=>{if(ck.some(c=>c[0]==='bad')){toast(T('Resolve failed checks first (retune on the map)','Сначала устраните ошибки (перенастройка на карте)'),'bad');return}
+    l.st='active';l.iss='2026-11-17';S.inv.unshift({id:'INV-26-'+(S.nextInv++),lic:l.id,amt:feeOf(l).ann,due:'2026-12-17',st:'open',kind:'annual'});save();close();render();toast(T('Licence '+l.id+' granted · first annual invoice issued','Лицензия '+l.id+' выдана · выставлен счёт'),'gold')};
+  if($('#mRej'))$('#mRej').onclick=()=>{l.st='rejected';save();close();render();toast(T('Application refused, applicant notified','Отказ, заявитель уведомлён'),'bad')};
+  if($('#mPdf'))$('#mPdf').onclick=()=>{toast(T('Certificate '+l.id+'.pdf generated','Свидетельство '+l.id+'.pdf сформировано'))};
+}
+
+/* ---------- APPLY ---------- */
+function rApply(){
+  const el=$('#v-apply'),fm=S.form,draft={...fm,id:'NEW',st:'pending',site:fm.cov==='nat'?null:fm.site||'vd'};const ck=checks(draft),fe=feeOf(draft);
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Licence application','Заявка на лицензию')}<span class="sp"></span><span class="pill">${T('Form','Форма')} TRA-L1</span></h3><div class="fgrid">
+    <div class="f"><label>${T('Applicant','Заявитель')}</label><select class="input" id="fOp">${OPS.map((o,i)=>`<option value="${i}" ${fm.op==i?'selected':''} ${S.role==='op'&&i!==3?'disabled':''}>${o}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Radio service','Радиослужба')}</label><select class="input" id="fSvc">${['mob','bc','fix','mar','imt'].map(k=>`<option value="${k}" ${fm.svc===k?'selected':''}>${T(SV[k][0],SV[k][1])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Centre frequency, MHz','Центральная частота, МГц')} *</label><input class="input mono" id="fF" type="number" step="0.0125" value="${fm.f}"><div class="err" id="eF"></div></div>
+    <div class="f"><label>${T('Bandwidth, MHz','Ширина полосы, МГц')} *</label><input class="input mono" id="fBw" type="number" step="0.0125" value="${fm.bw}"><div class="err" id="eBw"></div></div>
+    <div class="f"><label>${T('Coverage','Покрытие')}</label><select class="input" id="fCov">${Object.keys(COV).map(k=>`<option value="${k}" ${fm.cov===k?'selected':''}>${T(COV[k][1],COV[k][2])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Site','Объект')}</label><select class="input" id="fSite" ${fm.cov==='nat'?'disabled':''}>${Object.keys(CITIES).map(k=>`<option value="${k}" ${fm.site===k?'selected':''}>${CITIES[k][0]}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Power, W ERP','Мощность, Вт ЭИИМ')}</label><input class="input mono" id="fP" type="number" value="${fm.p}" ${fm.cov==='nat'?'disabled':''}></div>
+    <div class="f"><label>${T('Antenna height, m','Высота антенны, м')}</label><input class="input mono" id="fH" type="number" value="${fm.h}" ${fm.cov==='nat'?'disabled':''}></div>
+    <div class="f"><label>${T('Term','Срок')}</label><select class="input" id="fY">${[1,5,10,15].map(y=>`<option ${fm.yrs==y?'selected':''} value="${y}">${y} ${T('years','лет')}</option>`).join('')}</select></div>
+    <div class="f" style="align-self:end"><label class="row" style="cursor:pointer;color:var(--text)"><input type="checkbox" id="fRur" ${fm.rural?'checked':''}> ${T('Rural coverage obligation (−25%)','Обязательство покрытия села (−25%)')}</label></div>
+    <div class="f full"><label class="row" style="cursor:pointer;color:var(--text)"><input type="checkbox" id="fDec" ${fm.dec?'checked':''}> ${T('Equipment is type-approved and I accept licence conditions','Оборудование сертифицировано, условия лицензии принимаю')}</label></div>
+  </div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" id="fMap">${T('Preview on map','Показать на карте')}</button><button class="btn gold" id="fSub">${T('Submit & pay V$ 500 fee','Отправить и оплатить V$ 500')}</button></div></div>
+  <div><div class="card" style="margin-bottom:14px"><h3>${T('Live pre-checks','Предварительные проверки')}</h3>${ck.map(c=>`<div class="chk ${c[0]}">${c[0]==='ok'?'✅':c[0]==='warn'?'⚠️':'⛔'}<span>${c[1]}</span></div>`).join('')}</div>
+  <div class="card"><h3>${T('Fee estimate','Расчёт сборов')}</h3><div class="fee"><span>${T('Application fee','Сбор за заявку')}</span><b class="mono">${money(fe.app)}</b></div><div class="fee"><span>${T('Annual spectrum fee','Ежегодный сбор')}</span><b class="mono">${money(fe.ann)}</b></div><div class="fee"><span>× ${fm.yrs} ${T('years','лет')}</span><b class="mono">${money(fe.tot)}</b></div><div class="fee tot"><span>${T('Total over term','Итого за срок')}</span><span class="mono">${money(fe.tot+fe.app)}</span></div></div></div></div>`;
+  const rd=()=>{fm.op=+$('#fOp').value;fm.svc=$('#fSvc').value;fm.f=+$('#fF').value;fm.bw=+$('#fBw').value;fm.cov=$('#fCov').value;fm.site=$('#fSite').value;fm.p=+$('#fP').value;fm.h=+$('#fH').value;fm.yrs=+$('#fY').value;fm.rural=$('#fRur').checked;fm.dec=$('#fDec').checked;save()};
+  $$('#v-apply input,#v-apply select').forEach(i=>i.addEventListener('change',()=>{rd();rApply()}));
+  $('#fMap').onclick=()=>{rd();if(fm.cov==='nat'){toast(T('National blocks have no single site','У национальных блоков нет одного объекта'),'bad');return}const c=CITIES[fm.site];Object.assign(S.probe,{x:c[1],y:c[2],f:fm.f,p:fm.p,h:fm.h,on:true});save();go('map')};
+  $('#fSub').onclick=()=>{rd();let ok=true;
+    if(!(fm.f>=30&&fm.f<=40000)){$('#eF').textContent=T('30 – 40 000 MHz','30 – 40 000 МГц');ok=false}
+    if(!(fm.bw>0&&fm.bw<=400)){$('#eBw').textContent=T('0 – 400 MHz','0 – 400 МГц');ok=false}
+    if(!ok){toast(T('Fix the highlighted fields','Исправьте поля'),'bad');return}
+    if(!fm.dec){toast(T('Please accept the licence conditions','Примите условия лицензии'),'bad');return}
+    if(ck.some(c=>c[0]==='bad')&&!window.__ptForce){toast(T('Submitted with failed checks — regulator will need a retune','Отправлено с ошибками — регулятору потребуется перенастройка'),'gold')}
+    const l={id:'VL-'+(S.next++),op:fm.op,svc:fm.svc,f:fm.f,bw:fm.bw,p:fm.cov==='nat'?0:fm.p,h:fm.cov==='nat'?0:fm.h,site:fm.cov==='nat'?null:fm.site,cov:fm.cov,yrs:fm.yrs,rural:fm.rural,st:'pending',iss:'2026-11-17'};
+    S.lic.unshift(l);S.inv.unshift({id:'INV-26-'+(S.nextInv++),lic:l.id,amt:500,due:'2026-11-17',st:'paid',kind:'app'});fm.dec=false;S.licF='all';save();toast(T('Application '+l.id+' submitted · V$ 500 paid','Заявка '+l.id+' отправлена · V$ 500 оплачено'),'gold');go('lic')};
+}
+
+/* ---------- AUCTION ---------- */
+const BID=[['NovaTel',14,.32,10],['Volt Mobile',12,.27,8],['Aurora Net',10,.3,6],['Kestrel Wireless',7,.45,0]];
+const AUC=(()=>{const R=[];let r=0;while(r<60){const p=2e6*Math.pow(1.06,r);const d=BID.map(b=>Math.max(b[3],Math.floor(b[1]-b[2]*r)));const sum=d.reduce((a,b)=>a+b,0);R.push({r:r+1,p,d,sum});if(sum<=30)break;r++}return R})();
+function rAuc(){
+  const el=$('#v-auc'),n=AUC.length,ri=Math.min(n,S.aucR)-1,cur=AUC[ri],fin=AUC[n-1];
+  let lo=3410;const win=BID.map((b,i)=>{const k=fin.d[i];const rng=k?[lo,lo+k*10]:null;if(k)lo+=k*10;return{n:b[0],k,rng,pay:k*fin.p}});
+  const total=win.reduce((a,w)=>a+w.pay,0);const C=[cssv('--mal'),cssv('--gold'),cssv('--blue'),cssv('--violet')];
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('3.5 GHz auction proceeds','Выручка аукциона 3,5 ГГц')}</div><div class="v">${mM(total)}</div><div class="d">${T('closed 20 Nov 2025','завершён 20 нояб. 2025')}</div></div><div class="card kpi"><div class="l">${T('Clock rounds','Раундов')}</div><div class="v">${n}</div><div class="d">+6% ${T('per round','за раунд')}</div></div><div class="card kpi"><div class="l">${T('Final price per block','Цена блока')}</div><div class="v">${mM(fin.p)}</div><div class="d">10 MHz · ${T('reserve','старт')} V$ 2M</div></div><div class="card kpi"><div class="l">${T('Blocks sold','Продано блоков')}</div><div class="v">${fin.sum}/30</div><div class="d">3410–3710 MHz</div></div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('Clock auction replay','Повтор аукциона по раундам')}<span class="sp"></span><button class="btn sm" id="aPlay">▶ ${T('Replay','Повторить')}</button></h3>
+    <input type="range" id="aR" min="1" max="${n}" value="${ri+1}"><div class="row muted" style="font-size:12.5px;margin:4px 0 10px;justify-content:space-between"><span>${T('Round','Раунд')} <b class="mono" style="color:var(--text)">${cur.r}</b> / ${n}</span><span>${T('Price','Цена')} <b class="mono" style="color:var(--text)">${mM(cur.p)}</b></span><span>${T('Demand','Спрос')} <b class="mono" style="color:${cur.sum>30?'var(--amber)':'var(--mal3)'}">${cur.sum}</b> / 30</span></div>
+    ${aucChart(ri,C)}<div class="legend" style="margin-top:6px">${BID.map((b,i)=>`<span><i style="background:${C[i]}"></i>${b[0]} · ${cur.d[i]}</span>`).join('')}<span><i style="background:${cssv('--red')}"></i>${T('Supply 30','Предложение 30')}</span></div></div>
+  <div class="card"><h3>${T('Assignment & payments','Назначение и платежи')}</h3>${spectrumBar(win,C)}<div class="tw" style="margin-top:12px"><table><thead><tr><th>${T('Winner','Победитель')}</th><th>${T('Blocks','Блоков')}</th><th>${T('Range','Полоса')}</th><th>${T('Pays','Оплата')}</th></tr></thead><tbody>${win.map((w,i)=>`<tr><td><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${C[i]};margin-right:6px"></i>${w.n}</td><td class="mono">${w.k}</td><td class="mono">${w.rng?w.rng[0]+'–'+w.rng[1]:T('withdrew','вышел')}</td><td class="mono">${w.k?mM(w.pay):'—'}</td></tr>`).join('')}</tbody></table></div></div></div>
+  <div class="card" style="margin-top:14px"><h3>${T('Other awards','Другие распределения')}</h3><div class="tw"><table><thead><tr><th>${T('Auction','Аукцион')}</th><th>${T('Band','Полоса')}</th><th>${T('Lots','Лотов')}</th><th>${T('Reserve','Старт')}</th><th>${T('Result','Итог')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+   <tr><td>2026-mmW</td><td class="mono">24.25–27.5 GHz</td><td class="mono">8 × 400 MHz</td><td class="mono">V$ 3.0M</td><td class="mono">V$ 31.6M</td><td><span class="pill ok">${T('Completed','Завершён')}</span></td></tr>
+   <tr><td>2024-700</td><td class="mono">703–733 / 758–788 MHz</td><td class="mono">6 × 2×5 MHz</td><td class="mono">V$ 12M</td><td class="mono">V$ 118M</td><td><span class="pill ok">${T('Completed','Завершён')}</span></td></tr>
+   <tr><td>2027-L</td><td class="mono">1427–1518 MHz</td><td class="mono">9 × 10 MHz</td><td class="mono">V$ 4.5M</td><td>—</td><td><span class="pill warn">${T('Consultation','Консультации')}</span></td></tr></tbody></table></div></div>`;
+  $('#aR').oninput=e=>{S.aucR=+e.target.value;save();rAuc()};
+  $('#aPlay').onclick=()=>{let k=1;clearInterval(window.__auc);window.__auc=setInterval(()=>{if(S.view!=='auc'||k>n){clearInterval(window.__auc);return}S.aucR=k++;rAuc()},180)};
+}
+function aucChart(ri,C){
+  const W=520,H=210,p={l:30,r:46,t:10,b:24},n=AUC.length;const bw=(W-p.l-p.r)/n;const ymax=45;const y=v=>p.t+(1-v/ymax)*(H-p.t-p.b);
+  const pmax=AUC[n-1].p;const yp=v=>p.t+(1-v/(pmax*1.1))*(H-p.t-p.b);
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;[0,15,30,45].forEach(g=>s+=`<line x1="${p.l}" x2="${W-p.r}" y1="${y(g)}" y2="${y(g)}" stroke="${cssv('--line')}"/><text x="${p.l-5}" y="${y(g)+4}" text-anchor="end" font-size="10" fill="${cssv('--dim')}">${g}</text>`);
+  AUC.forEach((a,i)=>{let acc=0;a.d.forEach((d,k)=>{s+=`<rect x="${p.l+i*bw+1}" y="${y(acc+d)}" width="${bw-2}" height="${y(acc)-y(acc+d)}" fill="${C[k]}" opacity="${i<=ri?.9:.2}"/>`;acc+=d})});
+  s+=`<line x1="${p.l}" x2="${W-p.r}" y1="${y(30)}" y2="${y(30)}" stroke="${cssv('--red')}" stroke-width="2" stroke-dasharray="5 4"/>`;
+  s+=`<path d="${AUC.map((a,i)=>(i?'L':'M')+(p.l+i*bw+bw/2).toFixed(1)+','+yp(a.p).toFixed(1)).join('')}" fill="none" stroke="${cssv('--text')}" stroke-width="2"/>`;
+  s+=`<circle cx="${p.l+ri*bw+bw/2}" cy="${yp(AUC[ri].p)}" r="4.5" fill="${cssv('--gold')}" stroke="${cssv('--bg')}" stroke-width="2"/>`;
+  s+=`<text x="${W-p.r+4}" y="${yp(pmax)+4}" font-size="10" fill="${cssv('--muted')}">${mM(pmax)}</text>`;
+  [1,Math.ceil(n/2),n].forEach(r=>s+=`<text x="${p.l+(r-1)*bw+bw/2}" y="${H-6}" text-anchor="middle" font-size="10" fill="${cssv('--dim')}">R${r}</text>`);
+  return s+'</svg>';
+}
+function spectrumBar(win,C){const W=420,x=f=>20+(f-3400)/400*(W-40);let s=`<svg viewBox="0 0 ${W} 64" style="width:100%;height:auto"><rect x="${x(3400)}" y="10" width="${x(3800)-x(3400)}" height="26" rx="4" fill="${cssv('--line')}"/>`;
+  win.forEach((w,i)=>{if(!w.rng)return;s+=`<rect x="${x(w.rng[0])}" y="10" width="${x(w.rng[1])-x(w.rng[0])}" height="26" fill="${C[i]}"/><text x="${(x(w.rng[0])+x(w.rng[1]))/2}" y="28" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">${w.k*10}</text>`});
+  [3400,3500,3600,3700,3800].forEach(f=>s+=`<text x="${x(f)}" y="54" text-anchor="middle" font-size="10" fill="${cssv('--dim')}">${f}</text>`);return s+'</svg>'}
+
+/* ---------- FEES ---------- */
+const IST={paid:['Paid','Оплачен','ok'],open:['Open','К оплате','warn'],overdue:['Overdue','Просрочен','bad']};
+function rFees(){
+  const el=$('#v-fees'),c=S.fee,fe=feeOf({...c,p:0,h:0});const f=S.invF;const ls=S.inv.filter(i=>f==='all'||i.st===f);
+  const col=S.inv.filter(i=>i.st==='paid').reduce((a,i)=>a+i.amt,0),out=S.inv.filter(i=>i.st!=='paid').reduce((a,i)=>a+i.amt,0);
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Collected 2026','Собрано в 2026')}</div><div class="v">${mM(col)}</div><div class="d">${S.inv.filter(i=>i.st==='paid').length} ${T('invoices','счетов')}</div></div><div class="card kpi"><div class="l">${T('Outstanding','К оплате')}</div><div class="v">${mM(out)}</div><div class="d">${S.inv.filter(i=>i.st!=='paid').length} ${T('invoices','счетов')}</div></div><div class="card kpi"><div class="l">${T('Overdue','Просрочено')}</div><div class="v" style="color:var(--red)">${S.inv.filter(i=>i.st==='overdue').length}</div><div class="d">${T('2% monthly penalty','пеня 2% в месяц')}</div></div><div class="card kpi"><div class="l">${T('Auction instalments','Рассрочка аукциона')}</div><div class="v">${mM(41.2e6)}</div><div class="d">${T('next due 20 Nov','след. 20 нояб.')}</div></div></div>
+  <div class="grid2"><div class="card"><h3>${T('Invoices','Счета')}<span class="sp"></span><span class="chips">${['all','open','overdue','paid'].map(k=>`<button class="chip ${f===k?'on':''}" data-if="${k}">${k==='all'?T('All','Все'):T(IST[k][0],IST[k][1])}</button>`).join('')}</span></h3>
+   <div class="tw"><table><thead><tr><th>${T('Invoice','Счёт')}</th><th>${T('Licence','Лицензия')}</th><th>${T('Type','Тип')}</th><th>${T('Amount','Сумма')}</th><th>${T('Due','Срок')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>${ls.map(i=>`<tr><td class="mono">${i.id}</td><td class="mono">${i.lic}</td><td>${i.kind==='app'?T('Application','Заявка'):T('Annual','Ежегодный')}</td><td class="mono">${money(i.amt*(i.st==='overdue'?1.02:1))}</td><td>${fmtD(i.due)}</td><td><span class="pill ${IST[i.st][2]}">${T(IST[i.st][0],IST[i.st][1])}</span></td><td>${i.st!=='paid'?(S.role==='op'?`<button class="btn sm pri" data-pay="${i.id}">${T('Pay','Оплатить')}</button>`:`<button class="btn sm" data-rem="${i.id}">${T('Remind','Напомнить')}</button> <button class="btn sm" data-pay="${i.id}">${T('Mark paid','Отметить')}</button>`):''}</td></tr>`).join('')||`<tr><td colspan="7" class="muted">${T('Nothing here','Пусто')}</td></tr>`}</tbody></table></div>
+   <div class="chart" style="margin-top:14px"><h3 style="font-size:14px">${T('Fee revenue by quarter, V$ M','Сборы по кварталам, V$ млн')}</h3>${revChart()}</div></div>
+  <div class="card"><h3>${T('Fee calculator','Калькулятор сборов')}</h3><div class="fgrid">
+    <div class="f"><label>${T('Service','Служба')}</label><select class="input" id="cS">${['imt','mob','bc','fix'].map(k=>`<option value="${k}" ${c.svc===k?'selected':''}>${T(SV[k][0],SV[k][1])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Frequency, MHz','Частота, МГц')}</label><input class="input mono" id="cF" type="number" value="${c.f}"></div>
+    <div class="f"><label>${T('Bandwidth, MHz','Полоса, МГц')}</label><input class="input mono" id="cB" type="number" value="${c.bw}"></div>
+    <div class="f"><label>${T('Coverage','Покрытие')}</label><select class="input" id="cC">${Object.keys(COV).map(k=>`<option value="${k}" ${c.cov===k?'selected':''}>${T(COV[k][1],COV[k][2])}</option>`).join('')}</select></div>
+    <div class="f full"><label>${T('Term','Срок')}: <b id="cYv">${c.yrs} ${T('years','лет')}</b></label><input type="range" id="cY" min="1" max="20" value="${c.yrs}"></div>
+    <div class="f full"><label class="row" style="cursor:pointer;color:var(--text)"><input type="checkbox" id="cR" ${c.rural?'checked':''}> ${T('Rural coverage discount −25%','Скидка за покрытие села −25%')}</label></div></div>
+   <div style="margin-top:12px"><div class="fee"><span>${T('Price per MHz per year','Цена МГц в год')}</span><b class="mono">${c.svc==='fix'?'—':money(PRICE(c.f))}</b></div><div class="fee"><span>${T('Coverage factor','Коэфф. покрытия')}</span><b class="mono">× ${COV[c.cov][0]}</b></div><div class="fee"><span>${T('Annual fee','Сбор в год')}</span><b class="mono">${money(fe.ann)}</b></div><div class="fee tot"><span>${T('Total for term','Итого за срок')}</span><span class="mono">${money(fe.tot)}</span></div></div>
+   <p class="muted" style="font-size:11.5px;margin:6px 0 0">${T('Formula: price(band) × MHz × coverage × years; fixed links: V$ 1,200 + 40 × MHz per link.','Формула: цена(полоса) × МГц × покрытие × годы; РРЛ: V$ 1 200 + 40 × МГц за пролёт.')}</p></div></div>`;
+  $$('[data-if]').forEach(b=>b.onclick=()=>{S.invF=b.dataset.if;save();rFees()});
+  $$('[data-pay]').forEach(b=>b.onclick=()=>{const i=S.inv.find(x=>x.id===b.dataset.pay);i.st='paid';save();rFees();nav();toast(T('Payment received for ','Оплата получена: ')+i.id+' · '+T('receipt emailed','квитанция отправлена'),'gold')});
+  $$('[data-rem]').forEach(b=>b.onclick=()=>toast(T('Reminder sent for ','Напоминание по ')+b.dataset.rem));
+  const rd=()=>{c.svc=$('#cS').value;c.f=Math.max(30,+$('#cF').value||30);c.bw=Math.max(.0125,+$('#cB').value||1);c.cov=$('#cC').value;c.yrs=+$('#cY').value;c.rural=$('#cR').checked;save();rFees()};
+  ['#cS','#cF','#cB','#cC','#cY','#cR'].forEach(s=>$(s).addEventListener('change',rd));
+  $('#cY').oninput=e=>{$('#cYv').textContent=e.target.value+' '+T('years','лет')};
+}
+function revChart(){const q=[['Q1 25',18.2],['Q2 25',19.1],['Q3 25',18.7],['Q4 25',61.4],['Q1 26',21.3],['Q2 26',22.0],['Q3 26',22.6],['Q4 26',24.9]];
+  const W=460,H=170,mx=70,bw=(W-40)/q.length;let s=`<svg viewBox="0 0 ${W} ${H}">`;
+  q.forEach((d,i)=>{const h=d[1]/mx*(H-40);s+=`<rect x="${30+i*bw+6}" y="${H-22-h}" width="${bw-12}" height="${h}" rx="4" fill="${i===3?cssv('--gold'):cssv('--mal')}" opacity="${i===7?.55:1}"/><text x="${30+i*bw+bw/2}" y="${H-26-h}" text-anchor="middle" font-size="10" font-weight="700" fill="${cssv('--text')}">${d[1]}</text><text x="${30+i*bw+bw/2}" y="${H-7}" text-anchor="middle" font-size="9.5" fill="${cssv('--dim')}">${d[0]}</text>`});
+  return s+`</svg><p class="muted" style="font-size:11.5px;margin:4px 0 0">${T('Q4 2025 includes the first 3.5 GHz auction instalment; Q4 2026 is a forecast.','Q4 2025 — первый платёж аукциона 3,5 ГГц; Q4 2026 — прогноз.')}</p>`}
+
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();const u=S.user,r=S.role;S=seed();S.user=u;S.role=r;save();render();toast(T('Demo reset','Демо сброшено'))};
+$('#logout').onclick=()=>{S.user=null;save();lrole=S.role;render();toast(T('Signed out','Вы вышли'))};
+PT.onLang(()=>render());
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

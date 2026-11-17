@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GeoSphere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal2),var(--mal3));color:#fff;font-size:16px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;min-height:40px}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center}
+.who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+.mt{margin-top:14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px}
+.input.bad{border-color:var(--red)}
+select.input{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:30px}
+textarea.input{min-height:72px;resize:vertical;font-family:inherit}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right;font-family:var(--mono)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600;min-height:34px;color:var(--text)}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.log{font-size:13px}
+.log div{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.log div:last-child{border:0}
+.log .t{font-family:var(--mono);font-size:11.5px;color:var(--dim);flex:none;width:44px;padding-top:2px}
+.log span{flex:1;min-width:0;overflow-wrap:anywhere}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}
+.bar{height:8px;border-radius:9px;background:var(--line);overflow:hidden;min-width:40px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .6s}
+.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+.empty .big{font-size:36px}
+/* map */
+.mapwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px}
+.map{position:relative;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;height:600px;background:#cfe3f0;touch-action:none;user-select:none}
+.map svg{width:100%;height:100%;display:block;cursor:grab}
+.map svg.drag{cursor:grabbing}
+.map.meas svg{cursor:crosshair}
+.mtools{position:absolute;left:12px;top:12px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.mtools button{width:38px;height:38px;border-radius:10px;border:1px solid rgba(0,0,0,.15);background:rgba(255,255,255,.94);color:#15202b;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.mtools button.on{background:#0f7a5c;color:#fff;border-color:#0f7a5c}
+.mtools hr{border:0;height:4px;margin:0}
+.coord{position:absolute;left:12px;bottom:12px;background:rgba(15,23,32,.78);color:#e8eef3;font-family:var(--mono);font-size:11.5px;padding:5px 9px;border-radius:8px;z-index:2}
+.scalebar{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,.9);color:#15202b;font-size:11px;font-weight:700;padding:4px 8px 6px;border-radius:8px;z-index:2}
+.scalebar i{display:block;height:5px;border:2px solid #15202b;border-top:0;margin-top:2px}
+.mread{position:absolute;right:12px;top:12px;background:rgba(15,23,32,.86);color:#fff;padding:10px 12px;border-radius:12px;z-index:2;font-size:13px;max-width:calc(100% - 80px)}
+.mread b{font-size:19px;font-family:var(--mono);display:block}
+.mread .row button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;font-weight:600}
+.lyr{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:13.5px;cursor:pointer;border-bottom:1px dashed var(--line)}
+.lyr:last-child{border:0}
+.lyr input{width:17px;height:17px;accent-color:var(--mal);flex:none}
+.lyr .sw{width:22px;height:14px;border-radius:4px;flex:none;border:1px solid rgba(0,0,0,.15)}
+.lyr span{flex:1;min-width:0}
+.lyr small{color:var(--dim);font-family:var(--mono);font-size:11px}
+.bases{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.base{border:2px solid var(--line2);border-radius:10px;padding:0;overflow:hidden;cursor:pointer;background:var(--panel2);text-align:left;color:var(--text)}
+.base i{display:block;height:34px}
+.base span{display:block;font-size:12px;font-weight:600;padding:5px 8px}
+.base.on{border-color:var(--mal)}
+.attr{width:100%;font-size:13px}
+.attr td{padding:6px 4px;white-space:normal;border-bottom:1px dashed var(--line)}
+.attr td:first-child{color:var(--muted);width:42%}
+/* catalogue */
+.ds{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--panel);margin-bottom:10px;display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px}
+.ds .thumb{width:64px;height:64px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.ds .thumb svg{width:100%;height:100%;display:block}
+.ds .ttl{font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.ds .ab{font-size:13px;color:var(--muted);margin:4px 0 8px}
+.ds .meta{display:flex;flex-wrap:wrap;gap:6px}
+.kv{display:grid;grid-template-columns:180px minmax(0,1fr);font-size:13.5px}
+.kv div{padding:8px 4px;border-bottom:1px solid var(--line);overflow-wrap:anywhere;min-width:0}
+.kv div:nth-child(odd){color:var(--muted);font-weight:600}
+.url{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.url code{flex:1;min-width:0;font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;overflow-wrap:anywhere;word-break:break-all}
+.url .tag{font-size:11px;font-weight:800;width:62px;flex:none;color:var(--mal3)}
+pre.json{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;margin:0;max-height:420px;white-space:pre}
+pre.json .k{color:var(--blue)}pre.json .s{color:var(--mal3)}pre.json .n{color:var(--gold2)}
+.req{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--bg2);margin-bottom:10px}
+.req .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.req .top b{flex:1;min-width:160px;overflow-wrap:anywhere}
+.req .sub{font-size:12.5px;color:var(--muted);margin:6px 0 8px;overflow-wrap:anywhere}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;cursor:pointer}
+.chk input{width:18px;height:18px;margin-top:2px;accent-color:var(--mal);flex:none}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(1200px 500px at 70% -10%,color-mix(in srgb,var(--blue) 16%,transparent),transparent),radial-gradient(900px 400px at 0% 110%,color-mix(in srgb,var(--mal) 14%,transparent),transparent)}
+.lbox{width:100%;max-width:960px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:center}
+.lhero h2{font-size:34px;line-height:1.15;margin:12px 0;letter-spacing:-.02em}
+.lhero p{color:var(--muted);margin:0 0 16px}
+.lhero ul{list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:14px}
+.lhero li{display:flex;gap:10px}
+.lhero li b{color:var(--mal3)}
+.lcard{padding:24px;border-radius:var(--r2);box-shadow:var(--shadow)}
+.lcard h3{margin:0 0 4px;font-size:19px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.mapwrap{grid-template-columns:minmax(0,1fr)}.map{height:520px}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .lbox{grid-template-columns:minmax(0,1fr)}
+  .lhero h2{font-size:26px}
+}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.map{height:440px}.kv{grid-template-columns:minmax(0,1fr)}.kv div:nth-child(odd){border-bottom:0;padding-bottom:0}.ds{grid-template-columns:minmax(0,1fr)}.ds .thumb{display:none}.lhero ul{display:none}.mread b{font-size:16px}}
+</style>
+</head>
+<body data-demo-en="GeoSphere — National spatial data infrastructure" data-demo-ru="GeoSphere — Национальная инфраструктура пространственных данных">
+<section class="login" id="login">
+  <div class="lbox">
+    <div class="lhero">
+      <span class="pill gold" data-en="National Geospatial Agency · Republic of Veloria" data-ru="Национальное геопространственное агентство · Республика Велория"></span>
+      <h2 data-en="One map of the country. Open, standard, always current." data-ru="Одна карта страны. Открытая, по стандартам, всегда актуальная."></h2>
+      <p data-en="GeoSphere is the national SDI portal: map viewer, dataset catalogue, OGC and STAC services, measurement and self-service data downloads." data-ru="GeoSphere — национальный портал ИПД: просмотр карт, каталог наборов данных, сервисы OGC и STAC, измерения и самостоятельная выгрузка данных."></p>
+      <ul>
+        <li><b>✓</b><span data-en="Authoritative layers from 14 agencies in one viewer" data-ru="Эталонные слои 14 ведомств в одном просмотрщике"></span></li>
+        <li><b>✓</b><span data-en="OGC API, WMS/WFS, vector tiles and STAC for every dataset" data-ru="OGC API, WMS/WFS, векторные тайлы и STAC для каждого набора"></span></li>
+        <li><b>✓</b><span data-en="ISO 19115 metadata, INSPIRE-aligned" data-ru="Метаданные ISO 19115, совместимо с INSPIRE"></span></li>
+      </ul>
+    </div>
+    <div class="card lcard">
+      <h3 data-en="Sign in to GeoSphere" data-ru="Вход в GeoSphere"></h3>
+      <div class="muted" style="font-size:13px;margin-bottom:14px" data-en="Demo account is prefilled — one click to continue." data-ru="Демо-аккаунт уже заполнен — войдите одним нажатием."></div>
+      <div class="f" style="margin-bottom:10px"><label data-en="Email" data-ru="Эл. почта"></label><input class="input" id="lEmail" value="analyst@geo.gov.vl" autocomplete="username"><div class="err" id="lEmailE"></div></div>
+      <div class="f" style="margin-bottom:14px"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lPass" type="password" value="geosphere-demo" autocomplete="current-password"><div class="err" id="lPassE"></div></div>
+      <button class="btn pri" id="loginBtn" style="width:100%;justify-content:center;padding:12px" data-en="Sign in with demo account" data-ru="Войти в демо-аккаунт"></button>
+      <div class="muted" style="font-size:11.5px;margin-top:10px;text-align:center" data-en="Public viewer works without sign-in · downloads need an account" data-ru="Просмотр открыт без входа · для выгрузки нужен аккаунт"></div>
+    </div>
+  </div>
+</section>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>◍</b><div>GeoSphere<small data-en="National SDI · Veloria" data-ru="Национальная ИПД · Велория"></small></div></div>
+    <div class="sec" data-en="Explore" data-ru="Обзор"></div>
+    <button class="nav" data-view="dash"><span class="ic">◧</span><span data-en="Overview" data-ru="Сводка"></span></button>
+    <button class="nav" data-view="map"><span class="ic">🗺</span><span data-en="Map viewer" data-ru="Карта"></span></button>
+    <button class="nav" data-view="catalogue"><span class="ic">▤</span><span data-en="Data catalogue" data-ru="Каталог данных"></span><span class="cnt" id="cntD"></span></button>
+    <div class="sec" data-en="Data" data-ru="Данные"></div>
+    <button class="nav" data-view="downloads"><span class="ic">⬇</span><span data-en="Download requests" data-ru="Запросы на выгрузку"></span><span class="cnt" id="cntR"></span></button>
+    <button class="nav" data-view="metadata"><span class="ic">ⓘ</span><span data-en="Metadata &amp; services" data-ru="Метаданные и сервисы"></span></button>
+    <div class="grow"></div>
+    <div class="who"><div class="av">LM</div><div><b data-en="Lena Marovic" data-ru="Лена Марович"></b><span data-en="GIS analyst · Ministry of Environment" data-ru="ГИС-аналитик · Минприроды"></span></div></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="logout" style="flex:1;justify-content:center" data-en="Log out" data-ru="Выйти"></button>
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    </div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <span class="sp"></span>
+      <span class="pill ok" id="svc"></span>
+    </div>
+    <section class="view" id="v-dash"></section>
+    <section class="view" id="v-map"></section>
+    <section class="view" id="v-catalogue"></section>
+    <section class="view" id="v-downloads"></section>
+    <section class="view" id="v-metadata"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru), L=o=>o?(o[PT.lang]||o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const P='pt_geo_',KEY=P+'state',D=86400000;
+const nf=(n,d=0)=>Number(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const fmtD=t=>new Date(t).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const hm=t=>new Date(t).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3600)}
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KM=0.5; // km per map unit
+const lon=x=>20+x*0.006, lat=y=>47-y*0.00457;
+const pts=s=>s.trim().split(/\s+/).map(p=>p.split(',').map(Number));
+const shoe=a=>{let s=0;for(let i=0;i<a.length;i++){const [x1,y1]=a[i],[x2,y2]=a[(i+1)%a.length];s+=x1*y2-x2*y1}return Math.abs(s)/2};
+const plen=a=>{let s=0;for(let i=1;i<a.length;i++)s+=Math.hypot(a[i][0]-a[i-1][0],a[i][1]-a[i-1][1]);return s};
+
+/* ---------- geography ---------- */
+const COUNTRY='120,180 260,90 430,70 560,110 700,80 860,150 920,280 880,420 900,540 760,630 560,610 420,650 270,590 150,500 90,360';
+const C='500,350';
+const REG=[
+ {id:'r1',n:{en:'Northern Highlands',ru:'Северное нагорье'},code:'VL-NH',pop:812400,cap:{en:'Tessa',ru:'Тесса'},g:C+' 90,360 120,180 260,90 430,70 560,110'},
+ {id:'r2',n:{en:'Eastern Plains',ru:'Восточные равнины'},code:'VL-EP',pop:1264900,cap:{en:'Dravin',ru:'Дравин'},g:C+' 560,110 700,80 860,150 920,280 880,420'},
+ {id:'r3',n:{en:'Southern Coast',ru:'Южное побережье'},code:'VL-SC',pop:1530200,cap:{en:'Port Salen',ru:'Порт-Сален'},g:C+' 880,420 900,540 760,630 560,610 420,650'},
+ {id:'r4',n:{en:'Western Valley',ru:'Западная долина'},code:'VL-WV',pop:948300,cap:{en:'Mirel',ru:'Мирел'},g:C+' 420,650 270,590 150,500 90,360'}];
+const CITY=[
+ {id:'c1',n:{en:'Aurenna',ru:'Ауренна'},x:500,y:350,pop:1184000,cap:1},
+ {id:'c2',n:{en:'Tessa',ru:'Тесса'},x:420,y:170,pop:214000},
+ {id:'c3',n:{en:'Kelmar',ru:'Келмар'},x:255,y:215,pop:96000},
+ {id:'c4',n:{en:'Dravin',ru:'Дравин'},x:760,y:220,pop:388000},
+ {id:'c5',n:{en:'Varn',ru:'Варн'},x:830,y:400,pop:121000},
+ {id:'c6',n:{en:'Port Salen',ru:'Порт-Сален'},x:720,y:588,pop:542000},
+ {id:'c7',n:{en:'Lunis',ru:'Лунис'},x:585,y:480,pop:143000},
+ {id:'c8',n:{en:'Mirel',ru:'Мирел'},x:250,y:515,pop:276000}];
+const RIV=[
+ {id:'w1',n:{en:'Velora River',ru:'река Велора'},d:'M300,100 C340,200 280,300 360,380 S470,520 560,612',len:318,basin:18400},
+ {id:'w2',n:{en:'Dravna River',ru:'река Дравна'},d:'M860,160 C780,260 700,300 620,360 S520,420 470,470',len:226,basin:9600}];
+const ROAD=[
+ {id:'m1',ref:'A1',cls:'motorway',lanes:4,p:'255,215 420,170 500,350 585,480 720,588'},
+ {id:'m2',ref:'A2',cls:'motorway',lanes:4,p:'250,515 500,350 760,220'},
+ {id:'m3',ref:'N7',cls:'primary',lanes:2,p:'760,220 830,400 720,588'},
+ {id:'m4',ref:'N12',cls:'primary',lanes:2,p:'255,215 250,515'}];
+const LAND=[
+ {id:'f1',cls:{en:'Coniferous forest',ru:'Хвойный лес'},code:'312',g:'180,250 260,220 300,290 240,340 170,320'},
+ {id:'f2',cls:{en:'Broad-leaved forest',ru:'Лиственный лес'},code:'311',g:'640,140 740,130 760,200 680,230'},
+ {id:'f3',cls:{en:'Mixed forest',ru:'Смешанный лес'},code:'313',g:'300,460 380,440 400,520 320,560'},
+ {id:'f4',cls:{en:'Arable land',ru:'Пашня'},code:'211',g:'620,280 760,300 790,380 660,400 600,340'},
+ {id:'f5',cls:{en:'Wetlands',ru:'Водно-болотные угодья'},code:'411',g:'500,560 560,560 590,600 520,610'}];
+const FLOOD=[
+ {id:'z1',rp:100,g:'330,360 400,370 480,480 545,565 520,605 450,530 360,420'},
+ {id:'z2',rp:20,g:'560,350 640,345 600,390 530,420 500,410'}];
+const F={};REG.forEach(r=>F[r.id]={k:'admin',o:r});CITY.forEach(c=>F[c.id]={k:'cities',o:c});RIV.forEach(r=>F[r.id]={k:'rivers',o:r});ROAD.forEach(r=>F[r.id]={k:'roads',o:r});LAND.forEach(r=>F[r.id]={k:'land',o:r});FLOOD.forEach(r=>F[r.id]={k:'flood',o:r});
+
+const LAYERS=[['admin','Administrative boundaries','Административные границы','#8b5cf6','ds01'],['land','Land cover (CORINE)','Растительный покров (CORINE)','#3f9b5b','ds05'],['flood','Flood hazard zones','Зоны затопления','#3b82f6','ds09'],['rivers','Rivers & water bodies','Реки и водоёмы','#1d78c1','ds03'],['roads','Road network','Дорожная сеть','#e0a019','ds02'],['cities','Settlements','Населённые пункты','#dc2626','ds04']];
+const BASES={street:{en:'Street',ru:'Улицы',sea:'#cfe3f0',land:'#f6f3ea',edge:'#9fb3c2'},sat:{en:'Satellite',ru:'Спутник',sea:'#0c2433',land:'url(#satp)',edge:'#33475a'},topo:{en:'Topographic',ru:'Топооснова',sea:'#d5e7f1',land:'#eef0de',edge:'#8a9a7a'},dark:{en:'Dark',ru:'Тёмная',sea:'#0b1220',land:'#1b2333',edge:'#3a4760'}};
+
+/* ---------- catalogue ---------- */
+const TH={boundaries:['Boundaries','Границы'],transport:['Transport','Транспорт'],water:['Hydrography','Гидрография'],land:['Land cover','Покров'],elev:['Elevation','Рельеф'],imagery:['Imagery','Снимки'],people:['Population','Население'],hazard:['Hazards','Опасности']};
+const LIC={cc:['CC BY 4.0','CC BY 4.0','ok'],ogl:['Open Government Licence','Открытая гослицензия','ok'],res:['Restricted','Ограниченный доступ','warn']};
+const ds=(id,en,ru,th,type,lic,upd,res,size,org,aen,aru,layer,kw)=>({id,t:{en,ru},th,type,lic,upd,res,size,org,a:{en:aen,ru:aru},layer,kw});
+const DS=[
+ ds('ds01','Administrative boundaries (ADM0–ADM3)','Административные границы (ADM0–ADM3)','boundaries','vector','cc','2025-09-12','1:10 000','84 MB',{en:'National Geospatial Agency',ru:'Национальное геопространственное агентство'},'Official boundaries of the state, 4 regions, 38 districts and 412 municipalities with codes and population.','Официальные границы страны, 4 регионов, 38 районов и 412 муниципалитетов с кодами и населением.','admin','admin, boundaries, NUTS'),
+ ds('ds02','National road network','Национальная дорожная сеть','transport','vector','ogl','2025-10-30','1:5 000','312 MB',{en:'National Roads Authority',ru:'Национальное дорожное агентство'},'Topologically clean road graph with class, reference, lanes, surface and speed limits. Routable.','Топологически чистый граф дорог: класс, номер, полосы, покрытие и ограничения скорости. Пригоден для маршрутизации.','roads','roads, transport, network'),
+ ds('ds03','Hydrography: rivers, lakes, catchments','Гидрография: реки, озёра, водосборы','water','vector','cc','2025-06-04','1:10 000','146 MB',{en:'Water Resources Directorate',ru:'Управление водных ресурсов'},'River centrelines, water bodies and catchment polygons with Strahler order and flow direction.','Осевые линии рек, водоёмы и полигоны водосборов с порядком по Стралеру и направлением течения.','rivers','hydrography, rivers, catchments'),
+ ds('ds04','Settlements and gazetteer','Населённые пункты и справочник названий','people','vector','cc','2025-11-02','point','12 MB',{en:'Statistics Office',ru:'Статистическое управление'},'1,946 settlements with official names, status, census 2024 population and postal codes.','1 946 населённых пунктов: официальные названия, статус, население по переписи 2024 и индексы.','cities','gazetteer, places, census'),
+ ds('ds05','Land cover 2024 (CORINE nomenclature)','Растительный покров 2024 (номенклатура CORINE)','land','vector','cc','2025-03-18','MMU 25 ha','520 MB',{en:'Ministry of Environment',ru:'Министерство природных ресурсов'},'44-class land cover map derived from Sentinel-2, with change layer 2018–2024.','Карта покрова из 44 классов по данным Sentinel-2, со слоем изменений 2018–2024.','land','land cover, CORINE, Sentinel-2'),
+ ds('ds06','Digital elevation model 10 m','Цифровая модель рельефа 10 м','elev','raster','ogl','2024-12-01','10 m','18.4 GB',{en:'National Geospatial Agency',ru:'Национальное геопространственное агентство'},'Seamless bare-earth DEM from airborne LiDAR and stereo imagery, vertical accuracy ±0.8 m.','Бесшовная ЦМР рельефа по лидару и стереоснимкам, точность по высоте ±0,8 м.',null,'DEM, elevation, LiDAR'),
+ ds('ds07','Orthophoto mosaic 2025, 25 cm','Ортофотоплан 2025, 25 см','imagery','raster','ogl','2025-08-21','0.25 m','3.1 TB',{en:'National Geospatial Agency',ru:'Национальное геопространственное агентство'},'True-colour and near-infrared aerial orthophotos, delivered as Cloud-Optimised GeoTIFF tiles.','Аэрофотоснимки в естественных цветах и ближнем ИК, в виде тайлов Cloud-Optimised GeoTIFF.',null,'orthophoto, imagery, COG'),
+ ds('ds08','Cadastral parcels','Кадастровые участки','boundaries','vector','res','2025-11-14','1:1 000','2.2 GB',{en:'Land Registry',ru:'Земельный реестр'},'Legal parcel boundaries with parcel IDs. Owner data excluded. Access for registered public bodies.','Юридические границы участков с номерами. Без данных о владельцах. Доступ для госорганов.',null,'cadastre, parcels'),
+ ds('ds09','Flood hazard zones (1:20, 1:100)','Зоны затопления (1:20, 1:100)','hazard','vector','cc','2025-05-09','1:25 000','61 MB',{en:'Civil Protection Agency',ru:'Агентство гражданской защиты'},'Modelled inundation extents for 20- and 100-year return periods along main rivers.','Расчётные зоны затопления для паводков 20- и 100-летней повторяемости вдоль крупных рек.','flood','flood, hazard, risk'),
+ ds('ds10','Population grid 100 m','Сетка населения 100 м','people','raster','cc','2025-07-01','100 m','940 MB',{en:'Statistics Office',ru:'Статистическое управление'},'Census-based residential population disaggregated to a 100 m grid.','Население по переписи, распределённое по сетке 100 м.',null,'population, grid, census'),
+ ds('ds11','Sentinel-2 annual cloud-free composite','Годовой безоблачный композит Sentinel-2','imagery','raster','cc','2025-01-15','10 m','46 GB',{en:'Space Applications Centre',ru:'Центр космических приложений'},'Median composite of 12 bands for the full territory, STAC catalogued.','Медианный композит 12 каналов на всю территорию, в каталоге STAC.',null,'Sentinel-2, STAC, composite'),
+ ds('ds12','Geodetic control network','Геодезическая опорная сеть','elev','vector','res','2025-02-27','point','3 MB',{en:'National Geospatial Agency',ru:'Национальное геопространственное агентство'},'2,310 GNSS control points with coordinates in VLREF2020 and ITRF2014.','2 310 пунктов GNSS с координатами в VLREF2020 и ITRF2014.',null,'geodesy, GNSS, control')];
+const dsById=id=>DS.find(d=>d.id===id);
+const FMT={vector:['GeoPackage','Shapefile','GeoJSON','FlatGeobuf'],raster:['Cloud-Optimised GeoTIFF','GeoTIFF','JPEG2000']};
+const CRS=['EPSG:4326 — WGS 84','EPSG:3857 — Web Mercator','EPSG:32634 — UTM 34N','EPSG:9821 — VLREF2020 / TM'];
+
+/* ---------- state ---------- */
+function seed(){const now=Date.now();return{user:null,view:'map',layers:{admin:true,land:false,flood:false,rivers:true,roads:true,cities:true},base:'street',sel:null,vb:[0,0,1000,700],q:'',fTh:'all',fType:'all',fLic:'all',meta:'ds01',reqs:[
+ {id:'DR-24117',ds:'ds05',fmt:'GeoPackage',crs:CRS[0],ext:{en:'Whole country',ru:'Вся страна'},created:now-3*D,dur:9000,status:'ready',size:'520 MB'},
+ {id:'DR-24102',ds:'ds08',fmt:'GeoPackage',crs:CRS[3],ext:{en:'Western Valley',ru:'Западная долина'},created:now-6*D,dur:9000,status:'rejected',size:'—',note:{en:'Restricted dataset: requester is not a registered public body.',ru:'Набор с ограниченным доступом: заявитель не является госорганом.'}}],
+ log:[{t:now-35*60e3,en:'Road network updated: 214 segments changed (NRA feed)',ru:'Обновлена дорожная сеть: изменено 214 сегментов (поток NRA)'},{t:now-3*3600e3,en:'Harvested 38 records from Water Resources CSW',ru:'Собрано 38 записей из CSW Управления водных ресурсов'},{t:now-9*3600e3,en:'Settlements gazetteer published (census 2024 update)',ru:'Опубликован справочник населённых пунктов (перепись 2024)'},{t:now-26*3600e3,en:'Orthophoto 2025 block C added to the COG archive',ru:'Ортофото 2025, блок C, добавлен в архив COG'}],nextReq:24130,meas:{mode:null,p:[]}}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||!S.reqs)S=seed();
+S.meas=S.meas||{mode:null,p:[]};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const VIEWS={dash:['Overview','Сводка'],map:['Map viewer','Просмотр карты'],catalogue:['Data catalogue','Каталог данных'],downloads:['Download requests','Запросы на выгрузку'],metadata:['Metadata & services','Метаданные и сервисы']};
+
+function render(){
+  $('#login').hidden=!!S.user;$('#app').hidden=!S.user;if(!S.user)return;
+  $$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.view===S.view));
+  $$('.view').forEach(v=>{const on=v.id==='v-'+S.view;v.classList.toggle('on',on);if(!on)v.innerHTML=''});
+  $('#title').textContent=T(...VIEWS[S.view]);
+  $('#crumb').textContent='GeoSphere · '+T('National Geospatial Agency','Национальное геопространственное агентство');
+  $('#svc').textContent='● '+T('34 services online','34 сервиса в работе');
+  $('#cntD').textContent=DS.length;
+  const pend=S.reqs.filter(r=>r.status!=='ready'&&r.status!=='rejected').length;$('#cntR').textContent=pend;$('#cntR').style.display=pend?'':'none';
+  ({dash:rDash,map:rMap,catalogue:rCat,downloads:rDl,metadata:rMeta})[S.view]();
+}
+function go(v){S.view=v;save();render();$('#side').classList.remove('open');window.scrollTo(0,0)}
+
+/* ---------- overview ---------- */
+function rDash(){
+  const el=$('#v-dash'),r=rng(7),days=30,vals=[];for(let i=0;i<days;i++)vals.push(48+Math.sin(i/3.2)*9+r()*14+i*.6+((i%7)>4?-14:0));
+  const m=cssv('--mal'),b=cssv('--blue'),ln=cssv('--line'),mu=cssv('--muted');
+  const W=560,H=200,pl=34,pb=22,mx=Math.max(...vals)*1.1;
+  const X=i=>pl+i*(W-pl-8)/(days-1),Y=v=>8+(1-v/mx)*(H-pb-8);
+  const line=vals.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join('');
+  let grid='';[0,20,40,60].forEach(v=>{grid+=`<line x1="${pl}" x2="${W-8}" y1="${Y(v)}" y2="${Y(v)}" stroke="${ln}"/><text x="${pl-6}" y="${Y(v)+4}" fill="${mu}" font-size="10" text-anchor="end">${v}k</text>`});
+  const fm={};S.reqs.forEach(q=>fm[q.fmt]=(fm[q.fmt]||0)+1);const base={GeoPackage:412,'Cloud-Optimised GeoTIFF':288,Shapefile:173,GeoJSON:141,FlatGeobuf:36};Object.keys(fm).forEach(k=>base[k]=(base[k]||0)+fm[k]);
+  const fmx=Math.max(...Object.values(base));
+  const top=[['ds07',8420],['ds02',6115],['ds01',5870],['ds05',3402],['ds09',2210]];
+  el.innerHTML=`<div class="kpis">
+  <div class="card kpi"><div class="l">${T('Datasets published','Опубликовано наборов')}</div><div class="v">${nf(1248)}</div><div class="d">${T('from 14 agencies','от 14 ведомств')}</div></div>
+  <div class="card kpi"><div class="l">${T('API requests, 30 days','Запросов к API за 30 дней')}</div><div class="v">${nf(vals.reduce((a,v)=>a+v,0)/1000,2)}M</div><div class="d" style="color:var(--mal3)">▲ 12.4%</div></div>
+  <div class="card kpi"><div class="l">${T('Service availability','Доступность сервисов')}</div><div class="v">99.97%</div><div class="d">${T('SLA 99.9% · p95 180 ms','SLA 99,9% · p95 180 мс')}</div></div>
+  <div class="card kpi"><div class="l">${T('Metadata compliance','Соответствие метаданных')}</div><div class="v">96%</div><div class="d">ISO 19115 · INSPIRE</div></div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('OGC & STAC requests per day, thousands','Запросы OGC и STAC в день, тыс.')}</h3><svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="ga" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${m}" stop-opacity=".35"/><stop offset="1" stop-color="${m}" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${line}L${X(days-1)} ${Y(0)}L${X(0)} ${Y(0)}Z" fill="url(#ga)"/><path d="${line}" fill="none" stroke="${m}" stroke-width="2.5"/></svg></div>
+  <div class="card"><h3>${T('Downloads by format','Выгрузки по форматам')}</h3>${Object.entries(base).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px"><span style="width:118px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${k}</span><div class="bar" style="flex:1"><i style="width:${v/fmx*100}%"></i></div><b class="mono" style="width:34px;text-align:right">${v}</b></div>`).join('')}</div></div>
+  <div class="grid2 mt"><div class="card"><h3>${T('Most used datasets','Самые востребованные наборы')}<span class="sp"></span><button class="btn sm" data-go="catalogue">${T('Catalogue','Каталог')} →</button></h3><div class="tw"><table><thead><tr><th>${T('Dataset','Набор')}</th><th>${T('Theme','Тема')}</th><th class="num">${T('Requests','Запросы')}</th></tr></thead><tbody>${top.map(([id,n])=>{const d=dsById(id);return`<tr><td><a href="#" data-meta="${id}" style="color:var(--text);font-weight:600">${esc(L(d.t))}</a></td><td>${T(...TH[d.th])}</td><td class="num">${nf(n)}</td></tr>`}).join('')}</tbody></table></div></div>
+  <div class="card"><h3>${T('Activity','Активность')}</h3><div class="log">${S.log.slice(0,6).map(l=>`<div><span class="t">${hm(l.t)}</span><span>${esc(L(l))}</span></div>`).join('')}</div></div></div>`;
+  bind(el);
+}
+function bind(el){
+  $$('[data-go]',el).forEach(b=>b.onclick=e=>{e.preventDefault();go(b.dataset.go)});
+  $$('[data-meta]',el).forEach(b=>b.onclick=e=>{e.preventDefault();S.meta=b.dataset.meta;go('metadata')});
+  $$('[data-req]',el).forEach(b=>b.onclick=()=>{S.reqDs=b.dataset.req;go('downloads')});
+  $$('[data-show]',el).forEach(b=>b.onclick=()=>{S.layers[b.dataset.show]=true;go('map');toast(T('Layer added to the map','Слой добавлен на карту'))});
+}
+
+/* ---------- map ---------- */
+function mapSVG(){
+  const B=BASES[S.base],ly=S.layers,sel=S.sel,dark=S.base==='sat'||S.base==='dark';
+  const lab=dark?'#e8eef3':'#1d2733',halo=dark?'#0b1220':'#ffffff';
+  const r=rng(3);let sat='';for(let i=0;i<70;i++){const c=['#2f4a2a','#3d5a32','#4b5f3a','#5a5a3e','#36502f','#6b6a4a'][Math.floor(r()*6)];sat+=`<rect x="${r()*120}" y="${r()*120}" width="${8+r()*30}" height="${6+r()*24}" fill="${c}" opacity=".85"/>`}
+  let topo='';if(S.base==='topo'){[[255,215],[740,180]].forEach(([cx,cy])=>{for(let i=1;i<8;i++)topo+=`<ellipse cx="${cx}" cy="${cy}" rx="${i*24}" ry="${i*17}" fill="none" stroke="#b49a6a" stroke-width="${i%4?0.6:1.3}" opacity=".7" vector-effect="non-scaling-stroke"/>`})}
+  const hs=f=>f===sel?' stroke="#f5b301" stroke-width="4"':'';
+  let g=`<defs><pattern id="satp" width="120" height="120" patternUnits="userSpaceOnUse"><rect width="120" height="120" fill="#3a5233"/>${sat}</pattern><pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#3b82f6" opacity=".18"/><line x1="0" y1="0" x2="0" y2="10" stroke="#3b82f6" stroke-width="3" opacity=".55"/></pattern><clipPath id="cc"><polygon points="${COUNTRY}"/></clipPath></defs>
+  <rect x="-3000" y="-3000" width="7000" height="7000" fill="${B.sea}"/>
+  <polygon points="${COUNTRY}" fill="${B.land}" stroke="${B.edge}" stroke-width="2" vector-effect="non-scaling-stroke"/><g clip-path="url(#cc)">${topo}</g>`;
+  if(ly.land)g+=`<g>${LAND.map(l=>`<polygon data-f="${l.id}" points="${l.g}" fill="${['#3f9b5b','#5fb36b','#4d8f4f','#d9c36a','#7fb8b0'][LAND.indexOf(l)]}" fill-opacity=".72"${hs(l.id)||' stroke="none"'} vector-effect="non-scaling-stroke"/>`).join('')}</g>`;
+  if(ly.flood)g+=`<g>${FLOOD.map(z=>`<polygon data-f="${z.id}" points="${z.g}" fill="url(#hatch)" stroke="#2563eb" stroke-width="${z.id===sel?4:1.5}" ${z.id===sel?'stroke="#f5b301"':''} stroke-dasharray="${z.rp===100?'':'5 4'}" vector-effect="non-scaling-stroke"/>`).join('')}</g>`;
+  if(ly.admin)g+=`<g>${REG.map(rg=>`<polygon data-f="${rg.id}" points="${rg.g}" fill="${rg.id===sel?'#f5b301':'#8b5cf6'}" fill-opacity="${rg.id===sel?.18:.04}" stroke="${rg.id===sel?'#f5b301':'#8b5cf6'}" stroke-width="${rg.id===sel?3.5:1.6}" stroke-dasharray="7 4" vector-effect="non-scaling-stroke"/>`).join('')}</g>`;
+  if(ly.rivers)g+=`<g fill="none">${RIV.map(w=>`<path d="${w.d}" stroke="transparent" stroke-width="14" data-f="${w.id}"/><path d="${w.d}" stroke="${w.id===sel?'#f5b301':'#1d78c1'}" stroke-width="${w.id===sel?5:3}" stroke-linecap="round" vector-effect="non-scaling-stroke" pointer-events="none"/>`).join('')}</g>`;
+  if(ly.roads)g+=`<g fill="none" stroke-linecap="round" stroke-linejoin="round">${ROAD.map(rd=>`<polyline points="${rd.p}" stroke="transparent" stroke-width="14" data-f="${rd.id}"/><polyline points="${rd.p}" stroke="${dark?'#000':'#9a6b00'}" stroke-width="${rd.cls==='motorway'?6:4.5}" vector-effect="non-scaling-stroke" opacity=".45" pointer-events="none"/><polyline points="${rd.p}" stroke="${rd.id===sel?'#ff5a1f':'#f2b01e'}" stroke-width="${rd.cls==='motorway'?4:2.5}" vector-effect="non-scaling-stroke" pointer-events="none"/>`).join('')}</g>`;
+  if(ly.cities)g+=`<g id="cities">${CITY.map(c=>`<circle data-f="${c.id}" class="cdot" cx="${c.x}" cy="${c.y}" r="6" fill="${c.cap?'#dc2626':'#fff'}" stroke="${c.id===sel?'#f5b301':'#dc2626'}" stroke-width="${c.id===sel?4:2.5}" vector-effect="non-scaling-stroke"/><text class="clab" x="${c.x+10}" y="${c.y+4}" font-size="13" font-weight="${c.cap?800:600}" fill="${lab}" stroke="${halo}" stroke-width="3" paint-order="stroke" pointer-events="none">${esc(L(c.n))}</text>`).join('')}</g>`;
+  g+=`<g id="meas"></g>`;
+  return g;
+}
+function rMap(){
+  const el=$('#v-map');const m=S.meas;
+  el.innerHTML=`<div class="mapwrap"><div><div class="map ${m.mode?'meas':''}" id="map"><svg id="msvg" xmlns="http://www.w3.org/2000/svg">${mapSVG()}</svg>
+  <div class="mtools"><button id="zIn" title="${T('Zoom in','Приблизить')}">+</button><button id="zOut" title="${T('Zoom out','Отдалить')}">−</button><button id="zHome" title="${T('Full extent','Вся страна')}">⌂</button><hr><button id="mLine" class="${m.mode==='line'?'on':''}" title="${T('Measure distance','Измерить расстояние')}">📏</button><button id="mArea" class="${m.mode==='area'?'on':''}" title="${T('Measure area','Измерить площадь')}">⬠</button></div>
+  <div class="mread" id="mread" style="display:none"></div>
+  <div class="coord" id="coord">${T('Move over the map','Наведите на карту')}</div><div class="scalebar" id="scale"></div></div>
+  <div class="muted" style="font-size:12px;margin-top:8px">${T('Drag to pan · wheel or pinch to zoom · click a feature for attributes. Data: GeoSphere, CC BY 4.0.','Перетаскивание — сдвиг · колесо или щипок — масштаб · нажатие на объект — атрибуты. Данные: GeoSphere, CC BY 4.0.')}</div></div>
+  <div><div class="card"><h3>${T('Layers','Слои')}</h3>${LAYERS.map(([k,en,ru,c,d])=>`<label class="lyr"><input type="checkbox" data-ly="${k}" ${S.layers[k]?'checked':''}><i class="sw" style="background:${c}"></i><span>${T(en,ru)}</span><small>${d}</small></label>`).join('')}</div>
+  <div class="card mt"><h3>${T('Basemap','Подложка')}</h3><div class="bases">${Object.entries(BASES).map(([k,b])=>`<button class="base ${S.base===k?'on':''}" data-base="${k}"><i style="background:${k==='sat'?'linear-gradient(135deg,#2f4a2a,#5a5a3e 50%,#0c2433 51%)':`linear-gradient(135deg,${b.land} 55%,${b.sea} 56%)`}"></i><span>${L(b)}</span></button>`).join('')}</div></div>
+  <div class="card mt" id="info">${infoHTML()}</div></div></div>`;
+  bindMap();
+}
+function infoHTML(){
+  if(!S.sel||!F[S.sel])return`<h3>${T('Feature info','Атрибуты объекта')}</h3><div class="muted" style="font-size:13px">${T('Click any region, city, river, road or zone on the map.','Нажмите на регион, город, реку, дорогу или зону на карте.')}</div>`;
+  const {k,o}=F[S.sel];let rows=[],title='',dsid=LAYERS.find(l=>l[0]===k)[4];
+  if(k==='admin'){const a=shoe(pts(o.g))*KM*KM;title=L(o.n);rows=[[T('Code','Код'),o.code],[T('Level','Уровень'),'ADM1'],[T('Population (2024)','Население (2024)'),nf(o.pop)],[T('Area','Площадь'),nf(a)+' km²'],[T('Density','Плотность'),nf(o.pop/a,1)+T(' per km²',' чел./км²')],[T('Capital','Центр'),L(o.cap)]]}
+  if(k==='cities'){title=L(o.n);rows=[[T('Type','Тип'),o.cap?T('National capital','Столица'):o.pop>200000?T('City','Город'):T('Town','Городок')],[T('Population','Население'),nf(o.pop)],[T('Coordinates','Координаты'),lat(o.y).toFixed(4)+'°N, '+lon(o.x).toFixed(4)+'°E'],['GeoNames ID',String(7840000+o.x*7+o.y)]]}
+  if(k==='rivers'){title=L(o.n);rows=[[T('Length in country','Длина в стране'),o.len+' km'],[T('Catchment','Водосбор'),nf(o.basin)+' km²'],[T('Strahler order','Порядок по Стралеру'),o.id==='w1'?'6':'5'],[T('Flow','Течение'),T('north → south','с севера на юг')]]}
+  if(k==='roads'){const len=plen(pts(o.p))*KM;title=o.ref;rows=[[T('Class','Класс'),o.cls==='motorway'?T('Motorway','Автомагистраль'):T('Primary road','Дорога 1-го класса')],[T('Lanes','Полосы'),o.lanes],[T('Length','Длина'),nf(len,1)+' km'],[T('Surface','Покрытие'),T('Asphalt','Асфальт')],[T('Speed limit','Ограничение'),(o.cls==='motorway'?130:90)+T(' km/h',' км/ч')]]}
+  if(k==='land'){title=L(o.cls);rows=[['CORINE',o.code],[T('Area','Площадь'),nf(shoe(pts(o.g))*KM*KM)+' km²'],[T('Source','Источник'),'Sentinel-2, 2024'],[T('Confidence','Достоверность'),'91%']]}
+  if(k==='flood'){title=T('Flood zone 1:','Зона затопления 1:')+o.rp;rows=[[T('Return period','Повторяемость'),o.rp+T(' years',' лет')],[T('Area','Площадь'),nf(shoe(pts(o.g))*KM*KM)+' km²'],[T('Max depth','Макс. глубина'),(o.rp===100?3.4:1.6)+T(' m',' м')],[T('Model','Модель'),'HEC-RAS 2D, 2025']]}
+  return`<h3>${esc(title)}<span class="sp"></span><button class="btn sm" id="selX" aria-label="Clear">✕</button></h3><table class="attr">${rows.map(r=>`<tr><td>${r[0]}</td><td><b>${esc(r[1])}</b></td></tr>`).join('')}</table><div class="row" style="margin-top:10px"><button class="btn sm" data-meta="${dsid}">ⓘ ${T('Metadata','Метаданные')}</button><button class="btn sm pri" data-req="${dsid}">⬇ ${T('Request data','Запросить данные')}</button></div>`;
+}
+let VB=S.vb.slice();
+function bindMap(){
+  const svg=$('#msvg'),map=$('#map');
+  $$('[data-ly]').forEach(i=>i.onchange=()=>{S.layers[i.dataset.ly]=i.checked;save();redraw()});
+  $$('[data-base]').forEach(b=>b.onclick=()=>{S.base=b.dataset.base;save();$$('[data-base]').forEach(x=>x.classList.toggle('on',x===b));redraw()});
+  bindInfo();
+  const apply=()=>{svg.setAttribute('viewBox',VB.join(' '));const k=VB[2]/1000;$$('.clab',svg).forEach(t=>{t.setAttribute('font-size',13*k);t.setAttribute('stroke-width',3*k);const c=CITY.find(c=>c.n.en===t.textContent||c.n.ru===t.textContent);if(c)t.setAttribute('x',c.x+10*k),t.setAttribute('y',c.y+4*k)});$$('.cdot',svg).forEach(c=>c.setAttribute('r',6*k));scale();drawMeas()};
+  window.__applyVB=apply;
+  const zoom=(f,cx,cy)=>{const nw=Math.min(2000,Math.max(80,VB[2]*f)),r=nw/VB[2];if(cx==null){cx=VB[0]+VB[2]/2;cy=VB[1]+VB[3]/2}VB=[cx-(cx-VB[0])*r,cy-(cy-VB[1])*r,nw,VB[3]*r];S.vb=VB;save();apply()};
+  const toSvg=(x,y)=>{const p=svg.createSVGPoint();p.x=x;p.y=y;return p.matrixTransform(svg.getScreenCTM().inverse())};
+  $('#zIn').onclick=()=>zoom(1/1.5);$('#zOut').onclick=()=>zoom(1.5);$('#zHome').onclick=()=>{VB=[0,0,1000,700];S.vb=VB;save();apply()};
+  const setMode=md=>{S.meas.mode=S.meas.mode===md?null:md;S.meas.p=[];save();map.classList.toggle('meas',!!S.meas.mode);$('#mLine').classList.toggle('on',S.meas.mode==='line');$('#mArea').classList.toggle('on',S.meas.mode==='area');drawMeas()};
+  $('#mLine').onclick=()=>setMode('line');$('#mArea').onclick=()=>setMode('area');
+  svg.addEventListener('wheel',e=>{e.preventDefault();const p=toSvg(e.clientX,e.clientY);zoom(e.deltaY>0?1.2:1/1.2,p.x,p.y)},{passive:false});
+  const ptr=new Map();let down=null,pinch=null,hover=null;
+  svg.addEventListener('pointerdown',e=>{ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptr.size===1){down={x:e.clientX,y:e.clientY,vb:VB.slice(),moved:false,target:e.target}}else if(ptr.size===2){const [a,b]=[...ptr.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y),vb:VB.slice()};down=null}});
+  const mv=e=>{if(!ptr.has(e.pointerId)){if(e.target.closest&&e.target.closest('#msvg')){const p=toSvg(e.clientX,e.clientY);$('#coord').textContent=lat(p.y).toFixed(4)+'°N  '+lon(p.x).toFixed(4)+'°E';if(S.meas.mode&&S.meas.p.length){hover=[p.x,p.y];drawMeas(hover)}}return}
+    ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pinch&&ptr.size===2){const [a,b]=[...ptr.values()],d=Math.hypot(a.x-b.x,a.y-b.y);const c=toSvg((a.x+b.x)/2,(a.y+b.y)/2);const f=pinch.d/d,nw=Math.min(2000,Math.max(80,pinch.vb[2]*f)),r=nw/VB[2];VB=[c.x-(c.x-VB[0])*r,c.y-(c.y-VB[1])*r,nw,VB[3]*r];apply();return}
+    if(down){const dx=e.clientX-down.x,dy=e.clientY-down.y;if(Math.hypot(dx,dy)>5)down.moved=true;if(down.moved){svg.classList.add('drag');const rect=svg.getBoundingClientRect(),s=Math.max(down.vb[2]/rect.width,down.vb[3]/rect.height);VB=[down.vb[0]-dx*s,down.vb[1]-dy*s,down.vb[2],down.vb[3]];apply()}}};
+  const up=e=>{if(!ptr.has(e.pointerId))return;ptr.delete(e.pointerId);svg.classList.remove('drag');
+    if(down&&!down.moved&&ptr.size===0){if(S.meas.mode){const p=toSvg(e.clientX,e.clientY);S.meas.p.push([p.x,p.y]);save();drawMeas()}else{const f=down.target.closest&&down.target.closest('[data-f]');S.sel=f?f.dataset.f:null;save();redraw()}}
+    if(ptr.size<2)pinch=null;if(ptr.size===0){down=null;S.vb=VB;save()}};
+  window.onpointermove=mv;window.onpointerup=up;window.onpointercancel=up;
+  apply();
+}
+function bindInfo(){const i=$('#info');if(!i)return;bind(i);if($('#selX'))$('#selX').onclick=()=>{S.sel=null;save();redraw()}}
+function redraw(){const svg=$('#msvg');if(!svg)return;svg.innerHTML=mapSVG();$('#info').innerHTML=infoHTML();bindInfo();window.__applyVB&&window.__applyVB()}
+function scale(){const el=$('#scale'),svg=$('#msvg');if(!el||!svg)return;const w=svg.getBoundingClientRect().width;if(!w)return;const kmPerPx=Math.max(VB[2]/w,VB[3]/svg.getBoundingClientRect().height)*KM;const nice=[1,2,5,10,20,25,50,100,200];let km=nice.find(n=>n/kmPerPx>=60)||200;el.innerHTML=`${km} km<i style="width:${Math.round(km/kmPerPx)}px"></i>`}
+function drawMeas(hover){
+  const g=$('#meas'),rd=$('#mread');if(!g)return;const m=S.meas,k=VB[2]/1000;
+  if(!m.mode){g.innerHTML='';rd.style.display='none';return}
+  const p=hover?[...m.p,hover]:m.p;let s='';
+  if(p.length>1){const pp=p.map(q=>q.join(',')).join(' ');s+=m.mode==='area'&&p.length>2?`<polygon points="${pp}" fill="#f5b301" fill-opacity=".22" stroke="#f5b301" stroke-width="2.5" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>`:`<polyline points="${pp}" fill="none" stroke="#f5b301" stroke-width="3" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>`}
+  s+=m.p.map(q=>`<circle cx="${q[0]}" cy="${q[1]}" r="${5*k}" fill="#fff" stroke="#f5b301" stroke-width="2.5" vector-effect="non-scaling-stroke"/>`).join('');
+  g.innerHTML=s;
+  const dist=plen(m.mode==='area'&&p.length>2?[...p,p[0]]:p)*KM,area=p.length>2?shoe(p)*KM*KM:0;
+  rd.style.display='';
+  rd.innerHTML=`<div style="font-size:11.5px;opacity:.8">${m.mode==='line'?T('Distance','Расстояние'):T('Area','Площадь')} · ${m.p.length} ${T('points','точек')}</div><b>${m.mode==='line'?nf(dist,2)+' km':nf(area,1)+' km²'}</b>${m.mode==='area'?`<div style="font-size:12px;opacity:.85">${T('Perimeter','Периметр')} ${nf(dist,1)} km</div>`:''}${!m.p.length?`<div style="font-size:12px;opacity:.85;margin-top:4px">${T('Click on the map to add points','Нажимайте на карту, чтобы добавить точки')}</div>`:''}<div class="row" style="margin-top:8px"><button id="mUndo">${T('Undo','Отменить')}</button><button id="mClr">${T('Clear','Очистить')}</button></div>`;
+  $('#mUndo').onclick=()=>{m.p.pop();save();drawMeas()};$('#mClr').onclick=()=>{m.p=[];save();drawMeas()};
+}
+
+/* ---------- catalogue ---------- */
+function thumb(d){const c={boundaries:'#8b5cf6',transport:'#e0a019',water:'#1d78c1',land:'#3f9b5b',elev:'#b07a3a',imagery:'#4b5f3a',people:'#dc2626',hazard:'#3b82f6'}[d.th];return`<svg viewBox="60 40 900 640"><rect x="0" y="0" width="1000" height="700" fill="#d5e7f1"/><polygon points="${COUNTRY}" fill="${d.type==='raster'?c:'#f4f1e8'}" fill-opacity="${d.type==='raster'?.55:1}" stroke="${c}" stroke-width="14"/>${d.type==='vector'?`<polyline points="255,215 500,350 720,588" fill="none" stroke="${c}" stroke-width="22"/><circle cx="500" cy="350" r="40" fill="${c}"/>`:''}</svg>`}
+function rCat(){
+  const el=$('#v-catalogue'),q=S.q.toLowerCase();
+  const list=DS.filter(d=>(S.fTh==='all'||d.th===S.fTh)&&(S.fType==='all'||d.type===S.fType)&&(S.fLic==='all'||d.lic===S.fLic)&&(!q||(d.t.en+' '+d.t.ru+' '+d.a.en+' '+d.a.ru+' '+d.kw+' '+d.org.en+' '+d.org.ru).toLowerCase().includes(q)));
+  const ch=(key,arr)=>arr.map(([k,en,ru])=>`<button class="chip ${S[key]===k?'on':''}" data-f="${key}" data-v="${k}">${T(en,ru)}</button>`).join('');
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><input class="input" id="cq" value="${esc(S.q)}" placeholder="${T('Search datasets, keywords, publishers…','Поиск наборов, ключевых слов, издателей…')}">
+  <div class="chips" style="margin-top:10px">${ch('fTh',[['all','All themes','Все темы'],...Object.entries(TH).map(([k,v])=>[k,...v])])}</div>
+  <div class="chips" style="margin-top:8px">${ch('fType',[['all','Any type','Любой тип'],['vector','Vector','Векторные'],['raster','Raster','Растровые']])}${ch('fLic',[['all','Any licence','Любая лицензия'],...Object.entries(LIC).map(([k,v])=>[k,v[0],v[1]])])}</div></div>
+  <div class="row" style="margin-bottom:8px"><span class="muted" style="font-size:12.5px">${T(list.length+' of '+DS.length+' datasets shown (featured national collection)',list.length+' из '+DS.length+' наборов (основная национальная коллекция)')}</span>${S.q||S.fTh!=='all'||S.fType!=='all'||S.fLic!=='all'?`<button class="btn sm" id="cClr">${T('Clear filters','Сбросить фильтры')}</button>`:''}</div>
+  ${list.length?list.map(d=>`<div class="ds"><div class="thumb">${thumb(d)}</div><div><div class="mono muted" style="font-size:11.5px">${d.id.toUpperCase()} · ${esc(L(d.org))}</div><div class="ttl">${esc(L(d.t))}</div><div class="ab">${esc(L(d.a))}</div>
+  <div class="meta"><span class="pill">${T(...TH[d.th])}</span><span class="pill">${d.type==='vector'?T('Vector','Вектор'):T('Raster','Растр')}</span><span class="pill ${LIC[d.lic][2]}">${T(LIC[d.lic][0],LIC[d.lic][1])}</span><span class="pill">${d.res}</span><span class="pill">${d.size}</span><span class="pill">${T('Updated','Обновлено')} ${fmtD(d.upd)}</span></div>
+  <div class="row" style="margin-top:10px">${d.layer?`<button class="btn sm" data-show="${d.layer}">🗺 ${T('Show on map','На карту')}</button>`:''}<button class="btn sm" data-meta="${d.id}">ⓘ ${T('Metadata','Метаданные')}</button><button class="btn sm pri" data-req="${d.id}">⬇ ${T('Request download','Запросить выгрузку')}</button></div></div></div>`).join(''):`<div class="card empty"><div class="big">∅</div>${T('No datasets match your search','Ничего не найдено')}</div>`}`;
+  const i=$('#cq');i.oninput=()=>{S.q=i.value;save();clearTimeout(i._t);i._t=setTimeout(()=>{rCat();const n=$('#cq');n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)};
+  $$('[data-f]',el).forEach(b=>b.onclick=()=>{S[b.dataset.f]=b.dataset.v;save();rCat()});
+  if($('#cClr'))$('#cClr').onclick=()=>{S.q='';S.fTh=S.fType=S.fLic='all';save();rCat()};
+  bind(el);
+}
+
+/* ---------- downloads ---------- */
+const RST={queued:['Queued','В очереди',''],processing:['Processing','Обработка','warn'],review:['Awaiting approval','На согласовании','gold'],ready:['Ready','Готово','ok'],rejected:['Rejected','Отклонено','bad']};
+function reqStatus(r){if(r.status==='review'||r.status==='rejected')return{st:r.status,pc:0};if(r.status==='ready')return{st:'ready',pc:100};const e=Date.now()-r.created;if(e<3500)return{st:'queued',pc:0};if(e<3500+r.dur)return{st:'processing',pc:Math.round((e-3500)/r.dur*100)};r.status='ready';save();return{st:'ready',pc:100}}
+function rDl(){
+  const el=$('#v-downloads');const sel=dsById(S.reqDs||'ds01')||DS[0];
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('New download request','Новый запрос на выгрузку')}</h3><div class="fgrid">
+  <div class="f full"><label>${T('Dataset','Набор данных')}</label><select class="input" id="dDs">${DS.map(d=>`<option value="${d.id}" ${d.id===sel.id?'selected':''}>${esc(L(d.t))}${d.lic==='res'?' 🔒':''}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Area of interest','Область интереса')}</label><select class="input" id="dExt"><option value="all">${T('Whole country','Вся страна')}</option>${REG.map(r=>`<option value="${r.id}">${esc(L(r.n))}</option>`).join('')}<option value="view">${T('Current map view','Текущий вид карты')}</option></select></div>
+  <div class="f"><label>${T('Format','Формат')}</label><select class="input" id="dFmt">${FMT[sel.type].map(f=>`<option>${f}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Coordinate reference system','Система координат')}</label><select class="input" id="dCrs">${CRS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Notify email','Почта для уведомления')}</label><input class="input" id="dMail" value="analyst@geo.gov.vl"><div class="err" id="dMailE"></div></div>
+  <div class="f full"><label>${T('Purpose of use','Цель использования')}${sel.lic==='res'?' <span class="pill warn">'+T('required, 20+ chars','обязательно, от 20 символов')+'</span>':''}</label><textarea class="input" id="dPur" placeholder="${T('e.g. Flood risk assessment for the 2026 municipal plan','напр. Оценка риска затопления для муниципального плана 2026')}"></textarea><div class="err" id="dPurE"></div></div></div>
+  <label class="chk" style="margin-top:12px"><input type="checkbox" id="dLic"><span>${T('I accept the licence','Принимаю лицензию')} <b>${T(LIC[sel.lic][0],LIC[sel.lic][1])}</b> ${T('and will attribute “© GeoSphere / '+L(sel.org)+'”.','и укажу источник «© GeoSphere / '+L(sel.org)+'».')}</span></label><div class="err f" id="dLicE" style="color:var(--red);font-size:11.5px;margin-top:4px"></div>
+  <div class="row" style="margin-top:14px"><button class="btn pri" id="dGo">⬇ ${T('Submit request','Отправить запрос')}</button><span class="muted" style="font-size:12px">${T('Estimated size','Ожидаемый размер')}: <b id="dSize"></b></span></div></div>
+  <div class="card"><h3>${T('My requests','Мои запросы')}<span class="sp"></span><span class="pill">${S.reqs.length}</span></h3><div id="reqs"></div></div></div>`;
+  const estimate=()=>{const d=dsById($('#dDs').value),e=$('#dExt').value;const n=parseFloat(d.size),u=d.size.replace(/[\d.\s]/g,'');const f=e==='all'?1:e==='view'?Math.min(1,(VB[2]*VB[3])/700000):0.26;$('#dSize').textContent=(Math.max(0.1,n*f)).toFixed(n*f<10?1:0)+' '+u;return(Math.max(0.1,n*f)).toFixed(n*f<10?1:0)+' '+u};
+  $('#dDs').onchange=e=>{S.reqDs=e.target.value;save();rDl()};$('#dExt').onchange=estimate;estimate();
+  $('#dGo').onclick=()=>{let ok=true;const d=sel,mail=$('#dMail').value.trim(),pur=$('#dPur').value.trim();
+    const err=(id,m)=>{$('#'+id+'E').textContent=m||'';const i=$('#'+id);if(i.classList.contains('input'))i.classList.toggle('bad',!!m);if(m)ok=false};
+    err('dMail',/^\S+@\S+\.\S+$/.test(mail)?'':T('Enter a valid email','Введите корректный адрес'));
+    err('dPur',d.lic==='res'&&pur.length<20?T('Restricted data: describe the purpose (20+ characters)','Данные с ограничением: опишите цель (от 20 символов)'):'');
+    err('dLic',$('#dLic').checked?'':T('Please accept the licence','Примите условия лицензии'));
+    if(!ok)return;const ex=$('#dExt');
+    const r={id:'DR-'+(S.nextReq++),ds:d.id,fmt:$('#dFmt').value,crs:$('#dCrs').value,ext:ex.value==='all'?{en:'Whole country',ru:'Вся страна'}:ex.value==='view'?{en:'Map view '+VB.map(v=>Math.round(v)).join(','),ru:'Вид карты '+VB.map(v=>Math.round(v)).join(',')}:REG.find(x=>x.id===ex.value).n,created:Date.now(),dur:7000+Math.random()*6000,status:d.lic==='res'?'review':'run',size:estimate()};
+    S.reqs.unshift(r);S.log.unshift({t:Date.now(),en:'Download request '+r.id+' for '+d.t.en,ru:'Запрос '+r.id+': '+d.t.ru});save();render();
+    toast(d.lic==='res'?T('Sent to the data steward for approval','Отправлено хранителю данных на согласование'):T('Request '+r.id+' queued','Запрос '+r.id+' поставлен в очередь'),'gold')};
+  drawReqs();
+}
+function drawReqs(){
+  const box=$('#reqs');if(!box)return;
+  box.innerHTML=S.reqs.length?S.reqs.map(r=>{const d=dsById(r.ds),s=reqStatus(r);return`<div class="req"><div class="top"><b>${esc(L(d.t))}</b><span class="pill ${RST[s.st][2]}">${T(RST[s.st][0],RST[s.st][1])}</span></div>
+  <div class="sub"><span class="mono">${r.id}</span> · ${esc(r.fmt)} · ${esc(r.crs.split(' — ')[0])} · ${esc(L(r.ext))} · ${esc(r.size)} · ${fmtD(r.created)}</div>
+  ${s.st==='processing'?`<div class="bar"><i style="width:${s.pc}%"></i></div><div class="muted" style="font-size:11.5px;margin-top:4px">${T('Clipping, reprojecting and packaging…','Вырезка, перепроецирование и упаковка…')} ${s.pc}%</div>`:''}
+  ${s.st==='review'?`<div class="row"><span class="muted" style="font-size:12px;flex:1;min-width:150px">${T('Restricted dataset — waiting for the data steward.','Набор с ограничением — ждёт хранителя данных.')}</span><button class="btn sm" data-ap="${r.id}">✔ ${T('Approve as steward (demo)','Одобрить как хранитель (демо)')}</button><button class="btn sm" data-rj="${r.id}">✕ ${T('Reject','Отклонить')}</button></div>`:''}
+  ${s.st==='rejected'&&r.note?`<div class="muted" style="font-size:12.5px;color:var(--red)">${esc(L(r.note))}</div>`:''}
+  ${s.st==='ready'?`<div class="row"><button class="btn sm pri" data-get="${r.id}">⬇ ${T('Download','Скачать')}</button><span class="muted" style="font-size:12px">${T('Link valid 7 days','Ссылка действует 7 дней')}</span></div>`:''}</div>`}).join(''):`<div class="empty">${T('No requests yet','Запросов пока нет')}</div>`;
+  $$('[data-ap]',box).forEach(b=>b.onclick=()=>{const r=S.reqs.find(x=>x.id===b.dataset.ap);r.status='run';r.created=Date.now();save();drawReqs();toast(T('Approved — processing started','Одобрено — обработка начата'))});
+  $$('[data-rj]',box).forEach(b=>b.onclick=()=>{const r=S.reqs.find(x=>x.id===b.dataset.rj);r.status='rejected';r.note={en:'Rejected by the data steward.',ru:'Отклонено хранителем данных.'};save();drawReqs();toast(T('Request rejected','Запрос отклонён'),'bad')});
+  $$('[data-get]',box).forEach(b=>b.onclick=()=>{const r=S.reqs.find(x=>x.id===b.dataset.get),d=dsById(r.ds);
+    const fc={type:'FeatureCollection',name:d.id,crs:r.crs,metadata:{title:d.t.en,licence:LIC[d.lic][0],request:r.id,format_requested:r.fmt,extent:r.ext.en},features:(d.type==='vector'?CITY:[]).map(c=>({type:'Feature',properties:{name:c.n.en,population:c.pop},geometry:{type:'Point',coordinates:[+lon(c.x).toFixed(5),+lat(c.y).toFixed(5)]}}))};
+    const u=URL.createObjectURL(new Blob([JSON.stringify(fc,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=u;a.download=r.id+'_'+d.id+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);toast(T('Download started','Скачивание началось'))});
+}
+setInterval(()=>{if(S.user&&S.view==='downloads'&&S.reqs.some(r=>r.status==='run'))drawReqs();const p=S.reqs.filter(r=>{const s=reqStatus(r).st;return s!=='ready'&&s!=='rejected'}).length;const c=$('#cntR');if(c){c.textContent=p;c.style.display=p?'':'none'}},1000);
+
+/* ---------- metadata ---------- */
+function hl(j){return esc(j).replace(/(&quot;[^&]*?&quot;)(\s*:)?|(-?\d+(?:\.\d+)?)/g,(m,s,c,n)=>s?(c?`<span class="k">${s}</span>${c}`:`<span class="s">${s}</span>`):`<span class="n">${n}</span>`)}
+function rMeta(){
+  const el=$('#v-metadata');const d=dsById(S.meta)||DS[0];const uuid='5f0c'+d.id.slice(2)+'-9b1e-4c7a-a2d1-0e7f3b'+d.id.slice(2)+'c91a';
+  const bbox=[20.54,44.0,25.52,46.68];const host='https://geo.veloria.gov.vl';
+  const urls=d.type==='vector'?[['WMS',`${host}/ows?service=WMS&request=GetCapabilities&layers=${d.id}`],['WFS',`${host}/ows?service=WFS&version=2.0.0&request=GetCapabilities&typeNames=${d.id}`],['OGC API',`${host}/ogcapi/collections/${d.id}/items?f=json`],['MVT',`${host}/tiles/${d.id}/{z}/{x}/{y}.pbf`]]:[['WMS',`${host}/ows?service=WMS&request=GetCapabilities&layers=${d.id}`],['WCS',`${host}/ows?service=WCS&version=2.0.1&request=GetCapabilities`],['STAC',`${host}/stac/collections/${d.id}`],['COG',`https://data.geo.veloria.gov.vl/cog/${d.id}/mosaic.tif`]];
+  const rec={type:'Collection',stac_version:'1.0.0',id:d.id,title:d.t.en,description:d.a.en,license:d.lic==='cc'?'CC-BY-4.0':d.lic==='ogl'?'OGL-VL-1.0':'proprietary',keywords:d.kw.split(', '),providers:[{name:d.org.en,roles:['producer','licensor']},{name:'National Geospatial Agency',roles:['host']}],extent:{spatial:{bbox:[bbox]},temporal:{interval:[[d.upd+'T00:00:00Z',null]]}},summaries:{'proj:epsg':[4326,9821],gsd:d.res},links:urls.slice(0,3).map(u=>({rel:'alternate',title:u[0],href:u[1]}))};
+  const kv=[[T('Title','Название'),L(d.t)],[T('Abstract','Аннотация'),L(d.a)],[T('File identifier','Идентификатор'),uuid],[T('Topic category (ISO)','Тематическая категория (ISO)'),{boundaries:'boundaries',transport:'transportation',water:'inlandWaters',land:'imageryBaseMapsEarthCover',elev:'elevation',imagery:'imageryBaseMapsEarthCover',people:'society',hazard:'environment'}[d.th]],[T('Keywords','Ключевые слова'),d.kw],[T('Spatial representation','Пространственное представление'),d.type==='vector'?T('vector','вектор'):T('grid','растр')],[T('Scale / resolution','Масштаб / разрешение'),d.res],[T('Reference system','Система координат'),'EPSG:9821 (VLREF2020 / TM), EPSG:4326'],[T('Bounding box','Охват'),`W ${bbox[0]} · S ${bbox[1]} · E ${bbox[2]} · N ${bbox[3]}`],[T('Last revision','Последняя редакция'),fmtD(d.upd)],[T('Update frequency','Периодичность'),d.th==='transport'||d.th==='people'?T('monthly','ежемесячно'):T('annually','ежегодно')],[T('Lineage','Происхождение'),T('Compiled from agency source data, topology-validated and harmonised to the national data model v3.2.','Собрано из данных ведомства, проверена топология, приведено к национальной модели данных v3.2.')],[T('Licence','Лицензия'),T(LIC[d.lic][0],LIC[d.lic][1])],[T('Point of contact','Контакт'),L(d.org)+' · data@geo.gov.vl'],[T('Metadata standard','Стандарт метаданных'),'ISO 19115-1:2014 / ISO 19139']];
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row"><select class="input" id="mDs" style="flex:1;min-width:200px">${DS.map(x=>`<option value="${x.id}" ${x.id===d.id?'selected':''}>${esc(L(x.t))}</option>`).join('')}</select><span class="pill ${LIC[d.lic][2]}">${T(LIC[d.lic][0],LIC[d.lic][1])}</span><button class="btn sm pri" data-req="${d.id}">⬇ ${T('Request download','Запросить выгрузку')}</button>${d.layer?`<button class="btn sm" data-show="${d.layer}">🗺 ${T('Map','Карта')}</button>`:''}</div></div>
+  <div class="grid2"><div class="card"><h3>${T('ISO 19115 record','Запись ISO 19115')}<span class="sp"></span><button class="btn sm" id="mXml">⬇ XML</button></h3><div class="kv">${kv.map(([k,v])=>`<div>${k}</div><div>${esc(v)}</div>`).join('')}</div></div>
+  <div><div class="card"><h3>${T('Service endpoints','Адреса сервисов')}</h3>${urls.map((u,i)=>`<div class="url"><span class="tag">${u[0]}</span><code>${esc(u[1])}</code><button class="btn sm" data-copy="${i}" aria-label="Copy">⧉</button></div>`).join('')}</div>
+  <div class="card mt"><h3>${d.type==='raster'?'STAC Collection':'STAC / OGC API record'}</h3><pre class="json">${hl(JSON.stringify(rec,null,2))}</pre></div></div></div>`;
+  $('#mDs').onchange=e=>{S.meta=e.target.value;save();rMeta()};
+  $$('[data-copy]',el).forEach(b=>b.onclick=()=>{const t=urls[+b.dataset.copy][1];try{navigator.clipboard.writeText(t).then(()=>toast(T('URL copied','Адрес скопирован')),()=>toast(T('Copy not allowed here — select the text','Копирование недоступно — выделите текст'),'bad'))}catch(e){toast(T('Copy not allowed here','Копирование недоступно'),'bad')}});
+  $('#mXml').onclick=()=>{const x=`<?xml version="1.0" encoding="UTF-8"?>\n<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">\n  <gmd:fileIdentifier><gco:CharacterString>${uuid}</gco:CharacterString></gmd:fileIdentifier>\n  <gmd:identificationInfo><gmd:MD_DataIdentification><gmd:citation><gmd:CI_Citation><gmd:title><gco:CharacterString>${d.t.en}</gco:CharacterString></gmd:title></gmd:CI_Citation></gmd:citation><gmd:abstract><gco:CharacterString>${d.a.en}</gco:CharacterString></gmd:abstract></gmd:MD_DataIdentification></gmd:identificationInfo>\n</gmd:MD_Metadata>\n`;const u=URL.createObjectURL(new Blob([x],{type:'application/xml'}));const a=document.createElement('a');a.href=u;a.download=d.id+'_iso19139.xml';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);toast(T('ISO 19139 XML downloaded','XML ISO 19139 скачан'))};
+  bind(el);
+}
+
+/* ---------- shell ---------- */
+$$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.view));
+$('#loginBtn').onclick=()=>{const e=$('#lEmail').value.trim(),p=$('#lPass').value;let ok=true;
+  $('#lEmailE').textContent=/^\S+@\S+\.\S+$/.test(e)?'':(ok=false,T('Enter a valid email','Введите корректный адрес'));
+  $('#lPassE').textContent=p.length>=4?'':(ok=false,T('Enter the password','Введите пароль'));
+  if(!ok)return;S.user=e;S.view='map';save();render();toast(T('Signed in as ','Вход выполнен: ')+esc(e))};
+$('#logout').onclick=()=>{S.user=null;save();render()};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{Object.keys(localStorage).filter(k=>k.startsWith(P)).forEach(k=>localStorage.removeItem(k));location.reload()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&S.meas.mode){S.meas.p=[];save();drawMeas()}});
+PT.onLang(()=>render());
+window.addEventListener('resize',()=>scale());
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

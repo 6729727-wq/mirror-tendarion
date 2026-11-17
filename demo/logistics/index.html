@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logistica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+[hidden]{display:none!important}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px}
+.who b{display:block;font-size:13.5px}
+.cls{display:inline-block;margin-top:6px;font-size:10px;font-weight:800;letter-spacing:.12em;color:#1a1306;background:var(--gold);border-radius:4px;padding:1px 6px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f{margin-bottom:10px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.fgrid .full{grid-column:1/-1}
+.err{color:var(--red);font-size:12px;min-height:16px}
+.input.bad{border-color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+tr:last-child td{border-bottom:none}
+tr.sel td{background:color-mix(in srgb,var(--mal) 8%,transparent)}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.loginw{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(ellipse at 80% 0%,color-mix(in srgb,var(--gold) 14%,transparent),transparent 60%),radial-gradient(ellipse at 0% 100%,color-mix(in srgb,var(--mal) 14%,transparent),transparent 55%)}
+.loginc{width:100%;max-width:430px;padding:26px;box-shadow:var(--shadow)}
+.loginc h2{margin:6px 0 4px;font-size:21px}
+.demo{font-size:12px;border:1px dashed var(--line2);border-radius:10px;padding:8px 10px;margin:12px 0;color:var(--muted)}
+.banner{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-align:center;color:#1a1306;background:var(--gold);border-radius:6px;padding:3px;margin-bottom:12px}
+/* board */
+.unit{margin-bottom:16px}
+.unit h4{margin:0 0 8px;font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.unit h4 .sp{flex:1}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.tile{border:1px solid var(--line);border-left:5px solid var(--mal);border-radius:10px;padding:8px 10px;background:var(--bg2);cursor:pointer;text-align:left;min-height:62px}
+.tile.PMC{border-left-color:var(--amber)} .tile.NMC{border-left-color:var(--red)}
+.tile.on{outline:2px solid var(--gold);outline-offset:1px}
+.tile b{display:block;font-family:var(--mono);font-size:12.5px}
+.tile span{display:block;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st{font-weight:800;font-size:11px}
+.st.FMC{color:var(--mal3)} .st.PMC{color:var(--amber)} .st.NMC{color:var(--red)}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:8px 14px;cursor:pointer;font-weight:700;font-size:13px}
+.seg button.on.FMC{background:var(--mal);color:#fff}.seg button.on.PMC{background:var(--amber);color:#1a1306}.seg button.on.NMC{background:var(--red);color:#fff}
+.sticky{position:sticky;top:60px}
+.steps{display:flex;margin:2px 0}
+.steps div{flex:1;position:relative;text-align:center;font-size:10.5px;color:var(--dim);min-width:56px}
+.steps div:before{content:"";position:absolute;top:5px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.steps div:first-child:before{display:none}
+.steps i{display:block;width:12px;height:12px;border-radius:50%;margin:0 auto 3px;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1}
+.steps .ok i{background:var(--mal);border-color:var(--mal)} .steps .ok:before,.steps .cur:before{background:var(--mal)}
+.steps .cur i{border-color:var(--gold);background:var(--gold)} .steps .ok,.steps .cur{color:var(--text)}
+.map svg{width:100%;height:auto;display:block;touch-action:manipulation}
+.map .dp{cursor:pointer}
+.bar{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3))}
+.cv{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2);cursor:pointer}
+.cv.on{border-color:var(--mal)}
+.cv .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cv .top b{flex:1;min-width:140px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.intro{grid-template-columns:minmax(0,1fr)}.sticky{position:static}}
+@media (max-width:860px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+ .side.open{transform:none}
+ .menu-btn{display:inline-flex}
+ main{padding:14px 14px 50px}
+ .head h1{font-size:20px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.tiles{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}.seg button{padding:8px 10px}}
+</style>
+</head>
+<body data-demo-en="Logistica — defence logistics &amp; spare parts" data-demo-ru="Logistica — оборонная логистика и запчасти">
+<div class="loginw" id="loginw">
+ <div class="card loginc">
+  <div class="banner" data-en="OFFICIAL — DEMO DATA ONLY" data-ru="СЛУЖЕБНОЕ — ТОЛЬКО ДЕМО-ДАННЫЕ"></div>
+  <div class="brand" style="padding:0 0 6px"><b>◆</b><div>Logistica<small data-en="Defence Support Agency · Valdoria (fictional)" data-ru="Агентство обеспечения обороны · Вальдория (вымышл.)"></small></div></div>
+  <h2 data-en="Secure sign-in" data-ru="Защищённый вход"></h2>
+  <div class="muted" style="font-size:13.5px" data-en="Fleet readiness, spare parts supply and convoy movements for logistics staff." data-ru="Готовность техники, снабжение запчастями и перемещение колонн для штаба тыла."></div>
+  <div class="demo" data-en="Demo account and smart-card PIN are prefilled — just press <b>Sign in</b>." data-ru="Демо-учётная запись и PIN смарт-карты заполнены — нажмите <b>Войти</b>."></div>
+  <div class="f"><label data-en="Service ID" data-ru="Служебный ID"></label><input class="input mono" id="lu" value="VLD-48210-LOG" autocomplete="off"></div>
+  <div class="f"><label data-en="Smart-card PIN" data-ru="PIN смарт-карты"></label><input class="input" id="lp" type="password" value="802614" inputmode="numeric"></div>
+  <div class="f"><label data-en="Role" data-ru="Роль"></label><select class="input" id="lr"><option value="0" data-en="J4 logistics officer" data-ru="Офицер тыла J4"></option><option value="1" data-en="Depot manager" data-ru="Начальник склада"></option><option value="2" data-en="Movement controller" data-ru="Диспетчер перевозок"></option></select></div>
+  <div class="err" id="lerr"></div>
+  <button class="btn pri" id="login" style="width:100%;justify-content:center;padding:12px" data-en="Sign in" data-ru="Войти"></button>
+  <div class="muted" style="font-size:11.5px;margin-top:10px;text-align:center" data-en="Accredited network · session audited · S1000D data module links" data-ru="Аккредитованная сеть · сессия журналируется · ссылки на модули S1000D"></div>
+ </div>
+</div>
+<div class="app" id="app" hidden>
+ <aside class="side" id="side">
+  <div class="brand"><b>◆</b><div>Logistica<small data-en="Defence Support Agency" data-ru="Агентство обеспечения обороны"></small></div></div>
+  <div class="sec" data-en="Readiness" data-ru="Готовность"></div>
+  <div id="navA"></div>
+  <div class="sec" data-en="Supply &amp; movement" data-ru="Снабжение и перевозки"></div>
+  <div id="navB"></div>
+  <div class="grow"></div>
+  <div class="who" id="who"></div>
+  <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  <button class="btn sm" id="logout" style="margin-top:6px;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+ </aside>
+ <main>
+  <div class="head">
+   <button class="btn sm menu-btn" id="menuBtn">☰</button>
+   <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+   <div class="sp"></div>
+   <span class="pill gold" id="dayPill"></span>
+   <button class="btn sm" id="advance"></button>
+  </div>
+  <div class="intro">
+   <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+    <div class="how">
+     <div><b>1</b><span data-en="On the <b>Readiness board</b> pick a vehicle, change its status or raise a parts request for it." data-ru="На <b>Табло готовности</b> выберите машину, смените статус или создайте заявку на запчасть."></span></div>
+     <div><b>2</b><span data-en="In <b>Spare parts</b> approve, pick, ship and receive — the vehicle returns to FMC automatically." data-ru="В <b>Запчастях</b> согласуйте, соберите, отгрузите и примите — машина сама вернётся в строй."></span></div>
+     <div><b>3</b><span data-en="Move stock between depots on the <b>Depot map</b>, plan a convoy, watch <b>Readiness KPIs</b>." data-ru="Перемещайте запасы на <b>Карте складов</b>, спланируйте колонну, смотрите <b>Показатели</b>."></span></div>
+    </div></div>
+   <div class="card"><dl class="facts">
+    <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Defence logistics &amp; spare parts" data-ru="Оборонная логистика и запчасти"></dd>
+    <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · €700M</dd>
+    <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Defence Support Agency, Federal Republic of Valdoria (fictional)" data-ru="Агентство обеспечения обороны, Федеративная Республика Вальдория (вымышл.)"></dd>
+    <dt data-en="Stack" data-ru="Стек"></dt><dd>S1000D · SAP-class · secure</dd>
+   </dl></div>
+  </div>
+  <section class="view" id="v-board"></section>
+  <section class="view" id="v-kpi"></section>
+  <section class="view" id="v-req"></section>
+  <section class="view" id="v-map"></section>
+  <section class="view" id="v-conv"></section>
+ </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt_logistics_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const num=n=>Math.round(n).toLocaleString(loc());
+const eur=n=>'€'+Math.round(n).toLocaleString(loc());
+const DAY=864e5;
+const fmtD=t=>new Date(t).toLocaleDateString(loc(),{day:'numeric',month:'short'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+
+const PLAT={BSN:['Bison MBT','Танк «Бизон»','1st Armoured Brigade','1-я бронетанковая бригада',8],KST:['Kestrel IFV','БМП «Кестрел»','7th Mechanised Brigade','7-я механизированная бригада',10],MUL:['Mule 8×8 truck','Грузовик «Мул» 8×8','12th Logistics Regiment','12-й полк обеспечения',12],OSP:['Osprey UH-4 helicopter','Вертолёт «Оспри» UH-4','4th Aviation Wing','4-е авиакрыло',6]};
+const pl=k=>T(PLAT[k][0],PLAT[k][1]), un=k=>T(PLAT[k][2],PLAT[k][3]);
+// nsn, en, ru, platform, unit price €
+const PARTS=[['2815-21-700-1123','Engine fuel injector','Топливная форсунка двигателя','BSN',1840],['2520-21-633-0450','Final drive gearbox','Бортовая передача','BSN',46200],['5820-21-650-1177','Vehicle radio transceiver','Бортовая радиостанция','BSN',15300],
+['2530-21-614-0071','Track tensioner','Натяжитель гусеницы','KST',3900],['5855-21-902-3311','Thermal imager module','Модуль тепловизора','KST',28700],['2540-21-118-7720','Track link set (80)','Комплект траков (80)','KST',12400],
+['2920-21-510-0045','Starter motor 24 V','Стартер 24 В','MUL',1260],['2610-21-447-9032','Tyre 14.00R20','Шина 14.00R20','MUL',890],['6140-21-220-0808','Battery 6TL 12 V','Аккумулятор 6TL 12 В','MUL',410],
+['1615-21-801-2290','Main rotor damper','Демпфер несущего винта','OSP',18600],['1680-21-334-5501','Hydraulic pump','Гидронасос','OSP',22400],['6610-21-090-4412','Air data computer','Вычислитель воздушных сигналов','OSP',31800]];
+const PN={};PARTS.forEach(p=>PN[p[0]]={nsn:p[0],en:p[1],ru:p[2],plat:p[3],price:p[4]});
+const pn=n=>T(PN[n].en,PN[n].ru);
+// depots: id, en, ru, x, y, threat
+const DEP=[['D1','Northgate Central Depot','Центральный склад Нортгейт',300,92,0],['D2','Varn Harbour Depot','Склад порт Варн',110,190,0],['D3','Kessel Air Base','Авиабаза Кессель',430,180,0],['D4','Eastmark Forward Base','Передовая база Истмарк',560,280,2],['D5','Southfort Depot','Склад Саутфорт',265,322,1]];
+const DP={};DEP.forEach(d=>DP[d[0]]={id:d[0],en:d[1],ru:d[2],x:d[3],y:d[4],thr:d[5]});
+const dn=id=>T(DP[id].en,DP[id].ru);
+const ROADS=[['D1','D2'],['D1','D3'],['D2','D5'],['D3','D4'],['D3','D5'],['D5','D4'],['D1','D5']];
+const KM=1.55;
+const dist=(a,b)=>Math.hypot(DP[a].x-DP[b].x,DP[a].y-DP[b].y)*KM*1.18;
+function route(a,b){const D={},P={},Q=new Set(DEP.map(d=>d[0]));Q.forEach(k=>D[k]=1e9);D[a]=0;
+ while(Q.size){let u=null;Q.forEach(k=>{if(u===null||D[k]<D[u])u=k});Q.delete(u);if(u===b)break;
+  ROADS.forEach(([x,y])=>{const v=x===u?y:y===u?x:null;if(v&&Q.has(v)){const alt=D[u]+dist(u,v);if(alt<D[v]){D[v]=alt;P[v]=u}}})}
+ const path=[b];while(path[0]!==a)path.unshift(P[path[0]]);return{path,km:D[b]}}
+const RST=[['Submitted','Подана'],['Approved','Согласована'],['Picked','Собрана'],['Shipped','Отгружена'],['Received','Получена']];
+const CARGO={spares:['Spare parts','Запчасти'],ammo:['Ammunition','Боеприпасы'],fuel:['Fuel (bulk)','Топливо (наливом)'],rations:['Rations & water','Продовольствие и вода']};
+const CST=[['Planned','Запланирована'],['En route','В пути'],['Arrived','Прибыла']];
+const REASON={S:['Awaiting parts (NMCS)','Ждёт запчасти (NMCS)'],M:['In maintenance (NMCM)','На ремонте (NMCM)']};
+
+function seed(){
+ const r=rng(7),now=Date.now();const assets=[];
+ Object.entries(PLAT).forEach(([k,p])=>{for(let i=0;i<p[4];i++){const x=r();const st=x<.68?'FMC':x<.82?'PMC':'NMC';
+  const parts=PARTS.filter(q=>q[3]===k);const a={id:k+'-'+(100+i*7+Math.floor(r()*5)),plat:k,st,depot:k==='OSP'?'D3':k==='MUL'?'D5':k==='BSN'?'D1':'D2',hrs:Math.round(400+r()*3800),since:now-Math.floor(r()*12+1)*DAY};
+  if(st==='NMC'){a.rsn=r()<.6?'S':'M';if(a.rsn==='S')a.part=parts[Math.floor(r()*parts.length)][0]}
+  if(st==='PMC')a.note=['Night sight degraded','Secondary radio u/s','Hydraulic seep — monitor','Aux heater u/s'][Math.floor(r()*4)];
+  assets.push(a)}});
+ const stock={};DEP.forEach(d=>{stock[d[0]]={};PARTS.forEach(p=>{const big=d[0]==='D1'?3:1;stock[d[0]][p[0]]=Math.max(0,Math.round((r()*14-3)*big*(p[4]>20000?.4:1)))})});
+ stock.D4['2530-21-614-0071']=0;stock.D1['2520-21-633-0450']=1;
+ const reqs=[];let n=3301;
+ assets.filter(a=>a.part).forEach((a,i)=>{const st=[0,1,3,0,2,1][i%6];reqs.push({id:'REQ-'+(n++),asset:a.id,nsn:a.part,qty:a.part.startsWith('2540')?1:a.part.startsWith('2610')?4:1,pri:['02','03','06','02','05','01'][i%6],depot:'D1',st,date:now-(6-i%6)*DAY,just:'Vehicle NMC awaiting part; mission tasking next week'})});
+ reqs.push({id:'REQ-'+(n++),asset:assets[2].id,nsn:'5820-21-650-1177',qty:2,pri:'09',depot:'D1',st:4,date:now-14*DAY,just:''});
+ const convoys=[{id:'CNV-0418',from:'D1',to:'D4',veh:14,cargo:'ammo',date:now+DAY,st:0,escort:true},{id:'CNV-0417',from:'D2',to:'D5',veh:8,cargo:'fuel',date:now-DAY,st:1,escort:true,prog:.45},{id:'CNV-0415',from:'D1',to:'D3',veh:6,cargo:'spares',date:now-3*DAY,st:2,escort:false}];
+ const trend={};Object.keys(PLAT).forEach((k,j)=>{trend[k]=Array.from({length:11},(_,i)=>Math.round(62+j*3+Math.sin(i/2+j)*6+r()*5))});
+ const log=[{t:now-2*DAY,en:'CNV-0415 arrived at Kessel Air Base',ru:'CNV-0415 прибыла на авиабазу Кессель'}];
+ return{auth:false,role:0,view:'board',day:0,assets,stock,reqs,convoys,trend,log,nextReq:n,nextCnv:419,unitF:'all',stF:'all',selA:null,selDep:'D1',selCnv:'CNV-0418',reqF:'open',draft:null,plan:{from:'D1',to:'D4',veh:12,cargo:'spares'}};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+const now=()=>Date.now()+S.day*DAY;
+const logit=(en,ru)=>{S.log.unshift({t:now(),en,ru});S.log=S.log.slice(0,30)};
+
+function ready(k){const a=S.assets.filter(x=>!k||x.plat===k);const f=a.filter(x=>x.st==='FMC').length,p=a.filter(x=>x.st==='PMC').length;return{n:a.length,f,p,nm:a.length-f-p,pct:a.length?Math.round((f+p*.5)/a.length*100):0}}
+const micap=()=>S.assets.filter(a=>a.st==='NMC'&&a.rsn==='S').length;
+const stPill=s=>`<span class="pill ${s==='FMC'?'ok':s==='PMC'?'warn':'bad'}">${s}</span>`;
+const priL=p=>+p<=3?['Urgent','Срочно','bad']:+p<=8?['Priority','Приоритет','warn']:['Routine','Плановая',''];
+
+const VIEWS=[['board','▦','Readiness board','Табло готовности','A'],['kpi','◔','Readiness KPIs','Показатели готовности','A'],['req','⚙','Spare parts requests','Заявки на запчасти','B'],['map','⌖','Depot stock map','Карта складов','B'],['conv','⇢','Convoy planning','Планирование колонн','B']];
+function nav(){
+ const cnt=v=>{if(v==='board'){const n=S.assets.filter(a=>a.st==='NMC').length;return n?`<span class="cnt r">${n}</span>`:''}
+  if(v==='req'){const n=S.reqs.filter(q=>q.st===0).length;return n?`<span class="cnt">${n}</span>`:''}
+  if(v==='conv'){const n=S.convoys.filter(c=>c.st<2).length;return n?`<span class="cnt">${n}</span>`:''}return''};
+ const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>`<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${cnt(v[0])}</button>`).join('');
+ $('#navA').innerHTML=mk('A');$('#navB').innerHTML=mk('B');
+ $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+const ROLES=[['J4 logistics officer','Офицер тыла J4'],['Depot manager','Начальник склада'],['Movement controller','Диспетчер перевозок']];
+function render(){
+ $('#loginw').hidden=!!S.auth;$('#app').hidden=!S.auth;
+ if(!S.auth)return;
+ nav();const v=VIEWS.find(x=>x[0]===S.view);
+ $('#title').textContent=T(v[2],v[3]);
+ $('#crumb').textContent=T('Joint Logistics Command · ','Объединённое командование тыла · ')+(v[4]==='A'?T('Fleet readiness','Готовность техники'):T('Supply chain','Цепочка снабжения'));
+ $('#dayPill').textContent=T('Ops day','Опер. день')+' · '+fmtD(now())+(S.day?` (+${S.day})`:'');
+ $('#advance').textContent=T('Advance 1 day ▶','Следующий день ▶');
+ $('#who').innerHTML=`<b>Maj. L. Varga</b>${T(ROLES[S.role][0],ROLES[S.role][1])}<div class="muted" style="margin-top:4px">${T('Fleet readiness','Готовность парка')}: <b style="display:inline">${ready().pct}%</b> · MICAP ${micap()}</div><span class="cls">${T('OFFICIAL','СЛУЖЕБНОЕ')}</span>`;
+ $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+S.view));
+ ({board:rBoard,kpi:rKpi,req:rReq,map:rMap,conv:rConv})[S.view]();
+}
+
+/* ---------- READINESS BOARD ---------- */
+function rBoard(){
+ const el=$('#v-board');const all=ready();
+ const list=S.assets.filter(a=>(S.unitF==='all'||a.plat===S.unitF)&&(S.stF==='all'||a.st===S.stF));
+ if(!S.selA||!S.assets.find(a=>a.id===S.selA))S.selA=(S.assets.find(a=>a.st==='NMC')||S.assets[0]).id;
+ const a=S.assets.find(x=>x.id===S.selA);const openReq=S.reqs.filter(q=>q.asset===a.id&&q.st<4&&q.st>=0);
+ el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Fleet readiness','Готовность парка')}</div><div class="v ${all.pct>=75?'ok-t':'warn-t'}">${all.pct}%</div><div class="d">${T('target 75% · FMC + ½ PMC','цель 75% · FMC + ½ PMC')}</div></div>
+ <div class="card kpi"><div class="l">${T('Fully mission capable','Полностью исправны')}</div><div class="v ok-t">${all.f}</div><div class="d">${T('of','из')} ${all.n} ${T('platforms','единиц')}</div></div>
+ <div class="card kpi"><div class="l">${T('Partially capable','Ограниченно годны')}</div><div class="v warn-t">${all.p}</div><div class="d">PMC</div></div>
+ <div class="card kpi"><div class="l">${T('Not mission capable','Неисправны')}</div><div class="v bad-t">${all.nm}</div><div class="d">MICAP ${micap()} · ${T('maint.','ремонт')} ${all.nm-micap()}</div></div></div>
+ <div class="grid2"><div class="card"><div class="chips" style="margin-bottom:8px"><button class="chip ${S.unitF==='all'?'on':''}" data-uf="all">${T('All units','Все части')}</button>${Object.keys(PLAT).map(k=>`<button class="chip ${S.unitF===k?'on':''}" data-uf="${k}">${pl(k)}</button>`).join('')}</div>
+ <div class="chips" style="margin-bottom:14px">${['all','FMC','PMC','NMC'].map(s=>`<button class="chip ${S.stF===s?'on':''}" data-sf="${s}">${s==='all'?T('Any status','Любой статус'):s}</button>`).join('')}</div>
+ ${Object.keys(PLAT).filter(k=>list.some(x=>x.plat===k)).map(k=>{const r=ready(k);return`<div class="unit"><h4>${un(k)} <span class="muted" style="font-weight:500">· ${pl(k)}</span><span class="sp"></span><span class="pill ${r.pct>=75?'ok':r.pct>=60?'warn':'bad'}">${r.pct}%</span></h4>
+  <div class="tiles">${list.filter(x=>x.plat===k).map(x=>`<button class="tile ${x.st} ${x.id===S.selA?'on':''}" data-a="${x.id}"><b>${x.id}</b><span class="st ${x.st}">${x.st}</span><span>${x.st==='NMC'?(x.rsn==='S'?'⚙ '+T('parts','запчасти'):'🔧 '+T('maint.','ремонт')):x.st==='PMC'?T('limited','ограничен'):T('ready','готов')}</span></button>`).join('')}</div></div>`}).join('')||`<div class="muted">${T('No platforms match the filter.','Нет техники по фильтру.')}</div>`}
+ <div class="legend"><span><i style="background:var(--mal)"></i>FMC — ${T('fully mission capable','полностью исправна')}</span><span><i style="background:var(--amber)"></i>PMC — ${T('partially','частично')}</span><span><i style="background:var(--red)"></i>NMC — ${T('not capable','неисправна')}</span></div></div>
+ <div class="card sticky"><h3><span class="mono">${a.id}</span>${stPill(a.st)}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${pl(a.plat)}</span></h3>
+  <dl class="facts" style="font-size:13px;gap:6px 12px;margin-bottom:12px"><dt>${T('Unit','Часть')}</dt><dd>${un(a.plat)}</dd><dt>${T('Supporting depot','Склад обеспечения')}</dt><dd>${dn(a.depot)}</dd><dt>${T('Engine hours','Моточасы')}</dt><dd>${num(a.hrs)}</dd><dt>${T('Status since','Статус с')}</dt><dd>${fmtD(a.since)} · ${Math.max(0,Math.round((now()-a.since)/DAY))} ${T('d','дн.')}</dd>
+  ${a.st==='NMC'?`<dt>${T('Reason','Причина')}</dt><dd class="bad-t">${T(REASON[a.rsn][0],REASON[a.rsn][1])}</dd>`:''}${a.part?`<dt>${T('Awaiting','Ожидается')}</dt><dd>${esc(pn(a.part))}<br><span class="mono muted" style="font-size:11px">NSN ${a.part}</span></dd>`:''}
+  <dt>${T('Tech data','Техдокументация')}</dt><dd class="mono" style="font-size:11px">DMC-${a.plat}-A-${a.st==='NMC'?'32-10-00':'00-00-00'}-00A-520A-A</dd></dl>
+  <div class="f"><label>${T('Change status','Изменить статус')}</label><div class="seg">${['FMC','PMC','NMC'].map(s=>`<button class="${s} ${a.st===s?'on':''}" data-st="${s}">${s}</button>`).join('')}</div></div>
+  ${a.st==='NMC'?`<div class="fgrid"><div class="f"><label>${T('NMC reason','Причина NMC')}</label><select class="input" id="rsn">${Object.entries(REASON).map(([k,v])=>`<option value="${k}" ${a.rsn===k?'selected':''}>${T(v[0],v[1])}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Part required','Нужная запчасть')}</label><select class="input" id="apart"><option value="">—</option>${PARTS.filter(p=>p[3]===a.plat).map(p=>`<option value="${p[0]}" ${a.part===p[0]?'selected':''}>${esc(T(p[1],p[2]))}</option>`).join('')}</select></div></div><button class="btn sm" id="saveRsn">${T('Save reason','Сохранить причину')}</button>`:''}
+  <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px"><div class="muted" style="font-size:12px;margin-bottom:6px">${T('Open parts requests','Открытые заявки')}</div>
+  ${openReq.map(q=>`<div class="row" style="font-size:13px;margin-bottom:6px"><span class="mono">${q.id}</span><span class="pill ${priL(q.pri)[2]}">${q.pri}</span><span>${T(RST[q.st][0],RST[q.st][1])}</span></div>`).join('')||`<div class="muted" style="font-size:13px">${T('None','Нет')}</div>`}
+  <button class="btn pri" id="raise" style="margin-top:8px">${T('Raise parts request','Создать заявку на запчасть')}</button></div></div></div>`;
+ $$('[data-uf]',el).forEach(b=>b.onclick=()=>{S.unitF=b.dataset.uf;save();rBoard()});
+ $$('[data-sf]',el).forEach(b=>b.onclick=()=>{S.stF=b.dataset.sf;save();rBoard()});
+ $$('[data-a]',el).forEach(b=>b.onclick=()=>{S.selA=b.dataset.a;save();rBoard()});
+ $$('[data-st]',el).forEach(b=>b.onclick=()=>{const s=b.dataset.st;if(a.st===s)return;a.st=s;a.since=now();if(s!=='NMC'){delete a.rsn;delete a.part}else a.rsn='M';if(s!=='PMC')delete a.note;logit(`${a.id} status set to ${s}`,`${a.id}: статус ${s}`);save();toast(T(`${a.id} → ${s}`,`${a.id} → ${s}`),s==='NMC'?'bad':'');render()});
+ const sr=$('#saveRsn',el);if(sr)sr.onclick=()=>{a.rsn=$('#rsn').value;const p=$('#apart').value;if(a.rsn==='S'&&!p){toast(T('Select the part the vehicle is waiting for','Выберите запчасть, которую ждёт машина'),'bad');return}a.part=a.rsn==='S'?p:undefined;if(!a.part)delete a.part;save();toast(T('Reason saved','Причина сохранена'));render()};
+ $('#raise',el).onclick=()=>{S.draft={asset:a.id,nsn:a.part||PARTS.find(p=>p[3]===a.plat)[0],pri:a.st==='NMC'?'02':'06',depot:'D1'};S.reqF='open';save();go('req')};
+}
+
+/* ---------- KPIs ---------- */
+function rKpi(){
+ const el=$('#v-kpi');const ks=Object.keys(PLAT);const cols={BSN:'var(--gold)',KST:'var(--mal)',MUL:'var(--blue)',OSP:'var(--violet)'};
+ // bar chart
+ const W=560,H=240,pl0=40,bw=(W-pl0-20)/ks.length;const Y=v=>20+(1-v/100)*(H-50);
+ const bars=ks.map((k,i)=>{const r=ready(k);const x=pl0+i*bw+bw*.2,w=bw*.6;const fy=Y(r.f/r.n*100),py=Y((r.f+r.p)/r.n*100);
+  return`<rect x="${x}" y="${py}" width="${w}" height="${fy-py}" rx="3" style="fill:var(--amber);opacity:.75"/><rect x="${x}" y="${fy}" width="${w}" height="${Y(0)-fy}" rx="3" style="fill:${cols[k]}"/><text x="${x+w/2}" y="${py-6}" text-anchor="middle" style="fill:var(--text);font-size:13px;font-weight:700">${r.pct}%</text><text x="${x+w/2}" y="${H-12}" text-anchor="middle" style="fill:var(--muted);font-size:11px">${esc(pl(k).split(' ')[0].replace(/[«»]/g,''))}</text>`}).join('');
+ const grid=[0,25,50,75,100].map(v=>`<line x1="${pl0}" x2="${W-10}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:${v===75?'var(--red)':'var(--line)'};${v===75?'stroke-dasharray:5 4':''}"/><text x="${pl0-6}" y="${Y(v)+4}" text-anchor="end" style="fill:var(--dim);font-size:10px">${v}</text>`).join('');
+ // trend
+ const TW=560,TH=220,tl=36;const n=12;const TX=i=>tl+i*(TW-tl-14)/(n-1),TY=v=>14+(1-(v-40)/60)*(TH-44);
+ const lines=ks.map(k=>{const s=S.trend[k].concat([ready(k).pct]);return`<polyline points="${s.map((v,i)=>TX(i).toFixed(1)+','+TY(v).toFixed(1)).join(' ')}" style="fill:none;stroke:${cols[k]};stroke-width:2.2"/><circle cx="${TX(n-1)}" cy="${TY(s[n-1])}" r="4" style="fill:${cols[k]}"/>`}).join('');
+ const tg=[40,60,75,100].map(v=>`<line x1="${tl}" x2="${TW-14}" y1="${TY(v)}" y2="${TY(v)}" style="stroke:${v===75?'var(--red)':'var(--line)'};${v===75?'stroke-dasharray:5 4':''}"/><text x="${tl-6}" y="${TY(v)+4}" text-anchor="end" style="fill:var(--dim);font-size:10px">${v}</text>`).join('')+[0,3,6,9,11].map(i=>`<text x="${TX(i)}" y="${TH-8}" text-anchor="middle" style="fill:var(--dim);font-size:10px">${i===11?T('now','сейчас'):T('W','Н')+(i-11)}</text>`).join('');
+ // donut NMC reasons
+ const nmc=S.assets.filter(a=>a.st==='NMC');const ns=nmc.filter(a=>a.rsn==='S').length,nm=nmc.length-ns;
+ const C=2*Math.PI*52;const fS=nmc.length?ns/nmc.length:0;
+ const donut=`<svg viewBox="0 0 160 160" style="max-width:180px;margin:0 auto"><circle cx="80" cy="80" r="52" style="fill:none;stroke:var(--line);stroke-width:20"/><circle cx="80" cy="80" r="52" transform="rotate(-90 80 80)" style="fill:none;stroke:var(--red);stroke-width:20;stroke-dasharray:${fS*C} ${C}"/><circle cx="80" cy="80" r="52" transform="rotate(${-90+fS*360} 80 80)" style="fill:none;stroke:var(--amber);stroke-width:20;stroke-dasharray:${(1-fS)*C*(nmc.length?1:0)} ${C}"/><text x="80" y="78" text-anchor="middle" style="fill:var(--text);font-size:26px;font-weight:800">${nmc.length}</text><text x="80" y="98" text-anchor="middle" style="fill:var(--muted);font-size:11px">NMC</text></svg>`;
+ // top drivers
+ const drv={};nmc.filter(a=>a.part).forEach(a=>drv[a.part]=(drv[a.part]||0)+1);const drs=Object.entries(drv).sort((a,b)=>b[1]-a[1]);
+ const avgWait=S.reqs.filter(q=>q.st<4&&q.st>=0).reduce((t,q)=>t+(now()-q.date)/DAY,0)/Math.max(1,S.reqs.filter(q=>q.st<4&&q.st>=0).length);
+ const fill=(()=>{let ok=0,t=0;S.reqs.filter(q=>q.st>=0).forEach(q=>{t++;if(S.stock[q.depot][q.nsn]>=q.qty||q.st>=2)ok++});return t?Math.round(ok/t*100):100})();
+ el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Overall readiness','Общая готовность')}</div><div class="v ${ready().pct>=75?'ok-t':'warn-t'}">${ready().pct}%</div><div class="d">${T('target','цель')} 75%</div></div>
+ <div class="card kpi"><div class="l">MICAP</div><div class="v bad-t">${micap()}</div><div class="d">${T('NMC awaiting parts','NMC в ожидании запчастей')}</div></div>
+ <div class="card kpi"><div class="l">${T('Depot fill rate','Обеспеченность со склада')}</div><div class="v">${fill}%</div><div class="d">${T('requests met from stock','заявок со склада')}</div></div>
+ <div class="card kpi"><div class="l">${T('Avg request age','Средний возраст заявки')}</div><div class="v">${avgWait.toFixed(1)} ${T('d','дн.')}</div><div class="d">${T('open requests','открытые')}</div></div></div>
+ <div class="grid2"><div class="card chart"><h3>${T('Readiness by fleet','Готовность по паркам')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>FMC</span><span><i style="background:var(--amber)"></i>PMC</span><span><i style="background:var(--red);height:2px"></i>${T('target 75%','цель 75%')}</span></span></h3><svg viewBox="0 0 ${W} ${H}" role="img">${grid}${bars}</svg></div>
+ <div class="card chart"><h3>${T('NMC causes','Причины неисправности')}</h3>${donut}<div class="legend" style="justify-content:center;margin:8px 0 12px"><span><i style="background:var(--red)"></i>${T('Supply (NMCS)','Снабжение (NMCS)')} ${ns}</span><span><i style="background:var(--amber)"></i>${T('Maintenance (NMCM)','Ремонт (NMCM)')} ${nm}</span></div>
+ <div class="muted" style="font-size:12px;margin-bottom:6px">${T('Top readiness drivers (parts)','Главные дефицитные запчасти')}</div>${drs.slice(0,4).map(([k,c])=>`<div class="row" style="font-size:13px;margin-bottom:4px;flex-wrap:nowrap"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(pn(k))}</span><b class="bad-t">${c}</b></div>`).join('')||`<div class="muted" style="font-size:13px">—</div>`}</div></div>
+ <div class="card chart" style="margin-top:14px"><h3>${T('12-week readiness trend','Тренд готовности за 12 недель')}<span class="sp"></span><span class="legend">${ks.map(k=>`<span><i style="background:${cols[k]}"></i>${esc(pl(k))}</span>`).join('')}</span></h3><svg viewBox="0 0 ${TW} ${TH}" role="img">${tg}${lines}</svg></div>`;
+}
+
+/* ---------- SPARE PARTS REQUESTS ---------- */
+function rReq(){
+ const el=$('#v-req');const d=S.draft||{asset:'',nsn:'',pri:'06',depot:'D1'};
+ const ast=S.assets.find(a=>a.id===d.asset);const parts=PARTS.filter(p=>!ast||p[3]===ast.plat);
+ const list=S.reqs.filter(q=>S.reqF==='all'||(S.reqF==='open'?q.st>=0&&q.st<4:S.reqF==='done'?q.st===4:q.st<0)).sort((a,b)=>(+a.pri)-(+b.pri)||b.date-a.date);
+ el.innerHTML=`<div class="grid2"><div><div class="chips" style="margin-bottom:10px">${[['open','Open','Открытые'],['done','Received','Получены'],['rej','Rejected','Отклонены'],['all','All','Все']].map(f=>`<button class="chip ${S.reqF===f[0]?'on':''}" data-rf="${f[0]}">${T(f[1],f[2])} · ${S.reqs.filter(q=>f[0]==='all'||(f[0]==='open'?q.st>=0&&q.st<4:f[0]==='done'?q.st===4:q.st<0)).length}</button>`).join('')}</div>
+ <div class="tw"><table><thead><tr><th>${T('Request','Заявка')}</th><th>${T('Pri','Пр.')}</th><th>${T('Part / NSN','Запчасть / NSN')}</th><th>${T('For','Для')}</th><th>${T('Depot stock','Наличие')}</th><th>${T('Progress','Ход')}</th><th></th></tr></thead><tbody>
+ ${list.map(q=>{const p=priL(q.pri);const have=S.stock[q.depot][q.nsn];const next=[['Approve','Согласовать'],['Pick','Собрать'],['Ship','Отгрузить'],['Receive','Принять']][q.st];
+  return`<tr><td class="mono"><b>${q.id}</b><br><span class="muted" style="font-size:11px">${fmtD(q.date)}</span></td><td><span class="pill ${p[2]}" title="${T(p[0],p[1])}">${q.pri}</span></td><td class="wrap"><b>${esc(pn(q.nsn))}</b> × ${q.qty}<br><span class="mono muted" style="font-size:11px">${q.nsn}</span></td><td class="mono">${q.asset}</td>
+  <td>${q.st>=2?'—':`<span class="${have>=q.qty?'ok-t':'bad-t'}">${have}</span> <span class="muted" style="font-size:11px">${esc(dn(q.depot).split(' ')[0])}</span>`}</td>
+  <td>${q.st<0?`<span class="pill bad">${T('Rejected','Отклонена')}</span>`:`<div class="steps">${RST.map((s,i)=>`<div class="${i<q.st||q.st===4?'ok':i===q.st?'cur':''}"><i></i>${T(s[0],s[1])}</div>`).join('')}</div>`}</td>
+  <td>${q.st>=0&&q.st<4?`<div class="row" style="flex-wrap:nowrap"><button class="btn sm pri" data-nx="${q.id}">${T(next[0],next[1])}</button>${q.st===0?`<button class="btn sm danger" data-rj="${q.id}">✕</button>`:''}</div>`:''}</td></tr>`}).join('')||`<tr><td colspan="7" class="muted">${T('No requests','Заявок нет')}</td></tr>`}</tbody></table></div></div>
+ <div class="card sticky"><h3>${T('New spare parts request','Новая заявка на запчасть')}</h3>
+  <div class="fgrid"><div class="f"><label>${T('Platform (tail / reg. no.)','Машина (бортовой №)')}</label><select class="input" id="qa"><option value="">—</option>${S.assets.map(a=>`<option value="${a.id}" ${a.id===d.asset?'selected':''}>${a.id} · ${a.st}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Issuing depot','Склад выдачи')}</label><select class="input" id="qd">${DEP.map(x=>`<option value="${x[0]}" ${x[0]===d.depot?'selected':''}>${esc(T(x[1],x[2]))}</option>`).join('')}</select></div>
+  <div class="f full"><label>${T('Part (NSN)','Запчасть (NSN)')}</label><select class="input" id="qn">${parts.map(p=>`<option value="${p[0]}" ${p[0]===d.nsn?'selected':''}>${p[0]} — ${esc(T(p[1],p[2]))}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Quantity','Количество')}</label><input class="input" id="qq" inputmode="numeric" value="${d.qty||1}"></div>
+  <div class="f"><label>${T('Priority (01–15)','Приоритет (01–15)')}</label><select class="input" id="qp">${Array.from({length:15},(_,i)=>String(i+1).padStart(2,'0')).map(p=>`<option ${p===d.pri?'selected':''}>${p}</option>`).join('')}</select></div>
+  <div class="f full"><label>${T('Justification (required for 01–03)','Обоснование (обязательно для 01–03)')}</label><textarea class="input" id="qj" rows="2" placeholder="${T('Mission impact, tasking date…','Влияние на задачу, дата задачи…')}"></textarea></div></div>
+  <div class="muted" id="qinfo" style="font-size:12px;margin-bottom:6px"></div><div class="err" id="qerr"></div>
+  <button class="btn pri" id="qsub">${T('Submit request','Отправить заявку')}</button></div></div>`;
+ const info=()=>{const n=$('#qn').value,dp=$('#qd').value;if(!n){$('#qinfo').textContent='';return}const have=S.stock[dp][n];const best=DEP.map(x=>[x[0],S.stock[x[0]][n]]).sort((a,b)=>b[1]-a[1])[0];
+  $('#qinfo').innerHTML=`${T('Unit price','Цена')}: <b>${eur(PN[n].price)}</b> · ${T('in stock at depot','на складе')}: <b class="${have?'ok-t':'bad-t'}">${have}</b>${!have&&best[1]?` · ${T('best stock','больше всего')}: ${esc(dn(best[0]))} (${best[1]})`:''}`};
+ info();
+ $$('[data-rf]',el).forEach(b=>b.onclick=()=>{S.reqF=b.dataset.rf;save();rReq()});
+ const keep=()=>{S.draft={asset:$('#qa').value,nsn:$('#qn').value,pri:$('#qp').value,depot:$('#qd').value,qty:$('#qq').value};save()};
+ $('#qa').onchange=()=>{keep();const a=S.assets.find(x=>x.id===S.draft.asset);if(a&&PN[S.draft.nsn]?.plat!==a.plat)S.draft.nsn=a.part||PARTS.find(p=>p[3]===a.plat)[0];rReq()};
+ $('#qn').onchange=()=>{keep();info()};$('#qd').onchange=()=>{keep();info()};
+ $('#qsub').onclick=()=>{keep();const q=$('#qq'),j=$('#qj');let e='';[q,j,$('#qa')].forEach(x=>x.classList.remove('bad'));const v=+q.value;
+  if(!S.draft.asset){e=T('Select the platform','Выберите машину');$('#qa').classList.add('bad')}
+  else if(!Number.isInteger(v)||v<1||v>50){e=T('Quantity must be 1–50','Количество от 1 до 50');q.classList.add('bad')}
+  else if(+S.draft.pri<=3&&j.value.trim().length<10){e=T('Urgent priority needs a justification (10+ characters)','Срочный приоритет требует обоснования (от 10 символов)');j.classList.add('bad')}
+  $('#qerr').textContent=e;if(e)return;
+  const r={id:'REQ-'+(S.nextReq++),asset:S.draft.asset,nsn:S.draft.nsn,qty:v,pri:S.draft.pri,depot:S.draft.depot,st:0,date:now(),just:j.value.trim()};S.reqs.unshift(r);
+  const a=S.assets.find(x=>x.id===r.asset);if(a.st==='NMC'&&!a.part){a.rsn='S';a.part=r.nsn}
+  logit(`${r.id} raised for ${r.asset}`,`${r.id} создана для ${r.asset}`);S.draft=null;S.reqF='open';save();toast(T(`${r.id} submitted · priority ${r.pri}`,`${r.id} отправлена · приоритет ${r.pri}`));render()};
+ $$('[data-rj]',el).forEach(b=>b.onclick=()=>{const q=S.reqs.find(x=>x.id===b.dataset.rj);q.st=-1;save();toast(T(`${q.id} rejected`,`${q.id} отклонена`),'bad');render()});
+ $$('[data-nx]',el).forEach(b=>b.onclick=()=>step(S.reqs.find(x=>x.id===b.dataset.nx),true));
+}
+function step(q,loud){
+ if(q.st===1){const have=S.stock[q.depot][q.nsn];if(have<q.qty){if(loud)toast(T(`Not enough stock at ${dn(q.depot)} (${have}) — transfer stock on the Depot map first`,`Недостаточно на складе ${dn(q.depot)} (${have}) — сначала переместите запас на Карте складов`),'bad');return false}S.stock[q.depot][q.nsn]-=q.qty}
+ q.st++;
+ if(q.st===4){const a=S.assets.find(x=>x.id===q.asset);if(a&&a.st==='NMC'&&a.part===q.nsn){a.st='FMC';a.since=now();delete a.rsn;delete a.part;logit(`${a.id} returned to FMC`,`${a.id} возвращена в строй (FMC)`);if(loud)toast(T(`${q.id} received — ${a.id} back to FMC ✔`,`${q.id} получена — ${a.id} снова в строю ✔`))}else if(loud)toast(T(`${q.id} received`,`${q.id} получена`))}
+ else if(loud)toast(T(`${q.id}: ${RST[q.st][0]}`,`${q.id}: ${RST[q.st][1]}`));
+ save();if(loud)render();return true}
+
+/* ---------- MAP ---------- */
+const LAND='M60,120 L130,60 L230,40 L330,30 L420,60 L500,70 L585,130 L615,215 L600,300 L540,345 L430,360 L330,370 L220,365 L130,330 L70,270 L40,190 Z';
+function mapSvg(opts){const o=opts||{};const tot=id=>Object.values(S.stock[id]).reduce((a,b)=>a+b,0);const mx=Math.max(...DEP.map(d=>tot(d[0])));
+ const rp=o.route?o.route.path:[];
+ return`<svg viewBox="0 0 650 400" role="img"><defs><pattern id="hx${o.k||''}" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M0 8h16M8 0v16" style="stroke:var(--line);stroke-width:.5"/></pattern></defs>
+ <rect width="650" height="400" style="fill:var(--bg2)"/><rect width="650" height="400" style="fill:url(#hx${o.k||''})"/>
+ <path d="${LAND}" style="fill:var(--panel2);stroke:var(--line2);stroke-width:2"/><path d="M500,70 L585,130 L615,215 L600,300 L540,345 L470,300 L520,200 Z" style="fill:var(--red);opacity:.07"/>
+ <text x="560" y="335" style="fill:var(--red);font-size:10px;opacity:.8">${T('Elevated threat area','Зона повышенной угрозы')}</text>
+ <text x="22" y="380" style="fill:var(--blue);font-size:11px;opacity:.7">${T('Western Sea','Западное море')}</text>
+ ${ROADS.map(([a,b])=>{const on=rp.some((p,i)=>i&&((rp[i-1]===a&&p===b)||(rp[i-1]===b&&p===a)));return`<line x1="${DP[a].x}" y1="${DP[a].y}" x2="${DP[b].x}" y2="${DP[b].y}" style="stroke:${on?'var(--gold)':'var(--line2)'};stroke-width:${on?5:3};${on?'':'stroke-dasharray:6 5'}"/>`}).join('')}
+ ${o.conv!=null?`<text x="${o.conv[0]}" y="${o.conv[1]+6}" text-anchor="middle" style="font-size:20px">🚛</text>`:''}
+ ${DEP.map(d=>{const id=d[0],t=tot(id),r=10+Math.sqrt(t/mx)*18,sel=o.sel===id;const low=PARTS.filter(p=>S.stock[id][p[0]]===0).length;
+  return`<g class="dp" data-dp="${id}"><circle cx="${d[3]}" cy="${d[4]}" r="${r}" style="fill:${d[5]===2?'var(--red)':'var(--mal)'};fill-opacity:.28;stroke:${sel?'var(--gold)':d[5]===2?'var(--red)':'var(--mal)'};stroke-width:${sel?4:2}"/><circle cx="${d[3]}" cy="${d[4]}" r="4" style="fill:var(--text)"/>
+  <text x="${d[3]}" y="${d[4]-r-6}" text-anchor="middle" style="fill:var(--text);font-size:12px;font-weight:700">${esc(T(d[1],d[2]).replace(/ (Depot|Base|Air Base)$/,'').replace(/^(Склад|Авиабаза|Передовая база|Центральный склад) /,''))}</text>
+  <text x="${d[3]}" y="${d[4]+r+14}" text-anchor="middle" style="fill:var(--muted);font-size:10.5px">${num(t)} ${T('items','ед.')}${low?' · '+low+' ⚠':''}</text></g>`}).join('')}</svg>`}
+function rMap(){
+ const el=$('#v-map');const id=S.selDep,d=DP[id];
+ const val=PARTS.reduce((a,p)=>a+S.stock[id][p[0]]*p[4],0);
+ el.innerHTML=`<div class="grid2"><div class="card map"><h3>${T('Depot network','Сеть складов')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('circle size = items held','размер = количество')}</span><span>⚠ ${T('lines at zero','позиции на нуле')}</span></span></h3>${mapSvg({sel:id,k:'m'})}<div class="muted" style="font-size:12px;margin-top:6px">${T('Tap a depot to see its stock and move items between depots.','Нажмите на склад, чтобы увидеть запас и переместить позиции.')}</div>
+ <div class="chips" style="margin-top:10px">${DEP.map(x=>`<button class="chip ${x[0]===id?'on':''}" data-dc="${x[0]}">${esc(T(x[1],x[2]))}</button>`).join('')}</div></div>
+ <div class="card"><h3>${esc(dn(id))}${d.thr===2?`<span class="pill bad">${T('Threat: high','Угроза: высокая')}</span>`:d.thr===1?`<span class="pill warn">${T('Threat: moderate','Угроза: средняя')}</span>`:''}</h3>
+ <div class="muted" style="font-size:12.5px;margin-bottom:10px">${T('Stock value','Стоимость запаса')}: <b>${eur(val)}</b></div>
+ <div class="tw" style="margin-bottom:14px"><table><thead><tr><th>${T('Part','Запчасть')}</th><th>${T('Qty','Кол.')}</th><th>${T('Fleet','Парк')}</th></tr></thead><tbody>${PARTS.map(p=>{const q=S.stock[id][p[0]];return`<tr><td class="wrap" style="min-width:150px">${esc(T(p[1],p[2]))}<br><span class="mono muted" style="font-size:11px">${p[0]}</span></td><td><b class="${q===0?'bad-t':q<3?'warn-t':''}">${q}</b></td><td><span class="muted">${p[3]}</span></td></tr>`}).join('')}</tbody></table></div>
+ <h3>${T('Stock transfer','Перемещение запаса')}</h3>
+ <div class="fgrid"><div class="f full"><label>${T('Part','Запчасть')}</label><select class="input" id="tp">${PARTS.map(p=>`<option value="${p[0]}">${esc(T(p[1],p[2]))} (${S.stock[id][p[0]]})</option>`).join('')}</select></div>
+ <div class="f"><label>${T('To depot','На склад')}</label><select class="input" id="tt">${DEP.filter(x=>x[0]!==id).map(x=>`<option value="${x[0]}">${esc(T(x[1],x[2]))}</option>`).join('')}</select></div>
+ <div class="f"><label>${T('Quantity','Количество')}</label><input class="input" id="tq" value="1" inputmode="numeric"></div></div><div class="err" id="terr"></div>
+ <button class="btn pri" id="tgo">${T('Transfer','Переместить')}</button></div></div>`;
+ $$('[data-dp]',el).forEach(g=>g.addEventListener('click',()=>{S.selDep=g.dataset.dp;save();rMap()}));
+ $$('[data-dc]',el).forEach(b=>b.onclick=()=>{S.selDep=b.dataset.dc;save();rMap()});
+ $('#tgo',el).onclick=()=>{const p=$('#tp').value,to=$('#tt').value,q=+$('#tq').value;const have=S.stock[id][p];
+  if(!Number.isInteger(q)||q<1){$('#terr').textContent=T('Enter a whole quantity ≥ 1','Введите целое количество ≥ 1');return}
+  if(q>have){$('#terr').textContent=T(`Only ${have} available at this depot`,`На складе доступно только ${have}`);return}
+  S.stock[id][p]-=q;S.stock[to][p]+=q;logit(`${q} × ${PN[p].en} moved ${DP[id].en} → ${DP[to].en}`,`${q} × ${PN[p].ru}: ${DP[id].ru} → ${DP[to].ru}`);save();
+  toast(T(`Moved ${q} × ${pn(p)} to ${dn(to)}`,`Перемещено ${q} × ${pn(p)} на ${dn(to)}`));rMap()};
+}
+
+/* ---------- CONVOYS ---------- */
+function plan(from,to,veh,cargo){const r=route(from,to);const km=Math.round(r.km);const hrs=km/42+Math.floor(km/42/4)*0.5+1;const fuel=Math.round(veh*km*0.48);const thr=Math.max(...r.path.map(p=>DP[p].thr));const escort=thr>=2||cargo==='ammo'||cargo==='fuel'||(thr>=1&&veh>10);return{...r,km,hrs,fuel,escort,thr}}
+function posOn(path,f){const seg=[];let tot=0;for(let i=1;i<path.length;i++){const l=Math.hypot(DP[path[i]].x-DP[path[i-1]].x,DP[path[i]].y-DP[path[i-1]].y);seg.push(l);tot+=l}let d=f*tot;for(let i=0;i<seg.length;i++){if(d<=seg[i]){const a=DP[path[i]],b=DP[path[i+1]],t=seg[i]?d/seg[i]:0;return[a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t]}d-=seg[i]}const z=DP[path[path.length-1]];return[z.x,z.y]}
+function rConv(){
+ const el=$('#v-conv');const P=S.plan;const pv=P.from!==P.to?plan(P.from,P.to,+P.veh||1,P.cargo):null;
+ if(!S.convoys.find(c=>c.id===S.selCnv))S.selCnv=S.convoys[0]&&S.convoys[0].id;const sc=S.convoys.find(c=>c.id===S.selCnv);
+ const showRoute=pv||(sc?plan(sc.from,sc.to,sc.veh,sc.cargo):null);
+ const cpos=sc&&sc.st===1?posOn(plan(sc.from,sc.to,sc.veh,sc.cargo).path,sc.prog||0):null;
+ const minD=new Date(now()).toISOString().slice(0,10);
+ el.innerHTML=`<div class="grid2"><div class="card map"><h3>${T('Route planner','Планировщик маршрута')}<span class="sp"></span>${pv?`<span class="pill gold">${esc(dn(P.from).split(' ')[0])} → ${esc(dn(P.to).split(' ')[0])}</span>`:''}</h3>${mapSvg({route:showRoute,k:'c',conv:cpos})}
+ ${pv?`<div class="kpis" style="margin:12px 0 0;grid-template-columns:repeat(4,minmax(0,1fr))"><div class="kpi"><div class="l">${T('Distance','Расстояние')}</div><div class="v" style="font-size:20px">${pv.km} ${T('km','км')}</div></div><div class="kpi"><div class="l">${T('Est. time','Время')}</div><div class="v" style="font-size:20px">${pv.hrs.toFixed(1)} ${T('h','ч')}</div></div><div class="kpi"><div class="l">${T('Fuel','Топливо')}</div><div class="v" style="font-size:20px">${num(pv.fuel)} ${T('L','л')}</div></div><div class="kpi"><div class="l">${T('Escort','Охрана')}</div><div class="v ${pv.escort?'bad-t':'ok-t'}" style="font-size:20px">${pv.escort?T('Required','Нужна'):T('No','Нет')}</div></div></div>
+ <div class="muted" style="font-size:12px">${T('Via','Через')}: ${pv.path.map(p=>esc(dn(p))).join(' → ')} · ${T('42 km/h average, 30 min halt every 4 h, 0.48 L/km per vehicle.','в среднем 42 км/ч, привал 30 мин каждые 4 ч, 0,48 л/км на машину.')}</div>`:''}</div>
+ <div class="card"><h3>${T('Plan a convoy','Новая колонна')}</h3><div class="fgrid">
+  <div class="f"><label>${T('Origin','Откуда')}</label><select class="input" id="cf">${DEP.map(x=>`<option value="${x[0]}" ${x[0]===P.from?'selected':''}>${esc(T(x[1],x[2]))}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Destination','Куда')}</label><select class="input" id="ct">${DEP.map(x=>`<option value="${x[0]}" ${x[0]===P.to?'selected':''}>${esc(T(x[1],x[2]))}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Vehicles (2–40)','Машин (2–40)')}</label><input class="input" id="cvh" inputmode="numeric" value="${esc(P.veh)}"></div>
+  <div class="f"><label>${T('Cargo','Груз')}</label><select class="input" id="ccg">${Object.entries(CARGO).map(([k,v])=>`<option value="${k}" ${k===P.cargo?'selected':''}>${T(v[0],v[1])}</option>`).join('')}</select></div>
+  <div class="f full"><label>${T('Departure date','Дата выхода')}</label><input class="input" type="date" id="cdt" min="${minD}" value="${P.date||new Date(now()+DAY).toISOString().slice(0,10)}"></div></div>
+  <div class="err" id="cerr"></div><button class="btn pri" id="csave">${T('Save movement order','Сохранить приказ на марш')}</button>
+  <h3 style="margin-top:20px">${T('Movements','Перемещения')}</h3>
+  ${S.convoys.map(c=>{const p=plan(c.from,c.to,c.veh,c.cargo);return`<div class="cv ${c.id===S.selCnv?'on':''}" data-cv="${c.id}"><div class="top"><b class="mono">${c.id}</b><span class="pill ${c.st===2?'ok':c.st===1?'gold':''}">${T(CST[c.st][0],CST[c.st][1])}</span>${c.escort?`<span class="pill bad">${T('Escort','Охрана')}</span>`:''}</div>
+   <div style="font-size:13px;margin:4px 0">${esc(dn(c.from))} → ${esc(dn(c.to))}</div><div class="muted" style="font-size:12px">${c.veh} ${T('veh.','маш.')} · ${T(CARGO[c.cargo][0],CARGO[c.cargo][1])} · ${p.km} ${T('km','км')} · ${fmtD(c.date)}</div>
+   ${c.st===1?`<div class="bar" style="margin-top:8px"><i style="width:${Math.round((c.prog||0)*100)}%"></i></div>`:''}
+   ${c.st<2?`<div class="row" style="margin-top:8px"><button class="btn sm pri" data-cgo="${c.id}">${c.st===0?T('Depart','Выход'):T('Mark arrived','Отметить прибытие')}</button>${c.st===0?`<button class="btn sm danger" data-cx="${c.id}">${T('Cancel','Отменить')}</button>`:''}</div>`:''}</div>`}).join('')}</div></div>`;
+ const keep=()=>{S.plan={from:$('#cf').value,to:$('#ct').value,veh:$('#cvh').value,cargo:$('#ccg').value,date:$('#cdt').value};save()};
+ ['#cf','#ct','#ccg','#cdt'].forEach(s=>$(s,el).onchange=()=>{keep();rConv()});
+ $('#cvh',el).onchange=()=>{keep();rConv()};
+ $('#csave',el).onclick=()=>{keep();const p=S.plan,v=+p.veh;let e='';
+  if(p.from===p.to)e=T('Origin and destination must differ','Пункты отправления и назначения должны различаться');
+  else if(!Number.isInteger(v)||v<2||v>40)e=T('Vehicles must be between 2 and 40','Число машин — от 2 до 40');
+  else if(!p.date||new Date(p.date).getTime()<new Date(minD).getTime())e=T('Departure date cannot be in the past','Дата выхода не может быть в прошлом');
+  $('#cerr').textContent=e;if(e)return;const pv=plan(p.from,p.to,v,p.cargo);
+  const c={id:'CNV-0'+(S.nextCnv++),from:p.from,to:p.to,veh:v,cargo:p.cargo,date:new Date(p.date).getTime(),st:0,escort:pv.escort};S.convoys.unshift(c);S.selCnv=c.id;
+  logit(`${c.id} planned ${DP[c.from].en} → ${DP[c.to].en}`,`${c.id} запланирована ${DP[c.from].ru} → ${DP[c.to].ru}`);save();toast(T(`${c.id} saved${pv.escort?' — escort requested':''}`,`${c.id} сохранена${pv.escort?' — запрошена охрана':''}`),pv.escort?'gold':'');rConv()};
+ $$('[data-cv]',el).forEach(b=>b.onclick=e=>{if(e.target.closest('button'))return;S.selCnv=b.dataset.cv;const c=S.convoys.find(x=>x.id===b.dataset.cv);S.plan={...S.plan,from:c.from,to:c.to,veh:c.veh,cargo:c.cargo};save();rConv()});
+ $$('[data-cgo]',el).forEach(b=>b.onclick=()=>{const c=S.convoys.find(x=>x.id===b.dataset.cgo);c.st++;c.prog=c.st===1?0.05:1;S.selCnv=c.id;logit(`${c.id} ${c.st===1?'departed':'arrived'}`,`${c.id} ${c.st===1?'вышла':'прибыла'}`);save();toast(T(`${c.id}: ${CST[c.st][0]}`,`${c.id}: ${CST[c.st][1]}`));render()});
+ $$('[data-cx]',el).forEach(b=>b.onclick=()=>{S.convoys=S.convoys.filter(x=>x.id!==b.dataset.cx);save();toast(T('Movement cancelled','Перемещение отменено'),'bad');render()});
+}
+
+/* ---------- day simulation ---------- */
+function advance(){
+ S.day++;const r=rng(S.day*97+3);let moved=0,back=0,broke=0;
+ S.reqs.filter(q=>q.st>=1&&q.st<4).forEach(q=>{const before=S.assets.filter(a=>a.st==='FMC').length;if(step(q,false))moved++;if(S.assets.filter(a=>a.st==='FMC').length>before)back++});
+ S.convoys.forEach(c=>{if(c.st===0&&c.date<=now()){c.st=1;c.prog=0}if(c.st===1){const p=plan(c.from,c.to,c.veh,c.cargo);c.prog=Math.min(1,(c.prog||0)+Math.min(1,16/p.hrs));if(c.prog>=1){c.st=2;logit(`${c.id} arrived`,`${c.id} прибыла`)}}});
+ S.assets.filter(a=>a.st==='NMC'&&a.rsn==='M').forEach(a=>{if(r()<.3){a.st='FMC';a.since=now();delete a.rsn;back++}});
+ S.assets.filter(a=>a.st==='FMC').forEach(a=>{if(r()<.03){a.st='NMC';a.rsn=r()<.5?'S':'M';a.since=now();if(a.rsn==='S'){const ps=PARTS.filter(p=>p[3]===a.plat);a.part=ps[Math.floor(r()*ps.length)][0]}broke++}});
+ Object.keys(PLAT).forEach(k=>{S.trend[k].push(ready(k).pct);S.trend[k]=S.trend[k].slice(-11)});
+ save();toast(T(`Day +${S.day}: ${moved} requests progressed, ${back} returned to service, ${broke} new faults`,`День +${S.day}: заявок продвинуто ${moved}, в строй ${back}, новых неисправностей ${broke}`),broke?'gold':'');render();
+}
+
+$('#login').onclick=()=>{const u=$('#lu').value.trim(),p=$('#lp').value;if(!/^VLD-\d{5}-[A-Z]{3}$/.test(u)){$('#lerr').textContent=T('Service ID format: VLD-12345-ABC','Формат ID: VLD-12345-ABC');return}if(!/^\d{6}$/.test(p)){$('#lerr').textContent=T('PIN must be 6 digits','PIN — 6 цифр');return}
+ $('#lerr').textContent='';S.auth=true;S.role=+$('#lr').value;save();render();toast(T('Signed in · session audited','Вход выполнен · сессия журналируется'))};
+$('#lp').onkeydown=e=>{if(e.key==='Enter')$('#login').click()};
+$('#logout').onclick=()=>{S.auth=false;save();render()};
+$('#advance').onclick=advance;
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();S=seed();S.auth=true;save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

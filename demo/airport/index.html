@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AeroOps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],#login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;min-height:42px}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.who b{font-size:13px;overflow-wrap:anywhere}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.clock{font-family:var(--mono);font-weight:700;font-size:13px}
+.clock i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mal3);margin-right:6px;animation:pulse 1.4s infinite}
+.clock.paused i{background:var(--amber);animation:none}
+@keyframes pulse{50%{opacity:.25}}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2+.grid2,.mt{margin-top:14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:7px 12px;font-size:12.5px;min-height:34px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600;min-height:34px}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+select.input{appearance:auto}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.alert:last-child{border-bottom:0}
+.alert .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none}
+.alert .tx{flex:1;min-width:0;overflow-wrap:anywhere}
+.alert .tm{font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.alert.ack{opacity:.5}
+.strip{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px}
+.strip div{border:1px solid var(--line2);border-radius:9px;padding:6px 4px;text-align:center;font-size:11px;background:var(--bg2);min-width:0;overflow:hidden}
+.strip div b{display:block;font-family:var(--mono);font-size:12px}
+.strip div.occ{background:color-mix(in srgb,var(--mal) 16%,transparent);border-color:var(--mal)}
+.strip div.cf{background:color-mix(in srgb,var(--red) 16%,transparent);border-color:var(--red)}
+.strip div span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.svgbox svg{display:block;width:100%;height:auto}
+.tl-wrap svg{display:block;min-width:680px;width:100%;height:auto}
+.mile{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.mile div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:0}
+.mile span{display:block;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mile b{font-family:var(--mono);font-size:16px}
+.mile div.hl{border-color:var(--gold)}
+.board{position:relative;min-width:1700px;font-size:12px}
+.brow{display:flex;height:38px;border-bottom:1px solid var(--line)}
+.brow:last-child{border-bottom:0}
+.brow .gl{position:sticky;left:0;z-index:3;width:76px;flex:none;background:var(--panel2);border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding:0 10px;font-family:var(--mono);font-weight:700}
+.brow .gl small{font-family:var(--font);font-weight:500;font-size:10px;color:var(--dim)}
+.brow .lane{position:relative;flex:1}
+.brow.hdr{height:28px;background:var(--panel2)}
+.hr{position:absolute;top:0;bottom:0;border-left:1px solid var(--line);font-size:10.5px;color:var(--dim);padding:6px 4px;font-family:var(--mono)}
+.blk{position:absolute;top:5px;height:27px;border-radius:7px;background:color-mix(in srgb,var(--mal) 26%,var(--panel));border:1px solid var(--mal);color:var(--text);font-size:11px;font-weight:700;padding:0 6px;display:flex;align-items:center;overflow:hidden;white-space:nowrap;cursor:pointer;font-family:var(--mono)}
+.blk.E{background:color-mix(in srgb,var(--gold) 24%,var(--panel));border-color:var(--gold)}
+.blk.past{opacity:.42}
+.blk.cf{background:color-mix(in srgb,var(--red) 26%,var(--panel));border-color:var(--red);box-shadow:0 0 0 2px color-mix(in srgb,var(--red) 35%,transparent)}
+.blk.sel{outline:2px solid var(--text);outline-offset:1px;z-index:2}
+.now{position:absolute;top:0;bottom:0;width:2px;background:var(--gold);z-index:4;pointer-events:none}
+.now:before{content:attr(data-t);position:absolute;top:2px;left:4px;font-size:10px;font-family:var(--mono);color:var(--gold2);background:var(--panel);padding:0 3px;border-radius:4px}
+.cps{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:14px}
+.cp{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--panel);min-width:0}
+.cp .t{font-weight:700;font-size:13.5px;display:flex;gap:8px;align-items:center}
+.cp .t span{flex:1;min-width:0;overflow-wrap:anywhere}
+.cp .big{font-size:26px;font-weight:800;font-family:var(--mono);margin:6px 0 0}
+.cp .sub{font-size:12px;color:var(--muted)}
+.bar{height:7px;border-radius:9px;background:var(--line);overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;border-radius:9px}
+.lanes{display:flex;align-items:center;gap:8px;margin-top:8px}
+.lanes .btn{width:38px;height:38px;justify-content:center;padding:0;font-size:18px}
+.lanes b{font-family:var(--mono);font-size:15px;min-width:52px;text-align:center}
+canvas{display:block;width:100%}
+.trk{display:flex;gap:3px;align-items:center}
+.trk i{width:16px;height:6px;border-radius:4px;background:var(--line2)}
+.trk i.ok{background:var(--mal)} .trk i.cur{background:var(--gold)} .trk i.bad{background:var(--red)}
+.belts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.belt{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg2);min-width:0}
+.belt b{font-family:var(--mono)} .belt .sub{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.hbar{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,2fr) auto;gap:10px;align-items:center;font-size:12.5px;margin-bottom:8px}
+.hbar span:first-child{overflow-wrap:anywhere}
+.hbar .bar{margin:0}
+.hbar em{font-style:normal;font-family:var(--mono);font-weight:700}
+.empty{padding:22px;text-align:center;color:var(--muted);font-size:13px}
+.search{max-width:280px}
+/* login */
+#login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(1000px 500px at 80% -10%,color-mix(in srgb,var(--mal) 18%,transparent),transparent),radial-gradient(700px 400px at 0% 110%,color-mix(in srgb,var(--gold) 12%,transparent),transparent)}
+.lgbox{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;max-width:940px;width:100%;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}
+.lgart{padding:30px;background:linear-gradient(160deg,var(--bg2),var(--panel2));border-right:1px solid var(--line);display:flex;flex-direction:column;gap:14px;min-width:0}
+.lgart h2{margin:0;font-size:26px;letter-spacing:-.02em}
+.lgart p{margin:0;color:var(--muted);font-size:14px}
+.lgart svg{width:100%;height:auto;display:block}
+.lgform{padding:30px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.lgform h3{margin:0;font-size:18px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.role{border:1px solid var(--line2);border-radius:12px;padding:10px 12px;cursor:pointer;background:var(--bg2);text-align:left;min-width:0}
+.role.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.role b{display:block;font-size:13.5px} .role span{font-size:12px;color:var(--muted)}
+.err{color:var(--red);font-size:12.5px;min-height:18px}
+.scrim{display:none}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.intro{grid-template-columns:minmax(0,1fr)}.mile{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .scrim.on{display:block;position:fixed;inset:45px 0 0 0;background:rgba(0,0,0,.4);z-index:1400}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .lgbox{grid-template-columns:minmax(0,1fr)}
+  .lgart{border-right:0;border-bottom:1px solid var(--line)}
+  .strip{grid-template-columns:repeat(6,minmax(0,1fr))}
+}
+@media (max-width:560px){.how,.fgrid,.belts{grid-template-columns:minmax(0,1fr)}.kpi .v{font-size:20px}.kpis{gap:10px}.mile{grid-template-columns:repeat(2,minmax(0,1fr))}.strip{grid-template-columns:repeat(4,minmax(0,1fr))}.lgart,.lgform{padding:20px}.roles{grid-template-columns:minmax(0,1fr)}.lgart svg{display:none}.search{max-width:none;width:100%}.hbar{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}}
+</style>
+</head>
+<body data-demo-en="AeroOps — Airport operations &amp; A-CDM" data-demo-ru="AeroOps — Операции аэропорта и A-CDM">
+<section id="login">
+  <div class="lgbox">
+    <div class="lgart">
+      <div class="brand" style="padding:0"><b>✈</b><div>AeroOps<small data-en="Marabad International · AOCC" data-ru="Международный аэропорт Марабад · ЦУП"></small></div></div>
+      <h2 data-en="One operational picture for the whole airport" data-ru="Единая картина операций всего аэропорта"></h2>
+      <p data-en="Airport Collaborative Decision Making: airlines, ground handlers, ATC and the terminal share the same milestones, gates and passenger flow in real time." data-ru="Совместное принятие решений (A-CDM): авиакомпании, наземные службы, УВД и терминал видят одни и те же этапы, гейты и пассажиропоток в реальном времени."></p>
+      <svg viewBox="0 0 400 150" aria-hidden="true">
+        <defs><linearGradient id="lg1" x1="0" x2="1"><stop offset="0" stop-color="var(--mal)"/><stop offset="1" stop-color="var(--gold)"/></linearGradient></defs>
+        <rect x="10" y="96" width="380" height="16" rx="8" fill="var(--line)"/>
+        <rect x="10" y="96" width="250" height="16" rx="8" fill="url(#lg1)" opacity=".85"/>
+        <g font-family="var(--mono)" font-size="10" fill="var(--muted)"><text x="10" y="132">ALDT</text><text x="80" y="132">AIBT</text><text x="180" y="132">TOBT</text><text x="250" y="132">TSAT</text><text x="340" y="132">AOBT</text></g>
+        <g fill="var(--gold)"><circle cx="20" cy="104" r="5"/><circle cx="90" cy="104" r="5"/><circle cx="190" cy="104" r="5"/><circle cx="260" cy="104" r="5"/></g>
+        <path d="M60 60 L170 40 L182 44 L130 62 L200 64 L214 54 L222 56 L214 70 L222 84 L214 86 L200 76 L130 78 L182 96 L170 100 L60 80 Z" fill="var(--text)" opacity=".12" transform="translate(110,-30) scale(.9)"/>
+      </svg>
+    </div>
+    <div class="lgform">
+      <h3 data-en="Sign in to the operations console" data-ru="Вход в операционную консоль"></h3>
+      <div class="f"><label data-en="Operator ID" data-ru="ID оператора"></label><input class="input" id="lgUser" value="duty.manager@aocc.mrb"></div>
+      <div class="f"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lgPass" type="password" value="demo-2026"></div>
+      <div class="f"><label data-en="Role" data-ru="Роль"></label>
+        <div class="roles">
+          <button class="role on" data-role="aocc"><b data-en="AOCC duty manager" data-ru="Дежурный менеджер ЦУП"></b><span data-en="Gates, flow, all milestones" data-ru="Гейты, потоки, все этапы"></span></button>
+          <button class="role" data-role="gh"><b data-en="Ground handler" data-ru="Наземное обслуживание"></b><span data-en="Turnaround tasks, baggage" data-ru="Задачи оборота, багаж"></span></button>
+        </div></div>
+      <div class="err" id="lgErr"></div>
+      <button class="btn pri" id="loginBtn" style="justify-content:center;min-height:44px" data-en="Sign in with demo account" data-ru="Войти в демо-аккаунт"></button>
+      <div class="muted" style="font-size:12px" data-en="Demo credentials are prefilled. Data is simulated and stored only in this browser." data-ru="Демо-данные уже введены. Данные смоделированы и хранятся только в этом браузере."></div>
+    </div>
+  </div>
+</section>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>✈</b><div>AeroOps<small data-en="Marabad Intl · MRB" data-ru="Марабад · MRB"></small></div></div>
+    <div class="sec" data-en="Operations" data-ru="Операции"></div>
+    <div id="navO"></div>
+    <div class="sec" data-en="Terminal" data-ru="Терминал"></div>
+    <div id="navT"></div>
+    <div class="grow"></div>
+    <div class="who"><span class="muted" data-en="Signed in as" data-ru="Вы вошли как"></span><b id="whoName"></b><span class="pill gold" id="whoRole" style="align-self:flex-start"></span>
+      <button class="btn sm" id="logout" style="justify-content:center" data-en="Log out" data-ru="Выйти"></button></div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill clock" id="clock"></span>
+    </div>
+    <section class="view" id="v-ops"></section>
+    <section class="view" id="v-flights"></section>
+    <section class="view" id="v-turn"></section>
+    <section class="view" id="v-gates"></section>
+    <section class="view" id="v-pax"></section>
+    <section class="view" id="v-otp"></section>
+    <section class="view" id="v-bags"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const P='pt_airport_', KEY=P+'state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{Object.keys(localStorage).filter(k=>k.startsWith(P)).forEach(k=>localStorage.removeItem(k))}catch(e){}}};
+const pad=n=>String(n).padStart(2,'0');
+const hm=m=>{m=Math.round(m);m=((m%1440)+1440)%1440;return pad(Math.floor(m/60))+':'+pad(m%60)};
+const nf=n=>Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+
+/* ---------- reference data (fictional) ---------- */
+const AL={QA:['Qaresh Airways','Авиалинии Кареша',457],DN:['Dunes Air','Дюнс Эйр',312],OJ:['Oasis Jet','Оазис Джет',588],SW:['Sirocco Wings','Сирокко Вингс',241],GW:['Gulfway','Галфвей',764]};
+const CITY={VLM:['Velmar','Вельмар'],OSM:['Ostmark','Остмарк'],PLR:['Port Liras','Порт-Лирас'],HLB:['Haldby','Хальдбю'],ZRQ:['Zarqan','Заркан'],AMB:['Amberly','Эмберли'],KST:['Kestria','Кестрия'],SUL:['Sulma','Сульма'],DRV:['Doravia','Доравия'],MRZ:['Marenzo','Маренцо'],TLK:['Talisk','Талиск'],TAZ:['Tell Azra','Телль-Азра']};
+const GATES=[['A1','C'],['A2','C'],['A3','C'],['A4','C'],['A5','C'],['A6','C'],['A7','C'],['A8','C'],['B1','E'],['B2','E'],['B3','E'],['B4','E'],['B5','E'],['B6','E'],['R1','E'],['R2','E'],['R3','E'],['R4','E']];
+const TASKS=[['deb','Deboarding','Высадка',t=>2,t=>.18*t,[]],['unl','Baggage unload','Выгрузка багажа',t=>3,t=>.2*t,[]],['fue','Fuelling','Заправка',t=>8,t=>.25*t,[]],
+ ['cln','Cabin cleaning','Уборка салона',t=>0,t=>.2*t,['deb']],['cat','Catering','Бортпитание',t=>0,t=>.15*t,['deb']],['lod','Baggage load','Загрузка багажа',t=>.45*t,t=>.3*t,['unl']],
+ ['brd','Boarding','Посадка',t=>.6*t,t=>.3*t,['cln','cat','fue']],['dor','Doors closed','Двери закрыты',t=>0,t=>2,['brd','lod']]];
+const CODES={11:['Late check-in acceptance','Поздняя регистрация'],18:['Baggage processing','Обработка багажа'],32:['Loading / unloading','Погрузка / выгрузка'],34:['Servicing equipment','Оборудование обслуживания'],35:['Aircraft cleaning','Уборка ВС'],36:['Fuelling','Заправка'],41:['Technical defect','Техническая неисправность'],63:['Late crew boarding','Опоздание экипажа'],81:['ATFM restriction','Ограничение ОрВД (ATFM)'],87:['Airport facilities','Инфраструктура аэропорта'],93:['Late inbound aircraft','Поздний прилёт ВС']};
+const TCODE={deb:87,unl:32,fue:36,cln:35,cat:34,lod:32,brd:11,dor:63};
+const CPS=[['ckA','Check-in hall A','Зал регистрации A',16,1.2,9,15,'dep'],['ckB','Check-in hall B','Зал регистрации B',16,1.2,8,15,'dep'],['sec','Central security','Центральный досмотр',14,2.6,18,10,'dep'],['ft','Fast track','Ускоренный досмотр',3,2.4,2.2,5,'dep'],
+ ['pcd','Passport control · departures','Паспортный контроль · вылет',20,1.6,13,10,'dep'],['pca','Passport control · arrivals','Паспортный контроль · прилёт',20,1.6,12,15,'arr'],['trf','Transfer security','Трансферный досмотр',6,2.4,4,8,'trf']];
+const CPI={ckA:8,ckB:7,sec:8,ft:1,pcd:10,pca:9,trf:2};
+const NAMES=['Al-Rami H.','Benoit L.','Castell A.','Darvish N.','Eklund S.','Farouk M.','Galen T.','Haddad R.','Ivers K.','Jalil O.','Karimov D.','Lindell E.','Mansour Y.','Novak P.','Okafor C.','Qadir F.','Rasheed A.','Sorensen J.','Tarik B.','Vance G.'];
+
+function seedRots(){
+  const r=rng(2026),keys=Object.keys(AL),cs=Object.keys(CITY),rots=[];let t0=352;
+  for(let i=0;i<60;i++){
+    t0+=13+Math.floor(r()*11);if(t0>1330)break;
+    const al=keys[Math.floor(r()*5)],E=r()<.28,tat=E?95:50,num=101+Math.floor(r()*440)*2;
+    const sta=t0,std=sta+tat+4+Math.floor(r()*18);const x=r();
+    const ad=x<.55?Math.floor(r()*7)-3:x<.85?5+Math.floor(r()*10):17+Math.floor(r()*28);
+    const from=cs[Math.floor(r()*cs.length)],to=r()<.7?from:cs[Math.floor(r()*cs.length)];
+    const rot={id:'R'+(i+1),al,E,arr:al+' '+num,dep:al+' '+(num+1),from,to,sta,std,ad,slot:r()<.25?3+Math.floor(r()*12):0,td:{},codes:[],seats:E?300:180,load:.7+r()*.27,gate:null,conf:false};
+    if(ad>10)rot.codes.push({c:93,m:ad});
+    if(rot.slot)rot.codes.push({c:81,m:rot.slot});
+    if(r()<.3){const k=['cln','cat','fue','lod','brd','unl'][Math.floor(r()*6)],m=4+Math.floor(r()*14);rot.td[k]=m;rot.codes.push({c:TCODE[k],m})}
+    rots.push(rot);
+  }
+  return rots;
+}
+function allocate(rots,startT){
+  const sorted=rots.slice().sort((a,b)=>calc(a).aibt-calc(b).aibt);
+  sorted.forEach(rt=>{const c=calc(rt);
+    const g=GATES.find(([gid,sz])=>(sz==='E'||!rt.E)&&!rots.some(o=>o!==rt&&o.gate===gid&&ovl(c,calc(o),10)));
+    rt.gate=g?g[0]:'R4'});
+  let made=0;const fut=sorted.filter(x=>x.sta>startT+60);
+  for(let i=2;i<fut.length&&made<3;i+=5){const a=fut[i-1],b=fut[i];if(ovl(calc(a),calc(b),0)){b.gate=a.gate;made++}}
+}
+function ovl(a,b,buf){return a.aibt-buf<b.tsat+buf&&b.aibt-buf<a.tsat+buf}
+function calc(r){
+  const aibt=r.sta+r.ad,tat=r.E?95:50,X={};
+  TASKS.forEach(([k,,,s,d,deps])=>{const st=Math.max(aibt+s(tat),...deps.map(q=>X[q].e));X[k]={s:st,e:st+d(tat)+(r.td[k]||0)}});
+  const ready=X.dor.e,tobt=Math.max(r.std,ready),tsat=tobt+r.slot;
+  return{aibt,eldt:aibt-9,X,ready,tobt,tsat,ddel:tsat-r.std};
+}
+const ST={sch:['Scheduled','По расписанию',''],app:['Approaching','На подлёте','gold'],lnd:['Landed · taxiing','Сел · рулит','gold'],stand:['On stand','На стоянке','ok'],brd:['Boarding','Посадка','ok'],rdy:['Ready · awaiting TSAT','Готов · ждёт TSAT','warn'],dep:['Departed','Вылетел','']};
+function stat(r,c,t){c=c||calc(r);t=t==null?S.t:t;if(t<c.eldt-16)return'sch';if(t<c.eldt)return'app';if(t<c.aibt)return'lnd';if(t<c.X.brd.s)return'stand';if(t<c.ready)return'brd';if(t<c.tsat)return'rdy';return'dep'}
+function stPill(r,c){const k=stat(r,c);const d=(c||calc(r)).ddel>15&&k!=='dep'?' <span class="pill bad">+'+Math.round((c||calc(r)).ddel)+'′</span>':'';return`<span class="pill ${ST[k][2]}">${T(ST[k][0],ST[k][1])}</span>${d}`}
+const city=k=>T(CITY[k][0],CITY[k][1]);
+
+function seedOtp(){const r=rng(9);return Array.from({length:30},(_,i)=>({o:74+Math.round(r()*16),a:78+Math.round(r()*14),m:7+Math.round(r()*9)}))}
+function seed(){
+  const START=600;const rots=seedRots();allocate(rots,START);
+  const S0={auth:false,role:'aocc',user:'',view:'ops',t:START,speed:1,rots,sel:null,gsel:null,cps:{},hist:{},alerts:[],otp:seedOtp(),op:14,ff:'all',fq:'',bf:'all',bq:'',bx:{},seen:{},cfN:0,nid:1};
+  CPS.forEach(([id,,,max,rate,base])=>{S0.cps[id]={lanes:CPI[id],q:base*1.5};S0.hist[id]=[]});
+  S0.alerts=[{id:0,t:START-6,sev:'info',en:'Operating day opened · 58 rotations in AODB',ru:'Операционный день открыт · 58 оборотов в AODB',ack:false}];
+  return S0;
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+function alert_(sev,en,ru){S.alerts.unshift({id:S.nid++,t:S.t,sev,en,ru,ack:false});S.alerts=S.alerts.slice(0,40)}
+
+/* ---------- passenger flow model ---------- */
+let maxW=null;
+function waveCnt(t,kind){if(kind==='arr')return S.rots.filter(r=>{const a=r.sta+r.ad;return a>t-35&&a<=t}).length;return S.rots.filter(r=>r.std>t+35&&r.std<=t+130).length}
+function wave(t,kind){if(!maxW){maxW={};['dep','arr'].forEach(k=>{let m=1;for(let x=360;x<1400;x+=10)m=Math.max(m,waveCnt(x,k));maxW[k]=m})}
+  if(kind==='trf')return 1;return .5+1.0*waveCnt(t,kind)/maxW[kind]}
+function demand(cp,t){return cp[5]*wave(t,cp[7])}
+function simPax(dt,noise){CPS.forEach(cp=>{const s=S.cps[cp[0]];const cap=s.lanes*cp[4];const d=demand(cp,S.t)*(noise?(.85+Math.random()*.3):1);
+  s.q=Math.max(0,s.q+(d-cap)*dt);const w=s.q/cap;s.w=w;s.d=d;
+  const h=S.hist[cp[0]];h.push(+w.toFixed(1));if(h.length>90)h.shift();
+  if(w>cp[6]&&!s.al){s.al=true;alert_('bad',`${cp[1]}: wait ${Math.round(w)} min exceeds SLA ${cp[6]} min`,`${cp[2]}: ожидание ${Math.round(w)} мин выше нормы ${cp[6]} мин`)}
+  if(w<cp[6]*.75)s.al=false})}
+function cpWait(id){const s=S.cps[id];const cp=CPS.find(c=>c[0]===id);return s.w!=null?s.w:s.q/(s.lanes*cp[4])}
+function wCls(w,sla){return w>sla?'bad':w>sla*.6?'warn':'ok'}
+
+/* ---------- baggage model ---------- */
+let BAGS=null;
+function bags(){if(BAGS)return BAGS;BAGS=[];
+  S.rots.forEach((rt,i)=>{const r=rng(i*97+5);const an=AL[rt.al][2];
+    for(let j=0;j<11;j++){const dep=j<6;const tag='0'+an+String(100000+Math.floor(r()*899999));
+      BAGS.push({tag,rot:rt.id,dir:dep?'dep':'arr',name:NAMES[Math.floor(r()*NAMES.length)],f:r(),ci:45+r()*100,hold:dep&&r()<.07,mis:dep&&r()<.05,short:!dep&&r()<.05,trf:r()<.15})}});
+  return BAGS}
+const BST={dep:[['Checked in','Зарегистрирован'],['Screening (HBS)','Досмотр (HBS)'],['Sorted to make-up','В зоне комплектации'],['Loaded','Загружен'],['Departed','Улетел']],arr:[['On aircraft','На борту'],['Unloaded','Выгружен'],['On belt','На ленте'],['Delivered','Выдан']]};
+const EXC={hold:['Level-3 security hold','Задержан досмотром (ур. 3)'],mis:['Not found at make-up','Не найден в комплектации'],missed:['Missed flight','Не успел на рейс'],short:['Did not arrive','Не прибыл'],rush:['Rush · next service','Срочно · следующим рейсом'],pir:['PIR filed · tracing','Акт PIR · розыск'],cleared:['Hold cleared','Досмотр пройден']};
+function bagState(b){const rt=S.rots.find(r=>r.id===b.rot);const c=calc(rt),t=S.t,x=S.bx[b.tag]||{};
+  if(b.dir==='dep'){const ci=rt.std-b.ci;if(t<ci||t>c.tsat+50)return null;
+    if(t<ci+3)return{s:0};
+    const clr=b.hold?(x.cleared!=null?x.cleared:Infinity):ci+3;if(t<clr)return{s:1,exc:'hold',when:ci};
+    const sortT=Math.max(ci+8,clr+3);if(t<sortT)return{s:1};
+    const fix=b.mis?(x.fixed!=null?x.fixed:Infinity):sortT;if(t<fix)return{s:2,exc:'mis',when:sortT};
+    const loadT=Math.max(c.X.lod.s+b.f*(c.X.lod.e-c.X.lod.s),sortT+4,fix+5);
+    if(loadT>c.X.dor.e){if(t<c.X.dor.e)return{s:2};return x.rush?{s:2,exc:'rush',soft:1}:{s:2,exc:'missed',when:c.X.dor.e}}
+    if(t<loadT)return{s:2};if(t<c.tsat)return{s:3};return{s:4,done:1}}
+  if(t<c.aibt-50)return null;if(t<c.aibt)return{s:0};
+  const unT=c.X.unl.s+b.f*(c.X.unl.e-c.X.unl.s);
+  if(b.short){if(t<c.X.unl.e)return{s:0};return x.pir?{s:0,exc:'pir',soft:1}:{s:0,exc:'short',when:c.X.unl.e}}
+  if(t<unT)return{s:0};if(t<unT+7)return{s:1};const del=unT+9+b.f*12;if(t<del)return{s:2};if(t>del+40)return null;return{s:3,done:1}}
+function bagList(){return bags().map(b=>({b,st:bagState(b)})).filter(x=>x.st)}
+
+/* ---------- views ---------- */
+const VIEWS=[['ops','◎','Operations overview','Обзор операций','O'],['flights','☰','Flights · AODB','Рейсы · AODB','O'],['turn','⏱','Turnaround timeline','Оборот рейса','O'],['gates','▦','Gate allocation','Распределение гейтов','O'],
+ ['pax','⇶','Passenger flow','Пассажиропоток','T'],['otp','◔','On-time performance','Пунктуальность','T'],['bags','🧳','Baggage status','Статус багажа','T']];
+function conflicts(){const out=new Map();const live=S.rots.filter(r=>calc(r).tsat>S.t);
+  live.forEach(a=>{const ca=calc(a);const g=GATES.find(x=>x[0]===a.gate);if(a.E&&g&&g[1]==='C')out.set(a.id,T('Wide-body on narrow-body gate','Широкофюзеляжный ВС на узком гейте'));
+    live.forEach(b=>{if(a!==b&&a.gate===b.gate&&ovl(ca,calc(b),5))out.set(a.id,T('Overlaps ','Пересекается с ')+b.dep)})});return out}
+function counts(){return{al:S.alerts.filter(a=>!a.ack).length,cf:conflicts().size,bx:bagList().filter(x=>x.st.exc&&!x.st.soft).length}}
+function nav(){const c=counts();
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';if(v[0]==='ops'&&c.al)x=`<span class="cnt">${c.al}</span>`;if(v[0]==='gates'&&c.cf)x=`<span class="cnt r">${c.cf}</span>`;if(v[0]==='bags'&&c.bx)x=`<span class="cnt r">${c.bx}</span>`;
+    return`<button class="nav ${S.view===v[0]?'on':''}" data-view="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navO').innerHTML=mk('O');$('#navT').innerHTML=mk('T');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.view));}
+function go(v){S.view=v;save();closeMenu();render();window.scrollTo({top:0})}
+function head(){const v=VIEWS.find(x=>x[0]===S.view);$('#title').textContent=T(v[2],v[3]);
+  $('#crumb').textContent=T('Marabad International · Terminal 1 · A-CDM','Международный аэропорт Марабад · Терминал 1 · A-CDM');
+  const ck=$('#clock');ck.className='pill clock'+(S.speed?'':' paused');ck.innerHTML=`<i></i>${T('Local','Местное')} ${hm(S.t)} · ${S.speed?'×'+[0,1,4,10][S.speed]:T('paused','пауза')}`;
+  $('#whoName').textContent=S.user;$('#whoRole').textContent=S.role==='aocc'?T('AOCC duty manager','Дежурный менеджер ЦУП'):T('Ground handler','Наземное обслуживание')}
+const R={ops:rOps,flights:rFlights,turn:rTurn,gates:rGates,pax:rPax,otp:rOtp,bags:rBags};
+function render(){if(!S.auth){$('#login').hidden=false;$('#app').hidden=true;$$('.role').forEach(b=>b.classList.toggle('on',b.dataset.role===S.role));return}
+  $('#login').hidden=true;$('#app').hidden=false;nav();head();
+  $$('.view').forEach(e=>{const on=e.id==='v-'+S.view;e.classList.toggle('on',on);if(!on)e.innerHTML=''});R[S.view]()}
+
+/* ---------- OPS ---------- */
+function rOps(){const el=$('#v-ops');const t=S.t;
+  const cs=S.rots.map(r=>({r,c:calc(r)}));const dep=cs.filter(x=>x.c.tsat<=t);const onT=dep.filter(x=>x.c.ddel<=15).length;
+  const onStand=cs.filter(x=>{const k=stat(x.r,x.c);return k==='stand'||k==='brd'||k==='rdy'});
+  const tatAct=dep.length?dep.reduce((a,x)=>a+(x.c.tsat-x.c.aibt),0)/dep.length:0,tatPl=dep.length?dep.reduce((a,x)=>a+(x.r.std-x.r.sta),0)/dep.length:0;
+  const q=CPS.reduce((a,c)=>a+S.cps[c[0]].q,0),mw=Math.max(...CPS.map(c=>cpWait(c[0])));const bl=bagList();const cf=conflicts();
+  const next=cs.filter(x=>x.c.tsat>t).sort((a,b)=>a.c.tobt-b.c.tobt).slice(0,8);
+  el.innerHTML=`<div class="intro"><div class="card"><h3>${T('How to try it','Как попробовать')}</h3><div class="how">
+   <div><b>1</b><span>${T('The airport clock runs live. Use the speed buttons below; aircraft land, turn around and depart on their own.','Часы аэропорта идут вживую. Меняйте скорость кнопками ниже — самолёты садятся, обслуживаются и улетают сами.')}</span></div>
+   <div><b>2</b><span>${T('Open <b>Turnaround timeline</b>: report a task delay and watch TOBT move. Fix red gate conflicts in <b>Gate allocation</b>.','Откройте <b>Оборот рейса</b>: сообщите о задержке задачи и посмотрите, как сдвинется TOBT. Устраните красные конфликты в <b>Гейтах</b>.')}</span></div>
+   <div><b>3</b><span>${T('Open security lanes in <b>Passenger flow</b> before queues breach SLA; clear held bags in <b>Baggage</b>.','Открывайте линии досмотра в <b>Пассажиропотоке</b>, пока очереди не превысили норму; снимайте задержки в <b>Багаже</b>.')}</span></div></div></div>
+   <div class="card"><dl class="facts"><dt>${T('Tender','Тендер')}</dt><dd>${T('Airport operations & A-CDM','Операции аэропорта и A-CDM')}</dd><dt>${T('Year · budget','Год · бюджет')}</dt><dd>2026 · $350M</dd>
+   <dt>${T('Client','Заказчик')}</dt><dd>${T('Qaresh Airports Company (fictional)','Компания аэропортов Кареша (вымышл.)')}</dd><dt>${T('Stack','Стек')}</dt><dd>A-CDM · AODB · IoT</dd></dl>
+   <div class="row" style="margin-top:12px"><span class="muted" style="font-size:12px">${T('Simulation','Симуляция')}</span>${[[0,'⏸ '+T('Pause','Пауза')],[1,'×1'],[2,'×4'],[3,'×10']].map(x=>`<button class="chip ${S.speed===x[0]?'on':''}" data-sp="${x[0]}">${x[1]}</button>`).join('')}</div></div></div>
+  <div class="kpis">
+   <div class="card kpi"><div class="l">${T('Movements today','Движений сегодня')}</div><div class="v">${dep.length} / ${S.rots.length}</div><div class="d">${onStand.length} ${T('aircraft on stand now','ВС на стоянках сейчас')}</div></div>
+   <div class="card kpi"><div class="l">${T('Departure OTP (≤15′)','Пунктуальность вылета (≤15′)')}</div><div class="v ${dep.length&&onT/dep.length<.8?'warn-t':'ok-t'}">${dep.length?(onT/dep.length*100).toFixed(1):'—'}%</div><div class="d">${T('target 85%','цель 85%')}</div></div>
+   <div class="card kpi"><div class="l">${T('Avg turnaround','Средний оборот')}</div><div class="v">${Math.round(tatAct)}′</div><div class="d">${T('plan','план')} ${Math.round(tatPl)}′ · ${tatAct>tatPl?'+':''}${Math.round(tatAct-tatPl)}′</div></div>
+   <div class="card kpi"><div class="l">${T('Passengers in queues','Пассажиров в очередях')}</div><div class="v">${nf(q)}</div><div class="d">${T('max wait','макс. ожидание')} <b class="${mw>10?'bad-t':''}">${Math.round(mw)} ${T('min','мин')}</b> · ${bl.filter(x=>!x.st.done).length} ${T('bags in system','сумок в системе')}</div></div></div>
+  <div class="grid2"><div class="card"><h3>${T('Next departures · A-CDM milestones','Ближайшие вылеты · этапы A-CDM')}<span class="sp"></span><button class="btn sm" data-go="flights">${T('All flights','Все рейсы')} →</button></h3>
+   <div class="tw"><table><thead><tr><th>${T('Flight','Рейс')}</th><th>${T('Gate','Гейт')}</th><th>STD</th><th>TOBT</th><th>TSAT</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+   ${next.map(x=>`<tr class="clk" data-rot="${x.r.id}"><td class="mono"><b>${x.r.dep}</b> <span class="muted">${x.r.to}</span></td><td class="mono ${cf.has(x.r.id)?'bad-t':''}">${x.r.gate}</td><td class="mono">${hm(x.r.std)}</td><td class="mono ${x.c.tobt-x.r.std>5?'warn-t':''}">${hm(x.c.tobt)}</td><td class="mono">${hm(x.c.tsat)}</td><td>${stPill(x.r,x.c)}</td></tr>`).join('')}</tbody></table></div>
+   <div style="margin-top:14px;font-weight:700;font-size:13px">${T('Contact gates now','Контактные гейты сейчас')}</div><div class="strip" style="margin-top:8px">
+   ${GATES.map(([g])=>{const o=cs.find(x=>x.r.gate===g&&t>=x.c.aibt&&t<x.c.tsat);return`<div class="${o?(cf.has(o.r.id)?'cf':'occ'):''}"><b>${g}</b><span>${o?o.r.dep.replace(' ',''):T('free','своб.')}</span></div>`}).join('')}</div></div>
+  <div class="card"><h3>${T('Operational alerts','Оперативные сигналы')}<span class="sp"></span><button class="btn sm" id="ackAll">${T('Acknowledge all','Принять все')}</button></h3>
+   ${S.alerts.slice(0,12).map(a=>`<div class="alert ${a.ack?'ack':''}"><span class="dot" style="background:var(${a.sev==='bad'?'--red':a.sev==='warn'?'--amber':'--mal'})"></span><div class="tx">${esc(T(a.en,a.ru))}<div class="tm">${hm(a.t)}</div></div>${a.ack?'':`<button class="btn sm" data-ack="${a.id}">✓</button>`}</div>`).join('')||`<div class="empty">${T('No alerts','Нет сигналов')}</div>`}</div></div>`;
+  $$('[data-sp]',el).forEach(b=>b.onclick=()=>{S.speed=+b.dataset.sp;save();render()});
+  $$('[data-go]',el).forEach(b=>b.onclick=()=>go(b.dataset.go));
+  $$('tr[data-rot]',el).forEach(r=>r.onclick=()=>{S.sel=r.dataset.rot;go('turn')});
+  $$('[data-ack]',el).forEach(b=>b.onclick=()=>{const a=S.alerts.find(x=>x.id==b.dataset.ack);if(a)a.ack=true;save();render()});
+  $('#ackAll').onclick=()=>{S.alerts.forEach(a=>a.ack=true);save();render();toast(T('All alerts acknowledged','Все сигналы приняты'))};
+}
+
+/* ---------- FLIGHTS ---------- */
+function rFlights(){const el=$('#v-flights');const q=(S.fq||'').toLowerCase();const cf=conflicts();
+  let list=S.rots.map(r=>({r,c:calc(r)}));list.forEach(x=>x.k=stat(x.r,x.c));
+  const F={all:x=>1,ground:x=>['lnd','stand','brd','rdy'].includes(x.k),inb:x=>x.k==='sch'||x.k==='app',delay:x=>x.c.ddel>15,dep:x=>x.k==='dep'};
+  const cnt=k=>list.filter(F[k]).length;
+  list=list.filter(F[S.ff]).filter(x=>!q||(x.r.arr+x.r.dep+x.r.gate+x.r.from+x.r.to+AL[x.r.al][0]+city(x.r.from)+city(x.r.to)).toLowerCase().includes(q));
+  el.innerHTML=`<div class="row" style="margin-bottom:12px">${[['all','All','Все'],['inb','Inbound','На подлёте'],['ground','On ground','На земле'],['delay','Delayed >15′','Задержка >15′'],['dep','Departed','Вылетели']].map(x=>`<button class="chip ${S.ff===x[0]?'on':''}" data-ff="${x[0]}">${T(x[1],x[2])} · ${cnt(x[0])}</button>`).join('')}
+   <span class="grow"></span><input class="input search" id="fq" value="${esc(S.fq||'')}" placeholder="${T('Search flight, gate, city…','Поиск: рейс, гейт, город…')}"></div>
+  <div class="tw"><table><thead><tr><th>${T('Arrival','Прилёт')}</th><th>${T('From','Откуда')}</th><th>STA</th><th>AIBT</th><th>${T('Departure','Вылет')}</th><th>${T('To','Куда')}</th><th>STD</th><th>TOBT</th><th>TSAT</th><th>${T('Gate','Гейт')}</th><th>${T('Aircraft','ВС')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+  ${list.map(x=>`<tr class="clk" data-rot="${x.r.id}"><td class="mono"><b>${x.r.arr}</b></td><td>${city(x.r.from)}</td><td class="mono">${hm(x.r.sta)}</td><td class="mono ${x.r.ad>10?'warn-t':''}">${x.k==='sch'||x.k==='app'?'<span class="muted">'+hm(x.c.aibt)+'</span>':hm(x.c.aibt)}</td>
+   <td class="mono"><b>${x.r.dep}</b></td><td>${city(x.r.to)}</td><td class="mono">${hm(x.r.std)}</td><td class="mono ${x.c.tobt-x.r.std>5?'warn-t':''}">${hm(x.c.tobt)}</td><td class="mono">${hm(x.c.tsat)}</td><td class="mono ${cf.has(x.r.id)?'bad-t':''}">${x.r.gate}${cf.has(x.r.id)?' ⚠':''}</td>
+   <td>${x.r.E?T('Wide-body · 300','Широкофюз. · 300'):T('Narrow-body · 180','Узкофюз. · 180')}</td><td>${stPill(x.r,x.c)}</td></tr>`).join('')||`<tr><td colspan="12"><div class="empty">${T('No flights match','Рейсы не найдены')}</div></td></tr>`}</tbody></table></div>
+  <div class="muted" style="font-size:12px;margin-top:8px">${T('STA/STD scheduled · AIBT actual in-block · TOBT target off-block · TSAT target start-up approval. Click a row to open its turnaround.','STA/STD — по расписанию · AIBT — фактическая постановка · TOBT — целевое время готовности · TSAT — целевое время запуска. Нажмите строку, чтобы открыть оборот.')}</div>`;
+  $$('[data-ff]',el).forEach(b=>b.onclick=()=>{S.ff=b.dataset.ff;save();rFlights()});
+  const fq=$('#fq');fq.oninput=()=>{S.fq=fq.value;save();rFlights();const n=$('#fq');n.focus();n.setSelectionRange(n.value.length,n.value.length)};
+  $$('tr[data-rot]',el).forEach(r=>r.onclick=()=>{S.sel=r.dataset.rot;go('turn')});
+}
+
+/* ---------- TURNAROUND ---------- */
+function rTurn(){const el=$('#v-turn');const t=S.t;
+  if(!S.sel||!S.rots.find(r=>r.id===S.sel)){const c=S.rots.map(r=>({r,c:calc(r)})).filter(x=>t>=x.c.aibt&&t<x.c.tsat).sort((a,b)=>b.c.aibt-a.c.aibt)[0]||S.rots.find(r=>calc(r).tsat>t);S.sel=(c.r||c).id}
+  const r=S.rots.find(x=>x.id===S.sel),c=calc(r),k=stat(r,c);
+  const opts=S.rots.filter(x=>calc(x).tsat>t-60).map(x=>`<option value="${x.id}" ${x.id===r.id?'selected':''}>${x.arr} / ${x.dep} · ${hm(x.sta)}–${hm(x.std)} · ${x.gate}</option>`).join('');
+  const tStat=key=>{const x=c.X[key];return t>=x.e?'done':t>=x.s?'run':'plan'};
+  const mile=[['ELDT/ALDT',c.eldt],['AIBT',c.aibt],['STD',r.std],['TOBT',c.tobt],['TSAT',c.tsat],[k==='dep'?'AOBT':'EOBT',c.tsat]];
+  // SVG timeline
+  const t0=c.eldt-6,t1=Math.max(c.tsat,r.std)+20,W=760,L=130,H=40+TASKS.length*30+30,xs=m=>L+(m-t0)/(t1-t0)*(W-L-14);
+  const m=cssv('--mal'),g=cssv('--gold'),tx=cssv('--text'),mu=cssv('--muted'),ln=cssv('--line'),l2=cssv('--line2'),rd=cssv('--red'),pn=cssv('--panel2');
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let mm=Math.ceil(t0/10)*10;mm<=t1;mm+=10){const x=xs(mm);s+=`<line x1="${x}" x2="${x}" y1="24" y2="${H-20}" stroke="${ln}"/><text x="${x}" y="16" font-size="10" text-anchor="middle" fill="${mu}" font-family="monospace">${hm(mm)}</text>`}
+  TASKS.forEach(([key,en,ru,,dfn],i)=>{const y=34+i*30,x=c.X[key],st=tStat(key),dl=r.td[key]||0;const base=dfn(r.E?95:50);
+    s+=`<text x="8" y="${y+14}" font-size="12" fill="${tx}" font-weight="600">${T(en,ru)}</text><rect x="${xs(x.s)}" y="${y+2}" width="${Math.max(3,xs(x.e)-xs(x.s))}" height="18" rx="5" fill="${st==='done'?m:st==='run'?g:l2}" opacity="${st==='plan'?.7:.9}"/>`;
+    if(st==='run'){const p=(t-x.s)/(x.e-x.s);s+=`<rect x="${xs(x.s)}" y="${y+2}" width="${Math.max(2,(xs(x.e)-xs(x.s))*p)}" height="18" rx="5" fill="${m}"/>`}
+    if(dl>0)s+=`<rect x="${xs(x.s+base)}" y="${y+2}" width="${Math.max(2,xs(x.e)-xs(x.s+base))}" height="18" rx="5" fill="${rd}" opacity=".75"/><text x="${xs(x.e)+4}" y="${y+15}" font-size="10" fill="${rd}" font-weight="700">+${Math.round(dl)}′</text>`;
+    if(st==='done')s+=`<text x="${xs(x.s)+5}" y="${y+15}" font-size="10" fill="#fff" font-weight="700">✓</text>`});
+  let lx=-99,lo=0;[['AIBT',c.aibt,m],['STD',r.std,mu],['TOBT',c.tobt,g],['TSAT',c.tsat,tx]].forEach(([n,v,col],i)=>{let x=xs(v);s+=`<line x1="${x}" x2="${x}" y1="26" y2="${H-18}" stroke="${col}" stroke-dasharray="${n==='STD'?'3 3':'0'}" stroke-width="1.5"/>`;
+    if(x-lx<34){lo++;x=lx+34}else lo=0;lx=x;s+=`<text x="${Math.min(W-16,x)}" y="${H-5}" font-size="10" text-anchor="middle" fill="${col}" font-weight="700" font-family="monospace">${n}</text>`});
+  if(t>=t0&&t<=t1){const x=xs(t);s+=`<line x1="${x}" x2="${x}" y1="20" y2="${H-18}" stroke="${rd}" stroke-width="2"/><rect x="${x-22}" y="20" width="44" height="14" rx="4" fill="${rd}"/><text x="${x}" y="31" font-size="10" text-anchor="middle" fill="#fff" font-family="monospace">${hm(t)}</text>`}
+  s+='</svg>';
+  const open=TASKS.filter(x=>tStat(x[0])!=='done'&&x[0]!=='dor');const run=TASKS.filter(x=>tStat(x[0])==='run');
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row"><select class="input" id="rotSel" style="flex:1;min-width:0">${opts}</select></div>
+   <div class="row" style="margin-top:10px;font-size:13px"><b class="mono">${r.arr} → ${r.dep}</b><span class="muted">${city(r.from)} → MRB → ${city(r.to)}</span><span class="pill">${T('Gate','Гейт')} ${r.gate}</span><span class="pill">${r.E?T('Wide-body','Широкофюзеляжный'):T('Narrow-body','Узкофюзеляжный')}</span>${stPill(r,c)}${r.conf?`<span class="pill ok">✓ ${T('TOBT confirmed','TOBT подтверждён')}</span>`:''}</div></div>
+  <div class="mile">${mile.map(([n,v])=>`<div class="${n==='TOBT'?'hl':''}"><span>${n}</span><b>${hm(v)}</b></div>`).join('')}</div>
+  <div class="card"><h3>${T('Ground handling Gantt','Диаграмма наземного обслуживания')}<span class="sp"></span><span class="legend"><span><i style="background:${m}"></i>${T('done','готово')}</span><span><i style="background:${g}"></i>${T('in progress','идёт')}</span><span><i style="background:${l2}"></i>${T('planned','план')}</span><span><i style="background:${rd}"></i>${T('delay','задержка')}</span></span></h3>
+   <div class="tw tl-wrap" style="border:0">${s}</div></div>
+  <div class="grid2 mt"><div class="card"><h3>${T('Report a task delay','Сообщить о задержке задачи')}</h3>
+   ${open.length?`<div class="fgrid"><div class="f"><label>${T('Task','Задача')}</label><select class="input" id="dTask">${open.map(x=>`<option value="${x[0]}">${T(x[1],x[2])}</option>`).join('')}</select></div>
+   <div class="f"><label>${T('Delay, minutes (1–90)','Задержка, минут (1–90)')}</label><input class="input" id="dMin" type="number" min="1" max="90" value="8"></div>
+   <div class="f full"><label>${T('Delay code','Код задержки')}</label><select class="input" id="dCode">${Object.entries(CODES).map(([k,v])=>`<option value="${k}">${k} · ${T(v[0],v[1])}</option>`).join('')}</select></div></div>
+   <div class="row" style="margin-top:12px"><button class="btn pri" id="dSave">${T('Submit delay','Отправить задержку')}</button>${run.length?`<button class="btn" id="dDone">✓ ${T('Complete','Завершить')}: ${T(run[0][1],run[0][2])}</button>`:''}</div>`
+   :`<div class="empty">${T('All ground tasks are complete for this rotation.','Все задачи наземного обслуживания для этого оборота выполнены.')}</div>`}</div>
+  <div class="card"><h3>${T('A-CDM coordination','Координация A-CDM')}</h3>
+   <div style="font-size:13px;line-height:1.7">${T('Target off-block','Целевое время готовности')}: <b class="mono">${hm(c.tobt)}</b> (${c.tobt-r.std>0?'+'+Math.round(c.tobt-r.std)+'′ '+T('vs STD','к STD'):T('on schedule','по расписанию')})<br>
+   ${T('Start-up approval','Разрешение на запуск')}: <b class="mono">${hm(c.tsat)}</b>${r.slot?` · <span class="warn-t">ATFM +${r.slot}′</span>`:''}<br>
+   ${T('Delay codes','Коды задержек')}: ${r.codes.length?r.codes.map(x=>`<span class="pill warn" title="${esc(T(CODES[x.c][0],CODES[x.c][1]))}">${x.c} · ${Math.round(x.m)}′</span>`).join(' '):'<span class="muted">—</span>'}</div>
+   <div class="row" style="margin-top:12px"><button class="btn gold" id="confT" ${r.conf||k==='dep'?'disabled':''}>${T('Confirm TOBT & request TSAT','Подтвердить TOBT и запросить TSAT')}</button></div></div></div>`;
+  $('#rotSel').onchange=e=>{S.sel=e.target.value;save();rTurn()};
+  const ds=$('#dSave');if(ds)ds.onclick=()=>{const k2=$('#dTask').value,mn=+$('#dMin').value,cd=+$('#dCode').value;
+    if(!mn||mn<1||mn>90||!Number.isFinite(mn)){toast(T('Enter a delay between 1 and 90 minutes','Введите задержку от 1 до 90 минут'),'bad');return}
+    const before=c.tobt;r.td[k2]=(r.td[k2]||0)+Math.round(mn);r.codes.push({c:cd,m:Math.round(mn)});r.conf=false;const nc=calc(r);
+    alert_(nc.ddel>15?'warn':'info',`${r.dep}: ${TASKS.find(x=>x[0]===k2)[1]} +${Math.round(mn)} min (code ${cd}) · TOBT ${hm(nc.tobt)}`,`${r.dep}: ${TASKS.find(x=>x[0]===k2)[2]} +${Math.round(mn)} мин (код ${cd}) · TOBT ${hm(nc.tobt)}`);
+    save();render();toast(nc.tobt>before?T('Delay recorded · TOBT ','Задержка записана · TOBT ')+hm(before)+' → <b>'+hm(nc.tobt)+'</b>':T('Delay recorded · absorbed by turnaround buffer, TOBT stays ','Задержка записана · поглощена запасом оборота, TOBT остаётся ')+hm(nc.tobt),nc.tobt>before?'gold':'')};
+  const dd=$('#dDone');if(dd)dd.onclick=()=>{const k2=run[0][0];const x=c.X[k2];r.td[k2]=(r.td[k2]||0)-(x.e-t);save();render();toast(T('Task completed early · TOBT ','Задача завершена досрочно · TOBT ')+hm(calc(r).tobt))};
+  $('#confT').onclick=()=>{r.conf=true;alert_('info',`${r.dep}: TOBT ${hm(c.tobt)} confirmed · TSAT ${hm(c.tsat)} issued`,`${r.dep}: TOBT ${hm(c.tobt)} подтверждён · выдан TSAT ${hm(c.tsat)}`);save();render();toast('TSAT <b>'+hm(c.tsat)+'</b> · '+T('issued by ATC','выдан УВД'))};
+}
+
+/* ---------- GATES ---------- */
+let gScroll=null;
+function rGates(){const el=$('#v-gates');const t=S.t,K=1.5,X0=360,cf=conflicts();
+  const old=$('.board',el);if(old)gScroll=old.parentElement.scrollLeft;
+  const cs=S.rots.map(r=>({r,c:calc(r)}));
+  if(!S.gsel||!S.rots.find(r=>r.id===S.gsel))S.gsel=([...cf.keys()][0])||cs.find(x=>x.c.aibt>t).r.id;
+  const sel=S.rots.find(r=>r.id===S.gsel),sc=calc(sel);
+  let hdr='';for(let h=6;h<=24;h++)hdr+=`<div class="hr" style="left:${(h*60-X0)*K}px">${pad(h%24)}:00</div>`;
+  const rows=GATES.map(([g,sz])=>`<div class="brow"><div class="gl">${g}<small>${sz==='E'?T('wide','широкий'):T('narrow','узкий')}${g[0]==='R'?' · '+T('remote','удал.'):''}</small></div><div class="lane">
+    ${cs.filter(x=>x.r.gate===g).map(x=>`<div class="blk ${x.r.E?'E':''} ${x.c.tsat<=t?'past':''} ${cf.has(x.r.id)?'cf':''} ${x.r.id===S.gsel?'sel':''}" data-g="${x.r.id}" style="left:${(x.c.aibt-X0)*K}px;width:${Math.max(30,(x.c.tsat-x.c.aibt)*K)}px" title="${x.r.arr}/${x.r.dep} ${hm(x.c.aibt)}–${hm(x.c.tsat)}">${x.r.dep}</div>`).join('')}</div></div>`).join('');
+  const fits=GATES.map(([g,sz])=>{const big=sel.E&&sz==='C';const clash=S.rots.find(o=>o!==sel&&o.gate===g&&calc(o).tsat>t&&ovl(sc,calc(o),5));return{g,big,clash}});
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Conflicts','Конфликты')}</div><div class="v ${cf.size?'bad-t':'ok-t'}">${cf.size}</div><div class="d">${T('overlap or size mismatch','пересечение или размер')}</div></div>
+   <div class="card kpi"><div class="l">${T('Contact gate usage now','Занятость контактных гейтов')}</div><div class="v">${cs.filter(x=>x.r.gate[0]!=='R'&&t>=x.c.aibt&&t<x.c.tsat).length} / 14</div><div class="d">${T('remote stands','удалённые')}: ${cs.filter(x=>x.r.gate[0]==='R'&&t>=x.c.aibt&&t<x.c.tsat).length} / 4</div></div>
+   <div class="card kpi"><div class="l">${T('Pax via contact gates','Пассажиров через телетрапы')}</div><div class="v">${Math.round(cs.filter(x=>x.r.gate[0]!=='R').length/cs.length*100)}%</div><div class="d">${T('target ≥ 85%','цель ≥ 85%')}</div></div>
+   <div class="card kpi"><div class="l">${T('Rotations today','Оборотов сегодня')}</div><div class="v">${cs.length}</div><div class="d">${T('wide-body','широкофюз.')}: ${cs.filter(x=>x.r.E).length}</div></div></div>
+  <div class="card" style="padding:12px"><h3>${T('Gate allocation board','Табло распределения гейтов')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('narrow-body','узкофюз.')}</span><span><i style="background:var(--gold)"></i>${T('wide-body','широкофюз.')}</span><span><i style="background:var(--red)"></i>${T('conflict','конфликт')}</span></span>
+   <button class="btn sm" id="autoRes" ${cf.size?'':'disabled'}>⚡ ${T('Auto-resolve conflicts','Авторазрешение конфликтов')}</button></h3>
+   <div class="tw" id="gtw"><div class="board"><div class="brow hdr"><div class="gl"></div><div class="lane">${hdr}</div></div>${rows}<div class="now" data-t="${hm(t)}" style="left:${76+(t-X0)*K}px"></div></div></div></div>
+  <div class="grid2 mt"><div class="card"><h3>${T('Reassign rotation','Переназначить оборот')}</h3>
+   <div class="row" style="font-size:13px;margin-bottom:10px"><b class="mono">${sel.arr} / ${sel.dep}</b><span class="muted">${hm(sc.aibt)}–${hm(sc.tsat)}</span><span class="pill">${sel.E?T('Wide-body','Широкофюзеляжный'):T('Narrow-body','Узкофюзеляжный')}</span>${cf.has(sel.id)?`<span class="pill bad">⚠ ${esc(cf.get(sel.id))}</span>`:`<span class="pill ok">${T('No conflict','Без конфликта')}</span>`}</div>
+   <div class="fgrid"><div class="f"><label>${T('Current gate','Текущий гейт')}</label><input class="input mono" value="${sel.gate}" disabled></div>
+   <div class="f"><label>${T('New gate','Новый гейт')}</label><select class="input" id="ng"><option value="">— ${T('choose','выберите')} —</option>${fits.filter(f=>f.g!==sel.gate).map(f=>`<option value="${f.g}">${f.g} · ${f.big?T('too small','мал'):f.clash?T('busy with ','занят ')+f.clash.dep:T('free','свободен')}</option>`).join('')}</select></div></div>
+   <div class="row" style="margin-top:12px"><button class="btn pri" id="assign">${T('Assign gate','Назначить гейт')}</button><span class="muted" style="font-size:12px">${T('Tip: click any block on the board to select it.','Подсказка: нажмите блок на табло, чтобы выбрать его.')}</span></div></div>
+  <div class="card"><h3>${T('Open conflicts','Открытые конфликты')}</h3>${cf.size?[...cf.entries()].map(([id,why])=>{const r=S.rots.find(x=>x.id===id);return`<div class="alert"><span class="dot" style="background:var(--red)"></span><div class="tx"><b class="mono">${r.dep}</b> · ${T('gate','гейт')} ${r.gate}<div class="tm">${esc(why)}</div></div><button class="btn sm" data-pick="${id}">${T('Select','Выбрать')}</button></div>`}).join(''):`<div class="empty">✓ ${T('Plan is conflict-free','План без конфликтов')}</div>`}</div></div>`;
+  const tw=$('#gtw');tw.scrollLeft=gScroll!=null?gScroll:Math.max(0,(t-X0-60)*K);
+  $$('[data-g]',el).forEach(b=>b.onclick=()=>{S.gsel=b.dataset.g;save();rGates()});
+  $$('[data-pick]',el).forEach(b=>b.onclick=()=>{S.gsel=b.dataset.pick;save();rGates()});
+  $('#assign').onclick=()=>{const g=$('#ng').value;if(S.role!=='aocc'){toast(T('Only the AOCC duty manager can reassign gates','Переназначать гейты может только дежурный менеджер ЦУП'),'bad');return}
+    if(!g){toast(T('Choose a gate','Выберите гейт'),'bad');return}const f=fits.find(x=>x.g===g);
+    if(f.big){toast(T('Gate '+g+' cannot take a wide-body aircraft','Гейт '+g+' не принимает широкофюзеляжные ВС'),'bad');return}
+    if(f.clash){toast(T('Gate '+g+' is occupied by '+f.clash.dep,'Гейт '+g+' занят рейсом '+f.clash.dep),'bad');return}
+    const from=sel.gate;sel.gate=g;alert_('info',`${sel.dep}: gate ${from} → ${g}`,`${sel.dep}: гейт ${from} → ${g}`);save();render();toast(`${sel.dep}: ${from} → <b>${g}</b>`)};
+  $('#autoRes').onclick=()=>{if(S.role!=='aocc'){toast(T('Only the AOCC duty manager can reassign gates','Переназначать гейты может только дежурный менеджер ЦУП'),'bad');return}
+    let n=0;[...cf.keys()].map(id=>S.rots.find(r=>r.id===id)).sort((a,b)=>calc(b).aibt-calc(a).aibt).forEach(r=>{if(!conflicts().has(r.id))return;const c=calc(r);
+      const g=GATES.find(([gid,sz])=>(sz==='E'||!r.E)&&!S.rots.some(o=>o!==r&&o.gate===gid&&ovl(c,calc(o),5)));if(g){r.gate=g[0];n++}});
+    alert_('info',`Auto-allocation moved ${n} rotation(s)`,`Автораспределение перенесло оборотов: ${n}`);save();render();toast(T(`${n} rotation(s) moved · plan conflict-free`,`Перенесено оборотов: ${n} · план без конфликтов`))};
+}
+
+/* ---------- PAX ---------- */
+function rPax(){const el=$('#v-pax');const t=S.t;
+  const tot=CPS.reduce((a,c)=>a+S.cps[c[0]].q,0),thr=CPS.filter(c=>c[0]==='sec'||c[0]==='ft').reduce((a,c)=>a+S.cps[c[0]].lanes*c[4],0);
+  const br=CPS.filter(c=>cpWait(c[0])>c[6]).length;
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Passengers queuing','Пассажиров в очередях')}</div><div class="v">${nf(tot)}</div><div class="d">${T('all checkpoints','все пункты')}</div></div>
+   <div class="card kpi"><div class="l">${T('Security throughput','Пропускная способность досмотра')}</div><div class="v">${nf(thr*60)}</div><div class="d">${T('pax / hour','пасс./час')}</div></div>
+   <div class="card kpi"><div class="l">${T('SLA breaches','Нарушения нормы')}</div><div class="v ${br?'bad-t':'ok-t'}">${br}</div><div class="d">${T('checkpoints over target','пунктов выше нормы')}</div></div>
+   <div class="card kpi"><div class="l">${T('Departure wave','Волна вылетов')}</div><div class="v">${S.rots.filter(r=>r.std>t&&r.std<=t+120).length}</div><div class="d">${T('departures in next 2 h','вылетов за 2 ч')}</div></div></div>
+  <div class="cps">${CPS.map(cp=>{const s=S.cps[cp[0]],w=cpWait(cp[0]),cl=wCls(w,cp[6]),d=demand(cp,t),rec=Math.min(cp[3],Math.max(1,Math.ceil((d+s.q/cp[6])/cp[4])));
+   return`<div class="cp"><div class="t"><span>${T(cp[1],cp[2])}</span><span class="pill ${cl}" style="flex:none">${cl==='ok'?T('OK','Норма'):cl==='warn'?T('Rising','Растёт'):T('Breach','Превышение')}</span></div>
+    <div class="big ${cl}-t">${Math.round(w)} <small style="font-size:13px">${T('min','мин')}</small></div><div class="sub">${nf(s.q)} ${T('in queue','в очереди')} · ${T('SLA','норма')} ${cp[6]} ${T('min','мин')} · ${nf(d*60)} ${T('pax/h','пасс./ч')}</div>
+    <div class="bar"><i style="width:${Math.min(100,w/cp[6]/1.5*100)}%;background:var(--${cl==='ok'?'mal':cl==='warn'?'amber':'red'})"></i></div>
+    <div class="lanes"><button class="btn" data-ln="${cp[0]}" data-d="-1" ${s.lanes<=1?'disabled':''} aria-label="-">−</button><b>${s.lanes}/${cp[3]}</b><button class="btn" data-ln="${cp[0]}" data-d="1" ${s.lanes>=cp[3]?'disabled':''} aria-label="+">+</button><span class="sub">${T('lanes · advise','линий · совет')} <b class="${rec>s.lanes?'warn-t':''}">${rec}</b></span></div></div>`}).join('')}</div>
+  <div class="grid2"><div class="card"><h3>${T('Wait time trend · live','Динамика ожидания · вживую')}<span class="sp"></span><span class="legend" id="pxLeg"></span></h3><canvas id="pxc" height="240"></canvas></div>
+   <div class="card svgbox"><h3>${T('Terminal 1 heat map','Тепловая карта Терминала 1')}</h3><div id="tmap"></div><div class="muted" style="font-size:12px;margin-top:6px">${T('Sensors: lidar people counters and boarding-pass scans (IoT), refreshed every simulated minute.','Датчики: лидарные счётчики людей и сканы посадочных (IoT), обновление каждую минуту симуляции.')}</div></div></div>`;
+  $$('[data-ln]',el).forEach(b=>b.onclick=()=>{const s=S.cps[b.dataset.ln],cp=CPS.find(c=>c[0]===b.dataset.ln);s.lanes=Math.max(1,Math.min(cp[3],s.lanes+ +b.dataset.d));s.w=s.q/(s.lanes*cp[4]);save();rPax();
+    toast(`${T(cp[1],cp[2])}: ${s.lanes} ${T('lanes open','линий открыто')}`)});
+  drawPax();drawMap();
+}
+const PXC=['--mal','--gold','--red','--blue','--violet','--amber','--mal3'];
+function drawPax(){const cv=$('#pxc');if(!cv)return;const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=240;cv.width=W*dpr;cv.height=H*dpr;cv.style.height=H+'px';const x=cv.getContext('2d');x.scale(dpr,dpr);
+  const L=34,B=22,mx=Math.max(20,...CPS.map(c=>Math.max(0,...S.hist[c[0]])))*1.1;x.font='10px '+cssv('--mono');x.fillStyle=cssv('--muted');x.strokeStyle=cssv('--line');x.lineWidth=1;
+  for(let i=0;i<=4;i++){const y=8+(H-B-8)*i/4;x.beginPath();x.moveTo(L,y);x.lineTo(W-6,y);x.stroke();x.fillText(Math.round(mx*(1-i/4))+'′',2,y+3)}
+  x.fillText(T('last 90 sim-min','последние 90 мин'),L,H-6);
+  x.setLineDash([4,4]);x.strokeStyle=cssv('--red');const yS=8+(H-B-8)*(1-10/mx);x.beginPath();x.moveTo(L,yS);x.lineTo(W-6,yS);x.stroke();x.setLineDash([]);
+  CPS.forEach((cp,i)=>{const h=S.hist[cp[0]];if(h.length<2)return;x.strokeStyle=cssv(PXC[i]);x.lineWidth=2;x.beginPath();h.forEach((v,j)=>{const px=L+(W-L-6)*(j+90-h.length)/89,py=8+(H-B-8)*(1-v/mx);j?x.lineTo(px,py):x.moveTo(px,py)});x.stroke()});
+  $('#pxLeg').innerHTML=CPS.map((c,i)=>`<span><i style="background:var(${PXC[i]})"></i>${c[0].toUpperCase()}</span>`).join('')}
+function drawMap(){const el=$('#tmap');if(!el)return;const tx=cssv('--text'),mu=cssv('--muted'),ln=cssv('--line2'),bg=cssv('--bg2'),pn=cssv('--panel2');
+  const col=id=>{const cp=CPS.find(c=>c[0]===id),w=cpWait(id),k=wCls(w,cp[6]);return cssv(k==='ok'?'--mal':k==='warn'?'--amber':'--red')};
+  const Z=[['ckA',20,190,130,70,'CHK A'],['ckB',170,190,130,70,'CHK B'],['sec',60,110,170,56,'SEC'],['ft',240,110,60,56,'FT'],['pcd',330,110,110,56,'PC-D'],['pca',330,190,110,70,'PC-A'],['trf',450,110,90,56,'TRF']];
+  let s=`<svg viewBox="0 0 560 290" role="img"><rect x="6" y="96" width="548" height="180" rx="16" fill="${bg}" stroke="${ln}"/>
+   <rect x="40" y="18" width="480" height="64" rx="12" fill="${pn}" stroke="${ln}"/>`;
+  for(let i=0;i<8;i++)s+=`<rect x="${52+i*58}" y="26" width="48" height="22" rx="5" fill="none" stroke="${ln}"/><text x="${76+i*58}" y="41" font-size="10" text-anchor="middle" fill="${mu}" font-family="monospace">${i<4?'A'+(i*2+1):'B'+((i-4)*2+1)}</text>`;
+  s+=`<text x="280" y="70" text-anchor="middle" font-size="10.5" fill="${mu}">${T('Airside · piers A & B','Чистая зона · галереи A и B')}</text><text x="20" y="284" font-size="10.5" fill="${mu}">${T('Landside · kerb','Привокзальная площадь')}</text>`;
+  Z.forEach(([id,x,y,w,h,lb])=>{const c=col(id),wt=cpWait(id);s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="${c}" fill-opacity=".22" stroke="${c}" stroke-width="2"/><text x="${x+w/2}" y="${y+h/2-3}" text-anchor="middle" font-size="11" font-weight="700" fill="${tx}">${lb}</text><text x="${x+w/2}" y="${y+h/2+12}" text-anchor="middle" font-size="11" fill="${c}" font-weight="700" font-family="monospace">${Math.round(wt)}′ · ${nf(S.cps[id].q)}</text>`});
+  s+=`<path d="M85 190 L120 166 M235 190 L160 166 M385 166 L385 82 M145 110 L145 82" stroke="${mu}" stroke-dasharray="4 4" fill="none"/></svg>`;el.innerHTML=s}
+
+/* ---------- OTP ---------- */
+function rOtp(){const el=$('#v-otp');const t=S.t,n=S.op;
+  const cs=S.rots.map(r=>({r,c:calc(r)})),dep=cs.filter(x=>x.c.tsat<=t),arr=cs.filter(x=>x.c.aibt<=t);
+  const tO=dep.length?dep.filter(x=>x.c.ddel<=15).length/dep.length*100:0,tA=arr.length?arr.filter(x=>x.r.ad<=15).length/arr.length*100:0;
+  const avg=dep.length?dep.reduce((a,x)=>a+Math.max(0,x.c.ddel),0)/dep.length:0;
+  const hist=S.otp.slice(0,n-1).reverse().concat([{o:Math.round(tO),a:Math.round(tA),m:avg,today:1}]);const pAvg=hist.reduce((a,x)=>a+x.o,0)/hist.length;
+  const W=640,H=240,L=36,B=26,mi=50,ma=100,xs=i=>L+(W-L-14)*i/(hist.length-1),ys=v=>10+(H-B-10)*(1-(v-mi)/(ma-mi));
+  const m=cssv('--mal'),g=cssv('--gold'),mu=cssv('--muted'),ln=cssv('--line'),rd=cssv('--red'),bl=cssv('--blue');
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let v=50;v<=100;v+=10)s+=`<line x1="${L}" x2="${W-10}" y1="${ys(v)}" y2="${ys(v)}" stroke="${ln}"/><text x="${L-5}" y="${ys(v)+3}" font-size="10" text-anchor="end" fill="${mu}">${v}%</text>`;
+  s+=`<line x1="${L}" x2="${W-10}" y1="${ys(85)}" y2="${ys(85)}" stroke="${rd}" stroke-dasharray="5 4"/><text x="${W-12}" y="${ys(85)-4}" font-size="10" text-anchor="end" fill="${rd}">${T('target 85%','цель 85%')}</text>`;
+  [['a',bl],['o',m]].forEach(([k,col])=>{s+=`<path d="${hist.map((h,i)=>(i?'L':'M')+xs(i).toFixed(1)+' '+ys(h[k]).toFixed(1)).join(' ')}" fill="none" stroke="${col}" stroke-width="2.5"/>`;
+    hist.forEach((h,i)=>{s+=`<circle cx="${xs(i)}" cy="${ys(h[k])}" r="${h.today?5:3}" fill="${h.today?g:col}"><title>${h[k]}%</title></circle>`})});
+  hist.forEach((h,i)=>{if(i%Math.ceil(hist.length/8)===0||h.today)s+=`<text x="${xs(i)}" y="${H-8}" font-size="10" text-anchor="middle" fill="${h.today?g:mu}">${h.today?T('today','сегодня'):'−'+(hist.length-1-i)+T('d','д')}</text>`});s+='</svg>';
+  const byAl=Object.keys(AL).map(k=>{const d=dep.filter(x=>x.r.al===k);return{k,n:d.length,o:d.length?d.filter(x=>x.c.ddel<=15).length/d.length*100:null}});
+  const codes={};dep.concat(cs.filter(x=>x.c.aibt<=t&&x.c.tsat>t)).forEach(x=>x.r.codes.forEach(c=>{codes[c.c]=(codes[c.c]||0)+c.m}));const ce=Object.entries(codes).sort((a,b)=>b[1]-a[1]);const cmax=ce.length?ce[0][1]:1,ctot=ce.reduce((a,x)=>a+x[1],0);
+  el.innerHTML=`<div class="row" style="margin-bottom:12px">${[7,14,30].map(d=>`<button class="chip ${n===d?'on':''}" data-op="${d}">${d} ${T('days','дней')}</button>`).join('')}</div>
+  <div class="kpis"><div class="card kpi"><div class="l">${T('Departure OTP today','Пунктуальность вылета сегодня')}</div><div class="v ${tO<85?'warn-t':'ok-t'}">${tO.toFixed(1)}%</div><div class="d">${dep.length} ${T('departures','вылетов')}</div></div>
+   <div class="card kpi"><div class="l">${T('Arrival OTP today','Пунктуальность прилёта сегодня')}</div><div class="v">${tA.toFixed(1)}%</div><div class="d">${arr.length} ${T('arrivals','прилётов')}</div></div>
+   <div class="card kpi"><div class="l">${T('Average departure delay','Средняя задержка вылета')}</div><div class="v">${avg.toFixed(1)}′</div><div class="d">${T('per departed flight','на вылетевший рейс')}</div></div>
+   <div class="card kpi"><div class="l">${T('Period average','Среднее за период')}</div><div class="v">${pAvg.toFixed(1)}%</div><div class="d">${n} ${T('days incl. today','дней вкл. сегодня')}</div></div></div>
+  <div class="card svgbox"><h3>${T('On-time performance trend','Динамика пунктуальности')}<span class="sp"></span><span class="legend"><span><i style="background:${m}"></i>${T('departures','вылет')}</span><span><i style="background:${bl}"></i>${T('arrivals','прилёт')}</span></span></h3>${s}</div>
+  <div class="grid2 mt"><div class="card"><h3>${T('Delay minutes by cause (today)','Минуты задержек по причинам (сегодня)')}<span class="sp"></span><span class="pill">${nf(ctot)} ${T('min','мин')}</span></h3>
+   ${ce.map(([k,v])=>`<div class="hbar"><span><b class="mono">${k}</b> ${T(CODES[k][0],CODES[k][1])}</span><div class="bar"><i style="width:${v/cmax*100}%;background:var(--${k==93||k==81?'gold':'mal'})"></i></div><em>${Math.round(v)}′</em></div>`).join('')||`<div class="empty">${T('No delays yet','Задержек пока нет')}</div>`}</div>
+  <div class="card"><h3>${T('By airline (today)','По авиакомпаниям (сегодня)')}</h3>${byAl.map(a=>`<div class="hbar"><span>${T(AL[a.k][0],AL[a.k][1])}</span><div class="bar"><i style="width:${a.o||0}%;background:var(--${a.o!=null&&a.o<85?'amber':'mal'})"></i></div><em>${a.o==null?'—':Math.round(a.o)+'%'} <span class="muted">· ${a.n}</span></em></div>`).join('')}</div></div>`;
+  $$('[data-op]',el).forEach(b=>b.onclick=()=>{S.op=+b.dataset.op;save();rOtp()});
+}
+
+/* ---------- BAGS ---------- */
+function rBags(){const el=$('#v-bags');const t=S.t,q=(S.bq||'').toLowerCase();const all=bagList();
+  const F={all:x=>1,dep:x=>x.b.dir==='dep',arr:x=>x.b.dir==='arr',exc:x=>x.st.exc};
+  const list=all.filter(F[S.bf]).filter(x=>!q||(x.b.tag+x.b.name).toLowerCase().includes(q)).sort((a,b)=>(b.st.exc&&!b.st.soft?1:0)-(a.st.exc&&!a.st.soft?1:0)||a.b.rot.localeCompare(b.b.rot,undefined,{numeric:true})).slice(0,80);
+  const exc=all.filter(x=>x.st.exc&&!x.st.soft).length,del=all.filter(x=>x.st.done).length;
+  const arrs=S.rots.map(r=>({r,c:calc(r)})).filter(x=>x.c.aibt<=t+5&&x.c.X.unl.e+25>t).sort((a,b)=>a.c.aibt-b.c.aibt).slice(0,6);
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Tracked bags now','Отслеживается сумок')}</div><div class="v">${nf(all.length)}</div><div class="d">${T('sample of RFID-tagged bags','выборка с RFID-бирками')}</div></div>
+   <div class="card kpi"><div class="l">${T('Exceptions','Исключения')}</div><div class="v ${exc?'bad-t':'ok-t'}">${exc}</div><div class="d">${T('need action','требуют действий')}</div></div>
+   <div class="card kpi"><div class="l">${T('Completed','Завершено')}</div><div class="v">${del}</div><div class="d">${T('departed or delivered','улетели или выданы')}</div></div>
+   <div class="card kpi"><div class="l">${T('Mishandled rate','Доля сбоев')}</div><div class="v">${(exc/S.rots.reduce((q,r)=>q+r.seats*r.load*2.2,0)*1000).toFixed(2)}‰</div><div class="d">${T('of all bags today · target ≤ 5‰','от всех сумок дня · цель ≤ 5‰')}</div></div></div>
+  <div class="card" style="margin-bottom:14px"><h3>${T('Arrival reclaim belts','Ленты выдачи багажа')}</h3><div class="belts">${arrs.length?arrs.map((x,i)=>{const f=x.c.X.unl.s+9,l=x.c.X.unl.e+21,p=Math.max(0,Math.min(1,(t-f)/(l-f)));
+   return`<div class="belt"><div class="row"><b>${T('Belt','Лента')} ${i+1}</b><span class="grow"></span><span class="pill ${p>=1?'':p>0?'ok':'gold'}">${p>=1?T('Last bag','Последняя'):p>0?T('Delivering','Выдача'):T('Expected','Ожидается')}</span></div>
+    <div class="sub"><b class="mono">${x.r.arr}</b> · ${city(x.r.from)} · ${T('first bag','первая')} ${hm(f)} · ${T('last','последняя')} ${hm(l)}</div><div class="bar"><i style="width:${p*100}%;background:var(--mal)"></i></div></div>`}).join(''):`<div class="empty">${T('No active belts','Нет активных лент')}</div>`}</div></div>
+  <div class="row" style="margin-bottom:12px">${[['all','All','Все'],['dep','Departing','Вылет'],['arr','Arriving','Прилёт'],['exc','Exceptions','Исключения']].map(x=>`<button class="chip ${S.bf===x[0]?'on':''}" data-bf="${x[0]}">${T(x[1],x[2])} · ${all.filter(F[x[0]]).length}</button>`).join('')}
+   <span class="grow"></span><input class="input search" id="bq" value="${esc(S.bq||'')}" placeholder="${T('Tag number or passenger','Номер бирки или пассажир')}"></div>
+  <div class="tw"><table><thead><tr><th>${T('Bag tag','Бирка')}</th><th>${T('Passenger','Пассажир')}</th><th>${T('Flight','Рейс')}</th><th>${T('Progress','Ход')}</th><th>${T('Status','Статус')}</th><th>${T('Action','Действие')}</th></tr></thead><tbody>
+  ${list.map(({b,st})=>{const rt=S.rots.find(r=>r.id===b.rot);const stages=BST[b.dir];const lb=st.exc?T(EXC[st.exc][0],EXC[st.exc][1]):T(stages[st.s][0],stages[st.s][1]);
+    const act=st.exc==='hold'?['clear',T('Clear hold','Снять задержку')]:st.exc==='mis'?['fix',T('Locate & re-sort','Найти и пересортировать')]:st.exc==='missed'?['rush',T('Rush on next flight','Отправить следующим')]:st.exc==='short'?['pir',T('File PIR','Оформить PIR')]:null;
+    return`<tr><td class="mono"><b>${b.tag}</b>${b.trf?' <span class="pill">TRF</span>':''}</td><td>${b.name}</td><td class="mono">${b.dir==='dep'?rt.dep+' → '+rt.to:rt.arr+' ← '+rt.from}</td>
+     <td><div class="trk">${stages.map((_,i)=>`<i class="${st.exc&&!st.soft&&i===st.s?'bad':i<st.s||(st.done&&i===st.s)?'ok':i===st.s?'cur':''}"></i>`).join('')}</div></td>
+     <td><span class="pill ${st.exc?(st.soft?'gold':'bad'):st.done?'ok':''}">${lb}</span></td><td>${act?`<button class="btn sm ${act[0]==='clear'?'pri':''}" data-ba="${act[0]}" data-tag="${b.tag}">${act[1]}</button>`:'<span class="muted">—</span>'}</td></tr>`}).join('')||`<tr><td colspan="6"><div class="empty">${T('No bags match','Сумки не найдены')}</div></td></tr>`}</tbody></table></div>`;
+  $$('[data-bf]',el).forEach(b=>b.onclick=()=>{S.bf=b.dataset.bf;save();rBags()});
+  const bq=$('#bq');bq.oninput=()=>{S.bq=bq.value;save();rBags();const n=$('#bq');n.focus();n.setSelectionRange(n.value.length,n.value.length)};
+  $$('[data-ba]',el).forEach(b=>b.onclick=()=>{const tag=b.dataset.tag,a=b.dataset.ba;const x=S.bx[tag]=S.bx[tag]||{};
+    if(a==='clear')x.cleared=S.t;if(a==='fix')x.fixed=S.t;if(a==='rush')x.rush=1;if(a==='pir')x.pir=1;
+    const msg={clear:['security hold cleared','задержка досмотра снята'],fix:['located and re-sorted','найдена и пересортирована'],rush:['rush-tagged for next service','отправлена срочно следующим рейсом'],pir:['PIR filed, tracing started','акт PIR оформлен, начат розыск']}[a];
+    alert_('info',`Bag ${tag}: ${msg[0]}`,`Сумка ${tag}: ${msg[1]}`);save();render();toast(`${tag}: ${T(msg[0],msg[1])}`)});
+}
+
+/* ---------- tick ---------- */
+function tick(){if(!S.auth||!S.speed)return;const dt=[0,.5,2,5][S.speed];S.t+=dt;
+  if(S.t>=1410){S.t=360;S.rots.forEach(r=>{r.td={};r.codes=r.codes.filter(c=>c.c===93||c.c===81);r.conf=false;r.dl=0});S.otp.unshift({o:80,a:84,m:9});S.otp=S.otp.slice(0,30);S.seen={};alert_('info','New operating day started','Начался новый операционный день')}
+  simPax(dt,true);
+  S.rots.forEach(r=>{const c=calc(r);if(S.t>=c.aibt&&S.t<c.tsat&&c.ddel>15&&!r.dl){r.dl=1;alert_('warn',`${r.dep}: departure delay forecast +${Math.round(c.ddel)} min (TOBT ${hm(c.tobt)})`,`${r.dep}: прогноз задержки вылета +${Math.round(c.ddel)} мин (TOBT ${hm(c.tobt)})`)}});
+  bagList().forEach(x=>{if(x.st.exc&&!x.st.soft&&!S.seen[x.b.tag+x.st.exc]){S.seen[x.b.tag+x.st.exc]=1;alert_('bad',`Bag ${x.b.tag}: ${EXC[x.st.exc][0]}`,`Сумка ${x.b.tag}: ${EXC[x.st.exc][1]}`)}});
+  const cf=conflicts().size;if(cf>S.cfN)alert_('bad',`Gate plan: ${cf} conflict(s) detected`,`План гейтов: обнаружено конфликтов — ${cf}`);S.cfN=cf;
+  save();const a=document.activeElement;const editing=a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)&&a.closest('main');
+  head();nav();if(!editing)R[S.view]()}
+function warm(){if(!S.hist.sec||S.hist.sec.length)return;const t=S.t;for(let i=89;i>=0;i--){S.t=t-i;simPax(1,false)}S.t=t;S.alerts=S.alerts.filter(a=>a.t<t-5||a.id===0)}
+
+/* ---------- shell ---------- */
+function closeMenu(){$('#side').classList.remove('open');$('#scrim').classList.remove('on')}
+$('#menuBtn').onclick=()=>{$('#side').classList.toggle('open');$('#scrim').classList.toggle('on')};
+$('#scrim').onclick=closeMenu;
+$$('.role').forEach(b=>b.onclick=()=>{S.role=b.dataset.role;$$('.role').forEach(x=>x.classList.toggle('on',x===b));if(S.role==='gh'&&$('#lgUser').value==='duty.manager@aocc.mrb')$('#lgUser').value='ramp.lead@handling.mrb';if(S.role==='aocc'&&$('#lgUser').value==='ramp.lead@handling.mrb')$('#lgUser').value='duty.manager@aocc.mrb'});
+$('#loginBtn').onclick=()=>{const u=$('#lgUser').value.trim(),p=$('#lgPass').value;
+  if(!u||!p){$('#lgErr').textContent=T('Enter operator ID and password','Введите ID оператора и пароль');return}
+  $('#lgErr').textContent='';S.auth=true;S.user=u;save();render();toast(T('Welcome, ','Добро пожаловать, ')+esc(u))};
+$('#logout').onclick=()=>{S.auth=false;save();closeMenu();render()};
+$('#reset').onclick=()=>{store.clear();location.reload()};
+window.addEventListener('resize',()=>{if(S.auth&&S.view==='pax')drawPax()});
+PT.onLang(()=>render());
+warm();
+document.addEventListener('DOMContentLoaded',()=>{render();setInterval(tick,1000)});
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

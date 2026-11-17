@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ledgera ERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px;letter-spacing:.01em}
+.brand b{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff;font-size:15px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.side .grow{flex:1}
+.rolebox{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel)}
+.rolebox label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:700}
+.rolebox select{margin-top:6px}
+.who{display:flex;gap:10px;align-items:center;margin-top:10px;font-size:13px}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:12px;background:color-mix(in srgb,var(--gold) 25%,var(--panel2));color:var(--gold2);flex:none}
+main{padding:22px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim);margin-bottom:2px}
+.menu-btn{display:none}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px}
+.up{color:var(--mal3)} .dn{color:var(--red)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h3 .sp{flex:1}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td{background:color-mix(in srgb,var(--mal) 6%,transparent)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3));border-radius:9px}
+.bar i.over{background:linear-gradient(90deg,var(--amber),var(--red))}
+.tree .min td:first-child{font-weight:700}
+.tree .prog td:first-child{padding-left:38px;color:var(--muted)}
+.caret{display:inline-block;width:16px;transition:.15s;color:var(--dim)}
+.open .caret{transform:rotate(90deg)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.tools .input{width:auto;min-width:160px;flex:1;max-width:320px}
+.split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start}
+.steps{display:flex;gap:0;margin:14px 0}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted)}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2);z-index:0}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step.bad .dot{background:var(--red);border-color:var(--red);color:#fff}
+.log{font-size:12.5px;max-height:260px;overflow:auto;border-top:1px solid var(--line);margin-top:10px}
+.log div{padding:7px 0;border-bottom:1px dashed var(--line);display:flex;gap:10px}
+.log .t{color:var(--dim);font-family:var(--mono);font-size:11.5px;flex:none}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.on{display:flex}
+.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);padding:22px;box-shadow:var(--shadow);animation:pop .18s ease}
+@keyframes pop{from{transform:scale(.96);opacity:0}}
+.modal h2{margin:0 0 14px;font-size:19px}
+.modal .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.org{overflow-x:auto;padding:10px 0}
+.org ul{padding-top:18px;position:relative;display:flex;justify-content:center;margin:0;padding-left:0}
+.org li{list-style:none;text-align:center;position:relative;padding:18px 6px 0}
+.org li:before,.org li:after{content:"";position:absolute;top:0;right:50%;border-top:2px solid var(--line2);width:50%;height:18px}
+.org li:after{right:auto;left:50%;border-left:2px solid var(--line2)}
+.org li:only-child:after,.org li:only-child:before{display:none}
+.org li:only-child{padding-top:0}
+.org li:first-child:before,.org li:last-child:after{border:0 none}
+.org li:last-child:before{border-right:2px solid var(--line2);border-radius:0 8px 0 0}
+.org li:first-child:after{border-radius:8px 0 0 0}
+.org ul ul:before{content:"";position:absolute;top:0;left:50%;border-left:2px solid var(--line2);height:18px}
+.node{display:inline-block;border:1px solid var(--line2);background:var(--panel2);border-radius:12px;padding:8px 12px;font-size:12px;min-width:120px}
+.node b{display:block;font-size:13px}
+.node.top{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,var(--panel2))}
+.alert{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid color-mix(in srgb,var(--amber) 45%,transparent);background:color-mix(in srgb,var(--amber) 8%,transparent);border-radius:12px;margin-bottom:8px;font-size:13.5px;flex-wrap:wrap}
+.alert .sp{flex:1}
+.sys{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.sys .card{padding:14px}
+.sys .nm{font-weight:700;display:flex;align-items:center;gap:8px}
+.led{width:8px;height:8px;border-radius:50%;background:var(--mal3);box-shadow:0 0 8px var(--mal3);animation:bl 1.6s infinite}
+.led.warn{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+@keyframes bl{50%{opacity:.45}}
+.sys .row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:6px}
+.sys .row b{color:var(--text);font-family:var(--mono);font-weight:600}
+.busbox{position:relative}
+.busbox svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.lock{font-size:12px;color:var(--dim)}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.split{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:16px 16px 50px}
+  .head h1{font-size:20px}
+}
+@media (max-width:520px){.kpis{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.kpi .v{font-size:20px}.fgrid{grid-template-columns:1fr}.tools .input{max-width:none}}
+</style>
+</head>
+<body data-demo-en="Ledgera — government ERP / SPBE" data-demo-ru="Ledgera — госERP и СПБЭ">
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>L</b><div>Ledgera<small data-en="Ministry of Finance · Nordania" data-ru="Минфин · Нордания"></small></div></div>
+    <div id="navs"></div>
+    <div class="grow"></div>
+    <div class="rolebox">
+      <label data-en="Signed in as role" data-ru="Роль пользователя"></label>
+      <select class="input" id="role"></select>
+      <div class="who"><div class="av" id="av"></div><div><div id="uname" style="font-weight:600"></div><div class="muted" style="font-size:12px" id="urole"></div></div></div>
+    </div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo data" data-ru="Сбросить данные"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill gold mono" id="fy">FY 2026</span>
+      <button class="btn sm" id="csv">⇩ <span data-en="Export CSV" data-ru="Экспорт CSV"></span></button>
+    </div>
+
+    <section class="view" id="v-dash">
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <div class="card"><h3><span data-en="Budget execution by month, NDK M" data-ru="Исполнение бюджета по месяцам, млн NDK"></span><span class="sp"></span>
+          <span class="legend"><span><i style="background:var(--line2)"></i><span data-en="Plan" data-ru="План"></span></span><span><i style="background:var(--mal)"></i><span data-en="Actual" data-ru="Факт"></span></span><span><i style="background:var(--gold)"></i><span data-en="Cumulative %" data-ru="Накопл. %"></span></span></span></h3>
+          <div id="chart"></div></div>
+        <div class="card"><h3 data-en="Execution structure" data-ru="Структура исполнения"></h3><div id="donut"></div></div>
+      </div>
+      <div class="card" style="margin-top:14px"><h3><span data-en="Ministries" data-ru="Министерства"></span><span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500" data-en="Click a row to drill down" data-ru="Нажмите строку для детализации"></span></h3>
+        <div class="tw"><table id="tMin"></table></div></div>
+    </section>
+
+    <section class="view" id="v-budget">
+      <div class="tools"><input class="input" id="bq" data-en-ph="Search programme…" data-ru-ph="Поиск программы…"><button class="btn sm" id="bExp" data-en="Expand all" data-ru="Развернуть всё"></button><button class="btn sm" id="bCol" data-en="Collapse" data-ru="Свернуть"></button><span class="lock" id="bLock"></span></div>
+      <div class="tw"><table class="tree" id="tBud"></table></div>
+    </section>
+
+    <section class="view" id="v-proc">
+      <div class="tools"><select class="input" id="pf" style="max-width:200px"></select><span class="sp" style="flex:1"></span><button class="btn pri sm" id="newReq">＋ <span data-en="New purchase request" data-ru="Новая заявка"></span></button></div>
+      <div class="split">
+        <div class="tw"><table id="tReq"></table></div>
+        <div class="card" id="reqDetail"></div>
+      </div>
+    </section>
+
+    <section class="view" id="v-hr">
+      <div class="tools"><input class="input" id="hq" data-en-ph="Search name or position…" data-ru-ph="Поиск по имени или должности…"><select class="input" id="hd" style="max-width:220px"></select><button class="btn pri sm" id="addEmp">＋ <span data-en="Add employee" data-ru="Добавить сотрудника"></span></button></div>
+      <div class="tw"><table id="tEmp"></table></div>
+      <div class="card" style="margin-top:14px"><h3><span data-en="Org chart" data-ru="Оргструктура"></span><span class="sp"></span><select class="input" id="od" style="width:auto"></select></h3><div class="org" id="org"></div></div>
+    </section>
+
+    <section class="view" id="v-wh">
+      <div id="alerts"></div>
+      <div class="split">
+        <div class="tw"><table id="tStock"></table></div>
+        <div class="card"><h3 data-en="Stock movement" data-ru="Движение товара"></h3>
+          <div class="fgrid">
+            <div class="f full"><label data-en="Item" data-ru="Позиция"></label><select class="input" id="mvItem"></select></div>
+            <div class="f"><label data-en="Operation" data-ru="Операция"></label><select class="input" id="mvType"></select></div>
+            <div class="f"><label data-en="Quantity" data-ru="Количество"></label><input class="input" id="mvQty" type="number" min="1" value="10"></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center"><button class="btn pri sm" id="mvGo" data-en="Post movement" data-ru="Провести"></button><span class="lock" id="whLock"></span></div>
+          <div class="log" id="mvLog"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="v-int">
+      <div class="kpis" id="ikpis"></div>
+      <div class="grid2">
+        <div class="card busbox"><h3><span data-en="Inter-agency service bus · NIX" data-ru="Межведомственная шина · NIX"></span><span class="sp"></span><span class="pill ok"><span class="led"></span> <span data-en="live" data-ru="онлайн"></span></span></h3><div id="bus"></div></div>
+        <div class="card"><h3 data-en="Send test message" data-ru="Тестовое сообщение"></h3>
+          <div class="fgrid"><div class="f"><label data-en="From" data-ru="Откуда"></label><select class="input" id="tFrom"></select></div><div class="f"><label data-en="To" data-ru="Куда"></label><select class="input" id="tTo"></select></div>
+          <div class="f full"><label data-en="Message type" data-ru="Тип сообщения"></label><select class="input" id="tType"><option>GetTaxpayerStatus</option><option>PaymentOrder.v3</option><option>CitizenLookup</option><option>CustomsDeclaration</option><option>ContractNotice</option></select></div></div>
+          <button class="btn gold sm" id="tSend" style="margin-top:12px">➤ <span data-en="Send through bus" data-ru="Отправить через шину"></span></button>
+          <div class="log mono" id="tLog" style="font-size:11.5px"></div></div>
+      </div>
+      <div class="sys" id="sys" style="margin-top:14px"></div>
+    </section>
+  </main>
+</div>
+<div class="modal-bg" id="mbg"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru), L=o=>o?(PT.lang==='ru'?o.ru:o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='ledgera-v1';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+
+const ROLES={
+  minister:{en:'Minister',ru:'Министр',user:{en:'Astrid Holm',ru:'Астрид Хольм'},ini:'AH'},
+  accountant:{en:'Chief Accountant',ru:'Главный бухгалтер',user:{en:'Petter Lund',ru:'Петтер Лунд'},ini:'PL'},
+  procurement:{en:'Procurement officer',ru:'Специалист по закупкам',user:{en:'Karin Ek',ru:'Карин Эк'},ini:'KE'}
+};
+const PERM={
+  editBudget:['minister','accountant'],
+  createReq:['procurement'],
+  addEmp:['minister','accountant'],
+  stock:['procurement','accountant'],
+  sendTest:['minister','accountant','procurement']
+};
+const can=a=>PERM[a].includes(S.role);
+const STEPS=['procurement','accountant','minister'];
+const STEPNAME={procurement:{en:'Head of Procurement',ru:'Нач. закупок'},accountant:{en:'Chief Accountant',ru:'Главбух'},minister:{en:'Minister',ru:'Министр'}};
+
+const MIN=[
+ ['fin','Finance','Финансы',['Treasury modernisation','Модернизация казначейства'],['Debt management','Управление долгом'],['Tax administration','Налоговое администрирование']],
+ ['hea','Health','Здравоохранение',['Primary care network','Сеть первичной помощи'],['Hospital equipment','Оборудование больниц'],['e-Health records','Электронные медкарты']],
+ ['edu','Education','Образование',['School infrastructure','Школьная инфраструктура'],['Teacher salaries','Зарплаты учителей'],['Digital classroom','Цифровой класс']],
+ ['tra','Transport & Infrastructure','Транспорт и инфраструктура',['Northern highway','Северная магистраль'],['Rail renewal','Обновление ж/д'],['Port of Velmar','Порт Вельмар']],
+ ['dig','Digital Development','Цифровое развитие',['Gov cloud','Гособлако'],['e-Services portal','Портал госуслуг'],['Cybersecurity centre','Центр кибербезопасности']],
+ ['int','Interior','Внутренние дела',['Border systems','Пограничные системы'],['Emergency 112','Экстренная служба 112'],['Police fleet','Автопарк полиции']],
+ ['agr','Agriculture','Сельское хозяйство',['Farm subsidies','Субсидии фермерам'],['Irrigation','Ирригация'],['Food safety labs','Лаборатории пищ. безопасности']],
+ ['ene','Energy','Энергетика',['Grid upgrade','Модернизация сетей'],['Wind parks','Ветропарки'],['Energy efficiency','Энергоэффективность']]
+];
+const VENDORS=['Norbyte AS','Velmar Systems','Fjordline Supply','Arktek Group','Polaris Office','Granit Build'];
+const DEPTS=[['tre','Treasury','Казначейство'],['bud','Budget Policy','Бюджетная политика'],['pro','Procurement','Закупки'],['it','IT & Digital','ИТ и цифра'],['leg','Legal','Юридический'],['hr','HR','Кадры']];
+const POS={dir:{en:'Director',ru:'Директор'},head:{en:'Head of Unit',ru:'Начальник отдела'},sen:{en:'Senior Specialist',ru:'Ведущий специалист'},spe:{en:'Specialist',ru:'Специалист'}};
+const FN=[['Erik','Эрик'],['Lina','Лина'],['Mats','Матс'],['Ingrid','Ингрид'],['Oskar','Оскар'],['Freya','Фрея'],['Nils','Нильс'],['Sigrid','Сигрид'],['Anton','Антон'],['Maja','Майя'],['Henrik','Хенрик'],['Elsa','Эльза'],['Jonas','Йонас'],['Tove','Туве']];
+const LN=[['Halvorsen','Халворсен'],['Lindqvist','Линдквист'],['Berg','Берг'],['Strand','Странд'],['Dahl','Даль'],['Nordin','Нордин'],['Aune','Ауне'],['Moberg','Моберг'],['Sund','Сунд'],['Vik','Вик'],['Eklund','Эклунд']];
+const ITEMS=[['Laptop, 14"','Ноутбук 14"','pcs','шт',42,30],['A4 paper, box','Бумага A4, коробка','box','кор',18,40],['Toner cartridge','Картридж тонер','pcs','шт',64,25],['Office chair','Офисное кресло','pcs','шт',12,10],['Network switch 48p','Коммутатор 48 портов','pcs','шт',6,8],['ID card blanks','Бланки ID-карт','pcs','шт',5200,3000],['Fuel coupons','Талоны на топливо','pcs','шт',820,1000],['Server rack 42U','Серверная стойка 42U','pcs','шт',3,2],['Medical masks','Медицинские маски','box','кор',140,100]];
+
+function seed(){
+  const r=rng(2026);
+  const budget=MIN.map(m=>({id:m[0],en:m[1],ru:m[2],open:false,programs:m.slice(3).map((p,i)=>{const plan=Math.round(120+r()*780);const spent=Math.round(plan*(.48+r()*.32));return{id:m[0]+i,en:p[0],ru:p[1],plan,committed:Math.min(plan,Math.round(spent+plan*(.04+r()*.14))),spent}})}));
+  const emps=[];let n=1;
+  DEPTS.forEach(d=>{const dir={id:n++,f:Math.floor(r()*FN.length),l:Math.floor(r()*LN.length),dept:d[0],pos:'dir',mgr:null,since:2012+Math.floor(r()*8)};emps.push(dir);
+    const heads=[0,1].map(()=>{const h={id:n++,f:Math.floor(r()*FN.length),l:Math.floor(r()*LN.length),dept:d[0],pos:'head',mgr:dir.id,since:2015+Math.floor(r()*6)};emps.push(h);return h});
+    const k=3+Math.floor(r()*3);for(let i=0;i<k;i++)emps.push({id:n++,f:Math.floor(r()*FN.length),l:Math.floor(r()*LN.length),dept:d[0],pos:r()<.4?'sen':'spe',mgr:heads[i%2].id,since:2017+Math.floor(r()*9)});});
+  const stock=ITEMS.map((it,i)=>({id:'SKU-'+(1001+i),en:it[0],ru:it[1],uen:it[2],uru:it[3],qty:it[4],min:it[5],loc:i%3?'WH-1 Capital':'WH-2 North'}));
+  const reqs=[
+    {t:['Laptops for regional tax offices','Ноутбуки для налоговых отделений'],min:'fin',p:'fin2',a:4.8,v:0,step:3,st:'approved'},
+    {t:['MRI scanner — Velmar General','МРТ-сканер — больница Вельмара'],min:'hea',p:'hea1',a:38.5,v:3,step:2,st:'pending'},
+    {t:['Cloud storage expansion 2 PB','Расширение облачного хранилища 2 ПБ'],min:'dig',p:'dig0',a:22.0,v:1,step:1,st:'pending'},
+    {t:['Road salt, winter season','Дорожная соль, зимний сезон'],min:'tra',p:'tra0',a:6.2,v:5,step:0,st:'pending'},
+    {t:['Patrol vehicles (24 units)','Патрульные автомобили (24 шт.)'],min:'int',p:'int2',a:17.9,v:4,step:1,st:'rejected'},
+    {t:['Interactive panels for schools','Интерактивные панели для школ'],min:'edu',p:'edu2',a:11.3,v:4,step:0,st:'pending'}
+  ].map((q,i)=>({id:'PR-26-'+String(412+i).padStart(4,'0'),en:q.t[0],ru:q.t[1],min:q.min,prog:q.p,amount:q.a,vendor:VENDORS[q.v],step:q.step,status:q.st,created:'2026-'+String(9+Math.floor(i/3)).padStart(2,'0')+'-'+String(4+i*4).padStart(2,'0'),acts:[]}));
+  const audit=[];
+  reqs.forEach(q=>{audit.push({ts:q.created+' 09:1'+q.id.slice(-1),req:q.id,role:'procurement',en:'Request created',ru:'Заявка создана'});
+    for(let s=0;s<q.step&&s<3;s++)audit.push({ts:q.created+' 1'+(s+1)+':0'+s,req:q.id,role:STEPS[s],en:'Approved',ru:'Согласовано'});
+    if(q.status==='rejected')audit.push({ts:q.created+' 15:40',req:q.id,role:STEPS[q.step],en:'Rejected: price above market benchmark',ru:'Отклонено: цена выше рыночной'});});
+  return{role:'accountant',budget,emps,nextEmp:n,stock,moves:[],reqs,audit,nextReq:418};
+}
+let S=store.load()||seed();
+const save=()=>store.save(S);
+let view='dash', selReq=S.reqs[1]&&S.reqs[1].id, orgDept='it';
+
+function money(v){ // v in NDK millions
+  if(Math.abs(v)>=1000)return (v/1000).toLocaleString(PT.lang,{maximumFractionDigits:2,minimumFractionDigits:2})+T(' bn',' млрд');
+  return v.toLocaleString(PT.lang,{maximumFractionDigits:1,minimumFractionDigits:1})+T(' M',' млн');
+}
+const pct=(a,b)=>b?a/b*100:0;
+function tot(list){return list.reduce((o,p)=>(o.plan+=p.plan,o.committed+=p.committed,o.spent+=p.spent,o),{plan:0,committed:0,spent:0})}
+const minTot=m=>tot(m.programs), allTot=()=>tot(S.budget.flatMap(m=>m.programs));
+const now=()=>{const d=new Date();return d.toISOString().slice(0,10)+' '+d.toTimeString().slice(0,5)};
+function toast(msg,cls){const t=document.createElement('div');t.className='toast '+(cls||'');t.innerHTML=msg;$('#toasts').append(t);setTimeout(()=>t.remove(),3600)}
+function modal(html,onOk){const m=$('#modal');m.innerHTML=html;$('#mbg').classList.add('on');PT.apply(m);
+  $$('[data-close]',m).forEach(b=>b.onclick=closeModal);const ok=$('[data-ok]',m);if(ok)ok.onclick=()=>{if(onOk(m)!==false)closeModal()};const f=$('input,select',m);if(f)f.focus()}
+function closeModal(){$('#mbg').classList.remove('on')}
+$('#mbg').onclick=e=>{if(e.target.id==='mbg')closeModal()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+const denied=()=>toast(T('Not allowed for role ','Недоступно для роли ')+'<b>'+L(ROLES[S.role])+'</b>','bad');
+
+const ICONS={dash:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>',budget:'<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',proc:'<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/>',hr:'<circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/>',wh:'<path d="M21 8 12 3 3 8v13h18zM3 8l9 5 9-5M12 13v8"/>',int:'<circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/>'};
+const VIEWS=[['dash','Dashboard','Обзор'],['budget','Budget','Бюджет'],['proc','Procurement','Закупки'],['hr','HR','Кадры'],['wh','Warehouse','Склад'],['int','Integrations','Интеграции']];
+function renderNav(){
+  const pend=S.reqs.filter(q=>q.status==='pending'&&STEPS[q.step]===S.role).length, low=S.stock.filter(i=>i.qty<i.min).length;
+  $('#navs').innerHTML=VIEWS.map(v=>`<button class="nav ${v[0]===view?'on':''}" data-v="${v[0]}"><svg viewBox="0 0 24 24">${ICONS[v[0]]}</svg>${T(v[1],v[2])}${v[0]==='proc'&&pend?`<span class="cnt">${pend}</span>`:''}${v[0]==='wh'&&low?`<span class="cnt">${low}</span>`:''}</button>`).join('');
+  $$('#navs .nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  $('#role').innerHTML=Object.keys(ROLES).map(k=>`<option value="${k}" ${k===S.role?'selected':''}>${L(ROLES[k])}</option>`).join('');
+  const R=ROLES[S.role];$('#av').textContent=R.ini;$('#uname').textContent=L(R.user);$('#urole').textContent=L(R);
+}
+function go(v){view=v;$$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));$('#side').classList.remove('open');render();scrollTo(0,0)}
+$('#role').onchange=e=>{S.role=e.target.value;save();render();toast(T('Role switched: ','Роль: ')+'<b>'+L(ROLES[S.role])+'</b>','gold')};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();S=seed();save();render();toast(T('Demo data restored','Демо-данные восстановлены'))};
+
+/* ---------- Dashboard ---------- */
+const W=[.05,.07,.08,.08,.09,.09,.08,.08,.09,.09,.1,.1];
+function monthly(){const t=allTot(),r=rng(77),done=10;const sw=W.slice(0,done).reduce((a,b)=>a+b,0);
+  return W.map((w,i)=>({plan:t.plan*w,act:i<done?t.spent*w/sw*(.9+r()*.2):null}))}
+function renderDash(){
+  const t=allTot();const done=10;const expPlan=t.plan*W.slice(0,done).reduce((a,b)=>a+b,0);
+  const k=[[T('Approved budget','Утверждённый бюджет'),money(t.plan),T('Law No. 41/2025','Закон № 41/2025'),''],
+    [T('Committed','Обязательства'),money(t.committed),pct(t.committed,t.plan).toFixed(1)+'% '+T('of plan','плана'),''],
+    [T('Cash spent','Кассовое исполнение'),money(t.spent),(pct(t.spent,expPlan)-100).toFixed(1)+'% '+T('vs schedule','к графику'),t.spent>=expPlan?'up':'dn'],
+    [T('Open requests','Открытые заявки'),S.reqs.filter(q=>q.status==='pending').length,money(S.reqs.filter(q=>q.status==='pending').reduce((a,q)=>a+q.amount,0))+' '+T('pending','на рассмотрении'),'']];
+  $('#kpis').innerHTML=k.map(x=>`<div class="card kpi"><div class="l">${x[0]}</div><div class="v">${x[1]}</div><div class="d ${x[3]}">${x[2]}</div></div>`).join('');
+  drawChart();drawDonut(t);
+  $('#tMin').innerHTML=`<thead><tr><th>${T('Ministry','Министерство')}</th><th class="num">${T('Plan','План')}</th><th class="num">${T('Committed','Обязат.')}</th><th class="num">${T('Spent','Исполнено')}</th><th>${T('Execution','Исполнение')}</th><th class="num">%</th></tr></thead><tbody>`+
+    S.budget.map(m=>{const x=minTot(m),p=pct(x.spent,x.plan);return`<tr class="clk" data-m="${m.id}"><td>${L(m)}</td><td class="num">${money(x.plan)}</td><td class="num">${money(x.committed)}</td><td class="num">${money(x.spent)}</td><td><div class="bar"><i style="width:${Math.min(100,p)}%"></i></div></td><td class="num"><span class="pill ${p<55?'warn':'ok'}">${p.toFixed(1)}</span></td></tr>`}).join('')+'</tbody>';
+  $$('#tMin tr[data-m]').forEach(tr=>tr.onclick=()=>{S.budget.forEach(m=>m.open=m.id===tr.dataset.m);go('budget')});
+}
+function drawChart(){
+  const el=$('#chart'),w=Math.max(300,el.clientWidth||600),h=260,pl=46,pr=40,pt=12,pb=28;const d=monthly();
+  const mx=Math.max(...d.map(x=>Math.max(x.plan,x.act||0)))*1.15;const cw=(w-pl-pr)/12;
+  const c={line:cssv('--line'),line2:cssv('--line2'),mal:cssv('--mal'),mal3:cssv('--mal3'),gold:cssv('--gold'),dim:cssv('--dim')};
+  const mon=PT.lang==='ru'?['Я','Ф','М','А','М','И','И','А','С','О','Н','Д']:['J','F','M','A','M','J','J','A','S','O','N','D'];
+  const tp=d.reduce((a,x)=>a+x.plan,0);let cum=0,pts=[];
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="img"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.mal3}"/><stop offset="1" stop-color="${c.mal}"/></linearGradient></defs>`;
+  for(let i=0;i<=4;i++){const y=pt+(h-pt-pb)*i/4;s+=`<line x1="${pl}" x2="${w-pr}" y1="${y}" y2="${y}" stroke="${c.line}"/><text x="${pl-8}" y="${y+4}" text-anchor="end" font-size="10" fill="${c.dim}">${Math.round(mx*(1-i/4))}</text><text x="${w-pr+6}" y="${y+4}" font-size="10" fill="${c.dim}">${100-i*25}%</text>`}
+  d.forEach((x,i)=>{const x0=pl+i*cw,bw=cw*.36,ph=(h-pt-pb)*x.plan/mx;
+    s+=`<rect x="${x0+cw*.12}" y="${h-pb-ph}" width="${bw}" height="${ph}" rx="3" fill="${c.line2}"><title>${T('Plan','План')}: ${x.plan.toFixed(1)}</title></rect>`;
+    if(x.act!=null){const ah=(h-pt-pb)*x.act/mx;s+=`<rect x="${x0+cw*.12+bw+2}" y="${h-pb-ah}" width="${bw}" height="${ah}" rx="3" fill="url(#ga)"><title>${T('Actual','Факт')}: ${x.act.toFixed(1)}</title></rect>`;cum+=x.act;pts.push([x0+cw/2,pt+(h-pt-pb)*(1-cum/tp)])}
+    s+=`<text x="${x0+cw/2}" y="${h-8}" text-anchor="middle" font-size="11" fill="${c.dim}">${mon[i]}</text>`});
+  s+=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${c.gold}" stroke-width="2.5" stroke-linejoin="round"/>`+pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="${c.gold}"/>`).join('');
+  el.innerHTML=s+'</svg>';
+}
+function drawDonut(t){
+  const c={mal:cssv('--mal'),gold:cssv('--gold'),line2:cssv('--line2'),text:cssv('--text'),muted:cssv('--muted')};
+  const parts=[[T('Spent','Исполнено'),t.spent,c.mal],[T('Committed, unpaid','Обязательства, не оплачено'),t.committed-t.spent,c.gold],[T('Free balance','Свободный остаток'),t.plan-t.committed,c.line2]];
+  const R=70,C=2*Math.PI*R;let off=0;let s=`<svg viewBox="0 0 200 200" style="max-width:210px;display:block;margin:0 auto">`;
+  parts.forEach(p=>{const l=C*p[1]/t.plan;s+=`<circle cx="100" cy="100" r="${R}" fill="none" stroke="${p[2]}" stroke-width="22" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-off}" transform="rotate(-90 100 100)"/>`;off+=l});
+  s+=`<text x="100" y="98" text-anchor="middle" font-size="26" font-weight="800" fill="${c.text}">${pct(t.spent,t.plan).toFixed(1)}%</text><text x="100" y="118" text-anchor="middle" font-size="11" fill="${c.muted}">${T('executed','исполнено')}</text></svg>`;
+  s+='<div style="margin-top:12px">'+parts.map(p=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)"><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${p[2]};margin-right:8px"></i>${p[0]}</span><b class="mono">${money(p[1])}</b></div>`).join('')+'</div>';
+  $('#donut').innerHTML=s;
+}
+
+/* ---------- Budget ---------- */
+function renderBudget(){
+  const q=$('#bq').value.trim().toLowerCase();
+  $('#bLock').textContent=can('editBudget')?T('Click a programme to edit','Нажмите программу для правки'):'🔒 '+T('Read-only for your role','Только просмотр для вашей роли');
+  const t=allTot();let h=`<thead><tr><th>${T('Ministry / programme','Министерство / программа')}</th><th class="num">${T('Plan','План')}</th><th class="num">${T('Committed','Обязат.')}</th><th class="num">${T('Spent','Исполнено')}</th><th class="num">${T('Free','Остаток')}</th><th>${T('Execution','Исполнение')}</th></tr></thead><tbody>`;
+  S.budget.forEach(m=>{const progs=m.programs.filter(p=>!q||L(p).toLowerCase().includes(q)||L(m).toLowerCase().includes(q));if(!progs.length)return;const x=minTot(m),open=m.open||!!q;
+    h+=`<tr class="min clk ${open?'open':''}" data-m="${m.id}"><td><span class="caret">▸</span>${L(m)}</td><td class="num">${money(x.plan)}</td><td class="num">${money(x.committed)}</td><td class="num">${money(x.spent)}</td><td class="num">${money(x.plan-x.committed)}</td><td><div class="bar"><i style="width:${Math.min(100,pct(x.spent,x.plan))}%"></i></div></td></tr>`;
+    if(open)progs.forEach(p=>{const over=p.committed>p.plan;h+=`<tr class="prog clk" data-p="${p.id}"><td>${L(p)} <span class="mono muted" style="font-size:11px">${p.id.toUpperCase()}</span></td><td class="num">${money(p.plan)}</td><td class="num">${money(p.committed)}</td><td class="num">${money(p.spent)}</td><td class="num ${over?'dn':''}">${money(p.plan-p.committed)}</td><td><div class="bar"><i class="${over?'over':''}" style="width:${Math.min(100,pct(p.spent,p.plan))}%"></i></div></td></tr>`})});
+  h+=`<tr><td><b>${T('Total','Итого')}</b></td><td class="num"><b>${money(t.plan)}</b></td><td class="num"><b>${money(t.committed)}</b></td><td class="num"><b>${money(t.spent)}</b></td><td class="num"><b>${money(t.plan-t.committed)}</b></td><td></td></tr></tbody>`;
+  $('#tBud').innerHTML=h;
+  $$('#tBud tr.min').forEach(tr=>tr.onclick=()=>{const m=S.budget.find(m=>m.id===tr.dataset.m);m.open=!m.open;save();renderBudget()});
+  $$('#tBud tr.prog').forEach(tr=>tr.onclick=()=>editLine(tr.dataset.p));
+}
+function findProg(id){for(const m of S.budget)for(const p of m.programs)if(p.id===id)return[m,p];return[]}
+function editLine(id){
+  const[m,p]=findProg(id);if(!can('editBudget'))return denied();
+  modal(`<h2>${L(p)}</h2><div class="muted" style="margin:-8px 0 14px;font-size:13px">${L(m)} · <span class="mono">${p.id.toUpperCase()}</span></div>
+  <div class="fgrid"><div class="f"><label>${T('Plan, NDK M','План, млн NDK')}</label><input class="input mono" id="eP" type="number" step="0.1" value="${p.plan}"></div>
+  <div class="f"><label>${T('Committed','Обязательства')}</label><input class="input mono" id="eC" type="number" step="0.1" value="${p.committed}"></div>
+  <div class="f"><label>${T('Spent','Исполнено')}</label><input class="input mono" id="eS" type="number" step="0.1" value="${p.spent}"></div>
+  <div class="f"><label>${T('Reason','Основание')}</label><input class="input" id="eR" value="${T('Budget amendment','Поправка к бюджету')}"></div></div>
+  <div id="eErr" class="dn" style="font-size:13px;margin-top:8px"></div>
+  <div class="acts"><button class="btn" data-close>${T('Cancel','Отмена')}</button><button class="btn pri" data-ok>${T('Save & recalculate','Сохранить и пересчитать')}</button></div>`,
+  mm=>{const P=+$('#eP',mm).value,C=+$('#eC',mm).value,Sp=+$('#eS',mm).value;
+    if(!(P>=0&&C>=0&&Sp>=0)){$('#eErr',mm).textContent=T('Values must be non-negative numbers','Значения должны быть неотрицательными');return false}
+    if(Sp>C){$('#eErr',mm).textContent=T('Spent cannot exceed committed','Исполнено не может превышать обязательства');return false}
+    const dP=P-p.plan;p.plan=P;p.committed=C;p.spent=Sp;
+    S.audit.unshift({ts:now(),req:'BUD',role:S.role,en:`Budget line ${p.id.toUpperCase()} changed (plan ${dP>=0?'+':''}${dP.toFixed(1)} M)`,ru:`Изменена строка ${p.id.toUpperCase()} (план ${dP>=0?'+':''}${dP.toFixed(1)} млн)`});
+    save();render();toast(T('Totals recalculated','Итоги пересчитаны'))});
+}
+$('#bq').oninput=renderBudget;
+$('#bExp').onclick=()=>{S.budget.forEach(m=>m.open=true);save();renderBudget()};
+$('#bCol').onclick=()=>{S.budget.forEach(m=>m.open=false);save();renderBudget()};
+
+/* ---------- Procurement ---------- */
+const STAT={pending:['warn','Pending','На согласовании'],approved:['ok','Approved','Одобрено'],rejected:['bad','Rejected','Отклонено']};
+let pFilter='all';
+function renderProc(){
+  $('#pf').innerHTML=[['all','All statuses','Все статусы'],['mine','Awaiting my decision','Ждут моего решения'],['pending','Pending','На согласовании'],['approved','Approved','Одобрено'],['rejected','Rejected','Отклонено']].map(o=>`<option value="${o[0]}" ${o[0]===pFilter?'selected':''}>${T(o[1],o[2])}</option>`).join('');
+  $('#newReq').disabled=!can('createReq');$('#newReq').title=can('createReq')?'':T('Only Procurement officer','Только специалист по закупкам');
+  const list=S.reqs.filter(q=>pFilter==='all'||(pFilter==='mine'?q.status==='pending'&&STEPS[q.step]===S.role:q.status===pFilter));
+  $('#tReq').innerHTML=`<thead><tr><th>№</th><th>${T('Subject','Предмет')}</th><th class="num">${T('Amount','Сумма')}</th><th>${T('Status','Статус')}</th><th>${T('Stage','Этап')}</th></tr></thead><tbody>`+
+    (list.map(q=>`<tr class="clk" data-r="${q.id}" style="${q.id===selReq?'outline:2px solid var(--mal);outline-offset:-2px':''}"><td class="mono">${q.id}</td><td style="max-width:240px;overflow:hidden;text-overflow:ellipsis">${esc(L(q))}</td><td class="num">${money(q.amount)}</td><td><span class="pill ${STAT[q.status][0]}">${T(STAT[q.status][1],STAT[q.status][2])}</span></td><td class="muted">${q.status==='pending'?L(STEPNAME[STEPS[q.step]]):'—'}</td></tr>`).join('')||`<tr><td colspan="5" class="muted" style="text-align:center;padding:30px">${T('No requests','Нет заявок')}</td></tr>`)+'</tbody>';
+  $$('#tReq tr[data-r]').forEach(tr=>tr.onclick=()=>{selReq=tr.dataset.r;renderProc()});
+  renderReq();
+}
+function renderReq(){
+  const q=S.reqs.find(x=>x.id===selReq),el=$('#reqDetail');
+  if(!q){el.innerHTML=`<div class="muted">${T('Select a request','Выберите заявку')}</div>`;return}
+  const[m,p]=findProg(q.prog);
+  const steps=STEPS.map((r,i)=>{let c='';if(i<q.step)c='ok';else if(i===q.step&&q.status==='pending')c='cur';else if(i===q.step&&q.status==='rejected')c='bad';return`<div class="step ${c}"><div class="dot">${c==='ok'?'✓':c==='bad'?'✕':i+1}</div>${L(STEPNAME[r])}</div>`}).join('');
+  const mine=q.status==='pending'&&STEPS[q.step]===S.role;
+  const free=p?p.plan-p.committed:0;
+  el.innerHTML=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="mono muted">${q.id}</span><span class="pill ${STAT[q.status][0]}">${T(STAT[q.status][1],STAT[q.status][2])}</span></div>
+  <h3 style="margin:8px 0 4px;font-size:17px">${esc(L(q))}</h3>
+  <div class="fgrid" style="font-size:13px;margin-top:10px"><div><div class="muted">${T('Amount','Сумма')}</div><b class="mono">${money(q.amount)} NDK</b></div><div><div class="muted">${T('Vendor','Поставщик')}</div><b>${esc(q.vendor)}</b></div>
+  <div><div class="muted">${T('Budget line','Бюджетная строка')}</div><b>${m?L(m):''}</b><div class="muted">${p?L(p):''}</div></div><div><div class="muted">${T('Free balance on line','Свободный остаток')}</div><b class="mono ${free<q.amount&&q.status==='pending'?'dn':'up'}">${money(free)}</b></div></div>
+  <div class="steps">${steps}</div>
+  ${q.status==='pending'?(mine?`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri sm" id="apv">✓ ${T('Approve as ','Согласовать как ')}${L(STEPNAME[S.role])}</button><button class="btn danger sm" id="rej">✕ ${T('Reject','Отклонить')}</button></div>`:`<div class="lock">⏳ ${T('Waiting for ','Ожидает: ')}<b>${L(STEPNAME[STEPS[q.step]])}</b>. ${T('Switch role in the sidebar to act.','Смените роль в меню, чтобы принять решение.')}</div>`):''}
+  <div class="log">${S.audit.filter(a=>a.req===q.id).map(a=>`<div><span class="t">${a.ts}</span><span><b>${L(ROLES[a.role])}</b> · ${esc(L(a))}</span></div>`).join('')}</div>`;
+  const ap=$('#apv',el),rj=$('#rej',el);
+  if(ap)ap.onclick=()=>decide(q,true);
+  if(rj)rj.onclick=()=>modal(`<h2>${T('Reject request','Отклонить заявку')} ${q.id}</h2><div class="f"><label>${T('Reason','Причина')}</label><input class="input" id="rr" value="${T('Insufficient justification','Недостаточное обоснование')}"></div><div class="acts"><button class="btn" data-close>${T('Cancel','Отмена')}</button><button class="btn danger" data-ok>${T('Reject','Отклонить')}</button></div>`,mm=>decide(q,false,$('#rr',mm).value));
+}
+function decide(q,ok,reason){
+  const[,p]=findProg(q.prog);
+  if(ok&&S.role==='accountant'&&p&&p.plan-p.committed<q.amount){toast(T('Insufficient free balance on the budget line','Недостаточно свободного остатка по строке'),'bad');return}
+  if(ok){q.step++;S.audit.push({ts:now(),req:q.id,role:S.role,en:'Approved'+(S.role==='accountant'?' — funds reserved':''),ru:'Согласовано'+(S.role==='accountant'?' — средства зарезервированы':'')});
+    if(q.step>=3){q.status='approved';if(p)p.committed=+(p.committed+q.amount).toFixed(1);S.audit.push({ts:now(),req:q.id,role:S.role,en:'Contract commitment posted to budget',ru:'Обязательство проведено по бюджету'});toast(T('Request approved — commitment posted','Заявка одобрена — обязательство проведено'))}
+    else toast(T('Forwarded to ','Передано: ')+'<b>'+L(STEPNAME[STEPS[q.step]])+'</b>');}
+  else{q.status='rejected';S.audit.push({ts:now(),req:q.id,role:S.role,en:'Rejected: '+reason,ru:'Отклонено: '+reason});toast(T('Request rejected','Заявка отклонена'),'bad')}
+  save();render();
+}
+$('#pf').onchange=e=>{pFilter=e.target.value;renderProc()};
+function newReq(pre){
+  if(!can('createReq'))return denied();pre=pre||{};
+  const progOpts=S.budget.map(m=>`<optgroup label="${esc(L(m))}">`+m.programs.map(p=>`<option value="${p.id}" ${pre.prog===p.id?'selected':''}>${esc(L(p))} — ${T('free','ост.')} ${money(p.plan-p.committed)}</option>`).join('')+'</optgroup>').join('');
+  modal(`<h2>${T('New purchase request','Новая заявка на закупку')}</h2><div class="fgrid">
+  <div class="f full"><label>${T('Subject','Предмет закупки')}</label><input class="input" id="nT" value="${esc(pre.title||'')}" placeholder="${T('e.g. Servers for data centre','напр. Серверы для ЦОД')}"></div>
+  <div class="f full"><label>${T('Budget line','Бюджетная строка')}</label><select class="input" id="nP">${progOpts}</select></div>
+  <div class="f"><label>${T('Amount, NDK M','Сумма, млн NDK')}</label><input class="input mono" id="nA" type="number" step="0.1" value="${pre.amount||5}"></div>
+  <div class="f"><label>${T('Vendor','Поставщик')}</label><select class="input" id="nV">${VENDORS.map(v=>`<option>${v}</option>`).join('')}</select></div>
+  <div class="f full"><label>${T('Justification','Обоснование')}</label><input class="input" id="nJ" value="${T('Annual plan item 4.2','Пункт годового плана 4.2')}"></div></div>
+  <div id="nErr" class="dn" style="font-size:13px;margin-top:8px"></div>
+  <div class="acts"><button class="btn" data-close>${T('Cancel','Отмена')}</button><button class="btn pri" data-ok>${T('Submit for approval','Отправить на согласование')}</button></div>`,mm=>{
+    const t=$('#nT',mm).value.trim(),a=+$('#nA',mm).value;if(t.length<3||!(a>0)){$('#nErr',mm).textContent=T('Enter subject and a positive amount','Укажите предмет и сумму больше нуля');return false}
+    const pid=$('#nP',mm).value,id='PR-26-'+String(S.nextReq++).padStart(4,'0');
+    S.reqs.unshift({id,en:t,ru:t,min:pid.slice(0,3),prog:pid,amount:a,vendor:$('#nV',mm).value,step:0,status:'pending',created:now().slice(0,10),acts:[]});
+    S.audit.push({ts:now(),req:id,role:S.role,en:'Request created',ru:'Заявка создана'});selReq=id;pFilter='all';save();
+    if(view!=='proc')go('proc');else render();toast(T('Request ','Заявка ')+id+T(' submitted',' отправлена'))});
+}
+$('#newReq').onclick=()=>newReq();
+
+/* ---------- HR ---------- */
+const ename=e=>e.name||(PT.lang==='ru'?FN[e.f][1]+' '+LN[e.l][1]:FN[e.f][0]+' '+LN[e.l][0]);
+const dname=id=>{const d=DEPTS.find(d=>d[0]===id);return d?T(d[1],d[2]):id};
+let hDept='all';
+function renderHR(){
+  $('#hd').innerHTML=`<option value="all">${T('All departments','Все подразделения')}</option>`+DEPTS.map(d=>`<option value="${d[0]}" ${d[0]===hDept?'selected':''}>${T(d[1],d[2])}</option>`).join('');
+  $('#od').innerHTML=DEPTS.map(d=>`<option value="${d[0]}" ${d[0]===orgDept?'selected':''}>${T(d[1],d[2])}</option>`).join('');
+  $('#addEmp').disabled=!can('addEmp');
+  const q=$('#hq').value.trim().toLowerCase();
+  const list=S.emps.filter(e=>(hDept==='all'||e.dept===hDept)&&(!q||(ename(e)+' '+L(POS[e.pos])).toLowerCase().includes(q)));
+  $('#tEmp').innerHTML=`<thead><tr><th>${T('Employee','Сотрудник')}</th><th>${T('Position','Должность')}</th><th>${T('Department','Подразделение')}</th><th>${T('Manager','Руководитель')}</th><th>${T('Since','С')}</th><th>ID</th></tr></thead><tbody>`+
+   list.map(e=>{const m=S.emps.find(x=>x.id===e.mgr);const n=ename(e);return`<tr><td><span style="display:inline-flex;gap:10px;align-items:center"><span class="av" style="width:28px;height:28px;font-size:11px">${esc(n.split(' ').map(s=>s[0]).join('').slice(0,2))}</span>${esc(n)}</span></td><td>${L(POS[e.pos])}</td><td>${dname(e.dept)}</td><td class="muted">${m?esc(ename(m)):'—'}</td><td class="mono">${e.since}</td><td class="mono muted">EMP-${String(e.id).padStart(4,'0')}</td></tr>`}).join('')+
+   (list.length?'':`<tr><td colspan="6" class="muted" style="text-align:center;padding:24px">${T('Nobody found','Никого не найдено')}</td></tr>`)+'</tbody>';
+  const es=S.emps.filter(e=>e.dept===orgDept),dir=es.find(e=>e.pos==='dir');
+  const nd=(e,top)=>`<div class="node ${top?'top':''}"><b>${esc(ename(e))}</b><span class="muted">${L(POS[e.pos])}</span></div>`;
+  const sub=e=>{const k=es.filter(x=>x.mgr===e.id);return k.length?'<ul>'+k.map(x=>`<li>${nd(x)}${sub(x)}</li>`).join('')+'</ul>':''};
+  $('#org').innerHTML=dir?`<ul><li>${nd(dir,1)}${sub(dir)}</li></ul>`:'';
+}
+$('#hq').oninput=renderHR;$('#hd').onchange=e=>{hDept=e.target.value;renderHR()};$('#od').onchange=e=>{orgDept=e.target.value;renderHR()};
+$('#addEmp').onclick=()=>{if(!can('addEmp'))return denied();
+  modal(`<h2>${T('Add employee','Новый сотрудник')}</h2><div class="fgrid"><div class="f full"><label>${T('Full name','ФИО')}</label><input class="input" id="aN" placeholder="${T('e.g. Runa Solberg','напр. Руна Сольберг')}"></div>
+  <div class="f"><label>${T('Department','Подразделение')}</label><select class="input" id="aD">${DEPTS.map(d=>`<option value="${d[0]}" ${d[0]===orgDept?'selected':''}>${T(d[1],d[2])}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Position','Должность')}</label><select class="input" id="aP"><option value="spe">${L(POS.spe)}</option><option value="sen">${L(POS.sen)}</option><option value="head">${L(POS.head)}</option></select></div></div>
+  <div id="aErr" class="dn" style="font-size:13px;margin-top:8px"></div><div class="acts"><button class="btn" data-close>${T('Cancel','Отмена')}</button><button class="btn pri" data-ok>${T('Add to directory','Добавить')}</button></div>`,mm=>{
+    const n=$('#aN',mm).value.trim();if(n.length<3){$('#aErr',mm).textContent=T('Enter full name','Введите ФИО');return false}
+    const d=$('#aD',mm).value,pos=$('#aP',mm).value,es=S.emps.filter(e=>e.dept===d);const dir=es.find(e=>e.pos==='dir');const heads=es.filter(e=>e.pos==='head');
+    const mgr=pos==='head'?dir.id:heads.sort((a,b)=>es.filter(x=>x.mgr===a.id).length-es.filter(x=>x.mgr===b.id).length)[0].id;
+    S.emps.push({id:S.nextEmp++,name:n,dept:d,pos,mgr,since:2026});orgDept=d;save();renderHR();toast(T('Employee added: ','Добавлен: ')+esc(n))})};
+
+/* ---------- Warehouse ---------- */
+function renderWH(){
+  const low=S.stock.filter(i=>i.qty<i.min);
+  $('#alerts').innerHTML=low.map(i=>`<div class="alert"><span>⚠</span><span><b>${L(i)}</b> — ${T('stock','остаток')} <b class="mono">${i.qty.toLocaleString(PT.lang)}</b> ${T('below minimum','ниже минимума')} <span class="mono">${i.min.toLocaleString(PT.lang)}</span></span><span class="sp"></span><button class="btn sm" data-reorder="${i.id}">${T('Create purchase request','Создать заявку')}</button></div>`).join('');
+  $$('[data-reorder]').forEach(b=>b.onclick=()=>{const i=S.stock.find(x=>x.id===b.dataset.reorder);if(!can('createReq')){toast(T('Switch to Procurement officer to create a request','Переключитесь на роль «Специалист по закупкам»'),'bad');return}newReq({title:T('Replenish: ','Пополнение: ')+L(i),prog:'fin0',amount:1.2})});
+  $('#tStock').innerHTML=`<thead><tr><th>SKU</th><th>${T('Item','Позиция')}</th><th class="num">${T('On hand','Остаток')}</th><th class="num">${T('Min','Мин.')}</th><th>${T('Level','Уровень')}</th><th>${T('Location','Склад')}</th></tr></thead><tbody>`+
+    S.stock.map(i=>{const p=Math.min(100,i.qty/(i.min*2)*100),lo=i.qty<i.min;return`<tr class="clk" data-i="${i.id}"><td class="mono muted">${i.id}</td><td>${L(i)}</td><td class="num"><b class="${lo?'dn':''}">${i.qty.toLocaleString(PT.lang)}</b> <span class="muted">${PT.lang==='ru'?i.uru:i.uen}</span></td><td class="num muted">${i.min.toLocaleString(PT.lang)}</td><td><div class="bar"><i class="${lo?'over':''}" style="width:${p}%"></i></div></td><td class="muted">${i.loc}</td></tr>`}).join('')+'</tbody>';
+  $$('#tStock tr[data-i]').forEach(tr=>tr.onclick=()=>{$('#mvItem').value=tr.dataset.i});
+  const cur=$('#mvItem').value;
+  $('#mvItem').innerHTML=S.stock.map(i=>`<option value="${i.id}">${i.id} · ${esc(L(i))}</option>`).join('');if(cur)$('#mvItem').value=cur;
+  const ct=$('#mvType').value||'in';$('#mvType').innerHTML=`<option value="in">${T('Receipt (+)','Приход (+)')}</option><option value="out">${T('Issue (−)','Расход (−)')}</option>`;$('#mvType').value=ct;
+  $('#mvGo').disabled=!can('stock');$('#whLock').textContent=can('stock')?'':'🔒 '+T('Not allowed for Minister','Недоступно министру');
+  $('#mvLog').innerHTML=S.moves.slice(0,30).map(m=>{const i=S.stock.find(x=>x.id===m.id);return`<div><span class="t">${m.ts.slice(5)}</span><span><b class="${m.q>0?'up':'dn'}">${m.q>0?'+':''}${m.q}</b> ${esc(L(i))} → <span class="mono">${m.after}</span> · ${L(ROLES[m.role])}</span></div>`}).join('')||`<div class="muted">${T('No movements yet','Движений пока нет')}</div>`;
+}
+$('#mvGo').onclick=()=>{if(!can('stock'))return denied();const i=S.stock.find(x=>x.id===$('#mvItem').value),q=Math.floor(+$('#mvQty').value),t=$('#mvType').value;
+  if(!(q>0))return toast(T('Quantity must be positive','Количество должно быть больше нуля'),'bad');
+  if(t==='out'&&q>i.qty)return toast(T('Not enough stock: ','Недостаточно остатка: ')+i.qty,'bad');
+  const wasLow=i.qty<i.min;i.qty+=t==='in'?q:-q;S.moves.unshift({ts:now(),id:i.id,q:t==='in'?q:-q,after:i.qty,role:S.role});save();render();
+  if(!wasLow&&i.qty<i.min)toast('⚠ '+T('Low stock: ','Мало на складе: ')+L(i),'gold');else toast(T('Movement posted','Движение проведено'))};
+
+/* ---------- Integrations ---------- */
+const SYS=[['TRS','Treasury Core','Казначейство',18,1],['TAX','Tax Service','Налоговая служба',42,1],['REG','Civil Registry','ЗАГС / Реестр',25,1],['CUS','Customs','Таможня',61,1],['EPP','e-Procurement','Электронные закупки',33,1],['STAT','Statistics Office','Статистика',90,0],['CBN','Central Bank RTGS','ЦБ — RTGS',12,1]];
+const live=SYS.map((s,i)=>({code:s[0],en:s[1],ru:s[2],base:s[3],ok:s[4],msgs:180000+Math.floor(rng(i+5)()*900000),tps:0,lat:s[3],err:0}));
+let tFrom='TAX',tTo='TRS',pkts=[],busRaf=0,sentTotal=0;
+function nodePos(i,w,h){const a=-Math.PI/2+i*2*Math.PI/SYS.length;return[w/2+Math.cos(a)*w*.38,h/2+Math.sin(a)*h*.38]}
+function renderInt(){
+  const tps=live.reduce((a,s)=>a+s.tps,0),avg=live.reduce((a,s)=>a+s.lat,0)/live.length;
+  $('#ikpis').innerHTML=[[T('Connected systems','Подключено систем'),live.length,live.filter(s=>!s.ok).length+' '+T('degraded','с деградацией')],[T('Messages / sec','Сообщений / с'),tps,T('peak today 1 284','пик сегодня 1 284')],[T('Avg latency','Средняя задержка'),Math.round(avg)+' ms','p99 '+Math.round(avg*3.1)+' ms'],[T('Delivered today','Доставлено сегодня'),(4.21e6+sentTotal).toLocaleString(PT.lang),'99.982% SLA']]
+    .map(x=>`<div class="card kpi"><div class="l">${x[0]}</div><div class="v mono" style="font-size:22px">${x[1]}</div><div class="d muted">${x[2]}</div></div>`).join('');
+  $('#sys').innerHTML=live.map(s=>`<div class="card"><div class="nm"><span class="led ${s.ok?'':'warn'}"></span>${L(s)}<span class="sp" style="flex:1"></span><span class="mono muted" style="font-size:11px">${s.code}</span></div>
+    <div class="row">${T('Messages','Сообщений')}<b data-c="${s.code}">${s.msgs.toLocaleString(PT.lang)}</b></div><div class="row">${T('Latency','Задержка')}<b data-l="${s.code}">${Math.round(s.lat)} ms</b></div><div class="row">${T('Protocol','Протокол')}<b>${s.code==='CBN'?'ISO 20022':s.code==='STAT'?'SFTP batch':'REST/X-Road'}</b></div></div>`).join('');
+  const opt=v=>live.map(s=>`<option value="${s.code}" ${s.code===v?'selected':''}>${s.code} · ${L(s)}</option>`).join('');
+  $('#tFrom').innerHTML=opt(tFrom);$('#tTo').innerHTML=opt(tTo);
+  drawBus();
+}
+function drawBus(){
+  const el=$('#bus'),w=600,h=360;const c={line:cssv('--line2'),mal:cssv('--mal'),gold:cssv('--gold'),panel:cssv('--panel2'),text:cssv('--text'),amber:cssv('--amber')};
+  let s=`<svg viewBox="0 0 ${w} ${h}">`;
+  live.forEach((x,i)=>{const[px,py]=nodePos(i,w,h);s+=`<line x1="${w/2}" y1="${h/2}" x2="${px}" y2="${py}" stroke="${c.line}" stroke-width="2" stroke-dasharray="4 5"/>`});
+  s+=`<circle cx="${w/2}" cy="${h/2}" r="44" fill="${c.panel}" stroke="${c.gold}" stroke-width="2"/><text x="${w/2}" y="${h/2-2}" text-anchor="middle" font-weight="800" font-size="16" fill="${c.text}">NIX</text><text x="${w/2}" y="${h/2+15}" text-anchor="middle" font-size="10" fill="${c.gold}">BUS</text>`;
+  live.forEach((x,i)=>{const[px,py]=nodePos(i,w,h);s+=`<g><circle cx="${px}" cy="${py}" r="28" fill="${c.panel}" stroke="${x.ok?c.mal:c.amber}" stroke-width="2"/><text x="${px}" y="${py+4}" text-anchor="middle" font-size="11" font-weight="700" fill="${c.text}">${x.code}</text></g>`});
+  s+=`<g id="pk"></g></svg>`;el.innerHTML=s;
+}
+function busLoop(){
+  const g=$('#pk');if(g&&view==='int'){const w=600,h=360,t=performance.now();
+    if(Math.random()<.18){const a=Math.floor(Math.random()*live.length);let b=Math.floor(Math.random()*live.length);if(b===a)b=(b+1)%live.length;pkts.push({a,b,t0:t,dur:1400,test:0})}
+    pkts=pkts.filter(p=>t-p.t0<p.dur);
+    g.innerHTML=pkts.map(p=>{const k=(t-p.t0)/p.dur,[ax,ay]=nodePos(p.a,w,h),[bx,by]=nodePos(p.b,w,h);let x,y;if(k<.5){x=ax+(w/2-ax)*k*2;y=ay+(h/2-ay)*k*2}else{x=w/2+(bx-w/2)*(k-.5)*2;y=h/2+(by-h/2)*(k-.5)*2}
+      return p.test?`<circle cx="${x}" cy="${y}" r="9" fill="${cssv('--gold')}" opacity=".35"/><circle cx="${x}" cy="${y}" r="5.5" fill="${cssv('--gold2')}"/>`:`<circle cx="${x}" cy="${y}" r="3" fill="${cssv('--mal3')}" opacity=".8"/>`}).join('')}
+  busRaf=requestAnimationFrame(busLoop);
+}
+setInterval(()=>{live.forEach(s=>{s.tps=Math.round(s.base*(s.ok?2.4:.8)*(.7+Math.random()*.6));s.msgs+=s.tps;s.lat=Math.max(6,s.base*(s.ok?1:2.6)*(.8+Math.random()*.4))});
+  if(view!=='int')return;live.forEach(s=>{const c=$(`[data-c="${s.code}"]`),l=$(`[data-l="${s.code}"]`);if(c)c.textContent=s.msgs.toLocaleString(PT.lang);if(l)l.textContent=Math.round(s.lat)+' ms'});
+  const tps=live.reduce((a,s)=>a+s.tps,0);const v=$$('#ikpis .v');if(v[1])v[1].textContent=tps;if(v[2])v[2].textContent=Math.round(live.reduce((a,s)=>a+s.lat,0)/live.length)+' ms';},1000);
+$('#tFrom').onchange=e=>tFrom=e.target.value;$('#tTo').onchange=e=>tTo=e.target.value;
+$('#tSend').onclick=()=>{if(tFrom===tTo)return toast(T('Choose different systems','Выберите разные системы'),'bad');
+  const a=live.findIndex(s=>s.code===tFrom),b=live.findIndex(s=>s.code===tTo),id='MSG-'+Math.random().toString(16).slice(2,10).toUpperCase(),typ=$('#tType').value,t0=performance.now();
+  pkts.push({a,b,t0,dur:2200,test:1});
+  const lg=$('#tLog');const line=(txt,cls)=>{const d=document.createElement('div');d.innerHTML=`<span class="t">${new Date().toTimeString().slice(0,8)}</span><span class="${cls||''}">${txt}</span>`;lg.prepend(d)};
+  line(`→ ${id} ${tFrom} ⇒ NIX : ${typ} ${T('signed (GOST/ECDSA)','подписано (ГОСТ/ECDSA)')}`);
+  setTimeout(()=>line(`⇄ NIX ${T('routed','маршрутизировано')} ${id} → ${tTo} · ${T('schema valid','схема валидна')}`),1100);
+  setTimeout(()=>{const lat=Math.round(live[b].lat+40+Math.random()*30);live[a].msgs++;live[b].msgs++;sentTotal++;line(`✓ ACK 200 ${id} ${T('from','от')} ${tTo} · ${lat} ms`,'up');toast(T('Delivered ','Доставлено ')+id+' · '+lat+' ms')},2250)};
+requestAnimationFrame(busLoop);
+
+/* ---------- CSV ---------- */
+$('#csv').onclick=()=>{const tb=$('.view.on table');if(!tb)return;
+  const rows=[...tb.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>'"'+td.textContent.replace(/\s+/g,' ').trim().replace(/"/g,'""')+'"').join(','));
+  const blob=new Blob(['﻿'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ledgera-'+view+'-'+new Date().toISOString().slice(0,10)+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  toast(T('CSV exported: ','CSV выгружен: ')+(rows.length-1)+T(' rows',' строк'))};
+
+/* ---------- Render ---------- */
+function render(){
+  renderNav();const v=VIEWS.find(x=>x[0]===view);$('#title').textContent=T(v[1],v[2]);$('#crumb').textContent=T('Ledgera · Ministry of Finance of Nordania','Ledgera · Минфин Республики Нордания');
+  $('#csv').style.display=view==='int'?'none':'';
+  ({dash:renderDash,budget:renderBudget,proc:renderProc,hr:renderHR,wh:renderWH,int:renderInt})[view]();
+}
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(view==='dash')drawChart()},150)});
+PT.onLang(()=>render());
+go('dash');
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

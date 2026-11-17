@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gatekeeper Identity Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--mal2));color:#fff;font-size:15px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.nav{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;font-family:inherit}
+.nav:hover{background:var(--panel);color:var(--text)} .nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--panel2);border:1px solid var(--line2);color:var(--text);border-radius:999px;padding:0 7px;font-weight:700} .nav .cnt.r{background:var(--red);border-color:var(--red);color:#fff}
+.side .grow{flex:1} .sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;margin:10px 10px 4px}
+main{padding:20px 24px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px} .head h1{font-size:23px;margin:0} .head .sp{flex:1} .crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;margin-bottom:14px}
+.hint{display:flex;gap:10px;flex-wrap:wrap;padding:12px 14px;border:1px dashed color-mix(in srgb,var(--gold) 55%,transparent);border-radius:var(--r);background:color-mix(in srgb,var(--gold) 6%,var(--panel))}
+.hint .s{flex:1 1 170px;display:flex;gap:9px;font-size:13px;line-height:1.4}
+.hint .n{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--gold);color:#1a1306;font-weight:800;font-size:12px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;font-size:12.5px;padding:12px 14px} .facts span{color:var(--dim)} .facts b{font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi{padding:14px;cursor:default} .kpi.clk{cursor:pointer} .kpi.clk:hover{border-color:var(--mal)} .kpi .l{font-size:12px;color:var(--muted);font-weight:600} .kpi .v{font-size:24px;font-weight:800;margin:3px 0 0;letter-spacing:-.02em} .kpi .d{font-size:12px;color:var(--muted)}
+.kpi.bad .v{color:var(--red)} .kpi.warn .v{color:var(--amber)}
+.g2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start} .g2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap} .card h3 .sp{flex:1}
+.mt{margin-top:14px} .sub{font-size:12.5px;color:var(--muted);margin:-6px 0 12px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)} .tw.tall{max-height:560px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2);position:sticky;top:0;z-index:1}
+td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap} tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td{background:color-mix(in srgb,var(--mal) 6%,transparent)}
+tr.new td{animation:fl 1.6s} @keyframes fl{from{background:color-mix(in srgb,var(--gold) 28%,transparent)}}
+tr.dim td{opacity:.5}
+.btn:disabled{opacity:.42;cursor:not-allowed} .btn.sm{padding:6px 12px;font-size:12.5px} .btn.xs{padding:3px 9px;font-size:12px} .btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.view{display:none}.view.on{display:block;animation:fade .2s} @keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center} .tools .input{width:auto;min-width:130px;flex:1;max-width:260px} .tools select.input{flex:0 1 auto}
+.chartw svg{display:block;width:100%;height:auto}
+.av{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:10.5px;font-weight:800;color:#fff;margin-right:8px;vertical-align:middle;flex:none}
+.ty-mil{background:var(--mal2)} .ty-civ{background:var(--blue)} .ty-ctr{background:var(--violet)}
+.dots{display:inline-flex;gap:3px} .dots i{width:9px;height:9px;border-radius:3px;background:var(--line)} .dots i.on{background:var(--mal3)} .dots i.pv{background:var(--gold)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;border:1px solid var(--line2);border-radius:7px;padding:1px 7px;margin:2px 3px 2px 0;background:var(--panel2);white-space:nowrap} .chip.pv{border-color:var(--gold);color:var(--gold2)} .chip.add{border-color:var(--mal);color:var(--mal3)} .chip.rm{border-color:var(--red);color:var(--red);text-decoration:line-through} .chip.keep{border-color:var(--amber);color:var(--amber)}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:11px;padding:3px;gap:3px;background:var(--bg2);margin-bottom:14px;flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--muted);font:600 13px/1 inherit;font-family:inherit;padding:8px 14px;border-radius:8px;cursor:pointer} .seg button.on{background:var(--panel2);color:var(--text);box-shadow:0 0 0 1px var(--line2)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px} .fgrid .full{grid-column:1/-1} .f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.prop svg{display:block;width:100%;height:auto} .flow{stroke-dasharray:6 6;animation:dash .5s linear infinite} @keyframes dash{to{stroke-dashoffset:-12}}
+.plog{font-family:var(--mono);font-size:11.5px;max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--bg2);padding:8px 10px;margin-top:10px}
+.plog div{padding:2px 0;border-bottom:1px dashed var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .plog .ok{color:var(--mal3)} .plog .bad{color:var(--red)} .plog .w{color:var(--amber)}
+.chain{display:inline-flex;align-items:center;gap:3px} .chain i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10px;font-weight:800;border:2px solid var(--line2);color:var(--dim)} .chain b{width:10px;height:2px;background:var(--line2)}
+.chain i.ok{background:var(--mal);border-color:var(--mal);color:#fff} .chain i.cur{border-color:var(--gold);color:var(--gold2);animation:pulse 1.4s infinite} .chain i.no{background:var(--red);border-color:var(--red);color:#fff}
+@keyframes pulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 25%,transparent)}}
+.cat{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.ci{border:1px solid var(--line);border-radius:12px;padding:11px;background:var(--panel);display:flex;flex-direction:column;gap:6px} .ci .s{font-size:11px;color:var(--dim);font-family:var(--mono)} .ci .t{font-weight:700;font-size:13.5px} .ci .o{font-size:12px;color:var(--muted);flex:1}
+.cf{border:1px solid color-mix(in srgb,var(--red) 40%,var(--line));border-radius:12px;padding:12px;background:color-mix(in srgb,var(--red) 4%,var(--panel));margin-bottom:10px} .cf.mit{border-color:var(--line2);background:var(--panel);opacity:.75}
+.cf .why{font-size:12.5px;color:var(--muted);margin:6px 0 9px;line-height:1.45} .cf .a{display:flex;gap:6px;flex-wrap:wrap}
+.vs{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:800;margin:0 6px}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden} .prog i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .2s}
+.bulk{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:8px 10px;border:1px solid var(--gold);border-radius:11px;margin-bottom:10px;background:color-mix(in srgb,var(--gold) 7%,var(--panel));font-size:13px}
+.dec{display:inline-flex;gap:4px} .dec button{width:30px;height:28px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);cursor:pointer;font-weight:800}
+.dec button.c.on{background:var(--mal);border-color:var(--mal);color:#fff} .dec button.r.on{background:var(--red);border-color:var(--red);color:#fff}
+.pl{display:grid;gap:8px} .pi{border:1px solid var(--line);border-radius:11px;padding:9px 11px;cursor:pointer;background:var(--panel);font-size:13px} .pi.on{border-color:var(--gold)} .pi small{display:block;color:var(--dim);font-size:11.5px;margin-top:2px}
+.cond{display:grid;grid-template-columns:minmax(0,1.3fr) 64px minmax(0,1fr) 34px;gap:6px;margin-bottom:6px;align-items:center} .cond .input{padding:7px 8px;font-size:12.5px}
+.andl{font-size:10.5px;font-weight:800;color:var(--dim);letter-spacing:.1em;margin:-2px 0 4px 4px}
+.verdict{border-radius:14px;padding:14px 16px;font-weight:800;font-size:20px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.verdict.p{background:color-mix(in srgb,var(--mal) 18%,var(--panel));color:var(--mal3);border:1px solid var(--mal)} .verdict.d{background:color-mix(in srgb,var(--red) 14%,var(--panel));color:var(--red);border:1px solid var(--red)}
+.trace{font-size:12.5px} .trace .pol{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:8px} .trace .pol.hit{border-color:var(--gold)} .trace .c{display:flex;gap:8px;font-family:var(--mono);font-size:11.5px;padding:2px 0} .trace .c .y{color:var(--mal3)} .trace .c .n{color:var(--red)}
+.reader{position:relative;height:190px;border-radius:16px;background:linear-gradient(180deg,var(--bg2),var(--panel2));border:1px solid var(--line2);overflow:hidden;margin-bottom:12px}
+.slot{position:absolute;left:50%;bottom:26px;width:200px;height:12px;margin-left:-100px;border-radius:6px;background:#05090a;box-shadow:inset 0 2px 4px #000}
+.led{position:absolute;right:16px;bottom:22px;width:10px;height:10px;border-radius:50%;background:var(--line2)} .led.g{background:var(--mal3);box-shadow:0 0 10px var(--mal3)} .led.y{background:var(--gold);box-shadow:0 0 10px var(--gold);animation:blink .5s infinite} .led.r{background:var(--red);box-shadow:0 0 10px var(--red)} @keyframes blink{50%{opacity:.3}}
+.ccard{position:absolute;left:50%;width:180px;height:112px;margin-left:-90px;top:12px;border-radius:12px;background:linear-gradient(135deg,#1f5c4a,#0e3328 60%,#3b2f12);border:1px solid #c9a24a66;color:#f4ecd2;padding:10px 12px;font-size:10.5px;transition:transform .9s cubic-bezier(.6,0,.3,1),opacity .9s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.ccard.in{transform:translateY(96px) scale(.96)} .ccard .chipc{width:28px;height:21px;border-radius:5px;background:linear-gradient(135deg,#e8c66b,#a07a2a);margin:10px 0 6px} .ccard b{display:block;font-size:12px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-width:260px;margin:10px auto 0} .pad button{height:44px;border-radius:11px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);font:700 17px inherit;font-family:inherit;cursor:pointer} .pad button:hover{border-color:var(--mal)}
+.pins{display:flex;justify-content:center;gap:10px;margin:6px 0} .pins i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line2)} .pins i.on{background:var(--gold);border-color:var(--gold)}
+.steps{display:grid;gap:0} .st{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;position:relative;padding-bottom:14px} .st:before{content:'';position:absolute;left:14px;top:28px;bottom:0;width:2px;background:var(--line)} .st:last-child:before{display:none}
+.st .ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line2);font-weight:800;font-size:13px;background:var(--panel)} .st.ok .ic{background:var(--mal);border-color:var(--mal);color:#fff} .st.run .ic{border-color:var(--gold);animation:pulse 1.2s infinite} .st.bad .ic{background:var(--red);border-color:var(--red);color:#fff} .st.wait{opacity:.45}
+.st .t{font-weight:700;font-size:13.5px;margin-top:5px} .st .m{font-size:12px;color:var(--muted);font-family:var(--mono);word-break:break-all}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px} .modal-bg.on{display:flex}
+.modal{width:min(640px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);padding:22px;box-shadow:var(--shadow);animation:pop .18s}
+@keyframes pop{from{transform:scale(.96);opacity:0}} .modal h2{margin:0 0 6px;font-size:19px} .modal .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+.attrs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0} .attrs div{border:1px solid var(--line);border-radius:10px;padding:7px 9px;font-size:12.5px} .attrs span{display:block;font-size:11px;color:var(--dim)}
+.warnb{border:1px solid var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--panel));border-radius:11px;padding:9px 11px;font-size:12.5px;margin-top:10px} .okb{border:1px solid var(--mal);background:color-mix(in srgb,var(--mal) 9%,var(--panel));border-radius:11px;padding:9px 11px;font-size:12.5px;margin-top:10px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s} .toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+@media (max-width:1180px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.g2,.g2e,.g3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){.app{grid-template-columns:minmax(0,1fr)}.side{position:fixed;left:0;top:45px;z-index:1500;width:250px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}.side.open{transform:none}.menu-btn{display:inline-flex}main{padding:14px 14px 50px}.intro{grid-template-columns:minmax(0,1fr)}.head h1{font-size:19px}}
+@media (max-width:520px){.kpis{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.kpi .v{font-size:19px}.fgrid{grid-template-columns:1fr}.tools .input{max-width:none}.attrs{grid-template-columns:1fr 1fr}.cond{grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr) 30px}.cat{grid-template-columns:1fr}.toasts{left:16px;right:16px}.toast{max-width:none}}
+</style>
+</head>
+<body data-demo-en="Gatekeeper — enterprise identity & access management" data-demo-ru="Gatekeeper — управление идентификацией и доступом">
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>⚿</b><div>Gatekeeper<small data-en="Defense Manpower Data Centre" data-ru="Центр кадровых данных обороны"></small></div></div>
+    <div id="navs"></div>
+    <div class="grow"></div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" data-en="Republic of Nordania · Ministry of Defence · Identity governance" data-ru="Республика Нордания · Минобороны · Управление идентификацией"></div><h1 id="title"></h1></div>
+      <div class="sp"></div><span class="pill" id="sessPill"></span>
+    </div>
+    <div class="intro">
+      <div class="hint">
+        <div class="s"><span class="n">1</span><span data-en="<b>Directory</b> → open anyone → <b>Offboard</b>: watch access revoked across 8 systems." data-ru="<b>Справочник</b> → откройте любого → <b>Уволить</b>: доступ отзывается в 8 системах."></span></div>
+        <div class="s"><span class="n">2</span><span data-en="<b>Access requests</b> → request an item → approve as manager → data owner → security." data-ru="<b>Заявки на доступ</b> → запросите право → одобрите: руководитель → владелец данных → безопасность."></span></div>
+        <div class="s"><span class="n">3</span><span data-en="<b>Smart-card login</b>: insert card, PIN <b>1234</b>, watch the certificate chain check." data-ru="<b>Вход по смарт-карте</b>: вставьте карту, PIN <b>1234</b>, проверка цепочки сертификатов."></span></div>
+      </div>
+      <div class="card facts">
+        <span data-en="Tender" data-ru="Тендер"></span><b data-en="Identity &amp; access management (2025)" data-ru="Управление идентификацией и доступом (2025)"></b>
+        <span data-en="Budget" data-ru="Бюджет"></span><b class="mono">$1.4B</b>
+        <span data-en="Client" data-ru="Заказчик"></span><b data-en="Defense Manpower Data Centre, Republic of Nordania (fictional)" data-ru="Центр кадровых данных обороны Республики Нордания (вымышл.)"></b>
+        <span data-en="Stack" data-ru="Стек"></span><b data-en="IGA · RBAC/ABAC · PKI smart cards" data-ru="IGA · RBAC/ABAC · смарт-карты PKI"></b>
+      </div>
+    </div>
+    <section class="view" id="v-dash"></section>
+    <section class="view" id="v-dir"></section>
+    <section class="view" id="v-jml"></section>
+    <section class="view" id="v-req"></section>
+    <section class="view" id="v-sod"></section>
+    <section class="view" id="v-rev"></section>
+    <section class="view" id="v-abac"></section>
+    <section class="view" id="v-card"></section>
+    <section class="view" id="v-audit"></section>
+  </main>
+</div>
+<div class="modal-bg" id="mbg"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru),L=o=>o?(PT.lang==='ru'?o.ru:o.en):'',LA=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='gatekeeper-v1',DAY=864e5,NOW=Date.now();
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const d10=t=>new Date(t).toISOString().slice(0,10),hm=t=>new Date(t).toTimeString().slice(0,8);
+const fmt=n=>Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+const ago=d=>d<1?T('today','сегодня'):T(d+' d ago',d+' дн. назад');
+
+/* ---------- reference data ---------- */
+const SYS=[
+ {id:'DIR',en:'Directory (LDAP)',ru:'Каталог (LDAP)',own:['Identity Office','Служба идентификации']},
+ {id:'MAIL',en:'Email & collaboration',ru:'Почта и совместная работа',own:['Comms Directorate','Управление связи']},
+ {id:'HRP',en:'HR & payroll',ru:'Кадры и зарплата',own:['Personnel Directorate','Кадровое управление']},
+ {id:'LOG',en:'Logistics ERP',ru:'Логистическая ERP',own:['Defense Logistics Agency','Агентство тылового обеспечения']},
+ {id:'MED',en:'Medical records',ru:'Медицинские карты',own:['Medical Command','Медицинское командование']},
+ {id:'SNET',en:'Secret network',ru:'Секретная сеть',own:['Cyber Command','Киберкомандование']},
+ {id:'VPN',en:'Remote access VPN',ru:'Удалённый доступ VPN',own:['Cyber Command','Киберкомандование']},
+ {id:'PACS',en:'Building access (PACS)',ru:'Доступ в здания (СКУД)',own:['Security Directorate','Управление безопасности']}];
+const SY=Object.fromEntries(SYS.map(s=>[s.id,s]));
+const ENTS=[['DIR:user','Directory account','Учётная запись'],['DIR:admin','Domain administrator','Администратор домена',1],['MAIL:user','Mailbox','Почтовый ящик'],['MAIL:ops','Shared ops mailbox','Общий ящик дежурных'],
+ ['HRP:self','Self-service','Самообслуживание'],['HRP:clerk','Edit pay records','Правка зарплатных данных'],['HRP:payapprove','Approve payroll run','Утверждение ведомости',1],['HRP:admin','HR system admin','Администратор кадров',1],
+ ['LOG:view','Read inventory','Просмотр запасов'],['LOG:req','Create requisitions','Создание заявок'],['LOG:vendor','Create vendors','Создание поставщиков'],['LOG:po','Approve purchase orders','Утверждение заказов',1],['LOG:admin','ERP administrator','Администратор ERP',1],
+ ['MED:view','Read patient summary','Просмотр сводки пациента'],['MED:clin','Clinician — edit records','Врач — правка карт'],['MED:admin','Medical records admin','Администратор медкарт',1],
+ ['SNET:user','Secret network user','Пользователь секретной сети'],['SNET:admin','Secret network admin','Администратор секретной сети',1],
+ ['VPN:user','Standard VPN','Обычный VPN'],['VPN:priv','Privileged jump host','Привилег. jump-хост',1],
+ ['PACS:base','Base perimeter','Периметр базы'],['PACS:secure','Secure zone (SCIF)','Защищённая зона (SCIF)'],['PACS:admin','Badge office admin','Администратор бюро пропусков',1]]
+ .map(e=>({id:e[0],sys:e[0].split(':')[0],en:e[1],ru:e[2],priv:!!e[3]}));
+const E=Object.fromEntries(ENTS.map(e=>[e.id,e]));
+const BIRTH=['DIR:user','MAIL:user','HRP:self','PACS:base'];
+const JOBS={ops:{en:'Operations officer',ru:'Офицер оперативного отдела',e:['SNET:user','VPN:user','PACS:secure','MAIL:ops']},
+ log:{en:'Logistics specialist',ru:'Специалист по логистике',e:['LOG:view','LOG:req','VPN:user']},
+ proc:{en:'Procurement officer',ru:'Специалист по закупкам',e:['LOG:view','LOG:vendor']},
+ fin:{en:'Finance officer',ru:'Финансист',e:['LOG:view','LOG:po','HRP:payapprove']},
+ hr:{en:'HR clerk',ru:'Кадровик',e:['HRP:clerk']},
+ med:{en:'Clinician',ru:'Врач',e:['MED:view','MED:clin']},
+ it:{en:'Systems administrator',ru:'Системный администратор',e:['DIR:admin','VPN:priv','MAIL:ops']},
+ sec:{en:'Security officer',ru:'Офицер безопасности',e:['PACS:admin','PACS:secure','SNET:user']},
+ dev:{en:'Contract developer',ru:'Разработчик-подрядчик',e:['VPN:user','LOG:view']}};
+const UNITS={sig:['1st Signal Brigade','1-я бригада связи'],nav:['Naval Base Kjell','ВМБ Кьелль'],air:['Air Wing 3','3-е авиакрыло'],dla:['Defense Logistics Agency','Агентство тылового обеспечения'],med:['Medical Command','Медицинское командование'],hq:['HQ Personnel Directorate','Управление кадров штаба']};
+const TYPES={mil:['Military','Военный'],civ:['Civilian','Гражданский'],ctr:['Contractor','Подрядчик']};
+const CLR={none:['None','Нет'],conf:['Confidential','Конфиденциально'],secret:['Secret','Секретно'],ts:['Top Secret','Совершенно секретно']};
+const RANKS=[['Pvt','Ряд.'],['Sgt','Серж.'],['SSgt','Ст. серж.'],['Lt','Лейт.'],['Capt','Кап.'],['Maj','Майор'],['Col','Полк.']];
+const FIRMS=['Polar Systems AS','Fjordline Tech','Northgate Services'];
+const FN=[['Erik','Эрик'],['Ingrid','Ингрид'],['Lars','Ларс'],['Sigrid','Сигрид'],['Anders','Андерс'],['Maren','Марен'],['Jonas','Йонас'],['Tove','Туве'],['Henrik','Хенрик'],['Astrid','Астрид'],['Nils','Нильс'],['Liv','Лив'],['Oskar','Оскар'],['Freya','Фрейя'],['Magnus','Магнус'],['Elin','Элин'],['Viktor','Виктор'],['Hedda','Хедда'],['Rune','Руне'],['Karin','Карин'],['Tor','Тур'],['Silje','Силье'],['Bjorn','Бьёрн'],['Nora','Нора']];
+const LN=[['Halvorsen','Халворсен'],['Lindqvist','Линдквист'],['Berg','Берг'],['Dahl','Даль'],['Strand','Странд'],['Moen','Моэн'],['Aasen','Осен'],['Nygaard','Нюгор'],['Holm','Хольм'],['Solberg','Сульберг'],['Eklund','Эклунд'],['Vik','Вик'],['Brekke','Брекке'],['Lunde','Лунне'],['Sandvik','Сандвик'],['Hagen','Хаген'],['Falk','Фальк'],['Rask','Раск'],['Aune','Ауне'],['Kvist','Квист']];
+const SOD=[{id:'SOD-01',a:'LOG:vendor',b:'LOG:po',en:'One person could create a fictitious vendor and approve purchase orders paying it — classic procurement fraud.',ru:'Один человек может завести фиктивного поставщика и сам утвердить оплату ему — классическое мошенничество в закупках.'},
+ {id:'SOD-02',a:'HRP:clerk',b:'HRP:payapprove',en:'Editing pay records and approving the payroll run lets a user raise their own salary undetected.',ru:'Правка зарплатных данных и утверждение ведомости позволяют незаметно повысить себе оклад.'},
+ {id:'SOD-03',a:'MED:clin',b:'MED:admin',en:'A clinician who administers the records system can alter the audit trail of their own entries.',ru:'Врач-администратор системы может изменить журнал аудита собственных записей.'},
+ {id:'SOD-04',a:'DIR:admin',b:'PACS:admin',en:'Domain + badge office admin can create an identity and issue it physical access with no second person.',ru:'Админ домена и бюро пропусков может создать личность и выдать ей физический доступ без второго лица.'}];
+const ATTR=[{k:'subj.type',en:'Subject · type',ru:'Субъект · тип',v:['mil','civ','ctr']},{k:'subj.clearance',en:'Subject · clearance',ru:'Субъект · допуск',v:['none','conf','secret','ts'],ord:1},
+ {k:'subj.unit',en:'Subject · unit',ru:'Субъект · подразделение',v:Object.keys(UNITS)},{k:'subj.trained',en:'Subject · annual training',ru:'Субъект · ежегодное обучение',v:['yes','no']},
+ {k:'env.device',en:'Env · device',ru:'Среда · устройство',v:['managed','unmanaged']},{k:'env.location',en:'Env · location',ru:'Среда · место',v:['onsite','vpn','foreign']},
+ {k:'env.hour',en:'Env · hour (0–23)',ru:'Среда · час (0–23)',num:1},{k:'res.class',en:'Resource · classification',ru:'Ресурс · гриф',v:['unclass','cui','secret'],ord:1}];
+const AT=Object.fromEntries(ATTR.map(a=>[a.k,a]));
+const VL={yes:['yes','да'],no:['no','нет'],managed:['managed','управляемое'],unmanaged:['unmanaged','личное'],onsite:['on site','на объекте'],vpn:['VPN','VPN'],foreign:['abroad','за рубежом'],unclass:['unclassified','несекретно'],cui:['CUI','ДСП'],secret:['secret','секретно'],...TYPES,...CLR,...UNITS};
+const vl=v=>VL[v]?LA(VL[v]):v;
+const RES={SNET:'secret',MED:'cui',LOG:'cui',HRP:'cui',MAIL:'unclass',DIR:'unclass',VPN:'cui',PACS:'cui'};
+
+/* ---------- state ---------- */
+function mkPerson(R,i,o={}){const f=FN[Math.floor(R()*FN.length)],l=LN[Math.floor(R()*LN.length)];
+ const ty=o.ty||(R()<.48?'mil':R()<.62?'civ':'ctr');
+ let job=o.job||(ty==='ctr'?['dev','it','log'][Math.floor(R()*3)]:['ops','ops','log','log','proc','fin','hr','med','med','it','sec'][Math.floor(R()*11)]);
+ const unit=o.unit||(job==='med'?'med':job==='hr'?'hq':job==='proc'||job==='log'?(R()<.6?'dla':'nav'):['sig','nav','air','hq'][Math.floor(R()*4)]);
+ const clr=o.clr||(['ops','it','sec'].includes(job)?(R()<.4?'ts':'secret'):ty==='ctr'?'conf':(R()<.5?'conf':'none'));
+ const rk=ty==='mil'?Math.min(6,Math.floor(R()*R()*7.5)):-1;
+ const ents=[...new Set([...BIRTH,...JOBS[job].e])];
+ if(R()<.28){const x=ENTS.filter(e=>!e.priv&&!ents.includes(e.id)&&!SOD.some(s=>s.a===e.id||s.b===e.id));ents.push(x[Math.floor(R()*x.length)].id)}
+ return{id:'14'+String(20000000+Math.floor(R()*79999999)),en:f[0]+' '+l[0],ru:f[1]+' '+l[1],ty,job,unit,clr,rk,firm:ty==='ctr'?FIRMS[i%3]:'',ents,st:'active',
+  last:o.last!=null?o.last:(R()<.09?95+Math.floor(R()*200):Math.floor(R()*R()*25)),trained:R()<.86,since:NOW-Math.floor((200+R()*4000))*DAY,
+  card:{sn:Math.floor(R()*0xffffffff).toString(16).toUpperCase().padStart(8,'0'),exp:NOW+(ty==='ctr'?30+R()*380:180+R()*900)*DAY,st:'ok'}}}
+function seed(){const R=rng(20251117),pp=[];
+ pp.push(mkPerson(R,0,{ty:'mil',job:'sec',unit:'hq',clr:'ts',last:0}));pp[0].en='Astrid Solberg';pp[0].ru='Астрид Сульберг';pp[0].rk=4;pp[0].trained=true;
+ for(let i=1;i<124;i++)pp.push(mkPerson(R,i));
+ [[5,'LOG:po'],[12,'HRP:payapprove'],[23,'MED:admin'],[31,'PACS:admin'],[57,'LOG:vendor']].forEach(([i,e])=>{const p=pp[i];const r=SOD.find(s=>s.a===e||s.b===e);const other=r.a===e?r.b:r.a;[e,other].forEach(x=>{if(!p.ents.includes(x))p.ents.push(x)})});
+ [9,46].forEach(i=>{const p=pp[i];p.st='left';p.ents=[];p.card.st='revoked';p.last=40+i});
+ pp[17].card.exp=NOW-12*DAY;
+ pp.forEach((p,i)=>{if(i)p.mgr=pp[(i*7+3)%20].id});
+ const orph=[['DIR','svc_backup_legacy',412],['DIR','t.rask.adm',188],['LOG','vendor_sync01',260],['HRP','payroll_test',133],['SNET','j.berglund',97],['VPN','fjordline-tmp3',151],['MAIL','old-ops-desk',301],['PACS','badge#40917',122],['MED','locum.kvist',204]].map((o,i)=>({id:'ORP-'+(i+1),sys:o[0],acct:o[1],last:o[2],off:false}));
+ const S={pp,orph,reqs:[],log:[],exc:{},sodOff:{},nextReq:4101,nextJ:1,sess:null,lock:{},pol:[
+  {id:'POL-1',en:'Secret network — need clearance, managed device, training',ru:'Секретная сеть — допуск, управляемое устройство, обучение',res:'SNET',eff:'permit',c:[['subj.clearance','≥','secret'],['env.device','=','managed'],['subj.trained','=','yes']]},
+  {id:'POL-2',en:'Block classified access from abroad',ru:'Запрет секретного доступа из-за рубежа',res:'SNET',eff:'deny',c:[['env.location','=','foreign']]},
+  {id:'POL-3',en:'Medical records — Medical Command only',ru:'Медкарты — только медкомандование',res:'MED',eff:'permit',c:[['subj.unit','=','med'],['env.device','=','managed']]},
+  {id:'POL-4',en:'Contractors: no ERP after 20:00',ru:'Подрядчики: ERP не после 20:00',res:'LOG',eff:'deny',c:[['subj.type','=','ctr'],['env.hour','≥','20']]},
+  {id:'POL-5',en:'Logistics ERP — any trained staff',ru:'Логистическая ERP — любой обученный',res:'LOG',eff:'permit',c:[['subj.trained','=','yes'],['res.class','≤','cui']]}]};
+ const mk=(who,ent,just,steps,ago)=>({id:'AR-'+S.nextReq++,pid:pp[who].id,ent,just,dur:'90',t:NOW-ago*36e5,steps:['mgr','own','sec'].map((r,i)=>({r,st:i<steps?'ok':null,t:i<steps?NOW-(ago-i-1)*36e5:0})),st:'pending'});
+ S.reqs.push(mk(14,'LOG:req',['Covering requisitions while SSgt Dahl is on leave','Замещаю ст. серж. Даля на время отпуска'],0,5),mk(33,'SNET:user',['Assigned to exercise NORTHERN SHIELD planning cell','Назначен в штаб учения «Северный щит»'],1,9),mk(61,'LOG:po',['New finance role from 1 Dec','Новая финансовая роль с 1 декабря'],2,20));
+ S.rev={id:'Q4-2026',en:'Q4 2026 privileged & sensitive access',ru:'Привилегированный и чувствительный доступ, Q4 2026',due:NOW+9*DAY,items:[],done:false};
+ const Rr=rng(77);pp.filter(p=>p.st==='active').forEach(p=>p.ents.forEach(e=>{if((E[e].priv||e==='PACS:secure'||e==='SNET:user')&&S.rev.items.length<42)S.rev.items.push({pid:p.id,ent:e,used:Rr()<.22?95+Math.floor(Rr()*160):Math.floor(Rr()*40),d:null})}));
+ const R2=rng(9);const ev=[['provision','LOG','Provisioned LOG:req for','Выдано LOG:req для'],['login','DIR','Smart-card login','Вход по смарт-карте'],['certify','SNET','Certified SNET:user for','Подтверждено SNET:user для'],['revoke','VPN','Revoked VPN:user from','Отозвано VPN:user у'],['login-fail','DIR','Wrong PIN for','Неверный PIN у'],['approve','HRP','Manager approved HRP:clerk for','Руководитель одобрил HRP:clerk для'],['policy','SNET','Policy POL-2 evaluated: deny for','POL-2: отказ для']];
+ for(let i=0;i<46;i++){const e=ev[Math.floor(R2()*ev.length)],p=pp[1+Math.floor(R2()*120)];S.log.push({t:NOW-(i*3.3+R2()*3)*36e5,ty:e[0],sys:e[1],en:e[2]+' '+p.en,ru:e[3]+' '+p.ru,by:R2()<.5?'system':pp[Math.floor(R2()*20)].en})}
+ return S}
+let S=store.load();if(!S||!S.pp||S.pp.length<100)S=seed();
+const save=()=>store.save(S);
+let view='dash',dirQ={q:'',ty:'',unit:'',st:''},jmlTab='join',jmlPid=null,prop=null,polSel='POL-1',revSel=new Set(),auditQ={q:'',ty:'',sys:''},card={pid:null,ph:'idle',pin:'',steps:[]},catQ={q:'',sys:''};
+const P=id=>S.pp.find(p=>p.id===id),nm=p=>p?(PT.lang==='ru'?p.ru:p.en):'—';
+const rk=p=>p.rk>=0?LA(RANKS[p.rk])+' ':'';
+const full=p=>p?rk(p)+nm(p):'—';
+const ini=p=>(p.en.split(' ').map(s=>s[0]).join(''));
+const act=()=>S.pp.filter(p=>p.st==='active');
+const sysOf=p=>SYS.filter(s=>p.ents.some(e=>E[e].sys===s.id)).map(s=>s.id);
+const isPriv=p=>p.ents.some(e=>E[e].priv);
+const dormant=p=>p.st==='active'&&p.last>90;
+const entL=id=>`<span class="chip ${E[id].priv?'pv':''}">${id.split(':')[0]} · ${esc(L(E[id]))}</span>`;
+function conflicts(pp=act()){const o=[];pp.forEach(p=>SOD.forEach(r=>{if(S.sodOff[r.id])return;if(p.ents.includes(r.a)&&p.ents.includes(r.b)){const x=S.exc[p.id+'|'+r.id];o.push({p,r,mit:x&&x>NOW?x:0})}}));return o}
+function sodFor(p,add){return SOD.filter(r=>!S.sodOff[r.id]&&((add===r.a&&p.ents.includes(r.b))||(add===r.b&&p.ents.includes(r.a))))}
+function log(ty,sys,en,ru){S.log.unshift({t:Date.now(),ty,sys,en,ru,by:S.sess?P(S.sess).en:'Astrid Solberg'});if(S.log.length>400)S.log.length=400}
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(html,ok){const m=$('#modal');m.innerHTML=html;$('#mbg').classList.add('on');PT.apply(m);$$('[data-close]',m).forEach(b=>b.onclick=closeM);const o=$('[data-ok]',m);if(o)o.onclick=()=>{if(ok(m)!==false)closeM()}}
+function closeM(){$('#mbg').classList.remove('on')}
+$('#mbg').onclick=e=>{if(e.target.id==='mbg')closeM()};
+const opt=(v,t,s)=>`<option value="${v}" ${s?'selected':''}>${esc(t)}</option>`;
+const kpi=(l,v,d,c,go)=>`<div class="card kpi ${c||''} ${go?'clk':''}" ${go?`data-go="${go}"`:''}><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
+
+/* ---------- dashboard ---------- */
+function vDash(){const a=act(),orph=S.orph.filter(o=>!o.off),dor=a.filter(dormant),pr=a.filter(isPriv),cf=conflicts().filter(c=>!c.mit);
+ const accs=a.reduce((s,p)=>s+sysOf(p).length,0)+orph.length,risk=Math.min(100,Math.round(orph.length*3+dor.length*2.2+cf.length*6+pr.length*.35));
+ const rv=S.rev.items.filter(i=>i.d).length/S.rev.items.length;
+ $('#v-dash').innerHTML=`<div class="kpis">${kpi(T('Active identities','Активные личности'),fmt(a.length),`${a.filter(p=>p.ty==='mil').length} ${T('mil','воен.')} · ${a.filter(p=>p.ty==='civ').length} ${T('civ','гражд.')} · ${a.filter(p=>p.ty==='ctr').length} ${T('ctr','подр.')}`,'','dir')}
+  ${kpi(T('Accounts in 8 systems','Учёток в 8 системах'),fmt(accs),T('incl. orphans','вкл. сиротские'))}
+  ${kpi(T('Orphan accounts','Сиротские учётки'),orph.length,T('no owning identity','без владельца'),orph.length?'bad':'')}
+  ${kpi(T('Dormant > 90 d','Неактивны > 90 дн.'),dor.length,T('still enabled','всё ещё включены'),dor.length?'warn':'')}
+  ${kpi(T('Privileged users','Привилегированные'),pr.length,`${Math.round(rv*100)}% ${T('reviewed this Q','проверено в квартале')}`,'','rev')}
+  ${kpi(T('Open SoD conflicts','Конфликты SoD'),cf.length,`${T('identity risk','риск')} ${risk}/100`,cf.length?'bad':'','sod')}</div>
+  <div class="g2"><div class="card"><h3>${T('Accounts by system','Учётки по системам')}<span class="sp"></span><span class="pill">${T('privileged share in gold','доля привилегий — золотом')}</span></h3><div class="chartw" id="chSys"></div></div>
+  <div class="card"><h3>${T('Workforce mix','Состав персонала')}</h3><div class="chartw" id="chMix"></div></div></div>
+  <div class="g3 mt">
+   <div class="card"><h3>${T('Orphan accounts','Сиротские учётки')}<span class="sp"></span>${orph.length?`<button class="btn xs danger" id="offAll">${T('Disable all','Отключить все')}</button>`:''}</h3>
+    <div class="tw"><table><thead><tr><th>${T('System','Система')}</th><th>${T('Account','Учётка')}</th><th>${T('Last use','Исп.')}</th><th></th></tr></thead><tbody>${orph.map(o=>`<tr><td class="mono">${o.sys}</td><td class="mono">${esc(o.acct)}</td><td>${o.last} ${T('d','дн.')}</td><td><button class="btn xs danger" data-orph="${o.id}">${T('Disable','Отключить')}</button></td></tr>`).join('')||`<tr><td colspan="4" class="muted">✓ ${T('No orphan accounts','Сиротских учёток нет')}</td></tr>`}</tbody></table></div></div>
+   <div class="card"><h3>${T('Dormant accounts','Неактивные учётки')}</h3>
+    <div class="tw"><table><thead><tr><th>${T('Person','Сотрудник')}</th><th>${T('Last login','Вход')}</th><th></th></tr></thead><tbody>${dor.slice(0,12).map(p=>`<tr><td><a href="#" data-pid="${p.id}">${esc(full(p))}</a></td><td>${p.last} ${T('d','дн.')}</td><td><button class="btn xs" data-dis="${p.id}">${T('Suspend','Приостановить')}</button></td></tr>`).join('')||`<tr><td colspan="3" class="muted">✓ ${T('None','Нет')}</td></tr>`}</tbody></table></div></div>
+   <div class="card"><h3>${T('Privileged accounts','Привилегированные учётки')}<span class="sp"></span><button class="btn xs" data-go="rev">${T('Review','Проверить')}</button></h3>
+    <div class="tw"><table><thead><tr><th>${T('Person','Сотрудник')}</th><th>${T('Privileges','Привилегии')}</th></tr></thead><tbody>${pr.slice(0,12).map(p=>`<tr><td><a href="#" data-pid="${p.id}">${esc(full(p))}</a></td><td>${p.ents.filter(e=>E[e].priv).map(e=>`<span class="chip pv">${e}</span>`).join('')}</td></tr>`).join('')}</tbody></table></div></div></div>`;
+ drawSys();drawMix();
+ $$('[data-orph]').forEach(b=>b.onclick=()=>{const o=S.orph.find(x=>x.id===b.dataset.orph);o.off=true;log('disable',o.sys,'Disabled orphan account '+o.acct,'Отключена сиротская учётка '+o.acct);save();render();toast(T('Orphan account disabled: ','Отключена учётка: ')+o.acct)});
+ const oa=$('#offAll');if(oa)oa.onclick=()=>{S.orph.forEach(o=>{if(!o.off){o.off=true;log('disable',o.sys,'Disabled orphan account '+o.acct,'Отключена сиротская учётка '+o.acct)}});save();render();toast(T('All orphan accounts disabled','Все сиротские учётки отключены'))};
+ $$('[data-dis]').forEach(b=>b.onclick=()=>{const p=P(b.dataset.dis);p.st='susp';log('disable','DIR','Suspended dormant identity '+p.en,'Приостановлена неактивная учётка '+p.ru);save();render();toast(T('Suspended: ','Приостановлен: ')+nm(p))});
+ bindPid($('#v-dash'))}
+function bindPid(r){$$('[data-pid]',r).forEach(a=>a.onclick=e=>{e.preventDefault();personM(P(a.dataset.pid))})}
+function drawSys(){const a=act(),W=560,rh=30,H=SYS.length*rh+10,mx=Math.max(...SYS.map(s=>a.filter(p=>sysOf(p).includes(s.id)).length+S.orph.filter(o=>!o.off&&o.sys===s.id).length));
+ const c1=cssv('--mal2'),c2=cssv('--gold'),c3=cssv('--red'),tx=cssv('--muted'),ln=cssv('--line');
+ $('#chSys').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${SYS.map((s,i)=>{const n=a.filter(p=>sysOf(p).includes(s.id)).length,pv=a.filter(p=>p.ents.some(e=>E[e].sys===s.id&&E[e].priv)).length,o=S.orph.filter(x=>!x.off&&x.sys===s.id).length,y=i*rh+6,k=(W-200)/mx;
+  return`<text x="0" y="${y+15}" fill="${tx}" font-size="12">${esc(s.id)}</text><rect x="58" y="${y}" width="${W-200}" height="18" rx="5" fill="${ln}" opacity=".5"/><rect x="58" y="${y}" width="${n*k}" height="18" rx="5" fill="${c1}"/><rect x="58" y="${y}" width="${pv*k}" height="18" rx="5" fill="${c2}"/>${o?`<rect x="${58+n*k+2}" y="${y}" width="${Math.max(4,o*k)}" height="18" rx="4" fill="${c3}"/>`:''}<text x="${W-132}" y="${y+14}" fill="${cssv('--text')}" font-size="12" font-family="var(--mono)">${n}${o?` <tspan fill="${c3}">+${o} ${T('orphan','сирот.')}</tspan>`:''}</text>`}).join('')}</svg>`}
+function drawMix(){const a=act(),parts=[['mil',cssv('--mal3')],['civ',cssv('--blue')],['ctr',cssv('--violet')]].map(([k,c])=>({k,c,n:a.filter(p=>p.ty===k).length})),tot=a.length;let ang=-Math.PI/2;
+ const arcs=parts.map(p=>{const a0=ang,a1=ang+p.n/tot*Math.PI*2;ang=a1;const r=70,R=100,cx=110,cy=110,L=a1-a0>Math.PI?1:0,P=(rr,t)=>`${cx+rr*Math.cos(t)} ${cy+rr*Math.sin(t)}`;return`<path d="M${P(R,a0)} A${R} ${R} 0 ${L} 1 ${P(R,a1)} L${P(r,a1)} A${r} ${r} 0 ${L} 0 ${P(r,a0)}Z" fill="${p.c}"/>`}).join('');
+ $('#chMix').innerHTML=`<svg viewBox="0 0 400 220"><g>${arcs}</g><text x="110" y="108" text-anchor="middle" font-size="26" font-weight="800" fill="${cssv('--text')}">${tot}</text><text x="110" y="128" text-anchor="middle" font-size="11" fill="${cssv('--muted')}">${T('active','активных')}</text>
+  ${parts.map((p,i)=>`<rect x="240" y="${60+i*36}" width="14" height="14" rx="4" fill="${p.c}"/><text x="262" y="${72+i*36}" font-size="13" fill="${cssv('--text')}">${LA(TYPES[p.k])}</text><text x="262" y="${87+i*36}" font-size="11" fill="${cssv('--muted')}">${p.n} · ${Math.round(p.n/tot*100)}%</text>`).join('')}</svg>`}
+
+/* ---------- directory ---------- */
+function stPill(p){return p.st==='active'?(dormant(p)?`<span class="pill warn">${T('dormant','неактивен')}</span>`:`<span class="pill ok">${T('active','активен')}</span>`):p.st==='left'?`<span class="pill bad">${T('left','уволен')}</span>`:`<span class="pill">${T('suspended','приостановлен')}</span>`}
+function vDir(){const q=dirQ.q.toLowerCase(),list=S.pp.filter(p=>(!q||(p.en+' '+p.ru+' '+p.id).toLowerCase().includes(q))&&(!dirQ.ty||p.ty===dirQ.ty)&&(!dirQ.unit||p.unit===dirQ.unit)&&(!dirQ.st||p.st===dirQ.st||(dirQ.st==='dorm'&&dormant(p))||(dirQ.st==='priv'&&isPriv(p))));
+ $('#v-dir').innerHTML=`<div class="tools"><input class="input" id="dq" value="${esc(dirQ.q)}" placeholder="${T('Search name or ID…','Поиск по имени или ID…')}">
+  <select class="input" id="dty">${opt('',T('All types','Все типы'))}${Object.keys(TYPES).map(k=>opt(k,LA(TYPES[k]),dirQ.ty===k)).join('')}</select>
+  <select class="input" id="dun">${opt('',T('All units','Все подразделения'))}${Object.keys(UNITS).map(k=>opt(k,LA(UNITS[k]),dirQ.unit===k)).join('')}</select>
+  <select class="input" id="dst">${[['',T('Any status','Любой статус')],['active',T('Active','Активные')],['dorm',T('Dormant','Неактивные')],['priv',T('Privileged','Привилегированные')],['susp',T('Suspended','Приостановленные')],['left',T('Left','Уволенные')]].map(o=>opt(o[0],o[1],dirQ.st===o[0])).join('')}</select>
+  <span class="muted" style="font-size:13px">${list.length} / ${S.pp.length}</span><span style="flex:1"></span><button class="btn sm pri" id="hire">+ ${T('New joiner','Новый сотрудник')}</button></div>
+  <div class="tw tall"><table><thead><tr><th>${T('Name','Имя')}</th><th>ID</th><th>${T('Type','Тип')}</th><th>${T('Unit','Подразделение')}</th><th>${T('Role','Роль')}</th><th>${T('Clearance','Допуск')}</th><th>${T('Systems','Системы')}</th><th>${T('Last login','Вход')}</th><th>${T('Status','Статус')}</th></tr></thead>
+  <tbody>${list.map(p=>`<tr class="clk ${p.st==='left'?'dim':''} ${p.fresh?'new':''}" data-p="${p.id}"><td><span class="av ty-${p.ty}">${ini(p)}</span>${esc(full(p))}</td><td class="mono">${p.id}</td><td>${LA(TYPES[p.ty])}${p.firm?` <span class="muted">· ${p.firm}</span>`:''}</td><td>${LA(UNITS[p.unit])}</td><td>${L(JOBS[p.job])}</td><td>${LA(CLR[p.clr])}</td>
+   <td><span class="dots">${SYS.map(s=>`<i class="${p.ents.some(e=>E[e].sys===s.id&&E[e].priv)?'pv':sysOf(p).includes(s.id)?'on':''}" title="${s.id}"></i>`).join('')}</span></td><td>${p.st==='left'?'—':ago(p.last)}</td><td>${stPill(p)}</td></tr>`).join('')}</tbody></table></div>`;
+ const rr=()=>{vDir();const i=$('#dq');i.focus();i.setSelectionRange(i.value.length,i.value.length)};
+ $('#dq').oninput=e=>{dirQ.q=e.target.value;rr()};$('#dty').onchange=e=>{dirQ.ty=e.target.value;vDir()};$('#dun').onchange=e=>{dirQ.unit=e.target.value;vDir()};$('#dst').onchange=e=>{dirQ.st=e.target.value;vDir()};
+ $('#hire').onclick=()=>{jmlTab='join';go('jml')};$$('#v-dir tr[data-p]').forEach(r=>r.onclick=()=>personM(P(r.dataset.p)))}
+function personM(p){if(!p)return;const cf=conflicts([p]),mg=P(p.mgr);
+ modal(`<h2><span class="av ty-${p.ty}">${ini(p)}</span>${esc(full(p))}</h2><div class="muted mono" style="font-size:12px">ID ${p.id} · ${LA(TYPES[p.ty])}${p.firm?' · '+p.firm:''} · ${stPill(p)}</div>
+  <div class="attrs"><div><span>${T('Unit','Подразделение')}</span>${LA(UNITS[p.unit])}</div><div><span>${T('Job role (RBAC)','Роль (RBAC)')}</span>${L(JOBS[p.job])}</div><div><span>${T('Clearance','Допуск')}</span>${LA(CLR[p.clr])}</div>
+  <div><span>${T('Manager','Руководитель')}</span>${mg?esc(full(mg)):'—'}</div><div><span>${T('Smart card','Смарт-карта')}</span><span class="mono" style="display:inline;color:inherit;font-size:12px">${p.card.sn}</span> ${p.card.st!=='ok'?`<span class="pill bad">${p.card.st}</span>`:p.card.exp<NOW?`<span class="pill bad">${T('expired','истекла')}</span>`:''}</div><div><span>${T('Training','Обучение')}</span>${p.trained?'✓ '+T('current','актуально'):'✕ '+T('overdue','просрочено')}</div></div>
+  ${cf.length?`<div class="warnb">⚠ ${cf.map(c=>`<b>${c.r.id}</b> ${c.r.a} ✕ ${c.r.b}${c.mit?' — '+T('mitigated','с компенсирующей мерой'):''}`).join('<br>')}</div>`:''}
+  <div class="tw mt"><table><thead><tr><th>${T('System','Система')}</th><th>${T('Entitlements','Права')}</th></tr></thead><tbody>${SYS.map(s=>{const e=p.ents.filter(x=>E[x].sys===s.id);return`<tr><td>${esc(L(s))}</td><td>${e.length?e.map(entL).join(''):'<span class="muted">—</span>'}</td></tr>`}).join('')}</tbody></table></div>
+  <div class="acts"><button class="btn sm" data-close>${T('Close','Закрыть')}</button>${p.st==='susp'?`<button class="btn sm" id="pmEn">${T('Re-enable','Включить')}</button>`:''}${p.st==='active'?`<button class="btn sm" id="pmReq">${T('Request access','Запросить доступ')}</button><button class="btn sm" id="pmMv">${T('Move / transfer','Перевод')}</button><button class="btn sm danger" id="pmLv">${T('Offboard','Уволить')}</button>`:''}</div>`);
+ const b=id=>$('#'+id);if(b('pmMv'))b('pmMv').onclick=()=>{closeM();jmlTab='move';jmlPid=p.id;go('jml')};if(b('pmLv'))b('pmLv').onclick=()=>{closeM();jmlTab='leave';jmlPid=p.id;go('jml')};
+ if(b('pmReq'))b('pmReq').onclick=()=>{closeM();catQ.for=p.id;go('req')};if(b('pmEn'))b('pmEn').onclick=()=>{p.st='active';p.last=0;log('enable','DIR','Re-enabled '+p.en,'Включён '+p.ru);save();closeM();render()}}
+
+/* ---------- joiner / mover / leaver ---------- */
+function vJml(){const a=act(),sel=jmlPid&&P(jmlPid)&&P(jmlPid).st==='active'?jmlPid:a[1].id;jmlPid=sel;const busy=prop&&!prop.done;let form='';
+ if(jmlTab==='join'){const R=Math.random;form=`<h3>${T('Joiner — hire & provision','Приём — найм и выдача доступа')}</h3><p class="sub">${T('Birthright access comes from the job role (RBAC). Nothing is granted by hand.','Базовый доступ выдаётся по роли (RBAC). Вручную ничего не выдаётся.')}</p>
+  <div class="fgrid"><div class="f"><label>${T('First name','Имя')}</label><input class="input" id="jfn" value="${LA(FN[Math.floor(R()*FN.length)])}"></div><div class="f"><label>${T('Last name','Фамилия')}</label><input class="input" id="jln" value="${LA(LN[Math.floor(R()*LN.length)])}"></div>
+  <div class="f"><label>${T('Type','Тип')}</label><select class="input" id="jty">${Object.keys(TYPES).map(k=>opt(k,LA(TYPES[k]))).join('')}</select></div><div class="f"><label>${T('Unit','Подразделение')}</label><select class="input" id="jun">${Object.keys(UNITS).map(k=>opt(k,LA(UNITS[k]),k==='dla')).join('')}</select></div>
+  <div class="f"><label>${T('Job role','Роль')}</label><select class="input" id="jjob">${Object.keys(JOBS).map(k=>opt(k,L(JOBS[k]),k==='log')).join('')}</select></div><div class="f"><label>${T('Clearance','Допуск')}</label><select class="input" id="jclr">${Object.keys(CLR).map(k=>opt(k,LA(CLR[k]),k==='conf')).join('')}</select></div>
+  <div class="f full"><label>${T('Birthright entitlements','Базовые права')}</label><div id="jprev"></div></div></div><button class="btn gold mt" id="jgo" ${busy?'disabled':''}>${T('Hire & provision','Принять и выдать доступ')}</button>`}
+ else{const p=P(sel);form=`<h3>${jmlTab==='move'?T('Mover — transfer & recalculate','Перевод — пересчёт прав'):T('Leaver — offboard everywhere','Увольнение — отзыв везде')}</h3>
+  <p class="sub">${jmlTab==='move'?T('Old role access is removed, new birthright added; extra grants are kept but flagged for review.','Права старой роли снимаются, новой — выдаются; дополнительные сохраняются, но идут на проверку.'):T('One action revokes the badge, card certificate and every account. Target: < 15 min, measured below.','Одно действие отзывает пропуск, сертификат карты и все учётки. Цель: < 15 мин, время ниже.')}</p>
+  <div class="f"><label>${T('Person','Сотрудник')}</label><select class="input" id="jp">${a.map(x=>opt(x.id,full(x)+' · '+L(JOBS[x.job]),x.id===sel)).join('')}</select></div>
+  ${jmlTab==='move'?`<div class="fgrid mt"><div class="f"><label>${T('New job role','Новая роль')}</label><select class="input" id="mjob">${Object.keys(JOBS).map(k=>opt(k,L(JOBS[k]),k===(p.job==='fin'?'log':'fin'))).join('')}</select></div><div class="f"><label>${T('New unit','Новое подразделение')}</label><select class="input" id="mun">${Object.keys(UNITS).map(k=>opt(k,LA(UNITS[k]),k===p.unit)).join('')}</select></div></div>`:
+  `<div class="f mt"><label>${T('Reason','Причина')}</label><select class="input" id="lr">${[['Separation from service','Увольнение со службы'],['End of contract','Окончание контракта'],['Retirement','Выход в отставку'],['Termination for cause','Увольнение по статье']].map((r,i)=>opt(i,LA(r))).join('')}</select></div>`}
+  <div class="f mt"><label>${jmlTab==='move'?T('Access diff','Разница прав'):T('Will be revoked','Будет отозвано')}</label><div id="jprev"></div></div>
+  <button class="btn ${jmlTab==='move'?'gold':'danger'} mt" id="jgo" ${busy?'disabled':''}>${jmlTab==='move'?T('Apply transfer','Применить перевод'):T('Offboard now','Уволить сейчас')}</button>`}
+ $('#v-jml').innerHTML=`<div class="seg">${[['join','Joiner','Приём'],['move','Mover','Перевод'],['leave','Leaver','Увольнение']].map(t=>`<button class="${jmlTab===t[0]?'on':''}" data-t="${t[0]}">${LA(t.slice(1))}</button>`).join('')}</div>
+  <div class="g2e"><div class="card">${form}</div><div class="card prop"><h3>${T('Provisioning propagation','Распространение по системам')}<span class="sp"></span><span id="propSt" class="pill"></span></h3><div id="propSvg"></div><div class="plog" id="propLog"></div></div></div>`;
+ $$('#v-jml .seg button').forEach(b=>b.onclick=()=>{jmlTab=b.dataset.t;vJml()});
+ const pv=()=>{const el=$('#jprev');if(jmlTab==='join'){el.innerHTML=[...new Set([...BIRTH,...JOBS[$('#jjob').value].e])].map(e=>`<span class="chip add">+ ${e}</span>`).join('');return}
+  const p=P($('#jp').value);if(jmlTab==='leave'){el.innerHTML=p.ents.map(e=>`<span class="chip rm">${e}</span>`).join('')+`<span class="chip rm">${T('card','карта')} ${p.card.sn}</span>`;return}
+  const d=moveDiff(p,$('#mjob').value);el.innerHTML=d.add.map(e=>`<span class="chip add">+ ${e}</span>`).join('')+d.rm.map(e=>`<span class="chip rm">${e}</span>`).join('')+d.keep.map(e=>`<span class="chip keep">⚑ ${e}</span>`).join('')+(d.add.length+d.rm.length?'':`<span class="muted">${T('No change','Без изменений')}</span>`)};
+ $$('#v-jml select').forEach(s=>s.onchange=()=>{if(s.id==='jp')jmlPid=s.value;pv()});pv();
+ $('#jgo').onclick=()=>{if(prop&&!prop.done)return;if(jmlTab==='join')doJoin();else if(jmlTab==='move')doMove(P($('#jp').value),$('#mjob').value,$('#mun').value);else doLeave(P($('#jp').value),$('#lr').selectedOptions[0].textContent)};
+ drawProp()}
+function moveDiff(p,job){const oldR=new Set([...BIRTH,...JOBS[p.job].e]),newR=new Set([...BIRTH,...JOBS[job].e]);return{add:[...newR].filter(e=>!p.ents.includes(e)),rm:[...oldR].filter(e=>!newR.has(e)&&p.ents.includes(e)),keep:p.ents.filter(e=>!oldR.has(e)&&!newR.has(e))}}
+function runProp(mode,p,plan,done){prop={mode,pid:p.id,st:{},lines:[],t0:performance.now(),done:false};SYS.forEach(s=>prop.st[s.id]=plan.some(x=>x.sys===s.id)?'run':'skip');
+ const ln=(c,en,ru)=>{prop.lines.push({c,t:Date.now(),en,ru});drawProp()};ln('',`${mode.toUpperCase()} ${p.en} → ${plan.length} systems`,`${mode==='join'?'ПРИЁМ':mode==='move'?'ПЕРЕВОД':'УВОЛЬНЕНИЕ'} ${p.ru} → систем: ${plan.length}`);
+ let left=plan.length;const fin=()=>{if(--left)return;prop.done=true;prop.ms=performance.now()-prop.t0;ln('ok',`✓ Completed in ${(prop.ms/1000).toFixed(1)} s`,`✓ Готово за ${(prop.ms/1000).toFixed(1)} с`);done();save();if(view!=='jml')render();else{renderNav();drawProp();$('#jgo')&&($('#jgo').disabled=false)}};
+ plan.forEach(x=>{setTimeout(()=>{if(x.retry){prop.st[x.sys]='err';ln('w',`${x.sys}: connector timeout, retry 1/3…`,`${x.sys}: таймаут коннектора, повтор 1/3…`);setTimeout(()=>{prop.st[x.sys]='ok';ln('ok',`${x.sys}: ${x.en}`,`${x.sys}: ${x.ru}`);fin()},1100);return}
+  prop.st[x.sys]='ok';ln(mode==='leave'?'bad':'ok',`${x.sys}: ${x.en}`,`${x.sys}: ${x.ru}`);fin()},x.ms)});if(!plan.length){left=1;fin()}}
+function drawProp(){const el=$('#propSvg');if(!el)return;const W=520,H=300,cx=260,cy=150,c={run:cssv('--gold'),ok:prop&&prop.mode==='leave'?cssv('--red'):cssv('--mal3'),err:cssv('--amber'),skip:cssv('--line2'),idle:cssv('--line2')},tx=cssv('--text'),mu=cssv('--muted');
+ const lab={run:T('working…','выполняется…'),ok:prop&&prop.mode==='leave'?T('revoked','отозвано'):T('done','готово'),err:T('retrying','повтор'),skip:T('no change','без изм.'),idle:''};
+ el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${SYS.map((s,i)=>{const a=-Math.PI/2+i*Math.PI/4,x=cx+205*Math.cos(a),y=cy+118*Math.sin(a),st=prop?prop.st[s.id]:'idle';
+  return`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${c[st]}" stroke-width="${st==='skip'||st==='idle'?1.5:2.5}" class="${st==='run'||st==='err'?'flow':''}" opacity="${st==='skip'?.4:1}"/><g transform="translate(${x},${y})"><rect x="-42" y="-19" width="84" height="38" rx="10" fill="${cssv('--panel2')}" stroke="${c[st]}" stroke-width="2"/><text y="-2" text-anchor="middle" font-size="12" font-weight="700" fill="${tx}">${s.id}</text><text y="12" text-anchor="middle" font-size="9.5" fill="${st==='ok'?c.ok:mu}">${lab[st]}</text></g>`}).join('')}
+  <circle cx="${cx}" cy="${cy}" r="38" fill="${cssv('--panel')}" stroke="${cssv('--gold')}" stroke-width="2"/><text x="${cx}" y="${cy-2}" text-anchor="middle" font-size="12" font-weight="800" fill="${tx}">IGA</text><text x="${cx}" y="${cy+13}" text-anchor="middle" font-size="9.5" fill="${mu}">Gatekeeper</text></svg>`;
+ const lg=$('#propLog');if(lg){lg.innerHTML=prop?prop.lines.map(l=>`<div class="${l.c}">${hm(l.t)} ${esc(PT.lang==='ru'?l.ru:l.en)}</div>`).join(''):`<div>${T('Idle — start a joiner, mover or leaver flow.','Ожидание — запустите приём, перевод или увольнение.')}</div>`;lg.scrollTop=1e4}
+ const ps=$('#propSt');if(ps){ps.className='pill '+(!prop?'':prop.done?'ok':'gold');ps.textContent=!prop?T('idle','ожидание'):prop.done?`${(prop.ms/1000).toFixed(1)} s · SLA 15 min`:T('running','идёт')}}
+const LAT={PACS:300,VPN:550,SNET:800,DIR:1000,MAIL:1350,HRP:1700,LOG:1900,MED:2300};
+function doJoin(){const ty=$('#jty').value,job=$('#jjob').value,R=rng(Date.now()&0xffff);const p=mkPerson(R,S.pp.length,{ty,job,unit:$('#jun').value,clr:$('#jclr').value,last:0});
+ p.en=$('#jfn').value.trim()+' '+$('#jln').value.trim();p.ru=p.en;if(p.en.trim().length<3){toast(T('Enter a name','Введите имя'),'bad');return}
+ p.ents=[...new Set([...BIRTH,...JOBS[job].e])];p.mgr=S.pp[3].id;p.fresh=1;p.since=Date.now();p.trained=false;S.pp.unshift(p);jmlPid=p.id;
+ const plan=sysOf(p).map(s=>({sys:s,ms:LAT[s],en:`created ${p.ents.filter(e=>E[e].sys===s).join(', ')}`,ru:`создано ${p.ents.filter(e=>E[e].sys===s).join(', ')}`}));
+ plan.push({sys:'DIR',ms:2500,en:`PIV card ${p.card.sn} issued, cert enrolled`,ru:`выпущена карта ${p.card.sn}, сертификат записан`});
+ log('join','DIR','Joiner '+p.en+' hired as '+JOBS[job].en,'Принят '+p.ru+' — '+JOBS[job].ru);
+ runProp('join',p,plan,()=>{plan.forEach(x=>{});p.ents.forEach(e=>log('provision',E[e].sys,'Provisioned '+e+' for '+p.en,'Выдано '+e+' для '+p.ru));toast(`✓ ${esc(p.en)} — ${T('provisioned in','доступ выдан в')} ${sysOf(p).length} ${T('systems','системах')}`)});vJml()}
+function doMove(p,job,unit){const d=moveDiff(p,job);if(job===p.job&&unit===p.unit){toast(T('Pick a different role or unit','Выберите другую роль или подразделение'),'bad');return}
+ const sy=[...new Set([...d.add,...d.rm].map(e=>E[e].sys))];const plan=sy.map(s=>({sys:s,ms:LAT[s],retry:s==='LOG'&&d.rm.some(e=>E[e].sys==='LOG'),en:[...d.add.filter(e=>E[e].sys===s).map(e=>'+'+e),...d.rm.filter(e=>E[e].sys===s).map(e=>'−'+e)].join(' '),ru:[...d.add.filter(e=>E[e].sys===s).map(e=>'+'+e),...d.rm.filter(e=>E[e].sys===s).map(e=>'−'+e)].join(' ')}));
+ const oj=p.job;log('move','HRP',`Mover ${p.en}: ${JOBS[oj].en} → ${JOBS[job].en}`,`Перевод ${p.ru}: ${JOBS[oj].ru} → ${JOBS[job].ru}`);
+ runProp('move',p,plan,()=>{p.ents=p.ents.filter(e=>!d.rm.includes(e)).concat(d.add);p.job=job;p.unit=unit;d.rm.forEach(e=>log('revoke',E[e].sys,'Revoked '+e+' from '+p.en+' (role change)','Отозвано '+e+' у '+p.ru+' (смена роли)'));d.add.forEach(e=>log('provision',E[e].sys,'Provisioned '+e+' for '+p.en,'Выдано '+e+' для '+p.ru));
+  d.keep.forEach(e=>{if(!S.rev.done&&!S.rev.items.some(i=>i.pid===p.id&&i.ent===e))S.rev.items.unshift({pid:p.id,ent:e,used:0,d:null,mv:1})});
+  toast(`✓ ${esc(nm(p))}: +${d.add.length} / −${d.rm.length}${d.keep.length?` · ${d.keep.length} ${T('flagged for review','на проверку')}`:''}`)});vJml()}
+function doLeave(p,why){const sy=sysOf(p),order=['PACS','VPN','SNET','DIR','MAIL','HRP','LOG','MED'];
+ const plan=order.filter(s=>sy.includes(s)).map(s=>({sys:s,ms:LAT[s],retry:s==='LOG',en:{PACS:'badge disabled at all gates',VPN:'sessions killed, account locked',SNET:'account disabled, tokens revoked',DIR:'account disabled, groups stripped',MAIL:'mailbox → 7-yr retention, forwarding to manager',HRP:'access removed, final pay flagged',LOG:'roles removed, open approvals reassigned',MED:'account disabled'}[s],
+  ru:{PACS:'пропуск заблокирован на всех КПП',VPN:'сессии сброшены, учётка заблокирована',SNET:'учётка отключена, токены отозваны',DIR:'учётка отключена, группы сняты',MAIL:'ящик → хранение 7 лет, пересылка руководителю',HRP:'доступ снят, отмечен окончательный расчёт',LOG:'роли сняты, согласования переданы',MED:'учётка отключена'}[s]}));
+ plan.push({sys:'DIR',ms:2700,en:`PIV cert ${p.card.sn} revoked, CRL + OCSP published`,ru:`сертификат карты ${p.card.sn} отозван, CRL и OCSP обновлены`});
+ log('leave','HRP',`Leaver ${p.en}: ${why}`,`Увольнение ${p.ru}: ${why}`);p.st='left';
+ runProp('leave',p,plan,()=>{p.ents.forEach(e=>log('revoke',E[e].sys,'Revoked '+e+' from '+p.en+' (leaver)','Отозвано '+e+' у '+p.ru+' (увольнение)'));p.ents=[];p.card.st='revoked';S.rev.items=S.rev.items.filter(i=>i.pid!==p.id||i.d);
+  toast(`✓ ${esc(nm(p))} — ${T('access revoked in','доступ отозван за')} ${(prop.ms/1000).toFixed(1)} ${T('s','с')}`,'gold')});vJml();renderNav()}
+
+/* ---------- access requests ---------- */
+const STEPN=r=>({mgr:T('Manager','Руководитель'),own:T('Data owner','Владелец данных'),sec:T('Security (ISSO)','Безопасность (ISSO)')}[r]);
+function curStep(r){return r.steps.findIndex(s=>!s.st)}
+function vReq(){const me=S.sess||S.pp[0].id,q=catQ.q.toLowerCase(),cat=ENTS.filter(e=>!BIRTH.includes(e.id)&&(!catQ.sys||e.sys===catQ.sys)&&(!q||(e.id+e.en+e.ru).toLowerCase().includes(q)));
+ const pend=S.reqs.filter(r=>r.st==='pending'||r.st==='prov').length;
+ $('#v-req').innerHTML=`<div class="card"><h3>${T('Requests & approval chain','Заявки и цепочка согласования')}<span class="sp"></span><span class="pill gold">${pend} ${T('in flight','в работе')}</span></h3>
+  <p class="sub">${T('You act as each approver in turn: manager → data owner → security. Then Gatekeeper provisions automatically.','Вы по очереди действуете за каждого: руководитель → владелец данных → безопасность. Затем Gatekeeper выдаёт доступ сам.')}</p>
+  <div class="tw"><table><thead><tr><th>ID</th><th>${T('For','Для')}</th><th>${T('Entitlement','Право')}</th><th>${T('Justification','Обоснование')}</th><th>${T('Chain','Цепочка')}</th><th>${T('Action','Действие')}</th></tr></thead><tbody>
+  ${S.reqs.slice().reverse().map(r=>{const p=P(r.pid),k=curStep(r),sod=p?sodFor({ents:p.ents.filter(e=>e!==r.ent)},r.ent):[];
+   const ch=r.steps.map((s,i)=>`<i class="${s.st==='ok'?'ok':s.st==='no'?'no':(i===k&&r.st==='pending')?'cur':''}" title="${STEPN(s.r)}">${['M','O','S'][i]}</i>`).join('<b></b>');
+   const actn=r.st==='pending'?`<button class="btn xs pri" data-ap="${r.id}">✓ ${STEPN(r.steps[k].r)}</button> <button class="btn xs danger" data-dn="${r.id}">✕</button>`:r.st==='prov'?`<span class="pill gold">${T('Provisioning…','Выдача…')}</span>`:r.st==='done'?`<span class="pill ok">${T('Provisioned','Выдано')}</span>`:`<span class="pill bad">${T('Denied','Отклонено')}</span>`;
+   return`<tr class="${r.fresh?'new':''}"><td class="mono">${r.id}</td><td><a href="#" data-pid="${r.pid}">${esc(full(p))}</a></td><td>${entL(r.ent)}${sod.length?` <span class="pill bad">SoD</span>`:''}</td><td style="white-space:normal;min-width:180px;font-size:12.5px">${esc(LA(r.just))}</td><td><span class="chain">${ch}</span></td><td>${actn}</td></tr>`}).join('')}</tbody></table></div></div>
+  <div class="card mt"><h3>${T('Access catalog','Каталог доступа')}<span class="sp"></span><span class="muted" style="font-size:12.5px;font-weight:500">${T('Requesting for','Запрос для')}:</span><select class="input" id="rfor" style="width:auto;max-width:230px">${act().map(p=>opt(p.id,full(p),p.id===(catQ.for||me))).join('')}</select></h3>
+  <div class="tools"><input class="input" id="cq" value="${esc(catQ.q)}" placeholder="${T('Search entitlements…','Поиск прав…')}"><select class="input" id="csy">${opt('',T('All systems','Все системы'))}${SYS.map(s=>opt(s.id,L(s),catQ.sys===s.id)).join('')}</select></div>
+  <div class="cat">${cat.map(e=>{const p=P(catQ.for||me),has=p&&p.ents.includes(e.id),pend=S.reqs.some(r=>r.pid===(p&&p.id)&&r.ent===e.id&&(r.st==='pending'||r.st==='prov'));return`<div class="ci"><div class="s">${e.id}${e.priv?' · <span style="color:var(--gold2)">'+T('privileged','привилег.')+'</span>':''}</div><div class="t">${esc(L(e))}</div><div class="o">${esc(L(SY[e.sys]))} · ${T('owner','владелец')}: ${LA(SY[e.sys].own)}</div>
+   <button class="btn xs ${has||pend?'':'pri'}" data-rq="${e.id}" ${has||pend?'disabled':''}>${has?T('Already held','Уже есть'):pend?T('Pending','На согласовании'):T('Request','Запросить')}</button></div>`}).join('')}</div></div>`;
+ $('#rfor').onchange=e=>{catQ.for=e.target.value;vReq()};$('#cq').oninput=e=>{catQ.q=e.target.value;vReq();const i=$('#cq');i.focus();i.setSelectionRange(i.value.length,i.value.length)};$('#csy').onchange=e=>{catQ.sys=e.target.value;vReq()};
+ $$('[data-rq]').forEach(b=>b.onclick=()=>reqM(P(catQ.for||me),b.dataset.rq));$$('[data-ap]').forEach(b=>b.onclick=()=>approve(S.reqs.find(r=>r.id===b.dataset.ap)));
+ $$('[data-dn]').forEach(b=>b.onclick=()=>{const r=S.reqs.find(x=>x.id===b.dataset.dn),k=curStep(r);r.steps[k].st='no';r.st='denied';log('deny',E[r.ent].sys,`${STEPN(r.steps[k].r)} denied ${r.ent} for ${P(r.pid).en}`,`${STEPN(r.steps[k].r)} отклонил ${r.ent} для ${P(r.pid).ru}`);save();render();toast(T('Request denied','Заявка отклонена'),'bad')});bindPid($('#v-req'))}
+function reqM(p,ent){const sod=sodFor(p,ent);
+ modal(`<h2>${T('Request access','Запрос доступа')}</h2><div class="muted" style="font-size:13px">${esc(full(p))} · ${LA(UNITS[p.unit])}</div><div class="mt">${entL(ent)}</div>
+  <div class="fgrid mt"><div class="f full"><label>${T('Business justification','Обоснование')}</label><textarea class="input" id="rj" rows="3" placeholder="${T('Why is this access needed?','Зачем нужен доступ?')}">${T('Required for assigned duties in ','Нужно для обязанностей в ')+LA(UNITS[p.unit])}</textarea></div>
+  <div class="f"><label>${T('Duration','Срок доступа')}</label><select class="input" id="rd">${[['30','30 days','30 дней'],['90','90 days','90 дней'],['365','1 year','1 год']].map(o=>opt(o[0],LA(o.slice(1)),o[0]==='90')).join('')}</select></div>
+  <div class="f"><label>${T('Approval chain','Цепочка')}</label><div style="font-size:12.5px;padding-top:6px">${T('Manager','Руководитель')} → ${LA(SY[E[ent].sys].own)} → ISSO</div></div></div>
+  ${sod.length?`<div class="warnb">⚠ <b>${T('Separation-of-duties conflict','Конфликт разделения обязанностей')}</b> — ${sod.map(r=>`${r.id}: ${r.a} ✕ ${r.b}. ${esc(L(r))}`).join('<br>')}<br>${T('Security must approve with a compensating control.','Безопасность может одобрить только с компенсирующей мерой.')}</div>`:`<div class="okb">✓ ${T('No SoD conflicts with current access','Конфликтов SoD с текущими правами нет')}</div>`}
+  <div class="acts"><button class="btn sm" data-close>${T('Cancel','Отмена')}</button><button class="btn sm gold" data-ok>${T('Submit request','Отправить заявку')}</button></div>`,m=>{const j=$('#rj',m).value.trim();if(j.length<8){toast(T('Justification is too short','Обоснование слишком короткое'),'bad');return false}
+  const r={id:'AR-'+S.nextReq++,pid:p.id,ent,just:[j,j],dur:$('#rd',m).value,t:Date.now(),steps:['mgr','own','sec'].map(x=>({r:x,st:null,t:0})),st:'pending',fresh:1};S.reqs.push(r);
+  log('request',E[ent].sys,`${r.id}: ${p.en} requested ${ent}`,`${r.id}: ${p.ru} запросил ${ent}`);save();render();toast(`${r.id} ${T('submitted → manager','отправлена → руководителю')}`,'gold')})}
+function approve(r){const k=curStep(r),p=P(r.pid),s=r.steps[k],sod=sodFor({ents:p.ents},r.ent);
+ const fin=mit=>{s.st='ok';s.t=Date.now();delete r.fresh;log('approve',E[r.ent].sys,`${STEPN(s.r)} approved ${r.ent} for ${p.en}${mit?' (mitigated)':''}`,`${STEPN(s.r)} одобрил ${r.ent} для ${p.ru}${mit?' (с мерой)':''}`);
+  if(mit)sod.forEach(x=>S.exc[p.id+'|'+x.id]=Date.now()+90*DAY);
+  if(k===2){r.st='prov';save();render();toast(T('All approvals done — provisioning…','Все согласования есть — выдача…'),'gold');setTimeout(()=>{r.st='done';if(!p.ents.includes(r.ent))p.ents.push(r.ent);log('provision',E[r.ent].sys,`Provisioned ${r.ent} for ${p.en} (${r.id})`,`Выдано ${r.ent} для ${p.ru} (${r.id})`);save();render();toast(`✓ ${r.id}: ${r.ent} ${T('provisioned in','выдано в')} ${E[r.ent].sys}`)},1600)}
+  else{save();render();toast(`${STEPN(s.r)} ✓ → ${STEPN(r.steps[k+1].r)}`)}};
+ if(s.r==='sec'&&sod.length)modal(`<h2>${T('Security review','Проверка безопасности')}</h2><div class="warnb">⚠ ${sod.map(x=>`<b>${x.id}</b> ${x.a} ✕ ${x.b}<br>${esc(L(x))}`).join('<br>')}</div>
+  <div class="f mt"><label>${T('Compensating control','Компенсирующая мера')}</label><select class="input" id="mc">${[['Monthly transaction review by finance controller','Ежемесячная проверка операций контролёром'],['Dual approval above 10 000 NRD','Двойное утверждение свыше 10 000 NRD'],['Session recording + quarterly audit','Запись сессий + квартальный аудит']].map((o,i)=>opt(i,LA(o))).join('')}</select></div>
+  <div class="acts"><button class="btn sm" data-close>${T('Cancel','Отмена')}</button><button class="btn sm gold" data-ok>${T('Approve with control (90 d)','Одобрить с мерой (90 дн.)')}</button></div>`,()=>fin(true));else fin(false)}
+
+/* ---------- SoD ---------- */
+function vSod(){const cf=conflicts();
+ $('#v-sod').innerHTML=`<div class="g2"><div><div class="tools"><b style="font-size:15px">${T('Detected conflicts','Найденные конфликты')}</b><span class="pill ${cf.filter(c=>!c.mit).length?'bad':'ok'}">${cf.filter(c=>!c.mit).length} ${T('open','открыто')}</span><span class="pill">${cf.filter(c=>c.mit).length} ${T('mitigated','с мерой')}</span><span style="flex:1"></span><button class="btn sm" id="sodRun">⟳ ${T('Run detection','Запустить поиск')}</button></div>
+  <div id="sodList">${cf.map(c=>`<div class="cf ${c.mit?'mit':''}"><div><b>${esc(full(c.p))}</b> <span class="muted">· ${L(JOBS[c.p.job])} · ${LA(UNITS[c.p.unit])}</span> <span class="pill ${c.mit?'':'bad'}">${c.r.id}</span></div>
+   <div style="margin-top:8px">${entL(c.r.a)}<span class="vs">✕</span>${entL(c.r.b)}</div><div class="why"><b>${T('Why it matters','Почему это опасно')}:</b> ${esc(L(c.r))}<br><b>${T('How acquired','Как возникло')}:</b> ${[c.r.a,c.r.b].map(e=>`${e} — ${JOBS[c.p.job].e.includes(e)||BIRTH.includes(e)?T('job role','роль'):T('ad-hoc grant','разовая выдача')}`).join('; ')}</div>
+   <div class="a">${c.mit?`<span class="muted" style="font-size:12.5px">${T('Accepted with compensating control until','Принято с мерой до')} ${d10(c.mit)}</span>`:`<button class="btn xs danger" data-rv="${c.p.id}|${c.r.a}">${T('Revoke','Отозвать')} ${c.r.a}</button><button class="btn xs danger" data-rv="${c.p.id}|${c.r.b}">${T('Revoke','Отозвать')} ${c.r.b}</button><button class="btn xs" data-mt="${c.p.id}|${c.r.id}">${T('Accept risk · 90 d','Принять риск · 90 дн.')}</button>`}</div></div>`).join('')||`<div class="okb">✓ ${T('No separation-of-duties conflicts','Конфликтов разделения обязанностей нет')}</div>`}</div></div>
+  <div class="card"><h3>${T('SoD rule set','Правила SoD')}</h3><p class="sub">${T('Toxic combinations checked on every request, mover and nightly.','Опасные сочетания проверяются при каждой заявке, переводе и каждую ночь.')}</p>
+  ${SOD.map(r=>`<div style="border-bottom:1px dashed var(--line);padding:9px 0"><div style="display:flex;gap:8px;align-items:center"><b class="mono">${r.id}</b><span style="flex:1"></span><label style="font-size:12.5px;display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" data-rl="${r.id}" ${S.sodOff[r.id]?'':'checked'}>${T('enabled','вкл.')}</label></div><div style="margin:5px 0">${entL(r.a)} ✕ ${entL(r.b)}</div><div class="muted" style="font-size:12px">${esc(L(r))}</div></div>`).join('')}</div></div>`;
+ $$('[data-rv]').forEach(b=>b.onclick=()=>{const[pid,e]=b.dataset.rv.split('|'),p=P(pid);p.ents=p.ents.filter(x=>x!==e);log('revoke',E[e].sys,`SoD: revoked ${e} from ${p.en}`,`SoD: отозвано ${e} у ${p.ru}`);save();render();toast(`${T('Revoked','Отозвано')} ${e} · ${esc(nm(p))}`)});
+ $$('[data-mt]').forEach(b=>b.onclick=()=>{const[pid,rid]=b.dataset.mt.split('|'),p=P(pid);S.exc[b.dataset.mt]=Date.now()+90*DAY;log('sod','DIR',`SoD ${rid} accepted for ${p.en} (90 d)`,`SoD ${rid} принят для ${p.ru} (90 дн.)`);save();render();toast(T('Risk accepted with compensating control','Риск принят с компенсирующей мерой'),'gold')});
+ $$('[data-rl]').forEach(c=>c.onchange=()=>{S.sodOff[c.dataset.rl]=!c.checked;log('sod','DIR',`Rule ${c.dataset.rl} ${c.checked?'enabled':'disabled'}`,`Правило ${c.dataset.rl} ${c.checked?'включено':'выключено'}`);save();render()});
+ $('#sodRun').onclick=()=>{const b=$('#sodRun');b.disabled=true;$('#sodList').style.opacity=.35;let i=0;const iv=setInterval(()=>{i+=12;b.textContent=`${T('Scanning','Проверка')} ${Math.min(i,act().length)}/${act().length}`;if(i>=act().length){clearInterval(iv);log('sod','DIR','SoD detection run','Запущен поиск SoD');save();render();toast(`${T('Detection complete','Проверка завершена')}: ${conflicts().filter(c=>!c.mit).length} ${T('open conflicts','открытых конфликтов')}`,'gold')}},80)}}
+
+/* ---------- access review ---------- */
+function vRev(){const C=S.rev,it=C.items.filter(i=>P(i.pid)),dn=it.filter(i=>i.d).length,rec=i=>{const p=P(i.pid);return i.used>90||dormant(p)||conflicts([p]).some(c=>!c.mit&&(c.r.a===i.ent||c.r.b===i.ent))?'r':'c'};
+ $('#v-rev').innerHTML=`<div class="card"><h3>${esc(L(C))}<span class="sp"></span><span class="pill ${C.done?'ok':'gold'}">${C.done?T('Closed','Закрыта'):T('Due','Срок')+' '+d10(C.due)}</span></h3>
+  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><div class="prog" style="flex:1;min-width:160px"><i style="width:${dn/it.length*100}%"></i></div><b>${dn} / ${it.length}</b><span class="muted" style="font-size:12.5px">✓ ${it.filter(i=>i.d==='c').length} · ✕ ${it.filter(i=>i.d==='r').length}</span>
+  ${C.done?`<button class="btn sm gold" id="revNew">${T('Launch next quarter','Запустить следующий квартал')}</button>`:`<button class="btn sm" id="revRec">${T('Apply recommendations','Принять рекомендации')}</button><button class="btn sm gold" id="revFin" ${dn<it.length?'disabled':''}>${T('Complete campaign','Завершить кампанию')}</button>`}</div>
+  ${!C.done&&revSel.size?`<div class="bulk"><b>${revSel.size} ${T('selected','выбрано')}</b><button class="btn xs pri" id="bC">✓ ${T('Certify','Подтвердить')}</button><button class="btn xs danger" id="bR">✕ ${T('Revoke','Отозвать')}</button><button class="btn xs" id="bX">${T('Clear','Сбросить')}</button></div>`:''}
+  <div class="tw tall"><table><thead><tr><th><input type="checkbox" id="selAll" ${C.done?'disabled':''}></th><th>${T('Person','Сотрудник')}</th><th>${T('Entitlement','Право')}</th><th>${T('Last used','Использовано')}</th><th>${T('Recommendation','Рекомендация')}</th><th>${T('Decision','Решение')}</th></tr></thead><tbody>
+  ${it.map((i,n)=>{const p=P(i.pid),r=rec(i);return`<tr><td><input type="checkbox" data-sel="${n}" ${revSel.has(n)?'checked':''} ${C.done?'disabled':''}></td><td><a href="#" data-pid="${p.id}">${esc(full(p))}</a>${i.mv?` <span class="pill warn">${T('mover','перевод')}</span>`:''}</td><td>${entL(i.ent)}</td><td>${i.used>90?`<span style="color:var(--red)">${i.used} ${T('d','дн.')}</span>`:ago(i.used)}</td>
+   <td>${r==='r'?`<span class="pill bad">${T('Revoke','Отозвать')}</span> <span class="muted" style="font-size:11.5px">${i.used>90?T('unused','не исп.'):dormant(p)?T('dormant','неактивен'):'SoD'}</span>`:`<span class="pill ok">${T('Certify','Подтвердить')}</span>`}</td>
+   <td><span class="dec"><button class="c ${i.d==='c'?'on':''}" data-d="${n}|c" ${C.done?'disabled':''}>✓</button><button class="r ${i.d==='r'?'on':''}" data-d="${n}|r" ${C.done?'disabled':''}>✕</button></span></td></tr>`}).join('')}</tbody></table></div></div>`;
+ const set=(n,d)=>{it[n].d=it[n].d===d?null:d};
+ $$('[data-d]').forEach(b=>b.onclick=()=>{const[n,d]=b.dataset.d.split('|');set(+n,d);save();vRev();renderNav()});
+ $$('[data-sel]').forEach(c=>c.onchange=()=>{c.checked?revSel.add(+c.dataset.sel):revSel.delete(+c.dataset.sel);vRev()});
+ const sa=$('#selAll');sa.onchange=()=>{revSel=sa.checked?new Set(it.map((_,n)=>n)):new Set();vRev()};
+ const bulk=d=>{revSel.forEach(n=>it[n].d=d);toast(`${revSel.size} ${d==='c'?T('certified','подтверждено'):T('marked for revoke','к отзыву')}`);revSel=new Set();save();vRev();renderNav()};
+ if($('#bC')){$('#bC').onclick=()=>bulk('c');$('#bR').onclick=()=>bulk('r');$('#bX').onclick=()=>{revSel=new Set();vRev()}}
+ if($('#revRec'))$('#revRec').onclick=()=>{let k=0;it.forEach(i=>{if(!i.d){i.d=rec(i);k++}});save();vRev();renderNav();toast(`${k} ${T('decisions pre-filled from recommendations','решений заполнено по рекомендациям')}`)};
+ if($('#revFin'))$('#revFin').onclick=()=>{let k=0;it.forEach(i=>{const p=P(i.pid);if(i.d==='r'&&p.ents.includes(i.ent)){p.ents=p.ents.filter(e=>e!==i.ent);k++;log('revoke',E[i.ent].sys,`Review ${C.id}: revoked ${i.ent} from ${p.en}`,`Проверка ${C.id}: отозвано ${i.ent} у ${p.ru}`)}else if(i.d==='c')log('certify',E[i.ent].sys,`Review ${C.id}: certified ${i.ent} for ${p.en}`,`Проверка ${C.id}: подтверждено ${i.ent} для ${p.ru}`)});C.done=true;C.closed=Date.now();save();render();toast(`✓ ${C.id} ${T('closed','закрыта')}: ${k} ${T('entitlements revoked','прав отозвано')}`,'gold')};
+ if($('#revNew'))$('#revNew').onclick=()=>{const R=rng(Date.now()&0xffff),items=[];act().forEach(p=>p.ents.forEach(e=>{if(E[e].priv&&items.length<30)items.push({pid:p.id,ent:e,used:R()<.15?100+Math.floor(R()*90):Math.floor(R()*30),d:null})}));S.rev={id:'Q1-2027',en:'Q1 2027 privileged access',ru:'Привилегированный доступ, Q1 2027',due:Date.now()+30*DAY,items,done:false};revSel=new Set();log('certify','DIR','Campaign Q1-2027 launched','Запущена кампания Q1-2027');save();render()};
+ bindPid($('#v-rev'))}
+
+/* ---------- ABAC ---------- */
+let abacT={pid:null,res:'SNET',device:'managed',loc:'onsite',hour:10};
+function cmp(a,op,x,v){if(a.num){x=+x;v=+v}else if(a.ord){x=a.v.indexOf(x);v=a.v.indexOf(v)}return op==='='?x==v:op==='≠'?x!=v:op==='≥'?x>=v:x<=v}
+function ctxOf(p){return{'subj.type':p.ty,'subj.clearance':p.clr,'subj.unit':p.unit,'subj.trained':p.trained?'yes':'no','env.device':abacT.device,'env.location':abacT.loc,'env.hour':abacT.hour,'res.class':RES[abacT.res]}}
+function evaluate(p){const ctx=ctxOf(p),pols=S.pol.filter(x=>x.res===abacT.res).map(x=>{const cs=x.c.map(c=>({c,v:ctx[c[0]],ok:cmp(AT[c[0]],c[1],ctx[c[0]],c[2])}));return{x,cs,hit:cs.every(c=>c.ok)}});
+ const deny=pols.find(r=>r.x.eff==='deny'&&r.hit),perm=pols.find(r=>r.x.eff==='permit'&&r.hit);return{pols,dec:deny?'d':perm?'p':'d',why:deny?T('Deny overrides: ','Запрет важнее: ')+deny.x.id:perm?T('Permitted by ','Разрешено: ')+perm.x.id:T('No applicable permit — default deny','Нет разрешающей политики — запрет по умолчанию')}}
+function vAbac(){const pol=S.pol.find(x=>x.id===polSel)||S.pol[0];polSel=pol.id;if(!abacT.pid||!P(abacT.pid))abacT.pid=S.pp[0].id;const p=P(abacT.pid),ev=evaluate(p);
+ const valIn=(c,i)=>{const a=AT[c[0]];return a.num?`<input class="input" type="number" min="0" max="23" data-cv="${i}" value="${esc(c[2])}">`:`<select class="input" data-cv="${i}">${a.v.map(v=>opt(v,vl(v),v===c[2])).join('')}</select>`};
+ $('#v-abac').innerHTML=`<div class="g2e"><div class="card"><h3>${T('Policies','Политики')}<span class="sp"></span><button class="btn xs" id="pNew">+ ${T('New','Новая')}</button></h3>
+  <div class="pl">${S.pol.map(x=>`<div class="pi ${x.id===pol.id?'on':''}" data-pl="${x.id}"><span class="pill ${x.eff==='permit'?'ok':'bad'}">${x.eff==='permit'?T('PERMIT','РАЗРЕШИТЬ'):T('DENY','ЗАПРЕТИТЬ')}</span> <b class="mono">${x.id}</b> · ${esc(L(x))}<small>${x.res} · ${x.c.length} ${T('conditions','условий')}</small></div>`).join('')}</div>
+  <h3 class="mt">${T('Edit','Редактор')} <span class="mono" style="color:var(--gold2)">${pol.id}</span></h3>
+  <div class="fgrid"><div class="f full"><label>${T('Name','Название')}</label><input class="input" id="pName" value="${esc(L(pol))}"></div>
+  <div class="f"><label>${T('Resource','Ресурс')}</label><select class="input" id="pRes">${SYS.map(s=>opt(s.id,s.id+' · '+L(s),s.id===pol.res)).join('')}</select></div><div class="f"><label>${T('Effect','Эффект')}</label><select class="input" id="pEff">${opt('permit',T('Permit','Разрешить'),pol.eff==='permit')}${opt('deny',T('Deny','Запретить'),pol.eff==='deny')}</select></div></div>
+  <div class="f mt"><label>${T('Conditions (all must match)','Условия (все должны выполниться)')}</label>${pol.c.map((c,i)=>`${i?`<div class="andl">${T('AND','И')}</div>`:''}<div class="cond"><select class="input" data-ca="${i}">${ATTR.map(a=>opt(a.k,L(a),a.k===c[0])).join('')}</select><select class="input" data-co="${i}">${['=','≠',...(AT[c[0]].num||AT[c[0]].ord?['≥','≤']:[])].map(o=>opt(o,o,o===c[1])).join('')}</select>${valIn(c,i)}<button class="btn xs danger" data-cd="${i}">✕</button></div>`).join('')}
+  <button class="btn xs" id="cAdd">+ ${T('Add condition','Добавить условие')}</button></div>
+  <div class="acts" style="justify-content:flex-start"><button class="btn sm gold" id="pSave">${T('Save policy','Сохранить')}</button><button class="btn sm danger" id="pDel">${T('Delete','Удалить')}</button></div></div>
+  <div class="card"><h3>${T('Test this policy set','Проверить политики')}</h3><p class="sub">${T('Live evaluation against the policy decision point. Deny overrides permit.','Живая проверка в точке принятия решений. Запрет важнее разрешения.')}</p>
+  <div class="fgrid"><div class="f full"><label>${T('Subject','Субъект')}</label><select class="input" id="tP">${S.pp.filter(x=>x.st!=='left').map(x=>opt(x.id,full(x)+' · '+LA(CLR[x.clr]),x.id===p.id)).join('')}</select></div>
+  <div class="f"><label>${T('Resource','Ресурс')}</label><select class="input" id="tR">${SYS.map(s=>opt(s.id,s.id+' · '+vl(RES[s.id]),s.id===abacT.res)).join('')}</select></div><div class="f"><label>${T('Device','Устройство')}</label><select class="input" id="tD">${['managed','unmanaged'].map(v=>opt(v,vl(v),v===abacT.device)).join('')}</select></div>
+  <div class="f"><label>${T('Location','Место')}</label><select class="input" id="tL">${['onsite','vpn','foreign'].map(v=>opt(v,vl(v),v===abacT.loc)).join('')}</select></div><div class="f"><label>${T('Hour','Час')}: <b id="tHv">${String(abacT.hour).padStart(2,'0')}:00</b></label><input type="range" min="0" max="23" value="${abacT.hour}" id="tH" style="width:100%"></div></div>
+  <div class="verdict ${ev.dec} mt">${ev.dec==='p'?'✓ '+T('PERMIT','РАЗРЕШЕНО'):'✕ '+T('DENY','ЗАПРЕЩЕНО')}<span style="font-size:12.5px;font-weight:600;margin-left:auto;text-align:right">${esc(ev.why)}</span></div>
+  <div class="trace">${ev.pols.map(r=>`<div class="pol ${r.hit?'hit':''}"><b class="mono">${r.x.id}</b> <span class="pill ${r.x.eff==='permit'?'ok':'bad'}">${r.x.eff}</span> ${r.hit?'<b>'+T('matched','сработала')+'</b>':`<span class="muted">${T('not matched','не сработала')}</span>`}${r.cs.map(c=>`<div class="c"><span class="${c.ok?'y':'n'}">${c.ok?'✓':'✕'}</span>${c.c[0]} ${c.c[1]} ${esc(AT[c.c[0]].num?c.c[2]:vl(c.c[2]))} <span class="muted">(${T('is','факт')}: ${esc(AT[c.c[0]].num?c.v:vl(c.v))})</span></div>`).join('')}</div>`).join('')||`<div class="muted">${T('No policies for this resource','Для ресурса нет политик')}</div>`}</div></div></div>`;
+ $$('[data-pl]').forEach(d=>d.onclick=()=>{polSel=d.dataset.pl;abacT.res=S.pol.find(x=>x.id===polSel).res;vAbac()});
+ const rd=()=>{pol.c.forEach((c,i)=>{c[0]=$(`[data-ca="${i}"]`).value;c[1]=$(`[data-co="${i}"]`).value;const v=$(`[data-cv="${i}"]`);c[2]=v.value})};
+ $$('[data-ca]').forEach(s=>s.onchange=()=>{const i=+s.dataset.ca,a=AT[s.value];pol.c[i]=[s.value,'=',a.num?'12':a.v[0]];vAbac()});
+ $$('[data-co],[data-cv]').forEach(s=>s.onchange=()=>{rd();vAbac()});
+ $$('[data-cd]').forEach(b=>b.onclick=()=>{pol.c.splice(+b.dataset.cd,1);vAbac()});
+ $('#cAdd').onclick=()=>{rd();pol.c.push(['subj.trained','=','yes']);vAbac()};
+ $('#pSave').onclick=()=>{rd();const n=$('#pName').value.trim();if(PT.lang==='ru')pol.ru=n;else pol.en=n;pol.res=$('#pRes').value;pol.eff=$('#pEff').value;abacT.res=pol.res;log('policy',pol.res,`Policy ${pol.id} saved (${pol.eff}, ${pol.c.length} conditions)`,`Политика ${pol.id} сохранена (${pol.eff}, условий: ${pol.c.length})`);save();vAbac();toast(`${pol.id} ${T('saved & published to PDP','сохранена и опубликована')}`)};
+ $('#pDel').onclick=()=>{if(S.pol.length<2)return;S.pol=S.pol.filter(x=>x!==pol);log('policy',pol.res,`Policy ${pol.id} deleted`,`Политика ${pol.id} удалена`);polSel=S.pol[0].id;save();vAbac();toast(T('Policy deleted','Политика удалена'),'bad')};
+ $('#pNew').onclick=()=>{const id='POL-'+(Math.max(...S.pol.map(x=>+x.id.split('-')[1]))+1);S.pol.push({id,en:'New policy',ru:'Новая политика',res:abacT.res,eff:'permit',c:[['subj.trained','=','yes']]});polSel=id;save();vAbac()};
+ $('#tP').onchange=e=>{abacT.pid=e.target.value;vAbac()};$('#tR').onchange=e=>{abacT.res=e.target.value;vAbac()};$('#tD').onchange=e=>{abacT.device=e.target.value;vAbac()};$('#tL').onchange=e=>{abacT.loc=e.target.value;vAbac()};
+ $('#tH').oninput=e=>{abacT.hour=+e.target.value;$('#tHv').textContent=String(abacT.hour).padStart(2,'0')+':00'};$('#tH').onchange=()=>vAbac()}
+
+/* ---------- smart card ---------- */
+function vCard(){if(!card.pid||!P(card.pid))card.pid=S.pp[0].id;const p=P(card.pid),lk=S.lock[p.id]>=3,inn=card.ph!=='idle';
+ const led=card.ph==='check'?'y':card.ph==='ok'?'g':card.ph==='fail'||lk?'r':inn?'y':'';
+ $('#v-card').innerHTML=`<div class="g2e"><div class="card"><h3>${T('Card reader','Считыватель')}<span class="sp"></span>${S.sess?`<button class="btn xs" id="lo">${T('Sign out','Выйти')}</button>`:''}</h3>
+  <div class="f"><label>${T('Cardholder (pick any — try a leaver or an expired card)','Владелец карты (попробуйте уволенного или с истёкшей картой)')}</label><select class="input" id="cP" ${inn&&card.ph!=='ok'&&card.ph!=='fail'?'disabled':''}>${S.pp.map(x=>opt(x.id,full(x)+(x.st==='left'?' · '+T('LEFT','УВОЛЕН'):x.card.exp<NOW?' · '+T('expired card','карта истекла'):S.lock[x.id]>=3?' · '+T('locked','заблок.'):''),x.id===p.id)).join('')}</select></div>
+  <div class="reader mt"><div class="slot"></div><div class="led ${led}"></div><div class="ccard ${inn?'in':''}"><div style="display:flex;justify-content:space-between"><span>NORDANIA · MOD</span><span>PIV</span></div><div class="chipc"></div><b>${esc(p.en.toUpperCase())}</b><span class="mono">${p.id} · ${p.card.sn}</span></div></div>
+  ${card.ph==='idle'?`<button class="btn gold" id="ins" style="width:100%;justify-content:center" ${lk?'disabled':''}>${lk?'🔒 '+T('Card locked — 3 wrong PINs','Карта заблокирована — 3 неверных PIN'):T('Insert card','Вставить карту')}</button>${lk?`<button class="btn sm mt" id="unl">${T('Unlock with PUK (security officer)','Разблокировать PUK (офицер безопасности)')}</button>`:''}`:
+   card.ph==='pin'?`<div style="text-align:center;font-weight:700">${T('Enter PIN','Введите PIN')} <span class="muted" style="font-weight:500;font-size:12px">(${T('demo','демо')}: 1234 · ${T('tries left','осталось попыток')}: ${3-(S.lock[p.id]||0)})</span></div><div class="pins">${[0,1,2,3].map(i=>`<i class="${i<card.pin.length?'on':''}"></i>`).join('')}</div>
+   <div class="pad">${[1,2,3,4,5,6,7,8,9,'⌫',0,'OK'].map(k=>`<button data-k="${k}">${k}</button>`).join('')}</div>`:
+   `<button class="btn sm" id="ej" style="width:100%;justify-content:center" ${card.ph==='check'?'disabled':''}>${T('Eject card','Извлечь карту')}</button>`}</div>
+  <div class="card"><h3>${T('Certificate chain & session','Цепочка сертификатов и сессия')}</h3><div class="steps">${CSTEPS.map((s,i)=>{const r=card.steps[i];return`<div class="st ${r?r.c:'wait'}"><div class="ic">${r?r.c==='ok'?'✓':r.c==='bad'?'✕':'…':i+1}</div><div><div class="t">${LA(s)}</div><div class="m">${r&&r.m?esc(LA(r.m)):''}</div></div></div>`}).join('')}</div>
+  ${card.ph==='ok'?`<div class="okb">✓ <b>${T('Session established','Сессия установлена')}</b> — ${esc(full(p))} · ${L(JOBS[p.job])}<br>${p.ents.map(e=>`<span class="chip ${E[e].priv?'pv':''}">${e}</span>`).join('')}</div>`:card.ph==='fail'?`<div class="warnb" style="border-color:var(--red)">✕ <b>${T('Access denied','Доступ запрещён')}</b> — ${esc(LA(card.err))}</div>`:''}</div></div>`;
+ $('#cP').onchange=e=>{card={pid:e.target.value,ph:'idle',pin:'',steps:[]};vCard()};
+ const b=id=>$('#'+id);if(b('ins'))b('ins').onclick=()=>{card.ph='in';vCard();setTimeout(()=>{card.ph='pin';vCard()},950)};
+ if(b('unl'))b('unl').onclick=()=>{S.lock[p.id]=0;log('login','DIR',`PIN unblocked with PUK for ${p.en}`,`PIN разблокирован PUK для ${p.ru}`);save();vCard();toast(T('Card unlocked','Карта разблокирована'))};
+ if(b('ej'))b('ej').onclick=()=>{card={pid:p.id,ph:'idle',pin:'',steps:[]};vCard()};if(b('lo'))b('lo').onclick=()=>{log('login','DIR','Signed out '+P(S.sess).en,'Выход '+P(S.sess).ru);S.sess=null;save();card={pid:p.id,ph:'idle',pin:'',steps:[]};render()};
+ $$('[data-k]').forEach(k=>k.onclick=()=>{const v=k.dataset.k;if(v==='⌫')card.pin=card.pin.slice(0,-1);else if(v==='OK')pinOk(p);else if(card.pin.length<8){card.pin+=v;if(card.pin.length===4){vCard();setTimeout(()=>pinOk(p),250);return}}vCard()})}
+const CSTEPS=[['PIN verified by card applet','PIN проверен апплетом карты'],['Read PIV authentication certificate','Чтение сертификата аутентификации PIV'],['Signature by Nordania MoD Issuing CA-7','Подпись Nordania MoD Issuing CA-7'],['CA-7 chains to trusted Nordania Root CA-3','CA-7 ведёт к доверенному Nordania Root CA-3'],['Validity period','Срок действия'],['OCSP revocation status','Статус отзыва (OCSP)'],['Map to identity & build session','Сопоставление с личностью и сессия']];
+function pinOk(p){if(card.ph!=='pin')return;if(card.pin!=='1234'){S.lock[p.id]=(S.lock[p.id]||0)+1;card.pin='';log('login-fail','DIR',`Wrong PIN for card ${p.card.sn} (${S.lock[p.id]}/3)`,`Неверный PIN карты ${p.card.sn} (${S.lock[p.id]}/3)`);save();
+  if(S.lock[p.id]>=3){card.ph='idle';toast(T('Card locked after 3 wrong PINs','Карта заблокирована после 3 неверных PIN'),'bad')}else toast(T('Wrong PIN','Неверный PIN'),'bad');vCard();return}
+ S.lock[p.id]=0;card.ph='check';card.steps=[];const cn=`CN=${p.en.split(' ').reverse().join('.').toUpperCase()}.${p.id}`;
+ const exp=p.card.exp<NOW,rev=p.card.st!=='ok',left=p.st!=='active';
+ const seq=[{c:'ok',m:['PIN OK, retry counter reset','PIN верен, счётчик попыток сброшен']},{c:'ok',m:[`${cn} · serial ${p.card.sn}`,`${cn} · серийный ${p.card.sn}`]},{c:'ok',m:['RSA-2048 / SHA-256 signature valid','Подпись RSA-2048 / SHA-256 верна']},{c:'ok',m:['path length 1 · anchor in trust store','длина пути 1 · якорь в хранилище доверия']},
+  exp?{c:'bad',m:[`expired ${d10(p.card.exp)}`,`истёк ${d10(p.card.exp)}`],e:['Certificate expired — visit badge office for renewal','Сертификат истёк — обратитесь в бюро пропусков']}:{c:'ok',m:[`valid until ${d10(p.card.exp)}`,`действует до ${d10(p.card.exp)}`]},
+  rev?{c:'bad',m:['REVOKED · reason: cessationOfOperation','ОТОЗВАН · причина: cessationOfOperation'],e:['Certificate revoked (leaver)','Сертификат отозван (увольнение)']}:{c:'ok',m:['good · responder ocsp.pki.mod.nd · 84 ms','good · ocsp.pki.mod.nd · 84 мс']},
+  left||p.st==='susp'?{c:'bad',m:['identity not active','личность не активна'],e:['Identity is not active','Личность не активна']}:{c:'ok',m:[`${sysOf(p).length} systems · ${p.ents.length} entitlements · ABAC context attached`,`систем: ${sysOf(p).length} · прав: ${p.ents.length} · контекст ABAC добавлен`]}];
+ let i=0;const nx=()=>{const s=seq[i];card.steps[i]={c:'run'};vCard();setTimeout(()=>{card.steps[i]=s;if(s.c==='bad'){card.ph='fail';card.err=s.e;log('login-fail','DIR',`Smart-card login denied for ${p.en}: ${s.e[0]}`,`Отказ входа ${p.ru}: ${s.e[1]}`);save();vCard();return}
+  i++;if(i<seq.length){vCard();nx()}else{card.ph='ok';S.sess=p.id;p.last=0;log('login','DIR',`Smart-card login ${p.en} (${p.card.sn})`,`Вход по смарт-карте ${p.ru} (${p.card.sn})`);save();render();toast(`✓ ${T('Signed in as','Вход выполнен:')} ${esc(full(p))}`)}},430)};nx();vCard()}
+
+/* ---------- audit ---------- */
+const ATY={join:['Joiner','Приём'],move:['Mover','Перевод'],leave:['Leaver','Увольнение'],request:['Request','Заявка'],approve:['Approval','Согласование'],deny:['Denial','Отказ'],provision:['Provision','Выдача'],revoke:['Revoke','Отзыв'],certify:['Certify','Подтверждение'],sod:['SoD','SoD'],policy:['Policy','Политика'],login:['Login','Вход'],'login-fail':['Login failed','Ошибка входа'],disable:['Disable','Отключение'],enable:['Enable','Включение']};
+function auditRows(){const q=auditQ.q.toLowerCase();return S.log.filter(l=>(!auditQ.ty||l.ty===auditQ.ty)&&(!auditQ.sys||l.sys===auditQ.sys)&&(!q||(l.en+l.ru+l.by).toLowerCase().includes(q)))}
+function vAudit(){const rows=auditRows();
+ $('#v-audit').innerHTML=`<div class="tools"><input class="input" id="aq" value="${esc(auditQ.q)}" placeholder="${T('Search actor, person, entitlement…','Поиск по исполнителю, сотруднику, праву…')}"><select class="input" id="aty">${opt('',T('All events','Все события'))}${Object.keys(ATY).map(k=>opt(k,LA(ATY[k]),auditQ.ty===k)).join('')}</select><select class="input" id="asy">${opt('',T('All systems','Все системы'))}${SYS.map(s=>opt(s.id,s.id,auditQ.sys===s.id)).join('')}</select>
+  <span class="muted" style="font-size:13px">${rows.length} ${T('events','событий')}</span><span style="flex:1"></span><button class="btn sm" id="aCsv">⭳ CSV</button></div>
+  <div class="tw tall"><table><thead><tr><th>${T('Time','Время')}</th><th>${T('Event','Событие')}</th><th>${T('System','Система')}</th><th>${T('Details','Подробности')}</th><th>${T('Actor','Исполнитель')}</th></tr></thead><tbody>
+  ${rows.slice(0,250).map(l=>`<tr><td class="mono">${d10(l.t)} ${hm(l.t).slice(0,5)}</td><td><span class="pill ${['revoke','deny','login-fail','leave','disable'].includes(l.ty)?'bad':['provision','certify','login','join','enable'].includes(l.ty)?'ok':l.ty==='approve'||l.ty==='request'?'gold':''}">${LA(ATY[l.ty]||[l.ty,l.ty])}</span></td><td class="mono">${l.sys}</td><td>${esc(PT.lang==='ru'?l.ru:l.en)}</td><td class="muted">${esc(l.by==='system'?T('system','система'):l.by)}</td></tr>`).join('')}</tbody></table></div>`;
+ $('#aq').oninput=e=>{auditQ.q=e.target.value;vAudit();const i=$('#aq');i.focus();i.setSelectionRange(i.value.length,i.value.length)};$('#aty').onchange=e=>{auditQ.ty=e.target.value;vAudit()};$('#asy').onchange=e=>{auditQ.sys=e.target.value;vAudit()};
+ $('#aCsv').onclick=()=>{const csv='time,event,system,details,actor\n'+auditRows().map(l=>[new Date(l.t).toISOString(),l.ty,l.sys,'"'+(PT.lang==='ru'?l.ru:l.en).replace(/"/g,'""')+'"',l.by].join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='gatekeeper-audit.csv';a.click();toast(T('Audit log exported','Журнал выгружен'))}}
+
+/* ---------- shell ---------- */
+const VIEWS=[['dash','Risk dashboard','Панель рисков','<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/>',0],['dir','Directory','Справочник','<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M16 5.5a3 3 0 0 1 0 5.6M18.5 14.8c1.6.8 2.6 2.5 3 5"/>',0],['jml','Joiner · mover · leaver','Приём · перевод · увольнение','<path d="M4 12h12M12 6l6 6-6 6M20 4v16"/>',0],
+ ['req','Access requests','Заявки на доступ','<path d="M9 11V7a3 3 0 0 1 6 0v4M5 11h14v10H5z"/>',1],['sod','Separation of duties','Разделение обязанностей','<path d="M12 3v18M5 8l-3 6h6zM19 8l-3 6h6zM5 8h14"/>',1],['rev','Access review','Пересмотр доступа','<path d="M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>',1],['abac','ABAC policies','Политики ABAC','<path d="M4 6h16M4 12h10M4 18h6M17 15l2 2 3-4"/>',1],
+ ['card','Smart-card login','Вход по смарт-карте','<rect x="3" y="5" width="18" height="14" rx="2"/><rect x="6" y="9" width="5" height="4" rx="1"/><path d="M14 10h4M14 14h3"/>',2],['audit','Audit log','Журнал аудита','<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',2]];
+function renderNav(){const cnt={dir:[0],req:[S.reqs.filter(r=>r.st==='pending').length,0],sod:[conflicts().filter(c=>!c.mit).length,1],rev:[S.rev.done?0:S.rev.items.filter(i=>!i.d).length,0],dash:[S.orph.filter(o=>!o.off).length,1]};let sec=-1;
+ $('#navs').innerHTML=VIEWS.map(v=>{let h='';if(v[4]!==sec){sec=v[4];h=`<div class="sec">${[T('Lifecycle','Жизненный цикл'),T('Governance','Управление'),T('Authentication','Аутентификация')][sec]}</div>`}const c=cnt[v[0]];return h+`<button class="nav ${v[0]===view?'on':''}" data-v="${v[0]}"><svg viewBox="0 0 24 24">${v[3]}</svg>${T(v[1],v[2])}${c&&c[0]?`<span class="cnt ${c[1]?'r':''}">${c[0]}</span>`:''}</button>`}).join('');
+ $$('#navs .nav').forEach(b=>b.onclick=()=>go(b.dataset.v));const vv=VIEWS.find(v=>v[0]===view);$('#title').textContent=T(vv[1],vv[2]);
+ const sp=$('#sessPill');sp.className='pill '+(S.sess?'ok':'');sp.textContent=S.sess?'⚿ '+full(P(S.sess)):T('Not signed in — use smart card','Нет входа — войдите картой');sp.style.cursor='pointer';sp.onclick=()=>go('card')}
+const VF={dash:vDash,dir:vDir,jml:vJml,req:vReq,sod:vSod,rev:vRev,abac:vAbac,card:vCard,audit:vAudit};
+function go(v){view=v;$$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));$('#side').classList.remove('open');render();scrollTo(0,0)}
+function render(){renderNav();VF[view]();$$('#v-'+view+' [data-go]').forEach(b=>{if(!b.onclick)b.onclick=()=>go(b.dataset.go)})}
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{if(prop&&!prop.done){toast(T('Wait for the running flow to finish','Дождитесь окончания операции'),'bad');return}store.clear();S=seed();prop=null;card={pid:null,ph:'idle',pin:'',steps:[]};revSel=new Set();save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+window.__gk={go,P,S:()=>S,personM};
+document.addEventListener('DOMContentLoaded',()=>go('dash'));
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

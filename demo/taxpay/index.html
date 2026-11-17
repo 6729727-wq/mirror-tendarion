@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TaxPay Gateway</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1240px;margin:0 auto;padding:18px 20px 60px}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.logo b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;font-size:15px}
+.logo small{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
+.seg button{border:0;background:none;color:var(--muted);font:inherit;font-weight:700;font-size:13.5px;padding:8px 14px;border-radius:9px;cursor:pointer}
+.seg button.on{background:var(--panel2);color:var(--text);box-shadow:0 0 0 1px var(--line2)}
+.sp{flex:1}
+.hint{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.hint>div{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1px dashed color-mix(in srgb,var(--blue) 55%,transparent);border-radius:12px;background:color-mix(in srgb,var(--blue) 6%,transparent);font-size:13.5px}
+.hint>div>b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff;font-size:12px}
+.facts{display:flex;flex-wrap:wrap;padding:0;overflow:hidden;margin-bottom:16px}
+.facts>div{flex:1 1 150px;padding:10px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:-1px}
+.facts small{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);font-weight:700}
+.facts span{font-weight:700;font-size:13.5px}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.steps{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto}
+.steps span{flex:1;min-width:84px;font-size:12px;font-weight:700;color:var(--dim);padding:8px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--line);white-space:nowrap}
+.steps span i{font-style:normal;display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--line2);margin-right:6px;font-size:11px;color:var(--text)}
+.steps span.on{color:var(--text);border-color:var(--blue)}.steps span.on i{background:var(--blue);color:#fff}
+.steps span.ok i{background:var(--mal);color:#fff}
+.g2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;align-items:start}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.lookup{display:flex;gap:8px;flex-wrap:wrap}
+.lookup .input{flex:1;min-width:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{border:1px solid var(--line2);background:var(--panel2);color:var(--text);border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;font-family:var(--mono)}
+.chip:hover{border-color:var(--blue)}
+.debt{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:var(--bg2);transition:.15s}
+.debt.sel{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 7%,var(--bg2))}
+.debt input{width:18px;height:18px;margin-top:2px;accent-color:var(--blue)}
+.debt .t{font-weight:700;font-size:14px}
+.debt .m{font-size:12px;color:var(--muted)}
+.debt .a{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.debt .a s{display:block;font-size:12px;color:var(--dim);font-weight:500}
+.cd{display:inline-flex;gap:6px;align-items:center;margin-top:6px;font-size:12px;font-weight:700;color:var(--gold2);background:color-mix(in srgb,var(--gold) 12%,transparent);border-radius:8px;padding:3px 8px;font-family:var(--mono)}
+.cd.exp{color:var(--dim);background:var(--panel2)}
+.photo{width:150px;height:92px;border-radius:8px;overflow:hidden;margin-top:8px;border:1px solid var(--line)}
+.sum{position:sticky;top:60px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:13.5px}
+.row.tot{border-top:1px solid var(--line);margin-top:6px;padding-top:10px;font-size:17px;font-weight:800}
+.methods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.mth{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;cursor:pointer;background:var(--bg2);font-weight:700;font-size:13px}
+.mth .ic{font-size:22px;display:block;margin-bottom:4px}
+.mth.on{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 8%,var(--bg2))}
+.ccard{aspect-ratio:1.586;max-width:340px;border-radius:16px;padding:18px;color:#fff;background:linear-gradient(135deg,#1d2b4f,#3b4f8a);position:relative;margin-bottom:14px;box-shadow:var(--shadow);font-family:var(--mono);transition:background .3s}
+.ccard.visa{background:linear-gradient(135deg,#1a237e,#3949ab)}.ccard.mc{background:linear-gradient(135deg,#3a1c1c,#b4462b)}.ccard.amex{background:linear-gradient(135deg,#0e4f4a,#2a9d8f)}.ccard.nord{background:linear-gradient(135deg,#2b1d4f,#7c5cd6)}
+.ccard .chipi{width:40px;height:30px;border-radius:6px;background:linear-gradient(135deg,#e8c86e,#b38b2e);margin:8px 0 18px}
+.ccard .no{font-size:clamp(14px,4.4vw,19px);letter-spacing:.08em}
+.ccard .br{position:absolute;right:18px;top:16px;font-family:var(--font);font-weight:800;font-style:italic;font-size:18px}
+.ccard .nm{position:absolute;left:18px;bottom:14px;font-size:12px;opacity:.85}
+.ccard .ex{position:absolute;right:18px;bottom:14px;font-size:12px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.err{color:var(--red);font-size:12px;margin-top:4px;min-height:14px}
+.input.bad{border-color:var(--red)}.input.good{border-color:var(--mal2)}
+.banks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bank{border:1px solid var(--line);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;font-size:12.5px;font-weight:700;background:var(--bg2)}
+.bank i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;margin:0 auto 6px;color:#fff;font-style:normal;font-weight:800}
+.bank.on{border-color:var(--blue)}
+.qrbox{background:#fff;border-radius:14px;padding:12px;display:inline-block;line-height:0}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;place-items:center;padding:16px}
+.modal-bg.on{display:grid}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:18px;max-width:420px;width:100%;padding:22px;box-shadow:var(--shadow);max-height:90vh;overflow:auto}
+.otp{display:flex;gap:6px;justify-content:center;margin:14px 0}
+.otp input{width:42px;height:50px;text-align:center;font-size:22px;font-family:var(--mono);padding:0}
+.prog{height:4px;border-radius:4px;background:var(--line);overflow:hidden;margin:12px 0}
+.prog i{display:block;height:100%;width:0;background:var(--blue);transition:width .25s}
+.rcpt{max-width:520px;margin:0 auto;background:#fff;color:#111;border-radius:16px;padding:24px;box-shadow:var(--shadow)}
+.rcpt .row{border-bottom:1px dashed #ddd}
+.rcpt h2{margin:6px 0 2px;font-size:20px}
+.tabs2{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px}
+.tabs2 button{flex:none;border:1px solid var(--line);background:var(--panel);color:var(--muted);font:inherit;font-weight:700;font-size:13px;padding:8px 13px;border-radius:999px;cursor:pointer}
+.tabs2 button.on{color:var(--text);border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,var(--panel))}
+.tabs2 button em{font-style:normal;background:var(--red);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;margin-left:5px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}.kpi .v{font-size:23px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.new td{animation:flash 1.2s}
+@keyframes flash{from{background:color-mix(in srgb,var(--blue) 25%,transparent)}}
+tr.mm td{background:color-mix(in srgb,var(--red) 8%,transparent)}
+tr.res td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+tr.clk{cursor:pointer}tr.clk:hover td{background:color-mix(in srgb,var(--blue) 7%,transparent)}
+tr.sel td{background:color-mix(in srgb,var(--blue) 13%,transparent)}
+.bits{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;margin:10px 0}
+.bits span{aspect-ratio:1;border-radius:4px;display:grid;place-items:center;font-size:9px;font-family:var(--mono);background:var(--bg2);border:1px solid var(--line);color:var(--dim);cursor:default}
+.bits span.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+.bits span.hl{outline:2px solid var(--gold);outline-offset:1px}
+.hex{font-family:var(--mono);font-size:12.5px;word-break:break-all;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px;line-height:1.6}
+.hex b{color:var(--gold2)}
+.pci{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.preq{border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:var(--bg2);font-size:13px;cursor:pointer}
+.preq .h{display:flex;gap:8px;align-items:center}
+.preq .h b{font-family:var(--mono);color:var(--dim);font-size:12px}
+.preq .d{display:none;margin-top:8px;color:var(--muted);font-size:12.5px}
+.preq.open .d{display:block}
+.uptime{display:grid;grid-template-columns:repeat(90,minmax(0,1fr));gap:1px;height:30px}
+.uptime i{border-radius:2px;background:var(--mal2)}.uptime i.w{background:var(--amber)}.uptime i.b{background:var(--red)}
+.chart svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--blue);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:330px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)}.toast.ok{border-left-color:var(--mal)}.toast.sms{border-left-color:var(--gold)}
+.note{font-size:12px;color:var(--muted);margin-top:8px}
+@media print{body>*:not(.wrap){display:none!important}.wrap>*:not(#v-cit),#v-cit>*:not(#st4),#st4>*:not(.rcpt),.rcpt .btn{display:none!important}.rcpt{box-shadow:none}}
+@media (max-width:980px){.g2{grid-template-columns:minmax(0,1fr)}.sum{position:static}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.hint{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.wrap{padding:14px 14px 50px}.pci,.fgrid{grid-template-columns:minmax(0,1fr)}.methods,.banks{grid-template-columns:repeat(3,minmax(0,1fr))}.kpi .v{font-size:19px}.debt{grid-template-columns:auto minmax(0,1fr)}.debt .a{grid-column:2;text-align:left}.debt .a s{display:inline;margin-left:6px}.otp input{width:38px}.bits{grid-template-columns:repeat(8,minmax(0,1fr))}.seg button{padding:8px 10px}}
+</style>
+</head>
+<body data-demo-en="TaxPay Gateway — tax, fines & fees payments" data-demo-ru="TaxPay Gateway — шлюз налогов, штрафов и пошлин">
+<div class="wrap">
+  <div class="top">
+    <div class="logo"><b>TP</b><div>TaxPay Gateway<small data-en="Revenue Service of the Republic of Nordania" data-ru="Налоговая служба Республики Нордания"></small></div></div>
+    <div class="sp"></div>
+    <div class="seg"><button data-mode="cit" class="on" data-en="Citizen portal" data-ru="Портал гражданина"></button><button data-mode="con" data-en="Agency console" data-ru="Консоль ведомства"></button></div>
+  </div>
+  <div class="hint">
+    <div><b>1</b><span data-en="Pick a sample taxpayer ID or plate and press <b>Find</b> — tick several debts (fines show a 50% discount timer)." data-ru="Выберите пример ИНН или номера машины и нажмите <b>Найти</b> — отметьте несколько долгов (у штрафов таймер скидки 50%)."></span></div>
+    <div><b>2</b><span data-en="Pay by <b>card</b> (test 4111 1111 1111 1111, code from the SMS toast), <b>bank</b> consent or <b>QR</b> — get a receipt." data-ru="Оплатите <b>картой</b> (тест 4111 1111 1111 1111, код из SMS-уведомления), через <b>банк</b> или <b>QR</b> — получите квитанцию."></span></div>
+    <div><b>3</b><span data-en="Switch to <b>Agency console</b>: see your payment live, reconcile the bank statement, refund, inspect the ISO 8583 message." data-ru="Перейдите в <b>Консоль ведомства</b>: ваш платёж в ленте, сверка с выпиской банка, возврат, разбор ISO 8583."></span></div>
+  </div>
+  <div class="card facts">
+    <div><small data-en="Tender" data-ru="Тендер"></small><span data-en="Payment gateway" data-ru="Платёжный шлюз"></span></div>
+    <div><small data-en="Year" data-ru="Год"></small><span>2024</span></div>
+    <div><small data-en="Budget" data-ru="Бюджет"></small><span>$6.4M</span></div>
+    <div><small data-en="Client" data-ru="Заказчик"></small><span data-en="Revenue Service, Republic of Nordania" data-ru="Налоговая служба Республики Нордания"></span></div>
+    <div><small data-en="Stack" data-ru="Стек"></small><span>ISO 8583 · PCI DSS · open banking</span></div>
+  </div>
+
+  <section class="view on" id="v-cit">
+    <div class="steps" id="steps"></div>
+    <div id="st1" class="g2">
+      <div>
+        <div class="card" style="margin-bottom:14px"><h3 data-en="Find what you owe" data-ru="Найдите свои начисления"></h3>
+          <div class="lookup"><select class="input" id="qType" style="flex:0 0 auto;width:auto"></select><input class="input mono" id="q"><button class="btn pri" id="find" data-en="Find" data-ru="Найти"></button></div>
+          <div class="chips" id="chips"></div>
+        </div>
+        <div id="debts"></div>
+      </div>
+      <div class="card sum"><h3 data-en="Your payment" data-ru="Ваш платёж"></h3><div id="sumBox"></div><button class="btn pri" id="toPay" style="width:100%;justify-content:center;margin-top:12px" disabled data-en="Continue to payment →" data-ru="Перейти к оплате →"></button><div class="note" data-en="Data is generated for the demo — any ID returns plausible debts." data-ru="Данные сгенерированы для демо — любой номер вернёт правдоподобные начисления."></div></div>
+    </div>
+
+    <div id="st2" class="g2" style="display:none">
+      <div class="card">
+        <div class="methods" id="methods"></div>
+        <div id="mCard">
+          <div class="ccard" id="ccard"><div class="br" id="cBrand"></div><div class="chipi"></div><div class="no" id="cNoV">•••• •••• •••• ••••</div><div class="nm" id="cNmV">NAME SURNAME</div><div class="ex" id="cExV">MM/YY</div></div>
+          <div class="fgrid">
+            <div class="f full"><label data-en="Card number" data-ru="Номер карты"></label><input class="input mono" id="cNo" inputmode="numeric" maxlength="23" autocomplete="off"><div class="err" id="cNoE"></div></div>
+            <div class="f full"><label data-en="Cardholder name" data-ru="Имя держателя"></label><input class="input" id="cNm" autocomplete="off"></div>
+            <div class="f"><label data-en="Expiry MM/YY" data-ru="Срок ММ/ГГ"></label><input class="input mono" id="cEx" maxlength="5" inputmode="numeric"><div class="err" id="cExE"></div></div>
+            <div class="f"><label>CVC</label><input class="input mono" id="cCv" maxlength="4" inputmode="numeric" type="password"><div class="err" id="cCvE"></div></div>
+          </div>
+          <div class="chips"><span class="chip" data-card="4111111111111111">Visa ✓</span><span class="chip" data-card="5555555555554444">MC ✓</span><span class="chip" data-card="9100111122223330">NordPay ✓</span><span class="chip" data-card="4111111111111112" data-en="Bad Luhn ✕" data-ru="Ошибка Луна ✕"></span></div>
+        </div>
+        <div id="mBank" style="display:none"><div class="muted" style="font-size:13px;margin-bottom:10px" data-en="Choose your bank. You will approve a single-payment consent — the gateway never sees your bank login." data-ru="Выберите банк. Вы подтвердите согласие на один платёж — шлюз не видит ваш логин в банке."></div><div class="banks" id="banks"></div></div>
+        <div id="mQr" style="display:none;text-align:center"><div class="qrbox" id="payQr"></div><div style="margin-top:10px;font-weight:700" id="qrTimer"></div><div class="muted" style="font-size:13px" data-en="Scan with any Nordanian banking app (instant payments scheme)." data-ru="Отсканируйте в любом банковском приложении Нордании (система мгновенных платежей)."></div></div>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn" id="back1" data-en="← Back" data-ru="← Назад"></button><button class="btn pri" id="payBtn" style="flex:1;justify-content:center"></button></div>
+      </div>
+      <div class="card"><h3 data-en="Summary" data-ru="Итого"></h3><div id="sum2"></div><div class="note">🔒 <span data-en="PCI DSS Level 1 · card data tokenised, never stored · TLS 1.3" data-ru="PCI DSS уровень 1 · данные карты токенизируются, не хранятся · TLS 1.3"></span></div></div>
+    </div>
+
+    <div id="st4" style="display:none"></div>
+  </section>
+
+  <section class="view" id="v-con">
+    <div class="tabs2" id="ctabs"></div>
+    <div id="cv-live" class="cv"><div class="kpis" id="liveK"></div><div class="g2"><div class="card"><h3><span data-en="Payments stream" data-ru="Поток платежей"></span><span class="sp"></span><button class="btn sm" id="pause"></button></h3><div class="tw" style="max-height:420px;overflow:auto"><table id="tLive"></table></div></div><div class="card"><h3 data-en="Volume by type, today" data-ru="Объём по видам, сегодня"></h3><div class="chart" id="byType"></div><h3 style="margin-top:16px" data-en="By channel" data-ru="По каналам"></h3><div id="byCh"></div></div></div></div>
+    <div id="cv-rec" class="cv"><div class="kpis" id="recK"></div><div class="card"><h3><span data-en="Bank statement vs gateway ledger" data-ru="Выписка банка и реестр шлюза"></span><span class="sp"></span><select class="input" id="recF" style="width:auto"></select><button class="btn pri sm" id="autoM" data-en="Auto-match" data-ru="Автосверка"></button></h3><div class="tw"><table id="tRec"></table></div><div class="note" data-en="Matching key: RRN + amount + value date. Settlement file NBS-0417 (fictional bank)." data-ru="Ключ сверки: RRN + сумма + дата валютирования. Файл расчётов NBS-0417 (вымышленный банк)."></div></div></div>
+    <div id="cv-ref" class="cv"><div class="g2"><div class="card"><h3 data-en="Refundable payments" data-ru="Платежи для возврата"></h3><div class="tw" style="max-height:440px;overflow:auto"><table id="tRefP"></table></div></div><div class="card"><h3 data-en="Refund" data-ru="Возврат"></h3><div id="refForm"></div><h3 style="margin-top:16px" data-en="Refund queue" data-ru="Очередь возвратов"></h3><div id="refQ"></div></div></div></div>
+    <div id="cv-iso" class="cv"><div class="g2"><div class="card"><h3><span data-en="ISO 8583 message" data-ru="Сообщение ISO 8583"></span><span class="sp"></span><div class="seg" id="isoDir"><button data-d="req" class="on">0200</button><button data-d="resp">0210</button></div></h3><div id="isoHead"></div><div class="tw"><table id="tIso"></table></div></div><div class="card"><h3 data-en="Card transactions" data-ru="Карточные операции"></h3><div class="tw" style="max-height:520px;overflow:auto"><table id="tIsoL"></table></div></div></div></div>
+    <div id="cv-up" class="cv"><div class="kpis" id="upK"></div><div class="card" style="margin-bottom:14px"><h3><span data-en="Authorization latency, live (ms)" data-ru="Задержка авторизации, онлайн (мс)"></span><span class="sp"></span><span class="legend"><span><i style="background:var(--blue)"></i>p50</span><span><i style="background:var(--violet)"></i>p95</span><span><i style="background:var(--red)"></i>SLO 800</span></span></h3><div class="chart" id="latC"></div></div><div class="card"><h3><span data-en="Uptime, last 90 days" data-ru="Доступность, 90 дней"></span><span class="sp"></span><span class="mono" id="upPct"></span></h3><div class="uptime" id="upBars"></div><div class="legend" style="margin-top:8px"><span><i style="background:var(--mal2)"></i><span data-en="Operational" data-ru="Норма"></span></span><span><i style="background:var(--amber)"></i><span data-en="Degraded" data-ru="Деградация"></span></span><span><i style="background:var(--red)"></i><span data-en="Outage" data-ru="Сбой"></span></span></div><div id="incid" style="margin-top:12px"></div></div></div>
+    <div id="cv-pci" class="cv"><div class="g2"><div class="card"><h3><span data-en="PCI DSS v4.0 — 12 requirements" data-ru="PCI DSS v4.0 — 12 требований"></span><span class="sp"></span><button class="btn sm" id="asv" data-en="Run ASV scan" data-ru="ASV-сканирование"></button></h3><div class="pci" id="pci"></div></div><div class="card" style="text-align:center"><h3 data-en="Compliance status" data-ru="Статус соответствия"></h3><div id="pciRing"></div><div id="pciLog" style="text-align:left;margin-top:10px;font-size:12.5px"></div></div></div></div>
+  </section>
+</div>
+
+<div class="modal-bg" id="mod"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const T=(e,r)=>PT.t(e,r),L=o=>PT.lang==='ru'?o.ru:o.en;
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const money=v=>v.toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2})+' NDK';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const hash=s=>{let h=2166136261;for(const c of String(s))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+const KEY='pt-taxpay-v1';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}};
+function toast(m,k){const d=document.createElement('div');d.className='toast '+(k||'');d.innerHTML=m;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),k==='sms'?9000:3800)}
+const now=()=>new Date();
+const hms=d=>d.toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const pad=(n,l)=>String(n).padStart(l||2,'0');
+
+/* ---------- persistent data ---------- */
+let D=store.load()||{paid:[],refunds:[],recRes:{},pci:null};
+const TYPES={prop:{en:'Property tax',ru:'Налог на имущество',c:'--blue',ic:'🏠'},veh:{en:'Vehicle tax',ru:'Транспортный налог',c:'--violet',ic:'🚗'},fine:{en:'Traffic fine',ru:'Штраф ГИБДД',c:'--amber',ic:'📷'},court:{en:'Court fee',ru:'Судебная пошлина',c:'--gold',ic:'⚖'},inc:{en:'Income tax',ru:'Налог на доходы',c:'--mal2',ic:'💼'}};
+const QT=[['tin',{en:'Taxpayer ID',ru:'ИНН'},['NT-4471-0093','NT-2290-5518']],['plate',{en:'Vehicle plate',ru:'Госномер'},['NRD 482 KX','NRD 117 AB']],['bill',{en:'Bill number',ru:'Номер счёта'},['UIN 1882 0426 3317']]];
+const STREETS=['Harbour Rd','King Olav Ave','Fjord St','North Ring','Lindholm Bridge','Station Sq'];
+
+/* ---------- citizen flow ---------- */
+let debts=[],sel=new Set(),step=1,method='card',bank=null,lastQ='';
+function genDebts(q,type){const r=rng(hash(q));const out=[];const id=k=>'UIN '+(1880+Math.floor(r()*90))+' '+pad(Math.floor(r()*9999),4)+' '+pad(Math.floor(r()*9999),4);const t0=Date.now();
+  if(type!=='bill'){
+    if(type==='tin'){out.push({k:'prop',id:id(),d:{en:'Apartment, 14 Fjord St, apt 22 · 2025',ru:'Квартира, ул. Фьордовая 14, кв. 22 · 2025'},a:Math.round(180+r()*420)+.5});if(r()>.3)out.push({k:'inc',id:id(),d:{en:'Additional income tax, declaration 2025',ru:'Доплата налога на доходы, декларация 2025'},a:Math.round(90+r()*300)})}
+    out.push({k:'veh',id:id(),d:{en:'Vehicle '+(type==='plate'?q.toUpperCase():'NRD 482 KX')+' · 149 hp · 2025',ru:'Автомобиль '+(type==='plate'?q.toUpperCase():'NRD 482 KX')+' · 149 л.с. · 2025'},a:Math.round(120+r()*260)});
+    const nf=2+Math.floor(r()*2);for(let i=0;i<nf;i++){const issued=t0-(i===nf-1?26:2+Math.floor(r()*12))*864e5-Math.floor(r()*864e5);const sp=60+Math.floor(r()*35);out.push({k:'fine',id:id(),fine:{issued,limit:Math.round((sp-50)/10)*10||10,speed:sp,loc:STREETS[Math.floor(r()*STREETS.length)],cam:'CAM-'+pad(Math.floor(r()*900)+100,3),plate:type==='plate'?q.toUpperCase():'NRD 482 KX',seed:hash(q+i)},d:{en:'Speeding '+sp+' km/h in 50 zone',ru:'Превышение: '+sp+' км/ч при 50'},a:[100,150,250][Math.floor(r()*3)]})}
+  }
+  if(type!=='plate'||r()>.5)out.push({k:'court',id:type==='bill'?q.toUpperCase():id(),d:{en:'State fee, civil claim No. 2-'+Math.floor(1000+r()*8000)+'/26',ru:'Госпошлина, иск № 2-'+Math.floor(1000+r()*8000)+'/26'},a:Math.round(40+r()*260)});
+  const paidIds=new Set(D.paid.flatMap(p=>p.items.map(i=>i.id)));return out.filter(d=>!paidIds.has(d.id))}
+const DISC_MS=20*864e5;
+function discLeft(d){return d.fine?d.fine.issued+DISC_MS-Date.now():0}
+function due(d){return d.fine&&discLeft(d)>0?d.a/2:d.a}
+function fee(m,t){return m==='card'?Math.round(t*.009*100)/100:m==='bank'?0.3:0}
+function photo(f){const r=rng(f.seed);const c=['#c0392b','#2c3e50','#7f8c8d','#16a085','#d35400'][Math.floor(r()*5)];return `<svg viewBox="0 0 150 92" width="150" height="92"><rect width="150" height="92" fill="#1b2026"/><polygon points="40,92 70,30 80,30 110,92" fill="#2f353d"/><line x1="75" y1="34" x2="75" y2="92" stroke="#c9b44a" stroke-dasharray="6 6" stroke-width="2"/><rect x="${55+r()*20}" y="46" width="34" height="26" rx="5" fill="${c}"/><rect x="${60+r()*14}" y="66" width="22" height="6" fill="#eee"/><text x="4" y="10" font-size="7" fill="#9f9" font-family="monospace">${f.cam} ${f.speed}km/h</text><text x="4" y="88" font-size="7" fill="#9f9" font-family="monospace">${new Date(f.issued).toISOString().slice(0,16).replace('T',' ')}</text><rect x="104" y="4" width="42" height="12" fill="#000a"/><text x="106" y="13" font-size="7" fill="#fff" font-family="monospace">${f.plate}</text></svg>`}
+function cdText(ms){if(ms<=0)return T('Discount expired','Скидка истекла');const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4),s=Math.floor(ms%6e4/1e3);return `⏱ −50% ${T('ends in','ещё')} ${d}${T('d','д')} ${pad(h)}:${pad(m)}:${pad(s)}`}
+function renderSteps(){const st=[T('Find','Поиск'),T('Pay','Оплата'),T('Confirm','Подтверждение'),T('Receipt','Квитанция')];$('#steps').innerHTML=st.map((s,i)=>`<span class="${i+1===step?'on':i+1<step?'ok':''}"><i>${i+1<step?'✓':i+1}</i>${s}</span>`).join('');['#st1','#st2','#st4'].forEach((s,i)=>$(s).style.display=(i===0&&step===1)||(i===1&&(step===2||step===3))||(i===2&&step===4)?'':'none')}
+function renderQT(){const v=$('#qType').value||'tin';$('#qType').innerHTML=QT.map(q=>`<option value="${q[0]}">${L(q[1])}</option>`).join('');$('#qType').value=v;const q=QT.find(x=>x[0]===v);$('#chips').innerHTML=`<span class="muted" style="font-size:12px;align-self:center">${T('Samples:','Примеры:')}</span>`+QT.flatMap(x=>x[2].map(s=>`<span class="chip" data-s="${x[0]}|${s}">${s}</span>`)).join('');$('#q').placeholder=q[2][0]}
+$('#qType').onchange=renderQT;
+$('#chips').onclick=e=>{const c=e.target.closest('[data-s]');if(!c)return;const[t,s]=c.dataset.s.split('|');$('#qType').value=t;$('#q').value=s;renderQT();$('#find').click()};
+$('#find').onclick=()=>{const q=$('#q').value.trim()||$('#q').placeholder;const t=$('#qType').value;$('#q').value=q;$('#debts').innerHTML=`<div class="card muted">${T('Querying treasury registry…','Запрос в реестр начислений…')}<div class="prog"><i style="width:70%"></i></div></div>`;
+  setTimeout(()=>{lastQ=q;debts=genDebts(q,t);sel=new Set(debts.filter(d=>d.k==='fine'&&discLeft(d)>0).map(d=>d.id));renderDebts();renderSum()},650)};
+function renderDebts(){if(!debts.length){$('#debts').innerHTML=lastQ?`<div class="card" style="text-align:center">🎉 ${T('Nothing to pay for','Нет задолженности по')} <b class="mono">${esc(lastQ)}</b></div>`:'';return}
+  $('#debts').innerHTML=`<div class="muted" style="font-size:12.5px;margin-bottom:8px">${debts.length} ${T('items found for','начислений по')} <b class="mono">${esc(lastQ)}</b> · <a href="#" id="selAll">${T('select all','выбрать все')}</a></div>`+debts.map(d=>{const ty=TYPES[d.k];const dl=discLeft(d);return `<label class="debt ${sel.has(d.id)?'sel':''}" data-id="${d.id}"><input type="checkbox" ${sel.has(d.id)?'checked':''}><div><div class="t">${ty.ic} ${L(ty)}</div><div class="m">${esc(L(d.d))}</div><div class="m mono">${d.id}${d.fine?' · '+d.fine.loc+' · '+new Date(d.fine.issued).toLocaleDateString(loc()):''}</div>${d.fine?`<div class="cd ${dl>0?'':'exp'}" data-cd="${d.id}">${cdText(dl)}</div><div class="photo">${photo(d.fine)}</div>`:''}</div><div class="a">${money(due(d))}${due(d)!==d.a?`<s>${money(d.a)}</s>`:''}</div></label>`}).join('');
+  const sa=$('#selAll');if(sa)sa.onclick=e=>{e.preventDefault();debts.forEach(d=>sel.add(d.id));renderDebts();renderSum()}}
+$('#debts').addEventListener('change',e=>{const l=e.target.closest('[data-id]');if(!l)return;e.target.checked?sel.add(l.dataset.id):sel.delete(l.dataset.id);l.classList.toggle('sel',e.target.checked);renderSum()});
+function chosen(){return debts.filter(d=>sel.has(d.id))}
+function totals(){const c=chosen();const sub=c.reduce((a,d)=>a+due(d),0),disc=c.reduce((a,d)=>a+d.a-due(d),0);const f=fee(method,sub);return{c,sub,disc,f,tot:Math.round((sub+f)*100)/100}}
+function sumHtml(){const t=totals();if(!t.c.length)return `<div class="muted" style="font-size:13px">${T('Select at least one item.','Выберите хотя бы одно начисление.')}</div>`;return t.c.map(d=>`<div class="row"><span>${TYPES[d.k].ic} ${L(TYPES[d.k])}</span><b class="mono">${money(due(d))}</b></div>`).join('')+(t.disc?`<div class="row" style="color:var(--mal3)"><span>${T('Early-payment discount','Скидка за раннюю оплату')}</span><b class="mono">−${money(t.disc)}</b></div>`:'')+(step>1?`<div class="row"><span>${T('Processing fee','Комиссия')} (${method==='card'?'0.9%':method==='bank'?T('flat','фикс.'):T('none','нет')})</span><b class="mono">${money(t.f)}</b></div>`:'')+`<div class="row tot"><span>${T('Total','Итого')}</span><span class="mono">${money(step>1?t.tot:t.sub)}</span></div>`}
+function renderSum(){$('#sumBox').innerHTML=sumHtml();$('#toPay').disabled=!sel.size;if(step>1)$('#sum2').innerHTML=sumHtml()}
+setInterval(()=>{$$('[data-cd]').forEach(el=>{const d=debts.find(x=>x.id===el.dataset.cd);if(d)el.textContent=cdText(discLeft(d))});if(D&&step===2&&method==='qr')qrTick()},1000);
+$('#toPay').onclick=()=>{step=2;renderSteps();renderPayStep();window.scrollTo({top:0,behavior:'smooth'})};
+$('#back1').onclick=()=>{step=1;renderSteps();renderSum()};
+
+/* --- payment methods --- */
+const BK=[{n:'Fjordbank',c:'#1e6fd9'},{n:'Polar Savings',c:'#0f9d8a'},{n:'Aurora Bank',c:'#8e44ad'},{n:'Lindholm Coop',c:'#d35400'},{n:'Skerry Credit',c:'#2c3e50'},{n:'Harbour Mutual',c:'#c0392b'}];
+function renderPayStep(){$('#methods').innerHTML=[['card','💳',T('Card','Карта')],['bank','🏦',T('Bank account','Счёт в банке')],['qr','▦','QR']].map(m=>`<div class="mth ${method===m[0]?'on':''}" data-m="${m[0]}"><span class="ic">${m[1]}</span>${m[2]}</div>`).join('');
+  $('#mCard').style.display=method==='card'?'':'none';$('#mBank').style.display=method==='bank'?'':'none';$('#mQr').style.display=method==='qr'?'':'none';
+  $('#banks').innerHTML=BK.map((b,i)=>`<div class="bank ${bank===i?'on':''}" data-b="${i}"><i style="background:${b.c}">${b.n[0]}</i>${b.n}</div>`).join('');
+  const t=totals();$('#payBtn').textContent=method==='qr'?T('I have scanned — simulate payment','Я отсканировал — имитировать оплату'):(T('Pay ','Оплатить ')+money(t.tot));$('#payBtn').disabled=method==='bank'&&bank===null;
+  if(method==='qr'){if(!qrUntil)qrUntil=Date.now()+5*6e4;$('#payQr').innerHTML=qrSvg('NDQR|'+t.tot+'|'+t.c.map(d=>d.id).join(','),196);qrTick()}else qrUntil=0;
+  renderSum();cardPreview()}
+let qrUntil=0;function qrTick(){const ms=qrUntil-Date.now();$('#qrTimer').textContent=ms>0?T('QR valid for ','QR действует ')+Math.floor(ms/6e4)+':'+pad(Math.floor(ms%6e4/1e3)):T('QR expired — refresh','QR истёк — обновите');if(ms<=0){qrUntil=Date.now()+5*6e4}}
+$('#methods').onclick=e=>{const m=e.target.closest('[data-m]');if(m){method=m.dataset.m;renderPayStep()}};
+$('#banks').onclick=e=>{const b=e.target.closest('[data-b]');if(b){bank=+b.dataset.b;renderPayStep()}};
+function luhn(n){let s=0,alt=false;for(let i=n.length-1;i>=0;i--){let d=+n[i];if(alt){d*=2;if(d>9)d-=9}s+=d;alt=!alt}return s%10===0}
+function brand(n){if(/^4/.test(n))return['visa','VISA'];if(/^(5[1-5]|2(2[2-9]|[3-6]\d|7[01]|720))/.test(n))return['mc','Mastercard'];if(/^3[47]/.test(n))return['amex','AMEX'];if(/^9[01]/.test(n))return['nord','NordPay'];return['','']}
+function cardPreview(){const n=$('#cNo').value.replace(/\D/g,'');const b=brand(n);$('#ccard').className='ccard '+b[0];$('#cBrand').textContent=b[1];$('#cNoV').textContent=(n+'•'.repeat(Math.max(0,16-n.length))).replace(/(.{4})/g,'$1 ').trim();$('#cNmV').textContent=($('#cNm').value||'NAME SURNAME').toUpperCase();$('#cExV').textContent=$('#cEx').value||'MM/YY'}
+$('#cNo').oninput=e=>{const n=e.target.value.replace(/\D/g,'').slice(0,19);e.target.value=n.replace(/(.{4})/g,'$1 ').trim();const ok=n.length>=13&&luhn(n);e.target.classList.toggle('good',ok);e.target.classList.toggle('bad',n.length>=13&&!ok);$('#cNoE').textContent=n.length>=13&&!ok?T('Card number fails the Luhn check','Номер не проходит проверку Луна'):'';cardPreview()};
+$('#cEx').oninput=e=>{let v=e.target.value.replace(/\D/g,'').slice(0,4);if(v.length>2)v=v.slice(0,2)+'/'+v.slice(2);e.target.value=v;cardPreview()};
+$('#cNm').oninput=cardPreview;
+document.addEventListener('click',e=>{const c=e.target.closest('[data-card]');if(!c)return;$('#cNo').value=c.dataset.card;$('#cNo').dispatchEvent(new Event('input'));$('#cNm').value='Ingrid Halvorsen';$('#cEx').value='08/29';$('#cCv').value='123';cardPreview()});
+function validCard(){const n=$('#cNo').value.replace(/\D/g,''),ex=$('#cEx').value,cv=$('#cCv').value;let ok=true;
+  if(!(n.length>=13&&luhn(n))){$('#cNoE').textContent=T('Enter a valid card number','Введите корректный номер карты');ok=false}
+  const m=/^(\d\d)\/(\d\d)$/.exec(ex);const d=now();if(!m||+m[1]<1||+m[1]>12||(2000+ +m[2])*12+ +m[1]<d.getFullYear()*12+d.getMonth()+1){$('#cExE').textContent=T('Invalid or expired','Неверный или истёк');ok=false}else $('#cExE').textContent='';
+  if(!/^\d{3,4}$/.test(cv)){$('#cCvE').textContent=T('3–4 digits','3–4 цифры');ok=false}else $('#cCvE').textContent='';return ok}
+function modal(h){$('#modal').innerHTML=h;$('#mod').classList.add('on')}
+function closeM(){$('#mod').classList.remove('on')}
+$('#payBtn').onclick=()=>{const t=totals();if(!t.c.length)return;
+  if(method==='card'){if(!validCard())return;step=3;renderSteps();threeDS(t)}
+  else if(method==='bank')consent(t);
+  else{step=3;renderSteps();modal(`<div style="text-align:center"><div style="font-size:15px;font-weight:700">${T('Waiting for bank confirmation…','Ожидаем подтверждение банка…')}</div><div class="prog"><i id="pg"></i></div></div>`);prog(()=>complete(t,{m:'qr',bank:'NIPS'}))}};
+function prog(cb,ms){let p=0;const i=setInterval(()=>{p+=10;const el=$('#pg');if(el)el.style.width=p+'%';if(p>=100){clearInterval(i);cb()}},(ms||1600)/10)}
+let otpCode='',otpTries=0;
+function threeDS(t){otpCode=String(Math.floor(100000+Math.random()*900000));otpTries=0;const n=$('#cNo').value.replace(/\D/g,'');const b=brand(n);
+  modal(`<div style="display:flex;justify-content:space-between;align-items:center"><b>${b[1]||'Card'} ${b[0]==='visa'?'Secure':b[0]==='mc'?'Identity Check':'SafeKey'}</b><span class="pill">3-D Secure 2.2</span></div><div class="muted" style="font-size:12.5px;margin-top:10px">${T('Issuer: Fjordbank (fictional). Merchant: Revenue Service of Nordania.','Эмитент: Fjordbank (вымышленный). Получатель: Налоговая служба Нордании.')}</div><div class="row"><span>${T('Amount','Сумма')}</span><b class="mono">${money(t.tot)}</b></div><div class="row"><span>${T('Card','Карта')}</span><b class="mono">•••• ${n.slice(-4)}</b></div><div style="margin-top:10px;font-size:13.5px">${T('Enter the one-time code sent by SMS to +47 ••• •• 318','Введите одноразовый код из SMS на +47 ••• •• 318')}</div><div class="otp">${'<input class="input" maxlength="1" inputmode="numeric">'.repeat(6)}</div><div class="err" id="otpE" style="text-align:center"></div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" id="otpX">${T('Cancel','Отмена')}</button><button class="btn sm" id="otpR">${T('Resend','Отправить снова')}</button><button class="btn pri" id="otpOk" style="flex:1;justify-content:center">${T('Confirm','Подтвердить')}</button></div>`);
+  setTimeout(()=>toast(`📱 SMS: <b class="mono">${otpCode}</b> — ${T('your TaxPay code','код TaxPay')}`,'sms'),700);
+  const ins=$$('.otp input');ins[0].focus();ins.forEach((el,i)=>{el.oninput=()=>{el.value=el.value.replace(/\D/g,'');if(el.value&&ins[i+1])ins[i+1].focus();if(ins.every(x=>x.value))$('#otpOk').click()};el.onkeydown=e=>{if(e.key==='Backspace'&&!el.value&&ins[i-1])ins[i-1].focus()};el.onpaste=e=>{const v=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6);v.split('').forEach((c,j)=>ins[j]&&(ins[j].value=c));e.preventDefault()}});
+  $('#otpX').onclick=()=>{closeM();step=2;renderSteps();toast(T('Authentication cancelled','Аутентификация отменена'),'bad')};
+  $('#otpR').onclick=()=>{otpCode=String(Math.floor(100000+Math.random()*900000));toast(`📱 SMS: <b class="mono">${otpCode}</b>`,'sms')};
+  $('#otpOk').onclick=()=>{const v=ins.map(x=>x.value).join('');if(v===otpCode){$('#modal').innerHTML=`<div style="text-align:center"><b>${T('Authorising…','Авторизация…')}</b><div class="prog"><i id="pg"></i></div><div class="mono muted" style="font-size:12px">0200 → ${T('acquirer','эквайер')} → ${T('issuer','эмитент')} → 0210</div></div>`;prog(()=>complete(t,{m:'card',pan:n,brand:b[1]||'Card'}))}else{otpTries++;ins.forEach(x=>x.value='');ins[0].focus();$('#otpE').textContent=otpTries>=3?T('Too many attempts — payment declined','Слишком много попыток — отказ'):T('Wrong code, attempts left: ','Неверный код, осталось попыток: ')+(3-otpTries);if(otpTries>=3){setTimeout(()=>{closeM();step=2;renderSteps()},1400)}}}}
+function consent(t){const b=BK[bank];modal(`<div style="display:flex;gap:10px;align-items:center"><span style="display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:${b.c};color:#fff;font-weight:800">${b.n[0]}</span><div><b>${b.n}</b><div class="muted" style="font-size:12px">${T('Open banking · payment initiation','Открытый банкинг · инициирование платежа')}</div></div></div><div style="margin:14px 0 6px;font-weight:700">${T('TaxPay Gateway requests your consent to:','TaxPay Gateway запрашивает согласие на:')}</div><div class="row"><span>✓ ${T('Make one payment of','Один платёж на сумму')}</span><b class="mono">${money(t.tot)}</b></div><div class="row"><span>✓ ${T('Payee','Получатель')}</span><b>${T('Revenue Service','Налоговая служба')}</b></div><div class="row"><span>✓ ${T('Consent expires','Согласие истекает')}</span><b>${T('after this payment','после этого платежа')}</b></div><div class="row"><span>✕ ${T('Access to balance & history','Доступ к балансу и истории')}</span><b style="color:var(--mal3)">${T('not requested','не запрашивается')}</b></div><div class="f" style="margin-top:10px"><label>${T('Pay from account','Списать со счёта')}</label><select class="input mono" id="acct"><option>NO93 8601 1117 947 · ${T('Current','Текущий')}</option><option>NO15 8601 2204 113 · ${T('Savings','Сберегательный')}</option></select></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn" id="cX">${T('Deny','Отказать')}</button><button class="btn pri" id="cOk" style="flex:1;justify-content:center">${T('Authorise with BankID','Подтвердить через BankID')}</button></div>`);
+  $('#cX').onclick=()=>{closeM();toast(T('Consent denied — no payment made','Согласие отклонено — платёж не выполнен'),'bad')};
+  $('#cOk').onclick=()=>{step=3;renderSteps();$('#modal').innerHTML=`<div style="text-align:center"><b>${T('Redirecting back from','Возврат из')} ${b.n}…</b><div class="prog"><i id="pg"></i></div><div class="muted mono" style="font-size:12px">consent: ACCP · status: ACSC</div></div>`;prog(()=>complete(t,{m:'bank',bank:b.n}))}}
+function upi(){const r=Math.floor(Math.random()*1e8);const base='NRS26'+pad(r,8);const ch='ABCDEFGHJKLMNPQRSTUVWXYZ'[hash(base)%24];return base.slice(0,5)+'-'+base.slice(5,9)+'-'+base.slice(9)+'-'+ch}
+function complete(t,m){closeM();const p={uid:upi(),ts:Date.now(),items:t.c.map(d=>({id:d.id,k:d.k,a:due(d)})),sub:t.sub,disc:t.disc,fee:t.f,tot:t.tot,m:m.m,pan:m.pan?m.pan.slice(0,6)+'******'+m.pan.slice(-4):'',brand:m.brand||'',bank:m.bank||'',rrn:String(Math.floor(1e11+Math.random()*9e11)),auth:m.m==='card'?String(Math.floor(1e5+Math.random()*9e5)):'',stan:pad(Math.floor(Math.random()*1e6),6),who:lastQ,refunded:0};
+  D.paid.unshift(p);store.save();feedPush(fromPaid(p),true);step=4;renderSteps();renderReceipt(p);debts=debts.filter(d=>!sel.has(d.id));sel.clear();renderDebts();renderSum();renderTabs();toast('✅ '+T('Payment accepted','Платёж принят'),'ok')}
+function renderReceipt(p){$('#st4').innerHTML=`<div class="rcpt"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div><div style="color:#2e7d32;font-weight:800">✓ ${T('PAID','ОПЛАЧЕНО')}</div><h2>${money(p.tot)}</h2><div style="font-size:12px;color:#555">${T('Revenue Service of the Republic of Nordania (fictional)','Налоговая служба Республики Нордания (вымышленная)')}</div></div><div class="qrbox" style="padding:4px">${qrSvg(p.uid,108,true)}</div></div>
+  <div style="margin:14px 0 6px;font-size:12px;color:#555">${T('Unique payment ID','Уникальный идентификатор платежа')}</div><div style="font-family:var(--mono);font-size:18px;font-weight:700;letter-spacing:.04em">${p.uid}</div>
+  <div style="margin-top:10px">${p.items.map(i=>`<div class="row"><span>${L(TYPES[i.k])} <span style="font-family:var(--mono);font-size:11px;color:#777">${i.id}</span></span><b>${money(i.a)}</b></div>`).join('')}${p.disc?`<div class="row" style="color:#2e7d32"><span>${T('Discount applied','Применена скидка')}</span><b>−${money(p.disc)}</b></div>`:''}<div class="row"><span>${T('Fee','Комиссия')}</span><b>${money(p.fee)}</b></div><div class="row"><span>${T('Method','Способ')}</span><b>${p.m==='card'?p.brand+' '+p.pan.slice(-4):p.m==='bank'?T('Bank transfer · ','Перевод · ')+p.bank:T('QR instant payment','QR, мгновенный платёж')}</b></div><div class="row"><span>RRN</span><b style="font-family:var(--mono)">${p.rrn}</b></div><div class="row"><span>${T('Date','Дата')}</span><b>${new Date(p.ts).toLocaleString(loc())}</b></div></div>
+  <div style="font-size:11.5px;color:#666;margin-top:10px">${T('Debts are marked as settled in the treasury registry within 5 minutes. Scan the QR to verify this receipt.','Начисления гасятся в реестре в течение 5 минут. Отсканируйте QR, чтобы проверить квитанцию.')}</div>
+  <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><input class="input" id="em" type="email" style="flex:1;min-width:160px;background:#f4f4f4;color:#111;border-color:#ccc" placeholder="you@example.no"><button class="btn sm" id="emB">✉ ${T('Email','На почту')}</button><button class="btn sm" id="prB">🖨 ${T('Print','Печать')}</button><button class="btn sm pri" id="again">${T('New payment','Новый платёж')}</button><button class="btn sm" id="seeCon">${T('See it in console →','Открыть в консоли →')}</button></div></div>`;
+  $('#emB').onclick=()=>{const v=$('#em').value.trim();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){toast(T('Enter a valid email','Введите корректный email'),'bad');return}toast(T('Receipt sent to ','Квитанция отправлена на ')+esc(v)+T(' (simulated)',' (имитация)'),'ok')};
+  $('#prB').onclick=()=>window.print();$('#again').onclick=()=>{step=1;renderSteps();renderSum()};$('#seeCon').onclick=()=>{mode('con');ctab('live')}}
+function qrSvg(txt,size,light){const N=29,r=rng(hash(txt));const m=[];for(let y=0;y<N;y++){m[y]=[];for(let x=0;x<N;x++)m[y][x]=r()>.5}
+  const fp=(ox,oy)=>{for(let y=-1;y<8;y++)for(let x=-1;x<8;x++){const X=ox+x,Y=oy+y;if(X<0||Y<0||X>=N||Y>=N)continue;const on=x>=0&&x<7&&y>=0&&y<7&&(x===0||x===6||y===0||y===6||(x>=2&&x<=4&&y>=2&&y<=4));m[Y][X]=on}};fp(0,0);fp(N-7,0);fp(0,N-7);for(let i=8;i<N-8;i++){m[6][i]=i%2===0;m[i][6]=i%2===0}
+  let d='';for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(m[y][x])d+=`M${x},${y}h1v1h-1z`;return `<svg viewBox="-2 -2 ${N+4} ${N+4}" width="${size}" height="${size}" shape-rendering="crispEdges"><rect x="-2" y="-2" width="${N+4}" height="${N+4}" fill="#fff"/><path d="${d}" fill="#111"/></svg>`}
+
+/* ---------- console: live feed ---------- */
+const CH={card:{en:'Card',ru:'Карта'},bank:{en:'Open banking',ru:'Открытый банкинг'},qr:{en:'QR',ru:'QR'}};
+let feed=[],paused=false,fr=rng(42);
+function synth(ts){const ks=['prop','veh','fine','fine','court','inc'];const k=ks[Math.floor(fr()*ks.length)];const m=['card','card','card','bank','qr'][Math.floor(fr()*5)];const a=Math.round((k==='fine'?50+fr()*200:40+fr()*900)*100)/100;const ok=fr()>.04;const pan=['411111','555555','910011','401288'][Math.floor(fr()*4)]+'******'+pad(Math.floor(fr()*1e4),4);
+  return{ts,uid:'NRS26-'+pad(Math.floor(fr()*1e4),4)+'-'+pad(Math.floor(fr()*1e4),4)+'-'+'ABCDEFGH'[Math.floor(fr()*8)],k,m,a,st:ok?'ok':'dec',rc:ok?'00':['05','51','54'][Math.floor(fr()*3)],lat:Math.round(140+fr()*260+(fr()<.05?600:0)),pan:m==='card'?pan:'',rrn:String(Math.floor(1e11+fr()*9e11)),stan:pad(Math.floor(fr()*1e6),6),auth:ok?pad(Math.floor(fr()*1e6),6):'',mine:false}}
+function fromPaid(p){return{ts:p.ts,uid:p.uid,k:p.items[0].k,m:p.m,a:p.tot,st:'ok',rc:'00',lat:Math.round(180+Math.random()*120),pan:p.pan,rrn:p.rrn,stan:p.stan,auth:p.auth,mine:true,n:p.items.length}}
+for(let i=0;i<40;i++)feed.push(synth(Date.now()-(40-i)*37e3));
+D.paid.slice().reverse().forEach(p=>feed.push(fromPaid(p)));feed.sort((a,b)=>a.ts-b.ts);
+let dayVol=1823400+feed.reduce((a,f)=>a+(f.st==='ok'?f.a:0),0),dayCnt=6115+feed.length;
+function feedPush(f,flash){feed.push(f);if(feed.length>300)feed.shift();if(f.st==='ok'){dayVol+=f.a}dayCnt++;f.flash=flash;if(cmode==='con'&&ctabCur==='live')renderLive()}
+setInterval(()=>{if(!paused)feedPush(synth(Date.now()),true);lat.push(latPt());lat.shift();if(cmode==='con'&&ctabCur==='up')drawLat()},1800);
+function renderLive(){const ok=feed.filter(f=>f.st==='ok').length;
+  $('#liveK').innerHTML=[[T('Collected today','Собрано сегодня'),Math.round(dayVol).toLocaleString(loc())+' NDK'],[T('Payments today','Платежей сегодня'),dayCnt.toLocaleString(loc())],[T('Approval rate','Одобрено'),(ok/feed.length*100).toFixed(1)+'%'],[T('Avg auth latency','Ср. задержка'),Math.round(feed.slice(-50).reduce((a,f)=>a+f.lat,0)/Math.min(50,feed.length))+' ms']].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
+  $('#pause').textContent=paused?'▶ '+T('Resume','Продолжить'):'⏸ '+T('Pause','Пауза');
+  $('#tLive').innerHTML=`<thead><tr><th>${T('Time','Время')}</th><th>${T('Payment ID','ID платежа')}</th><th>${T('Type','Вид')}</th><th>${T('Channel','Канал')}</th><th class="num">${T('Amount','Сумма')}</th><th>RC</th><th class="num">ms</th></tr></thead><tbody>`+feed.slice(-60).reverse().map(f=>`<tr class="${f.flash?'new':''}" ${f.mine?'style="font-weight:700"':''}><td class="mono">${hms(new Date(f.ts))}</td><td class="mono">${f.uid}${f.mine?' <span class="pill gold">'+T('you','вы')+'</span>':''}</td><td>${TYPES[f.k].ic} ${L(TYPES[f.k])}</td><td>${L(CH[f.m])}</td><td class="num mono">${f.a.toFixed(2)}</td><td><span class="pill ${f.st==='ok'?'ok':'bad'}">${f.rc}</span></td><td class="num mono">${f.lat}</td></tr>`).join('')+'</tbody>';feed.forEach(f=>f.flash=false);
+  const by={};feed.filter(f=>f.st==='ok').forEach(f=>by[f.k]=(by[f.k]||0)+f.a);const mx=Math.max(...Object.values(by));
+  $('#byType').innerHTML=Object.keys(TYPES).map(k=>`<div style="margin-bottom:9px;font-size:12.5px"><div style="display:flex;justify-content:space-between"><span>${TYPES[k].ic} ${L(TYPES[k])}</span><b class="mono">${Math.round(by[k]||0).toLocaleString(loc())}</b></div><div style="height:7px;border-radius:5px;background:var(--line);margin-top:4px;overflow:hidden"><i style="display:block;height:100%;width:${(by[k]||0)/mx*100}%;background:var(${TYPES[k].c})"></i></div></div>`).join('');
+  const cc={};feed.forEach(f=>cc[f.m]=(cc[f.m]||0)+1);$('#byCh').innerHTML=`<div style="display:flex;height:12px;border-radius:6px;overflow:hidden">${Object.keys(CH).map((k,i)=>`<i style="width:${(cc[k]||0)/feed.length*100}%;background:var(${['--blue','--mal2','--gold'][i]})"></i>`).join('')}</div><div class="legend" style="margin-top:8px">${Object.keys(CH).map((k,i)=>`<span><i style="background:var(${['--blue','--mal2','--gold'][i]})"></i>${L(CH[k])} ${Math.round((cc[k]||0)/feed.length*100)}%</span>`).join('')}</div>`}
+$('#pause').onclick=()=>{paused=!paused;renderLive()};
+
+/* ---------- reconciliation ---------- */
+let REC=null;
+function buildRec(){const r=rng(917);const rows=[];const base=feed.filter(f=>f.st==='ok').slice(0,28);
+  base.forEach((f,i)=>{let bank={a:f.a,rrn:f.rrn},st='match',why=null;
+    if(i===3){bank.a=Math.round((f.a-1.25)*100)/100;st='amt';why={en:'Bank credited 1.25 NDK less (interchange fee netted)',ru:'Банк зачислил на 1,25 NDK меньше (удержана комиссия)'}}
+    if(i===9){bank=null;st='nobank';why={en:'Not in bank statement — settlement may be in transit',ru:'Нет в выписке — возможно, расчёт в пути'}}
+    if(i===15){bank.a=Math.round(f.a*10)/100;st='amt';why={en:'Amount differs by factor 10 — decimal shift in bank file',ru:'Сумма отличается в 10 раз — сдвиг запятой в файле банка'}}
+    if(i===21){st='dup';why={en:'Same RRN appears twice in bank statement',ru:'Один RRN дважды в выписке банка'}}
+    rows.push({id:'R'+i,g:f,b:bank,st,why})});
+  rows.push({id:'RX',g:null,b:{a:312.4,rrn:'778812004511'},st:'nogw',why:{en:'Credit in bank with no gateway transaction',ru:'Зачисление в банке без операции в шлюзе'}});return rows}
+const RST={match:{en:'Matched',ru:'Сверено',k:'ok'},amt:{en:'Amount mismatch',ru:'Расхождение суммы',k:'bad'},nobank:{en:'Missing in bank',ru:'Нет в банке',k:'warn'},nogw:{en:'Missing in gateway',ru:'Нет в шлюзе',k:'bad'},dup:{en:'Duplicate',ru:'Дубль',k:'bad'},res:{en:'Resolved',ru:'Урегулировано',k:'ok'}};
+const ACT={amt:[{en:'Post fee adjustment',ru:'Провести корректировку'},{en:'Raise claim to bank',ru:'Претензия банку'}],nobank:[{en:'Mark in transit (T+1)',ru:'В пути (T+1)'}],nogw:[{en:'Return to sender',ru:'Вернуть отправителю'},{en:'Assign to taxpayer',ru:'Привязать к плательщику'}],dup:[{en:'Request bank reversal',ru:'Запросить сторно'}]};
+function renderRec(){if(!REC)REC=buildRec();const f=$('#recF').value||'all';$('#recF').innerHTML=[['all',T('All rows','Все строки')],['mm',T('Mismatches only','Только расхождения')]].map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('');$('#recF').value=f;
+  const st=r=>D.recRes[r.id]?'res':r.st;const mm=REC.filter(r=>st(r)!=='match'&&st(r)!=='res');const gw=REC.filter(r=>r.g).reduce((a,r)=>a+r.g.a,0),bk=REC.filter(r=>r.b).reduce((a,r)=>a+r.b.a*(r.st==='dup'&&!D.recRes[r.id]?2:1),0);
+  $('#recK').innerHTML=[[T('Gateway total','Итого шлюз'),gw.toFixed(2)],[T('Bank total','Итого банк'),bk.toFixed(2)],[T('Difference','Разница'),`<span style="color:${Math.abs(gw-bk)>.01?'var(--red)':'var(--mal3)'}">${(bk-gw).toFixed(2)}</span>`],[T('Open mismatches','Открытых расхождений'),mm.length]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
+  $('#tRec').innerHTML=`<thead><tr><th>RRN</th><th class="num">${T('Gateway','Шлюз')}</th><th class="num">${T('Bank','Банк')}</th><th>${T('Status','Статус')}</th><th>${T('Reason / action','Причина / действие')}</th></tr></thead><tbody>`+REC.filter(r=>f==='all'||(st(r)!=='match')).map(r=>{const s=st(r);return `<tr class="${s==='res'?'res':s!=='match'?'mm':''}"><td class="mono">${(r.g||r.b).rrn}</td><td class="num mono">${r.g?r.g.a.toFixed(2):'—'}</td><td class="num mono">${r.b?r.b.a.toFixed(2)+(r.st==='dup'?' ×2':''):'—'}</td><td><span class="pill ${RST[s].k}">${L(RST[s])}</span></td><td style="white-space:normal;min-width:240px;font-size:12.5px">${r.why?(s==='res'?'✓ '+esc(L(D.recRes[r.id])):esc(L(r.why))+'<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">'+ACT[r.st].map((a,i)=>`<button class="btn sm" data-res="${r.id}|${i}">${L(a)}</button>`).join('')+'</div>'):''}</td></tr>`}).join('')+'</tbody>';renderTabs()}
+$('#recF').onchange=renderRec;
+$('#tRec').onclick=e=>{const b=e.target.closest('[data-res]');if(!b)return;const[id,i]=b.dataset.res.split('|');const r=REC.find(x=>x.id===id);D.recRes[id]=ACT[r.st][+i];store.save();renderRec();toast(T('Resolved: ','Урегулировано: ')+L(ACT[r.st][+i]),'ok')};
+$('#autoM').onclick=()=>{const rows=$$('#tRec tbody tr');rows.forEach((tr,i)=>setTimeout(()=>tr.classList.add('new'),i*40));setTimeout(()=>{toast(T('Auto-match: ','Автосверка: ')+REC.filter(r=>r.st==='match').length+T(' matched, ',' сверено, ')+REC.filter(r=>r.st!=='match'&&!D.recRes[r.id]).length+T(' need review',' требуют разбора'))},rows.length*40+200)};
+
+/* ---------- refunds ---------- */
+let refSel=null;
+function refundable(){return D.paid.map(p=>({uid:p.uid,ts:p.ts,a:p.tot,m:p.m,left:Math.round((p.tot-p.refunded)*100)/100,mine:true,p})).concat(feed.filter(f=>f.st==='ok'&&!f.mine).slice(-14).reverse().map(f=>({uid:f.uid,ts:f.ts,a:f.a,m:f.m,left:f.a-(D.refunds.filter(r=>r.uid===f.uid).reduce((a,r)=>a+r.a,0))})))}
+function renderRef(){const rs=refundable();if(!refSel&&rs.length)refSel=rs[0].uid;
+  $('#tRefP').innerHTML=`<thead><tr><th>${T('Payment ID','ID платежа')}</th><th>${T('Channel','Канал')}</th><th class="num">${T('Paid','Оплачено')}</th><th class="num">${T('Refundable','К возврату')}</th></tr></thead><tbody>`+rs.map(r=>`<tr class="clk ${r.uid===refSel?'sel':''}" data-u="${r.uid}"><td class="mono">${r.uid}${r.mine?' <span class="pill gold">'+T('you','вы')+'</span>':''}</td><td>${L(CH[r.m])}</td><td class="num mono">${r.a.toFixed(2)}</td><td class="num mono">${r.left.toFixed(2)}</td></tr>`).join('')+'</tbody>';
+  const r=rs.find(x=>x.uid===refSel);$('#refForm').innerHTML=r?`<div class="mono" style="font-weight:700">${r.uid}</div><div class="muted" style="font-size:12.5px">${new Date(r.ts).toLocaleString(loc())} · ${L(CH[r.m])}</div><div class="fgrid" style="margin-top:10px"><div class="f"><label>${T('Amount','Сумма')}</label><input class="input mono" id="rA" value="${r.left.toFixed(2)}"></div><div class="f"><label>${T('Reason','Причина')}</label><select class="input" id="rR"><option>${T('Duplicate payment','Двойная оплата')}</option><option>${T('Fine cancelled by court','Штраф отменён судом')}</option><option>${T('Overpayment','Переплата')}</option></select></div></div><div class="err" id="rE"></div><button class="btn pri" id="rGo" ${r.left<=0?'disabled':''}>${T('Request refund','Оформить возврат')}</button><div class="note">${T('Refunds above 500 NDK need a second approver (4-eyes).','Возврат свыше 500 NDK требует второго подтверждения (принцип 4 глаз).')}</div>`:`<div class="muted">${T('No payments yet.','Платежей пока нет.')}</div>`;
+  const g=$('#rGo');if(g)g.onclick=()=>{const a=parseFloat($('#rA').value.replace(',','.'));if(!(a>0)||a>r.left+.001){$('#rE').textContent=T('Amount must be between 0.01 and ','Сумма от 0,01 до ')+r.left.toFixed(2);return}
+    const rf={id:'RF-'+(7000+D.refunds.length),uid:r.uid,a,reason:$('#rR').value,st:a>500?'appr':'proc',ts:Date.now()};D.refunds.unshift(rf);if(r.p)r.p.refunded+=a;store.save();renderRef();toast(T('Refund ','Возврат ')+rf.id+T(' created',' создан'),'ok');if(rf.st==='proc')advRef(rf)};
+  $('#refQ').innerHTML=D.refunds.length?D.refunds.slice(0,8).map(f=>`<div style="display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line);font-size:12.5px;flex-wrap:wrap"><span class="mono">${f.id}</span><span class="mono muted" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${f.uid}</span><b class="mono">${f.a.toFixed(2)}</b><span class="pill ${f.st==='done'?'ok':f.st==='appr'?'warn':'gold'}">${f.st==='done'?T('Returned','Возвращено'):f.st==='appr'?T('Needs approval','Ждёт подтверждения'):T('Processing','В обработке')}</span>${f.st==='appr'?`<button class="btn sm gold" data-ap="${f.id}">${T('Approve','Подтвердить')}</button>`:''}</div>`).join(''):`<div class="muted" style="font-size:13px">${T('No refunds yet.','Возвратов пока нет.')}</div>`}
+function advRef(f){setTimeout(()=>{f.st='done';store.save();if(ctabCur==='ref')renderRef();toast(f.id+T(' returned to payer',' возвращён плательщику'),'ok')},2500)}
+$('#tRefP').onclick=e=>{const r=e.target.closest('[data-u]');if(r){refSel=r.dataset.u;renderRef()}};
+$('#refQ').onclick=e=>{const b=e.target.closest('[data-ap]');if(!b)return;const f=D.refunds.find(x=>x.id===b.dataset.ap);f.st='proc';store.save();renderRef();advRef(f)};
+
+/* ---------- ISO 8583 ---------- */
+let isoSel=null,isoDir='req',isoHl=null;
+const FN={2:'Primary account number',3:'Processing code',4:'Amount, transaction',7:'Transmission date & time',11:'System trace audit number',12:'Local time',13:'Local date',18:'Merchant category code',22:'POS entry mode',25:'POS condition code',32:'Acquiring institution ID',37:'Retrieval reference number',38:'Authorization ID response',39:'Response code',41:'Card acceptor terminal ID',42:'Card acceptor ID',43:'Card acceptor name/location',49:'Currency code, transaction',62:'Private: payment ID'};
+const FNR={2:'Номер карты (PAN)',3:'Код обработки',4:'Сумма операции',7:'Дата и время передачи',11:'Номер трассировки (STAN)',12:'Местное время',13:'Местная дата',18:'Код категории продавца (MCC)',22:'Режим ввода POS',25:'Условие POS',32:'ID эквайера',37:'Номер ссылки (RRN)',38:'Код авторизации',39:'Код ответа',41:'ID терминала',42:'ID продавца',43:'Имя/место продавца',49:'Код валюты',62:'Частное: ID платежа'};
+function isoFields(f,dir){const d=new Date(f.ts);const u=d.toISOString();const x={2:f.pan.replace(/\*/g,'0'),3:'000000',4:pad(Math.round(f.a*100),12),7:u.slice(5,7)+u.slice(8,10)+u.slice(11,13)+u.slice(14,16)+u.slice(17,19),11:f.stan,12:pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds()),13:pad(d.getMonth()+1)+pad(d.getDate()),18:'9311',22:'812',25:'59',32:'47100',37:f.rrn,41:'TPGW0001',42:'NRS-REV-0000001',43:'NORDANIA REVENUE SVC  HAVNBY       NO',49:'999',62:f.uid};
+  if(dir==='resp'){delete x[18];delete x[22];delete x[43];x[38]=f.auth||'      ';x[39]=f.rc}return x}
+function bitmap(keys){const b=new Array(64).fill(0);keys.forEach(k=>{if(k<=64)b[k-1]=1});return b}
+function renderIso(){const cards=feed.filter(f=>f.m==='card').slice(-30).reverse();if(!isoSel||!cards.find(c=>c.uid===isoSel))isoSel=(cards.find(c=>c.mine)||cards[0]||{}).uid;const f=cards.find(c=>c.uid===isoSel);
+  $('#tIsoL').innerHTML=`<thead><tr><th>${T('Time','Время')}</th><th>PAN</th><th class="num">${T('Amount','Сумма')}</th><th>RC</th></tr></thead><tbody>`+cards.map(c=>`<tr class="clk ${c.uid===isoSel?'sel':''}" data-iso="${c.uid}"><td class="mono">${hms(new Date(c.ts))}${c.mine?' ★':''}</td><td class="mono">${c.pan.slice(0,4)}…${c.pan.slice(-4)}</td><td class="num mono">${c.a.toFixed(2)}</td><td><span class="pill ${c.rc==='00'?'ok':'bad'}">${c.rc}</span></td></tr>`).join('')+'</tbody>';
+  $$('#isoDir button').forEach(b=>b.classList.toggle('on',b.dataset.d===isoDir));if(!f){$('#isoHead').innerHTML='';$('#tIso').innerHTML='';return}
+  const x=isoFields(f,isoDir),keys=Object.keys(x).map(Number).sort((a,b)=>a-b),bm=bitmap(keys);const hex=[];for(let i=0;i<64;i+=4)hex.push(parseInt(bm.slice(i,i+4).join(''),2).toString(16).toUpperCase());const mti=isoDir==='req'?'0200':'0210';
+  $('#isoHead').innerHTML=`<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:6px;font-size:13px"><span><span class="muted">MTI</span> <b class="mono" style="color:var(--gold2)">${mti}</b> — ${isoDir==='req'?T('financial request','финансовый запрос'):T('financial response','финансовый ответ')}</span><span><span class="muted">${T('Version','Версия')}</span> <b>1987</b></span><span><span class="muted">${T('Class','Класс')}</span> <b>2 · ${T('financial','финансовый')}</b></span></div><div class="muted" style="font-size:12px">${T('Primary bitmap — bit 1 = 0, no secondary bitmap. Hover a field to see its bit.','Первичный битмап — бит 1 = 0, вторичного нет. Наведите на поле — увидите его бит.')}</div><div class="bits">${bm.map((v,i)=>`<span class="${v?'on':''} ${isoHl===i+1?'hl':''}" title="bit ${i+1}">${i+1}</span>`).join('')}</div><div class="hex"><b>${mti}</b> ${hex.join('')} ${keys.slice(0,4).map(k=>x[k]).join(' ')} …</div>`;
+  $('#tIso').innerHTML=`<thead><tr><th>${T('Field','Поле')}</th><th>${T('Name','Название')}</th><th>${T('Value','Значение')}</th></tr></thead><tbody>`+keys.map(k=>`<tr data-f="${k}"><td class="mono">DE ${pad(k,3)}</td><td>${PT.lang==='ru'?FNR[k]:FN[k]}</td><td class="mono">${k===2?esc(f.pan.slice(0,6)+'******'+f.pan.slice(-4))+' <span class="pill">'+T('masked','маска')+'</span>':esc(x[k])}</td></tr>`).join('')+'</tbody>'}
+$('#tIsoL').onclick=e=>{const r=e.target.closest('[data-iso]');if(r){isoSel=r.dataset.iso;renderIso()}};
+$('#isoDir').onclick=e=>{const b=e.target.closest('[data-d]');if(b){isoDir=b.dataset.d;renderIso()}};
+$('#tIso').addEventListener('mouseover',e=>{const r=e.target.closest('[data-f]');const v=r?+r.dataset.f:null;if(v!==isoHl){isoHl=v;$$('.bits span').forEach((s,i)=>s.classList.toggle('hl',i+1===isoHl))}});
+
+/* ---------- uptime / latency ---------- */
+const lr=rng(5);let lt=0;function latPt(){lt++;const sp=lr()<.04?500+lr()*500:0;const p50=170+Math.sin(lt/7)*25+lr()*30;return{p50,p95:p50*1.9+lr()*80+sp}}
+const lat=Array.from({length:90},latPt);
+const UP=(()=>{const r=rng(99);return Array.from({length:90},(_,i)=>{const x=r();return x<.03?'b':x<.09?'w':''})})();
+function drawLat(){const W=760,H=220,P={l:36,r:8,t:10,b:20},mx=1200;const x=i=>P.l+i/(lat.length-1)*(W-P.l-P.r),y=v=>H-P.b-Math.min(v,mx)/mx*(H-P.t-P.b);let g='';
+  [0,300,600,900,1200].forEach(v=>g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${y(v)}" y2="${y(v)}" stroke="${css('--line')}"/><text x="${P.l-5}" y="${y(v)+4}" font-size="10" text-anchor="end" fill="${css('--dim')}">${v}</text>`);
+  const path=k=>lat.map((p,i)=>(i?'L':'M')+x(i).toFixed(1)+','+y(p[k]).toFixed(1)).join('');
+  g+=`<path d="${path('p95')} L${x(lat.length-1)},${H-P.b} L${P.l},${H-P.b}Z" fill="${css('--violet')}" opacity=".12"/><path d="${path('p95')}" fill="none" stroke="${css('--violet')}" stroke-width="1.6"/><path d="${path('p50')}" fill="none" stroke="${css('--blue')}" stroke-width="2"/><line x1="${P.l}" x2="${W-P.r}" y1="${y(800)}" y2="${y(800)}" stroke="${css('--red')}" stroke-dasharray="5 4"/><text x="${P.l}" y="${H-5}" font-size="10" fill="${css('--dim')}">−${Math.round(lat.length*1.8)}s</text><text x="${W-P.r}" y="${H-5}" font-size="10" text-anchor="end" fill="${css('--dim')}">${T('now','сейчас')}</text>`;
+  $('#latC').innerHTML=`<svg viewBox="0 0 ${W} ${H}" font-family="Inter,sans-serif">${g}</svg>`;
+  const l=lat[lat.length-1];const br=lat.filter(p=>p.p95>800).length;$('#upK').innerHTML=[['p50',Math.round(l.p50)+' ms'],['p95',Math.round(l.p95)+' ms'],[T('SLO breaches (window)','Нарушений SLO (окно)'),br],[T('Uptime 90d','Доступность 90 д'),upPct()+'%']].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('')}
+function upPct(){const mins=UP.reduce((a,u)=>a+(u==='b'?14:u==='w'?3:0),0);return(100-mins/(90*1440)*100).toFixed(3)}
+function renderUp(){drawLat();$('#upBars').innerHTML=UP.map((u,i)=>`<i class="${u}" title="${new Date(Date.now()-(89-i)*864e5).toLocaleDateString(loc())}"></i>`).join('');$('#upPct').textContent=upPct()+'% · SLA 99.95%';
+  const inc=UP.map((u,i)=>[u,i]).filter(z=>z[0]==='b');$('#incid').innerHTML=inc.map(([u,i],j)=>`<div style="display:flex;gap:8px;font-size:12.5px;padding:6px 0;border-bottom:1px dashed var(--line)"><span class="pill bad">INC-${240+j}</span><span class="mono muted">${new Date(Date.now()-(89-i)*864e5).toLocaleDateString(loc())}</span><span style="flex:1">${L([{en:'Issuer timeout from Fjordbank — failover to stand-in processing',ru:'Таймаут эмитента Fjordbank — переход на stand-in'},{en:'HSM cluster node restart, 14 min partial outage',ru:'Перезапуск узла HSM, частичный сбой 14 мин'},{en:'Open-banking API rate-limited by Aurora Bank',ru:'Aurora Bank ограничил запросы open-banking API'}][j%3])}</span></div>`).join('')}
+
+/* ---------- PCI DSS ---------- */
+const PCI=[['Install and maintain network security controls','Сетевые средства защиты'],['Apply secure configurations','Безопасные конфигурации'],['Protect stored account data','Защита хранимых данных карт'],['Encrypt transmission over open networks','Шифрование передачи по открытым сетям'],['Protect from malicious software','Защита от вредоносного ПО'],['Develop secure systems and software','Безопасная разработка'],['Restrict access by need to know','Доступ по необходимости'],['Identify users and authenticate','Идентификация и аутентификация'],['Restrict physical access','Ограничение физического доступа'],['Log and monitor all access','Журналы и мониторинг'],['Test security regularly','Регулярное тестирование'],['Support with policies and programs','Политики и программы']];
+const PEV=[['Segmented CDE, firewall rules reviewed every 6 months','Изолированная зона CDE, правила МЭ пересматриваются раз в 6 мес.'],['CIS benchmarks, drift detection','Эталоны CIS, контроль дрейфа'],['PAN tokenised; vault in HSM, AES-256','PAN токенизирован; хранилище в HSM, AES-256'],['TLS 1.3 only, HSTS, mTLS to acquirer','Только TLS 1.3, HSTS, mTLS к эквайеру'],['EDR on all hosts','EDR на всех узлах'],['SAST/DAST in CI, OWASP top-10 training','SAST/DAST в CI, обучение OWASP'],['RBAC, quarterly access recertification','RBAC, ежеквартальный пересмотр прав'],['MFA for all CDE access','MFA для всего доступа к CDE'],['Data centre tier III, badge + biometrics','ЦОД Tier III, пропуск + биометрия'],['SIEM, 12-month log retention','SIEM, хранение журналов 12 мес.'],['Quarterly ASV scan, annual pentest','Квартальное ASV-сканирование, ежегодный пентест'],['Incident response plan tested','План реагирования проверен']];
+if(!D.pci)D.pci=PCI.map((_,i)=>i===10?'prog':i===5?'prog':'ok');
+let asvRun=false;
+function renderPci(){$('#pci').innerHTML=PCI.map((p,i)=>`<div class="preq" data-p="${i}"><div class="h"><b>${pad(i+1)}</b><span style="flex:1">${PT.lang==='ru'?p[1]:p[0]}</span><span class="pill ${D.pci[i]==='ok'?'ok':D.pci[i]==='gap'?'bad':'warn'}">${D.pci[i]==='ok'?T('In place','Выполнено'):D.pci[i]==='gap'?T('Gap','Нарушение'):T('In progress','В работе')}</span></div><div class="d">${PT.lang==='ru'?PEV[i][1]:PEV[i][0]}<div style="margin-top:6px">${D.pci[i]!=='ok'?`<button class="btn sm pri" data-fix="${i}">${T('Upload evidence & mark in place','Загрузить доказательства')}</button>`:`<span class="muted">✓ ${T('Evidence on file, QSA reviewed','Доказательства есть, проверено QSA')}</span>`}</div></div></div>`).join('');
+  const ok=D.pci.filter(x=>x==='ok').length,pc=ok/12,R=54,C=2*Math.PI*R;$('#pciRing').innerHTML=`<svg viewBox="0 0 140 140" width="160" height="160"><circle cx="70" cy="70" r="${R}" fill="none" stroke="${css('--line')}" stroke-width="12"/><circle cx="70" cy="70" r="${R}" fill="none" stroke="${pc===1?css('--mal2'):css('--gold')}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C*pc} ${C}" transform="rotate(-90 70 70)"/><text x="70" y="68" text-anchor="middle" font-size="26" font-weight="800" fill="${css('--text')}">${ok}/12</text><text x="70" y="88" text-anchor="middle" font-size="11" fill="${css('--muted')}">${pc===1?T('Ready for AOC','Готово к AOC'):T('requirements','требований')}</text></svg>`}
+$('#pci').onclick=e=>{const fx=e.target.closest('[data-fix]');if(fx){D.pci[+fx.dataset.fix]='ok';store.save();renderPci();toast(T('Requirement marked in place','Требование выполнено'),'ok');return}const p=e.target.closest('[data-p]');if(p)p.classList.toggle('open')};
+$('#asv').onclick=()=>{if(asvRun)return;asvRun=true;const lg=$('#pciLog');const steps=[T('Discovering external IPs… 6 hosts','Поиск внешних IP… 6 узлов'),T('Port scan… 443/tcp only','Сканирование портов… только 443/tcp'),T('TLS config: TLS 1.3, no weak ciphers','TLS: 1.3, слабых шифров нет'),T('CVE check: 0 high, 1 medium (patched)','Проверка CVE: 0 высоких, 1 средняя (исправлена)'),T('✅ ASV scan PASSED — report ASV-2026-Q4','✅ ASV-сканирование ПРОЙДЕНО — отчёт ASV-2026-Q4')];lg.innerHTML='';
+  steps.forEach((s,i)=>setTimeout(()=>{lg.innerHTML+=`<div class="mono" style="padding:3px 0">${s}</div>`;if(i===steps.length-1){asvRun=false;D.pci[10]='ok';store.save();renderPci()}},(i+1)*600))};
+
+/* ---------- console tabs & modes ---------- */
+let cmode='cit',ctabCur='live';
+const CT=[['live',{en:'Live payments',ru:'Платежи онлайн'}],['rec',{en:'Reconciliation',ru:'Сверка'}],['ref',{en:'Refunds',ru:'Возвраты'}],['iso',{en:'ISO 8583 inspector',ru:'Инспектор ISO 8583'}],['up',{en:'Uptime & latency',ru:'Доступность'}],['pci',{en:'PCI DSS',ru:'PCI DSS'}]];
+function renderTabs(){const mm=REC?REC.filter(r=>r.st!=='match'&&!D.recRes[r.id]).length:5;const ap=D.refunds.filter(f=>f.st==='appr').length;$('#ctabs').innerHTML=CT.map(c=>`<button class="${ctabCur===c[0]?'on':''}" data-ct="${c[0]}">${L(c[1])}${c[0]==='rec'&&mm?`<em>${mm}</em>`:''}${c[0]==='ref'&&ap?`<em>${ap}</em>`:''}</button>`).join('')}
+function ctab(t){ctabCur=t;renderTabs();$$('.cv').forEach(v=>v.style.display=v.id==='cv-'+t?'':'none');({live:renderLive,rec:renderRec,ref:renderRef,iso:renderIso,up:renderUp,pci:renderPci})[t]()}
+$('#ctabs').onclick=e=>{const b=e.target.closest('[data-ct]');if(b)ctab(b.dataset.ct)};
+function mode(m){cmode=m;$$('[data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));$('#v-cit').classList.toggle('on',m==='cit');$('#v-con').classList.toggle('on',m==='con');if(m==='con')ctab(ctabCur);window.scrollTo(0,0)}
+$$('[data-mode]').forEach(b=>b.onclick=()=>mode(b.dataset.mode));
+$('#mod').onclick=e=>{if(e.target.id==='mod'&&step!==3)closeM()};
+
+function renderAll(){renderQT();renderSteps();renderDebts();renderSum();if(step===2||step===3)renderPayStep();if(step===4&&D.paid[0])renderReceipt(D.paid[0]);if(cmode==='con')ctab(ctabCur)}
+PT.onLang(renderAll);
+renderAll();
+const h=location.hash.slice(1);if(h&&CT.find(c=>c[0]===h)){ctabCur=h;mode('con')}
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

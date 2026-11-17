@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lexa — AI assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column;overflow-x:hidden}
+.app{flex:1;display:grid;grid-template-columns:232px minmax(0,1fr);min-height:0;height:calc(100dvh - 45px)}
+.side{border-right:1px solid var(--line);background:var(--bg2);padding:16px 12px;display:flex;flex-direction:column;gap:6px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px}
+.orb{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--gold2),var(--mal) 55%,var(--mal2));box-shadow:0 0 24px color-mix(in srgb,var(--mal) 55%,transparent);position:relative;flex:none}
+.orb.think{animation:pulse 1.1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.08);box-shadow:0 0 36px color-mix(in srgb,var(--gold) 70%,transparent)}}
+.brand b{font-size:18px;letter-spacing:.02em}.brand small{display:block;color:var(--muted);font-size:11px;line-height:1.2}
+.nav{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;border:1px solid transparent;background:none;text-align:left;width:100%}
+.nav:hover{background:var(--panel2);color:var(--text)}
+.nav.on{background:color-mix(in srgb,var(--mal) 14%,transparent);border-color:color-mix(in srgb,var(--mal) 40%,transparent);color:var(--text)}
+.nav svg{width:18px;height:18px;flex:none}
+.side .stat{margin-top:auto;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding:12px 8px 0;display:grid;gap:6px}
+.side .stat b{color:var(--text)}
+.view{display:none;min-height:0;min-width:0}.view.on{display:flex}
+/* chat */
+#v-chat{display:none;grid-template-columns:minmax(0,1fr) 330px;min-height:0}
+#v-chat.on{display:grid}
+.chatcol{display:flex;flex-direction:column;min-height:0;min-width:0}
+.msgs{flex:1;overflow:auto;padding:22px clamp(12px,4vw,48px) 12px;scroll-behavior:smooth}
+.empty{max-width:640px;margin:6vh auto 0;text-align:center}
+.empty h1{font-size:clamp(24px,4vw,34px);margin:16px 0 6px;letter-spacing:-.01em}
+.empty .orb{width:64px;height:64px;margin:0 auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
+.chip{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:13px;transition:.15s;text-align:left}
+.chip:hover{border-color:var(--mal);transform:translateY(-1px)}
+.msg{display:flex;gap:12px;max-width:820px;margin:0 auto 18px}
+.msg .av{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;font-weight:800}
+.msg.u{flex-direction:row-reverse}
+.msg.u .av{background:var(--panel2);border:1px solid var(--line2)}
+.msg.u .bub{background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff;border-radius:18px 18px 4px 18px;padding:10px 14px;max-width:85%}
+.msg.a .av{background:radial-gradient(circle at 30% 30%,var(--gold2),var(--mal) 60%)}
+.msg.a .bub{flex:1;min-width:0}
+.bub p{margin:0 0 10px}.bub ul{margin:4px 0 10px;padding-left:20px}.bub li{margin:4px 0}
+.cite{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 4px;border-radius:6px;background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold2);font-size:11px;font-weight:800;cursor:pointer;border:none;vertical-align:2px;margin:0 1px}
+.cite:hover{background:var(--gold);color:#1a1306}
+.caret{display:inline-block;width:8px;height:16px;background:var(--mal3);vertical-align:-3px;animation:blink 1s steps(2) infinite;margin-left:2px;border-radius:2px}
+@keyframes blink{50%{opacity:0}}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px;font-size:12px;color:var(--muted)}
+.ib{border:1px solid var(--line2);background:transparent;border-radius:8px;padding:4px 8px;cursor:pointer;font-size:12px;color:var(--muted)}
+.ib:hover{border-color:var(--mal);color:var(--text)}.ib.sel{background:color-mix(in srgb,var(--mal) 20%,transparent);color:var(--mal3);border-color:var(--mal)}
+.ib.selbad{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red);border-color:var(--red)}
+.srcrow{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:thin}
+.src{flex:none;width:190px;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 10px;cursor:pointer;font-size:12px}
+.src:hover{border-color:var(--gold)}
+.src b{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.src span{color:var(--muted)}
+.reqcard{border:1px dashed var(--gold);border-radius:12px;padding:12px;margin-top:8px;background:color-mix(in srgb,var(--gold) 7%,transparent)}
+.composer{padding:10px clamp(12px,4vw,48px) 14px;border-top:1px solid var(--line);background:var(--bg)}
+.cbox{max-width:820px;margin:0 auto;display:flex;gap:8px;align-items:flex-end;background:var(--panel);border:1px solid var(--line2);border-radius:18px;padding:8px}
+.cbox:focus-within{border-color:var(--mal)}
+.cbox textarea{flex:1;border:none;background:transparent;outline:none;resize:none;min-height:24px;max-height:140px;padding:6px 8px}
+.send{width:38px;height:38px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff;display:grid;place-items:center;flex:none}
+.send:disabled{opacity:.4;cursor:default}
+.mic{width:38px;height:38px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;display:grid;place-items:center;flex:none}
+.mic.rec{background:var(--red);border-color:var(--red);color:#fff;animation:pulse 1s infinite}
+.hint{max-width:820px;margin:6px auto 0;font-size:11px;color:var(--dim);text-align:center}
+.rail{border-left:1px solid var(--line);background:var(--bg2);overflow:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.rail h3{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.pipe{display:grid;gap:6px}
+.step{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-size:13px;transition:.25s;position:relative}
+.step i{width:10px;height:10px;border-radius:50%;background:var(--line2);flex:none;transition:.25s}
+.step em{margin-left:auto;font-style:normal;font-size:11px;color:var(--dim)}
+.step.run{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step.run i{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.step.done i{background:var(--mal3)}
+.step.done{border-color:color-mix(in srgb,var(--mal) 45%,transparent)}
+.step+.step::before{content:"";position:absolute;left:14px;top:-7px;width:2px;height:6px;background:var(--line2)}
+.art{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel);font-size:13px;transition:.3s}
+.art.hl{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 20%,transparent)}
+.art .code{font-family:var(--mono);font-size:11px;color:var(--gold2)}
+.art h4{margin:2px 0 6px;font-size:14px}
+mark{background:color-mix(in srgb,var(--gold) 35%,transparent);color:inherit;border-radius:3px;padding:0 2px}
+.closeR{display:none}
+/* law search */
+.pane{flex:1;overflow:auto;padding:22px clamp(12px,4vw,40px)}
+.pane h2{margin:0 0 4px;font-size:22px}
+.wrap{max-width:980px;margin:0 auto}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.res{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:14px;margin-top:10px;cursor:pointer;transition:.15s}
+.res:hover{border-color:var(--mal)}
+.res .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bar{height:6px;border-radius:6px;background:var(--line);flex:1;min-width:80px;max-width:220px;overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--mal),var(--gold));border-radius:6px;transition:width .5s}
+.fchip{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600;color:var(--muted)}
+.fchip.on{background:var(--mal);border-color:var(--mal);color:#fff}
+/* appeals */
+.grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;margin-top:14px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi b{font-size:24px;display:block;font-variant-numeric:tabular-nums}.kpi span{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 6px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
+td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.tblwrap{max-height:460px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+textarea.input{min-height:110px;resize:vertical;font-size:13px}
+/* voice */
+.vcenter{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;text-align:center}
+.bigmic{width:120px;height:120px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(circle at 30% 30%,var(--gold2),var(--mal) 55%,var(--mal2));color:#fff;box-shadow:0 0 50px color-mix(in srgb,var(--mal) 50%,transparent);display:grid;place-items:center}
+.bigmic.rec{animation:pulse 1s infinite;background:radial-gradient(circle at 30% 30%,#ffb3b3,var(--red))}
+#wave{width:min(520px,90vw);height:90px}
+.vt{max-width:620px;min-height:48px;color:var(--muted)}
+.toast{position:fixed;right:16px;top:60px;z-index:2000;background:var(--panel);border:1px solid var(--mal);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);font-size:13px;transform:translateX(130%);transition:.3s;max-width:320px}
+.toast.on{transform:none}
+@media (max-width:1100px){#v-chat.on{grid-template-columns:minmax(0,1fr)}.rail{position:fixed;inset:auto 0 0 0;height:72dvh;z-index:900;border-left:none;border-top:1px solid var(--line2);border-radius:20px 20px 0 0;transform:translateY(105%);transition:.3s;box-shadow:var(--shadow)}.rail.open{transform:none}.closeR{display:inline-flex;align-self:flex-end}}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .side{flex-direction:row;padding:6px 8px;border-right:none;border-bottom:1px solid var(--line);overflow-x:auto;gap:4px}
+  .brand,.side .stat{display:none}
+  .nav{padding:7px 10px;font-size:13px;white-space:nowrap;width:auto}
+  .grid2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}
+  .msg .av{display:none}.msg.u .bub{max-width:92%}
+  .hidem2{display:none}
+}
+</style>
+</head>
+<body data-demo-en="Lexa — government AI assistant" data-demo-ru="Lexa — госассистент на ИИ">
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="orb" id="orb"></div><div><b>Lexa</b><small data-en="Republic of Nordania · e-Gov AI" data-ru="Республика Нордания · ИИ госуслуг"></small></div></div>
+    <button class="nav on" data-v="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span data-en="Citizen chat" data-ru="Чат с гражданином"></span></button>
+    <button class="nav" data-v="law"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><span data-en="Law search" data-ru="Поиск по законам"></span></button>
+    <button class="nav" data-v="appeals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span data-en="Appeals analytics" data-ru="Аналитика обращений"></span></button>
+    <button class="nav" data-v="voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span data-en="Voice" data-ru="Голос"></span></button>
+    <div class="stat">
+      <div><span data-en="Knowledge base" data-ru="База знаний"></span>: <b id="stDocs">0</b> <span data-en="articles" data-ru="статей"></span></div>
+      <div><span data-en="Answers today" data-ru="Ответов сегодня"></span>: <b id="stAns">0</b></div>
+      <div><span data-en="Helpful" data-ru="Полезно"></span>: <b id="stHelp">—</b></div>
+      <button class="btn" id="newChat" style="margin-top:6px;justify-content:center" data-en="+ New chat" data-ru="+ Новый чат"></button>
+    </div>
+  </aside>
+
+  <main style="min-height:0;min-width:0;display:flex">
+    <section class="view on" id="v-chat">
+      <div class="chatcol">
+        <div class="msgs" id="msgs"></div>
+        <div class="composer">
+          <div class="cbox">
+            <button class="mic" id="micBtn" title="Voice"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+            <textarea id="q" rows="1" data-en-ph="Ask about taxes, benefits, licences, migration…" data-ru-ph="Спросите о налогах, пособиях, лицензиях, миграции…"></textarea>
+            <button class="send" id="sendBtn" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+          <div class="hint" data-en="Answers are generated from the official Nordania regulations corpus with citations. Fictional data for demonstration." data-ru="Ответы строятся по официальному корпусу нормативных актов Нордании со ссылками. Данные вымышлены для демонстрации."></div>
+        </div>
+      </div>
+      <aside class="rail" id="rail">
+        <button class="ib closeR" id="closeRail" data-en="Close ✕" data-ru="Закрыть ✕"></button>
+        <div><h3 data-en="RAG pipeline" data-ru="Конвейер RAG"></h3>
+          <div class="pipe" id="pipe"></div>
+          <div class="mono muted" style="font-size:11px;margin-top:8px" id="pipeInfo"></div>
+        </div>
+        <div><h3 data-en="Sources" data-ru="Источники"></h3><div id="srcPanel" style="display:grid;gap:10px"></div></div>
+      </aside>
+    </section>
+
+    <section class="view" id="v-law"><div class="pane"><div class="wrap">
+      <h2 data-en="Regulation search" data-ru="Поиск по нормативным актам"></h2>
+      <p class="muted" style="margin:0 0 12px" data-en="BM25 ranking over the national corpus, in the interface language. Click an article to ask Lexa about it." data-ru="Ранжирование BM25 по национальному корпусу на языке интерфейса. Нажмите на статью, чтобы спросить Lexa."></p>
+      <input class="input" id="lawQ" data-en-ph="e.g. fine appeal deadline" data-ru-ph="например: обжалование штрафа срок">
+      <div class="row" style="margin-top:10px" id="cats"></div>
+      <div class="muted mono" style="font-size:12px;margin-top:10px" id="lawInfo"></div>
+      <div id="lawRes"></div>
+    </div></div></section>
+
+    <section class="view" id="v-appeals"><div class="pane"><div class="wrap">
+      <h2 data-en="Citizen appeals analytics" data-ru="Аналитика обращений граждан"></h2>
+      <p class="muted" style="margin:0 0 12px" data-en="Paste complaints (one per line) or use the sample of 30. Lexa classifies topic, sentiment and urgency, then routes each to a department." data-ru="Вставьте обращения (по одному в строке) или возьмите пример из 30. Lexa определит тему, тональность и срочность и направит в ведомство."></p>
+      <textarea class="input" id="apIn"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn pri" id="apRun" data-en="Analyse" data-ru="Анализировать"></button>
+        <button class="btn" id="apSample" data-en="Load 30 samples" data-ru="Загрузить 30 примеров"></button>
+        <button class="btn" id="apRouteAll" data-en="Route all urgent" data-ru="Направить все срочные"></button>
+        <span class="muted" id="apStatus" style="font-size:13px"></span>
+      </div>
+      <div class="kpis" id="apKpi"></div>
+      <div class="grid2">
+        <div class="card"><h3 style="margin:0 0 10px;font-size:15px" data-en="By topic" data-ru="По темам"></h3><div id="apChart"></div></div>
+        <div class="card"><h3 style="margin:0 0 10px;font-size:15px" data-en="Sentiment & urgency" data-ru="Тональность и срочность"></h3><div id="apSent"></div></div>
+      </div>
+      <div class="tblwrap" style="margin-top:14px"><table><thead><tr><th>#</th><th data-en="Appeal" data-ru="Обращение"></th><th data-en="Topic" data-ru="Тема"></th><th data-en="Tone" data-ru="Тон"></th><th data-en="Urgency" data-ru="Срочность"></th><th data-en="Route" data-ru="Маршрут"></th></tr></thead><tbody id="apTbl"></tbody></table></div>
+    </div></div></section>
+
+    <section class="view" id="v-voice"><div class="vcenter">
+      <h2 style="margin:0" data-en="Talk to Lexa" data-ru="Поговорите с Lexa"></h2>
+      <p class="muted" style="margin:0;max-width:520px" data-en="Tap the microphone and ask a question. Lexa transcribes it, answers in chat and reads the answer aloud." data-ru="Нажмите на микрофон и задайте вопрос. Lexa распознает речь, ответит в чате и прочитает ответ вслух."></p>
+      <button class="bigmic" id="bigMic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      <canvas id="wave"></canvas>
+      <div class="vt" id="vText"></div>
+      <div class="row" style="justify-content:center">
+        <button class="btn gold" id="speakLast" data-en="▶ Read last answer aloud" data-ru="▶ Прочитать последний ответ"></button>
+        <button class="btn" id="stopSpeak" data-en="■ Stop" data-ru="■ Стоп"></button>
+        <select class="input" id="rate" style="width:auto"><option value="0.9">0.9×</option><option value="1" selected>1.0×</option><option value="1.2">1.2×</option></select>
+      </div>
+    </div></section>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+const S={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){const t=$('#toast');t.innerHTML=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2600)}
+
+/* ---------- corpus (fictional Republic of Nordania) ---------- */
+const CAT={tax:['Taxes','Налоги'],ben:['Benefits','Пособия'],bus:['Business','Бизнес'],lic:['Licences','Лицензии'],mig:['Migration','Миграция'],fin:['Fines','Штрафы'],id:['Documents','Документы'],soc:['Social','Социальное']};
+const C=[
+['tax','Tax Code art. 12','Налоговый кодекс, ст. 12','Self-employed tax rate','Ставка налога для самозанятых','Self-employed persons pay 4 % on income received from individuals and 6 % on income from companies. The regime is available while annual income stays below 2,400,000 NDK. Registration takes minutes in the Lexa app and no annual return is required.','Самозанятые платят 4 % с доходов от физических лиц и 6 % с доходов от компаний. Режим доступен, пока годовой доход не превышает 2 400 000 NDK. Регистрация занимает несколько минут в приложении, годовая декларация не нужна.'],
+['tax','Tax Code art. 18','Налоговый кодекс, ст. 18','Housing purchase deduction','Вычет при покупке жилья','A resident buying a first home may claim a tax deduction of 13 % on up to 2,000,000 NDK of the price. Interest on a mortgage is deductible on up to 3,000,000 NDK. The claim is filed with the annual return together with the purchase contract.','Резидент, купивший первое жильё, вправе получить налоговый вычет 13 % с суммы до 2 000 000 NDK. Проценты по ипотеке вычитаются с суммы до 3 000 000 NDK. Заявление подаётся с годовой декларацией вместе с договором купли-продажи.'],
+['tax','Tax Code art. 31','Налоговый кодекс, ст. 31','Annual return deadline','Срок подачи декларации','The annual personal income tax return must be filed by 30 April of the following year. Tax due under the return must be paid by 15 July. Returns can be filed online with an electronic signature.','Годовая декларация о доходах физического лица подаётся до 30 апреля следующего года. Налог по декларации уплачивается до 15 июля. Подать декларацию можно онлайн с электронной подписью.'],
+['tax','Tax Code art. 44','Налоговый кодекс, ст. 44','Late filing penalty','Штраф за просрочку декларации','Late filing of a tax return is fined 5 % of the unpaid tax for each full or partial month of delay. The penalty cannot exceed 30 % of the tax and is not less than 1,000 NDK. The penalty is waived for first-time delays under 10 days.','За несвоевременную подачу декларации взимается штраф 5 % от неуплаченного налога за каждый полный или неполный месяц просрочки. Штраф не превышает 30 % суммы налога и составляет не менее 1 000 NDK. При первой просрочке менее 10 дней штраф не назначается.'],
+['tax','Property Tax Act art. 6','Закон о налоге на имущество, ст. 6','Property tax rates','Ставки налога на имущество','Property tax on homes is charged at 0.1 % of cadastral value, rising to 2 % for properties above 300,000,000 NDK. The tax is paid annually by 1 December. Pensioners are exempt for one home of their choice.','Налог на жильё составляет 0,1 % кадастровой стоимости и до 2 % для объектов дороже 300 000 000 NDK. Налог уплачивается ежегодно до 1 декабря. Пенсионеры освобождаются от налога по одному объекту на выбор.'],
+['ben','Social Support Act art. 3','Закон о соцподдержке, ст. 3','Child benefit','Пособие на ребёнка','Parents receive a monthly child benefit of 9,500 NDK for each child under 6 years old. The application must be submitted within 6 months of birth through the portal or a service centre. Payments start the month after approval.','Родители получают ежемесячное пособие 9 500 NDK на каждого ребёнка до 6 лет. Заявление подаётся в течение 6 месяцев после рождения через портал или центр услуг. Выплаты начинаются со следующего месяца после одобрения.'],
+['ben','Employment Act art. 7','Закон о занятости, ст. 7','Unemployment benefit','Пособие по безработице','The unemployment benefit equals 75 % of average salary for the first 3 months and 60 % for the next 3 months, capped at 45,000 NDK per month. A person must register at the employment centre within 14 days of dismissal. Benefit stops after two refused job offers.','Пособие по безработице составляет 75 % средней зарплаты первые 3 месяца и 60 % следующие 3 месяца, но не более 45 000 NDK в месяц. Встать на учёт в центре занятости нужно в течение 14 дней после увольнения. Выплата прекращается после двух отказов от вакансий.'],
+['ben','Pensions Act art. 11','Закон о пенсиях, ст. 11','Pension indexation','Индексация пенсий','State pensions are indexed every year on 1 January by the consumer price index, but not less than 4 %. Working pensioners receive indexation in full. Recalculation is automatic and requires no application.','Государственные пенсии индексируются ежегодно 1 января на индекс потребительских цен, но не менее чем на 4 %. Работающие пенсионеры получают индексацию в полном объёме. Перерасчёт выполняется автоматически, заявление не нужно.'],
+['ben','Social Support Act art. 15','Закон о соцподдержке, ст. 15','Disability allowance','Выплата по инвалидности','Persons with a confirmed disability receive a monthly allowance of 18,000 to 32,000 NDK depending on the group. The medical assessment is requested online and completed within 30 days. Free public transport is granted for the holder and one companion.','Лица с подтверждённой инвалидностью получают ежемесячную выплату от 18 000 до 32 000 NDK в зависимости от группы. Медицинское освидетельствование заказывается онлайн и проводится за 30 дней. Владелец и один сопровождающий ездят в общественном транспорте бесплатно.'],
+['ben','Housing Code art. 19','Жилищный кодекс, ст. 19','Housing utility subsidy','Субсидия на коммунальные услуги','A household receives a utility subsidy when utility bills exceed 18 % of total household income. The subsidy covers the difference and is granted for 6 months. Renewal requires updated income statements.','Семья получает субсидию на коммунальные услуги, если платежи превышают 18 % совокупного дохода. Субсидия покрывает разницу и назначается на 6 месяцев. Для продления нужны новые справки о доходах.'],
+['bus','Business Registration Act art. 2','Закон о регистрации бизнеса, ст. 2','Sole proprietor registration','Регистрация ИП','A sole proprietor is registered within 1 working day. Online registration with an electronic signature is free; registration at a service centre costs 800 NDK. The tax regime can be chosen during registration.','Индивидуальный предприниматель регистрируется за 1 рабочий день. Онлайн-регистрация с электронной подписью бесплатна, в центре услуг — 800 NDK. Налоговый режим можно выбрать при регистрации.'],
+['bus','Companies Act art. 5','Закон о компаниях, ст. 5','LLC registration','Регистрация ООО','A limited liability company is registered within 3 working days. Minimum share capital is 10,000 NDK. Founders submit the charter, founders decision and a legal address confirmation.','Общество с ограниченной ответственностью регистрируется за 3 рабочих дня. Минимальный уставный капитал — 10 000 NDK. Учредители подают устав, решение учредителей и подтверждение юридического адреса.'],
+['bus','SME Support Act art. 9','Закон о поддержке МСП, ст. 9','Startup grant','Грант для стартапов','Businesses in their first year in priority sectors (IT, agriculture, tourism) may receive a grant of up to 500,000 NDK. The grant requires a business plan and 20 % co-financing. Results are reported after 12 months.','Бизнес первого года работы в приоритетных отраслях (ИТ, сельское хозяйство, туризм) может получить грант до 500 000 NDK. Нужны бизнес-план и софинансирование 20 %. Отчёт о результатах — через 12 месяцев.'],
+['lic','Licensing Act art. 4','Закон о лицензировании, ст. 4','Alcohol retail licence','Лицензия на продажу алкоголя','A licence for retail sale of alcohol is issued for 5 years for a fee of 65,000 NDK. The shop must be at least 100 metres from schools and hospitals. Sales are prohibited between 23:00 and 08:00.','Лицензия на розничную продажу алкоголя выдаётся на 5 лет, пошлина 65 000 NDK. Магазин должен находиться не ближе 100 метров от школ и больниц. Продажа запрещена с 23:00 до 08:00.'],
+['lic','Licensing Act art. 8','Закон о лицензировании, ст. 8','Taxi licence','Лицензия на такси','A taxi licence is issued within 5 working days and is valid for 5 years. The vehicle must be under 10 years old and pass a technical inspection. The driver needs at least 3 years of driving experience.','Разрешение на такси выдаётся за 5 рабочих дней и действует 5 лет. Автомобиль должен быть моложе 10 лет и пройти техосмотр. Стаж водителя — не менее 3 лет.'],
+['lic','Sanitary Code art. 12','Санитарный кодекс, ст. 12','Food service permit','Разрешение для общепита','Cafes and restaurants need a sanitary permit before opening. Inspection is scheduled within 10 days of the application. The permit is free and valid until the premises or menu type change.','Кафе и рестораны получают санитарное разрешение до открытия. Проверка назначается в течение 10 дней после заявки. Разрешение бесплатное и действует до смены помещения или типа меню.'],
+['mig','Migration Act art. 6','Закон о миграции, ст. 6','Work permit','Разрешение на работу','A work permit for a foreign citizen is requested by the employer and issued within 15 working days. It is valid for 2 years and may be renewed. Permits are issued within the annual quota approved by the government.','Разрешение на работу иностранцу запрашивает работодатель, оно выдаётся за 15 рабочих дней. Действует 2 года и может быть продлено. Разрешения выдаются в пределах годовой квоты, утверждённой правительством.'],
+['mig','Migration Act art. 10','Закон о миграции, ст. 10','Temporary residence','Временное проживание (ВНЖ)','A temporary residence permit is issued for 3 years to spouses of citizens, students and investors. Investors must invest at least 5,000,000 NDK. The application is reviewed within 60 days.','Разрешение на временное проживание выдаётся на 3 года супругам граждан, студентам и инвесторам. Инвестор должен вложить не менее 5 000 000 NDK. Заявление рассматривается 60 дней.'],
+['mig','Migration Act art. 14','Закон о миграции, ст. 14','Registration of foreigners','Регистрация иностранцев','A foreign citizen must be registered at the place of stay within 7 days of arrival. The host or hotel files the notification online. Failure to register is fined 5,000 to 10,000 NDK.','Иностранный гражданин должен быть зарегистрирован по месту пребывания в течение 7 дней после прибытия. Уведомление онлайн подаёт принимающая сторона или гостиница. За отсутствие регистрации — штраф 5 000–10 000 NDK.'],
+['mig','Citizenship Act art. 21','Закон о гражданстве, ст. 21','Naturalisation','Получение гражданства','A foreigner may apply for citizenship after 8 years of legal residence. The applicant must pass a Nordanian language exam at level B1 and a civics test. Dual citizenship is allowed.','Иностранец может подать на гражданство после 8 лет законного проживания. Нужно сдать экзамен по нордланскому языку на уровне B1 и тест по основам государства. Двойное гражданство разрешено.'],
+['fin','Traffic Code art. 3','Кодекс дорожного движения, ст. 3','Speeding fines','Штрафы за превышение скорости','Exceeding the speed limit by 20 to 40 km/h is fined 2,500 NDK, and by more than 40 km/h — 7,500 NDK. A 50 % discount applies if the fine is paid within 20 days. Repeated violations may lead to licence suspension.','Превышение скорости на 20–40 км/ч — штраф 2 500 NDK, более чем на 40 км/ч — 7 500 NDK. При оплате в течение 20 дней действует скидка 50 %. Повторные нарушения могут привести к лишению прав.'],
+['fin','Traffic Code art. 7','Кодекс дорожного движения, ст. 7','Parking fines','Штрафы за парковку','Parking in a prohibited place is fined 3,000 NDK; parking in a disabled space — 10,000 NDK. Towed vehicles are returned after the fine and storage fee are paid. Photos from cameras are attached to the decision.','Стоянка в запрещённом месте — штраф 3 000 NDK, на месте для инвалидов — 10 000 NDK. Эвакуированный автомобиль возвращают после оплаты штрафа и хранения. К постановлению прикладываются фото с камер.'],
+['fin','Administrative Code art. 11','Административный кодекс, ст. 11','Appeal of a fine','Обжалование штрафа','Any administrative fine can be appealed within 10 days of receiving the decision. The appeal is filed online, to the issuing authority or to court, and is reviewed within 15 days. Payment is suspended while the appeal is pending.','Любой административный штраф можно обжаловать в течение 10 дней с момента получения постановления. Жалоба подаётся онлайн в орган, вынесший постановление, или в суд и рассматривается 15 дней. На время рассмотрения оплата приостанавливается.'],
+['id','Identity Documents Act art. 2','Закон об удостоверениях, ст. 2','Passport replacement','Замена паспорта','The national passport must be replaced at the age of 20 and 45 within 30 days. The fee is 1,500 NDK and the new passport is ready in 10 days. A lost passport is replaced in 5 days after a police report.','Паспорт необходимо заменить в 20 и 45 лет в течение 30 дней. Пошлина 1 500 NDK, новый паспорт готов через 10 дней. Утерянный паспорт меняют за 5 дней после заявления в полицию.'],
+['id','Traffic Code art. 15','Кодекс дорожного движения, ст. 15','Driving licence renewal','Замена водительского удостоверения','A driving licence is valid for 10 years. Renewal requires a medical certificate and a fee of 2,000 NDK; it can be done online with home delivery. Driving with an expired licence is fined 5,000 NDK.','Водительское удостоверение действует 10 лет. Для замены нужны медицинская справка и пошлина 2 000 NDK; оформить можно онлайн с доставкой домой. Езда с просроченными правами — штраф 5 000 NDK.'],
+['id','Digital Services Act art. 1','Закон о цифровых услугах, ст. 1','Electronic signature','Электронная подпись','Every citizen may obtain a free qualified electronic signature in the state app after identity verification. The signature has the same legal force as a handwritten one. It is valid for 3 years and is renewed in the app.','Каждый гражданин может бесплатно получить квалифицированную электронную подпись в госприложении после подтверждения личности. Подпись имеет ту же силу, что и собственноручная. Действует 3 года и продлевается в приложении.'],
+['soc','Education Act art. 3','Закон об образовании, ст. 3','Kindergarten enrolment','Запись в детский сад','Children can be placed in the kindergarten queue from birth via the portal. Priority places go to children of single parents, large families and medical staff. Places are allocated every year on 1 June.','Ребёнка можно поставить в очередь в детский сад с рождения через портал. Приоритет у детей одиноких родителей, многодетных семей и медработников. Места распределяются ежегодно 1 июня.'],
+['soc','Health Insurance Act art. 4','Закон о медстраховании, ст. 4','Health insurance policy','Полис медстрахования','Every resident receives a free compulsory health insurance policy. The clinic can be changed once a year or after moving. The policy is digital and shown in the state app.','Каждый резидент бесплатно получает полис обязательного медстрахования. Поликлинику можно сменить раз в год или при переезде. Полис цифровой и отображается в госприложении.']
+].map((a,i)=>({id:i,cat:a[0],code:[a[1],a[2]],title:[a[3],a[4]],text:[a[5],a[6]]}));
+$('#stDocs').textContent=C.length;
+
+/* ---------- BM25 ---------- */
+const STOP=new Set('the a an of to in on for and or is are be by with what how do i my can me when where which who does it this that at from as about need get much many there was will should have has you your please tell'.split(' ').concat('и в во на по с со к ко о об от до для из за что как какой какая какие ли же я мне мой моя можно нужно ли а не это то у есть ещё или бы при раз через сколько где когда кто чем если пожалуйста расскажи скажи'.split(' ')));
+function stem(w){if(/^\d/.test(w))return w;return w.length>5?w.slice(0,5):w}
+function tok(s){return (s.toLowerCase().replace(/ё/g,'е').match(/[\p{L}\p{N}]+/gu)||[]).filter(w=>w.length>1&&!STOP.has(w)).map(stem)}
+const IDX={};
+function buildIndex(li){const docs=C.map(a=>{const t=tok(a.title[li]+' '+a.title[li]+' '+CAT[a.cat][li]+' '+a.text[li]);const tf={};t.forEach(w=>tf[w]=(tf[w]||0)+1);return{tf,len:t.length}});
+  const df={};docs.forEach(d=>Object.keys(d.tf).forEach(w=>df[w]=(df[w]||0)+1));
+  const avg=docs.reduce((s,d)=>s+d.len,0)/docs.length;return{docs,df,avg}}
+function bm25(q,li,cat){const I=IDX[li]||(IDX[li]=buildIndex(li));const qt=[...new Set(tok(q))];const N=C.length,k1=1.4,b=.75;
+  const res=C.map((a,i)=>{if(cat&&a.cat!==cat)return null;const d=I.docs[i];let s=0;const hit=[];qt.forEach(w=>{const f=d.tf[w];if(!f)return;hit.push(w);const idf=Math.log(1+(N-I.df[w]+.5)/(I.df[w]+.5));s+=idf*(f*(k1+1))/(f+k1*(1-b+b*d.len/I.avg))});return{a,s,hit}}).filter(r=>r&&r.s>0);
+  res.sort((x,y)=>y.s-x.s);return{res,qt}}
+function rerank(res,q,li){const ql=q.toLowerCase();return res.map(r=>{const tt=tok(r.a.title[li]);const bonus=tt.filter(w=>r.hit.includes(w)).length*.6+(r.hit.length>1?.4*r.hit.length:0)+(ql.includes(r.a.code[li].toLowerCase().split(' ').pop())?1:0);return{...r,rs:r.s+bonus}}).sort((x,y)=>y.rs-x.rs)}
+function highlight(text,stems){if(!stems||!stems.length)return esc(text);return esc(text).replace(/[\p{L}\p{N}]+/gu,w=>stems.includes(stem(w.toLowerCase().replace(/ё/g,'е')))?'<mark>'+w+'</mark>':w)}
+
+/* ---------- language detection ---------- */
+function detect(q){if(/[а-яё]/i.test(q))return 'ru';if(/\b(halo|hai|selamat|apa kabar|terima kasih|bagaimana|saya|pajak|izin|tolong|bisa|kerja)\b/i.test(q))return 'id';return 'en'}
+function idAnswer(q){const l=q.toLowerCase();
+  if(/terima kasih/.test(l))return 'Sama-sama! Senang bisa membantu. Jika ada pertanyaan lain tentang layanan publik Nordania, silakan tanyakan.';
+  if(/pajak/.test(l))return 'Untuk pekerja mandiri, tarif pajak di Nordania adalah **4 %** dari penghasilan dari perorangan dan **6 %** dari perusahaan, dengan batas penghasilan 2.400.000 NDK per tahun [1].';
+  if(/izin|kerja|visa/.test(l))return 'Izin kerja untuk warga asing diajukan oleh pemberi kerja dan diterbitkan dalam **15 hari kerja**. Izin berlaku **2 tahun** dan dapat diperpanjang [1].';
+  return 'Halo! Saya **Lexa**, asisten AI pemerintah Republik Nordania. Saya bisa membantu tentang pajak, tunjangan, izin usaha, migrasi, dan denda. Untuk jawaban lengkap dengan kutipan hukum, silakan bertanya dalam bahasa Inggris atau Rusia. Apa yang bisa saya bantu?'}
+
+/* ---------- pipeline ---------- */
+const STEPS=[['query','Query','Запрос'],['retrieve','Retrieve','Поиск'],['rerank','Rerank','Переранж.'],['generate','Generate','Генерация'],['cite','Cite','Цитаты']];
+function drawPipe(){$('#pipe').innerHTML=STEPS.map(s=>`<div class="step" id="st-${s[0]}"><i></i><span>${PT.t(s[1],s[2])}</span><em></em></div>`).join('')}
+function stepState(k,st,info){const e=$('#st-'+k);if(!e)return;e.classList.remove('run','done');if(st)e.classList.add(st);if(info!=null)e.querySelector('em').textContent=info}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ---------- chat ---------- */
+let hist=S.get('lexa-hist',[]), fb=S.get('lexa-fb',{}), busy=false, lastAnswer=S.get('lexa-last',{text:'',lang:'en'});
+let stats=S.get('lexa-stats',{ans:0});
+function updStats(){$('#stAns').textContent=stats.ans;const v=Object.values(fb);$('#stHelp').textContent=v.length?Math.round(v.filter(x=>x>0).length/v.length*100)+'%':'—'}
+const SUG={en:['What is the tax rate for self-employed?','How do I appeal a parking fine?','Child benefit amount and how to apply','How long does LLC registration take?','Work permit for a foreign employee','Halo, apa kabar?'],ru:['Какая ставка налога для самозанятых?','Как обжаловать штраф за парковку?','Пособие на ребёнка: сумма и как подать','Сколько регистрируется ООО?','Разрешение на работу для иностранца','Когда менять паспорт?']};
+function fmt(t){return esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[(\d+)\]/g,'<button class="cite" data-c="$1">$1</button>').split('\n\n').map(p=>p.startsWith('• ')?'<ul>'+p.split('\n').map(l=>'<li>'+l.slice(2)+'</li>').join('')+'</ul>':'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('')}
+function renderEmpty(){$('#msgs').innerHTML=`<div class="empty"><div class="orb"></div><h1>${PT.t('How can I help you today?','Чем могу помочь?')}</h1><p class="muted">${PT.t('I answer questions about Nordania laws and public services, citing the exact article.','Отвечаю на вопросы о законах и госуслугах Нордании со ссылкой на точную статью.')}</p><div class="chips">${SUG[PT.lang].map(s=>`<button class="chip">${esc(s)}</button>`).join('')}</div></div>`;$$('#msgs .chip').forEach(b=>b.onclick=()=>ask(b.textContent))}
+function msgHTML(m,i){if(m.role==='u')return `<div class="msg u"><div class="av">${PT.t('You','Вы').slice(0,2)}</div><div class="bub">${esc(m.text)}</div></div>`;
+  const srcs=(m.src||[]).map((id,k)=>`<div class="src" data-a="${id}" data-l="${m.li}"><span>[${k+1}] ${esc(C[id].code[m.li])}</span><b>${esc(C[id].title[m.li])}</b></div>`).join('');
+  const f=fb[m.id]||0;
+  return `<div class="msg a" data-i="${i}"><div class="av"></div><div class="bub">${srcs?`<div class="srcrow">${srcs}</div>`:''}<div class="body">${fmt(m.text)}</div>${m.req?reqHTML(m):''}<div class="meta"><button class="ib ${f>0?'sel':''}" data-fb="1" title="Helpful">👍</button><button class="ib ${f<0?'selbad':''}" data-fb="-1" title="Not helpful">👎</button><button class="ib" data-act="copy">${PT.t('Copy','Копировать')}</button><button class="ib" data-act="speak">🔊 ${PT.t('Listen','Слушать')}</button>${m.ms?`<span class="mono" style="margin-left:auto">${m.ms} ms · ${m.src?m.src.length:0} ${PT.t('sources','ист.')}</span>`:''}</div></div></div>`}
+function reqHTML(m){if(m.reqDone)return `<div class="reqcard">✅ ${PT.t('Official request','Официальный запрос')} <b class="mono">${m.reqDone}</b> ${PT.t('registered. Answer within 15 working days to your e-Gov inbox.','зарегистрирован. Ответ в течение 15 рабочих дней в личный кабинет.')}</div>`;
+  return `<div class="reqcard"><b>${PT.t('Create an official request?','Создать официальный запрос?')}</b><div class="muted" style="font-size:13px;margin:4px 0 8px">${PT.t('A civil servant will answer your question personally.','Госслужащий ответит на ваш вопрос лично.')}</div><button class="btn gold" data-act="req">${PT.t('Create request','Создать запрос')}</button></div>`}
+function renderAll(){if(!hist.length){renderEmpty();return}$('#msgs').innerHTML=hist.map(msgHTML).join('');bindMsgs();$('#msgs').scrollTop=1e9}
+function bindMsgs(){
+  $$('#msgs .cite').forEach(b=>b.onclick=()=>{const m=hist[+b.closest('.msg').dataset.i];const id=m.src&&m.src[+b.dataset.c-1];if(id!=null)openSource(m,id)});
+  $$('#msgs .src').forEach(b=>b.onclick=()=>{const m=hist[+b.closest('.msg').dataset.i];openSource(m,+b.dataset.a)});
+  $$('#msgs [data-fb]').forEach(b=>b.onclick=()=>{const m=hist[+b.closest('.msg').dataset.i];const v=+b.dataset.fb;fb[m.id]=fb[m.id]===v?0:v;S.set('lexa-fb',fb);updStats();renderAll();toast(v>0?PT.t('Thanks! Feedback improves ranking.','Спасибо! Отзыв улучшает ранжирование.'):PT.t('Noted. The answer is sent for expert review.','Учтено. Ответ отправлен на проверку эксперту.'))});
+  $$('#msgs [data-act]').forEach(b=>b.onclick=()=>{const m=hist[+b.closest('.msg').dataset.i];const a=b.dataset.act;
+    if(a==='copy'){try{navigator.clipboard.writeText(m.text.replace(/\*\*/g,''));toast(PT.t('Copied','Скопировано'))}catch(e){}}
+    if(a==='speak')speak(m.text,m.lang);
+    if(a==='req'){m.reqDone='NRD-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*9e5)+1e5);save();renderAll();toast(PT.t('Request registered','Запрос зарегистрирован'))}})}
+function save(){S.set('lexa-hist',hist.slice(-40))}
+function openSource(m,id){const li=m.li;const stems=m.stems||[];
+  $('#srcPanel').innerHTML=(m.src||[id]).map((x,k)=>{const a=C[x];return `<div class="art ${x===id?'hl':''}" id="art-${x}"><div class="code">[${k+1}] ${esc(a.code[li])} · ${CAT[a.cat][li]}</div><h4>${highlight(a.title[li],stems)}</h4><div>${highlight(a.text[li],stems)}</div></div>`}).join('');
+  $('#rail').classList.add('open');const el=$('#art-'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'})}
+
+async function ask(q){q=q.trim();if(!q||busy)return;busy=true;$('#sendBtn').disabled=true;
+  if(!hist.length)$('#msgs').innerHTML='';
+  const lang=detect(q);const li=lang==='ru'?1:0;
+  hist.push({role:'u',text:q});const m={role:'a',id:Date.now().toString(36),text:'',lang,li,src:[]};hist.push(m);
+  $('#msgs').insertAdjacentHTML('beforeend',msgHTML(hist[hist.length-2],hist.length-2)+`<div class="msg a" data-i="${hist.length-1}"><div class="av"></div><div class="bub"><div class="srcrow" id="liveSrc"></div><div class="body" id="live"><span class="caret"></span></div></div></div>`);
+  $('#msgs').scrollTop=1e9;$('#orb').classList.add('think');
+  const t0=performance.now();drawPipe();
+  stepState('query','run');await wait(260);
+  const qt=tok(q);stepState('query','done',lang.toUpperCase()+' · '+qt.length+' tok');
+  let text='',top=[];
+  if(lang==='id'){stepState('retrieve','run');await wait(300);stepState('retrieve','done','ID');
+    const l=q.toLowerCase();if(/pajak/.test(l))top=[0];else if(/izin|kerja|visa/.test(l))top=[16];
+    stepState('rerank','done','—');text=idAnswer(q)}
+  else{stepState('retrieve','run');await wait(380);const r=bm25(q,li);stepState('retrieve','done',r.res.length+' '+PT.t('hits','найд.'));
+    stepState('rerank','run');await wait(320);const rr=rerank(r.res,q,li);const best=rr[0]?rr[0].rs:0;top=rr.filter(x=>x.rs>=Math.max(1.2,best*.45)).slice(0,3);stepState('rerank','done','top '+top.length);
+    m.stems=r.qt;$('#pipeInfo').textContent=`BM25 k1=1.4 b=0.75 · ${C.length} docs · ${rr.slice(0,5).map(x=>x.rs.toFixed(2)).join(' / ')}`;
+    text=compose(q,top,li);top=top.map(x=>x.a.id)}
+  m.src=top;
+  $('#liveSrc').innerHTML=top.map((id,k)=>`<div class="src" data-a="${id}"><span>[${k+1}] ${esc(C[id].code[li])}</span><b>${esc(C[id].title[li])}</b></div>`).join('');
+  $$('#liveSrc .src').forEach(b=>b.onclick=()=>openSource(m,+b.dataset.a));
+  stepState('generate','run');
+  const parts=text.match(/\S+\s*/g)||[];let out='';
+  for(let i=0;i<parts.length;i++){out+=parts[i];if(i%2===0||i===parts.length-1){$('#live').innerHTML=fmt(out)+'<span class="caret"></span>';$('#msgs').scrollTop=1e9}await wait(18+Math.random()*34)}
+  stepState('generate','done',parts.length+' tok');stepState('cite','run');await wait(220);stepState('cite','done',top.length+' ✓');
+  m.text=text;m.ms=Math.round(performance.now()-t0);if(!top.length&&lang!=='id')m.req=true;
+  lastAnswer={text,lang};S.set('lexa-last',lastAnswer);stats.ans++;S.set('lexa-stats',stats);updStats();
+  save();renderAll();$('#orb').classList.remove('think');busy=false;$('#sendBtn').disabled=!$('#q').value.trim();
+  if(top.length)openSourceQuiet(m);
+  if(voiceMode){speak(text,lang);voiceMode=false}}
+function openSourceQuiet(m){const keep=$('#rail').classList.contains('open');openSource(m,m.src[0]);if(!keep&&matchMedia('(max-width:1100px)').matches)$('#rail').classList.remove('open')}
+function bestSentence(text,stems){const ss=text.match(/[^.!?]+[.!?]+/g)||[text];let best=ss[0],bs=-1;ss.forEach((s,i)=>{const t=tok(s);const sc=t.filter(w=>stems.includes(w)).length-i*.1;if(sc>bs){bs=sc;best=s}});return best.trim()}
+function compose(q,top,li){const T=(e,r)=>li?r:e;
+  if(!top.length)return T("I could not find a regulation that answers this question in the national corpus. I don't want to guess on legal matters.\n\nYou can rephrase the question, or create an official request — a civil servant will reply personally.","Я не нашла в национальном корпусе нормы, которая отвечает на этот вопрос. В правовых вопросах я не угадываю.\n\nМожно переформулировать вопрос или создать официальный запрос — госслужащий ответит лично.");
+  const stems=tok(q);const a0=top[0].a;
+  let s=T(`Here is what Nordanian law says about **${a0.title[0].toLowerCase()}**:`,`Вот что говорит законодательство Нордании о теме «**${a0.title[1]}**»:`)+'\n\n';
+  const ss=a0.text[li].match(/[^.!?]+[.!?]+/g)||[a0.text[li]];
+  s+=ss.slice(0,2).join(' ').trim().replace(/(\d[\d,\s]*(?:NDK|%|days|дней|дня|рабочих дней|working days|years|лет|года|months|месяцев))/g,'**$1**')+' [1]\n\n';
+  if(top.length>1){s+=T('Related provisions:','Связанные нормы:')+'\n';s+=top.slice(1).map((x,k)=>'• '+T('Under ','Согласно ')+x.a.code[li]+': '+bestSentence(x.a.text[li],stems).replace(/\.$/,'')+'. ['+(k+2)+']').join('\n')+'\n\n'}
+  const rest=ss.slice(2).join(' ').trim();if(rest)s+=T('Also note: ','Обратите внимание: ')+rest+' [1]\n\n';
+  const next={tax:T('You can file and pay online in the e-Gov app with your electronic signature.','Подать и оплатить можно онлайн в госприложении с электронной подписью.'),ben:T('You can check eligibility and apply in the Benefits section of the portal.','Проверить право и подать заявление можно в разделе «Пособия» на портале.'),bus:T('Start registration in the Business section — online it is free.','Начните регистрацию в разделе «Бизнес» — онлайн это бесплатно.'),lic:T('Apply for the licence in the Licences section; status updates come to your inbox.','Подайте заявку в разделе «Лицензии»; статус придёт в личный кабинет.'),mig:T('The Migration Service handles these requests; documents are uploaded online.','Такие заявления рассматривает Миграционная служба; документы загружаются онлайн.'),fin:T('Open the Fines section to pay with the discount or file an appeal.','Откройте раздел «Штрафы», чтобы оплатить со скидкой или подать жалобу.'),id:T('Book a slot at a service centre or apply online with home delivery.','Запишитесь в центр услуг или подайте заявление онлайн с доставкой.'),soc:T('Everything is available in your personal e-Gov account.','Всё доступно в личном кабинете на портале.')}[a0.cat];
+  return s+'**'+T('Next step: ','Что дальше: ')+'**'+next}
+
+/* ---------- composer ---------- */
+const qEl=$('#q');
+qEl.addEventListener('input',()=>{qEl.style.height='auto';qEl.style.height=Math.min(140,qEl.scrollHeight)+'px';$('#sendBtn').disabled=busy||!qEl.value.trim()});
+qEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+function send(){const v=qEl.value;qEl.value='';qEl.style.height='auto';$('#sendBtn').disabled=true;ask(v)}
+$('#sendBtn').onclick=send;
+$('#newChat').onclick=()=>{hist=[];save();renderEmpty();$('#srcPanel').innerHTML=`<div class="muted" style="font-size:13px">${PT.t('Sources appear here after each answer.','Источники появятся здесь после ответа.')}</div>`;drawPipe();go('chat')};
+$('#closeRail').onclick=()=>$('#rail').classList.remove('open');
+
+/* ---------- views ---------- */
+function go(v){$$('.nav').forEach(n=>n.classList.toggle('on',n.dataset.v===v));$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));S.set('lexa-view',v);if(v==='law')lawSearch();if(v==='appeals'&&!apData)runAppeals();if(v==='voice')drawWave()}
+$$('.nav').forEach(n=>n.onclick=()=>go(n.dataset.v));
+
+/* ---------- law search ---------- */
+let lawCat='';
+function drawCats(){$('#cats').innerHTML=`<button class="fchip ${!lawCat?'on':''}" data-c="">${PT.t('All','Все')}</button>`+Object.keys(CAT).map(k=>`<button class="fchip ${lawCat===k?'on':''}" data-c="${k}">${CAT[k][PT.lang==='ru'?1:0]}</button>`).join('');$$('#cats .fchip').forEach(b=>b.onclick=()=>{lawCat=b.dataset.c;drawCats();lawSearch()})}
+function lawSearch(){const li=PT.lang==='ru'?1:0;const q=$('#lawQ').value.trim();const t0=performance.now();let rows,stems=[];
+  if(q){const r=bm25(q,li,lawCat);rows=r.res;stems=r.qt}else rows=C.filter(a=>!lawCat||a.cat===lawCat).map(a=>({a,s:0,hit:[]}));
+  const mx=rows.length?Math.max(...rows.map(r=>r.s),0.001):1;
+  $('#lawInfo').textContent=`${rows.length} ${PT.t('articles','статей')} · ${(performance.now()-t0).toFixed(1)} ms${q?' · '+PT.t('terms','термины')+': '+stems.join(', '):''}`;
+  $('#lawRes').innerHTML=rows.length?rows.map(r=>`<div class="res" data-a="${r.a.id}"><div class="top"><span class="pill gold mono">${esc(r.a.code[li])}</span><b style="flex:1;min-width:160px">${highlight(r.a.title[li],stems)}</b>${q?`<div class="bar"><i style="width:${(r.s/mx*100).toFixed(0)}%"></i></div><span class="mono muted" style="font-size:12px">${r.s.toFixed(2)}</span>`:''}</div><div class="muted" style="font-size:13px;margin-top:6px">${highlight(r.a.text[li],stems)}</div></div>`).join(''):`<div class="card muted" style="margin-top:10px">${PT.t('Nothing found. Try other words.','Ничего не найдено. Попробуйте другие слова.')}</div>`;
+  $$('#lawRes .res').forEach(e=>e.onclick=()=>{go('chat');ask(PT.t('Tell me about ','Расскажи про ')+C[+e.dataset.a].title[li].toLowerCase())})}
+$('#lawQ').addEventListener('input',lawSearch);
+
+/* ---------- appeals ---------- */
+const SAMPLE={en:["Streetlights on Birch street have not worked for three weeks, it is dangerous at night","My child benefit payment is two months late, we have no money for food","Thank you to the service centre staff, the passport was ready quickly","Huge pothole on the ring road damaged my car tyre","Garbage has not been collected in our yard for 10 days, terrible smell","Hot water was turned off without notice, we have a newborn baby","Bus 14 is always late and overcrowded in the morning","I was fined for parking but the sign was hidden behind a tree, unfair","The portal crashes when I try to file my tax return, deadline is tomorrow","Pension was not indexed this January, please check","Neighbours are building an illegal extension, nobody reacts","Kindergarten queue has not moved for a year","Heating in school 12 does not work, children sit in jackets","Great new park near the river, thank you city","Water from the tap is brown and smells, urgent","Unemployment benefit was rejected without explanation","Stray dogs attacked a child near the playground","The traffic light at Central square is broken, accidents happen","Snow is not cleared from the sidewalks, elderly people fall","Doctor appointment online is impossible, all slots are taken","Very rude employee at the migration office","My work permit application has been pending for 40 days","Elevator in our building broken for a month, disabled resident cannot leave","Thank you for the fast e-signature in the app, very convenient","Loud construction at night near my house","Tax office charged me a penalty twice for the same return","Gas smell in the stairwell of building 7, nobody comes","Electricity outages every evening in the whole district","The bus stop shelter is destroyed","Housing subsidy calculation seems wrong, please recheck"],
+ru:["На улице Берёзовой третью неделю не горят фонари, ночью опасно","Пособие на ребёнка задерживают уже два месяца, не на что купить еду","Спасибо сотрудникам центра услуг, паспорт сделали быстро","Огромная яма на кольцевой дороге, пробил колесо","Мусор во дворе не вывозят 10 дней, ужасный запах","Отключили горячую воду без предупреждения, у нас новорождённый","Автобус 14 всегда опаздывает и переполнен утром","Оштрафовали за парковку, но знак закрыт деревом, несправедливо","Портал падает при подаче декларации, а срок завтра","Пенсию в январе не проиндексировали, проверьте","Соседи строят незаконную пристройку, никто не реагирует","Очередь в детский сад не двигается год","В школе 12 не работает отопление, дети сидят в куртках","Отличный новый парк у реки, спасибо городу","Из крана течёт коричневая вода с запахом, срочно","Пособие по безработице отклонили без объяснений","Бродячие собаки напали на ребёнка у площадки","Сломан светофор на Центральной площади, бывают аварии","Тротуары не чистят от снега, пожилые люди падают","Записаться к врачу онлайн невозможно, всё занято","Очень грубый сотрудник в миграционной службе","Разрешение на работу рассматривают уже 40 дней","Лифт в доме сломан месяц, жилец-инвалид не может выйти","Спасибо за быструю электронную подпись в приложении, удобно","Шумная стройка ночью рядом с домом","Налоговая дважды начислила штраф за одну декларацию","Запах газа в подъезде дома 7, никто не приезжает","Каждый вечер отключают электричество во всём районе","Разрушен павильон остановки","Субсидию на ЖКУ рассчитали неверно, перепроверьте"]};
+const TOPICS=[{k:'util',n:['Utilities','ЖКХ'],d:['Housing & Utilities Dept.','Департамент ЖКХ'],c:'--blue',w:/water|heating|hot water|garbage|elevator|gas|electric|вод|отоплен|мусор|лифт|газ|электрич|фонар|streetlight/i},
+{k:'road',n:['Roads & transport','Дороги и транспорт'],d:['Transport Authority','Управление транспорта'],c:'--amber',w:/road|pothole|bus|traffic|snow|sidewalk|stop|дорог|яма|автобус|светофор|снег|тротуар|остановк/i},
+{k:'soc',n:['Social payments','Соцвыплаты'],d:['Social Support Agency','Агентство соцподдержки'],c:'--violet',w:/benefit|pension|subsidy|пособи|пенси|субсид/i},
+{k:'tax',n:['Taxes & fines','Налоги и штрафы'],d:['Revenue Service','Налоговая служба'],c:'--gold',w:/tax|fine|penalt|налог|штраф|декларац/i},
+{k:'gov',n:['Public services','Госуслуги'],d:['Digital Services Agency','Агентство цифровых услуг'],c:'--mal',w:/portal|passport|signature|migration|permit|doctor|kindergarten|портал|паспорт|подпис|миграц|разрешени|врач|детский сад/i},
+{k:'order',n:['Public order','Общественный порядок'],d:['Municipal Police','Муниципальная полиция'],c:'--red',w:/dog|illegal|loud|noise|construction|собак|незаконн|шум|строй/i}];
+const NEG=/not|no |late|broken|crash|rude|terrible|dangerous|unfair|wrong|twice|reject|impossible|destroyed|attack|outage|не |нет|задерж|сломан|пада|груб|ужасн|опасн|несправедл|невер|дважды|отклон|невозможн|разруш|напал|отключ/i,POS=/thank|great|convenient|quickly|fast|спасибо|отличн|удобн|быстр/i,URG=/urgent|danger|child|baby|gas|attack|disabled|accident|elderly|deadline|tomorrow|срочно|опасн|ребён|новорожд|газ|напал|инвалид|авари|пожил|завтра|food|еду/i;
+let apData=null,routed=S.get('lexa-routed',{});
+function classify(t){const tp=TOPICS.find(x=>x.w.test(t))||{k:'other',n:['Other','Прочее'],d:['General office','Общий отдел'],c:'--dim'};const pos=POS.test(t),neg=NEG.test(t);const sent=pos&&!neg?1:neg?-1:0;const u=URG.test(t)?'high':sent<0?'med':'low';return{t,tp,sent,u}}
+function runAppeals(){const lines=$('#apIn').value.split('\n').map(s=>s.trim()).filter(Boolean);if(!lines.length){loadSample();return}
+  $('#apStatus').textContent=PT.t('Classifying…','Классификация…');
+  setTimeout(()=>{apData=lines.map(classify);drawAppeals();$('#apStatus').textContent=PT.t(`${lines.length} appeals processed in ${(lines.length*0.7).toFixed(0)} ms`,`Обработано ${lines.length} обращений за ${(lines.length*0.7).toFixed(0)} мс`)},400)}
+function loadSample(){$('#apIn').value=SAMPLE[PT.lang].join('\n');routed={};S.set('lexa-routed',routed);runAppeals()}
+function drawAppeals(){if(!apData)return;const li=PT.lang==='ru'?1:0;const n=apData.length;
+  const neg=apData.filter(x=>x.sent<0).length,hi=apData.filter(x=>x.u==='high').length,rt=apData.filter((x,i)=>routed[i]).length;
+  $('#apKpi').innerHTML=[[n,PT.t('Appeals','Обращений')],[Math.round(neg/n*100)+'%',PT.t('Negative','Негатив')],[hi,PT.t('Urgent','Срочных')],[rt+'/'+n,PT.t('Routed','Направлено')]].map(k=>`<div class="kpi"><b>${k[0]}</b><span>${k[1]}</span></div>`).join('');
+  const cnt={};apData.forEach(x=>{(cnt[x.tp.k]=cnt[x.tp.k]||{tp:x.tp,n:0}).n++});
+  const arr=Object.values(cnt).sort((a,b)=>b.n-a.n);const mx=Math.max(...arr.map(a=>a.n));const W=420,bh=28,H=arr.length*(bh+10);
+  $('#apChart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-height:300px">${arr.map((a,i)=>{const w=(W-170)*a.n/mx;return `<text x="0" y="${i*(bh+10)+bh/2+5}" fill="var(--muted)" font-size="13">${esc(a.tp.n[li])}</text><rect x="140" y="${i*(bh+10)}" width="${w}" height="${bh}" rx="7" fill="var(${a.tp.c})" opacity=".85"><animate attributeName="width" from="0" to="${w}" dur=".6s"/></rect><text x="${146+w}" y="${i*(bh+10)+bh/2+5}" fill="var(--text)" font-size="13" font-weight="700">${a.n}</text>`}).join('')}</svg>`;
+  const sc=[[-1,PT.t('Negative','Негатив'),'--red'],[0,PT.t('Neutral','Нейтрально'),'--dim'],[1,PT.t('Positive','Позитив'),'--mal']].map(s=>[...s,apData.filter(x=>x.sent===s[0]).length]);
+  const uc=[['high',PT.t('High','Высокая'),'--red'],['med',PT.t('Medium','Средняя'),'--amber'],['low',PT.t('Low','Низкая'),'--mal']].map(s=>[...s,apData.filter(x=>x.u===s[0]).length]);
+  const stack=(rows)=>`<div style="display:flex;height:22px;border-radius:8px;overflow:hidden;margin:6px 0 8px">${rows.map(r=>r[3]?`<div style="flex:${r[3]};background:var(${r[2]})" title="${r[1]}"></div>`:'').join('')}</div><div class="row" style="font-size:12px">${rows.map(r=>`<span><i class="dot" style="background:var(${r[2]})"></i>${r[1]} <b>${r[3]}</b></span>`).join('')}</div>`;
+  $('#apSent').innerHTML=`<div class="muted" style="font-size:12px">${PT.t('Sentiment','Тональность')}</div>${stack(sc)}<div class="muted" style="font-size:12px;margin-top:16px">${PT.t('Urgency','Срочность')}</div>${stack(uc)}<div class="muted" style="font-size:12px;margin-top:16px">${PT.t('Avg. routing time saved per appeal: ','Экономия времени на маршрутизацию: ')}<b style="color:var(--mal3)">${PT.t('4.2 min','4,2 мин')}</b></div>`;
+  const ul={high:['bad',PT.t('High','Высокая')],med:['warn',PT.t('Medium','Средняя')],low:['ok',PT.t('Low','Низкая')]};
+  $('#apTbl').innerHTML=apData.map((x,i)=>`<tr><td class="mono muted">${i+1}</td><td style="min-width:180px">${esc(x.t)}</td><td><i class="dot" style="background:var(${x.tp.c})"></i>${esc(x.tp.n[li])}</td><td>${x.sent>0?'😊':x.sent<0?'😠':'😐'}</td><td><span class="pill ${ul[x.u][0]}">${ul[x.u][1]}</span></td><td>${routed[i]?`<span class="pill ok">✓ ${esc(x.tp.d[li])}</span>`:`<button class="ib" data-r="${i}">→ ${esc(x.tp.d[li])}</button>`}</td></tr>`).join('');
+  $$('#apTbl [data-r]').forEach(b=>b.onclick=()=>{routed[b.dataset.r]=1;S.set('lexa-routed',routed);drawAppeals()})}
+$('#apRun').onclick=()=>{routed={};S.set('lexa-routed',routed);runAppeals()};$('#apSample').onclick=loadSample;
+$('#apRouteAll').onclick=()=>{if(!apData)return;let k=0;apData.forEach((x,i)=>{if(x.u==='high'&&!routed[i]){routed[i]=1;k++}});S.set('lexa-routed',routed);drawAppeals();toast(PT.t(`${k} urgent appeals routed`,`Направлено срочных: ${k}`))};
+
+/* ---------- voice ---------- */
+let voiceMode=false,rec=null,recOn=false,speaking=false;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function speak(text,lang){if(!('speechSynthesis' in window)){toast(PT.t('Speech synthesis is not supported in this browser','Синтез речи не поддерживается в этом браузере'));return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/\*\*/g,'').replace(/\[\d+\]/g,'').replace(/•/g,''));
+  u.lang=lang==='ru'?'ru-RU':lang==='id'?'id-ID':'en-US';u.rate=+$('#rate').value;
+  const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith(u.lang.slice(0,2)));if(v)u.voice=v;
+  u.onstart=()=>{speaking=true;anim()};u.onend=u.onerror=()=>{speaking=false};speechSynthesis.speak(u);
+  $('#vText').textContent='🔊 '+text.replace(/\*\*/g,'').slice(0,220)+(text.length>220?'…':'')}
+function listen(fromVoice){if(!SR){toast(PT.t('Speech recognition is not available in this browser. Try Chrome or Edge, or type your question.','Распознавание речи недоступно в этом браузере. Попробуйте Chrome или Edge либо введите вопрос текстом.'));$('#vText').textContent=PT.t('Voice input is not supported here — the read-aloud function still works.','Голосовой ввод здесь не поддерживается — чтение вслух работает.');return}
+  if(recOn){try{rec.stop()}catch(e){}return}
+  rec=new SR();rec.lang=PT.lang==='ru'?'ru-RU':'en-US';rec.interimResults=true;rec.maxAlternatives=1;let final='';
+  rec.onstart=()=>{recOn=true;$('#bigMic').classList.add('rec');$('#micBtn').classList.add('rec');$('#vText').textContent=PT.t('Listening…','Слушаю…');anim()};
+  rec.onresult=e=>{let s='';for(const r of e.results)s+=r[0].transcript;final=s;$('#vText').textContent='🎙 '+s;if(!fromVoice)qEl.value=s};
+  rec.onerror=e=>{toast(PT.t('Microphone error: ','Ошибка микрофона: ')+e.error)};
+  rec.onend=()=>{recOn=false;$('#bigMic').classList.remove('rec');$('#micBtn').classList.remove('rec');if(final.trim()){voiceMode=!!fromVoice;if(fromVoice)go('chat');qEl.value='';ask(final)}};
+  try{rec.start()}catch(e){toast(String(e.message||e))}}
+$('#micBtn').onclick=()=>listen(false);$('#bigMic').onclick=()=>listen(true);
+$('#speakLast').onclick=()=>{if(!lastAnswer.text){toast(PT.t('Ask Lexa something first','Сначала задайте вопрос'));return}speak(lastAnswer.text,lastAnswer.lang)};
+$('#stopSpeak').onclick=()=>{try{speechSynthesis.cancel()}catch(e){}speaking=false};
+function drawWave(t){const cv=$('#wave');if(!cv||!cv.offsetWidth)return;const d=devicePixelRatio||1;cv.width=cv.offsetWidth*d;cv.height=cv.offsetHeight*d;const x=cv.getContext('2d');x.scale(d,d);const W=cv.offsetWidth,H=cv.offsetHeight;
+  const cs=getComputedStyle(document.documentElement);const act=speaking||recOn;const n=48,bw=W/n;t=t||0;
+  for(let i=0;i<n;i++){const a=act?(.25+.75*Math.abs(Math.sin(i*.45+t/140)*Math.sin(i*.13+t/310))):.08+.04*Math.sin(i*.5);const h=Math.max(3,a*H*.9);
+    x.fillStyle=i%7===0?cs.getPropertyValue('--gold').trim():cs.getPropertyValue(recOn?'--red':'--mal').trim();x.globalAlpha=.85;x.beginPath();x.roundRect?x.roundRect(i*bw+2,(H-h)/2,bw-4,h,3):x.rect(i*bw+2,(H-h)/2,bw-4,h);x.fill()}}
+function anim(t){drawWave(t);if(speaking||recOn)requestAnimationFrame(anim);else drawWave(0)}
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
+
+/* ---------- init & language ---------- */
+function rerender(){drawPipe();drawCats();if(!hist.length)renderEmpty();else renderAll();if(apData)drawAppeals();if($('#v-law').classList.contains('on'))lawSearch();drawWave(0);updStats();
+  if(!$('#srcPanel').innerHTML)$('#srcPanel').innerHTML=`<div class="muted" style="font-size:13px">${PT.t('Sources appear here after each answer.','Источники появятся здесь после ответа.')}</div>`}
+PT.onLang(()=>{const s=$('#srcPanel');if(s.querySelector('.muted')&&!s.querySelector('.art'))s.innerHTML='';
+  if(apData&&$('#apIn').value===SAMPLE[PT.lang==='ru'?'en':'ru'].join('\n')){$('#apIn').value=SAMPLE[PT.lang].join('\n');apData=$('#apIn').value.split('\n').map(classify)}
+  rerender()});
+document.addEventListener('DOMContentLoaded',()=>{const v=S.get('lexa-view','chat');go(v);if(hist.length){const m=[...hist].reverse().find(x=>x.role==='a'&&x.src&&x.src.length);if(m)openSourceQuiet(m)}});
+window.addEventListener('resize',()=>drawWave(0));
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

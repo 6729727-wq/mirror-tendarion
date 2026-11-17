@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visit Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--mal2));color:#fff;font-size:16px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.me{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold2);flex:none}
+.me small{display:block;color:var(--muted);font-size:11.5px}
+main{padding:20px 24px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 8px;font-size:12px;min-width:28px;justify-content:center}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.err{color:var(--red);font-size:12px;min-height:15px;margin-top:3px}
+.input.bad{border-color:var(--red)}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(circle at 15% 15%,color-mix(in srgb,var(--gold) 16%,transparent),transparent 50%),radial-gradient(circle at 85% 85%,color-mix(in srgb,var(--mal) 14%,transparent),transparent 45%)}
+.lcard{width:100%;max-width:440px;padding:28px}
+.lcard .brand{padding:0 0 16px;font-size:20px}
+.lcard h2{margin:0 0 4px;font-size:22px}
+.demo-cred{font-size:12px;border:1px dashed var(--line2);border-radius:10px;padding:8px 10px;margin:14px 0 0;color:var(--muted)}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.roles button{border:1px solid var(--line2);border-radius:12px;padding:10px;background:var(--bg2);cursor:pointer;text-align:left;font-size:13px;color:var(--muted)}
+.roles button b{display:block;font-size:14px;color:var(--text)}
+.roles button.on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--bg2);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip.on{border-color:var(--gold);color:var(--text);background:color-mix(in srgb,var(--gold) 14%,transparent)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.tools .input{max-width:240px}
+.split{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;align-items:start}
+.map svg{width:100%;height:auto;display:block;border-radius:12px}
+.map .pin{cursor:pointer}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:14px}
+.dc{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);cursor:pointer;text-align:left;padding:0;display:flex;flex-direction:column;color:var(--text)}
+.dc:hover{border-color:var(--line2)} .dc.on{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 18%,transparent)}
+.dc .ph{height:92px;position:relative;display:flex;align-items:flex-end;padding:8px 10px}
+.dc .ph span{font-size:30px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+.dc .ph em{position:absolute;right:8px;top:8px;font-style:normal;font-size:11px;background:rgba(0,0,0,.45);color:#fff;border-radius:999px;padding:2px 8px}
+.dc .bd{padding:10px 12px 12px;font-size:12.5px}
+.dc .bd b{display:block;font-size:14.5px;margin-bottom:2px}
+.dc .bd small{color:var(--muted)}
+.det .ph{height:130px;border-radius:12px;display:flex;align-items:flex-end;padding:12px;font-size:44px;margin-bottom:12px}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 12px;font-size:13px;margin:10px 0}
+.kv span{color:var(--muted)} .kv b{font-weight:600;overflow-wrap:anywhere}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.empty .big{font-size:40px}
+/* itinerary */
+.itin{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;align-items:start}
+.day{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:12px;overflow:hidden}
+.day .dh{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg2);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.day .dh b{font-size:14px}
+.day .dh .sp{flex:1}
+.stop{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px dashed var(--line);font-size:13px}
+.stop:last-child{border-bottom:0}
+.stop .e{font-size:20px;text-align:center}
+.stop small{display:block;color:var(--muted);font-size:11.5px}
+.stop .ac{display:flex;gap:4px}
+.stop[draggable=true]{cursor:grab}
+.stop.drag{opacity:.4}
+.day.over{border-color:var(--gold)}
+.drop{padding:10px 12px;font-size:12px;color:var(--dim)}
+.sum .big{font-size:26px;font-weight:800}
+.bar{height:8px;border-radius:6px;background:var(--line);overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:var(--gold)}
+/* events */
+.ev{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--panel);margin-bottom:10px}
+.ev .dt{text-align:center;border-radius:12px;background:var(--bg2);padding:8px 4px;border:1px solid var(--line)}
+.ev .dt b{display:block;font-size:22px;line-height:1}
+.ev .dt small{font-size:11px;color:var(--muted);text-transform:uppercase}
+.ev h4{margin:0 0 3px;font-size:15px}
+.ev p{margin:0;font-size:12.5px;color:var(--muted)}
+.ev .r{text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.seats{font-size:11.5px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2500;display:grid;place-items:center;padding:16px}
+.modal .card{width:100%;max-width:420px;max-height:calc(100vh - 32px);overflow:auto}
+.qty{display:flex;align-items:center;gap:10px}
+.qty b{font-size:18px;min-width:24px;text-align:center}
+/* visa */
+.steps{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.step{flex:1;min-width:80px;border-top:4px solid var(--line);padding-top:6px;font-size:12px;color:var(--dim);font-weight:600}
+.step.ok{border-color:var(--mal);color:var(--muted)} .step.cur{border-color:var(--gold);color:var(--text)}
+.vt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.vt button{border:1px solid var(--line2);border-radius:14px;padding:14px;background:var(--bg2);cursor:pointer;text-align:left;font-size:12.5px;color:var(--muted)}
+.vt button b{display:block;font-size:15px;color:var(--text);margin-bottom:3px}
+.vt button .pr{display:block;font-size:20px;font-weight:800;color:var(--gold2);margin-top:6px}
+.vt button.on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.upl{border:2px dashed var(--line2);border-radius:14px;padding:16px;text-align:center;font-size:13px;color:var(--muted);cursor:pointer;background:var(--bg2)}
+.upl.ok{border-color:var(--mal);color:var(--text)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);padding:10px;background:var(--bg2);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.mono{white-space:nowrap;font-size:12px}
+.tline{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--line2);font-size:12.5px}
+.tline li{position:relative;padding:0 0 10px 6px}
+.tline li:before{content:"";position:absolute;left:-21px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.tline li span{display:block;color:var(--dim);font-size:11px}
+.permit{border:1px solid var(--mal);border-radius:16px;padding:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--mal) 14%,var(--panel)),var(--panel));display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:12px;align-items:center}
+.permit .qr{width:92px;height:92px;background:#fff;border-radius:8px;padding:6px}
+/* analytics */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+@media (max-width:1100px){.grid2,.split,.intro,.itin{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .vt{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.tools .input{max-width:none;flex:1 1 140px}.lcard{padding:20px}.ev{grid-template-columns:54px minmax(0,1fr)}.ev .r{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}.dgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.permit{grid-template-columns:minmax(0,1fr) 72px}.permit .qr{width:72px;height:72px}}
+</style>
+</head>
+<body data-demo-en="Visit Hub — national tourism platform & eVisa" data-demo-ru="Visit Hub — национальная туристическая платформа и eVisa">
+<div class="login" id="login"></div>
+<div class="app" id="app" style="display:none">
+  <aside class="side" id="side">
+    <div class="brand"><b>☀</b><div>Visit Sahrava<small data-en="Tourism Authority" data-ru="Туристическое управление"></small></div></div>
+    <div class="sec" data-en="Traveller" data-ru="Путешественник"></div>
+    <div id="navA"></div>
+    <div class="sec" data-en="Authority" data-ru="Управление"></div>
+    <div id="navS"></div>
+    <div class="grow"></div>
+    <div class="me" id="me"></div>
+    <button class="btn sm" id="logout" style="margin-top:8px;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+    <button class="btn sm" id="reset" style="margin-top:6px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill gold" id="hPill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Filter <b>destinations</b> on the map and add places to your <b>trip</b>. Reorder stops by dragging or arrows." data-ru="Отфильтруйте <b>места</b> на карте и добавьте их в <b>поездку</b>. Меняйте порядок перетаскиванием или стрелками."></span></div>
+          <div><b>2</b><span data-en="Book tickets for <b>events</b>, then apply for an <b>eVisa</b> — four steps with validation and instant decision." data-ru="Купите билеты на <b>события</b>, затем оформите <b>eVisa</b> — четыре шага с проверкой и быстрым решением."></span></div>
+          <div><b>3</b><span data-en="Open <b>Analytics</b> (authority) — arrivals, source markets, visa decisions; your actions show up in the numbers." data-ru="Откройте <b>Аналитику</b> (управление) — прибытия, рынки, решения по визам; ваши действия видны в цифрах."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="National tourism platform & eVisa" data-ru="Национальная туристическая платформа и eVisa"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $160M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Tourism authority, Sahrava (fictional)" data-ru="Туристическое управление Сахравы (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>Headless CMS · booking</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-explore"></section>
+    <section class="view" id="v-trip"></section>
+    <section class="view" id="v-events"></section>
+    <section class="view" id="v-visa"></section>
+    <section class="view" id="v-stats"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div id="modal"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=a=>a==null?'':Array.isArray(a)?(PT.lang==='ru'?a[1]:a[0]):a;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY='pt_visit_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+const fmtD=d=>new Date(d).toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+
+const CAT={heritage:['🏛','Heritage','Наследие','--gold'],nature:['🌿','Nature','Природа','--mal'],coast:['🏖','Coast','Побережье','--blue'],desert:['🐪','Desert','Пустыня','--amber'],city:['🌆','City','Город','--violet']};
+const REG={north:['North Highlands','Северное нагорье'],cap:['Capital Region','Столичный регион'],west:['Red Sea Coast','Побережье Красного моря'],south:['Southern Sands','Южные пески'],east:['Gulf Coast','Побережье Залива']};
+const DEST=[
+ {id:'d1',c:'city',r:'cap',x:300,y:190,n:['Al Qasr Old Town','Старый город Аль-Каср'],d:['Mud-brick souqs, the Palace Museum and rooftop cafés in the capital\'s historic core.','Глинобитные базары, Дворцовый музей и кафе на крышах в историческом центре столицы.'],h:3,p:0,rt:4.7,s:['Spring','Весна']},
+ {id:'d2',c:'heritage',r:'north',x:205,y:95,n:['Hegra Rock Tombs','Скальные гробницы Хегра'],d:['111 monumental tombs carved into sandstone — a UNESCO site with guided night tours.','111 монументальных гробниц в песчанике — объект ЮНЕСКО с ночными экскурсиями.'],h:5,p:25,rt:4.9,s:['Winter','Зима']},
+ {id:'d3',c:'coast',r:'west',x:95,y:215,n:['Coral Bay Reef','Риф Корал-Бэй'],d:['Shallow coral gardens, turtles and dive schools along a protected marine park.','Мелководные коралловые сады, черепахи и дайв-школы в морском заповеднике.'],h:6,p:60,rt:4.8,s:['Autumn','Осень']},
+ {id:'d4',c:'desert',r:'south',x:330,y:330,n:['Empty Quarter Dunes','Дюны Пустой четверти'],d:['Sunset 4×4 safari, Bedouin camp dinner and stargazing in the largest sand sea.','Сафари на закате, ужин в лагере бедуинов и звёзды над крупнейшим песчаным морем.'],h:8,p:180,rt:4.8,s:['Winter','Зима']},
+ {id:'d5',c:'nature',r:'north',x:150,y:60,n:['Wadi Rum Canyons','Каньоны Вади-Рам'],d:['Red-rock canyons with hiking trails, rock arches and hot-air balloon flights.','Каньоны из красного камня, тропы, каменные арки и полёты на воздушном шаре.'],h:6,p:90,rt:4.6,s:['Spring','Весна']},
+ {id:'d6',c:'city',r:'east',x:470,y:165,n:['Marina Promenade','Набережная Марина'],d:['Waterfront dining, the Museum of the Future Sea and a 6 km cycling corniche.','Рестораны у воды, Музей будущего моря и 6 км велодорожки вдоль залива.'],h:4,p:0,rt:4.5,s:['All year','Круглый год']},
+ {id:'d7',c:'heritage',r:'cap',x:345,y:240,n:['Diriyah Mud Fort','Глиняная крепость Дирия'],d:['Restored 18th-century citadel with a light-and-sound show every evening.','Отреставрированная цитадель XVIII века с вечерним светозвуковым шоу.'],h:3,p:15,rt:4.7,s:['Winter','Зима']},
+ {id:'d8',c:'nature',r:'west',x:130,y:295,n:['Juniper Mountains','Можжевеловые горы'],d:['Cool terraced villages at 2,800 m, juniper forests, honey farms and cable car.','Прохладные террасные деревни на 2800 м, можжевеловые леса, пасеки и канатная дорога.'],h:5,p:20,rt:4.6,s:['Summer','Лето']},
+ {id:'d9',c:'coast',r:'east',x:500,y:240,n:['Pearl Islands','Жемчужные острова'],d:['Dhow cruise to pearl-diving villages, mangroves and flamingo lagoons.','Прогулка на доу к деревням ловцов жемчуга, мангры и лагуны с фламинго.'],h:7,p:120,rt:4.7,s:['Autumn','Осень']},
+ {id:'d10',c:'desert',r:'south',x:230,y:360,n:['Edge of the World Cliffs','Скалы «Край света»'],d:['300 m escarpment with sweeping views — sunrise hikes and camel caravans.','Обрыв высотой 300 м с панорамой — рассветные походы и караваны верблюдов.'],h:5,p:45,rt:4.8,s:['Winter','Зима']},
+ {id:'d11',c:'heritage',r:'west',x:115,y:150,n:['Al Balad Harbour Quarter','Квартал Аль-Балад'],d:['Coral-stone houses with carved rawasheen balconies on the historic pilgrim port.','Дома из кораллового камня с резными балконами в историческом порту паломников.'],h:3,p:0,rt:4.6,s:['All year','Круглый год']},
+ {id:'d12',c:'city',r:'cap',x:270,y:250,n:['Arts District','Квартал искусств'],d:['Galleries, design studios and the National Theatre in a converted rail yard.','Галереи, студии дизайна и Национальный театр на месте старого депо.'],h:3,p:10,rt:4.4,s:['All year','Круглый год']}
+];
+const EVENTS=[
+ {id:'e1',n:['Winter Lights Festival','Фестиваль зимних огней'],c:'heritage',dest:'d2',day:12,mo:0,price:35,seats:400,sold:318,t:'18:30',desc:['Projection shows on the rock tombs, food trucks and live oud.','Проекции на скальных гробницах, фуд-траки и живой уд.']},
+ {id:'e2',n:['Desert Ultra Marathon','Ультрамарафон в пустыне'],c:'desert',dest:'d4',day:20,mo:0,price:120,seats:250,sold:211,t:'05:00',desc:['50 km through dunes with checkpoints and a finish-line camp.','50 км по дюнам с контрольными точками и лагерем на финише.']},
+ {id:'e3',n:['Red Sea Film Week','Неделя кино Красного моря'],c:'city',dest:'d11',day:3,mo:1,price:18,seats:900,sold:540,t:'19:00',desc:['Open-air premieres on the harbour and director talks.','Премьеры под открытым небом в гавани и встречи с режиссёрами.']},
+ {id:'e4',n:['Falcon Heritage Cup','Кубок наследия соколиной охоты'],c:'heritage',dest:'d7',day:14,mo:1,price:25,seats:1200,sold:870,t:'15:00',desc:['Falconry races, Arabian horse parade and craft market.','Соколиные гонки, парад арабских скакунов и ярмарка ремёсел.']},
+ {id:'e5',n:['Coral Reef Clean-up Dive','Очистка рифа: погружение'],c:'coast',dest:'d3',day:22,mo:1,price:60,seats:40,sold:37,t:'08:00',desc:['Guided dive with marine biologists; gear included.','Погружение с морскими биологами; снаряжение включено.']},
+ {id:'e6',n:['Balloon Fiesta','Фестиваль воздушных шаров'],c:'nature',dest:'d5',day:6,mo:2,price:210,seats:120,sold:64,t:'06:15',desc:['Sunrise flights over the canyons with breakfast on landing.','Полёты на рассвете над каньонами и завтрак после посадки.']},
+ {id:'e7',n:['Marina Food Festival','Гастрофестиваль Марина'],c:'city',dest:'d6',day:15,mo:2,price:12,seats:3000,sold:1260,t:'17:00',desc:['120 stalls, chef battles and a night market on the corniche.','120 палаток, битвы шефов и ночной рынок на набережной.']},
+ {id:'e8',n:['Juniper Honey Harvest','Праздник можжевелового мёда'],c:'nature',dest:'d8',day:28,mo:2,price:15,seats:300,sold:96,t:'10:00',desc:['Tasting tours of mountain apiaries and terrace-village walks.','Дегустации на горных пасеках и прогулки по террасным деревням.']}
+];
+const MONTHS=[['Jan','янв'],['Feb','фев'],['Mar','мар']];
+const VTYPES={tour:{n:['Tourist eVisa','Туристическая eVisa'],d:['Multiple entry · 1 year · stay up to 90 days','Многократная · 1 год · до 90 дней'],fee:80},tr:{n:['Transit visa','Транзитная виза'],d:['Single entry · 96 hours stopover','Однократная · транзит до 96 ч'],fee:0},ev:{n:['Event visa','Виза на событие'],d:['Linked to an event ticket · 30 days','По билету на событие · 30 дней'],fee:40}};
+const NATS=[['GB','United Kingdom','Великобритания'],['DE','Germany','Германия'],['US','United States','США'],['IN','India','Индия'],['CN','China','Китай'],['FR','France','Франция'],['ID','Indonesia','Индонезия'],['PH','Philippines','Филиппины'],['RU','Russia','Россия'],['NG','Nigeria','Нигерия']];
+
+function seed(){
+  const base=Date.now();
+  const apps=[
+   {id:'EV-25-104812',type:'tour',name:'Lena Hoffmann',nat:'DE',pp:'C4X82JK91',sub:base-86400e3*6,st:'approved',log:[[base-86400e3*6,'Submitted','Подана'],[base-86400e3*6+3600e3*2,'Automated checks passed','Автопроверки пройдены'],[base-86400e3*5,'Approved · eVisa issued','Одобрено · eVisa выдана']]},
+   {id:'EV-25-104877',type:'ev',name:'Arjun Mehta',nat:'IN',pp:'Z7712045',sub:base-86400e3*2,st:'review',log:[[base-86400e3*2,'Submitted','Подана'],[base-86400e3*2+3600e3,'Sent to officer review','Передана на проверку']]},
+   {id:'EV-25-104903',type:'tour',name:'Grace Oduya',nat:'NG',pp:'A09123776',sub:base-3600e3*20,st:'docs',log:[[base-3600e3*20,'Submitted','Подана'],[base-3600e3*14,'Additional document requested: hotel booking','Запрошен документ: бронь отеля']]},
+   {id:'EV-25-104951',type:'tr',name:'Wei Zhang',nat:'CN',pp:'E88213409',sub:base-3600e3*5,st:'submitted',log:[[base-3600e3*5,'Submitted','Подана']]}
+  ];
+  return{user:null,role:'trav',view:'explore',cat:'all',reg:'all',q:'',sel:'d2',
+    trip:{name:'',start:'',days:[{stops:['d1','d12']},{stops:['d7']},{stops:['d2']}]},
+    evf:'all',evm:'all',book:[],apps,mine:[],
+    visa:{step:0,type:'tour',f:{name:'',nat:'',dob:'',pp:'',ppx:'',email:'',arr:'',nights:'7',purpose:'leisure',hotel:''},docs:{photo:false,pass:false},agree:false},
+    sv:'visa'};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+const D=id=>DEST.find(d=>d.id===id);
+
+const VIEWS=[['explore','🗺','Explore','Места','A'],['trip','🧳','Trip builder','Моя поездка','A'],['events','🎟','Events','События','A'],['visa','🛂','eVisa','eVisa','A'],['stats','📊','Tourism analytics','Аналитика туризма','S']];
+
+/* ---------- login ---------- */
+function rLogin(){
+  const cr=S.role==='auth'?['analyst@tourism.gov.sh','demo-visit-2026']:['traveller@visit.demo','demo-visit-2026'];
+  $('#login').innerHTML=`<div class="card lcard"><div class="brand"><b>☀</b><div>Visit Sahrava<small>${T('National tourism platform','Национальная туристическая платформа')}</small></div></div>
+   <h2>${T('Welcome back','С возвращением')}</h2><p class="muted" style="margin:0;font-size:13.5px">${T('Choose a role — demo credentials are filled in, just press Sign in.','Выберите роль — демо-данные уже заполнены, нажмите «Войти».')}</p>
+   <div class="roles"><button data-role="trav" class="${S.role==='trav'?'on':''}"><b>${T('Traveller','Путешественник')}</b>${T('Plan, book, apply','Планы, билеты, виза')}</button><button data-role="auth" class="${S.role==='auth'?'on':''}"><b>${T('Authority','Управление')}</b>${T('Analytics & visa desk','Аналитика и визы')}</button></div>
+   <div class="f"><label>${T('Email','Почта')}</label><input class="input" id="lUser" value="${cr[0]}" autocomplete="username"></div>
+   <div class="f" style="margin-top:10px"><label>${T('Password','Пароль')}</label><input class="input" id="lPass" type="password" value="${cr[1]}" autocomplete="current-password"></div>
+   <div class="err" id="lErr"></div>
+   <button class="btn pri" id="lGo" style="width:100%;justify-content:center">${T('Sign in','Войти')}</button>
+   <div class="demo-cred">${T('Demo','Демо')}: <span class="mono">${cr[0]}</span> / <span class="mono">${cr[1]}</span></div></div>`;
+  $$('[data-role]').forEach(b=>b.onclick=()=>{S.role=b.dataset.role;save();rLogin()});
+  $('#lGo').onclick=()=>{const u=$('#lUser').value.trim();
+    if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(u)){$('#lErr').textContent=T('Enter a valid email','Введите корректную почту');return}
+    if($('#lPass').value.length<6){$('#lErr').textContent=T('Password is too short','Пароль слишком короткий');return}
+    S.user=u;S.view=S.role==='auth'?'stats':'explore';save();render();toast(T('Signed in','Вход выполнен'))};
+}
+
+/* ---------- shell ---------- */
+function nav(){const stops=S.trip.days.reduce((a,d)=>a+d.stops.length,0);
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';if(v[0]==='trip'&&stops)x=`<span class="cnt">${stops}</span>`;if(v[0]==='events'&&S.book.length)x=`<span class="cnt">${S.book.length}</span>`;if(v[0]==='stats'){const p=S.apps.filter(a=>a.st==='review'||a.st==='submitted').length;if(p)x=`<span class="cnt">${p}</span>`}
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navA').innerHTML=mk('A');$('#navS').innerHTML=mk('S');$$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  $('#me').innerHTML=`<div class="av">${S.role==='auth'?'TA':'AR'}</div><div style="min-width:0">${S.role==='auth'?T('Tourism analyst','Аналитик'):T('Alex Rivera','Алекс Ривера')}<small style="overflow:hidden;text-overflow:ellipsis">${esc(S.user)}</small></div>`;
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  if(!S.user){$('#login').style.display='';$('#app').style.display='none';rLogin();return}
+  $('#login').style.display='none';$('#app').style.display='';
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=v[4]==='A'?T('Visit Sahrava · traveller portal','Visit Sahrava · портал путешественника'):T('Tourism Authority · back office','Туристическое управление · бэк-офис');
+  $('#hPill').textContent='☀ '+T('Capital 24°C · peak season','Столица 24°C · высокий сезон');
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({explore:rExplore,trip:rTrip,events:rEvents,visa:rVisa,stats:rStats})[v[0]]();
+}
+const grad=c=>`linear-gradient(135deg,color-mix(in srgb,var(${CAT[c][3]}) 70%,#000) ,color-mix(in srgb,var(${CAT[c][3]}) 25%,var(--panel)))`;
+const inTrip=id=>S.trip.days.some(d=>d.stops.includes(id));
+
+/* ---------- explore ---------- */
+function filtD(){const q=S.q.toLowerCase();return DEST.filter(d=>(S.cat==='all'||d.c===S.cat)&&(S.reg==='all'||d.r===S.reg)&&(!q||(L(d.n)+' '+L(d.d)).toLowerCase().includes(q)))}
+function mapSvg(list,sel,lines){const ids=list.map(d=>d.id);
+  let s=`<svg viewBox="0 0 580 410" role="img" aria-label="map"><rect width="580" height="410" style="fill:color-mix(in srgb,var(--blue) 14%,var(--bg2))"/>
+  <path d="M60 40 L250 18 L380 60 L455 110 L540 140 L560 260 L510 300 L430 390 L250 400 L160 370 L95 320 L55 230 L70 150 Z" style="fill:color-mix(in srgb,var(--amber) 16%,var(--panel));stroke:var(--line2)" stroke-width="2"/>
+  <path d="M60 40 L250 18 L270 130 L140 170 L55 230 L70 150Z" style="fill:color-mix(in srgb,var(--mal) 10%,transparent)"/>
+  <path d="M190 400 L250 300 L400 300 L430 390Z" style="fill:color-mix(in srgb,var(--amber) 14%,transparent)"/>
+  ${[[150,40,'north'],[300,165,'cap'],[70,265,'west'],[300,385,'south'],[480,120,'east']].map(r=>`<text x="${r[0]}" y="${r[1]}" font-size="10.5" font-weight="700" letter-spacing="1" style="fill:var(--dim);text-transform:uppercase">${esc(L(REG[r[2]])).toUpperCase()}</text>`).join('')}`;
+  if(lines&&lines.length>1)s+=`<polyline points="${lines.map(d=>d.x+','+d.y).join(' ')}" fill="none" stroke-width="2.5" stroke-dasharray="6 4" style="stroke:var(--gold)"/>`;
+  DEST.forEach(d=>{const on=ids.includes(d.id),sl=d.id===sel;const n=lines?lines.findIndex(x=>x.id===d.id):-1;
+    s+=`<g class="pin" data-pin="${d.id}" opacity="${on?1:.25}"><circle cx="${d.x}" cy="${d.y}" r="${sl?15:11}" style="fill:var(${CAT[d.c][3]});stroke:var(--bg)" stroke-width="3"/><text x="${d.x}" y="${d.y+4}" text-anchor="middle" font-size="${sl?13:10}">${n>=0?'':CAT[d.c][0]}</text>${n>=0?`<text x="${d.x}" y="${d.y+4}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">${n+1}</text>`:''}<title>${esc(L(d.n))}</title></g>`;
+    if(sl)s+=`<text x="${d.x}" y="${d.y-21}" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--text);paint-order:stroke;stroke:var(--bg);stroke-width:3">${esc(L(d.n))}</text>`});
+  return s+'</svg>'}
+function rExplore(){const el=$('#v-explore');const list=filtD();const d=D(S.sel);
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="tools" style="margin:0"><input class="input" id="dq" value="${esc(S.q)}" placeholder="${T('Search places…','Поиск мест…')}"><select class="input" id="dr" style="max-width:220px"><option value="all">${T('All regions','Все регионы')}</option>${Object.keys(REG).map(r=>`<option value="${r}" ${S.reg===r?'selected':''}>${L(REG[r])}</option>`).join('')}</select></div>
+   <div class="chips" style="margin-top:10px"><button class="chip ${S.cat==='all'?'on':''}" data-cat="all">${T('All','Все')} ${DEST.length}</button>${Object.keys(CAT).map(c=>`<button class="chip ${S.cat===c?'on':''}" data-cat="${c}">${CAT[c][0]} ${T(CAT[c][1],CAT[c][2])}</button>`).join('')}</div></div>
+  <div class="split"><div class="card map"><h3>${T('Destinations map','Карта мест')}<span class="sp"></span><span class="pill">${list.length} ${T('shown','показано')}</span></h3>${mapSvg(list,S.sel)}<div class="legend">${Object.keys(CAT).map(c=>`<span><i style="background:var(${CAT[c][3]})"></i>${T(CAT[c][1],CAT[c][2])}</span>`).join('')}</div></div>
+   <div class="card det">${d?`<div class="ph" style="background:${grad(d.c)}">${CAT[d.c][0]}</div><h3>${esc(L(d.n))}<span class="sp"></span><span class="pill gold">★ ${d.rt}</span></h3><p style="margin:0;font-size:13.5px;line-height:1.5">${esc(L(d.d))}</p>
+    <div class="kv"><span>${T('Region','Регион')}</span><b>${L(REG[d.r])}</b><span>${T('Type','Тип')}</span><b>${CAT[d.c][0]} ${T(CAT[d.c][1],CAT[d.c][2])}</b><span>${T('Time needed','Время')}</span><b>~${d.h} ${T('h','ч')}</b><span>${T('Entry','Вход')}</span><b>${d.p?money(d.p):T('Free','Бесплатно')}</b><span>${T('Best season','Сезон')}</span><b>${L(d.s)}</b></div>
+    <div class="row"><select class="input" id="addDay" style="width:auto">${S.trip.days.map((x,i)=>`<option value="${i}">${T('Day','День')} ${i+1}</option>`).join('')}</select><button class="btn sm pri" id="addTrip" ${inTrip(d.id)?'disabled':''}>${inTrip(d.id)?'✓ '+T('In your trip','В поездке'):'＋ '+T('Add to trip','В поездку')}</button>${EVENTS.some(e=>e.dest===d.id)?`<button class="btn sm" id="seeEv">🎟 ${T('Events here','События здесь')}</button>`:''}</div>`:`<div class="empty"><div class="big">🗺</div>${T('Pick a place on the map','Выберите место на карте')}</div>`}</div></div>
+  <div class="dgrid">${list.map(x=>`<button class="dc ${x.id===S.sel?'on':''}" data-d="${x.id}"><div class="ph" style="background:${grad(x.c)}"><span>${CAT[x.c][0]}</span><em>★ ${x.rt}</em></div><div class="bd"><b>${esc(L(x.n))}</b><small>${L(REG[x.r])} · ${x.p?money(x.p):T('Free','Бесплатно')}${inTrip(x.id)?' · ✓':''}</small></div></button>`).join('')||`<div class="empty" style="grid-column:1/-1">${T('No places match these filters','Нет мест по этим фильтрам')}</div>`}</div>`;
+  $$('[data-cat]',el).forEach(b=>b.onclick=()=>{S.cat=b.dataset.cat;save();rExplore()});
+  $('#dr').onchange=e=>{S.reg=e.target.value;save();rExplore()};
+  $('#dq').oninput=e=>{S.q=e.target.value;save();clearTimeout(rExplore.t);rExplore.t=setTimeout(()=>{rExplore();const i=$('#dq');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)};
+  $$('[data-pin],[data-d]',el).forEach(b=>b.addEventListener('click',()=>{S.sel=b.dataset.pin||b.dataset.d;save();rExplore()}));
+  if($('#addTrip'))$('#addTrip').onclick=()=>{const i=+$('#addDay').value;S.trip.days[i].stops.push(d.id);save();rExplore();nav();toast(T('Added to Day ','Добавлено в день ')+(i+1)+' · '+esc(L(d.n)),'gold')};
+  if($('#seeEv'))$('#seeEv').onclick=()=>{S.evf='all';S.evm='all';S.evDest=d.id;go('events')};
+}
+
+/* ---------- trip ---------- */
+function tripCost(){let c=0,h=0;S.trip.days.forEach(d=>d.stops.forEach(id=>{c+=D(id).p;h+=D(id).h}));return{c,h}}
+function rTrip(){const el=$('#v-trip');const tc=tripCost();const pts=[];S.trip.days.forEach(d=>d.stops.forEach(id=>pts.push(D(id))));
+  const t=S.trip;const nights=t.days.length;const hotel=nights*140,ev=S.book.reduce((a,b)=>a+b.q*EVENTS.find(e=>e.id===b.e).price,0);
+  el.innerHTML=`<div class="itin"><div>
+   <div class="card" style="margin-bottom:12px"><div class="fgrid"><div class="f"><label>${T('Trip name','Название поездки')}</label><input class="input" id="tName" value="${esc(t.name)}" placeholder="${T('e.g. Winter in Sahrava','напр. Зима в Сахраве')}"></div><div class="f"><label>${T('Start date','Дата начала')}</label><input class="input" type="date" id="tStart" value="${t.start}"></div></div></div>
+   ${t.days.map((d,i)=>{const h=d.stops.reduce((a,id)=>a+D(id).h,0);return `<div class="day" data-day="${i}"><div class="dh"><b>${T('Day','День')} ${i+1}</b><span class="muted" style="font-size:12px">${t.start?fmtD(new Date(t.start).getTime()+i*864e5):''} · ${h} ${T('h planned','ч в плане')}</span>${h>10?`<span class="pill warn">${T('Busy day','Плотный день')}</span>`:''}<span class="sp"></span><button class="btn xs" data-mvd="${i}:-1" ${i?'':'disabled'} aria-label="day up">↑</button><button class="btn xs" data-mvd="${i}:1" ${i<t.days.length-1?'':'disabled'} aria-label="day down">↓</button><button class="btn xs danger" data-rmd="${i}" ${t.days.length>1?'':'disabled'}>✕</button></div>
+    ${d.stops.length?d.stops.map((id,j)=>{const x=D(id);return `<div class="stop" draggable="true" data-st="${i}:${j}"><span class="e">${CAT[x.c][0]}</span><div style="min-width:0"><b>${esc(L(x.n))}</b><small>${L(REG[x.r])} · ~${x.h} ${T('h','ч')} · ${x.p?money(x.p):T('free','беспл.')}</small></div><div class="ac"><button class="btn xs" data-mv="${i}:${j}:-1" aria-label="up">↑</button><button class="btn xs" data-mv="${i}:${j}:1" aria-label="down">↓</button><button class="btn xs danger" data-rm="${i}:${j}" aria-label="remove">✕</button></div></div>`}).join(''):`<div class="drop">${T('Drop places here or add from Explore','Перетащите места сюда или добавьте из раздела «Места»')}</div>`}</div>`}).join('')}
+   <div class="row"><button class="btn sm" id="addD">＋ ${T('Add day','Добавить день')}</button><button class="btn sm" id="toEx">🗺 ${T('Add places','Добавить места')}</button><button class="btn sm pri" id="saveTrip">${T('Save trip','Сохранить поездку')}</button></div>
+  </div>
+  <div><div class="card map" style="margin-bottom:12px"><h3>${T('Route','Маршрут')}</h3>${mapSvg(pts,null,pts)}</div>
+   <div class="card sum"><h3>${T('Trip summary','Итог поездки')}</h3><div class="kv"><span>${T('Days','Дней')}</span><b>${nights}</b><span>${T('Stops','Остановок')}</span><b>${pts.length}</b><span>${T('Sightseeing','Осмотр')}</span><b>${tc.h} ${T('h','ч')}</b><span>${T('Entry tickets','Входные билеты')}</span><b>${money(tc.c)}</b><span>${T('Hotels (est. $140/night)','Отели (≈ $140/ночь)')}</span><b>${money(hotel)}</b><span>${T('Event tickets','Билеты на события')}</span><b>${money(ev)}</b></div>
+    <div class="muted" style="font-size:12px">${T('Estimated total','Ориентировочно')}</div><div class="big">${money(tc.c+hotel+ev)}</div>
+    <div class="bar"><i style="width:${Math.min(100,(tc.h/(nights*8))*100)}%"></i></div><div class="muted" style="font-size:12px">${T('Pace','Темп')}: ${Math.round(tc.h/(nights*8)*100)}% ${T('of 8 h/day','от 8 ч/день')}</div>
+    <button class="btn sm gold" id="toVisa" style="margin-top:12px;width:100%;justify-content:center">🛂 ${T('Apply for eVisa for this trip','Оформить eVisa на эту поездку')}</button></div></div></div>`;
+  const mvArr=(a,i,dir)=>{const k=i+dir;if(k<0||k>=a.length)return false;[a[i],a[k]]=[a[k],a[i]];return true};
+  $$('[data-mv]',el).forEach(b=>b.onclick=()=>{const[i,j,dir]=b.dataset.mv.split(':').map(Number);const st=t.days[i].stops;
+    if(!mvArr(st,j,dir)){const ni=i+dir;if(ni<0||ni>=t.days.length)return;const id=st.splice(j,1)[0];dir<0?t.days[ni].stops.push(id):t.days[ni].stops.unshift(id)}save();rTrip()});
+  $$('[data-mvd]',el).forEach(b=>b.onclick=()=>{const[i,dir]=b.dataset.mvd.split(':').map(Number);mvArr(t.days,i,dir);save();rTrip()});
+  $$('[data-rm]',el).forEach(b=>b.onclick=()=>{const[i,j]=b.dataset.rm.split(':').map(Number);const id=t.days[i].stops.splice(j,1)[0];save();rTrip();nav();toast(T('Removed · ','Удалено · ')+esc(L(D(id).n)))});
+  $$('[data-rmd]',el).forEach(b=>b.onclick=()=>{const i=+b.dataset.rmd;const moved=t.days[i].stops;t.days.splice(i,1);t.days[Math.max(0,i-1)].stops.push(...moved);save();rTrip();toast(T('Day removed — its stops moved to the previous day','День удалён — места перенесены в предыдущий'))});
+  $('#addD').onclick=()=>{if(t.days.length>=14){toast(T('Maximum 14 days','Максимум 14 дней'),'bad');return}t.days.push({stops:[]});save();rTrip()};
+  $('#toEx').onclick=()=>go('explore');
+  $('#tName').oninput=e=>{t.name=e.target.value;save()};
+  $('#tStart').onchange=e=>{t.start=e.target.value;save();rTrip()};
+  $('#saveTrip').onclick=()=>{if(t.name.trim().length<3){$('#tName').classList.add('bad');toast(T('Give your trip a name (min 3 characters)','Назовите поездку (мин. 3 символа)'),'bad');return}
+    if(!t.start){$('#tStart').classList.add('bad');toast(T('Pick a start date','Выберите дату начала'),'bad');return}
+    if(!pts.length){toast(T('Add at least one place','Добавьте хотя бы одно место'),'bad');return}
+    t.saved=Date.now();save();toast(T('Trip “'+esc(t.name)+'” saved','Поездка «'+esc(t.name)+'» сохранена'),'gold')};
+  $('#toVisa').onclick=()=>{if(t.start)S.visa.f.arr=t.start;S.visa.f.nights=String(nights);save();go('visa')};
+  let drag=null;
+  $$('.stop',el).forEach(s=>{s.addEventListener('dragstart',e=>{drag=s.dataset.st;s.classList.add('drag');e.dataTransfer.effectAllowed='move'});s.addEventListener('dragend',()=>s.classList.remove('drag'))});
+  $$('.day',el).forEach(d=>{d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('over')});d.addEventListener('dragleave',()=>d.classList.remove('over'));
+    d.addEventListener('drop',e=>{e.preventDefault();d.classList.remove('over');if(!drag)return;const[i,j]=drag.split(':').map(Number);const id=t.days[i].stops.splice(j,1)[0];
+      const to=+d.dataset.day;const tgt=e.target.closest('.stop');let pos=t.days[to].stops.length;if(tgt){const[ti,tj]=tgt.dataset.st.split(':').map(Number);pos=ti===i&&tj>j?tj-1:tj;if(ti!==to)pos=t.days[to].stops.length}
+      t.days[to].stops.splice(pos,0,id);drag=null;save();rTrip()})});
+}
+
+/* ---------- events ---------- */
+const evDate=e=>new Date(new Date().getFullYear()+1,e.mo,e.day);
+function rEvents(){const el=$('#v-events');let list=EVENTS.filter(e=>(S.evf==='all'||e.c===S.evf)&&(S.evm==='all'||e.mo===+S.evm)&&(!S.evDest||e.dest===S.evDest));
+  el.innerHTML=`<div class="split" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)"><div><div class="card" style="margin-bottom:12px"><div class="chips"><button class="chip ${S.evf==='all'?'on':''}" data-ef="all">${T('All','Все')}</button>${Object.keys(CAT).map(c=>`<button class="chip ${S.evf===c?'on':''}" data-ef="${c}">${CAT[c][0]} ${T(CAT[c][1],CAT[c][2])}</button>`).join('')}</div>
+   <div class="chips" style="margin-top:8px"><button class="chip ${S.evm==='all'?'on':''}" data-em="all">${T('Any month','Любой месяц')}</button>${MONTHS.map((m,i)=>`<button class="chip ${S.evm==i?'on':''}" data-em="${i}">${T(m[0],m[1])}</button>`).join('')}${S.evDest?`<button class="chip on" id="clrDest">📍 ${esc(L(D(S.evDest).n))} ✕</button>`:''}</div></div>
+   ${list.map(e=>{const left=e.seats-e.sold,dt=evDate(e);return `<div class="ev"><div class="dt"><b>${e.day}</b><small>${T(MONTHS[e.mo][0],MONTHS[e.mo][1])}</small></div><div style="min-width:0"><h4>${CAT[e.c][0]} ${esc(L(e.n))}</h4><p>📍 ${esc(L(D(e.dest).n))} · ${e.t} · ${dt.toLocaleDateString(loc(),{weekday:'short'})}</p><p style="margin-top:3px">${esc(L(e.desc))}</p></div>
+    <div class="r"><b>${e.price?money(e.price):T('Free','Бесплатно')}</b><span class="seats ${left<20?'bad-t':''}">${left>0?left+' '+T('seats left','мест'):T('Sold out','Распродано')}</span><button class="btn sm ${left?'pri':''}" data-bk="${e.id}" ${left?'':'disabled'}>${T('Book','Купить')}</button></div></div>`}).join('')||`<div class="card empty">${T('No events match','Нет подходящих событий')}</div>`}</div>
+  <div class="card"><h3>🎟 ${T('My tickets','Мои билеты')}<span class="sp"></span><span class="pill">${S.book.length}</span></h3>${S.book.length?S.book.map((b,i)=>{const e=EVENTS.find(x=>x.id===b.e);return `<div class="stop" style="padding:9px 0;grid-template-columns:30px minmax(0,1fr) auto"><span class="e">${CAT[e.c][0]}</span><div style="min-width:0"><b>${esc(L(e.n))}</b><small>${e.day} ${T(MONTHS[e.mo][0],MONTHS[e.mo][1])} · ${b.q} × ${money(e.price)} · <span class="mono">${b.ref}</span></small></div><button class="btn xs danger" data-cx="${i}">${T('Cancel','Отмена')}</button></div>`}).join(''):`<p class="muted" style="font-size:13px">${T('No tickets yet. Book an event to see it here — tickets also count toward your trip budget.','Билетов пока нет. Купите билет — он появится здесь и войдёт в бюджет поездки.')}</p>`}</div></div>`;
+  $$('[data-ef]',el).forEach(b=>b.onclick=()=>{S.evf=b.dataset.ef;save();rEvents()});
+  $$('[data-em]',el).forEach(b=>b.onclick=()=>{S.evm=b.dataset.em;save();rEvents()});
+  if($('#clrDest'))$('#clrDest').onclick=()=>{S.evDest=null;save();rEvents()};
+  $$('[data-bk]',el).forEach(b=>b.onclick=()=>bookModal(EVENTS.find(e=>e.id===b.dataset.bk)));
+  $$('[data-cx]',el).forEach(b=>b.onclick=()=>{const bk=S.book.splice(+b.dataset.cx,1)[0];EVENTS.find(e=>e.id===bk.e).sold-=bk.q;save();rEvents();nav();toast(T('Booking cancelled · refund issued','Бронь отменена · деньги возвращены'))});
+}
+function bookModal(e){let q=1;const left=e.seats-e.sold;
+  const draw=()=>{$('#modal').innerHTML=`<div class="modal" id="mbg"><div class="card"><h3>${esc(L(e.n))}<span class="sp"></span><button class="btn xs" id="mX">✕</button></h3><p class="muted" style="font-size:13px;margin:0 0 12px">📍 ${esc(L(D(e.dest).n))} · ${e.day} ${T(MONTHS[e.mo][0],MONTHS[e.mo][1])} · ${e.t}</p>
+   <div class="f"><label>${T('Tickets','Билеты')}</label><div class="qty"><button class="btn xs" id="qM">−</button><b>${q}</b><button class="btn xs" id="qP">＋</button><span class="muted" style="font-size:12px">${T('max','макс.')} ${Math.min(8,left)}</span></div></div>
+   <div class="f" style="margin-top:12px"><label>${T('Lead guest name','Имя гостя')}</label><input class="input" id="bName" value="Alex Rivera"><div class="err" id="bErr"></div></div>
+   <div class="kv"><span>${T('Total','Итого')}</span><b style="font-size:18px">${money(q*e.price)}</b></div>
+   <button class="btn pri" id="bOk" style="width:100%;justify-content:center">${T('Confirm booking','Подтвердить')}</button></div></div>`;
+   $('#mX').onclick=close;$('#mbg').onclick=ev=>{if(ev.target.id==='mbg')close()};
+   $('#qM').onclick=()=>{q=Math.max(1,q-1);draw()};$('#qP').onclick=()=>{q=Math.min(8,left,q+1);draw()};
+   $('#bOk').onclick=()=>{const n=$('#bName').value.trim();if(n.length<3||!/\s/.test(n)){$('#bErr').textContent=T('Enter first and last name','Введите имя и фамилию');return}
+     e.sold+=q;S.book.push({e:e.id,q,name:n,ref:'TK-'+Math.random().toString(36).slice(2,8).toUpperCase(),t:Date.now()});save();close();rEvents();nav();toast(T(`Booked ${q} ticket(s) — e-tickets sent`,`Куплено билетов: ${q} — электронные билеты отправлены`),'gold')}};
+  const close=()=>$('#modal').innerHTML='';draw();
+}
+
+/* ---------- eVisa ---------- */
+const STEPS=[['Visa type','Тип визы'],['Applicant','Заявитель'],['Travel','Поездка'],['Documents & pay','Документы и оплата']];
+const STL={submitted:['Submitted','Подана',''],review:['Officer review','На проверке','warn'],docs:['Docs requested','Нужны документы','warn'],approved:['Approved','Одобрена','ok'],rejected:['Refused','Отказ','bad']};
+function vErr(step){const f=S.visa.f,e={};const today=new Date().toISOString().slice(0,10);
+  if(step===1){if(!/^[A-Za-zА-Яа-яЁё' -]{2,}\s+[A-Za-zА-Яа-яЁё' -]{2,}$/.test(f.name.trim()))e.name=T('Full name as in passport','ФИО как в паспорте');
+    if(!f.nat)e.nat=T('Select nationality','Выберите гражданство');
+    if(!f.dob||f.dob>=today||(Date.now()-new Date(f.dob))/31557600000<1)e.dob=T('Valid date of birth','Корректная дата рождения');
+    if(!/^[A-Z0-9]{6,9}$/.test(f.pp.toUpperCase()))e.pp=T('6–9 letters/digits','6–9 букв/цифр');
+    if(!f.ppx)e.ppx=T('Required','Обязательно');else if((new Date(f.ppx)-Date.now())/864e5<180)e.ppx=T('Passport must be valid 6+ months','Паспорт должен действовать 6+ месяцев');
+    if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(f.email))e.email=T('Valid email','Корректная почта')}
+  if(step===2){if(!f.arr||f.arr<today)e.arr=T('Arrival date in the future','Дата прибытия в будущем');
+    const n=+f.nights,max=S.visa.type==='tr'?4:S.visa.type==='ev'?30:90;if(!(n>=1&&n<=max))e.nights=T('1–'+max+' nights for this visa','1–'+max+' ночей для этой визы');
+    if(f.hotel.trim().length<5)e.hotel=T('Hotel or host address','Отель или адрес проживания')}
+  if(step===3){if(!S.visa.docs.photo)e.photo=1;if(!S.visa.docs.pass)e.pass=1;if(!S.visa.agree)e.agree=T('Please confirm the declaration','Подтвердите декларацию')}
+  return e}
+function fld(id,en,ru,html,errs){return `<div class="f ${id==='hotel'?'full':''}"><label>${T(en,ru)}</label>${html}<div class="err">${errs[id]||''}</div></div>`}
+function rVisa(){const el=$('#v-visa');const v=S.visa,f=v.f;const errs=v.showErr?vErr(v.step):{};const ty=VTYPES[v.type];
+  let body='';
+  if(v.step===0)body=`<div class="vt">${Object.keys(VTYPES).map(k=>`<button data-vt="${k}" class="${v.type===k?'on':''}"><b>${L(VTYPES[k].n)}</b>${L(VTYPES[k].d)}<span class="pr">${VTYPES[k].fee?money(VTYPES[k].fee):T('Free','Бесплатно')}</span></button>`).join('')}</div>
+   <p class="muted" style="font-size:12.5px;margin:12px 0 0">${v.type==='ev'?T('Event visa requires a ticket: ','Для визы на событие нужен билет: ')+(S.book.length?'✓ '+S.book.length+T(' booked',' куплено'):T('book one in Events first','сначала купите в разделе «События»')):T('Eligible nationalities get a decision in minutes; others are reviewed by an officer.','Граждане из списка получают решение за минуты; остальные — после проверки офицером.')}</p>`;
+  if(v.step===1)body=`<div class="fgrid">${fld('name','Full name (as in passport)','ФИО (как в паспорте)',`<input class="input ${errs.name?'bad':''}" data-f="name" value="${esc(f.name)}" placeholder="Alex Rivera">`,errs)}
+   ${fld('nat','Nationality','Гражданство',`<select class="input ${errs.nat?'bad':''}" data-f="nat"><option value="">—</option>${NATS.map(n=>`<option value="${n[0]}" ${f.nat===n[0]?'selected':''}>${T(n[1],n[2])}</option>`).join('')}</select>`,errs)}
+   ${fld('dob','Date of birth','Дата рождения',`<input type="date" class="input ${errs.dob?'bad':''}" data-f="dob" value="${f.dob}">`,errs)}
+   ${fld('pp','Passport number','Номер паспорта',`<input class="input mono ${errs.pp?'bad':''}" data-f="pp" value="${esc(f.pp)}" placeholder="C4X82JK91">`,errs)}
+   ${fld('ppx','Passport expiry','Паспорт действует до',`<input type="date" class="input ${errs.ppx?'bad':''}" data-f="ppx" value="${f.ppx}">`,errs)}
+   ${fld('email','Email for the decision','Почта для решения',`<input class="input ${errs.email?'bad':''}" data-f="email" value="${esc(f.email)}" placeholder="you@mail.com">`,errs)}</div>
+   <button class="btn sm" id="fill" style="margin-top:4px">✨ ${T('Fill with demo traveller','Заполнить демо-данными')}</button>`;
+  if(v.step===2)body=`<div class="fgrid">${fld('arr','Arrival date','Дата прибытия',`<input type="date" class="input ${errs.arr?'bad':''}" data-f="arr" value="${f.arr}">`,errs)}
+   ${fld('nights','Nights','Ночей',`<input type="number" min="1" class="input ${errs.nights?'bad':''}" data-f="nights" value="${f.nights}">`,errs)}
+   ${fld('purpose','Purpose','Цель',`<select class="input" data-f="purpose">${[['leisure','Leisure','Отдых'],['event','Event','Событие'],['family','Visiting family','Визит к родным'],['umrah','Religious visit','Религиозный визит']].map(p=>`<option value="${p[0]}" ${f.purpose===p[0]?'selected':''}>${T(p[1],p[2])}</option>`).join('')}</select>`,errs)}
+   <div></div>${fld('hotel','Accommodation address','Адрес проживания',`<input class="input ${errs.hotel?'bad':''}" data-f="hotel" value="${esc(f.hotel)}" placeholder="${T('Hotel name, city','Отель, город')}">`,errs)}</div>
+   ${S.trip.days.some(d=>d.stops.length)?`<p class="muted" style="font-size:12.5px;margin:0">🧳 ${T('Linked trip','Связанная поездка')}: ${S.trip.name?esc(S.trip.name)+' · ':''}${S.trip.days.length} ${T('days','дн.')}</p>`:''}`;
+  if(v.step===3){const fee=ty.fee,svc=fee?5:0;body=`<div class="fgrid"><div class="upl ${v.docs.photo?'ok':''}" data-up="photo">${v.docs.photo?'✓ portrait_photo.jpg · 412 KB':'📷 '+T('Upload passport-style photo','Загрузите фото как на паспорт')}${errs.photo?`<div class="err">${T('Required','Обязательно')}</div>`:''}</div>
+   <div class="upl ${v.docs.pass?'ok':''}" data-up="pass">${v.docs.pass?'✓ passport_bio.pdf · 1.2 MB':'🛂 '+T('Upload passport bio page','Загрузите разворот паспорта')}${errs.pass?`<div class="err">${T('Required','Обязательно')}</div>`:''}</div></div>
+   <div class="kv" style="margin-top:14px"><span>${L(ty.n)}</span><b>${money(fee)}</b><span>${T('Service fee','Сервисный сбор')}</span><b>${money(svc)}</b><span>${T('Total','Итого')}</span><b style="font-size:18px">${money(fee+svc)}</b></div>
+   <label class="row" style="font-size:13px;cursor:pointer"><input type="checkbox" id="agree" ${v.agree?'checked':''}> ${T('I declare the information is true and complete.','Подтверждаю, что сведения верны и полны.')}</label><div class="err">${errs.agree||''}</div>
+   <p class="muted" style="font-size:12px;margin:4px 0 0">${T('Demo payment — no card is charged.','Демо-оплата — карта не списывается.')}</p>`}
+  const mine=S.apps.filter(a=>S.mine.includes(a.id));
+  el.innerHTML=`<div class="split"><div class="card"><h3>🛂 ${T('Apply for an eVisa','Оформление eVisa')}</h3>
+   <div class="steps">${STEPS.map((s,i)=>`<div class="step ${i<v.step?'ok':i===v.step?'cur':''}">${i+1}. ${T(s[0],s[1])}</div>`).join('')}</div>${body}
+   <div class="row" style="margin-top:14px;justify-content:space-between"><button class="btn sm" id="vBack" ${v.step?'':'disabled'}>← ${T('Back','Назад')}</button><button class="btn ${v.step===3?'gold':'pri'}" id="vNext">${v.step===3?T('Pay & submit','Оплатить и подать'):T('Continue','Далее')} →</button></div></div>
+  <div class="card"><h3>${T('My applications','Мои заявления')}<span class="sp"></span><span class="pill">${mine.length}</span></h3>${mine.length?mine.slice().reverse().map(a=>appCard(a)).join(''):`<div class="empty"><div class="big">📄</div>${T('Submitted applications and issued eVisas appear here.','Поданные заявления и выданные визы появятся здесь.')}</div>`}</div></div>`;
+  $$('[data-vt]',el).forEach(b=>b.onclick=()=>{v.type=b.dataset.vt;save();rVisa()});
+  $$('[data-f]',el).forEach(i=>i.addEventListener(i.tagName==='SELECT'||i.type==='date'?'change':'input',()=>{f[i.dataset.f]=i.dataset.f==='pp'?i.value.toUpperCase():i.value;save();if(v.showErr&&(i.tagName==='SELECT'||i.type==='date'))rVisa()}));
+  $$('[data-up]',el).forEach(u=>u.onclick=()=>{v.docs[u.dataset.up]=!v.docs[u.dataset.up];save();rVisa();if(v.docs[u.dataset.up])toast(T('File uploaded · quality check passed','Файл загружен · проверка качества пройдена'))});
+  if($('#agree'))$('#agree').onchange=e=>{v.agree=e.target.checked;save()};
+  if($('#fill'))$('#fill').onclick=()=>{const d=new Date();d.setFullYear(d.getFullYear()+6);Object.assign(f,{name:'Alex Rivera',nat:'GB',dob:'1990-04-18',pp:'C4X82JK91',ppx:d.toISOString().slice(0,10),email:'alex.rivera@mail.test'});v.showErr=false;save();rVisa()};
+  $('#vBack').onclick=()=>{v.step--;v.showErr=false;save();rVisa()};
+  $('#vNext').onclick=()=>{if(v.step===0&&v.type==='ev'&&!S.book.length){toast(T('Book an event ticket first','Сначала купите билет на событие'),'bad');return}
+    const e=vErr(v.step);if(Object.keys(e).length){v.showErr=true;save();rVisa();toast(T('Please fix the highlighted fields','Исправьте отмеченные поля'),'bad');return}
+    v.showErr=false;if(v.step<3){v.step++;save();rVisa();return}submitVisa()};
+  $$('[data-dl]',el).forEach(b=>b.onclick=()=>toast(T('eVisa PDF sent to ','PDF eVisa отправлен на ')+esc(S.apps.find(a=>a.id===b.dataset.dl).email||''),'gold'));
+}
+function appCard(a){const s=STL[a.st];return `<div style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px"><div class="row"><b class="mono" style="font-size:13px">${a.id}</b><span class="sp" style="flex:1"></span><span class="pill ${s[2]}">${T(s[0],s[1])}</span></div>
+  <div class="muted" style="font-size:12.5px;margin:4px 0 10px">${L(VTYPES[a.type].n)} · ${esc(a.name)}</div>
+  ${a.st==='approved'?`<div class="permit"><div><div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${T('Electronic visa','Электронная виза')}</div><b style="font-size:16px">${esc(a.name)}</b><div class="mono" style="font-size:12px;margin-top:4px">${a.pp} · ${T('valid to','до')} ${fmtD(a.sub+31536e6)}</div><button class="btn xs" data-dl="${a.id}" style="margin-top:8px">⬇ PDF</button></div>${qr(a.id)}</div>`:`<ul class="tline">${a.log.slice().reverse().map(l=>`<li>${T(l[1],l[2])}<span>${new Date(l[0]).toLocaleString(loc(),{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span></li>`).join('')}</ul>`}</div>`}
+function qr(seed){let h=0;for(const c of seed)h=(h*31+c.charCodeAt(0))>>>0;let s='<svg class="qr" viewBox="0 0 21 21">';for(let y=0;y<21;y++)for(let x=0;x<21;x++){const f=(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);let on;if(f){const fx=x>13?x-14:x,fy=y>13?y-14:y;on=fx===0||fy===0||fx===6||fy===6||(fx>1&&fx<5&&fy>1&&fy<5)}else{h=(h*1103515245+12345)>>>0;on=(h>>16)&1}if(on)s+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#111"/>`}return s+'</svg>'}
+function submitVisa(){const v=S.visa,f=v.f;const id='EV-25-'+(105000+S.apps.length*7+Math.floor(Math.random()*6));const now=Date.now();
+  const a={id,type:v.type,name:f.name.trim(),nat:f.nat,pp:f.pp.toUpperCase(),email:f.email,sub:now,st:'submitted',log:[[now,'Submitted · payment received','Подана · оплата получена']]};
+  S.apps.push(a);S.mine.push(id);S.visa={step:0,type:'tour',f:{name:'',nat:'',dob:'',pp:'',ppx:'',email:'',arr:'',nights:'7',purpose:'leisure',hotel:''},docs:{photo:false,pass:false},agree:false};save();rVisa();nav();
+  toast(T('Application '+id+' submitted','Заявление '+id+' подано'),'gold');
+  const fast=['GB','DE','US','FR'].includes(a.nat);
+  setTimeout(()=>{a.log.push([Date.now(),'Automated security & document checks passed','Автоматические проверки пройдены']);if(!fast){a.st='review';a.log.push([Date.now(),'Sent to officer review','Передана офицеру на проверку'])}save();if(S.view==='visa')rVisa()},2500);
+  if(fast)setTimeout(()=>{a.st='approved';a.log.push([Date.now(),'Approved · eVisa issued','Одобрено · eVisa выдана']);save();if(S.view==='visa'||S.view==='stats')render();toast(T('🎉 eVisa approved for ','🎉 eVisa одобрена: ')+esc(a.name),'gold')},5500);
+}
+
+/* ---------- analytics ---------- */
+const MK=['GCC','UK','Germany','India','China','USA','Other'];const MKR=['ССАЗ','Великобритания','Германия','Индия','Китай','США','Другие'];
+const ARR=[[412,438,505,560,611,470,398,402,520,598,640,702],[355,371,430,488,520,401,350,356,452,515,560,610]];
+function rStats(){const el=$('#v-stats');const apps=S.apps;const appr=apps.filter(a=>a.st==='approved').length,dec=apps.filter(a=>a.st==='approved'||a.st==='rejected').length;
+  const tix=S.book.reduce((a,b)=>a+b.q,0);const evRev=EVENTS.reduce((a,e)=>a+e.sold*e.price,0);
+  const k=[['International arrivals (YTD)','Иностранные прибытия (с начала года)','6.26M','+12.4% '+T('vs last year','к прошлому году'),'ok-t'],['Tourism spend','Расходы туристов','$9.8B',T('avg $1,565 per visitor','в среднем $1 565 на туриста'),''],['eVisa approval rate','Одобрение eVisa',(91+Math.round(appr/Math.max(1,dec)*4))+'%',T('median decision 6 min','медиана решения 6 мин'),'ok-t'],['Event ticket revenue','Выручка от событий',money(evRev),tix+T(' tickets booked in this demo',' билетов куплено в демо'),'']];
+  const pend=apps.filter(a=>a.st==='submitted'||a.st==='review'||a.st==='docs');
+  el.innerHTML=`<div class="kpis">${k.map(x=>`<div class="card kpi"><div class="l">${T(x[0],x[1])}</div><div class="v ${x[4]}">${x[2]}</div><div class="d">${x[3]}</div></div>`).join('')}</div>
+  <div class="grid2"><div class="card chart"><h3>${T('Monthly international arrivals, thousands','Прибытия по месяцам, тыс.')}</h3>${lineSvg()}<div class="legend"><span><i style="background:var(--gold)"></i>${new Date().getFullYear()}</span><span><i style="background:var(--dim)"></i>${new Date().getFullYear()-1}</span></div></div>
+   <div class="card chart"><h3>${T('Source markets','Рынки')}</h3>${barSvg()}</div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('Visits by destination type','Посещения по типам мест')}</h3>${donutSvg()}</div>
+   <div class="card chart"><h3>${T('Top destinations — occupancy','Популярные места — загрузка')}</h3>${occSvg()}</div></div>
+  <div class="card"><h3>🛂 ${T('eVisa officer desk','Рабочее место визового офицера')}<span class="sp"></span><span class="pill ${pend.length?'warn':'ok'}">${pend.length} ${T('pending','ожидают')}</span></h3>
+   <div class="tw"><table><thead><tr><th>${T('Application','Заявление')}</th><th>${T('Applicant','Заявитель')}</th><th>${T('Nationality','Гражданство')}</th><th>${T('Type','Тип')}</th><th>${T('Submitted','Подано')}</th><th>${T('Status','Статус')}</th><th>${T('Decision','Решение')}</th></tr></thead><tbody>
+   ${apps.slice().reverse().map(a=>{const s=STL[a.st];const n=NATS.find(x=>x[0]===a.nat);return `<tr><td class="mono">${a.id}</td><td>${esc(a.name)}</td><td>${n?T(n[1],n[2]):a.nat}</td><td>${L(VTYPES[a.type].n)}</td><td style="white-space:nowrap">${fmtD(a.sub)}</td><td><span class="pill ${s[2]}">${T(s[0],s[1])}</span></td><td style="white-space:nowrap">${a.st==='approved'||a.st==='rejected'?'—':`<button class="btn xs pri" data-ap="${a.id}">${T('Approve','Одобрить')}</button> <button class="btn xs" data-dc="${a.id}">${T('Request doc','Запросить')}</button> <button class="btn xs danger" data-rj="${a.id}">${T('Refuse','Отказать')}</button>`}</td></tr>`}).join('')}</tbody></table></div></div>`;
+  const act=(id,st,en,ru)=>{const a=S.apps.find(x=>x.id===id);a.st=st;a.log.push([Date.now(),en,ru]);save();rStats();nav();toast(a.id+' → '+T(STL[st][0],STL[st][1]),st==='approved'?'gold':st==='rejected'?'bad':'')};
+  $$('[data-ap]',el).forEach(b=>b.onclick=()=>act(b.dataset.ap,'approved','Approved by officer · eVisa issued','Одобрено офицером · eVisa выдана'));
+  $$('[data-dc]',el).forEach(b=>b.onclick=()=>act(b.dataset.dc,'docs','Additional document requested','Запрошен дополнительный документ'));
+  $$('[data-rj]',el).forEach(b=>b.onclick=()=>act(b.dataset.rj,'rejected','Refused · reason sent to applicant','Отказано · причина отправлена заявителю'));
+}
+function lineSvg(){const W=620,H=230,pl=40,pb=26,pt=12,mx=800;const xs=i=>pl+i*(W-pl-14)/11,ys=v=>pt+(H-pt-pb)*(1-v/mx);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;for(let g=0;g<=4;g++){const v=mx*g/4;s+=`<line x1="${pl}" x2="${W}" y1="${ys(v)}" y2="${ys(v)}" style="stroke:var(--line)"/><text x="${pl-6}" y="${ys(v)+4}" text-anchor="end" font-size="10" style="fill:var(--dim)">${v}</text>`}
+  const mo=PT.lang==='ru'?['я','ф','м','а','м','и','и','а','с','о','н','д']:['J','F','M','A','M','J','J','A','S','O','N','D'];
+  mo.forEach((m,i)=>s+=`<text x="${xs(i)}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(--dim)">${m}</text>`);
+  const cur=ARR[0].map((v,i)=>i===0?v+S.mine.length*1:v);
+  s+=`<path d="M${ARR[1].map((v,i)=>xs(i)+','+ys(v)).join(' L')}" fill="none" stroke-width="2" stroke-dasharray="5 4" style="stroke:var(--dim)"/>`;
+  s+=`<path d="M${xs(0)},${ys(0)} L${cur.map((v,i)=>xs(i)+','+ys(v)).join(' L')} L${xs(11)},${ys(0)}Z" style="fill:color-mix(in srgb,var(--gold) 16%,transparent)"/><path d="M${cur.map((v,i)=>xs(i)+','+ys(v)).join(' L')}" fill="none" stroke-width="3" style="stroke:var(--gold)"/>`;
+  cur.forEach((v,i)=>s+=`<circle cx="${xs(i)}" cy="${ys(v)}" r="3.5" style="fill:var(--gold)"><title>${v}k</title></circle>`);
+  return s+'</svg>'}
+function barSvg(){const v=[1840,920,610,580,540,470,1300],mx=2000,W=360,rh=28,pl=96,H=v.length*rh+8;let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  v.forEach((x,i)=>{const w=(W-pl-50)*x/mx,y=i*rh+4;s+=`<text x="${pl-8}" y="${y+15}" text-anchor="end" font-size="11.5" style="fill:var(--muted)">${PT.lang==='ru'?MKR[i]:MK[i]}</text><rect x="${pl}" y="${y+3}" width="${w}" height="16" rx="4" style="fill:var(${i===6?'--dim':'--mal'})"/><text x="${pl+w+6}" y="${y+15}" font-size="11" font-weight="700" style="fill:var(--text)">${(x/1000).toFixed(2)}M</text>`});return s+'</svg>'}
+function donutSvg(){const vals={heritage:28,nature:17,coast:22,desert:14,city:19};S.trip.days.forEach(d=>d.stops.forEach(id=>vals[D(id).c]+=.5));const tot=Object.values(vals).reduce((a,b)=>a+b,0),r=60,C=2*Math.PI*r;let off=0;
+  let s=`<div class="row" style="justify-content:center;gap:20px"><svg viewBox="0 0 160 160" style="width:160px;max-width:45%">`;
+  Object.keys(vals).forEach(c=>{const p=vals[c]/tot;s+=`<circle cx="80" cy="80" r="${r}" fill="none" stroke-width="22" style="stroke:var(${CAT[c][3]})" stroke-dasharray="${p*C} ${C}" stroke-dashoffset="${-off*C}" transform="rotate(-90 80 80)"/>`;off+=p});
+  s+=`<text x="80" y="86" text-anchor="middle" font-size="18" font-weight="800" style="fill:var(--text)">14.1M</text></svg><div style="font-size:13px;display:flex;flex-direction:column;gap:6px">`;
+  Object.keys(vals).forEach(c=>s+=`<div><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(${CAT[c][3]});margin-right:6px"></i>${T(CAT[c][1],CAT[c][2])} <b>${Math.round(vals[c]/tot*100)}%</b></div>`);return s+'</div></div>'}
+function occSvg(){const top=DEST.slice().sort((a,b)=>b.rt-a.rt).slice(0,6);const W=360,rh=28,pl=130,H=top.length*rh+8;let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  top.forEach((d,i)=>{const p=Math.min(99,Math.round(d.rt*18-4+(inTrip(d.id)?3:0))),w=(W-pl-40)*p/100,y=i*rh+4;const nm=L(d.n);s+=`<text x="${pl-8}" y="${y+15}" text-anchor="end" font-size="11" style="fill:var(--muted)">${esc(nm.length>19?nm.slice(0,18)+'…':nm)}</text><rect x="${pl}" y="${y+3}" width="${W-pl-40}" height="16" rx="4" style="fill:var(--bg2)"/><rect x="${pl}" y="${y+3}" width="${w}" height="16" rx="4" style="fill:var(${p>85?'--amber':'--gold'})"/><text x="${pl+w+5}" y="${y+15}" font-size="11" font-weight="700" style="fill:var(--text)">${p}%</text>`});return s+'</svg>'}
+
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#logout').onclick=()=>{S.user=null;save();render();toast(T('Signed out','Вы вышли'))};
+$('#reset').onclick=()=>{const u=S.user,r=S.role;store.clear();S=seed();S.user=u;S.role=r;S.view=r==='auth'?'stats':'explore';$('#modal').innerHTML='';save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

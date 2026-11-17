@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CareerGate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;gap:10px;align-items:center}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff;font-weight:800;font-size:13px;flex:none}
+.who small{display:block;color:var(--muted);font-size:11.5px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:3px;min-height:0}
+.input.bad{border-color:var(--red)}
+select.input{appearance:auto}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.login .hero{padding:48px;background:radial-gradient(circle at 20% 20%,color-mix(in srgb,var(--mal) 26%,transparent),transparent 60%),radial-gradient(circle at 80% 90%,color-mix(in srgb,var(--gold) 20%,transparent),transparent 55%),var(--bg2);display:flex;flex-direction:column;justify-content:center;gap:16px;border-right:1px solid var(--line)}
+.login .hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em}
+.login .hero ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:14px}
+.login .hero li{display:flex;gap:10px}.login .hero li b{color:var(--mal3)}
+.login .box{display:grid;place-items:center;padding:30px 18px}
+.login .card{width:100%;max-width:400px;display:grid;gap:12px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block;font-size:14px} .opt span{font-size:12px;color:var(--muted)}
+/* jobs */
+.filters{display:grid;grid-template-columns:minmax(0,2fr) repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.jl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;align-items:start}
+.job{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--panel);cursor:pointer;transition:.15s}
+.job:hover{border-color:var(--line2)} .job.on{border-color:var(--mal);box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 15%,transparent)}
+.job .t{display:flex;gap:8px;align-items:flex-start}
+.job .t b{flex:1;font-size:15px;line-height:1.3}
+.job .m{font-size:12.5px;color:var(--muted);margin-top:4px}
+.job .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.star{background:none;border:0;cursor:pointer;font-size:18px;color:var(--dim);padding:0 2px;line-height:1}
+.star.on{color:var(--gold)}
+.det{position:sticky;top:60px}
+.det h2{margin:0 0 4px;font-size:21px}
+.det .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}
+.det .grid div{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--muted)}
+.det .grid b{display:block;color:var(--text);font-size:13.5px}
+.det h4{margin:14px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+.det ul{margin:0;padding-left:18px;font-size:13.5px}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+/* wizard */
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.drop{border:2px dashed var(--line2);border-radius:14px;padding:18px;text-align:center;cursor:pointer;background:var(--bg2);display:block}
+.drop:hover{border-color:var(--mal)}
+.drop.ok{border-style:solid;border-color:var(--mal);background:color-mix(in srgb,var(--mal) 8%,transparent)}
+.exp{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--bg2);display:flex;gap:10px;align-items:flex-start}
+.exp div{flex:1;min-width:0;font-size:13px} .exp b{display:block;font-size:14px}
+.q{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)}
+.q p{margin:0 0 8px;font-weight:600;font-size:14px}
+.q.miss{border-color:var(--red)}
+.scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.scale button{border:1px solid var(--line2);background:var(--panel);border-radius:10px;padding:8px 4px;cursor:pointer;font-size:11.5px;line-height:1.25;min-height:44px}
+.scale button b{display:block;font-size:14px;font-family:var(--mono)}
+.scale button.on{background:var(--mal);border-color:var(--mal);color:#fff}
+.yn{display:flex;gap:8px}
+.yn button{flex:1;border:1px solid var(--line2);background:var(--panel);border-radius:10px;padding:10px;cursor:pointer;font-weight:600}
+.yn button.on{background:var(--mal);border-color:var(--mal);color:#fff}
+.rev{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:13.5px}
+.rev dt{color:var(--muted)} .rev dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.big-score{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+/* my apps */
+.appc{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)}
+.appc .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.appc .top b{flex:1;min-width:160px}
+.tl{display:flex;margin-top:12px}
+.tl div{flex:1;position:relative;text-align:center;font-size:11px;color:var(--dim);min-width:0}
+.tl div:before{content:"";position:absolute;top:6px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.tl div:first-child:before{display:none}
+.tl i{display:block;width:14px;height:14px;border-radius:50%;margin:0 auto 4px;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1}
+.tl .ok i{background:var(--mal);border-color:var(--mal)} .tl .ok:before,.tl .cur:before{background:var(--mal)}
+.tl .cur i{border-color:var(--gold);background:var(--gold)} .tl .ok,.tl .cur{color:var(--text)}
+.tl .rej i{background:var(--red);border-color:var(--red)}
+.tl span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+/* kanban */
+.kb{display:grid;grid-template-columns:repeat(6,minmax(170px,1fr));gap:10px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:10px;min-height:220px;display:flex;flex-direction:column;gap:8px}
+.col.over{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 8%,var(--bg2))}
+.col h5{margin:0 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;justify-content:space-between}
+.cd{background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:9px 10px;font-size:12.5px;cursor:grab}
+.cd.new{border-color:var(--gold)}
+.cd b{display:block;font-size:13.5px}
+.cd .mv{display:flex;gap:4px;margin-top:8px}
+.cd .mv button{flex:1;border:1px solid var(--line2);background:var(--bg2);border-radius:8px;padding:5px 0;cursor:pointer;font-size:13px;min-height:32px}
+.cd .mv button:hover{border-color:var(--mal)}
+.sc{font-family:var(--mono);font-weight:700;border-radius:6px;padding:1px 6px;font-size:11.5px}
+.kbtools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.kbtools .input{width:auto;min-width:220px;max-width:100%}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2500;display:grid;place-items:center;padding:16px}
+.modal .card{width:100%;max-width:520px;max-height:86vh;overflow:auto}
+.note{font-size:12.5px;padding:6px 0;border-bottom:1px dashed var(--line)}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.intro{grid-template-columns:minmax(0,1fr)}.filters{grid-template-columns:1fr 1fr}.filters .q0{grid-column:1/-1}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .jl{grid-template-columns:minmax(0,1fr)}
+  .det{position:static}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .login .hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .login .hero h2{font-size:24px}
+}
+@media (max-width:560px){.how,.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.step span{font-size:10px}.tl span{font-size:9px}.det .grid{grid-template-columns:1fr 1fr}.scale{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.scale button{font-size:0;padding:6px 2px}.scale button b{font-size:15px}.kbtools .input{min-width:0;width:100%}}
+</style>
+</head>
+<body data-demo-en="CareerGate — government jobs & hiring platform" data-demo-ru="CareerGate — платформа вакансий и найма госслужбы">
+<div id="loginScr"></div>
+<div class="app" id="app" style="display:none">
+  <aside class="side" id="side">
+    <div class="brand"><b>⌂</b><div>CareerGate<small data-en="Office of Personnel · Valdoria" data-ru="Управление кадров · Вальдория"></small></div></div>
+    <div class="sec" data-en="Job seeker" data-ru="Соискатель"></div>
+    <div id="navS"></div>
+    <div class="sec" data-en="Hiring manager" data-ru="Менеджер по найму"></div>
+    <div id="navH"></div>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="logout" style="flex:1;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    </div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill" id="hdrPill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Search <b>Jobs</b> with filters, star favourites and press <b>Apply</b> on a vacancy." data-ru="Найдите вакансию в <b>Вакансиях</b> через фильтры, отметьте избранное и нажмите <b>Откликнуться</b>."></span></div>
+          <div><b>2</b><span data-en="Attach a resume, answer the <b>assessment questionnaire</b>, get your category rating and submit." data-ru="Приложите резюме, ответьте на <b>оценочную анкету</b>, получите категорию и отправьте."></span></div>
+          <div><b>3</b><span data-en="As hiring manager move candidates on the <b>Pipeline</b> board and watch <b>Time-to-hire</b> update." data-ru="Как менеджер двигайте кандидатов на доске <b>Воронки</b> и смотрите, как меняется <b>Срок найма</b>."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Government jobs & hiring platform" data-ru="Платформа вакансий и найма госслужбы"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $95M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Office of Personnel Management, Republic of Valdoria (fictional)" data-ru="Управление кадров, Республика Вальдория (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>Search · assessments · ATS</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-search"></section>
+    <section class="view" id="v-apply"></section>
+    <section class="view" id="v-mine"></section>
+    <section class="view" id="v-pipe"></section>
+    <section class="view" id="v-tth"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div id="modal"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=o=>o?(PT.lang==='ru'?o.ru||o.en:o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY='pt_jobs_state';
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const fmtD=d=>new Date(d).toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'});
+const money=n=>'V$ '+Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const DAY=864e5, NOW=new Date('2026-11-17T10:00:00').getTime();
+const iso=t=>new Date(t).toISOString().slice(0,10);
+
+const AG={tre:{en:'Ministry of Finance',ru:'Министерство финансов'},hea:{en:'Ministry of Health',ru:'Министерство здравоохранения'},tra:{en:'Transport Authority',ru:'Транспортное управление'},dig:{en:'Digital Service Agency',ru:'Агентство цифровых услуг'},env:{en:'Environment Protection Agency',ru:'Агентство охраны среды'},jus:{en:'Ministry of Justice',ru:'Министерство юстиции'}};
+const LOC={cap:{en:'Valdor (capital)',ru:'Вальдор (столица)'},nor:{en:'Northport',ru:'Нортпорт'},riv:{en:'Riverton',ru:'Ривертон'},rem:{en:'Remote',ru:'Удалённо'}};
+const J=(id,ag,lc,gr,smin,smax,type,rem,close,en,ru,den,dru,duties,quals)=>({id,ag,lc,gr,smin,smax,type,rem,close,t:{en,ru},d:{en:den,ru:dru},duties,quals});
+const JOBS=[
+ J('VAL-26-1041','dig','cap',12,68000,88000,'ft',1,'2026-12-05','Senior Data Analyst','Старший аналитик данных','Build analytics products that measure how citizens use 140 digital services.','Создание аналитики, показывающей, как граждане пользуются 140 цифровыми услугами.',[['Design KPI dashboards for service owners','Проектировать KPI-дашборды для владельцев услуг'],['Run A/B experiments on service journeys','Проводить A/B-тесты пользовательских путей'],['Brief directors on findings','Докладывать выводы директорам']],[['3+ years in data analysis','3+ года в анализе данных'],['SQL and Python','SQL и Python']]),
+ J('VAL-26-1042','dig','rem',13,78000,99000,'ft',1,'2026-12-12','Cloud Platform Engineer','Инженер облачной платформы','Operate the government cloud landing zone serving 60 agencies.','Сопровождение государственной облачной платформы для 60 ведомств.',[['Automate infrastructure as code','Автоматизировать инфраструктуру как код'],['Lead incident response','Руководить реагированием на инциденты']],[['Kubernetes, Terraform','Kubernetes, Terraform'],['Security clearance eligible','Допуск к гостайне']]),
+ J('VAL-26-1043','tre','cap',11,58000,74000,'ft',0,'2026-11-30','Budget Analyst','Бюджетный аналитик','Analyse ministry budget requests and prepare execution reports.','Анализ бюджетных заявок министерств и отчётов об исполнении.',[['Review budget submissions','Проверять бюджетные заявки'],['Prepare monthly execution reports','Готовить ежемесячные отчёты об исполнении']],[['Degree in finance or economics','Высшее финансовое или экономическое'],['Advanced spreadsheet skills','Уверенная работа с таблицами']]),
+ J('VAL-26-1044','tre','nor',9,46000,59000,'ft',0,'2026-12-02','Tax Compliance Officer','Инспектор налогового контроля','Examine business returns and support taxpayers in the northern region.','Проверка деклараций бизнеса и поддержка налогоплательщиков северного региона.',[['Audit small business returns','Проверять декларации малого бизнеса'],['Hold taxpayer consultations','Проводить консультации']],[['Accounting background','Опыт в бухучёте']]),
+ J('VAL-26-1045','hea','riv',10,52000,66000,'ft',0,'2026-12-09','Public Health Program Officer','Специалист программ здравоохранения','Coordinate vaccination and screening programmes across 14 districts.','Координация программ вакцинации и скрининга в 14 районах.',[['Plan district campaigns','Планировать кампании по районам'],['Track coverage indicators','Отслеживать охват']],[['Public health degree','Образование в общественном здравоохранении']]),
+ J('VAL-26-1046','hea','cap',14,92000,118000,'ft',0,'2026-12-20','Chief Medical Informatics Officer','Директор по медицинской информатике','Lead the national electronic health record programme.','Руководство национальной программой электронных медкарт.',[['Set clinical data standards','Задавать стандарты клинических данных'],['Lead a team of 40','Руководить командой из 40 человек']],[['Medical degree + 5 yrs leadership','Медицинское образование + 5 лет руководства']]),
+ J('VAL-26-1047','tra','nor',8,41000,52000,'ft',0,'2026-11-28','Port Safety Inspector','Инспектор безопасности порта','Inspect vessels and terminals for safety compliance.','Инспекция судов и терминалов на соответствие требованиям безопасности.',[['Conduct on-site inspections','Проводить выездные проверки'],['Issue compliance notices','Выдавать предписания']],[['Maritime certificate','Морской сертификат']]),
+ J('VAL-26-1048','tra','cap',12,66000,84000,'ft',1,'2026-12-15','Transport Policy Advisor','Советник по транспортной политике','Shape policy for the 2030 rail and urban mobility plan.','Разработка политики по плану железных дорог и городской мобильности до 2030 г.',[['Draft policy papers','Готовить аналитические записки'],['Consult stakeholders','Проводить консультации со сторонами']],[['Policy or planning degree','Образование в политике или планировании']]),
+ J('VAL-26-1049','env','riv',9,45000,57000,'pt',0,'2026-12-01','Environmental Field Technician','Полевой эколог-техник','Collect water and air samples for the national monitoring network.','Отбор проб воды и воздуха для национальной сети мониторинга.',[['Field sampling','Отбор проб на местах'],['Maintain sensors','Обслуживать датчики']],[['Driving licence','Водительские права']]),
+ J('VAL-26-1050','env','rem',11,57000,72000,'ft',1,'2026-12-18','Climate Data Scientist','Специалист по климатическим данным','Model emissions scenarios for the national climate plan.','Моделирование сценариев выбросов для национального климатического плана.',[['Build emissions models','Строить модели выбросов'],['Publish open datasets','Публиковать открытые данные']],[['Python, statistics','Python, статистика']]),
+ J('VAL-26-1051','jus','cap',13,76000,95000,'ft',0,'2026-12-08','Senior Legal Counsel','Старший юрисконсульт','Advise on procurement and administrative law.','Консультирование по закупочному и административному праву.',[['Review contracts','Проверять контракты'],['Represent in tribunals','Представлять в трибуналах']],[['Bar admission','Статус адвоката']]),
+ J('VAL-26-1052','jus','nor',7,36000,45000,'ft',0,'2026-11-26','Court Records Clerk','Секретарь судебного архива','Maintain court case files and digitise archives.','Ведение судебных дел и оцифровка архива.',[['Register case filings','Регистрировать поступающие дела'],['Scan and index archives','Сканировать и индексировать архив']],[['Attention to detail','Внимательность']]),
+ J('VAL-26-1053','dig','cap',11,60000,76000,'ft',1,'2026-12-10','UX Researcher','UX-исследователь','Research citizen needs for the national services portal.','Исследование потребностей граждан для портала госуслуг.',[['Run usability studies','Проводить юзабилити-тесты'],['Synthesize insights','Обобщать выводы']],[['Portfolio of research','Портфолио исследований']]),
+ J('VAL-26-1054','hea','nor',8,40000,51000,'pt',0,'2026-12-04','Community Health Worker','Социальный медработник','Support patients in rural communities with chronic conditions.','Поддержка пациентов с хроническими болезнями в сельских районах.',[['Home visits','Визиты на дом'],['Health education sessions','Занятия по здоровью']],[['Nursing certificate','Сертификат медсестры']]),
+ J('VAL-26-1055','tre','rem',12,64000,82000,'ft',1,'2026-12-22','Procurement Specialist','Специалист по закупкам','Run competitive tenders under the public procurement act.','Проведение конкурсных закупок по закону о госзакупках.',[['Draft tender documents','Готовить тендерную документацию'],['Evaluate bids','Оценивать заявки']],[['Procurement certification','Сертификат по закупкам']]),
+ J('VAL-26-1056','tra','riv',10,50000,63000,'ft',0,'2026-12-11','Road Asset Engineer','Инженер дорожных активов','Plan maintenance of 3,200 km of national roads.','Планирование ремонта 3 200 км национальных дорог.',[['Condition surveys','Обследование состояния'],['Maintenance programming','Планирование ремонтов']],[['Civil engineering degree','Строительное образование']])
+];
+const QS=[['Analyse data to support programme or policy decisions','Анализ данных для решений по программам и политике'],['Prepare written reports or briefings for senior leadership','Подготовка отчётов и записок для руководства'],['Manage projects with multiple stakeholders and deadlines','Управление проектами с несколькими сторонами и сроками'],['Use spreadsheets, databases or BI tools to organise information','Работа с таблицами, базами данных или BI-инструментами'],['Interpret laws, regulations or policies and apply them to cases','Толкование законов и правил применительно к случаям'],['Present information to groups or the public','Выступления перед группами или публикой'],['Coordinate budgets, resources or procurement','Координация бюджетов, ресурсов или закупок']];
+const SCALE=[['No experience','Нет опыта'],['Training only','Только обучение'],['With supervision','Под контролем'],['Independently','Самостоятельно'],['Expert / trained others','Эксперт / обучал других']];
+const STG=[['applied','Applied','Отклик'],['screen','Screened','Отбор'],['assess','Assessment','Оценка'],['interview','Interview','Интервью'],['offer','Offer','Оффер'],['hired','Hired','Принят']];
+const SRC=[['Portal','Портал'],['Referral','Рекомендация'],['University fair','Ярмарка вузов'],['Internal','Внутренний']];
+
+function seed(){
+  const r=rng(41);
+  const FN=['Anna Kowal','Marek Novak','Lina Haddad','Peter Olsen','Sofia Reyes','David Mensah','Elena Petrova','Tomas Berg','Aisha Khan','Lucas Moreau','Mira Sato','Jonas Weber','Nadia Rahman','Oscar Lindgren','Ruth Adeyemi','Ivan Sokolov','Clara Duarte','Kenji Mori','Hana Novakova','Samuel Ortiz','Yara Saleh','Felix Brandt'];
+  const pipe=[];const hjobs=['VAL-26-1041','VAL-26-1053','VAL-26-1042'];
+  for(let i=0;i<22;i++){const st=[0,0,0,0,1,1,1,2,2,2,3,3,3,4,4,5,0,1,2,3,4,5][i];
+    pipe.push({id:'C-'+(3101+i),name:FN[i],job:hjobs[i%3],stage:STG[st][0],score:55+Math.floor(r()*44),src:Math.floor(r()*4),applied:iso(NOW-(4+Math.floor(r()*40))*DAY),moved:iso(NOW-Math.floor(r()*6)*DAY),notes:[],rej:false});}
+  // historical hires: month index (0=Dec 25 .. 11=Nov 26) & days
+  const hires=[];const base=[98,96,94,91,93,88,86,84,81,79,77,74];
+  base.forEach((b,m)=>{for(let k=0;k<3+Math.floor(r()*4);k++)hires.push({m,days:Math.round(b+(r()-.5)*18),stg:[4+r()*4,6+r()*5,9+r()*7,18+r()*9,9+r()*6].map(x=>+x.toFixed(1))})});
+  return{user:null,role:'seeker',view:'search',saved:['VAL-26-1048'],f:{q:'',ag:'',lc:'',gr:'',sal:0,rem:false,ft:false,only:false},sel:'VAL-26-1041',sort:'close',
+    profile:{name:'Daria Volkova',email:'d.volkova@mail.vd',phone:'+371 555 0142',resume:null,exp:[{t:'Data Analyst',o:'City of Valdor Statistics Office',y:'2021–2026'},{t:'Junior Analyst',o:'Northport Logistics',y:'2018–2021'}],edu:'MSc Applied Statistics, Valdor University, 2018'},
+    draft:null,apps:[{id:'APP-77310',job:'VAL-26-1050',date:'2026-10-21',cat:'Well qualified',score:76,cid:null,stage:'assess',rej:false}],pipe,hires,hjob:'VAL-26-1041',nextApp:77311,nextC:3123};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+
+const VIEWS=[['search','🔎','Find jobs','Поиск вакансий','S'],['apply','📝','Application','Заявка','S'],['mine','📂','My applications','Мои заявки','S'],['pipe','🗂','Pipeline','Воронка кандидатов','H'],['tth','⏱','Time-to-hire','Срок найма','H']];
+function nav(){
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';
+    if(v[0]==='mine'&&S.apps.length)x=`<span class="cnt">${S.apps.length}</span>`;
+    if(v[0]==='pipe'){const n=S.pipe.filter(c=>c.stage==='applied'&&!c.rej).length;if(n)x=`<span class="cnt">${n}</span>`}
+    if(v[0]==='apply'&&!S.draft)return '';
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navS').innerHTML=mk('S');$('#navH').innerHTML=mk('H');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  if(!S.user){$('#app').style.display='none';$('#loginScr').style.display='';rLogin();return}
+  $('#loginScr').style.display='none';$('#app').style.display='';
+  if(S.view==='apply'&&!S.draft)S.view='search';
+  nav();const v=VIEWS.find(x=>x[0]===S.view);
+  $('#title').textContent=T(v[2],v[3]);
+  $('#crumb').textContent=v[4]==='S'?T('Job seeker portal','Портал соискателя'):T('Hiring manager workspace','Кабинет менеджера по найму');
+  const open=S.pipe.filter(c=>!c.rej&&c.stage!=='hired').length;
+  $('#hdrPill').className='pill '+(v[4]==='S'?'ok':'gold');
+  $('#hdrPill').textContent=v[4]==='S'?T(JOBS.length+' open vacancies',JOBS.length+' открытых вакансий'):T(open+' active candidates',open+' кандидатов в работе');
+  $('#who').innerHTML=`<div class="av">${S.role==='hm'?'RM':'DV'}</div><div>${S.role==='hm'?'Robert Maas':esc(S.profile.name)}<small>${S.role==='hm'?T('Hiring manager · Digital Service','Менеджер по найму · Цифровые услуги'):T('Job seeker','Соискатель')}</small></div>`;
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+S.view));
+  ({search:rSearch,apply:rApply,mine:rMine,pipe:rPipe,tth:rTth})[S.view]();
+}
+
+/* ---------- LOGIN ---------- */
+let lrole='seeker';
+function rLogin(){
+  const cr=lrole==='hm'?['r.maas@opm.gov.vd','Hire-2026!']:['d.volkova@mail.vd','Demo-2026!'];
+  $('#loginScr').innerHTML=`<div class="login"><div class="hero">
+    <span class="pill gold" style="align-self:flex-start">${T('Valdoria Civil Service','Госслужба Вальдории')}</span>
+    <h2>${T('One gateway to every public service career','Единый вход во все карьеры на госслужбе')}</h2>
+    <p class="muted" style="margin:0;max-width:520px">${T('Search 4,800 vacancies across 62 agencies, apply once with a reusable profile, and track every step. Hiring teams run structured assessments and a transparent pipeline.','Ищите среди 4 800 вакансий в 62 ведомствах, откликайтесь одним профилем и следите за каждым шагом. Команды найма ведут структурированную оценку и прозрачную воронку.')}</p>
+    <ul><li><b>✓</b>${T('Merit-based category rating','Категорийная оценка по заслугам')}</li><li><b>✓</b>${T('Average time-to-hire down from 98 to 74 days','Средний срок найма снижен с 98 до 74 дней')}</li><li><b>✓</b>${T('WCAG 2.2 AA, available in two languages','WCAG 2.2 AA, два языка')}</li></ul>
+  </div><div class="box"><div class="card">
+    <h3 style="margin:0">${T('Sign in to CareerGate','Вход в CareerGate')}</h3>
+    <div class="roles"><button class="opt ${lrole==='seeker'?'on':''}" data-r="seeker"><b>${T('Job seeker','Соискатель')}</b><span>${T('Search & apply','Поиск и отклики')}</span></button><button class="opt ${lrole==='hm'?'on':''}" data-r="hm"><b>${T('Hiring manager','Менеджер по найму')}</b><span>${T('Pipeline & analytics','Воронка и аналитика')}</span></button></div>
+    <div class="f"><label>${T('Email','Почта')}</label><input class="input" id="lMail" value="${cr[0]}"></div>
+    <div class="f"><label>${T('Password','Пароль')}</label><input class="input" id="lPw" type="password" value="${cr[1]}"></div>
+    <button class="btn pri" id="lGo" style="justify-content:center">${T('Sign in with demo account','Войти демо-аккаунтом')}</button>
+    <p class="muted" style="font-size:12px;margin:0">${T('Demo credentials are prefilled. Both roles share one demo dataset — you can switch later in the sidebar.','Демо-данные уже введены. Обе роли работают с одними данными — переключиться можно в меню.')}</p>
+  </div></div></div>`;
+  $$('[data-r]').forEach(b=>b.onclick=()=>{lrole=b.dataset.r;rLogin()});
+  $('#lGo').onclick=()=>{if(!/@/.test($('#lMail').value)||$('#lPw').value.length<4){toast(T('Enter email and password','Введите почту и пароль'),'bad');return}
+    S.user=$('#lMail').value.trim();S.role=lrole;S.view=lrole==='hm'?'pipe':'search';save();render();toast(T('Signed in as ','Вход выполнен: ')+esc(S.user))};
+}
+
+/* ---------- SEARCH ---------- */
+function filtered(){
+  const f=S.f,q=f.q.trim().toLowerCase();
+  let r=JOBS.filter(j=>(!q||(j.t.en+' '+j.t.ru+' '+L(AG[j.ag])+' '+j.id).toLowerCase().includes(q))&&(!f.ag||j.ag===f.ag)&&(!f.lc||j.lc===f.lc)&&(!f.gr||(f.gr==='lo'?j.gr<=9:f.gr==='mid'?j.gr>=10&&j.gr<=12:j.gr>=13))&&(j.smax>=f.sal)&&(!f.rem||j.rem)&&(!f.ft||j.type==='ft')&&(!f.only||S.saved.includes(j.id)));
+  r.sort((a,b)=>S.sort==='sal'?b.smax-a.smax:S.sort==='gr'?b.gr-a.gr:a.close.localeCompare(b.close));
+  return r;
+}
+const daysLeft=d=>Math.ceil((new Date(d+'T23:59:00').getTime()-NOW)/DAY);
+function rSearch(){
+  const el=$('#v-search'),f=S.f;
+  const opts=(o,cur,all)=>`<option value="">${all}</option>`+Object.keys(o).map(k=>`<option value="${k}" ${cur===k?'selected':''}>${L(o[k])}</option>`).join('');
+  el.innerHTML=`<div class="filters">
+    <input class="input q0" id="fq" placeholder="${T('Keyword, title or vacancy number','Ключевое слово, должность или номер')}" value="${esc(f.q)}">
+    <select class="input" id="fag">${opts(AG,f.ag,T('All agencies','Все ведомства'))}</select>
+    <select class="input" id="flc">${opts(LOC,f.lc,T('All locations','Все города'))}</select>
+    <select class="input" id="fgr"><option value="">${T('All grades','Все разряды')}</option><option value="lo" ${f.gr==='lo'?'selected':''}>GS 7–9</option><option value="mid" ${f.gr==='mid'?'selected':''}>GS 10–12</option><option value="hi" ${f.gr==='hi'?'selected':''}>GS 13–15</option></select>
+    <select class="input" id="fsal">${[0,50000,65000,80000,95000].map(v=>`<option value="${v}" ${+f.sal===v?'selected':''}>${v?T('Salary up to ≥ ','Зарплата до ≥ ')+money(v):T('Any salary','Любая зарплата')}</option>`).join('')}</select>
+  </div>
+  <div class="row" style="margin-bottom:14px">
+    <button class="chip ${f.rem?'on':''}" data-t="rem">🏠 ${T('Remote eligible','Можно удалённо')}</button>
+    <button class="chip ${f.ft?'on':''}" data-t="ft">⏰ ${T('Full-time','Полная занятость')}</button>
+    <button class="chip ${f.only?'on':''}" data-t="only">★ ${T('Saved','Избранное')} (${S.saved.length})</button>
+    <span class="grow"></span>
+    <select class="input" id="fsort" style="width:auto"><option value="close" ${S.sort==='close'?'selected':''}>${T('Closing soonest','Скоро закрытие')}</option><option value="sal" ${S.sort==='sal'?'selected':''}>${T('Highest salary','Выше зарплата')}</option><option value="gr" ${S.sort==='gr'?'selected':''}>${T('Highest grade','Выше разряд')}</option></select>
+    <button class="btn sm" id="fclr">${T('Clear filters','Сбросить фильтры')}</button>
+  </div>
+  <div class="jl"><div id="jlist"></div><div id="jdet"></div></div>`;
+  const upd=()=>{save();listJobs()};
+  $('#fq').oninput=e=>{f.q=e.target.value;upd()};
+  [['#fag','ag'],['#flc','lc'],['#fgr','gr'],['#fsal','sal']].forEach(([s,k])=>$(s).onchange=e=>{f[k]=k==='sal'?+e.target.value:e.target.value;upd()});
+  $('#fsort').onchange=e=>{S.sort=e.target.value;upd()};
+  $$('[data-t]',el).forEach(b=>b.onclick=()=>{f[b.dataset.t]=!f[b.dataset.t];b.classList.toggle('on');if(b.dataset.t==='only')b.innerHTML='★ '+T('Saved','Избранное')+' ('+S.saved.length+')';upd()});
+  $('#fclr').onclick=()=>{S.f={q:'',ag:'',lc:'',gr:'',sal:0,rem:false,ft:false,only:false};save();rSearch()};
+  listJobs();
+}
+function listJobs(){
+  const r=filtered();
+  if(r.length&&!r.find(j=>j.id===S.sel))S.sel=r[0].id;
+  $('#jlist').innerHTML=`<div class="muted" style="font-size:12.5px;margin-bottom:8px">${T(r.length+' of '+JOBS.length+' vacancies',r.length+' из '+JOBS.length+' вакансий')}</div>`+(r.length?r.map(j=>{const dl=daysLeft(j.close);const ap=S.apps.find(a=>a.job===j.id);
+    return `<div class="job ${S.sel===j.id?'on':''}" data-j="${j.id}"><div class="t"><b>${L(j.t)}</b><button class="star ${S.saved.includes(j.id)?'on':''}" data-s="${j.id}" aria-label="save">★</button></div>
+    <div class="m">${L(AG[j.ag])} · ${L(LOC[j.lc])}</div>
+    <div class="tags"><span class="pill">GS-${j.gr}</span><span class="pill">${money(j.smin)}–${money(j.smax).replace('V$ ','')}</span>${j.rem?`<span class="pill ok">${T('Remote','Удалённо')}</span>`:''}${j.type==='pt'?`<span class="pill">${T('Part-time','Неполная')}</span>`:''}<span class="pill ${dl<=10?'warn':''}">${T('Closes in '+dl+' d','Закрытие через '+dl+' дн.')}</span>${ap?`<span class="pill gold">${T('Applied','Отклик подан')}</span>`:''}</div></div>`}).join(''):`<div class="card empty">${T('No vacancies match these filters.','Нет вакансий по этим фильтрам.')}</div>`);
+  $$('.job').forEach(c=>c.onclick=e=>{if(e.target.closest('.star'))return;S.sel=c.dataset.j;save();listJobs();if(innerWidth<860)$('#jdet').scrollIntoView({behavior:'smooth'})});
+  $$('.star').forEach(b=>b.onclick=()=>{const id=b.dataset.s,i=S.saved.indexOf(id);if(i>=0)S.saved.splice(i,1);else S.saved.push(id);save();listJobs();const c=$('[data-t="only"]');if(c)c.innerHTML='★ '+T('Saved','Избранное')+' ('+S.saved.length+')';toast(i>=0?T('Removed from saved','Убрано из избранного'):T('Saved to your list','Добавлено в избранное'))});
+  const j=JOBS.find(x=>x.id===S.sel);
+  if(!j||!r.length){$('#jdet').innerHTML='';return}
+  const ap=S.apps.find(a=>a.job===j.id);
+  $('#jdet').innerHTML=`<div class="card det"><div class="crumb mono">${j.id}</div><h2>${L(j.t)}</h2><div class="muted" style="font-size:13.5px">${L(AG[j.ag])}</div>
+   <div class="grid"><div>${T('Salary','Зарплата')}<b>${money(j.smin)} – ${money(j.smax)}</b></div><div>${T('Grade','Разряд')}<b>GS-${j.gr}</b></div><div>${T('Location','Место')}<b>${L(LOC[j.lc])}</b></div><div>${T('Schedule','График')}<b>${j.type==='ft'?T('Full-time','Полный'):T('Part-time','Неполный')}</b></div><div>${T('Closes','Закрытие')}<b>${fmtD(j.close)}</b></div><div>${T('Remote','Удалённо')}<b>${j.rem?T('Eligible','Можно'):T('No','Нет')}</b></div></div>
+   <p style="font-size:14px;margin:0">${L(j.d)}</p>
+   <h4>${T('Duties','Обязанности')}</h4><ul>${j.duties.map(d=>`<li>${T(d[0],d[1])}</li>`).join('')}</ul>
+   <h4>${T('Qualifications','Требования')}</h4><ul>${j.quals.map(d=>`<li>${T(d[0],d[1])}</li>`).join('')}<li>${T('Valdorian citizenship','Гражданство Вальдории')}</li></ul>
+   <h4>${T('How you will be evaluated','Как вас оценят')}</h4><p class="muted" style="font-size:13px;margin:0">${T('Online assessment questionnaire (7 items) → category rating → structured interview.','Онлайн-анкета (7 вопросов) → категорийная оценка → структурированное интервью.')}</p>
+   <div class="row" style="margin-top:16px">${ap?`<span class="pill gold">${T('You applied on ','Отклик подан ')+fmtD(ap.date)}</span><button class="btn sm" id="dTrack">${T('Track status','Статус')}</button>`:`<button class="btn pri" id="dApply">${T('Apply now','Откликнуться')}</button>`}<button class="btn sm" id="dShare">${T('Copy link','Ссылка')}</button></div></div>`;
+  if($('#dApply'))$('#dApply').onclick=()=>startApply(j.id);
+  if($('#dTrack'))$('#dTrack').onclick=()=>go('mine');
+  $('#dShare').onclick=()=>{try{navigator.clipboard&&navigator.clipboard.writeText('https://careergate.gov.vd/job/'+j.id).catch(()=>{})}catch(e){}toast(T('Link copied','Ссылка скопирована'))};
+}
+function startApply(id){
+  if(S.draft&&S.draft.job!==id&&!confirmSwitch())return;
+  if(!S.draft||S.draft.job!==id)S.draft={job:id,s:0,name:S.profile.name,email:S.profile.email,phone:S.profile.phone,resume:S.profile.resume,exp:JSON.parse(JSON.stringify(S.profile.exp)),edu:S.profile.edu,cover:'',ans:{},cit:null,vet:null,decl:false};
+  save();go('apply');
+}
+function confirmSwitch(){toast(T('Previous draft replaced','Предыдущий черновик заменён'),'gold');return true}
+
+/* ---------- APPLY WIZARD ---------- */
+const WST=[['Resume','Резюме'],['Assessment','Анкета'],['Review','Проверка'],['Submitted','Отправлено']];
+function stepsBar(cur){return `<div class="steps">${WST.map((s,i)=>`<div class="step ${i<cur?'ok':i===cur?'cur':''}"><div class="dot">${i<cur?'✓':i+1}</div><span>${T(s[0],s[1])}</span></div>`).join('')}</div>`}
+function scoreOf(d){const v=QS.map((_,i)=>d.ans[i]);const n=v.filter(x=>x!=null).length;const s=Math.round(v.reduce((a,x)=>a+(x||0),0)/(QS.length*4)*100);return{n,s}}
+function catOf(s){return s>=85?['Best qualified','Наиболее квалифицирован','ok']:s>=70?['Well qualified','Хорошо квалифицирован','ok']:s>=50?['Qualified','Квалифицирован','warn']:['Not qualified','Не квалифицирован','bad']}
+function rApply(){
+  const el=$('#v-apply'),d=S.draft,j=JOBS.find(x=>x.id===d.job);
+  let h=`<div class="card" style="margin-bottom:14px"><div class="row"><div style="flex:1;min-width:200px"><div class="crumb mono">${j.id}</div><b style="font-size:16px">${L(j.t)}</b><div class="muted" style="font-size:12.5px">${L(AG[j.ag])} · GS-${j.gr} · ${T('closes ','закрытие ')+fmtD(j.close)}</div></div><button class="btn sm danger" id="wDiscard">${T('Discard draft','Удалить черновик')}</button></div></div>`+stepsBar(d.s);
+  if(d.s===0){
+    h+=`<div class="grid2"><div class="card"><h3>${T('Contact details','Контактные данные')}</h3><div class="fgrid">
+      <div class="f full"><label>${T('Full name','ФИО')} *</label><input class="input" id="wName" value="${esc(d.name)}"><div class="err" id="eName"></div></div>
+      <div class="f"><label>${T('Email','Почта')} *</label><input class="input" id="wMail" value="${esc(d.email)}"><div class="err" id="eMail"></div></div>
+      <div class="f"><label>${T('Phone','Телефон')} *</label><input class="input" id="wPh" value="${esc(d.phone)}"><div class="err" id="ePh"></div></div>
+      <div class="f full"><label>${T('Highest education','Образование')}</label><input class="input" id="wEdu" value="${esc(d.edu)}"></div>
+      <div class="f full"><label>${T('Cover note (optional)','Сопроводительное письмо (необязательно)')}</label><textarea class="input" id="wCov" rows="3" placeholder="${T('Why this role?','Почему эта должность?')}">${esc(d.cover)}</textarea></div>
+    </div></div><div class="card"><h3>${T('Resume','Резюме')} *</h3>
+      <label class="drop ${d.resume?'ok':''}" id="drop"><input type="file" id="wFile" accept=".pdf,.doc,.docx,.txt" hidden>${d.resume?`📄 <b>${esc(d.resume.n)}</b><div class="muted" style="font-size:12px">${(d.resume.sz/1024).toFixed(0)} KB · ${T('click to replace','нажмите, чтобы заменить')}</div>`:`⬆️ <b>${T('Upload resume','Загрузите резюме')}</b><div class="muted" style="font-size:12px">PDF, DOCX · ${T('max 5 MB','до 5 МБ')}</div>`}</label>
+      <div class="row" style="margin:8px 0 14px"><button class="btn sm" id="wSample">${T('Use sample resume','Взять демо-резюме')}</button><div class="err" id="eRes" style="color:var(--red);font-size:12px"></div></div>
+      <h3>${T('Work experience','Опыт работы')}<span class="sp"></span><span class="pill">${d.exp.length}</span></h3>
+      <div id="expL">${d.exp.map((x,i)=>`<div class="exp"><div><b>${esc(x.t)}</b>${esc(x.o)} · <span class="mono">${esc(x.y)}</span></div><button class="btn sm danger" data-del="${i}">✕</button></div>`).join('')||`<div class="muted" style="font-size:13px">${T('No entries yet','Записей нет')}</div>`}</div>
+      <div class="fgrid" style="margin-top:8px"><input class="input" id="xT" placeholder="${T('Job title','Должность')}"><input class="input" id="xO" placeholder="${T('Employer','Работодатель')}"><input class="input" id="xY" placeholder="2019–2023"><button class="btn sm" id="xAdd" style="justify-content:center">+ ${T('Add experience','Добавить опыт')}</button></div>
+    </div></div>
+    <div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn pri" id="wNext">${T('Continue to assessment','К анкете')} →</button></div>`;
+  }else if(d.s===1){
+    const sc=scoreOf(d);
+    h+=`<div class="card"><h3>${T('Eligibility','Соответствие')}</h3>
+      <div class="q ${d.cit===null&&d.tried?'miss':''}"><p>${T('Are you a citizen of Valdoria?','Вы гражданин Вальдории?')} *</p><div class="yn"><button class="${d.cit===true?'on':''}" data-yn="cit:1">${T('Yes','Да')}</button><button class="${d.cit===false?'on':''}" data-yn="cit:0">${T('No','Нет')}</button></div></div>
+      <div class="q ${d.vet===null&&d.tried?'miss':''}"><p>${T('Do you claim veterans’ preference?','Претендуете на льготу для ветеранов?')} *</p><div class="yn"><button class="${d.vet===true?'on':''}" data-yn="vet:1">${T('Yes','Да')}</button><button class="${d.vet===false?'on':''}" data-yn="vet:0">${T('No','Нет')}</button></div></div>
+      <h3 style="margin-top:18px">${T('Occupational questionnaire','Профессиональная анкета')}<span class="sp"></span><span class="pill">${sc.n}/${QS.length}</span></h3>
+      <p class="muted" style="font-size:12.5px;margin:-6px 0 12px">${T('Choose the statement that best describes your experience. Answers are verified at interview.','Выберите вариант, лучше всего описывающий ваш опыт. Ответы проверяются на интервью.')}</p>
+      ${QS.map((q,i)=>`<div class="q ${d.ans[i]==null&&d.tried?'miss':''}"><p>${i+1}. ${T(q[0],q[1])}</p><div class="scale">${SCALE.map((s,k)=>`<button class="${d.ans[i]===k?'on':''}" data-q="${i}:${k}" title="${T(s[0],s[1])}"><b>${'ABCDE'[k]}</b>${T(s[0],s[1])}</button>`).join('')}</div></div>`).join('')}
+      <div class="row" style="justify-content:space-between;margin-top:6px"><button class="btn" id="wBack">← ${T('Back','Назад')}</button><span class="muted" style="font-size:12.5px">${T('Preliminary score','Предварительный балл')}: <b class="mono">${sc.s}</b></span><button class="btn pri" id="wNext">${T('Review application','Проверить заявку')} →</button></div></div>`;
+  }else if(d.s===2){
+    const sc=scoreOf(d),c=catOf(sc.s);
+    h+=`<div class="grid2"><div class="card"><h3>${T('Review','Проверка')}</h3><dl class="rev">
+      <dt>${T('Name','ФИО')}</dt><dd>${esc(d.name)}</dd><dt>${T('Email','Почта')}</dt><dd>${esc(d.email)}</dd><dt>${T('Phone','Телефон')}</dt><dd>${esc(d.phone)}</dd>
+      <dt>${T('Resume','Резюме')}</dt><dd>📄 ${esc(d.resume.n)}</dd><dt>${T('Experience','Опыт')}</dt><dd>${d.exp.map(x=>esc(x.t)+' · '+esc(x.o)).join('<br>')||'—'}</dd><dt>${T('Education','Образование')}</dt><dd>${esc(d.edu)||'—'}</dd>
+      <dt>${T('Citizenship','Гражданство')}</dt><dd>${d.cit?T('Yes','Да'):T('No','Нет')}</dd><dt>${T('Veterans’ preference','Льгота ветерана')}</dt><dd>${d.vet?T('Claimed (+5)','Заявлена (+5)'):T('No','Нет')}</dd></dl>
+      <label class="row" style="margin-top:14px;font-size:13px;cursor:pointer"><input type="checkbox" id="wDecl" ${d.decl?'checked':''}> ${T('I certify the information is true and complete.','Подтверждаю, что сведения верны и полны.')}</label></div>
+      <div class="card"><h3>${T('Your assessment result','Результат анкеты')}</h3><div class="big-score">${ring(sc.s+(d.vet?5:0))}<div><span class="pill ${c[2]}">${T(c[0],c[1])}</span><p class="muted" style="font-size:12.5px;margin:8px 0 0">${T('Category rating places you in a quality group. Veterans’ preference adds 5 points.','Категорийная оценка относит вас к группе. Льгота ветерана добавляет 5 баллов.')}</p></div></div>
+      <div style="margin-top:14px">${QS.map((q,i)=>`<div style="display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:3px 0;border-bottom:1px dashed var(--line)"><span>${i+1}. ${T(q[0],q[1])}</span><b class="mono">${'ABCDE'[d.ans[i]]}</b></div>`).join('')}</div></div></div>
+      <div class="row" style="justify-content:space-between;margin-top:14px"><button class="btn" id="wBack">← ${T('Back','Назад')}</button><button class="btn gold" id="wSubmit">${T('Submit application','Отправить заявку')}</button></div>`;
+  }
+  el.innerHTML=h;
+  $('#wDiscard').onclick=()=>{S.draft=null;save();toast(T('Draft discarded','Черновик удалён'));go('search')};
+  const keep=()=>{if(d.s===0){d.name=$('#wName').value;d.email=$('#wMail').value;d.phone=$('#wPh').value;d.edu=$('#wEdu').value;d.cover=$('#wCov').value}save()};
+  if(d.s===0){
+    $$('#v-apply input,#v-apply textarea').forEach(i=>i.addEventListener('change',keep));
+    $('#wFile').onchange=e=>{const fl=e.target.files[0];if(!fl)return;if(fl.size>5*1048576){toast(T('File is larger than 5 MB','Файл больше 5 МБ'),'bad');return}keep();d.resume={n:fl.name,sz:fl.size};save();rApply();toast(T('Resume uploaded','Резюме загружено'))};
+    $('#wSample').onclick=()=>{keep();d.resume={n:'Volkova_Resume_2026.pdf',sz:184320};S.profile.resume=d.resume;save();rApply();toast(T('Sample resume attached','Демо-резюме прикреплено'))};
+    $$('[data-del]').forEach(b=>b.onclick=()=>{keep();d.exp.splice(+b.dataset.del,1);save();rApply()});
+    $('#xAdd').onclick=()=>{const t=$('#xT').value.trim(),o=$('#xO').value.trim(),y=$('#xY').value.trim();if(!t||!o){toast(T('Enter title and employer','Укажите должность и работодателя'),'bad');return}keep();d.exp.unshift({t,o,y:y||'—'});save();rApply()};
+    $('#wNext').onclick=()=>{keep();let ok=true;const set=(id,m)=>{$('#e'+id).textContent=m||'';const inp={Name:'#wName',Mail:'#wMail',Ph:'#wPh'}[id];if(inp)$(inp).classList.toggle('bad',!!m);if(m)ok=false};
+      set('Name',d.name.trim().split(/\s+/).length<2?T('Enter first and last name','Введите имя и фамилию'):'');
+      set('Mail',/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(d.email.trim())?'':T('Invalid email','Неверная почта'));
+      set('Ph',d.phone.replace(/\D/g,'').length<8?T('At least 8 digits','Минимум 8 цифр'):'');
+      $('#eRes').textContent=d.resume?'':T('Resume is required','Нужно резюме');if(!d.resume)ok=false;
+      if(!ok){toast(T('Please fix the highlighted fields','Исправьте отмеченные поля'),'bad');return}
+      d.s=1;save();rApply();window.scrollTo({top:0})};
+  }else if(d.s===1){
+    $$('[data-q]').forEach(b=>b.onclick=()=>{const[i,k]=b.dataset.q.split(':').map(Number);d.ans[i]=k;save();const y=scrollY;rApply();window.scrollTo(0,y)});
+    $$('[data-yn]').forEach(b=>b.onclick=()=>{const[k,v]=b.dataset.yn.split(':');d[k]=v==='1';save();const y=scrollY;rApply();window.scrollTo(0,y)});
+    $('#wBack').onclick=()=>{d.s=0;save();rApply()};
+    $('#wNext').onclick=()=>{const sc=scoreOf(d);if(sc.n<QS.length||d.cit===null||d.vet===null){d.tried=true;save();rApply();toast(T('Answer all questions','Ответьте на все вопросы'),'bad');return}
+      if(d.cit===false){toast(T('This vacancy is open to citizens only','Вакансия только для граждан'),'bad');return}
+      d.s=2;save();rApply();window.scrollTo({top:0})};
+  }else if(d.s===2){
+    $('#wDecl').onchange=e=>{d.decl=e.target.checked;save()};
+    $('#wBack').onclick=()=>{d.s=1;save();rApply()};
+    $('#wSubmit').onclick=()=>{if(!d.decl){toast(T('Please confirm the certification','Подтвердите достоверность'),'bad');return}
+      const sc=scoreOf(d),tot=Math.min(100,sc.s+(d.vet?5:0)),c=catOf(tot);const id='APP-'+(S.nextApp++),cid='C-'+(S.nextC++);
+      S.pipe.unshift({id:cid,name:d.name.trim(),job:d.job,stage:'applied',score:tot,src:0,applied:iso(NOW),moved:iso(NOW),notes:[],rej:false,mine:true});
+      S.apps.unshift({id,job:d.job,date:iso(NOW),cat:c[0],score:tot,cid});
+      S.profile.name=d.name.trim();S.profile.email=d.email;S.profile.phone=d.phone;S.profile.exp=d.exp;S.profile.resume=d.resume;
+      S.draft=null;save();toast(T('Application '+id+' submitted','Заявка '+id+' отправлена'),'gold');go('mine')};
+  }
+}
+function ring(p){const r=38,c=2*Math.PI*r;return `<svg width="96" height="96" viewBox="0 0 96 96" style="flex:none"><circle cx="48" cy="48" r="${r}" fill="none" stroke="${cssv('--line')}" stroke-width="10"/><circle cx="48" cy="48" r="${r}" fill="none" stroke="${cssv('--gold')}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${c*Math.min(100,p)/100} ${c}" transform="rotate(-90 48 48)"/><text x="48" y="55" text-anchor="middle" fill="${cssv('--text')}" font-size="22" font-weight="800">${Math.min(100,p)}</text></svg>`}
+
+/* ---------- MY APPLICATIONS ---------- */
+function appStage(a){if(a.cid){const c=S.pipe.find(x=>x.id===a.cid);if(c)return{st:c.stage,rej:c.rej}}return{st:a.stage||'applied',rej:!!a.rej}}
+function rMine(){
+  const el=$('#v-mine');
+  if(!S.apps.length){el.innerHTML=`<div class="card empty">${T('No applications yet.','Заявок пока нет.')} <button class="btn sm pri" id="mGo">${T('Find jobs','Найти вакансии')}</button></div>`;$('#mGo').onclick=()=>go('search');return}
+  el.innerHTML=(S.draft?`<div class="card" style="margin-bottom:12px;border-color:var(--gold)"><div class="row"><b style="flex:1">📝 ${T('Draft in progress: ','Черновик: ')+L(JOBS.find(j=>j.id===S.draft.job).t)}</b><button class="btn sm gold" id="mCont">${T('Continue','Продолжить')}</button></div></div>`:'')+
+  S.apps.map(a=>{const j=JOBS.find(x=>x.id===a.job),s=appStage(a),idx=STG.findIndex(x=>x[0]===s.st);
+    const stTxt=s.rej?T('Not selected','Не выбран'):T(STG[idx][1],STG[idx][2]);
+    return `<div class="appc"><div class="top"><b>${L(j.t)}<div class="muted" style="font-size:12px;font-weight:500">${a.id} · ${L(AG[j.ag])} · ${T('submitted ','подано ')+fmtD(a.date)}</div></b><span class="pill">${T('Score','Балл')} ${a.score}</span><span class="pill ok">${T(a.cat,catOf(a.score)[1])}</span><span class="pill ${s.rej?'bad':s.st==='hired'?'gold':'warn'}">${stTxt}</span>${!s.rej&&s.st!=='hired'?`<button class="btn sm danger" data-wd="${a.id}">${T('Withdraw','Отозвать')}</button>`:''}</div>
+    <div class="tl">${STG.map((x,i)=>`<div class="${s.rej&&i===idx?'rej':i<idx?'ok':i===idx?'cur':''}"><i></i><span>${T(x[1],x[2])}</span></div>`).join('')}</div></div>`}).join('')+
+  `<p class="muted" style="font-size:12.5px">${T('Status updates come live from the hiring manager’s pipeline. Switch to <b>Pipeline</b> to move your own candidate card.','Статусы приходят из воронки менеджера. Откройте <b>Воронку</b>, чтобы передвинуть свою карточку.')}</p>`;
+  if($('#mCont'))$('#mCont').onclick=()=>go('apply');
+  $$('[data-wd]').forEach(b=>b.onclick=()=>{const a=S.apps.find(x=>x.id===b.dataset.wd);const c=a.cid&&S.pipe.find(x=>x.id===a.cid);if(c)c.rej=true;else a.rej=true;save();rMine();nav();toast(T('Application withdrawn','Заявка отозвана'),'bad')});
+}
+
+/* ---------- PIPELINE ---------- */
+let dragId=null;
+function rPipe(){
+  const el=$('#v-pipe'),hj=S.hjob;
+  const list=S.pipe.filter(c=>(hj==='all'||c.job===hj)&&!c.rej);
+  const jobsWith=[...new Set(S.pipe.map(c=>c.job))];
+  const rejN=S.pipe.filter(c=>(hj==='all'||c.job===hj)&&c.rej).length;
+  el.innerHTML=`<div class="kbtools"><select class="input" id="pJob"><option value="all">${T('All requisitions','Все вакансии')}</option>${jobsWith.map(id=>`<option value="${id}" ${hj===id?'selected':''}>${id} · ${L(JOBS.find(j=>j.id===id).t)}</option>`).join('')}</select>
+    <input class="input" id="pQ" placeholder="${T('Filter candidates','Фильтр кандидатов')}" style="min-width:180px;flex:1">
+    <span class="pill">${list.length} ${T('active','в работе')}</span><span class="pill bad">${rejN} ${T('rejected','отклонено')}</span></div>
+    <p class="muted" style="font-size:12.5px;margin:-4px 0 10px">${T('Drag cards between columns or use ◀ ▶ buttons. Moving to <b>Hired</b> records time-to-hire.','Перетаскивайте карточки или жмите ◀ ▶. Перевод в <b>Принят</b> записывает срок найма.')}</p>
+    <div class="kb">${STG.map((s,si)=>{const cs=list.filter(c=>c.stage===s[0]).sort((a,b)=>b.score-a.score);
+      return `<div class="col" data-col="${s[0]}"><h5><span>${T(s[1],s[2])}</span><span>${cs.length}</span></h5>${cs.map(c=>{const sc=c.score>=85?'var(--mal)':c.score>=70?'var(--gold)':'var(--amber)';const dd=Math.round((NOW-new Date(c.applied).getTime())/DAY);
+        return `<div class="cd ${c.mine?'new':''}" draggable="true" data-c="${c.id}"><div class="row" style="gap:6px"><b style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.name)}</b><span class="sc" style="background:color-mix(in srgb,${sc} 20%,transparent);color:${sc}">${c.score}</span></div>
+        <div class="muted">${c.id} · ${T(SRC[c.src][0],SRC[c.src][1])}</div><div class="muted">${T(dd+' days in process',dd+' дн. в процессе')}${c.notes.length?' · 💬'+c.notes.length:''}</div>
+        <div class="mv"><button data-mv="${c.id}:-1" ${si===0?'disabled':''} aria-label="back">◀</button><button data-open="${c.id}" aria-label="open">⋯</button><button data-mv="${c.id}:1" ${si===STG.length-1?'disabled':''} aria-label="forward">▶</button></div></div>`}).join('')}</div>`}).join('')}</div>`;
+  $('#pJob').onchange=e=>{S.hjob=e.target.value;save();rPipe()};
+  $('#pQ').oninput=e=>{const q=e.target.value.toLowerCase();$$('.cd').forEach(c=>c.style.display=c.textContent.toLowerCase().includes(q)?'':'none')};
+  $$('[data-mv]').forEach(b=>b.onclick=()=>{const[id,d]=b.dataset.mv.split(':');const c=S.pipe.find(x=>x.id===id);const i=STG.findIndex(s=>s[0]===c.stage)+(+d);if(i<0||i>=STG.length)return;moveTo(c,STG[i][0])});
+  $$('[data-open]').forEach(b=>b.onclick=()=>openCand(b.dataset.open));
+  $$('.cd').forEach(c=>{c.ondragstart=e=>{dragId=c.dataset.c;try{e.dataTransfer.setData('text/plain',dragId)}catch(x){}}});
+  $$('.col').forEach(col=>{col.ondragover=e=>{e.preventDefault();col.classList.add('over')};col.ondragleave=()=>col.classList.remove('over');
+    col.ondrop=e=>{e.preventDefault();col.classList.remove('over');const c=S.pipe.find(x=>x.id===dragId);if(c&&c.stage!==col.dataset.col)moveTo(c,col.dataset.col)}});
+}
+function moveTo(c,st){
+  c.stage=st;c.moved=iso(NOW);
+  if(st==='hired'){const days=Math.max(14,Math.round((NOW-new Date(c.applied).getTime())/DAY)+38);S.hires.push({m:11,days,stg:[5,7,10,days-36,8].map(x=>+(+x).toFixed(1)),name:c.name});toast(T(esc(c.name)+' hired · '+days+' days to hire',esc(c.name)+' принят · '+days+' дн. до найма'),'gold')}
+  else toast(esc(c.name)+' → '+T(...STG.find(s=>s[0]===st).slice(1)));
+  save();rPipe();nav();
+}
+function openCand(id){
+  const c=S.pipe.find(x=>x.id===id),j=JOBS.find(x=>x.id===c.job);
+  $('#modal').innerHTML=`<div class="modal"><div class="card"><h3>${esc(c.name)}<span class="sp"></span><button class="btn sm" id="mx">✕</button></h3>
+    <div class="muted" style="font-size:13px">${c.id} · ${L(j.t)}</div>
+    <div class="row" style="margin:12px 0"><span class="pill">${T('Score','Балл')} ${c.score}</span><span class="pill ok">${T(catOf(c.score)[0],catOf(c.score)[1])}</span><span class="pill">${T('Applied','Отклик')} ${fmtD(c.applied)}</span><span class="pill">${T(SRC[c.src][0],SRC[c.src][1])}</span></div>
+    <div class="f"><label>${T('Stage','Этап')}</label><select class="input" id="mSt">${STG.map(s=>`<option value="${s[0]}" ${c.stage===s[0]?'selected':''}>${T(s[1],s[2])}</option>`).join('')}</select></div>
+    <h3 style="margin-top:14px">${T('Interview notes','Заметки')}</h3><div id="mNotes">${c.notes.map(n=>`<div class="note"><span class="muted mono">${n.d}</span> ${esc(n.t)}</div>`).join('')||`<div class="muted" style="font-size:12.5px">${T('No notes yet','Заметок нет')}</div>`}</div>
+    <div class="row" style="margin-top:8px"><input class="input" id="mN" style="flex:1;min-width:0" placeholder="${T('Add a note…','Добавить заметку…')}"><button class="btn sm" id="mNA">${T('Add','Добавить')}</button></div>
+    <div class="row" style="margin-top:16px;justify-content:space-between"><button class="btn sm danger" id="mRej">${T('Reject candidate','Отклонить')}</button><button class="btn sm pri" id="mSave">${T('Save','Сохранить')}</button></div></div></div>`;
+  const close=()=>$('#modal').innerHTML='';
+  $('#mx').onclick=close;$('.modal').onclick=e=>{if(e.target.classList.contains('modal'))close()};
+  $('#mNA').onclick=()=>{const t=$('#mN').value.trim();if(!t)return;c.notes.push({d:new Date().toLocaleDateString(loc(),{day:'numeric',month:'short'}),t});save();openCand(id)};
+  $('#mRej').onclick=()=>{c.rej=true;save();close();rPipe();nav();toast(esc(c.name)+' — '+T('rejected, applicant notified','отклонён, кандидат уведомлён'),'bad')};
+  $('#mSave').onclick=()=>{const st=$('#mSt').value;close();if(st!==c.stage)moveTo(c,st);else{save();rPipe()}};
+}
+
+/* ---------- TIME TO HIRE ---------- */
+function months(){const out=[];for(let m=0;m<12;m++){const d=new Date(2025,11+m,1);out.push(d.toLocaleDateString(loc(),{month:'short'}))}return out}
+function rTth(){
+  const el=$('#v-tth'),H=S.hires;
+  const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+  const byM=[...Array(12)].map((_,m)=>avg(H.filter(h=>h.m===m).map(h=>h.days)));
+  const last=H.filter(h=>h.m===11),prev=H.filter(h=>h.m===10);
+  const act=S.pipe.filter(c=>!c.rej);
+  const offers=S.pipe.filter(c=>c.stage==='offer'||c.stage==='hired').length,hired=S.pipe.filter(c=>c.stage==='hired').length;
+  const stg=[0,1,2,3,4].map(i=>avg(H.map(h=>h.stg[i])));
+  el.innerHTML=`<div class="kpis">
+    <div class="card kpi"><div class="l">${T('Avg time-to-hire (Nov)','Средний срок найма (нояб.)')}</div><div class="v">${Math.round(avg(last.map(h=>h.days)))} ${T('d','дн.')}</div><div class="d ok-t" style="color:var(--mal3)">▼ ${Math.round(avg(prev.map(h=>h.days))-avg(last.map(h=>h.days)))} ${T('vs Oct','к окт.')} · ${T('target 80','цель 80')}</div></div>
+    <div class="card kpi"><div class="l">${T('Hires, 12 months','Наймов за 12 мес.')}</div><div class="v">${H.length}</div><div class="d">${last.length} ${T('this month','в этом месяце')}</div></div>
+    <div class="card kpi"><div class="l">${T('Active candidates','Кандидатов в работе')}</div><div class="v">${act.filter(c=>c.stage!=='hired').length}</div><div class="d">${S.pipe.filter(c=>c.stage==='applied'&&!c.rej).length} ${T('awaiting screening','ждут отбора')}</div></div>
+    <div class="card kpi"><div class="l">${T('Offer acceptance','Принятие офферов')}</div><div class="v">${Math.round((H.length+hired)/(H.length+offers+4)*100)}%</div><div class="d">${T('12-month','за 12 мес.')}</div></div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('Time-to-hire trend, days','Динамика срока найма, дни')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('Average','Среднее')}</span><span><i style="background:var(--gold)"></i>${T('Target 80','Цель 80')}</span></span></h3>${lineChart(byM)}</div>
+  <div class="card chart"><h3>${T('Days per stage','Дней на этапе')}</h3>${stageBars(stg)}</div></div>
+  <div class="grid2" style="margin-top:14px"><div class="card chart"><h3>${T('Pipeline funnel','Воронка кандидатов')}</h3>${funnel()}</div>
+  <div class="card"><h3>${T('Recent hires','Последние наймы')}</h3><div class="tw"><table><thead><tr><th>${T('Month','Месяц')}</th><th>${T('Candidate','Кандидат')}</th><th>${T('Days','Дней')}</th><th>SLA</th></tr></thead><tbody>${H.slice(-8).reverse().map(h=>`<tr><td>${months()[h.m]}</td><td>${esc(h.name||T('Anonymised','Обезличено'))}</td><td class="mono">${h.days}</td><td><span class="pill ${h.days<=80?'ok':'warn'}">${h.days<=80?T('Met','В срок'):T('Over','Сверх')}</span></td></tr>`).join('')}</tbody></table></div></div></div>`;
+}
+function lineChart(v){
+  const W=560,Hh=220,p={l:34,r:10,t:12,b:26},mx=110,mn=50;const ms=months();
+  const x=i=>p.l+i*(W-p.l-p.r)/11,y=d=>p.t+(mx-d)/(mx-mn)*(Hh-p.t-p.b);
+  const pts=v.map((d,i)=>d?[x(i),y(d)]:null).filter(Boolean);
+  const line=pts.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+','+q[1].toFixed(1)).join('');
+  const area=line+`L${pts[pts.length-1][0]},${Hh-p.b}L${pts[0][0]},${Hh-p.b}Z`;
+  return `<svg viewBox="0 0 ${W} ${Hh}"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${cssv('--mal')}" stop-opacity=".35"/><stop offset="1" stop-color="${cssv('--mal')}" stop-opacity="0"/></linearGradient></defs>
+  ${[60,80,100].map(g=>`<line x1="${p.l}" x2="${W-p.r}" y1="${y(g)}" y2="${y(g)}" stroke="${cssv('--line')}"/><text x="${p.l-6}" y="${y(g)+4}" text-anchor="end" font-size="11" fill="${cssv('--dim')}">${g}</text>`).join('')}
+  <line x1="${p.l}" x2="${W-p.r}" y1="${y(80)}" y2="${y(80)}" stroke="${cssv('--gold')}" stroke-dasharray="5 4" stroke-width="1.5"/>
+  <path d="${area}" fill="url(#ga)"/><path d="${line}" fill="none" stroke="${cssv('--mal')}" stroke-width="2.5"/>
+  ${pts.map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="3.5" fill="${cssv('--panel')}" stroke="${cssv('--mal')}" stroke-width="2"><title>${Math.round(v[i])}</title></circle>`).join('')}
+  ${ms.map((m,i)=>i%2===0||i===11?`<text x="${x(i)}" y="${Hh-8}" text-anchor="middle" font-size="11" fill="${cssv('--dim')}">${m}</text>`:'').join('')}
+  <text x="${pts[pts.length-1][0]-4}" y="${pts[pts.length-1][1]-10}" text-anchor="end" font-size="12" font-weight="700" fill="${cssv('--text')}">${Math.round(v[11])}</text></svg>`;
+}
+function stageBars(st){
+  const lab=[['Screening','Отбор'],['Assessment','Оценка'],['Interview','Интервью'],['Selection & checks','Решение и проверки'],['Offer to start','Оффер – выход']];
+  const mx=Math.max(...st),W=380,rh=34;
+  return `<svg viewBox="0 0 ${W} ${lab.length*rh+6}">${lab.map((l,i)=>{const w=(W-150)*st[i]/mx;const c=st[i]===mx?cssv('--amber'):cssv('--mal');
+    return `<text x="0" y="${i*rh+21}" font-size="12" fill="${cssv('--muted')}">${T(l[0],l[1])}</text><rect x="120" y="${i*rh+8}" width="${w}" height="18" rx="5" fill="${c}"/><text x="${124+w}" y="${i*rh+21}" font-size="12" font-weight="700" fill="${cssv('--text')}">${st[i].toFixed(1)}</text>`}).join('')}</svg>
+    <p class="muted" style="font-size:12px;margin:6px 0 0">${T('Bottleneck: selection & background checks.','Узкое место: решение и проверки.')}</p>`;
+}
+function funnel(){
+  const all=S.pipe.length;const counts=STG.map((s,i)=>S.pipe.filter(c=>STG.findIndex(x=>x[0]===c.stage)>=i).length);
+  const W=480,rh=32;
+  return `<svg viewBox="0 0 ${W} ${STG.length*rh+4}">${STG.map((s,i)=>{const w=Math.max(28,(W-170)*counts[i]/all);const x0=110+((W-170)-w)/2;
+    return `<text x="0" y="${i*rh+20}" font-size="12" fill="${cssv('--muted')}">${T(s[1],s[2])}</text><rect x="${x0}" y="${i*rh+4}" width="${w}" height="24" rx="6" fill="${cssv('--mal')}" opacity="${1-i*.12}"/><text x="${W-4}" y="${i*rh+20}" text-anchor="end" font-size="12" font-weight="700" fill="${cssv('--text')}">${counts[i]} · ${Math.round(counts[i]/all*100)}%</text>`}).join('')}</svg>`;
+}
+
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();const u=S.user,r=S.role;S=seed();S.user=u;S.role=r;S.view=r==='hm'?'pipe':'search';save();render();toast(T('Demo reset','Демо сброшено'))};
+$('#logout').onclick=()=>{S.user=null;save();lrole=S.role;render();toast(T('Signed out','Вы вышли'))};
+PT.onLang(()=>render());
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

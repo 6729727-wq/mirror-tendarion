@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Citizen 311</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:13px;font-weight:800;letter-spacing:-.02em}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.me{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);flex:none}
+.me small{display:block;color:var(--muted);font-size:11.5px}
+main{padding:20px 24px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.err{color:var(--red);font-size:12px;min-height:16px;margin-top:3px}
+.input.bad{border-color:var(--red)}
+textarea.input{resize:vertical;min-height:70px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(circle at 20% 10%,color-mix(in srgb,var(--mal) 16%,transparent),transparent 50%),radial-gradient(circle at 90% 90%,color-mix(in srgb,var(--gold) 12%,transparent),transparent 45%)}
+.lcard{width:100%;max-width:440px;padding:28px}
+.lcard .brand{padding:0 0 16px;font-size:20px}
+.lcard h2{margin:0 0 4px;font-size:22px}
+.demo-cred{font-size:12px;border:1px dashed var(--line2);border-radius:10px;padding:8px 10px;margin:14px 0;color:var(--muted)}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.roles button{border:1px solid var(--line2);border-radius:12px;padding:10px;background:var(--bg2);cursor:pointer;text-align:left;font-size:13px}
+.roles button b{display:block;font-size:14px}
+.roles button.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+/* desk */
+.sbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--bg2);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip.on{border-color:var(--mal);color:var(--text);background:color-mix(in srgb,var(--mal) 14%,transparent)}
+.chip.st-avail.on{border-color:var(--mal)} .chip.st-break.on{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 14%,transparent)}
+.mini{display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.mini b{display:block;font-size:17px;color:var(--text)}
+.desk{display:grid;grid-template-columns:250px minmax(0,1fr) 270px;gap:14px;align-items:start}
+.qlist{display:flex;flex-direction:column;gap:6px;max-height:560px;overflow:auto;margin-top:10px}
+.qi{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:9px 10px;background:var(--bg2);cursor:pointer;text-align:left;width:100%}
+.qi:hover{border-color:var(--line2)}
+.qi.on{border-color:var(--mal);box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 16%,transparent)}
+.qi .ci{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--panel2);font-size:15px}
+.qi b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qi small{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qi .w{font-family:var(--mono);font-size:11.5px;text-align:right}
+.qi .w.hot{color:var(--red)} .qi .w.act{color:var(--mal3)}
+.chead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.chead b{font-size:16px}
+.ai{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid color-mix(in srgb,var(--violet) 40%,transparent);background:color-mix(in srgb,var(--violet) 8%,transparent);border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:10px}
+.ai .bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:6px;max-width:220px}
+.ai .bar i{display:block;height:100%;background:var(--violet)}
+.msgs{display:flex;flex-direction:column;gap:8px;max-height:330px;min-height:160px;overflow:auto;padding:4px 2px 8px}
+.m{max-width:85%;padding:8px 12px;border-radius:14px;font-size:13.5px;line-height:1.45;overflow-wrap:anywhere}
+.m.c{background:var(--panel2);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.m.a{background:color-mix(in srgb,var(--mal) 20%,var(--panel));align-self:flex-end;border-bottom-right-radius:4px}
+.m.s{align-self:center;font-size:12px;color:var(--muted);background:none;border:1px dashed var(--line2)}
+.m small{display:block;font-size:10.5px;color:var(--dim);margin-top:2px}
+.mail{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg2);font-size:13.5px;margin-bottom:8px}
+.mail .sub{font-weight:700;margin-bottom:4px}
+.call{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);background:color-mix(in srgb,var(--gold) 9%,transparent);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.call .tm{font-family:var(--mono);font-size:20px;font-weight:700}
+.wave{display:flex;gap:3px;align-items:center;height:22px}
+.wave i{width:3px;background:var(--gold);border-radius:2px;animation:wv 1s ease-in-out infinite}
+.wave.off i{animation:none;height:4px!important;opacity:.4}
+@keyframes wv{0%,100%{height:5px}50%{height:20px}}
+.comp{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.kbs{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.kbi{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg2);font-size:13px}
+.kbi b{display:block;margin-bottom:3px}
+.kbi p{margin:0 0 8px;color:var(--muted);font-size:12.5px}
+.tf{border:1px solid var(--gold);border-radius:14px;padding:14px;margin-top:12px;background:color-mix(in srgb,var(--gold) 5%,transparent)}
+.wrap{display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.wrap select{width:auto;flex:1;min-width:160px}
+.empty{text-align:center;padding:50px 16px;color:var(--muted)}
+.empty .big{font-size:40px}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 10px;font-size:12.5px;margin:10px 0}
+.kv span{color:var(--muted)} .kv b{font-weight:600;overflow-wrap:anywhere}
+.hist{list-style:none;padding:0;margin:0;font-size:12.5px}
+.hist li{padding:7px 0;border-bottom:1px dashed var(--line);display:flex;gap:8px}
+.hist li span{color:var(--dim);font-family:var(--mono);font-size:11px;flex:none;width:60px}
+/* tables */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);padding:10px;background:var(--bg2);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.mono{white-space:nowrap;font-size:12px}
+tr.sel td{background:color-mix(in srgb,var(--mal) 9%,transparent)}
+tbody tr{cursor:pointer} tbody tr:hover td{background:var(--panel2)}
+.slab{height:6px;border-radius:6px;background:var(--line);overflow:hidden;width:90px;margin-top:4px}
+.slab i{display:block;height:100%}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.tools .input{max-width:260px}
+.tools select.input{max-width:220px}
+.split{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.tline{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--line2);font-size:12.5px}
+.tline li{position:relative;padding:0 0 10px 6px}
+.tline li:before{content:"";position:absolute;left:-21px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--mal)}
+.tline li span{display:block;color:var(--dim);font-size:11px}
+/* kb */
+.art{font-size:14px;line-height:1.6}
+.art ol{padding-left:20px}
+.quote{border-left:3px solid var(--mal);padding:8px 12px;background:var(--bg2);border-radius:0 10px 10px 0;margin:10px 0}
+/* dashboard */
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+@media (max-width:1250px){.desk{grid-template-columns:240px minmax(0,1fr)}.ppane{grid-column:1/-1}.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1100px){.grid2,.split,.intro{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .desk{grid-template-columns:minmax(0,1fr)}
+  .qlist{max-height:300px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.kpi .v{font-size:20px}.m{max-width:92%}.tools .input,.tools select.input{max-width:none;flex:1 1 140px}.lcard{padding:20px}}
+</style>
+</head>
+<body data-demo-en="Citizen 311 — omnichannel citizen contact centre" data-demo-ru="Citizen 311 — единый контакт-центр для жителей">
+<div class="login" id="login"></div>
+<div class="app" id="app" style="display:none">
+  <aside class="side" id="side">
+    <div class="brand"><b>311</b><div>Citizen 311<small data-en="City of Port Aldin" data-ru="Город Порт-Олдин"></small></div></div>
+    <div class="sec" data-en="Contact centre" data-ru="Контакт-центр"></div>
+    <div id="navA"></div>
+    <div class="sec" data-en="Supervisor" data-ru="Руководитель"></div>
+    <div id="navS"></div>
+    <div class="grow"></div>
+    <div class="me" id="me"></div>
+    <button class="btn sm" id="logout" style="margin-top:8px;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+    <button class="btn sm" id="reset" style="margin-top:6px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill" id="slaPill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Open a contact from the <b>queue</b> — chat, call, email or social. AI routing shows the detected intent." data-ru="Откройте обращение из <b>очереди</b> — чат, звонок, почта или соцсети. ИИ-маршрутизация показывает тему."></span></div>
+          <div><b>2</b><span data-en="Insert a <b>knowledge answer</b>, reply, create a <b>service request</b> and complete the wrap-up." data-ru="Вставьте <b>ответ из базы знаний</b>, ответьте, создайте <b>заявку</b> и завершите обращение."></span></div>
+          <div><b>3</b><span data-en="Move tickets through statuses in <b>Service requests</b> and watch the <b>SLA dashboard</b> update." data-ru="Двигайте заявки по статусам в разделе <b>Заявки</b> и смотрите, как меняется <b>панель SLA</b>."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Omnichannel citizen contact centre" data-ru="Единый контакт-центр для жителей"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $70M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="City government, City of Port Aldin (fictional)" data-ru="Правительство города Порт-Олдин (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>Omnichannel · CRM · AI routing</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-desk"></section>
+    <section class="view" id="v-tix"></section>
+    <section class="view" id="v-kb"></section>
+    <section class="view" id="v-sla"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=a=>a==null?'':Array.isArray(a)?(PT.lang==='ru'?a[1]:a[0]):(typeof a==='object'?(PT.lang==='ru'?a.ru:a.en):a);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt_c311_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const fmtT=d=>new Date(d).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});
+const fmtDT=d=>new Date(d).toLocaleString(loc(),{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+function dur(ms){ms=Math.max(0,ms);const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;return h?`${h}${T('h','ч')} ${String(m).padStart(2,'0')}${T('m','м')}`:`${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`}
+function hrs(ms){const neg=ms<0;ms=Math.abs(ms);const h=Math.floor(ms/3600e3),m=Math.floor(ms%3600e3/60e3);const s=h>=48?Math.floor(h/24)+T('d ','д ')+(h%24)+T('h','ч'):h+T('h ','ч ')+m+T('m','м');return (neg?'−':'')+s}
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+
+const CH={chat:['💬','Web chat','Веб-чат'],voice:['📞','Voice','Звонок'],email:['✉️','Email','Почта'],social:['📱','Social / WhatsApp','Соцсети / WhatsApp']};
+const DEPTS={roads:['Roads & Streets','Дороги и улицы'],waste:['Waste Services','Вывоз отходов'],water:['Water Utility','Водоканал'],light:['Street Lighting','Уличное освещение'],parks:['Parks & Trees','Парки и деревья'],env:['Environmental Health','Санитарный надзор'],trans:['Transport & Parking','Транспорт и парковка'],fin:['Finance & Tax','Финансы и налоги']};
+const CATS={
+ pothole:{d:'roads',sla:72,n:['Pothole / road damage','Яма / повреждение дороги'],kw:['pothole','road','яма','дорог']},
+ bin:{d:'waste',sla:48,n:['Missed bin collection','Не вывезли мусор'],kw:['bin','trash','collect','мусор','бак']},
+ leak:{d:'water',sla:4,n:['Water leak / burst main','Утечка воды / прорыв трубы'],kw:['leak','water','вода','теч']},
+ light:{d:'light',sla:120,n:['Streetlight out','Не горит фонарь'],kw:['light','lamp','фонар','свет']},
+ tree:{d:'parks',sla:8,n:['Fallen tree / branch','Упавшее дерево / ветка'],kw:['tree','branch','дерев','ветк']},
+ noise:{d:'env',sla:24,n:['Noise complaint','Жалоба на шум'],kw:['noise','drill','шум','сверл']},
+ parking:{d:'trans',sla:240,n:['Parking fine dispute','Оспаривание штрафа за парковку'],kw:['parking','fine','штраф','парков']},
+ tax:{d:'fin',sla:120,n:['Property tax question','Вопрос по налогу на имущество'],kw:['tax','bill','налог','счёт']}
+};
+const SCRIPT={
+ pothole:{sub:['Dangerous pothole on Harbour Road','Опасная яма на Харбор-роуд'],c:[["Hi, there's a huge pothole on Harbour Road near the bus stop — two cars already damaged tyres today.","Здравствуйте, на Харбор-роуд у остановки огромная яма — сегодня уже двое пробили шины."],["It's right in the left lane, about half a metre wide and quite deep.","Прямо в левой полосе, около полуметра шириной и довольно глубокая."],["Thank you, please send me the reference number.","Спасибо, пришлите, пожалуйста, номер обращения."]]},
+ bin:{sub:['Recycling not collected again','Снова не вывезли вторсырьё'],c:[["Our recycling bin wasn't collected this morning again — third time this month.","Сегодня утром снова не вывезли бак для вторсырья — третий раз за месяц."],["It was at the kerb by 6:30, handle facing the road.","Бак стоял у бордюра с 6:30, ручкой к дороге."],["OK, will someone come back today?","Хорошо, сегодня кто-нибудь заедет?"]]},
+ leak:{sub:['Water flooding the crossing on Mill St','Вода заливает переход на Милл-стрит'],c:[["Water is gushing out of the pavement on Mill Street, it's flooding the crossing!","На Милл-стрит из-под тротуара хлещет вода, заливает переход!"],["Yes, it's clean water, a lot of it, near number 40.","Да, чистая вода, очень много, около дома 40."],["Should I call the emergency number as well?","Мне ещё звонить в экстренную службу?"]]},
+ light:{sub:['Three streetlights out on Linden Ave','Не горят три фонаря на Линден-авеню'],c:[["Three streetlights are out on Linden Avenue, it's completely dark at night.","На Линден-авеню не горят три фонаря, ночью полная темнота."],["Pole numbers are LA-114, LA-115 and LA-117.","Номера опор LA-114, LA-115 и LA-117."],["Great, thanks for the quick help.","Отлично, спасибо за быструю помощь."]]},
+ tree:{sub:['Branch blocking footpath in Kingsway Park','Ветка перекрыла дорожку в парке Кингсвей'],c:[["A big branch fell in the storm and is blocking the footpath in Kingsway Park.","Во время бури упала большая ветка и перекрыла дорожку в парке Кингсвей."],["No one is hurt, but children walk there to school.","Никто не пострадал, но там дети ходят в школу."],["Thank you, I'll keep people away for now.","Спасибо, пока прослежу, чтобы никто не подходил."]]},
+ noise:{sub:['Construction noise from 5 am','Стройка шумит с 5 утра'],c:[["The construction site next door starts drilling at 5 am every day.","Стройка по соседству каждый день начинает сверлить в 5 утра."],["It's at 22 Quay Lane, the contractor is Brightline Builders.","Это Куэй-лейн, 22, подрядчик — Brightline Builders."],["Can you tell me which hours are allowed?","Подскажите, в какие часы шуметь разрешено?"]]},
+ parking:{sub:['Fine issued despite resident permit','Штраф при наличии разрешения жителя'],c:[["I got a parking fine but I had a valid resident permit displayed.","Мне выписали штраф за парковку, хотя у меня было выставлено разрешение жителя."],["The fine number is PCN-88310427.","Номер штрафа PCN-88310427."],["OK, I'll upload the photo of my permit.","Хорошо, загружу фото разрешения."]]},
+ tax:{sub:['Property tax up 30%?','Налог вырос на 30%?'],c:[["My property tax bill went up 30% this year — why?","Налог на имущество в этом году вырос на 30% — почему?"],["The account number is PT-204-5519.","Номер лицевого счёта PT-204-5519."],["Can I pay in instalments?","Можно платить частями?"]]}
+};
+const KB=[
+ {id:'KB-101',cat:'pothole',t:['Reporting potholes and road damage','Сообщение о ямах и повреждениях дороги'],a:["Thank you for reporting this. I've logged a road repair request: crews assess within 24 hours and make the spot safe within 72 hours. If your vehicle was damaged you can file a claim at portaldin.gov/claims.","Спасибо за сообщение. Я оформила заявку на ремонт дороги: бригада осмотрит место в течение 24 часов и устранит опасность в течение 72 часов. Если машина пострадала, подайте претензию на portaldin.gov/claims."],s:[['Confirm exact location (house number, pole or bus stop)','Уточнить место (номер дома, опора, остановка)'],['Ask size and lane; danger to traffic → priority High','Спросить размер и полосу; опасно для движения → приоритет «Высокий»'],['Create SR “Pothole”, attach photos if provided','Создать заявку «Яма», приложить фото'],['Give the reference number and the 72 h SLA','Сообщить номер и срок 72 ч']],v:1840,h:212},
+ {id:'KB-114',cat:'bin',t:['Missed bin collection','Не вывезли мусорный бак'],a:["Sorry about the missed collection. I've booked a return visit — the crew will come back within 48 hours. Please leave the bin at the kerb until it's emptied.","Приносим извинения. Я оформила повторный вывоз — бригада приедет в течение 48 часов. Пожалуйста, оставьте бак у бордюра до вывоза."],s:[['Check the route schedule — was today the collection day?','Проверить график маршрута — был ли сегодня день вывоза?'],['3+ misses in 30 days → flag for contractor penalty','3+ пропуска за 30 дней → отметить для штрафа подрядчику'],['Create SR “Missed bin”','Создать заявку «Не вывезли мусор»']],v:2650,h:301},
+ {id:'KB-120',cat:'leak',t:['Water leaks and burst mains (urgent)','Утечки и прорывы труб (срочно)'],a:["Thank you — this is urgent. I've dispatched the water utility emergency crew; target arrival is under 4 hours. You don't need to call the emergency number unless there is a risk to life or the road collapses.","Спасибо — это срочно. Я вызвала аварийную бригаду водоканала, прибытие — до 4 часов. Звонить в экстренную службу не нужно, если нет угрозы жизни или провала дороги."],s:[['Clean water + flooding → priority Critical','Чистая вода + подтопление → приоритет «Критический»'],['Ask for nearest house number and whether traffic is affected','Уточнить номер дома и мешает ли движению'],['Create SR — auto-dispatch to Water Utility on-call','Создать заявку — автоотправка дежурным водоканала']],v:960,h:144},
+ {id:'KB-131',cat:'light',t:['Streetlight outages','Неисправные уличные фонари'],a:["Thanks for letting us know. I've logged the faulty streetlights; repairs are usually done within 5 working days. Pole numbers help the crew find them fast.","Спасибо за сообщение. Заявка на ремонт фонарей оформлена; обычно ремонт занимает до 5 рабочих дней. Номера опор помогут бригаде быстро их найти."],s:[['Ask for pole numbers (on a plate at eye level)','Спросить номера опор (табличка на уровне глаз)'],['3+ adjacent lights out → priority High','3+ фонаря подряд → приоритет «Высокий»']],v:1120,h:98},
+ {id:'KB-140',cat:'tree',t:['Fallen trees and branches','Упавшие деревья и ветки'],a:["Thank you. I've raised an urgent request with Parks — a crew will clear the path within 8 hours. Please keep a safe distance and don't try to move large branches.","Спасибо. Я передала срочную заявку в службу парков — бригада расчистит дорожку в течение 8 часов. Держитесь на безопасном расстоянии и не пытайтесь убрать крупные ветки сами."],s:[['Blocking road or power lines → call emergency line instead','Перекрыта дорога или провода → экстренная линия'],['Blocking footpath → priority High, SLA 8 h','Перекрыта дорожка → «Высокий», срок 8 ч']],v:740,h:81},
+ {id:'KB-152',cat:'noise',t:['Construction noise rules','Правила шума от строек'],a:["Construction noise is allowed Monday to Friday 7:00–19:00 and Saturday 8:00–13:00; it's not allowed on Sundays and public holidays. I've opened a complaint so Environmental Health can inspect the site.","Строительный шум разрешён с понедельника по пятницу 7:00–19:00 и в субботу 8:00–13:00; в воскресенье и праздники — запрещён. Я оформила жалобу, санитарный надзор проверит площадку."],s:[['Record address and contractor name','Записать адрес и название подрядчика'],['Repeat complaints → inspection within 24 h','Повторные жалобы → проверка за 24 ч']],v:880,h:120},
+ {id:'KB-163',cat:'parking',t:['Disputing a parking fine','Оспаривание штрафа за парковку'],a:["You can challenge the fine within 28 days. I've opened a dispute with the fine number — please upload a photo of your resident permit at portaldin.gov/pcn. Payment is paused while the dispute is reviewed.","Оспорить штраф можно в течение 28 дней. Я открыла спор по номеру штрафа — загрузите фото разрешения жителя на portaldin.gov/pcn. Оплата приостановлена на время рассмотрения."],s:[['Validate PCN format: PCN-########','Проверить формат: PCN-########'],['Create SR “Parking dispute”, payment hold flag','Создать заявку «Спор по штрафу», флаг паузы оплаты']],v:1310,h:156},
+ {id:'KB-171',cat:'tax',t:['Property tax bills and instalments','Налог на имущество и рассрочка'],a:["This year's revaluation raised assessed values city-wide, which is why bills went up. You can split the payment into 10 monthly instalments — I've sent a request to Finance and they'll confirm within 5 days.","После переоценки этого года выросла оценочная стоимость по всему городу, поэтому вырос налог. Оплату можно разбить на 10 ежемесячных платежей — я отправила запрос в финансовый отдел, ответ придёт в течение 5 дней."],s:[['Verify identity before discussing the account','Подтвердить личность перед обсуждением счёта'],['Explain revaluation; offer instalments or appeal','Объяснить переоценку; предложить рассрочку или обжалование']],v:1590,h:174},
+ {id:'KB-200',cat:'gen',t:['311 or emergency? Triage guide','311 или экстренная служба? Сортировка'],a:["311 is for non-emergency city services. If there is a risk to life, fire, crime in progress or a collapsed road, please call the emergency number immediately.","311 — для неэкстренных городских услуг. При угрозе жизни, пожаре, преступлении или провале дороги немедленно звоните в экстренную службу."],s:[['Risk to life → warm transfer to emergency','Угроза жизни → перевод в экстренную службу'],['Log the interaction with disposition “Transferred”','Отметить обращение как «Переведено»']],v:3020,h:410},
+ {id:'KB-210',cat:'gen',t:['Bulky waste pickup booking','Вывоз крупногабаритного мусора'],a:["You can book a bulky waste pickup online or with me now. The first two items per year are free; extra items are 15 PAD each.","Вывоз крупного мусора можно заказать онлайн или прямо сейчас у меня. Первые два предмета в год — бесплатно, далее по 15 PAD за предмет."],s:[['Ask item list and access','Уточнить список предметов и доступ'],['Offer next available slot','Предложить ближайшее окно']],v:2210,h:188}
+];
+const CITS=[
+ {id:'C-100482',n:['Amara Okoye','Амара Окойе'],a:['14 Harbour Rd','Харбор-роуд, 14'],ph:'+1 555 0142',em:'amara.okoye@mail.test',lg:['English','английский'],y:2019},
+ {id:'C-100517',n:['Daniel Price','Дэниел Прайс'],a:['40 Mill St, apt 3','Милл-стрит, 40, кв. 3'],ph:'+1 555 0177',em:'d.price@mail.test',lg:['English','английский'],y:2021},
+ {id:'C-100563',n:['Sofia Marin','София Марин'],a:['7 Linden Ave','Линден-авеню, 7'],ph:'+1 555 0109',em:'sofia.m@mail.test',lg:['Spanish','испанский'],y:2018},
+ {id:'C-100601',n:['Hiro Tanaka','Хиро Танака'],a:['3 Kingsway Park Rd','Кингсвей-парк-роуд, 3'],ph:'+1 555 0190',em:'hiro.t@mail.test',lg:['English','английский'],y:2023},
+ {id:'C-100644',n:['Leila Haddad','Лейла Хаддад'],a:['20 Quay Lane','Куэй-лейн, 20'],ph:'+1 555 0125',em:'leila.h@mail.test',lg:['Arabic','арабский'],y:2020},
+ {id:'C-100690',n:['Mateo Ruiz','Матео Руис'],a:['88 Station Sq','Привокзальная пл., 88'],ph:'+1 555 0163',em:'mateo.ruiz@mail.test',lg:['Spanish','испанский'],y:2022},
+ {id:'C-100712',n:['Grace Kim','Грейс Ким'],a:['5 Orchard Close','Орчард-клоуз, 5'],ph:'+1 555 0118',em:'grace.kim@mail.test',lg:['Korean','корейский'],y:2017},
+ {id:'C-100755',n:['Ivan Petrov','Иван Петров'],a:['61 Riverside Dr','Риверсайд-драйв, 61'],ph:'+1 555 0136',em:'i.petrov@mail.test',lg:['Russian','русский'],y:2024},
+ {id:'C-100798',n:['Olga Smirnova','Ольга Смирнова'],a:['9 Beacon Hill','Бикон-хилл, 9'],ph:'+1 555 0151',em:'olga.s@mail.test',lg:['Russian','русский'],y:2016},
+ {id:'C-100830',n:['Samuel Adeyemi','Сэмюэл Адейеми'],a:['112 Market St','Маркет-стрит, 112'],ph:'+1 555 0184',em:'sam.adeyemi@mail.test',lg:['English','английский'],y:2025}
+];
+const TST=[['New','Новая'],['Assigned','Назначена'],['In progress','В работе'],['Resolved','Решена']];
+const PRI={low:['Low','Низкий'],norm:['Normal','Обычный'],high:['High','Высокий'],crit:['Critical','Критический']};
+const DISP=[['res','Resolved on first contact','Решено при первом обращении'],['tkt','Service request created','Создана заявка'],['xfer','Transferred to department','Передано в отдел'],['info','Information only','Только консультация']];
+const CATK=Object.keys(CATS);
+function slaH(cat,pri){const h=CATS[cat].sla;return pri==='crit'?Math.min(h,4):pri==='high'?Math.round(h*.5):pri==='low'?h*1.5:h}
+
+let ixN=5200;
+function mkIx(r,ch,cit,cat,ago){const sc=SCRIPT[cat];return{id:'IX-'+(ixN++),ch,cit,cat,t:Date.now()-ago*1000,st:'q',step:1,conf:+(0.78+r()*0.2).toFixed(2),dept:CATS[cat].d,msgs:[{f:'c',en:sc.c[0][0],ru:sc.c[0][1],t:Date.now()-ago*1000}],last:0}}
+function seed(){
+  const r=rng(311);ixN=5200;const now=Date.now();
+  const ix=[mkIx(r,'voice',1,'leak',94),mkIx(r,'chat',0,'pothole',212),mkIx(r,'email',4,'noise',1460),mkIx(r,'social',2,'light',388),mkIx(r,'chat',7,'tax',61),mkIx(r,'chat',3,'tree',35)];
+  const tix=[];let n=48210;
+  for(let i=0;i<18;i++){const cat=CATK[Math.floor(r()*CATK.length)];const pri=['norm','norm','high','low','crit'][Math.floor(r()*5)];const age=(r()*CATS[cat].sla*1.3+1)*3600e3;const created=now-age;const sla=slaH(cat,pri)*3600e3;
+    let st=Math.floor(r()*4);const res=st===3?created+sla*(0.4+r()*0.9):null;const cit=Math.floor(r()*CITS.length);
+    const log=[{t:created,en:'Created via '+['web chat','voice','email','app'][i%4],ru:'Создана через '+['веб-чат','звонок','почту','приложение'][i%4]}];
+    if(st>=1)log.push({t:created+age*.15,en:'Assigned to '+DEPTS[CATS[cat].d][0],ru:'Назначена: '+DEPTS[CATS[cat].d][1]});
+    if(st>=2)log.push({t:created+age*.35,en:'Crew dispatched',ru:'Бригада выехала'});
+    if(st===3)log.push({t:res,en:'Resolved and citizen notified',ru:'Решена, житель уведомлён'});
+    tix.push({id:'SR-26-'+(n+i*7),cat,pri,addr:CITS[cit].a,cit,ch:['chat','voice','email','social'][i%4],created,due:created+sla,st,res,dept:CATS[cat].d,desc:SCRIPT[cat].c[0],log});}
+  tix.sort((a,b)=>b.created-a.created);
+  return{user:null,role:'agent',view:'desk',agent:'avail',ix,cur:null,tix,nextSR:48400,tsel:null,tfil:{st:'open',q:'',d:''},qf:'all',kbq:'',kbsel:'KB-101',helpful:{},tf:false,drafts:{},stats:{handled:0,aht:0,fcr:0,tk:0},hist:{}};
+}
+let S=store.load()||seed();
+if(S.ix&&S.ix.length){ixN=Math.max(...S.ix.map(x=>+x.id.slice(3)))+1}
+const save=()=>store.save();
+
+const VIEWS=[['desk','🎧','Agent desktop','Рабочее место оператора','A'],['tix','🎫','Service requests','Заявки','A'],['kb','📚','Knowledge base','База знаний','A'],['sla','📊','SLA dashboard','Панель SLA','S']];
+
+/* ---------- login ---------- */
+function rLogin(){
+  $('#login').innerHTML=`<div class="card lcard">
+   <div class="brand"><b>311</b><div>Citizen 311<small>${T('City of Port Aldin · Contact centre','Город Порт-Олдин · Контакт-центр')}</small></div></div>
+   <h2>${T('Sign in to the agent desktop','Вход в рабочее место оператора')}</h2>
+   <p class="muted" style="margin:0;font-size:13.5px">${T('City staff single sign-on. Demo credentials are filled in — just press Sign in.','Единый вход сотрудников города. Демо-данные уже заполнены — просто нажмите «Войти».')}</p>
+   <div class="roles"><button data-role="agent" class="${S.role==='agent'?'on':''}"><b>${T('Agent','Оператор')}</b>${T('Queue, tickets, KB','Очередь, заявки, база')}</button><button data-role="sup" class="${S.role==='sup'?'on':''}"><b>${T('Supervisor','Руководитель')}</b>${T('Starts on SLA dashboard','Начинает с панели SLA')}</button></div>
+   <div class="f"><label>${T('Work email','Рабочая почта')}</label><input class="input" id="lUser" value="m.okafor@portaldin.gov" autocomplete="username"></div>
+   <div class="f" style="margin-top:10px"><label>${T('Password','Пароль')}</label><input class="input" id="lPass" type="password" value="demo-311-2026" autocomplete="current-password"></div>
+   <div class="err" id="lErr"></div>
+   <button class="btn pri" id="lGo" style="width:100%;justify-content:center;margin-top:4px">${T('Sign in','Войти')}</button>
+   <div class="demo-cred">${T('Demo account','Демо-аккаунт')}: <span class="mono">m.okafor@portaldin.gov</span> / <span class="mono">demo-311-2026</span> · MFA ${T('skipped in demo','пропущена в демо')}</div>
+  </div>`;
+  $$('[data-role]').forEach(b=>b.onclick=()=>{S.role=b.dataset.role;save();rLogin()});
+  $('#lGo').onclick=()=>{const u=$('#lUser').value.trim(),p=$('#lPass').value;
+    if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(u)){$('#lErr').textContent=T('Enter a valid work email','Введите корректную рабочую почту');$('#lUser').classList.add('bad');return}
+    if(p.length<6){$('#lErr').textContent=T('Password is too short','Пароль слишком короткий');$('#lPass').classList.add('bad');return}
+    S.user={email:u,since:Date.now()};S.view=S.role==='sup'?'sla':'desk';save();render();toast(T('Signed in · status Available','Вход выполнен · статус «Доступен»'))};
+}
+
+/* ---------- shell ---------- */
+function nav(){
+  const open=S.tix.filter(t=>t.st<3),br=open.filter(t=>Date.now()>t.due).length,q=S.ix.filter(x=>x.st==='q').length;
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';if(v[0]==='desk'&&q)x=`<span class="cnt">${q}</span>`;if(v[0]==='tix'&&br)x=`<span class="cnt r">${br}</span>`;
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navA').innerHTML=mk('A');$('#navS').innerHTML=mk('S');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  const stl={avail:['Available','Доступен','ok-t'],brk:['On break','Перерыв','warn-t'],wrap:['Wrap-up','Постобработка','warn-t']}[S.agent];
+  $('#me').innerHTML=`<div class="av">MO</div><div style="min-width:0">${T('Maria Okafor','Мария Окафор')}<small>${S.role==='sup'?T('Supervisor · Team B','Руководитель · группа B'):T('Agent · Team B','Оператор · группа B')} · <span class="${stl[2]}">● ${T(stl[0],stl[1])}</span></small></div>`;
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  if(!S.user){$('#login').style.display='';$('#app').style.display='none';rLogin();return}
+  $('#login').style.display='none';$('#app').style.display='';
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=v[4]==='A'?T('Contact centre · Team B','Контакт-центр · группа B'):T('Supervisor view','Вид руководителя');
+  const sl=svcLevel();$('#slaPill').className='pill '+(sl>=80?'ok':'warn');$('#slaPill').textContent=T('Service level ','Уровень сервиса ')+sl+'% · '+T('target 80/20','цель 80/20');
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({desk:rDesk,tix:rTix,kb:rKb,sla:rSla})[v[0]]();
+}
+
+/* ---------- desk ---------- */
+function cur(){return S.ix.find(x=>x.id===S.cur&&x.st==='a')}
+function waitCls(x){const w=Date.now()-x.t;return x.st==='a'?'act':w>180e3?'hot':''}
+function qItem(x){const c=CITS[x.cit];return `<button class="qi ${x.id===S.cur?'on':''}" data-ix="${x.id}"><span class="ci">${CH[x.ch][0]}</span><span style="min-width:0"><b>${esc(L(c.n))}</b><small>${esc(L(CATS[x.cat].n))}</small></span><span class="w ${waitCls(x)}" data-since="${x.st==='a'?x.start:x.t}">${x.st==='a'?T('active','активно'):''}</span></button>`}
+function rDesk(){
+  const el=$('#v-desk');const q=S.ix.filter(x=>x.st!=='d'&&(S.qf==='all'||x.ch===S.qf));
+  const queued=S.ix.filter(x=>x.st==='q'),act=cur();
+  const aht=S.stats.handled?Math.round(S.stats.aht/S.stats.handled/1000):0;
+  el.innerHTML=`<div class="card sbar">
+   <span class="muted" style="font-size:12.5px;font-weight:600">${T('My status','Мой статус')}</span>
+   <div class="chips">${[['avail','Available','Доступен'],['brk','Break','Перерыв'],['wrap','Wrap-up','Постобработка']].map(s=>`<button class="chip st-${s[0]==='brk'?'break':'avail'} ${S.agent===s[0]?'on':''}" data-st="${s[0]}">${T(s[1],s[2])}</button>`).join('')}</div>
+   <span class="sp" style="flex:1"></span>
+   <div class="mini"><div>${T('In queue','В очереди')}<b>${queued.length}</b></div><div>${T('Longest wait','Макс. ожидание')}<b class="mono" data-since="${queued.length?Math.min(...queued.map(x=>x.t)):''}">—</b></div><div>${T('Handled today','Обработано')}<b>${S.stats.handled}</b></div><div>${T('My AHT','Моё ср. время')}<b class="mono">${aht?dur(aht*1000):'—'}</b></div></div>
+  </div>
+  <div class="desk">
+   <div class="card qpane"><h3>${T('Omnichannel queue','Единая очередь')}<span class="sp"></span><button class="btn sm pri" id="nextBtn" ${!queued.length||S.agent!=='avail'?'disabled':''}>${T('Accept next','Принять след.')}</button></h3>
+    <div class="chips">${[['all','All','Все'],['chat','💬',''],['voice','📞',''],['email','✉️',''],['social','📱','']].map(f=>`<button class="chip ${S.qf===f[0]?'on':''}" data-qf="${f[0]}" title="${f[0]}">${f[2]?T(f[1],f[2]):f[1]} ${S.ix.filter(x=>x.st!=='d'&&(f[0]==='all'||x.ch===f[0])).length}</button>`).join('')}</div>
+    <div class="qlist">${q.length?q.sort((a,b)=>(a.st==='a'?-1:0)-(b.st==='a'?-1:0)||a.t-b.t).map(qItem).join(''):`<div class="empty" style="padding:24px 8px">${T('Queue is empty','Очередь пуста')}</div>`}</div>
+    <p class="muted" style="font-size:11.5px;margin:10px 0 0">${T('AI routing orders contacts by urgency and skills. New contacts arrive automatically.','ИИ-маршрутизация упорядочивает обращения по срочности и навыкам. Новые обращения поступают автоматически.')}</p>
+   </div>
+   <div class="card cpane" id="cpane">${act?conv(act):`<div class="empty"><div class="big">🎧</div><b>${T('No active contact','Нет активного обращения')}</b><p>${S.agent==='avail'?T('Pick one from the queue or press “Accept next”.','Выберите обращение в очереди или нажмите «Принять след.».'):T('You are not available — switch status to take contacts.','Вы недоступны — смените статус, чтобы принимать обращения.')}</p></div>`}</div>
+   <div class="card ppane">${act?citCard(act):`<h3>${T('Citizen card','Карточка жителя')}</h3><p class="muted" style="font-size:13px">${T('Citizen profile, history and open requests appear here when a contact is open.','Профиль жителя, история и открытые заявки появятся здесь, когда откроете обращение.')}</p>`}</div>
+  </div>`;
+  $$('[data-st]',el).forEach(b=>b.onclick=()=>{S.agent=b.dataset.st;save();render()});
+  $$('[data-qf]',el).forEach(b=>b.onclick=()=>{S.qf=b.dataset.qf;save();rDesk()});
+  $$('[data-ix]',el).forEach(b=>b.onclick=()=>openIx(b.dataset.ix));
+  $('#nextBtn').onclick=()=>{const n=S.ix.filter(x=>x.st==='q').sort((a,b)=>(CATS[b.cat].sla<10)-(CATS[a.cat].sla<10)||a.t-b.t)[0];if(n)openIx(n.id)};
+  if(act)bindConv(act);
+  tick();
+}
+function openIx(id){const x=S.ix.find(i=>i.id===id);if(!x)return;
+  if(x.st==='q'){if(S.agent!=='avail'){toast(T('Set status to Available first','Сначала смените статус на «Доступен»'),'bad');return}
+    x.st='a';x.start=Date.now();x.last=Date.now();x.msgs.push({f:'s',en:(x.ch==='voice'?'Call connected':'Contact accepted')+' · AI intent: '+CATS[x.cat].n[0],ru:(x.ch==='voice'?'Звонок принят':'Обращение принято')+' · тема ИИ: '+CATS[x.cat].n[1],t:Date.now()})}
+  S.cur=id;S.tf=false;save();render();
+  if(innerWidth<860){const p=$('#cpane');if(p)p.scrollIntoView({behavior:'smooth'})}
+}
+function msgHtml(m){return `<div class="m ${m.f}">${esc(m.f==='a'?m.en:L(m))}<small>${m.f==='c'?T('Citizen','Житель'):m.f==='a'?T('You','Вы'):''} ${fmtT(m.t)}</small></div>`}
+function conv(x){const c=CITS[x.cit];const sug=KB.filter(k=>k.cat===x.cat).concat(KB.filter(k=>k.cat==='gen').slice(0,1));
+  return `<div class="chead"><span style="font-size:20px">${CH[x.ch][0]}</span><div style="min-width:0;flex:1"><b>${esc(L(c.n))}</b><div class="muted" style="font-size:12px">${T(CH[x.ch][1],CH[x.ch][2])} · ${x.id} · ${T('handling','в работе')} <span class="mono" data-since="${x.start}"></span></div></div><span class="pill ${CATS[x.cat].sla<=8?'bad':'gold'}">${L(CATS[x.cat].n)}</span></div>
+  <div class="ai"><div><b>🤖 ${T('AI routing','ИИ-маршрутизация')}</b> · ${T('intent','тема')}: ${L(CATS[x.cat].n)} · ${T('route to','отдел')}: <b>${L(DEPTS[x.dept])}</b>
+    <div class="bar"><i style="width:${x.conf*100}%"></i></div><span class="muted" style="font-size:11.5px">${T('confidence','уверенность')} ${Math.round(x.conf*100)}% · ${T('sentiment','настроение')}: ${x.cat==='leak'||x.cat==='bin'?T('frustrated','раздражён'):T('neutral','нейтральное')}</span></div>
+    <select class="input" id="xfer" style="width:auto;max-width:160px;font-size:12.5px;padding:6px 8px">${Object.keys(DEPTS).map(d=>`<option value="${d}" ${d===x.dept?'selected':''}>${L(DEPTS[d])}</option>`).join('')}</select></div>
+  ${x.ch==='voice'?`<div class="call"><span style="font-size:22px">📞</span><div><div class="muted" style="font-size:11.5px">${T('Live call','Звонок')} · ${c.ph}</div><span class="tm" data-since="${x.start}"></span></div><div class="wave ${x.hold||x.mute?'off':''}">${Array.from({length:9},(_,i)=>`<i style="animation-delay:${i*.09}s"></i>`).join('')}</div><span class="sp" style="flex:1"></span><button class="btn sm" id="mute">${x.mute?T('Unmute','Вкл. микрофон'):T('Mute','Без звука')}</button><button class="btn sm" id="hold">${x.hold?T('Resume','Снять удержание'):T('Hold','Удержание')}</button></div>`:''}
+  ${x.ch==='email'?`<div class="mail"><div class="sub">${esc(L(SCRIPT[x.cat].sub))}</div><div class="muted" style="font-size:12px">${esc(c.em)} → 311@portaldin.gov</div></div>`:''}
+  <div class="muted" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">${x.ch==='voice'?T('Live transcript (AI)','Расшифровка звонка (ИИ)'):T('Conversation','Переписка')}</div>
+  <div class="msgs" id="msgs">${x.msgs.map(msgHtml).join('')}</div>
+  <div class="comp"><textarea class="input" id="reply" rows="3" placeholder="${x.ch==='voice'?T('Call notes / what you said…','Заметки по звонку / что вы сказали…'):T('Type a reply…','Напишите ответ…')}">${esc(S.drafts[x.id]||'')}</textarea>
+   <div class="row"><button class="btn sm pri" id="send">${x.ch==='voice'?T('Log to transcript','В расшифровку'):x.ch==='email'?T('Send email','Отправить письмо'):T('Send','Отправить')}</button><button class="btn sm gold" id="tfBtn">＋ ${T('Create service request','Создать заявку')}</button></div></div>
+  <div class="kbs"><div class="muted" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">📚 ${T('Suggested knowledge answers','Подсказки из базы знаний')}</div>
+   ${sug.map(k=>`<div class="kbi"><b>${esc(L(k.t))}</b><p>${esc(L(k.a)).slice(0,150)}…</p><div class="row"><button class="btn sm" data-ins="${k.id}">${T('Insert answer','Вставить ответ')}</button><button class="btn sm" data-kb="${k.id}">${T('Open article','Открыть статью')}</button></div></div>`).join('')}</div>
+  ${S.tf?tfForm(x):''}
+  <div class="wrap"><select class="input" id="disp">${DISP.map(d=>`<option value="${d[0]}" ${(x.tk?'tkt':'res')===d[0]?'selected':''}>${T(d[1],d[2])}</option>`).join('')}</select><button class="btn sm pri" id="done">${x.ch==='voice'?T('End call & complete','Завершить звонок'):T('Complete contact','Завершить обращение')}</button></div>`;
+}
+function tfForm(x){const c=CITS[x.cit];const pri=CATS[x.cat].sla<=8?'crit':'norm';
+  return `<div class="tf" id="tf"><h3 style="margin:0 0 10px">🎫 ${T('New service request','Новая заявка')}<span class="sp"></span><button class="btn sm" id="tfX">✕</button></h3>
+  <div class="fgrid"><div class="f"><label>${T('Category','Категория')}</label><select class="input" id="tfCat">${CATK.map(k=>`<option value="${k}" ${k===x.cat?'selected':''}>${L(CATS[k].n)}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Priority','Приоритет')}</label><select class="input" id="tfPri">${Object.keys(PRI).map(p=>`<option value="${p}" ${p===pri?'selected':''}>${L(PRI[p])}</option>`).join('')}</select></div>
+  <div class="f full"><label>${T('Location','Адрес')}</label><input class="input" id="tfAddr" value="${esc(L(c.a))}"><div class="err" id="eAddr"></div></div>
+  <div class="f full"><label>${T('Description','Описание')}</label><textarea class="input" id="tfDesc" rows="3">${esc(x.msgs.filter(m=>m.f==='c').map(m=>L(m)).join(' '))}</textarea><div class="err" id="eDesc"></div></div>
+  <label class="full row" style="font-size:13px;cursor:pointer"><input type="checkbox" id="tfSms" checked> ${T('Send reference and updates to the citizen by SMS','Отправить номер и обновления жителю по SMS')}</label></div>
+  <div class="row" style="margin-top:10px"><button class="btn pri sm" id="tfSave">${T('Save request','Сохранить заявку')}</button><span class="muted" style="font-size:12px" id="tfSla"></span></div></div>`;
+}
+function paintMsgs(x){const m=$('#msgs');if(!m||S.cur!==x.id)return;m.innerHTML=x.msgs.map(msgHtml).join('');m.scrollTop=m.scrollHeight}
+function bindConv(x){
+  const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;
+  $('#reply').oninput=e=>{S.drafts[x.id]=e.target.value;save()};
+  $('#xfer').onchange=e=>{x.dept=e.target.value;x.msgs.push({f:'s',en:'Routed to '+DEPTS[x.dept][0],ru:'Направлено: '+DEPTS[x.dept][1],t:Date.now()});save();paintMsgs(x);toast(T('Routing updated · ','Маршрут изменён · ')+L(DEPTS[x.dept]))};
+  if($('#mute'))$('#mute').onclick=()=>{x.mute=!x.mute;save();rDesk()};
+  if($('#hold'))$('#hold').onclick=()=>{x.hold=!x.hold;x.msgs.push({f:'s',en:x.hold?'Call on hold':'Call resumed',ru:x.hold?'Звонок на удержании':'Звонок возобновлён',t:Date.now()});save();rDesk()};
+  $('#send').onclick=()=>{const v=$('#reply').value.trim();if(!v){toast(T('Write a reply first','Сначала напишите ответ'),'bad');return}
+    x.msgs.push({f:'a',en:v,ru:v,t:Date.now()});delete S.drafts[x.id];x.last=Date.now();save();rDesk();
+    if(x.ch!=='voice')setTimeout(()=>citizenNext(x),1400)};
+  $$('[data-ins]').forEach(b=>b.onclick=()=>{const k=KB.find(a=>a.id===b.dataset.ins);const ta=$('#reply');ta.value=(ta.value?ta.value+'\n':'')+L(k.a);S.drafts[x.id]=ta.value;save();ta.focus();toast(T('Answer inserted — edit and send','Ответ вставлен — отредактируйте и отправьте'))});
+  $$('[data-kb]').forEach(b=>b.onclick=()=>{S.kbsel=b.dataset.kb;go('kb')});
+  $('#tfBtn').onclick=()=>{S.tf=true;save();rDesk();const f=$('#tf');if(f)f.scrollIntoView({behavior:'smooth',block:'center'})};
+  if(S.tf){
+    const upd=()=>{const h=slaH($('#tfCat').value,$('#tfPri').value);$('#tfSla').textContent=T('SLA: resolve within ','SLA: решить за ')+h+T(' h → ',' ч → ')+L(DEPTS[CATS[$('#tfCat').value].d])};upd();
+    $('#tfCat').onchange=upd;$('#tfPri').onchange=upd;
+    $('#tfX').onclick=()=>{S.tf=false;save();rDesk()};
+    $('#tfSave').onclick=()=>{const a=$('#tfAddr').value.trim(),d=$('#tfDesc').value.trim();let ok=true;
+      $('#eAddr').textContent=a.length<5?T('Enter the exact location (min 5 characters)','Укажите точный адрес (мин. 5 символов)'):'';$('#tfAddr').classList.toggle('bad',a.length<5);
+      $('#eDesc').textContent=d.length<15?T('Describe the issue (min 15 characters)','Опишите проблему (мин. 15 символов)'):'';$('#tfDesc').classList.toggle('bad',d.length<15);
+      if(a.length<5||d.length<15)return;
+      const cat=$('#tfCat').value,pri=$('#tfPri').value,now=Date.now();const id='SR-26-'+(S.nextSR++);
+      S.tix.unshift({id,cat,pri,addr:a,cit:x.cit,ch:x.ch,created:now,due:now+slaH(cat,pri)*3600e3,st:pri==='crit'?1:0,res:null,dept:CATS[cat].d,desc:d,log:[{t:now,en:'Created by Maria Okafor from '+x.id,ru:'Создана Марией Окафор из '+x.id}].concat(pri==='crit'?[{t:now,en:'Auto-dispatched to on-call crew',ru:'Автоматически передана дежурной бригаде'}]:[])});
+      x.tk=id;S.tf=false;S.stats.tk++;x.msgs.push({f:'s',en:'Service request '+id+' created'+($('#tfSms').checked?' · SMS sent':''),ru:'Заявка '+id+' создана'+($('#tfSms').checked?' · SMS отправлено':''),t:now});
+      save();render();toast(T('Service request <b>'+id+'</b> created','Заявка <b>'+id+'</b> создана'),'gold')};
+  }
+  $('#done').onclick=()=>{const d=$('#disp').value;x.st='d';x.end=Date.now();x.disp=d;S.stats.handled++;S.stats.aht+=x.end-x.start;if(d==='res'||d==='tkt')S.stats.fcr++;
+    (S.hist[x.cit]=S.hist[x.cit]||[]).unshift({t:x.end,ch:x.ch,cat:x.cat,disp:d,tk:x.tk||null});
+    const nx=S.ix.find(i=>i.st==='a');S.cur=nx?nx.id:null;S.tf=false;save();render();toast(T('Contact completed · ','Обращение завершено · ')+x.id)};
+}
+function citizenNext(x){if(x.st!=='a')return;const sc=SCRIPT[x.cat].c;if(x.step>=sc.length)return;
+  x.msgs.push({f:'c',en:sc[x.step][0],ru:sc[x.step][1],t:Date.now()});x.step++;x.last=Date.now();save();paintMsgs(x)}
+function citCard(x){const c=CITS[x.cit];const open=S.tix.filter(t=>t.cit===x.cit&&t.st<3);const h=(S.hist[x.cit]||[]).slice(0,3);
+  const past=[[22,'bin','tkt'],[64,'tax','res'],[190,'parking','info']].filter((p,i)=>(x.cit+i)%3!==0);
+  return `<h3>${T('Citizen card','Карточка жителя')}<span class="sp"></span>${x.verified?`<span class="pill ok">✓ ${T('Verified','Подтверждён')}</span>`:`<button class="btn sm" id="verify">${T('Verify ID','Проверить')}</button>`}</h3>
+  <div class="row"><div class="av" style="width:44px;height:44px;font-size:15px">${L(c.n).split(' ').map(s=>s[0]).join('')}</div><div><b>${esc(L(c.n))}</b><div class="muted mono" style="font-size:11.5px">${c.id}</div></div></div>
+  <div class="kv"><span>${T('Address','Адрес')}</span><b>${esc(L(c.a))}</b><span>${T('Phone','Телефон')}</span><b class="mono">${c.ph}</b><span>Email</span><b>${esc(c.em)}</b><span>${T('Language','Язык')}</span><b>${L(c.lg)}</b><span>${T('Resident since','Житель с')}</span><b>${c.y}</b><span>${T('Consent','Согласие')}</span><b class="ok-t">SMS · Email</b></div>
+  <div class="muted" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:6px">${T('Open requests','Открытые заявки')} (${open.length})</div>
+  <ul class="hist">${open.length?open.slice(0,4).map(t=>`<li><span>${t.id.slice(6)}</span><div>${L(CATS[t.cat].n)} · <b class="${Date.now()>t.due?'bad-t':''}">${T(TST[t.st][0],TST[t.st][1])}</b></div></li>`).join(''):`<li class="muted">${T('None','Нет')}</li>`}</ul>
+  <div class="muted" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:10px">${T('Contact history','История обращений')}</div>
+  <ul class="hist">${h.map(e=>`<li><span>${fmtT(e.t)}</span><div>${CH[e.ch][0]} ${L(CATS[e.cat].n)}${e.tk?' · '+e.tk:''}</div></li>`).join('')}${past.map(p=>`<li><span>${p[0]}${T('d ago',' дн.')}</span><div>${L(CATS[p[1]].n)} · ${T(DISP.find(d=>d[0]===p[2])[1],DISP.find(d=>d[0]===p[2])[2])}</div></li>`).join('')}</ul>`;
+}
+
+/* ---------- tickets ---------- */
+function slaInfo(t){const tot=t.due-t.created;if(t.st===3){const ok=t.res<=t.due;return{txt:ok?T('Met','Выполнен'):T('Missed','Нарушен'),cls:ok?'ok-t':'bad-t',p:Math.min(1,(t.res-t.created)/tot)}}
+  const left=t.due-Date.now();const p=Math.min(1,(Date.now()-t.created)/tot);return{txt:left<0?T('Breached ','Просрочено ')+hrs(-left):hrs(left)+T(' left',' ост.'),cls:left<0?'bad-t':p>.75?'warn-t':'',p}}
+function filtT(){const f=S.tfil,q=f.q.toLowerCase();return S.tix.filter(t=>(f.st==='all'||(f.st==='open'?t.st<3:f.st==='br'?t.st<3&&Date.now()>t.due:+f.st===t.st))&&(!f.d||t.dept===f.d)&&(!q||(t.id+' '+L(t.addr)+' '+L(CATS[t.cat].n)+' '+L(CITS[t.cit].n)).toLowerCase().includes(q)))}
+function tRows(){const l=filtT();return l.length?l.map(t=>{const s=slaInfo(t);return `<tr data-t="${t.id}" class="${S.tsel===t.id?'sel':''}"><td class="mono">${t.id}</td><td>${L(CATS[t.cat].n)}</td><td>${esc(L(t.addr))}</td><td>${L(DEPTS[t.dept])}</td><td><span class="pill ${t.pri==='crit'?'bad':t.pri==='high'?'warn':''}">${L(PRI[t.pri])}</span></td><td><span class="pill ${t.st===3?'ok':t.st===2?'gold':''}">${T(TST[t.st][0],TST[t.st][1])}</span></td><td><span class="${s.cls}" style="font-size:12.5px;white-space:nowrap">${s.txt}</span><div class="slab"><i style="width:${s.p*100}%;background:var(${s.cls==='bad-t'?'--red':s.cls==='warn-t'?'--amber':'--mal'})"></i></div></td></tr>`}).join(''):`<tr><td colspan="7" class="muted" style="text-align:center;padding:24px">${T('No requests match the filters','Нет заявок по фильтрам')}</td></tr>`}
+function rTix(){const el=$('#v-tix');const f=S.tfil;const t=S.tix.find(x=>x.id===S.tsel);
+  const cnt=k=>S.tix.filter(t=>k==='open'?t.st<3:k==='br'?t.st<3&&Date.now()>t.due:k==='all'?1:+k===t.st).length;
+  el.innerHTML=`<div class="split"><div class="card"><h3>${T('Service requests','Заявки')}<span class="sp"></span><span class="pill">${S.tix.length} ${T('total','всего')}</span></h3>
+   <div class="chips" style="margin-bottom:10px">${[['open','Open','Открытые'],['br','Breached','Просрочены'],['0',...TST[0]],['1',...TST[1]],['2',...TST[2]],['3',...TST[3]],['all','All','Все']].map(c=>`<button class="chip ${f.st===c[0]?'on':''}" data-tf="${c[0]}">${T(c[1],c[2])} ${cnt(c[0])}</button>`).join('')}</div>
+   <div class="tools"><input class="input" id="tq" value="${esc(f.q)}" placeholder="${T('Search ID, address, citizen…','Поиск: номер, адрес, житель…')}"><select class="input" id="td"><option value="">${T('All departments','Все отделы')}</option>${Object.keys(DEPTS).map(d=>`<option value="${d}" ${f.d===d?'selected':''}>${L(DEPTS[d])}</option>`).join('')}</select></div>
+   <div class="tw"><table><thead><tr><th>ID</th><th>${T('Category','Категория')}</th><th>${T('Location','Адрес')}</th><th>${T('Department','Отдел')}</th><th>${T('Priority','Приоритет')}</th><th>${T('Status','Статус')}</th><th>SLA</th></tr></thead><tbody id="tb">${tRows()}</tbody></table></div></div>
+   <div class="card" id="tdet">${t?tDetail(t):`<div class="empty"><div class="big">🎫</div>${T('Select a request to see details, move it through statuses and add notes.','Выберите заявку, чтобы увидеть детали, сменить статус и добавить заметку.')}</div>`}</div></div>`;
+  $$('[data-tf]',el).forEach(b=>b.onclick=()=>{f.st=b.dataset.tf;save();rTix()});
+  $('#tq').oninput=e=>{f.q=e.target.value;save();$('#tb').innerHTML=tRows();bindRows()};
+  $('#td').onchange=e=>{f.d=e.target.value;save();rTix()};
+  bindRows();if(t)bindDetail(t);
+}
+function bindRows(){$$('#tb tr[data-t]').forEach(r=>r.onclick=()=>{S.tsel=r.dataset.t;save();rTix();if(innerWidth<1100)$('#tdet').scrollIntoView({behavior:'smooth'})})}
+function tDetail(t){const s=slaInfo(t),c=CITS[t.cit];
+  return `<h3><span class="mono">${t.id}</span><span class="sp"></span><span class="pill ${t.st===3?'ok':t.st===2?'gold':''}">${T(TST[t.st][0],TST[t.st][1])}</span></h3>
+  <div class="row" style="gap:4px;margin-bottom:12px">${TST.map((x,i)=>`<div style="flex:1;height:6px;border-radius:4px;background:var(${i<=t.st?'--mal':'--line'})"></div>`).join('')}</div>
+  <div class="kv"><span>${T('Category','Категория')}</span><b>${L(CATS[t.cat].n)}</b><span>${T('Location','Адрес')}</span><b>${esc(L(t.addr))}</b><span>${T('Citizen','Житель')}</span><b>${esc(L(c.n))} · ${CH[t.ch][0]}</b><span>${T('Created','Создана')}</span><b>${fmtDT(t.created)}</b><span>${T('Due','Срок')}</span><b>${fmtDT(t.due)}</b><span>SLA</span><b class="${s.cls}">${s.txt}</b><span>${T('Description','Описание')}</span><b style="font-weight:500">${esc(L(t.desc))}</b></div>
+  <div class="fgrid" style="margin:10px 0"><div class="f"><label>${T('Department','Отдел')}</label><select class="input" id="dDept">${Object.keys(DEPTS).map(d=>`<option value="${d}" ${t.dept===d?'selected':''}>${L(DEPTS[d])}</option>`).join('')}</select></div>
+   <div class="f"><label>${T('Priority','Приоритет')}</label><select class="input" id="dPri">${Object.keys(PRI).map(p=>`<option value="${p}" ${t.pri===p?'selected':''}>${L(PRI[p])}</option>`).join('')}</select></div></div>
+  <div class="row" style="margin-bottom:12px">${t.st<3?`<button class="btn sm pri" id="adv">→ ${T(TST[t.st+1][0],TST[t.st+1][1])}</button>`:`<button class="btn sm" id="reopen">${T('Reopen','Открыть заново')}</button>`}</div>
+  <div class="f"><label>${T('Add internal note','Внутренняя заметка')}</label><div class="row"><input class="input" id="note" style="flex:1;min-width:0" placeholder="${T('e.g. Crew ETA 14:30','напр. Бригада прибудет в 14:30')}"><button class="btn sm" id="addNote">${T('Add','Добавить')}</button></div></div>
+  <div class="muted" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px">${T('Timeline','Хронология')}</div>
+  <ul class="tline">${t.log.slice().reverse().map(e=>`<li>${esc(L(e))}<span>${fmtDT(e.t)}</span></li>`).join('')}</ul>`;
+}
+function bindDetail(t){const lg=(en,ru)=>t.log.push({t:Date.now(),en,ru});
+  if($('#adv'))$('#adv').onclick=()=>{t.st++;if(t.st===3)t.res=Date.now();lg('Status → '+TST[t.st][0],'Статус → '+TST[t.st][1]);save();render();toast(t.id+' → '+T(TST[t.st][0],TST[t.st][1]),t.st===3?'gold':'')};
+  if($('#reopen'))$('#reopen').onclick=()=>{t.st=1;t.res=null;lg('Reopened','Открыта заново');save();render()};
+  $('#dDept').onchange=e=>{t.dept=e.target.value;lg('Reassigned to '+DEPTS[t.dept][0],'Переназначена: '+DEPTS[t.dept][1]);save();rTix();toast(T('Reassigned','Переназначена'))};
+  $('#dPri').onchange=e=>{t.pri=e.target.value;t.due=t.created+slaH(t.cat,t.pri)*3600e3;lg('Priority → '+PRI[t.pri][0],'Приоритет → '+PRI[t.pri][1]);save();rTix();toast(T('Priority and SLA updated','Приоритет и срок обновлены'))};
+  $('#addNote').onclick=()=>{const v=$('#note').value.trim();if(v.length<3){toast(T('Note is too short','Заметка слишком короткая'),'bad');return}lg('Note: '+v,'Заметка: '+v);save();rTix();toast(T('Note added','Заметка добавлена'))};
+}
+
+/* ---------- knowledge ---------- */
+function kbList(){const q=S.kbq.toLowerCase();const l=KB.filter(k=>!q||(L(k.t)+' '+L(k.a)+' '+k.id).toLowerCase().includes(q));
+  return l.length?l.map(k=>`<button class="qi ${S.kbsel===k.id?'on':''}" data-k="${k.id}" style="grid-template-columns:30px minmax(0,1fr) auto"><span class="ci">📄</span><span style="min-width:0"><b>${esc(L(k.t))}</b><small>${k.id} · ${k.cat==='gen'?T('General','Общее'):L(DEPTS[CATS[k.cat].d])}</small></span><span class="w">${k.v+(S.helpful[k.id]?0:0)}</span></button>`).join(''):`<div class="empty" style="padding:24px">${T('Nothing found','Ничего не найдено')}</div>`}
+function rKb(){const el=$('#v-kb');const k=KB.find(a=>a.id===S.kbsel)||KB[0];const act=cur();const hv=S.helpful[k.id]||0;
+  el.innerHTML=`<div class="split" style="grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)"><div class="card"><h3>${T('Articles','Статьи')}<span class="sp"></span><span class="pill">${KB.length}</span></h3>
+   <input class="input" id="kq" value="${esc(S.kbq)}" placeholder="${T('Search the knowledge base…','Поиск по базе знаний…')}">
+   <div class="qlist" id="kl">${kbList()}</div></div>
+   <div class="card art"><h3>${esc(L(k.t))}<span class="sp"></span><span class="pill mono">${k.id}</span></h3>
+    <div class="muted" style="font-size:12.5px">${k.cat==='gen'?T('General','Общее'):L(DEPTS[CATS[k.cat].d])+' · SLA '+CATS[k.cat].sla+T(' h',' ч')} · ${T('used','использовано')} ${k.v.toLocaleString(loc())} ${T('times','раз')}</div>
+    <div class="muted" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:14px">${T('Approved answer for citizens','Утверждённый ответ жителю')}</div>
+    <div class="quote">${esc(L(k.a))}</div>
+    <div class="muted" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">${T('Agent guidance','Инструкция оператору')}</div>
+    <ol>${k.s.map(s=>`<li>${esc(L(s))}</li>`).join('')}</ol>
+    <div class="row"><button class="btn sm pri" id="useAns" ${act&&act.ch!=='voice'?'':'disabled'}>${T('Use in active contact','Вставить в обращение')}</button><button class="btn sm ${hv>0?'gold':''}" id="helpful">👍 ${T('Helpful','Полезно')} · ${k.h+hv}</button></div>
+    ${act?'':`<p class="muted" style="font-size:12px">${T('Open a contact on the agent desktop to insert this answer.','Откройте обращение на рабочем месте, чтобы вставить ответ.')}</p>`}</div></div>`;
+  const bind=()=>$$('[data-k]').forEach(b=>b.onclick=()=>{S.kbsel=b.dataset.k;save();rKb()});bind();
+  $('#kq').oninput=e=>{S.kbq=e.target.value;save();$('#kl').innerHTML=kbList();bind()};
+  $('#helpful').onclick=()=>{S.helpful[k.id]=hv?0:1;save();rKb()};
+  $('#useAns').onclick=()=>{if(!act)return;S.drafts[act.id]=(S.drafts[act.id]?S.drafts[act.id]+'\n':'')+L(k.a);save();go('desk');toast(T('Answer inserted into the reply','Ответ вставлен в сообщение'))};
+}
+
+/* ---------- SLA dashboard ---------- */
+const BASE={hours:[7,8,9,10,11,12,13,14,15,16,17,18,19],ch:{chat:[12,34,52,61,58,49,55,63,57,48,39,22,14],voice:[18,46,71,80,74,60,66,72,69,58,44,27,15],email:[6,14,22,25,21,18,20,24,19,17,12,8,5],social:[3,8,13,15,17,19,16,18,21,20,17,13,9]}};
+function svcLevel(){return Math.min(99,82+Math.min(8,S.stats.handled)-Math.max(0,S.ix.filter(x=>x.st==='q'&&Date.now()-x.t>180e3).length-2))}
+function rSla(){const el=$('#v-sla');const now=Date.now();const open=S.tix.filter(t=>t.st<3);const br=open.filter(t=>now>t.due);const risk=open.filter(t=>now<=t.due&&(now-t.created)/(t.due-t.created)>.75);
+  const done=S.tix.filter(t=>t.st===3);const met=done.filter(t=>t.res<=t.due).length;
+  const handled=1186+S.stats.handled,aht=Math.round((372*1186+(S.stats.aht/1000))/handled),fcr=Math.round((0.71*1186+S.stats.fcr)/handled*100);
+  const sl=svcLevel();
+  const k=[['Service level 80/20','Уровень сервиса 80/20',sl+'%',sl>=80?'ok-t':'warn-t',T('answered in 20 s','ответ за 20 с')],['Avg speed of answer','Ср. время ответа','00:'+String(17+Math.max(0,S.ix.filter(x=>x.st==='q').length-4)).padStart(2,'0'),'',T('target ≤ 00:20','цель ≤ 00:20')],['Avg handle time','Ср. время обработки',dur(aht*1000),'',T('target ≤ 06:30','цель ≤ 06:30')],['Abandon rate','Доля брошенных','3.8%','ok-t',T('target < 5%','цель < 5%')],['First contact resolution','Решено с 1-го раза',fcr+'%',fcr>=70?'ok-t':'warn-t',handled.toLocaleString(loc())+T(' contacts today',' обращ. сегодня')],['SRs breaching SLA','Заявки с нарушением SLA',br.length+' / '+open.length,br.length?'bad-t':'ok-t',risk.length+T(' at risk',' под угрозой')]];
+  const depts=Object.keys(DEPTS).map((d,i)=>{const b=[[92,100],[88,100],[97,100],[79,100],[85,100],[90,100],[94,100],[83,100]][i];const dd=done.filter(t=>t.dept===d);const m=dd.filter(t=>t.res<=t.due).length;const ob=br.filter(t=>t.dept===d).length;return{d,p:Math.max(0,Math.round((b[0]+m*2-ob*3)/(b[1]+dd.length*2)*100))}});
+  const mix={chat:0,voice:0,email:0,social:0};Object.keys(mix).forEach(c=>mix[c]=BASE.ch[c].reduce((a,b)=>a+b,0)+S.ix.filter(x=>x.ch===c&&x.st==='d').length);
+  el.innerHTML=`<div class="kpis">${k.map(x=>`<div class="card kpi"><div class="l">${T(x[0],x[1])}</div><div class="v ${x[3]}">${x[2]}</div><div class="d">${x[4]}</div></div>`).join('')}</div>
+  <div class="grid2"><div class="card chart"><h3>${T('Contacts by hour and channel — today','Обращения по часам и каналам — сегодня')}</h3>${hourSvg()}<div class="legend">${Object.keys(CHC).map(c=>`<span><i style="background:var(${CHC[c]})"></i>${T(CH[c][1],CH[c][2])}</span>`).join('')}</div></div>
+   <div class="card chart"><h3>${T('Channel mix','Каналы')}</h3>${donut(mix)}</div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('SLA compliance by department (30 days)','Соблюдение SLA по отделам (30 дней)')}<span class="sp"></span><span class="pill gold">${T('target 90%','цель 90%')}</span></h3>${deptSvg(depts)}</div>
+   <div class="card"><h3>⚠️ ${T('Breached & at risk','Просрочено и под угрозой')}<span class="sp"></span><button class="btn sm" id="toTix">${T('Open queue','К заявкам')}</button></h3>
+    <ul class="hist">${br.concat(risk).slice(0,8).map(t=>`<li><span>${t.id.slice(6)}</span><div style="flex:1;min-width:0">${L(CATS[t.cat].n)} · ${L(DEPTS[t.dept])}<div class="${now>t.due?'bad-t':'warn-t'}" style="font-size:11.5px">${slaInfo(t).txt}</div></div><button class="btn sm" data-esc="${t.id}">${T('Escalate','Эскалировать')}</button></li>`).join('')||`<li class="muted">${T('All requests within SLA','Все заявки в сроке')}</li>`}</ul>
+    <div class="muted" style="font-size:12px;margin-top:10px">${T('Resolved in demo set: ','Решено в демо-наборе: ')}${done.length} · ${T('within SLA','в срок')} ${done.length?Math.round(met/done.length*100):0}%</div></div></div>
+  <div class="card"><h3>${T('Live queue by channel','Очередь по каналам сейчас')}</h3><div class="tw"><table style="min-width:520px"><thead><tr><th>${T('Channel','Канал')}</th><th>${T('Waiting','Ждут')}</th><th>${T('Active','В работе')}</th><th>${T('Longest wait','Макс. ожидание')}</th><th>${T('Agents ready','Свободно операторов')}</th></tr></thead><tbody>${Object.keys(CH).map((c,i)=>{const w=S.ix.filter(x=>x.ch===c&&x.st==='q');return `<tr><td>${CH[c][0]} ${T(CH[c][1],CH[c][2])}</td><td>${w.length}</td><td>${S.ix.filter(x=>x.ch===c&&x.st==='a').length}</td><td class="mono" ${w.length?`data-since="${Math.min(...w.map(x=>x.t))}"`:''}>—</td><td>${[4,7,2,2][i]}</td></tr>`}).join('')}</tbody></table></div></div>`;
+  $('#toTix').onclick=()=>{S.tfil.st='br';go('tix')};
+  $$('[data-esc]',el).forEach(b=>b.onclick=()=>{const t=S.tix.find(x=>x.id===b.dataset.esc);if(t.pri!=='crit'){t.pri=t.pri==='high'?'crit':'high'}t.log.push({t:Date.now(),en:'Escalated by supervisor',ru:'Эскалирована руководителем'});save();toast(T('Escalated · ','Эскалирована · ')+t.id,'gold');b.disabled=true;b.textContent=T('Escalated','Эскалирована')});
+  tick();
+}
+const CHC={chat:'--mal',voice:'--gold',email:'--blue',social:'--violet'};
+function hourSvg(){const W=640,H=230,pl=34,pb=24,pt=10;const hs=BASE.hours,curH=new Date().getHours();
+  const tot=hs.map((h,i)=>Object.keys(CHC).reduce((a,c)=>a+BASE.ch[c][i],0)+(h===curH?S.stats.handled:0));const mx=Math.ceil(Math.max(...tot)/50)*50;
+  const bw=(W-pl-10)/hs.length;let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let g=0;g<=4;g++){const y=pt+(H-pt-pb)*(1-g/4);s+=`<line x1="${pl}" x2="${W}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--dim)">${mx*g/4}</text>`}
+  hs.forEach((h,i)=>{let y=H-pb;Object.keys(CHC).forEach(c=>{const v=BASE.ch[c][i]+(h===curH&&c==='chat'?S.stats.handled:0);const bh=v/mx*(H-pt-pb);y-=bh;s+=`<rect x="${pl+i*bw+4}" y="${y}" width="${bw-8}" height="${bh}" rx="2" style="fill:var(${CHC[c]})"><title>${h}:00 · ${c} ${v}</title></rect>`});
+    s+=`<text x="${pl+i*bw+bw/2}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(${h===curH?'--text':'--dim'})">${h}</text>`});
+  return s+'</svg>'}
+function donut(mix){const tot=Object.values(mix).reduce((a,b)=>a+b,0);const r=60,C=2*Math.PI*r;let off=0;
+  let s=`<div class="row" style="justify-content:center;gap:20px"><svg viewBox="0 0 160 160" style="width:160px;max-width:45%">`;
+  Object.keys(mix).forEach(c=>{const p=mix[c]/tot;s+=`<circle cx="80" cy="80" r="${r}" fill="none" stroke-width="22" style="stroke:var(${CHC[c]})" stroke-dasharray="${p*C} ${C}" stroke-dashoffset="${-off*C}" transform="rotate(-90 80 80)"/>`;off+=p});
+  s+=`<text x="80" y="78" text-anchor="middle" font-size="22" font-weight="800" style="fill:var(--text)">${tot.toLocaleString(loc())}</text><text x="80" y="96" text-anchor="middle" font-size="10" style="fill:var(--muted)">${T('contacts','обращений')}</text></svg><div style="font-size:13px;display:flex;flex-direction:column;gap:6px">`;
+  Object.keys(mix).forEach(c=>s+=`<div><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(${CHC[c]});margin-right:6px"></i>${T(CH[c][1],CH[c][2])} <b>${Math.round(mix[c]/tot*100)}%</b></div>`);
+  return s+'</div></div>'}
+function deptSvg(ds){const W=560,rh=26,H=ds.length*rh+20,pl=150;let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  ds.forEach((d,i)=>{const y=i*rh+6,w=(W-pl-50)*d.p/100;s+=`<text x="${pl-8}" y="${y+14}" text-anchor="end" font-size="11.5" style="fill:var(--muted)">${esc(L(DEPTS[d.d]))}</text><rect x="${pl}" y="${y+2}" width="${W-pl-50}" height="16" rx="4" style="fill:var(--bg2)"/><rect x="${pl}" y="${y+2}" width="${w}" height="16" rx="4" style="fill:var(${d.p>=90?'--mal':d.p>=80?'--amber':'--red'})"/><text x="${pl+w+6}" y="${y+14}" font-size="11.5" font-weight="700" style="fill:var(--text)">${d.p}%</text>`});
+  const tx=pl+(W-pl-50)*.9;s+=`<line x1="${tx}" x2="${tx}" y1="0" y2="${H-10}" stroke-dasharray="4 3" style="stroke:var(--gold)"/>`;
+  return s+'</svg>'}
+
+/* ---------- live simulation ---------- */
+function tick(){const now=Date.now();$$('[data-since]').forEach(e=>{const v=+e.dataset.since;if(!v)return;const ag=e.closest('.qi');if(ag&&e.classList.contains('act'))return;e.textContent=dur(now-v)});
+  $$('.qi .w[data-since]').forEach(e=>{if(!e.classList.contains('act'))e.classList.toggle('hot',now-(+e.dataset.since)>180e3)})}
+setInterval(()=>{if(!S.user)return;tick();const now=Date.now();
+  S.ix.filter(x=>x.st==='a'&&x.ch==='voice'&&!x.hold&&x.step<SCRIPT[x.cat].c.length&&now-x.last>7000).forEach(x=>citizenNext(x));
+},1000);
+const ARR=[[5,'chat','bin'],[6,'voice','parking'],[8,'email','pothole'],[9,'social','noise'],[1,'chat','light'],[2,'voice','tree'],[3,'email','tax'],[0,'social','leak']];
+setInterval(()=>{if(!S.user)return;const live=S.ix.filter(x=>x.st!=='d');if(live.length>=10)return;
+  const r=rng(Date.now()%1e6);const a=ARR[(S.arr=(S.arr||0)+1)%ARR.length];S.ix.push(mkIx(r,a[1],a[0],a[2],0));
+  S.ix=S.ix.filter(x=>x.st!=='d'||Date.now()-x.end<36e5*6).slice(-40);save();
+  if(S.view==='desk'&&!document.activeElement.matches('textarea,input,select'))rDesk();else nav();
+  toast(CH[a[1]][0]+' '+T('New '+CH[a[1]][1].toLowerCase()+' contact in queue','Новое обращение: '+CH[a[1]][2].toLowerCase()))},25000);
+
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#logout').onclick=()=>{S.user=null;save();render();toast(T('Signed out','Вы вышли'))};
+$('#reset').onclick=()=>{store.clear();S=seed();S.user={email:'m.okafor@portaldin.gov',since:Date.now()};save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

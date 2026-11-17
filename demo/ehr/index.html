@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Medora EHR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px;line-height:1.2}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center;margin-top:8px}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+.who span{color:var(--muted)}
+.sidebtns{display:flex;gap:6px;margin-top:8px}
+.sidebtns .btn{flex:1;justify-content:center}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.intro.hide{display:none}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.card{min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h3 .x{font-size:12px;color:var(--muted);font-weight:500}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fgrid .full{grid-column:1/-1}
+.f{min-width:0}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px;display:none}
+.f.bad .input{border-color:var(--red)} .f.bad .err{display:block}
+select.input{appearance:auto}
+textarea.input{resize:vertical}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row .sp{flex:1}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 9px;font-size:12px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)} .blue-t{color:var(--blue)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.prog.gold i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.prog.red i{background:var(--red)} .prog.amber i{background:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;overflow-wrap:anywhere}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack>*+*{margin-top:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.risk{display:inline-block;min-width:38px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:8px;padding:2px 6px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;min-width:0}
+.li:last-child{border-bottom:0}
+.li>.grow{min-width:0}
+.li small{display:block;color:var(--muted);font-size:12px}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:100px;max-height:240px;overflow:auto;overflow-wrap:anywhere}
+.log div{padding:2px 0} .log .t{color:var(--dim)}
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 10%,transparent);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.alert.warn{border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.alert.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.alert b{display:block}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow:auto;padding:20px;animation:fade .2s}
+.modal .box h3{margin:0 0 14px;font-size:17px;display:flex;gap:8px;align-items:center}
+.modal .box h3 .sp{flex:1}
+.mclose{border:0;background:none;font-size:20px;cursor:pointer;color:var(--muted);padding:0 4px}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.lg-hero{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 60%),radial-gradient(90% 80% at 100% 100%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 60%),var(--bg2);border-right:1px solid var(--line);padding:48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.lg-hero .bigb{display:flex;align-items:center;gap:14px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+.lg-hero .bigb b{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:26px}
+.lg-hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em;max-width:560px}
+.lg-hero p{color:var(--muted);margin:0;max-width:520px}
+.lg-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px}
+.lg-feats div{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 70%,transparent);border-radius:12px;padding:10px 12px;font-size:13px}
+.lg-feats div b{display:block;font-size:13.5px}
+.lg-form{display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-form .card{width:100%;max-width:420px;padding:26px}
+.lg-form h3{font-size:20px;margin:0 0 4px}
+.lg-form .f{margin-top:12px}
+.lg-demo{border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-top:14px;color:var(--muted)}
+.lg-demo b{color:var(--gold2)}
+.lg-sec{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--dim);margin-top:14px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.split,.intro,.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .lg-hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .lg-hero h2{font-size:24px}
+  .lg-form{padding:20px 14px 40px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.fgrid.c3,.opts,.lg-feats{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.step span{font-size:10px}.lg-form .card{padding:18px}.modal .box{padding:16px}}
+.btn.xs{padding:3px 10px;font-size:11.5px;min-height:28px}
+#headx{min-width:0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;border:1px solid var(--line2);color:var(--muted)}
+.mt{margin-top:14px}
+
+.pb{display:flex;gap:14px;align-items:center;flex-wrap:wrap;border-left:4px solid var(--mal)}
+.av2{width:46px;height:46px;border-radius:50%;background:var(--mal);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.slots{display:flex;flex-direction:column;gap:6px}
+.slot{display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px dashed var(--line2);border-radius:10px;flex-wrap:wrap}
+.slot.b{border-style:solid;background:var(--bg2)}.slot.in{border-color:var(--mal)}.slot.done{opacity:.65}.slot.ns{opacity:.6;border-color:var(--amber)}
+.slot small{display:block;color:var(--muted);font-size:12px}
+.note{white-space:pre-wrap;font-family:var(--mono);font-size:12px;margin:8px 0;color:var(--text)}
+tr.sel td{background:color-mix(in srgb,var(--mal) 10%,transparent)}
+
+</style>
+</head>
+<body data-demo-en="Medora EHR — clinician workspace for veterans' health" data-demo-ru="Medora EHR — рабочее место врача: медкарта ветеранов">
+<div class="login" id="login" hidden></div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side"></aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <div id="headx" class="row"></div>
+      <button class="btn sm" id="showIntro" hidden title="How to try it">?</button>
+    </div>
+    <div class="intro" id="intro"></div>
+    <section class="view on" id="view"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div class="modal" id="modal"></div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const TT=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtDS=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+const fmtN=(n,dg=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:dg,maximumFractionDigits:dg});
+const pct=(n,dg=0)=>fmtN(n,dg)+'%';
+const uid=(p)=>(p||'')+Math.random().toString(36).slice(2,8).toUpperCase();
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body,mount){const m=$('#modal');m.innerHTML=`<div class="box" role="dialog"><h3><span>${title}</span><span class="sp"></span><button class="mclose" aria-label="Close">×</button></h3>${body}</div>`;m.classList.add('on');$('.mclose',m).onclick=closeModal;m.onclick=e=>{if(e.target===m)closeModal()};if(mount)mount($('.box',m))}
+function closeModal(){const m=$('#modal');m.classList.remove('on');m.innerHTML=''}
+/* form validation: fields = [[id, test(v)->bool, [en,ru] message]] ; returns true if ok */
+function validate(fields,root){let ok=true;fields.forEach(([id,test,msg])=>{const el=$('#'+id,root||document);if(!el)return;const f=el.closest('.f');const good=test(el.type==='checkbox'?el.checked:el.value.trim());if(f){f.classList.toggle('bad',!good);let e=$('.err',f);if(!e){e=document.createElement('div');e.className='err';f.append(e)}e.textContent=TT(msg)}if(!good)ok=false});if(!ok)toast(T('Please fix the highlighted fields','Исправьте выделенные поля'),'bad');return ok}
+const fld=(id,label,inner,cls)=>`<div class="f ${cls||''}"><label for="${id}">${label}</label>${inner}</div>`;
+const inp=(id,label,val,cls,type,attrs)=>fld(id,label,`<input class="input" id="${id}" type="${type||'text'}" value="${esc(val==null?'':val)}" ${attrs||''}>`,cls);
+const sel=(id,label,opts,val,cls)=>fld(id,label,`<select class="input" id="${id}">${opts.map(o=>`<option value="${esc(o[0])}" ${String(o[0])===String(val)?'selected':''}>${esc(o.length>2?T(o[1],o[2]):o[1])}</option>`).join('')}</select>`,cls);
+const pill=(txt,cls)=>`<span class="pill ${cls||''}">${txt}</span>`;
+const kpi=(l,v,d,cls)=>`<div class="card kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}</div>${d!=null?`<div class="d">${d}</div>`:''}</div>`;
+const chipsH=(items,cur,attr)=>items.map(x=>`<button class="chip ${String(cur)===String(x[0])?'on':''}" data-${attr}="${esc(x[0])}">${x.length>2?T(x[1],x[2]):x[1]}</button>`).join('');
+const bind=(root,attr,fn)=>$$('[data-'+attr+']',root).forEach(b=>b.onclick=e=>{e.stopPropagation();fn(b.dataset[attr.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())],b,e)});
+const tbl=(heads,rows,empty)=>`<div class="tw"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${heads.length}" class="muted">${empty||T('Nothing here yet','Пока пусто')}</td></tr>`}</tbody></table></div>`;
+function dl(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type||'text/plain'}));a.download=name;document.body.append(a);a.click();a.remove()}catch(e){}}
+/* ---- inline SVG charts (theme-aware via CSS vars in style attrs) ---- */
+const C=['var(--mal)','var(--gold)','var(--blue)','var(--violet)','var(--amber)','var(--red)','var(--mal3)'];
+function lineChart(o){/* o:{series:[{name,data:[...],color,dash,area}], labels:[...], w,h, yfmt, min,max, band:[y0,y1,color]} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=12,pt=14,pb=28;const all=o.series.flatMap(s=>s.data).filter(v=>v!=null);
+  let mn=o.min!=null?o.min:Math.min(...all),mx=o.max!=null?o.max:Math.max(...all);if(mx===mn)mx=mn+1;const pad=(mx-mn)*.08;if(o.min==null)mn-=pad;if(o.max==null)mx+=pad;
+  const n=Math.max(...o.series.map(s=>s.data.length));const X=i=>pl+(n<2?0:i*(W-pl-pr)/(n-1)),Y=v=>pt+(1-(v-mn)/(mx-mn))*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  if(o.band){s+=`<rect x="${pl}" y="${Y(o.band[1])}" width="${W-pl-pr}" height="${Math.max(0,Y(o.band[0])-Y(o.band[1]))}" style="fill:${o.band[2]||'var(--mal)'};opacity:.1"/>`}
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/8);(o.labels||[]).forEach((l,i)=>{if(i%step===0||i===n-1)s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  o.series.forEach((se,k)=>{const col=se.color||C[k%C.length];const pts=se.data.map((v,i)=>v==null?null:[X(i),Y(v)]).filter(Boolean);if(!pts.length)return;const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+    if(se.area)s+=`<path d="${d}L${pts[pts.length-1][0]} ${H-pb}L${pts[0][0]} ${H-pb}Z" style="fill:${col};opacity:.14"/>`;
+    s+=`<path d="${d}" fill="none" style="stroke:${col}" stroke-width="${se.width||2.2}" stroke-linejoin="round" stroke-linecap="round" ${se.dash?'stroke-dasharray="6 5"':''}/>`;
+    if(se.dots!==false&&pts.length<=40)pts.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${se.dots===true?3.2:2.4}" style="fill:${col}"><title>${esc((o.labels||[])[i]||'')} · ${yf(se.data[i])}</title></circle>`})});
+  return s+'</svg>'}
+function barChart(o){/* o:{labels,series:[{name,data,color}],stacked,w,h,yfmt,hl:index} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=10,pt=16,pb=30;const n=o.labels.length;const sums=o.labels.map((_,i)=>o.stacked?o.series.reduce((a,s)=>a+(s.data[i]||0),0):Math.max(...o.series.map(s=>s.data[i]||0)));
+  const mx=(o.max||Math.max(...sums,1))*1.08;const bw=(W-pl-pr)/n;const Y=v=>pt+(1-v/mx)*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let i=0;i<=4;i++){const v=mx*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/12);
+  o.labels.forEach((l,i)=>{const x0=pl+i*bw;let acc=0;const ns=o.series.length;
+    o.series.forEach((se,k)=>{const v=se.data[i]||0;const col=se.color||C[k%C.length];
+      if(o.stacked){const y=Y(acc+v),h=Y(acc)-y;s+=`<rect x="${x0+bw*.18}" y="${y}" width="${bw*.64}" height="${Math.max(0,h)}" rx="3" style="fill:${col}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`;acc+=v}
+      else{const w=bw*.7/ns;const y=Y(v);s+=`<rect x="${x0+bw*.15+k*w}" y="${y}" width="${Math.max(1,w-2)}" height="${Math.max(0,H-pb-y)}" rx="3" style="fill:${col};opacity:${o.hl!=null&&o.hl!==i?.45:1}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`}});
+    if(i%step===0)s+=`<text x="${x0+bw/2}" y="${H-10}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  return s+'</svg>'}
+function hbars(items,o){/* items:[[label,value,color?]] */o=o||{};const mx=o.max||Math.max(...items.map(x=>x[1]),1);const f=o.fmt||(v=>fmtN(v));
+  return items.map(x=>`<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:7px"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x[0]}</span><div class="prog" style="width:${o.w||110}px;flex:none"><i style="width:${x[1]/mx*100}%;${x[2]?'background:'+x[2]:''}"></i></div><span class="mono" style="width:${o.vw||48}px;text-align:right;flex:none">${f(x[1])}</span></div>`).join('')}
+function donut(parts,o){/* parts:[[label,value,color]] */o=o||{};const sz=o.size||140,r=sz/2-12,c=2*Math.PI*r;const tot=parts.reduce((a,p)=>a+p[1],0)||1;let off=0;
+  let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" style="flex:none"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="16"/>`;
+  parts.forEach((p,i)=>{const L=c*p[1]/tot;s+=`<circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:${p[2]||C[i%C.length]}" stroke-width="16" stroke-dasharray="${L} ${c-L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${sz/2} ${sz/2})"><title>${esc(p[0])}: ${fmtN(p[1])}</title></circle>`;off+=L});
+  s+=`<text x="${sz/2}" y="${sz/2+2}" text-anchor="middle" font-size="${o.fs||20}" font-weight="800" style="fill:var(--text)">${o.center!=null?o.center:fmtN(tot)}</text>${o.sub?`<text x="${sz/2}" y="${sz/2+18}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(o.sub)}</text>`:''}</svg>`;
+  const leg=`<div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;min-width:0">${parts.map((p,i)=>`<div style="display:flex;gap:8px;align-items:center"><i style="width:10px;height:10px;border-radius:3px;background:${p[2]||C[i%C.length]};flex:none"></i><span style="flex:1;min-width:0">${p[0]}</span><b class="mono">${o.fmt?o.fmt(p[1]):fmtN(p[1])}</b></div>`).join('')}</div>`;
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${s}${leg}</div>`}
+function gauge(p,o){o=o||{};const r=50,c=Math.PI*r;const col=o.color||(p>=90?'var(--red)':p>=75?'var(--amber)':'var(--mal)');
+  return `<svg viewBox="0 0 120 70" style="width:${o.w||150}px;max-width:100%"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:var(--line)" stroke-width="11" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${c*clamp(p,0,100)/100} ${c}"/><text x="60" y="58" text-anchor="middle" font-size="19" font-weight="800" style="fill:var(--text)">${o.label!=null?o.label:Math.round(p)+'%'}</text></svg>`}
+function spark(data,col){const W=110,H=30,mn=Math.min(...data),mx=Math.max(...data)||1;const d=data.map((v,i)=>(i?'L':'M')+(i*W/(data.length-1)).toFixed(1)+' '+(H-3-(v-mn)/((mx-mn)||1)*(H-6)).toFixed(1)).join('');return `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;flex:none"><path d="${d}" fill="none" style="stroke:${col||'var(--mal)'}" stroke-width="2"/></svg>`}
+
+//@demo Medora EHR|clinician workspace for veterans' health|рабочее место врача: медкарта ветеранов
+const MEDS=[
+['amox','Amoxicillin 500 mg','Амоксициллин 500 мг','penicillin','PO','TID'],
+['ceph','Cefalexin 500 mg','Цефалексин 500 мг','cephalosporin','PO','QID'],
+['azi','Azithromycin 250 mg','Азитромицин 250 мг','macrolide','PO','QD'],
+['ibu','Ibuprofen 400 mg','Ибупрофен 400 мг','nsaid','PO','TID PRN'],
+['asa','Aspirin 81 mg','Аспирин 81 мг','nsaid','PO','QD'],
+['para','Paracetamol 1 g','Парацетамол 1 г','analgesic','PO','QID PRN'],
+['met','Metformin 1000 mg','Метформин 1000 мг','biguanide','PO','BID'],
+['lis','Lisinopril 10 mg','Лизиноприл 10 мг','acei','PO','QD'],
+['ator','Atorvastatin 40 mg','Аторвастатин 40 мг','statin','PO','QHS'],
+['sert','Sertraline 50 mg','Сертралин 50 мг','ssri','PO','QD'],
+['tram','Tramadol 50 mg','Трамадол 50 мг','opioid','PO','Q6H PRN'],
+['morph','Morphine 5 mg','Морфин 5 мг','opioid','IV','Q4H PRN'],
+['hep','Heparin 5000 U','Гепарин 5000 ЕД','anticoag','SC','BID'],
+['ins','Insulin glargine 20 U','Инсулин гларгин 20 ЕД','insulin','SC','QHS']];
+const CLS={penicillin:['Penicillins','Пенициллины'],cephalosporin:['Cephalosporins','Цефалоспорины'],nsaid:['NSAIDs','НПВС'],opioid:['Opioids','Опиоиды'],sulfa:['Sulfonamides','Сульфаниламиды'],acei:['ACE inhibitors','Ингибиторы АПФ'],latex:['Latex','Латекс'],iodine:['Iodinated contrast','Йодсодержащий контраст']};
+const CROSS={penicillin:['cephalosporin']};
+const INTER=[['ssri','tram','Serotonin syndrome risk','Риск серотонинового синдрома'],['anticoag','nsaid','Bleeding risk','Риск кровотечения'],['acei','nsaid','Reduced antihypertensive effect, kidney risk','Снижение эффекта, риск для почек']];
+const LABS=[['hba1c','HbA1c','HbA1c','%',4,5.6],['glu','Glucose','Глюкоза','mmol/L',3.9,5.5],['cr','Creatinine','Креатинин','µmol/L',62,106],['k','Potassium','Калий','mmol/L',3.5,5.1],['hb','Haemoglobin','Гемоглобин','g/L',130,170],['ldl','LDL cholesterol','ЛПНП','mmol/L',0,3],['crp','CRP','СРБ','mg/L',0,5],['wbc','WBC','Лейкоциты','×10⁹/L',4,10]];
+const IMG=[['cxr','Chest X-ray','Рентген грудной клетки'],['ct','CT head','КТ головы'],['us','Abdominal ultrasound','УЗИ брюшной полости'],['ecg','12-lead ECG','ЭКГ 12 отведений']];
+const CLIN=[['dr1','Dr. L. Brandt','Др. Л. Брандт'],['dr2','Dr. S. Okafor','Др. С. Окафор'],['dr3','Dr. M. Ruiz','Др. М. Руис']];
+const VT=[['bp','Blood pressure','Давление','mmHg'],['hr','Heart rate','Пульс','bpm'],['t','Temperature','Температура','°C'],['spo2','SpO₂','SpO₂','%'],['rr','Resp. rate','ЧДД','/min']];
+const medOf=id=>MEDS.find(m=>m[0]===id);
+const labOf=id=>LABS.find(l=>l[0]===id);
+const age=d=>Math.floor((Date.now()-new Date(d))/31557600000);
+const P=()=>S.pts.find(p=>p.id===S.cur)||S.pts[0];
+let PQ='',PF='all',LB='hba1c',NF='',SD=null;
+const APP={slug:'ehr',ver:2,icon:'⚕',name:'Medora EHR',sub:['Veterans Health Service · Nordania','Служба здоровья ветеранов · Нордания'],
+login:{user:'l.brandt@vhs.nd',pass:'demo-smart-2025',name:'Dr. Lena Brandt',role:['Attending physician, Internal medicine','Лечащий врач, терапия'],
+tag:['SMART on FHIR · PIV card sign-in','SMART on FHIR · вход по PIV-карте'],
+hero:['The whole veteran record on one screen','Вся медкарта ветерана на одном экране'],
+heroP:['Patient list, chart with vitals trends, problems and medications, safe order entry with allergy and interaction checks, lab results, notes and clinic scheduling — built on FHIR R4.','Список пациентов, карта с динамикой показателей, проблемы и препараты, безопасное назначение с проверкой аллергий и взаимодействий, анализы, записи и расписание приёма — на FHIR R4.'],
+feats:[['🩺','Patient chart','Медкарта','Vitals, problems, meds','Показатели, проблемы, препараты'],['💊','Safe ordering','Безопасные назначения','Allergy & interaction alerts','Аллергии и взаимодействия'],['🧪','Lab results','Анализы','Ranges, trends, acknowledge','Нормы, динамика, ознакомление'],['📅','Scheduling','Расписание','Clinic slots & check-in','Слоты приёма и регистрация']]},
+how:[['Pick a patient in <b>Patients</b> — the banner with allergies follows you through every tab.','Выберите пациента в разделе <b>Пациенты</b> — плашка с аллергиями видна на всех вкладках.'],
+['In <b>Orders</b> try prescribing <b>Amoxicillin</b> to Robert Hale (penicillin allergy) — the system stops you and asks for an override reason.','В <b>Назначениях</b> попробуйте выписать <b>Амоксициллин</b> Роберту Хейлу (аллергия на пенициллин) — система остановит и попросит причину.'],
+['Record vitals in <b>Chart</b>, acknowledge abnormal results in <b>Labs</b>, sign a note and book a follow-up in <b>Schedule</b>.','Внесите показатели в <b>Карте</b>, отметьте отклонения в <b>Анализах</b>, подпишите запись и назначьте повторный приём в <b>Расписании</b>.']],
+facts:[['Tender','Тендер','Federal electronic health record (VA EHRM class)','Федеральная электронная медкарта (класс VA EHRM)'],['Year · budget','Год · бюджет','2025 · $16.1B'],['Client','Заказчик','Veterans Health Service, Republic of Nordania (fictional)','Служба здоровья ветеранов, Республика Нордания (вымышл.)'],['Stack','Стек','FHIR R4 · HL7 · Postgres · SMART']],
+groups:[['pt','Patient','Пациент'],['work','Workload','Работа']],
+views:[['pts','👥','Patients','Пациенты','pt'],['chart','🩺','Chart','Карта','pt'],['ord','💊','Orders','Назначения','pt'],['lab','🧪','Lab results','Анализы','pt'],['notes','📝','Notes','Записи','pt'],['sched','📅','Schedule','Расписание','work']],
+badge(id){if(id==='lab'){const n=S.pts.reduce((a,p)=>a+p.labs.filter(l=>!l.ack&&flag(l)).length,0);return[n,1]}if(id==='sched'){return[S.appts.filter(a=>a.d===today()&&a.st==='booked').length,0]}return null},
+head(){const p=P();return `<span class="pill gold" style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">👤 ${esc(p.name)} · ${age(p.dob)}${T('y','л')}</span>${p.all.length?pill('⚠ '+p.all.map(a=>T(...CLS[a.c])).join(', '),'bad'):pill(T('NKDA','Аллергий нет'),'ok')}`},
+seed(){const R=rng(7);const N=[['Robert Hale','Роберт Хейл','1951-03-14','M','Ward 4B · bed 12','Отд. 4Б · койка 12',[{c:'penicillin',r:'Anaphylaxis',rr:'Анафилаксия',sev:'high'}],[['E11.9','Type 2 diabetes','Сахарный диабет 2 типа','2014'],['I10','Hypertension','Гипертония','2009'],['J18.9','Community-acquired pneumonia','Внебольничная пневмония','now']],['met','lis','ins'],'inp'],
+['Maria Santos','Мария Сантос','1978-09-02','F','Clinic · PTSD programme','Поликлиника · программа ПТСР',[{c:'sulfa',r:'Rash',rr:'Сыпь',sev:'mod'}],[['F43.1','PTSD','ПТСР','2016'],['G47.0','Insomnia','Бессонница','2019']],['sert'],'out'],
+['James Okoro','Джеймс Окоро','1965-12-20','M','Ward 2A · bed 3','Отд. 2А · койка 3',[],[['I48.0','Atrial fibrillation','Фибрилляция предсердий','2020'],['E78.5','Hyperlipidaemia','Гиперлипидемия','2015']],['hep','ator'],'inp'],
+['Anna Lindgren','Анна Линдгрен','1988-05-30','F','Clinic · Orthopaedics','Поликлиника · ортопедия',[{c:'latex',r:'Contact dermatitis',rr:'Контактный дерматит',sev:'low'}],[['M17.1','Knee osteoarthritis','Остеоартроз колена','2021'],['S83.5','ACL injury (service)','Травма ПКС (служба)','2012']],['para'],'out'],
+['Victor Hale','Виктор Хейл','1947-07-08','M','Ward 4B · bed 7','Отд. 4Б · койка 7',[{c:'nsaid',r:'GI bleed',rr:'ЖКК',sev:'high'},{c:'iodine',r:'Urticaria',rr:'Крапивница',sev:'mod'}],[['N18.3','CKD stage 3','ХБП 3 ст.','2018'],['I50.9','Heart failure','Сердечная недостаточность','2022']],['lis','ator'],'inp'],
+['Dana Whitfield','Дана Уитфилд','1993-01-17','F','Clinic · Primary care','Поликлиника · терапия',[],[['F32.1','Depressive episode','Депрессивный эпизод','2024']],[],'out'],
+['Tomas Novak','Томаш Новак','1958-10-11','M','ED · bay 5','Приёмное · бокс 5',[{c:'opioid',r:'Respiratory depression',rr:'Угнетение дыхания',sev:'high'}],[['R07.4','Chest pain','Боль в груди','now'],['E11.9','Type 2 diabetes','Сахарный диабет 2 типа','2011']],['met','asa'],'ed']];
+const pts=N.map((n,i)=>{const id='VHS-'+(40211+i*37);const vit=[];for(let d=13;d>=0;d--){const sick=i===0&&d<5;vit.push({t:Date.now()-d*864e5+(R()*3e6|0),sys:Math.round((i===4?150:128)+R()*14-(sick?6:0)),dia:Math.round(78+R()*10),hr:Math.round((i===2?92:72)+R()*12+(sick?18:0)),tt:+((sick?38.2:36.6)+R()*.6-(d===0&&sick?.5:0)).toFixed(1),spo2:Math.round(sick?92+R()*3:96+R()*3),rr:Math.round(sick?22+R()*3:14+R()*3)})}
+const labs=[];LABS.forEach((l,k)=>{if(R()<.35&&k>1)return;for(let j=3;j>=0;j--){let v=l[4]+(l[5]-l[4])*(.3+R()*.5);if(i===0&&l[0]==='hba1c')v=7.4+j*.3;if(i===0&&l[0]==='crp')v=48-j*6;if(i===0&&l[0]==='wbc')v=13.5-j*.8;if(i===4&&l[0]==='cr')v=150+j*4;if(i===4&&l[0]==='k')v=5.6-j*.1;labs.push({id:uid(),k:l[0],v:+v.toFixed(l[5]<10?1:0),t:Date.now()-j*20*864e5-(k*3e6),ack:j>0})}});
+return {id,name:n[0],nru:n[1],dob:n[2],sex:n[3],loc:[n[4],n[5]],all:n[6],prob:n[7].map(p=>({code:p[0],en:p[1],ru:p[2],since:p[3],st:'active'})),meds:n[8].map(m=>({id:uid(),m,st:'active',start:addDays(today(),-60-(R()*400|0)),by:'Dr. L. Brandt'})),vit,labs,notes:[],ord:[],svc:['Army','Navy','Air Force','Marines'][i%4]}});
+pts[0].notes.push({id:uid(),type:'prog',t:Date.now()-864e5,by:'Dr. S. Okafor',signed:true,txt:'S: Productive cough, fever 3 days.\nO: T 38.4, SpO2 92% RA, crackles R base. CXR: RLL consolidation.\nA: CAP, CURB-65 = 2.\nP: Admit, IV antibiotics (penicillin allergy — avoid beta-lactams), O2 to 94-98%.'});
+pts[0].ord.push({id:'ORD-7781',kind:'img',item:'cxr',st:'resulted',t:Date.now()-864e5*1.2,pr:'stat',by:'Dr. S. Okafor'});
+pts[2].notes.push({id:uid(),type:'cons',t:Date.now()-3*864e5,by:'Dr. M. Ruiz',signed:true,txt:'Cardiology consult: rate-controlled AF. CHA2DS2-VASc 3. Continue anticoagulation, echo in 6 weeks.'});
+const appts=[];const sl=['08:30','09:00','09:30','10:00','10:30','11:00','13:30','14:00','14:30','15:00'];
+for(let d=0;d<5;d++)sl.forEach((s,k)=>{if(R()<.45){const pi=Math.floor(R()*pts.length);appts.push({id:uid(),d:addDays(today(),d),s,pt:pts[pi].id,dr:CLIN[k%3][0],why:['Follow-up','Medication review','Post-discharge','New complaint','Annual exam'][k%5],st:d===0&&k<3?'done':'booked'})}});
+return {pts,cur:pts[0].id,appts,oseq:7800}},
+R:{}
+};
+const pname=p=>PT.lang==='ru'?p.nru:p.name;
+function flag(l){const L=labOf(l.k);return l.v<L[4]?'L':l.v>L[5]?'H':''}
+function vitFlag(k,v){return k==='sys'?v>=140||v<90:k==='hr'?v>100||v<50:k==='tt'?v>=38||v<35.5:k==='spo2'?v<94:k==='rr'?v>20||v<10:false}
+function banner(p){return `<div class="card pb"><div class="av2">${esc(p.name.split(' ').map(x=>x[0]).join(''))}</div><div class="grow" style="min-width:0"><b style="font-size:17px">${esc(pname(p))}</b><div class="muted" style="font-size:12.5px">${p.id} · ${fmtD(p.dob)} (${age(p.dob)} ${T('y','л')}) · ${p.sex==='M'?T('Male','Муж.'):T('Female','Жен.')} · ${T('Veteran','Ветеран')}: ${p.svc} · ${TT(p.loc)}</div></div><div class="row" style="justify-content:flex-end">${p.all.length?p.all.map(a=>pill('⚠ '+T(...CLS[a.c])+' — '+T(a.r,a.rr),'bad')).join(''):pill(T('No known drug allergies','Аллергий нет'),'ok')}</div></div>`}
+
+
+APP.R.pts=el=>{const list=S.pts.filter(p=>(PF==='all'||p.loc[0].startsWith({inp:'Ward',out:'Clinic',ed:'ED'}[PF]))&&(!PQ||(p.name+' '+p.nru+' '+p.id).toLowerCase().includes(PQ.toLowerCase())));
+const last=p=>p.vit[p.vit.length-1];
+el.innerHTML=`<div class="kpis">${kpi(T('My patients','Мои пациенты'),S.pts.length)}${kpi(T('Inpatients','В стационаре'),S.pts.filter(p=>p.loc[0].startsWith('Ward')).length)}${kpi(T('Abnormal results','Отклонения'),S.pts.reduce((a,p)=>a+p.labs.filter(l=>!l.ack&&flag(l)).length,0),T('to acknowledge','ждут ознакомления'),'bad-t')}${kpi(T('Clinic today','Приём сегодня'),S.appts.filter(a=>a.d===today()).length)}</div>
+<div class="card"><div class="row" style="margin-bottom:12px"><input class="input" id="pq" style="max-width:280px" placeholder="${T('Name or VHS number…','Имя или номер VHS…')}" value="${esc(PQ)}"><div class="sp"></div><div class="chips">${chipsH([['all','All','Все'],['inp','Inpatient','Стационар'],['out','Clinic','Поликлиника'],['ed','Emergency','Приёмное']],PF,'pf')}</div><button class="btn sm pri" id="addPt">+ ${T('Register patient','Новый пациент')}</button></div>
+${tbl([T('Patient','Пациент'),T('Location','Где'),T('Active problems','Проблемы'),T('Last vitals','Показатели'),T('Alerts','Сигналы'),''],list.map(p=>{const v=last(p);const ab=p.labs.filter(l=>!l.ack&&flag(l)).length;const ews=news(v);
+return `<tr class="${p.id===S.cur?'sel':''}"><td><b>${esc(pname(p))}</b><div class="muted mono" style="font-size:11.5px">${p.id} · ${age(p.dob)}${T('y','л')} ${p.sex}</div></td><td>${TT(p.loc)}</td><td class="wrap" style="font-size:12.5px">${p.prob.filter(x=>x.st==='active').map(x=>T(x.en,x.ru)).join(', ')}</td><td class="mono" style="font-size:12px">${v?`${v.sys}/${v.dia} · ${v.hr} · ${v.tt}° · ${v.spo2}%`:'—'}</td>
+<td>${ews>=5?pill('NEWS '+ews,'bad'):ews>=3?pill('NEWS '+ews,'warn'):pill('NEWS '+ews,'ok')} ${p.all.length?pill('⚠ '+p.all.length,'bad'):''} ${ab?pill('🧪 '+ab,'warn'):''}</td><td><button class="btn xs pri" data-open="${p.id}">${T('Open chart','Открыть')}</button></td></tr>`}),T('No patients found','Пациенты не найдены'))}</div>`;
+$('#pq').oninput=e=>{PQ=e.target.value;const c=e.target.selectionStart;APP.R.pts(el);const i=$('#pq');i.focus();i.setSelectionRange(c,c)};
+bind(el,'pf',v=>{PF=v;APP.R.pts(el)});
+bind(el,'open',id=>{S.cur=id;save();go('chart')});
+$('#addPt').onclick=()=>modal(T('Register patient','Новый пациент'),`<div class="fgrid">${inp('npN',T('Full name','ФИО'),'')}${inp('npD',T('Date of birth','Дата рождения'),'','','date')}${sel('npS',T('Sex','Пол'),[['M','Male','Муж.'],['F','Female','Жен.']],'M')}${sel('npB',T('Service branch','Род войск'),[['Army','Army'],['Navy','Navy'],['Air Force','Air Force'],['Marines','Marines']],'Army')}${sel('npL',T('Location','Где'),[['c','Clinic · Primary care','Поликлиника · терапия'],['e','ED · triage','Приёмное · сортировка']],'c')}${sel('npA',T('Known allergy','Аллергия'),[['','None','Нет'],...Object.keys(CLS).map(k=>[k,...CLS[k]])],'')}</div><div class="row mt"><div class="sp"></div><button class="btn pri" id="npGo">${T('Register','Зарегистрировать')}</button></div>`,box=>{
+$('#npGo',box).onclick=()=>{if(!validate([['npN',v=>/^\S+\s+\S+/.test(v),['First and last name','Имя и фамилия']],['npD',v=>v&&age(v)>=17&&age(v)<110,['Valid date, age 17–110','Корректная дата, возраст 17–110']]],box))return;
+const nm=$('#npN',box).value.trim();const a=$('#npA',box).value;const l=$('#npL',box).value==='c'?['Clinic · Primary care','Поликлиника · терапия']:['ED · triage','Приёмное · сортировка'];
+const p={id:'VHS-'+(41000+S.pts.length*13),name:nm,nru:nm,dob:$('#npD',box).value,sex:$('#npS',box).value,loc:l,all:a?[{c:a,r:'Reported by patient',rr:'Со слов пациента',sev:'mod'}]:[],prob:[],meds:[],vit:[],labs:[],notes:[],ord:[],svc:$('#npB',box).value};
+S.pts.unshift(p);S.cur=p.id;audit(`Patient registered ${p.id} (FHIR Patient/${p.id})`,`Зарегистрирован пациент ${p.id}`,'pt');save();closeModal();toast(T('Patient registered','Пациент зарегистрирован'),'ok');go('chart')}})};
+function news(v){if(!v)return 0;let s=0;s+=v.rr<=8?3:v.rr<=11?1:v.rr<=20?0:v.rr<=24?2:3;s+=v.spo2<=91?3:v.spo2<=93?2:v.spo2<=95?1:0;s+=v.sys<=90?3:v.sys<=100?2:v.sys<=110?1:v.sys<=219?0:3;s+=v.hr<=40?3:v.hr<=50?1:v.hr<=90?0:v.hr<=110?1:v.hr<=130?2:3;s+=v.tt<=35?3:v.tt<=36?1:v.tt<=38?0:v.tt<=39?1:2;return s}
+
+
+let VS='bp';
+APP.R.chart=el=>{const p=P();const v=p.vit.slice(-14);const L=v.map(x=>fmtDS(x.t));const lv=v[v.length-1];
+const ser={bp:[{name:'SYS',data:v.map(x=>x.sys),color:'var(--red)',area:0},{name:'DIA',data:v.map(x=>x.dia),color:'var(--blue)'}],hr:[{name:'HR',data:v.map(x=>x.hr),color:'var(--mal)',area:1}],t:[{name:'T',data:v.map(x=>x.tt),color:'var(--amber)',area:1}],spo2:[{name:'SpO2',data:v.map(x=>x.spo2),color:'var(--blue)',area:1}],rr:[{name:'RR',data:v.map(x=>x.rr),color:'var(--violet)',area:1}]}[VS];
+const band={bp:[90,140],hr:[50,100],t:[36,37.9],spo2:[94,100],rr:[12,20]}[VS];
+el.innerHTML=`${banner(p)}<div class="kpis mt">${lv?[['sys',`${lv.sys}/${lv.dia}`,T('BP, mmHg','АД, мм рт. ст.')],['hr',lv.hr,T('Heart rate','Пульс')],['tt',lv.tt+'°',T('Temperature','Температура')],['spo2',lv.spo2+'%','SpO₂']].map(k=>kpi(k[2],k[1],k[0]==='sys'?'NEWS2 '+news(lv):fmtDS(lv.t)+' '+fmtT(lv.t),vitFlag(k[0],lv[k[0]])?'bad-t':'')).join(''):kpi(T('Vitals','Показатели'),'—',T('none recorded','не вносились'))}</div>
+<div class="grid2"><div class="card"><h3>${T('Vital signs — 14 days','Показатели — 14 дней')}<span class="sp"></span><button class="btn xs pri" id="addV">+ ${T('Record vitals','Внести')}</button></h3><div class="chips" style="margin-bottom:8px">${chipsH(VT,VS,'vs')}</div>
+<div class="chart">${v.length>1?lineChart({labels:L,series:ser,band:[band[0],band[1],'var(--mal)'],yfmt:v=>fmtN(v,VS==='t'?1:0)}):`<div class="empty">${T('Record at least two sets of vitals to see the trend','Внесите хотя бы два набора показателей')}</div>`}</div><div class="legend"><span><i style="background:var(--mal);opacity:.3"></i>${T('Normal range','Норма')}</span></div></div>
+<div class="card"><h3>${T('Problem list','Список проблем')}<span class="sp"></span><button class="btn xs" id="addPb">+ ${T('Add','Добавить')}</button></h3>
+${p.prob.map((x,i)=>`<div class="li"><span class="mono tag">${x.code}</span><div class="grow"><b style="${x.st==='resolved'?'text-decoration:line-through;color:var(--muted)':''}">${T(x.en,x.ru)}</b><small>${x.since==='now'?T('Current admission','Текущая госпитализация'):T('since ','с ')+x.since}</small></div><button class="btn xs" data-pbt="${i}">${x.st==='active'?T('Resolve','Снять'):T('Reactivate','Вернуть')}</button></div>`).join('')||`<div class="empty">${T('No problems recorded','Проблем нет')}</div>`}
+<h3 class="mt">${T('Allergies','Аллергии')}<span class="sp"></span><button class="btn xs" id="addAl">+ ${T('Add','Добавить')}</button></h3>
+${p.all.map((a,i)=>`<div class="li"><span>⚠</span><div class="grow"><b>${T(...CLS[a.c])}</b><small>${T(a.r,a.rr)} · ${a.sev==='high'?T('severe','тяжёлая'):a.sev==='mod'?T('moderate','средняя'):T('mild','лёгкая')}</small></div><button class="btn xs" data-rmal="${i}">✕</button></div>`).join('')||`<div class="muted" style="font-size:13px">${T('No known drug allergies (NKDA)','Аллергии не выявлены')}</div>`}</div></div>
+<div class="card mt"><h3>${T('Active medications','Текущие препараты')}<span class="sp"></span><button class="btn xs" data-gord="1">${T('New order →','Назначить →')}</button></h3>
+${tbl([T('Medication','Препарат'),T('Route · frequency','Путь · кратность'),T('Started','Начат'),T('Prescriber','Врач'),''],p.meds.map(m=>{const d=medOf(m.m);return `<tr><td><b>${T(d[1],d[2])}</b>${m.ov?' '+pill(T('override','с обоснованием'),'warn'):''}</td><td class="mono">${d[4]} · ${d[5]}</td><td>${fmtD(m.start)}</td><td>${esc(m.by)}</td><td>${m.st==='active'?`<button class="btn xs danger" data-dc="${m.id}">${T('Discontinue','Отменить')}</button>`:pill(T('Stopped','Отменён'))}</td></tr>`}),T('No medications','Препаратов нет'))}</div>`;
+bind(el,'vs',x=>{VS=x;APP.R.chart(el)});bind(el,'gord',()=>go('ord'));
+bind(el,'pbt',i=>{const x=p.prob[i];x.st=x.st==='active'?'resolved':'active';audit(`${p.id}: problem ${x.code} ${x.st}`,`${p.id}: проблема ${x.code} — ${x.st==='active'?'активна':'снята'}`,'chart');save();rerender()});
+bind(el,'rmal',i=>{const a=p.all.splice(i,1)[0];audit(`${p.id}: allergy removed (${a.c})`,`${p.id}: аллергия удалена (${a.c})`,'chart');save();rerender()});
+bind(el,'dc',id=>{const m=p.meds.find(x=>x.id===id);m.st='stopped';audit(`${p.id}: ${medOf(m.m)[1]} discontinued`,`${p.id}: отменён ${medOf(m.m)[2]}`,'ord');save();rerender();toast(T('Medication discontinued','Препарат отменён'))});
+$('#addV').onclick=()=>modal(T('Record vitals — ','Показатели — ')+esc(pname(p)),`<div class="fgrid c3">${inp('vS',T('Systolic','Систолич.'),lv?lv.sys:'','','number')}${inp('vD',T('Diastolic','Диастолич.'),lv?lv.dia:'','','number')}${inp('vH',T('Heart rate','Пульс'),'','','number')}${inp('vT',T('Temp °C','Темп. °C'),'','','number','step="0.1"')}${inp('vO','SpO₂ %','','','number')}${inp('vR',T('Resp. rate','ЧДД'),'','','number')}</div><div class="row mt"><div id="vNews" class="muted"></div><div class="sp"></div><button class="btn pri" id="vGo">${T('Save to chart','Сохранить')}</button></div>`,box=>{
+const rd=()=>({sys:+$('#vS',box).value,dia:+$('#vD',box).value,hr:+$('#vH',box).value,tt:+$('#vT',box).value,spo2:+$('#vO',box).value,rr:+$('#vR',box).value});
+$$('input',box).forEach(i=>i.oninput=()=>{const x=rd();if(Object.values(x).every(Boolean)){const n=news(x);$('#vNews',box).innerHTML='NEWS2: '+pill(n,n>=5?'bad':n>=3?'warn':'ok')}});
+$('#vGo',box).onclick=()=>{const R=(a,b)=>v=>+v>=a&&+v<=b;if(!validate([['vS',R(60,260),['60–260','60–260']],['vD',R(30,160),['30–160','30–160']],['vH',R(25,220),['25–220','25–220']],['vT',R(32,43),['32–43 °C','32–43 °C']],['vO',R(50,100),['50–100','50–100']],['vR',R(4,60),['4–60','4–60']]],box))return;
+const x=rd();x.t=Date.now();p.vit.push(x);const n=news(x);audit(`${p.id}: vitals recorded (NEWS2 ${n})`,`${p.id}: показатели внесены (NEWS2 ${n})`,'chart');save();closeModal();rerender();toast(n>=5?T('NEWS2 '+n+' — rapid response team alerted','NEWS2 '+n+' — вызвана бригада быстрого реагирования'):T('Vitals saved','Показатели сохранены'),n>=5?'bad':'ok')}});
+$('#addPb').onclick=()=>modal(T('Add problem','Добавить проблему'),`<div class="fgrid">${inp('pbC',T('ICD-10 code','Код МКБ-10'),'','','text','placeholder="J45.9"')}${inp('pbN',T('Description','Описание'),'')}</div><div class="row mt"><div class="sp"></div><button class="btn pri" id="pbGo">${T('Add','Добавить')}</button></div>`,box=>{
+$('#pbGo',box).onclick=()=>{if(!validate([['pbC',v=>/^[A-Z]\d{2}(\.\d{1,2})?$/i.test(v),['Format A00 or A00.0','Формат A00 или A00.0']],['pbN',v=>v.length>=3,['Describe the problem','Опишите проблему']]],box))return;const n=$('#pbN',box).value.trim();p.prob.unshift({code:$('#pbC',box).value.toUpperCase(),en:n,ru:n,since:String(new Date().getFullYear()),st:'active'});audit(`${p.id}: problem added`,`${p.id}: добавлена проблема`,'chart');save();closeModal();rerender()}});
+$('#addAl').onclick=()=>modal(T('Add allergy','Добавить аллергию'),`<div class="fgrid">${sel('alC',T('Substance class','Класс веществ'),Object.keys(CLS).map(k=>[k,...CLS[k]]),'sulfa')}${sel('alS',T('Severity','Тяжесть'),[['low','Mild','Лёгкая'],['mod','Moderate','Средняя'],['high','Severe','Тяжёлая']],'mod')}${inp('alR',T('Reaction','Реакция'),'','full')}</div><div class="row mt"><div class="sp"></div><button class="btn pri" id="alGo">${T('Save','Сохранить')}</button></div>`,box=>{
+$('#alGo',box).onclick=()=>{if(!validate([['alR',v=>v.length>=3,['Describe the reaction','Опишите реакцию']]],box))return;const c=$('#alC',box).value;if(p.all.some(a=>a.c===c)){toast(T('Already recorded','Уже внесена'),'warn');return}const r=$('#alR',box).value.trim();p.all.push({c,r,rr:r,sev:$('#alS',box).value});audit(`${p.id}: allergy added (${c})`,`${p.id}: добавлена аллергия (${c})`,'chart');save();closeModal();rerender()}});
+};
+
+
+const OD=()=>S.od||(S.od={kind:'med',item:'amox',pr:'routine',dose:'',dur:'7',ind:''});
+function checkOrder(p,o){const out=[];if(o.kind==='med'){const m=medOf(o.item);
+p.all.forEach(a=>{if(a.c===m[3])out.push({lvl:'hard',en:`ALLERGY: ${p.name} has a documented ${CLS[a.c][0].toLowerCase()} allergy (${a.r}).`,ru:`АЛЛЕРГИЯ: у пациента задокументирована аллергия — ${CLS[a.c][1].toLowerCase()} (${a.rr}).`});
+else if((CROSS[a.c]||[]).includes(m[3]))out.push({lvl:'soft',en:`Cross-sensitivity: ${CLS[a.c][0]} allergy, ~2% cross-reactivity with ${CLS[m[3]][0].toLowerCase()}.`,ru:`Перекрёстная реакция: аллергия на ${CLS[a.c][1].toLowerCase()}, ~2% с ${CLS[m[3]][1].toLowerCase()}.`})});
+p.meds.filter(x=>x.st==='active').forEach(x=>{const c2=medOf(x.m)[3];INTER.forEach(r=>{if((r[0]===c2&&r[1]===m[3])||(r[1]===c2&&r[0]===m[3])||(r[0]===c2&&r[1]===o.item))out.push({lvl:'soft',en:`Interaction with ${medOf(x.m)[1]}: ${r[2]}.`,ru:`Взаимодействие с ${medOf(x.m)[2]}: ${r[3]}.`})})});
+if(p.meds.some(x=>x.st==='active'&&x.m===o.item))out.push({lvl:'soft',en:'Duplicate: patient already takes this medication.',ru:'Дубль: пациент уже получает этот препарат.'});
+if(o.item==='met'){const cr=p.labs.filter(l=>l.k==='cr').sort((a,b)=>b.t-a.t)[0];if(cr&&cr.v>130)out.push({lvl:'soft',en:`Renal: creatinine ${cr.v} µmol/L — review metformin dose.`,ru:`Почки: креатинин ${cr.v} мкмоль/л — пересмотрите дозу метформина.`})}}
+if(o.kind==='img'&&o.item==='ct'&&p.all.some(a=>a.c==='iodine'))out.push({lvl:'soft',en:'Iodinated contrast allergy — order non-contrast or premedicate.',ru:'Аллергия на йодсодержащий контраст — без контраста или премедикация.'});
+return out}
+APP.R.ord=el=>{const p=P();const o=OD();const items=o.kind==='med'?MEDS.map(m=>[m[0],m[1],m[2]]):o.kind==='lab'?LABS.map(l=>[l[0],l[1],l[2]]):IMG;if(!items.some(i=>i[0]===o.item))o.item=items[0][0];
+const al=checkOrder(p,o);
+el.innerHTML=`${banner(p)}<div class="grid2 mt"><div class="card"><h3>${T('New order','Новое назначение')}</h3>
+<div class="chips" style="margin-bottom:12px">${chipsH([['med','Medication','Препарат'],['lab','Laboratory','Анализ'],['img','Imaging','Исследование']],o.kind,'ok2')}</div>
+<div class="fgrid">${sel('oI',o.kind==='med'?T('Medication','Препарат'):o.kind==='lab'?T('Test','Анализ'):T('Study','Исследование'),items,o.item)}${sel('oP',T('Priority','Срочность'),[['routine','Routine','Планово'],['urgent','Urgent','Срочно'],['stat','STAT','Немедленно']],o.pr)}
+${o.kind==='med'?inp('oDs',T('Dose / instructions','Доза / указания'),o.dose,'','text','placeholder="'+T('as listed','как указано')+'"')+inp('oDu',T('Duration, days','Длительность, дней'),o.dur,'','number'):''}
+${fld('oInd',T('Indication','Показание'),`<select class="input" id="oInd"><option value="">${T('— select problem —','— выберите проблему —')}</option>${p.prob.filter(x=>x.st==='active').map(x=>`<option value="${x.code}" ${o.ind===x.code?'selected':''}>${x.code} · ${esc(T(x.en,x.ru))}</option>`).join('')}<option value="other" ${o.ind==='other'?'selected':''}>${T('Other','Другое')}</option></select>`,'full')}</div>
+<div class="mt">${al.map(a=>`<div class="alert ${a.lvl==='hard'?'':'warn'}" style="margin-bottom:8px"><span>${a.lvl==='hard'?'⛔':'⚠'}</span><div>${esc(T(a.en,a.ru))}</div></div>`).join('')||`<div class="alert ok"><span>✔</span><div>${T('No allergy, interaction or duplicate alerts','Аллергий, взаимодействий и дублей не найдено')}</div></div>`}</div>
+<div class="row mt"><div class="sp"></div><button class="btn pri" id="oSign">✍ ${T('Sign order','Подписать назначение')}</button></div></div>
+<div class="card"><h3>${T('Orders for this patient','Назначения пациента')}</h3><div class="stack">${p.ord.slice().sort((a,b)=>b.t-a.t).map(x=>{const nm=x.kind==='med'?T(medOf(x.item)[1],medOf(x.item)[2]):x.kind==='lab'?T(labOf(x.item)[1],labOf(x.item)[2]):T(...IMG.find(i=>i[0]===x.item).slice(1));
+return `<div class="li"><span>${x.kind==='med'?'💊':x.kind==='lab'?'🧪':'🩻'}</span><div class="grow"><b>${nm}</b><small><span class="mono">${x.id}</span> · ${fmtDS(x.t)} ${fmtT(x.t)} · ${esc(x.by)}${x.ov?' · '+T('override: ','обоснование: ')+esc(x.ov):''}</small></div>${x.pr==='stat'?pill('STAT','bad'):''}${x.st==='pending'?`<button class="btn xs" data-res="${x.id}">${x.kind==='med'?T('Dispense','Выдать'):T('Result','Результат')}</button><button class="btn xs danger" data-cx="${x.id}">✕</button>`:pill(x.st==='cancel'?T('Cancelled','Отменено'):x.st==='resulted'?T('Resulted','Готово'):T('Active','Активно'),x.st==='cancel'?'':'ok')}</div>`}).join('')||`<div class="empty">${T('No orders yet','Назначений нет')}</div>`}</div></div></div>`;
+bind(el,'ok2',k=>{o.kind=k;o.item='';save();APP.R.ord(el)});
+$('#oI').onchange=e=>{o.item=e.target.value;save();APP.R.ord(el)};
+$('#oP').onchange=e=>{o.pr=e.target.value;save()};$('#oInd').onchange=e=>{o.ind=e.target.value;save()};
+if($('#oDs')){$('#oDs').oninput=e=>{o.dose=e.target.value;save()};$('#oDu').oninput=e=>{o.dur=e.target.value;save()}}
+const place=ov=>{const id='ORD-'+(++S.oseq);const x={id,kind:o.kind,item:o.item,pr:o.pr,st:'pending',t:Date.now(),by:S.user.name,ov};p.ord.push(x);
+if(o.kind==='med'){p.meds.push({id:uid(),m:o.item,st:'active',start:today(),by:S.user.name,ov});x.st='active'}
+audit(`${p.id}: order ${id} signed (${o.kind}:${o.item})${ov?' with override: '+ov:''}`,`${p.id}: назначение ${id} подписано (${o.kind}:${o.item})${ov?', обоснование: '+ov:''}`,'ord');S.od=null;save();closeModal();rerender();toast(id+T(' signed and sent',' подписано и отправлено')+(o.kind==='lab'?T(' to the lab',' в лабораторию'):o.kind==='img'?T(' to radiology',' в радиологию'):T(' to pharmacy',' в аптеку')),'ok')};
+$('#oSign').onclick=()=>{const v=[['oInd',x=>!!x,['Choose an indication','Выберите показание']]];if(o.kind==='med')v.push(['oDu',x=>+x>=1&&+x<=365,['1–365 days','1–365 дней']]);if(!validate(v,el))return;
+const hard=al.filter(a=>a.lvl==='hard'),soft=al.filter(a=>a.lvl==='soft');
+if(!hard.length&&!soft.length)return place();
+modal(hard.length?'⛔ '+T('Allergy alert','Аллергия'):'⚠ '+T('Clinical decision support','Поддержка решений'),`${al.map(a=>`<div class="alert ${a.lvl==='hard'?'':'warn'}" style="margin-bottom:8px"><span>${a.lvl==='hard'?'⛔':'⚠'}</span><div>${esc(T(a.en,a.ru))}</div></div>`).join('')}
+${sel('ovR',T('Override reason','Причина'),[['','— required —','— обязательно —'],['tol','Patient has tolerated this drug before','Ранее переносил препарат'],['alt','No suitable alternative','Нет альтернативы'],['mon','Will monitor closely','Под наблюдением'],['err','Allergy record is incorrect','Аллергия внесена ошибочно']],'')}${hard.length?inp('ovP',T('Re-enter your password to confirm','Введите пароль для подтверждения'),'','','password'):''}
+<div class="row mt"><button class="btn pri" id="ovCancel">${T('Cancel order (recommended)','Отменить (рекомендуется)')}</button><div class="sp"></div><button class="btn danger" id="ovGo">${T('Override and sign','Подписать с обоснованием')}</button></div>`,box=>{
+$('#ovCancel',box).onclick=()=>{audit(`${p.id}: order cancelled after alert`,`${p.id}: назначение отменено после предупреждения`,'ord');closeModal();toast(T('Order not placed — good catch','Назначение не создано'),'ok')};
+$('#ovGo',box).onclick=()=>{const v=[['ovR',x=>!!x,['Choose a reason','Выберите причину']]];if(hard.length)v.push(['ovP',x=>x===APP.login.pass,['Password incorrect (demo: '+APP.login.pass+')','Неверный пароль (демо: '+APP.login.pass+')']]);if(!validate(v,box))return;place($('#ovR',box).selectedOptions[0].textContent)}})};
+bind(el,'cx',id=>{p.ord.find(x=>x.id===id).st='cancel';audit(`${p.id}: order ${id} cancelled`,`${p.id}: назначение ${id} отменено`,'ord');save();rerender()});
+bind(el,'res',id=>{const x=p.ord.find(y=>y.id===id);x.st='resulted';if(x.kind==='lab'){const L=labOf(x.item);const v=+(L[4]+(L[5]-L[4])*(Math.random()*1.4-.1)).toFixed(L[5]<10?1:0);p.labs.push({id:uid(),k:x.item,v,t:Date.now(),ack:false});LB=x.item}
+audit(`${p.id}: ${id} resulted`,`${p.id}: ${id} — результат получен`,'lab');save();rerender();toast(x.kind==='lab'?T('Result filed to Labs','Результат в разделе «Анализы»'):T('Report filed','Заключение получено'),'ok')});
+};
+
+
+APP.R.lab=el=>{const p=P();const keys=[...new Set(p.labs.map(l=>l.k))];if(!keys.includes(LB))LB=keys[0];
+const latest=keys.map(k=>p.labs.filter(l=>l.k===k).sort((a,b)=>b.t-a.t)[0]);const ser=p.labs.filter(l=>l.k===LB).sort((a,b)=>a.t-b.t);const L=labOf(LB||'hba1c');const un=p.labs.filter(l=>!l.ack&&flag(l));
+el.innerHTML=`${banner(p)}<div class="grid2 mt"><div class="card"><h3>${T('Latest results','Последние результаты')}<span class="sp"></span>${un.length?`<button class="btn xs pri" id="ackAll">✓ ${T('Acknowledge all abnormal','Отметить все отклонения')} (${un.length})</button>`:''}</h3>
+${tbl([T('Test','Анализ'),T('Result','Результат'),T('Reference','Норма'),T('Date','Дата'),''],latest.map(l=>{const d=labOf(l.k);const f=flag(l);return `<tr class="${l.k===LB?'sel':''}" data-lb="${l.k}" style="cursor:pointer"><td><b>${T(d[1],d[2])}</b></td><td class="mono ${f?'bad-t':''}"><b>${l.v}</b> ${d[3]} ${f?`<b>${f}</b>`:''}</td><td class="mono muted">${d[4]}–${d[5]}</td><td>${fmtDS(l.t)}</td><td>${f&&!l.ack?`<button class="btn xs" data-ack="${l.id}">${T('Acknowledge','Ознакомлен')}</button>`:f?pill('✓','ok'):''}</td></tr>`}),T('No results','Результатов нет'))}
+<div class="muted" style="font-size:12px;margin-top:8px">${T('Click a row to see the trend. H/L = above/below reference.','Нажмите строку, чтобы увидеть динамику. H/L — выше/ниже нормы.')}</div></div>
+<div class="card"><h3>${L?T(L[1],L[2])+' — '+T('trend','динамика'):''}</h3>${ser.length>1?`<div class="chart">${lineChart({labels:ser.map(s=>fmtDS(s.t)),series:[{name:L[1],data:ser.map(s=>s.v),color:'var(--violet)',dots:true}],band:[L[4],L[5],'var(--mal)'],min:Math.min(L[4],...ser.map(s=>s.v))*.85,max:Math.max(L[5],...ser.map(s=>s.v))*1.12,yfmt:v=>fmtN(v,L[5]<10?1:0)})}</div>`:`<div class="empty">${T('One value only','Только одно значение')}</div>`}
+<div class="muted" style="font-size:12.5px">${T('Reference','Норма')}: ${L[4]}–${L[5]} ${L[3]} · LOINC-${String(1e4+LABS.indexOf(L)*731).slice(0,4)}-${LABS.indexOf(L)}</div>
+<div class="row mt"><button class="btn sm" id="reord">↻ ${T('Repeat this test','Повторить анализ')}</button></div></div></div>`;
+bind(el,'lb',k=>{LB=k;APP.R.lab(el)});
+const ack=l=>{l.ack=true;l.by=S.user.name};
+bind(el,'ack',id=>{const l=p.labs.find(x=>x.id===id);ack(l);audit(`${p.id}: abnormal ${l.k}=${l.v} acknowledged`,`${p.id}: отклонение ${l.k}=${l.v} — ознакомлен`,'lab');save();rerender()});
+if($('#ackAll'))$('#ackAll').onclick=()=>{un.forEach(ack);audit(`${p.id}: ${un.length} abnormal results acknowledged`,`${p.id}: отмечено отклонений: ${un.length}`,'lab');save();rerender();toast(T('All abnormal results acknowledged','Все отклонения отмечены'),'ok')};
+$('#reord').onclick=()=>{const o=OD();o.kind='lab';o.item=LB;save();go('ord')};
+};
+
+
+const TPL={prog:['Progress note','Дневник','S: \nO: \nA: \nP: '],adm:['Admission H&P','Первичный осмотр','Chief complaint: \nHPI: \nPMH: \nExam: \nAssessment & plan: '],dis:['Discharge summary','Выписной эпикриз','Diagnosis: \nCourse: \nDischarge meds: \nFollow-up: '],cons:['Consult','Консультация','Reason: \nFindings: \nRecommendations: ']};
+APP.R.notes=el=>{const p=P();const nd=S.nd&&S.nd.p===p.id?S.nd:null;const list=p.notes.filter(n=>!NF||n.type===NF).sort((a,b)=>b.t-a.t);
+el.innerHTML=`${banner(p)}<div class="grid2 mt"><div class="card"><h3>${T('Write note','Новая запись')}</h3>
+<div class="fgrid">${sel('nT',T('Note type','Тип'),Object.keys(TPL).map(k=>[k,TPL[k][0],TPL[k][1]]),nd?nd.type:'prog')}<div class="f"><label>&nbsp;</label><div class="row"><button class="btn sm" id="nTpl">${T('Insert template','Вставить шаблон')}</button><button class="btn sm" id="nVit">${T('Pull latest vitals','Вставить показатели')}</button></div></div>
+${fld('nX',T('Text','Текст'),`<textarea class="input mono" id="nX" rows="9" style="font-size:12.5px">${esc(nd?nd.txt:'')}</textarea>`,'full')}</div>
+<div class="row mt"><span class="muted" style="font-size:12px" id="nSaved">${nd?T('Draft autosaved','Черновик сохранён'):''}</span><div class="sp"></div><button class="btn" id="nDraft">${T('Save draft','Черновик')}</button><button class="btn pri" id="nSign">✍ ${T('Sign note','Подписать')}</button></div></div>
+<div class="card"><h3>${T('Note history','История записей')}</h3><div class="chips" style="margin-bottom:10px">${chipsH([['','All','Все'],...Object.keys(TPL).map(k=>[k,TPL[k][0],TPL[k][1]])],NF,'nf')}</div>
+<div class="stack">${list.map(n=>`<div class="card" style="background:var(--bg2);padding:12px"><div class="row"><b>${T(TPL[n.type][0],TPL[n.type][1])}</b>${n.signed?pill('✍ '+T('Signed','Подписано'),'ok'):pill(T('Draft','Черновик'),'warn')}${n.add?pill(T('Addendum','Дополнение'),'gold'):''}<div class="sp"></div><span class="muted" style="font-size:12px">${fmtDS(n.t)} ${fmtT(n.t)} · ${esc(n.by)}</span></div><pre class="note">${esc(n.txt)}</pre>${n.signed?`<button class="btn xs" data-addn="${n.id}">+ ${T('Addendum','Дополнение')}</button>`:''}</div>`).join('')||`<div class="empty">${T('No notes yet','Записей нет')}</div>`}</div></div></div>`;
+const keep=()=>{S.nd={p:p.id,type:$('#nT').value,txt:$('#nX').value};save();$('#nSaved').textContent=T('Draft autosaved','Черновик сохранён')};
+$('#nX').oninput=keep;$('#nT').onchange=keep;
+$('#nTpl').onclick=()=>{const t=$('#nT').value;$('#nX').value=($('#nX').value?$('#nX').value+'\n':'')+TPL[t][2];keep()};
+$('#nVit').onclick=()=>{const v=p.vit[p.vit.length-1];if(!v){toast(T('No vitals recorded','Показателей нет'),'warn');return}$('#nX').value+=`${$('#nX').value?'\n':''}Vitals ${fmtDS(v.t)}: BP ${v.sys}/${v.dia}, HR ${v.hr}, T ${v.tt}, SpO2 ${v.spo2}%, RR ${v.rr} (NEWS2 ${news(v)})`;keep()};
+$('#nDraft').onclick=()=>{keep();toast(T('Draft saved','Черновик сохранён'),'ok')};
+$('#nSign').onclick=()=>{if(!validate([['nX',v=>v.replace(/^[A-Za-z &]+:\s*$/gm,'').trim().length>=20,['Note is too short (20+ characters of content)','Слишком коротко (от 20 символов текста)']]],el))return;
+p.notes.push({id:uid(),type:$('#nT').value,t:Date.now(),by:S.user.name,signed:true,txt:$('#nX').value.trim()});S.nd=null;audit(`${p.id}: ${TPL[$('#nT').value][0]} signed (FHIR DocumentReference)`,`${p.id}: подписана запись «${TPL[$('#nT').value][1]}»`,'note');save();rerender();toast(T('Note signed and locked','Запись подписана и закрыта для правок'),'ok')};
+bind(el,'nf',v=>{NF=v;APP.R.notes(el)});
+bind(el,'addn',id=>modal(T('Addendum','Дополнение'),`${fld('adX',T('Addendum text (original stays unchanged)','Текст дополнения (исходная запись не меняется)'),'<textarea class="input" id="adX" rows="4"></textarea>')}<div class="row mt"><div class="sp"></div><button class="btn pri" id="adGo">${T('Sign addendum','Подписать')}</button></div>`,box=>{
+$('#adGo',box).onclick=()=>{if(!validate([['adX',v=>v.length>=5,['Enter text','Введите текст']]],box))return;const o=p.notes.find(n=>n.id===id);p.notes.push({id:uid(),type:o.type,t:Date.now(),by:S.user.name,signed:true,add:1,txt:'Addendum to note of '+fmtDS(o.t)+':\n'+$('#adX',box).value.trim()});audit(`${p.id}: addendum signed`,`${p.id}: подписано дополнение`,'note');save();closeModal();rerender()}}));
+};
+
+
+const VW={'Follow-up':'Повторный','Medication review':'Пересмотр терапии','Post-discharge':'После выписки','New complaint':'Новая жалоба','Annual exam':'Ежегодный осмотр'};const wy=w=>esc(T(w,VW[w]||w));
+const SLOTS=['08:30','09:00','09:30','10:00','10:30','11:00','13:30','14:00','14:30','15:00'];
+APP.R.sched=el=>{if(!SD)SD=today();const days=rngDays();const day=S.appts.filter(a=>a.d===SD);
+const load=days.map(d=>S.appts.filter(a=>a.d===d&&a.st!=='cx').length);
+el.innerHTML=`<div class="kpis">${kpi(T('Booked today','Записано сегодня'),S.appts.filter(a=>a.d===today()&&a.st!=='cx').length)}${kpi(T('Checked in','Пришли'),S.appts.filter(a=>a.d===today()&&a.st==='in').length)}${kpi(T('Seen','Приняты'),S.appts.filter(a=>a.st==='done').length)}${kpi(T('No-shows','Неявки'),S.appts.filter(a=>a.st==='ns').length,null,'warn-t')}</div>
+<div class="grid2"><div class="card"><div class="chips" style="margin-bottom:12px">${days.map((d,i)=>`<button class="chip ${d===SD?'on':''}" data-sd="${d}">${new Date(d).toLocaleDateString(loc(),{weekday:'short',day:'numeric'})} · ${load[i]}</button>`).join('')}</div>
+<div class="slots">${SLOTS.map(s=>{const a=day.find(x=>x.s===s&&x.st!=='cx');const p=a&&S.pts.find(x=>x.id===a.pt);
+return a?`<div class="slot b ${a.st}"><span class="mono">${s}</span><div class="grow" style="min-width:0"><b>${esc(p?pname(p):'—')}</b><small>${wy(a.why)} · ${T(...CLIN.find(c=>c[0]===a.dr).slice(1))}</small></div>${a.st==='booked'?`<button class="btn xs pri" data-ci="${a.id}">${T('Check in','Пришёл')}</button><button class="btn xs" data-ns="${a.id}">${T('No-show','Неявка')}</button><button class="btn xs danger" data-acx="${a.id}">✕</button>`:a.st==='in'?`<button class="btn xs pri" data-seen="${a.id}">${T('Seen','Принят')}</button>`:pill(a.st==='done'?T('Seen','Принят'):T('No-show','Неявка'),a.st==='done'?'ok':'warn')}</div>`
+:`<div class="slot"><span class="mono">${s}</span><span class="muted grow">${T('Free','Свободно')}</span><button class="btn xs" data-book="${s}">+ ${T('Book','Записать')}</button></div>`}).join('')}</div></div>
+<div class="card"><h3>${T('Clinic load — next 5 days','Загрузка — 5 дней')}</h3><div class="chart">${barChart({labels:days.map(d=>new Date(d).toLocaleDateString(loc(),{weekday:'short'})),series:[{name:T('Booked','Записано'),data:load,color:'var(--mal)'}],max:SLOTS.length,hl:days.indexOf(SD),hlines:[{v:SLOTS.length*.8,label:'80%',color:'var(--amber)'}]})}</div>
+<h3 class="mt">${T('Upcoming for ','Ближайшие у ')}${esc(pname(P()))}</h3>${S.appts.filter(a=>a.pt===S.cur&&a.d>=today()&&a.st==='booked').sort((a,b)=>(a.d+a.s).localeCompare(b.d+b.s)).map(a=>`<div class="li"><span>📅</span><div class="grow"><b>${fmtD(a.d)} ${a.s}</b><small>${wy(a.why)}</small></div></div>`).join('')||`<div class="muted" style="font-size:13px">${T('No upcoming visits','Визитов не запланировано')}</div>`}</div></div>`;
+bind(el,'sd',d=>{SD=d;APP.R.sched(el)});
+const A=id=>S.appts.find(a=>a.id===id);
+bind(el,'ci',id=>{A(id).st='in';audit('Patient checked in '+A(id).s,'Пациент пришёл '+A(id).s,'sched');save();rerender()});
+bind(el,'seen',id=>{A(id).st='done';save();rerender()});
+bind(el,'ns',id=>{A(id).st='ns';audit('No-show '+A(id).s,'Неявка '+A(id).s,'sched');save();rerender()});
+bind(el,'acx',id=>{A(id).st='cx';audit('Appointment cancelled','Визит отменён','sched');save();rerender();toast(T('Slot released','Слот освобождён'))});
+bind(el,'book',s=>modal(T('Book ','Запись ')+fmtD(SD)+' '+s,`<div class="fgrid">${sel('bP',T('Patient','Пациент'),S.pts.map(p=>[p.id,pname(p)+' · '+p.id]),S.cur)}${sel('bD',T('Clinician','Врач'),CLIN,'dr1')}${sel('bW',T('Visit type','Тип визита'),[['Follow-up','Follow-up','Повторный'],['Medication review','Medication review','Пересмотр терапии'],['New complaint','New complaint','Новая жалоба'],['Post-discharge','Post-discharge','После выписки']],'Follow-up')}${sel('bR',T('Reminder','Напоминание'),[['sms','SMS 24h before','SMS за 24 ч'],['none','None','Нет']],'sms')}</div><div class="row mt"><div class="sp"></div><button class="btn pri" id="bGo">${T('Book visit','Записать')}</button></div>`,box=>{
+$('#bGo',box).onclick=()=>{const pid=$('#bP',box).value,dr=$('#bD',box).value;if(S.appts.some(a=>a.d===SD&&a.s===s&&a.st!=='cx')){toast(T('Slot just taken','Слот уже занят'),'bad');return}
+if(S.appts.some(a=>a.d===SD&&a.pt===pid&&a.st==='booked')){toast(T('Patient already has a visit this day','У пациента уже есть визит в этот день'),'warn')}
+S.appts.push({id:uid(),d:SD,s,pt:pid,dr,why:$('#bW',box).selectedOptions[0].value,st:'booked'});audit(`Visit booked ${SD} ${s} for ${pid}`,`Запись ${SD} ${s}: ${pid}`,'sched');save();closeModal();rerender();toast(T('Visit booked','Визит назначен')+($('#bR',box).value==='sms'?T(' · SMS reminder set',' · SMS-напоминание'):''),'ok')}}));
+};
+function rngDays(){const out=[];for(let i=0;out.length<5;i++){const d=addDays(today(),i);const w=new Date(d).getDay();if(w&&w<6||i===0)out.push(d)}return out}
+
+/* ---- boot: state, login, shell, router ---- */
+const KEY='pt_'+APP.slug+'_state';
+let S=null;
+function fresh(){const s=APP.seed();s.v=APP.ver||1;s.view=APP.views[0][0];s.user=null;s.intro=true;s.audit=s.audit||[];return s}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||S.v!==(APP.ver||1))S=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function audit(en,ru,kind){S.audit=S.audit||[];S.audit.unshift({t:Date.now(),en,ru,k:kind||'',u:S.user?S.user.name:'system'});if(S.audit.length>300)S.audit.length=300;save()}
+const auditTxt=a=>PT.lang==='ru'?a.ru:a.en;
+let lgVals=null;
+function rerender(){if(!S.user){renderLogin();return}renderShell();renderView()}
+function go(id){S.view=id;save();closeSide();renderShell();renderView();window.scrollTo(0,0)}
+function closeSide(){const s=$('#side');if(s)s.classList.remove('open')}
+function renderLogin(){
+  $('#app').hidden=true;const L=$('#login');L.hidden=false;const lg=APP.login;
+  const v=lgVals||{u:lg.user,p:lg.pass,r:(lg.roles||[[0]])[0][0]};
+  L.innerHTML=`<div class="lg-hero">
+    <div class="bigb"><b>${APP.icon}</b><div>${esc(APP.name)}<div style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0">${TT(APP.sub)}</div></div></div>
+    <h2>${TT(lg.hero)}</h2><p>${TT(lg.heroP)}</p>
+    <div class="lg-feats">${lg.feats.map(f=>`<div><b>${f[0]} ${T(f[1],f[2])}</b>${T(f[3],f[4])}</div>`).join('')}</div>
+  </div>
+  <div class="lg-form"><div class="card">
+    <h3>${T('Sign in to','Вход в')} ${esc(APP.name)}</h3><div class="muted" style="font-size:13px">${TT(lg.tag)}</div>
+    ${inp('lgU',T('User ID','Логин'),v.u,'','text','autocomplete="username"')}
+    ${inp('lgP',T('Password','Пароль'),v.p,'','password','autocomplete="current-password"')}
+    ${lg.roles?sel('lgR',T('Sign in as','Войти как'),lg.roles.map(r=>[r[0],r[1],r[2]]),v.r):''}
+    <button class="btn pri" id="lgGo" style="width:100%;justify-content:center;margin-top:16px;padding:12px">${T('Sign in','Войти')} →</button>
+    <div class="lg-demo">${T('<b>Demo access.</b> Credentials are prefilled — press <b>Sign in</b>. All data is synthetic and stays in this browser.','<b>Демо-доступ.</b> Логин и пароль уже введены — нажмите <b>Войти</b>. Все данные вымышленные и хранятся только в этом браузере.')}</div>
+    <div class="lg-sec">🔒 <span>${TT(lg.secure||['Demo environment · MFA simulated · session in local storage','Демо-среда · MFA имитируется · сессия в локальном хранилище'])}</span></div>
+  </div></div>`;
+  const keep=()=>{lgVals={u:$('#lgU').value,p:$('#lgP').value,r:$('#lgR')?$('#lgR').value:v.r}};
+  $$('input,select',L).forEach(i=>i.oninput=keep);
+  const go2=()=>{keep();if(!validate([['lgU',x=>x.length>=3,['Enter your user ID','Введите логин']],['lgP',x=>x.length>=4,['Enter the password','Введите пароль']]],L))return;
+    const role=lg.roles?lg.roles.find(r=>String(r[0])===String(lgVals.r)):null;
+    S.user={id:lgVals.u,name:lg.name,role:role?[role[1],role[2]]:lg.role,rk:role?role[0]:null};
+    if(APP.onLogin)APP.onLogin(role?role[0]:null);
+    audit('Signed in as '+lgVals.u,'Вход: '+lgVals.u,'auth');save();
+    toast(T('Welcome, ','Добро пожаловать, ')+esc(lg.name.split(' ')[0]),'ok');lgVals=null;rerender()};
+  $('#lgGo').onclick=go2;$$('input',L).forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')go2()});
+}
+function renderShell(){
+  $('#login').hidden=true;$('#app').hidden=false;const u=S.user;
+  const groups=APP.groups||[[null]];
+  $('#side').innerHTML=`<div class="brand"><b>${APP.icon}</b><div>${esc(APP.name)}<small>${TT(APP.sub)}</small></div></div>
+    ${groups.map(g=>`${g[0]!=null&&g[1]?`<div class="sec">${T(g[1],g[2])}</div>`:''}${APP.views.filter(v=>(v[4]||null)===g[0]&&(!APP.visible||APP.visible(v[0]))).map(v=>{const b=APP.badge?APP.badge(v[0]):null;return `<button class="nav ${S.view===v[0]?'on':''}" data-go="${v[0]}"><span class="ic">${v[1]}</span><span>${T(v[2],v[3])}</span>${b&&b[0]?`<span class="cnt ${b[1]?'r':''}">${b[0]}</span>`:''}</button>`}).join('')}`).join('')}
+    <div class="grow"></div>
+    ${APP.sideExtra?APP.sideExtra():''}
+    <div class="who"><div class="av">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</div><div style="min-width:0"><b>${esc(u.name)}</b><span>${TT(u.role)}</span></div></div>
+    <div class="sidebtns"><button class="btn sm" id="sOut">${T('Sign out','Выйти')}</button><button class="btn sm" id="sReset">${T('Reset demo','Сбросить демо')}</button></div>`;
+  bind($('#side'),'go',id=>go(id));
+  if(APP.bindSide)APP.bindSide($('#side'));
+  $('#sOut').onclick=()=>{audit('Signed out','Выход','auth');S.user=null;save();closeModal();rerender()};
+  $('#sReset').onclick=()=>{if(!confirmReset())return;try{Object.keys(localStorage).filter(k=>k.indexOf('pt_'+APP.slug+'_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}const u=S.user;S=fresh();S.user=u;if(APP.onLogin)APP.onLogin(u.rk);save();closeModal();rerender();toast(T('Demo data reset','Демо-данные сброшены'),'ok')};
+  const cur=APP.views.find(v=>v[0]===S.view)||APP.views[0];
+  const g=groups.find(x=>x[0]===(cur[4]||null));
+  $('#crumb').innerHTML=esc(APP.name)+(g&&g[1]?' · '+T(g[1],g[2]):'');
+  $('#title').innerHTML=T(cur[2],cur[3]);
+  $('#headx').innerHTML=APP.head?APP.head():'';
+  if(APP.bindHead)APP.bindHead($('#headx'));
+  const I=$('#intro');
+  if(S.intro){I.className='intro';I.innerHTML=`<div class="card"><h3><span>${T('How to try it','Как попробовать')}</span><span class="sp"></span><button class="btn xs" id="introX">${T('Hide','Скрыть')}</button></h3><div class="how">${APP.how.map((h,i)=>`<div><b>${i+1}</b><span>${TT(h)}</span></div>`).join('')}</div></div>
+    <div class="card"><dl class="facts">${APP.facts.map(f=>`<dt>${T(f[0],f[1])}</dt><dd>${f.length>3?T(f[2],f[3]):f[2]}</dd>`).join('')}</dl></div>`;
+    $('#introX').onclick=()=>{S.intro=false;save();renderShell()}}
+  else{I.className='intro hide';I.innerHTML=''}
+  $('#showIntro').hidden=S.intro;
+}
+let confirmReset=()=>true;
+function renderView(){
+  if(!APP.views.find(v=>v[0]===S.view))S.view=APP.views[0][0];
+  const el=$('#view');el.className='view on';el.dataset.v=S.view;
+  if(APP.leave)APP.leave();
+  try{APP.R[S.view](el)}catch(e){console.error(e);el.innerHTML='<div class="card">'+esc(e.message)+'</div>'}
+}
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+$('#showIntro').onclick=()=>{S.intro=true;save();renderShell()};
+document.addEventListener('click',e=>{const s=$('#side');if(s&&s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+let booted=false;
+PT.onLang(()=>{booted=true;rerender()});
+if(document.readyState!=='loading')setTimeout(()=>{if(!booted)rerender()},0);
+
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenRail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+[hidden]{display:none!important}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--mal));color:#06140f;font-size:16px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;gap:10px;align-items:center}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);font-weight:800;font-size:13px;flex:none}
+.who small{display:block;color:var(--muted);font-size:11.5px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card{min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.btn.blk{width:100%;justify-content:center}
+.err{color:var(--red);font-size:12.5px;min-height:18px;margin-top:6px}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start;margin-bottom:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.search{max-width:280px}
+/* login */
+.loginv{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(900px 500px at 75% 0%,color-mix(in srgb,var(--gold) 12%,transparent),transparent),radial-gradient(700px 400px at 0% 100%,color-mix(in srgb,var(--mal) 14%,transparent),transparent)}
+.login{width:100%;max-width:440px;padding:26px}
+.login h2{margin:6px 0 4px;font-size:21px}
+.login .f{margin-top:12px}
+.roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.role{border:1px solid var(--line2);border-radius:12px;background:var(--bg2);padding:10px 6px;cursor:pointer;font-size:12px;font-weight:600;text-align:center}
+.role b{display:block;font-size:18px}
+.role.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.secure{display:flex;gap:8px;font-size:12px;color:var(--muted);margin-top:14px;align-items:center;justify-content:center;flex-wrap:wrap}
+/* catalogue */
+.apis{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.api{display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:.15s}
+.api:hover{border-color:var(--mal)}
+.api .top{display:flex;gap:10px;align-items:center}
+.api .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:19px;background:color-mix(in srgb,var(--mal) 14%,transparent);flex:none}
+.api h4{margin:0;font-size:15px}
+.api p{margin:0;font-size:13px;color:var(--muted);line-height:1.45;flex:1}
+.api .meta{display:flex;gap:6px;flex-wrap:wrap}
+.ep{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px;flex-wrap:wrap}
+.ep:last-child{border-bottom:0}
+.ep code{font-family:var(--mono);font-size:12.5px;word-break:break-all;flex:1;min-width:140px}
+.m{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;min-width:52px;text-align:center;flex:none}
+.m.GET{background:color-mix(in srgb,var(--blue) 18%,transparent);color:var(--blue)}
+.m.POST{background:color-mix(in srgb,var(--mal) 18%,transparent);color:var(--mal3)}
+.m.DELETE{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}
+/* console */
+.con{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;align-items:start}
+pre.code{font-family:var(--mono);font-size:12px;line-height:1.55;background:#08110e;color:#cfe6dc;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0;overflow:auto;max-height:440px;white-space:pre}
+[data-theme=light] pre.code{background:#0d1a16}
+pre.code .k{color:#7fd6ff} pre.code .s{color:#f3d79a} pre.code .n{color:#a5f3c8} pre.code .c{color:#6f8a80}
+.resh{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;font-size:13px}
+textarea.input{font-family:var(--mono);font-size:12px;min-height:110px;resize:vertical}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:10px;overflow-x:auto}
+.tab{border:0;background:none;padding:8px 12px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab.on{color:var(--text);border-bottom-color:var(--mal)}
+.tok{font-family:var(--mono);font-size:11.5px;word-break:break-all;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+/* consent journey */
+.steps{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.st{flex:1;min-width:110px;display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:600;color:var(--dim);padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
+.st b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--line);font-size:11.5px;flex:none;color:var(--text)}
+.st.on{color:var(--text);border-color:var(--mal)}
+.st.on b{background:var(--mal);color:#fff}
+.st.done b{background:var(--mal2);color:#fff}
+.phone{max-width:380px;margin:0 auto;border:8px solid #1c2a25;border-radius:34px;background:var(--panel);overflow:hidden;box-shadow:var(--shadow)}
+.phone .bar{height:26px;background:#1c2a25;display:flex;justify-content:center;align-items:center}
+.phone .bar i{width:70px;height:6px;border-radius:6px;background:#2f413a}
+.scr{padding:18px 16px;min-height:430px;display:flex;flex-direction:column;gap:10px}
+.scr h4{margin:0;font-size:17px}
+.tpp{display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px}
+.logo{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:14px;color:#fff;flex:none}
+.perm{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px;cursor:pointer}
+.perm:last-child{border-bottom:0}
+.perm input{margin-top:3px;accent-color:var(--mal);width:17px;height:17px;flex:none}
+.perm small{display:block;color:var(--muted)}
+.acc{display:flex;gap:10px;align-items:center;border:1px solid var(--line2);border-radius:12px;padding:10px;cursor:pointer;font-size:13px}
+.acc.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.acc span{flex:1;min-width:0}
+.otp{display:flex;gap:8px;justify-content:center}
+.otp input{width:42px;height:50px;text-align:center;font-size:22px;font-weight:700;padding:0}
+.bankh{display:flex;align-items:center;gap:8px;font-weight:800;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.cons{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+.cons:last-child{border-bottom:0}
+.cons .b{flex:1;min-width:180px}
+.cons .b small{display:block;color:var(--muted);font-size:12px}
+.log{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;max-height:190px;overflow:auto}
+.log div{padding:2px 0;white-space:nowrap}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mal3);box-shadow:0 0 10px var(--mal3);animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.3}}
+.bars{display:flex;flex-direction:column;gap:9px}
+.bars div{display:grid;grid-template-columns:120px minmax(0,1fr) 64px;gap:10px;align-items:center;font-size:12.5px}
+.bars i{display:block;height:9px;border-radius:9px;background:linear-gradient(90deg,var(--mal2),var(--mal3))}
+.bars em{font-style:normal;font-family:var(--mono);text-align:right}
+.drawer{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.45);display:flex;justify-content:flex-end}
+.drawer .in{width:min(460px,100%);height:100%;background:var(--panel);border-left:1px solid var(--line2);padding:20px;overflow:auto;animation:slide .2s}
+@keyframes slide{from{transform:translateX(40px);opacity:0}}
+@media (max-width:1180px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.split,.intro,.con{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.kpis{gap:10px}.kpi .v{font-size:19px}.card{padding:14px}.login{padding:20px}.phone{border-width:5px;border-radius:26px}.bars div{grid-template-columns:86px minmax(0,1fr) 54px}.search{max-width:none;width:100%}.st{min-width:0;flex:1 1 40%}}
+</style>
+</head>
+<body data-demo-en="OpenRail — open banking API platform &amp; consent" data-demo-ru="OpenRail — платформа open banking и согласий">
+<div class="loginv" id="loginV">
+  <div class="card login">
+    <div class="brand" style="padding:0 0 6px"><b>⇄</b><div>OpenRail<small data-en="National open banking hub · Central Bank" data-ru="Национальный хаб open banking · Центральный банк"></small></div></div>
+    <h2 data-en="Sign in to OpenRail" data-ru="Вход в OpenRail"></h2>
+    <div class="muted" style="font-size:13px" data-en="Demo credentials are prefilled. Pick a starting role — all roles are available inside." data-ru="Демо-данные уже заполнены. Выберите стартовую роль — внутри доступны все роли."></div>
+    <div class="f"><label data-en="Email" data-ru="Почта"></label><input class="input" id="lgU" value="dev@fintrack.demo" autocomplete="username"></div>
+    <div class="f"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lgP" type="password" value="openrail-demo" autocomplete="current-password"></div>
+    <div class="f"><label data-en="Start as" data-ru="Начать как"></label>
+      <div class="roles" id="roles">
+        <button class="role on" data-role="cat"><b>🧑‍💻</b><span data-en="Developer" data-ru="Разработчик"></span></button>
+        <button class="role" data-role="journey"><b>🙋</b><span data-en="Customer" data-ru="Клиент"></span></button>
+        <button class="role" data-role="traffic"><b>🏦</b><span data-en="Regulator" data-ru="Регулятор"></span></button>
+      </div></div>
+    <div class="err" id="lgErr"></div>
+    <button class="btn pri blk" id="login" data-en="Sign in with demo account" data-ru="Войти в демо-аккаунт"></button>
+    <div class="secure"><span>🔐 FAPI 2.0 · mTLS · PKCE</span></div>
+  </div>
+</div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>⇄</b><div>OpenRail<small data-en="Open banking hub" data-ru="Хаб open banking"></small></div></div>
+    <div class="sec" data-en="Developer portal" data-ru="Портал разработчика"></div><div id="navD"></div>
+    <div class="sec" data-en="Customer" data-ru="Клиент"></div><div id="navC"></div>
+    <div class="sec" data-en="Bank &amp; regulator" data-ru="Банк и регулятор"></div><div id="navB"></div>
+    <div class="grow"></div>
+    <div class="who"><div class="av">FT</div><div style="min-width:0">FinTrack Ltd<small data-en="TPP · AISP + PISP" data-ru="TPP · AISP + PISP"></small></div></div>
+    <button class="btn sm blk" id="logout" style="margin-top:8px" data-en="Sign out" data-ru="Выйти"></button>
+    <button class="btn sm blk" id="reset" style="margin-top:6px" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill ok"><span class="live"></span>&nbsp;<span data-en="Sandbox · all systems normal" data-ru="Песочница · всё работает"></span></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3 data-en="How to try it" data-ru="Как попробовать"></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Browse the <b>API catalogue</b>, open an endpoint and run it in the <b>Try-it console</b> — get a token, send, read the JSON." data-ru="Откройте <b>каталог API</b>, выберите метод и выполните его в <b>консоли</b> — получите токен, отправьте запрос, посмотрите JSON."></span></div>
+          <div><b>2</b><span data-en="As a customer, walk the <b>Consent journey</b>: app asks, bank authenticates you, you pick accounts and approve. Revoke it in <b>My consents</b>." data-ru="Как клиент пройдите <b>путь согласия</b>: приложение просит, банк проверяет вас, вы выбираете счета и одобряете. Отзовите в <b>Моих согласиях</b>."></span></div>
+          <div><b>3</b><span data-en="As the regulator, watch <b>API traffic</b> live and manage the <b>TPP registry</b>: approve applicants, suspend misbehaving apps." data-ru="Как регулятор смотрите <b>трафик API</b> в реальном времени и ведите <b>реестр TPP</b>: одобряйте заявки, приостанавливайте нарушителей."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Open banking API platform &amp; consent" data-ru="Платформа open banking и согласий"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $75M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Central bank (fictional)" data-ru="Центральный банк (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>FAPI · OAuth 2 · API gateway</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-cat"></section>
+    <section class="view" id="v-try"></section>
+    <section class="view" id="v-journey"></section>
+    <section class="view" id="v-mine"></section>
+    <section class="view" id="v-traffic"></section>
+    <section class="view" id="v-tpp"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div id="drawerRoot"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const P='pt_openbanking_';
+const store={load(){try{return JSON.parse(localStorage.getItem(P+'state'))}catch(e){return null}},save(){try{localStorage.setItem(P+'state',JSON.stringify(S))}catch(e){}},clear(){try{Object.keys(localStorage).filter(k=>k.indexOf(P)===0).forEach(k=>localStorage.removeItem(k))}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const num=(n,d=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:d,maximumFractionDigits:d});
+const NOW0=Date.parse('2026-11-17T10:30:00');
+const now=()=>Date.now();
+const fmtD=t=>new Date(t).toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'});
+const fmtT=t=>new Date(t).toLocaleString(loc(),{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const fmtH=t=>new Date(t).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+const hex=n=>{let s='';for(let i=0;i<n;i++)s+='0123456789abcdef'[Math.floor(Math.random()*16)];return s};
+const uuid=()=>hex(8)+'-'+hex(4)+'-4'+hex(3)+'-a'+hex(3)+'-'+hex(12);
+
+/* ---------- API catalogue ---------- */
+const APIS=[
+ {id:'ais',ico:'📒',n:['Account Information','Информация о счетах'],v:'v3.1',scope:'accounts',d:['Read accounts, balances, transactions and standing orders with customer consent.','Чтение счетов, остатков, операций и регулярных платежей с согласия клиента.'],
+  eps:[['GET','/accounts','List accounts'],['GET','/accounts/{id}/balances','Account balances'],['GET','/accounts/{id}/transactions','Transactions'],['GET','/accounts/{id}/standing-orders','Standing orders']]},
+ {id:'pis',ico:'💸',n:['Payment Initiation','Инициация платежей'],v:'v3.1',scope:'payments',d:['Initiate domestic instant payments from the customer’s account, with SCA redirect.','Инициация мгновенных внутренних платежей со счёта клиента с SCA-перенаправлением.'],
+  eps:[['POST','/domestic-payment-consents','Create payment consent'],['POST','/domestic-payments','Submit payment'],['GET','/domestic-payments/{id}','Payment status']]},
+ {id:'cof',ico:'✅',n:['Confirmation of Funds','Подтверждение средств'],v:'v3.1',scope:'fundsconfirmations',d:['Yes/no check that an amount is available — no balance revealed.','Проверка «да/нет», хватает ли суммы — без раскрытия остатка.'],
+  eps:[['POST','/funds-confirmations','Check funds']]},
+ {id:'vrp',ico:'🔁',n:['Variable Recurring Payments','Переменные регулярные платежи'],v:'v1.0',scope:'payments',d:['Sweeping and subscriptions within customer-set limits per period.','Автоперевод и подписки в лимитах, заданных клиентом на период.'],
+  eps:[['POST','/domestic-vrp-consents','Create VRP mandate'],['POST','/domestic-vrps','Execute VRP']]},
+ {id:'cons',ico:'🛡',n:['Consent Management','Управление согласиями'],v:'v2.0',scope:'consents',d:['Retrieve and revoke consents; dashboard API for banks and customers.','Получение и отзыв согласий; API панели для банков и клиентов.'],
+  eps:[['GET','/consents/{id}','Get consent'],['DELETE','/consents/{id}','Revoke consent']]},
+ {id:'prod',ico:'🏷',n:['Products & ATMs (open data)','Продукты и банкоматы (открытые данные)'],v:'v2.3',scope:'',d:['Public product terms, fees, branches and ATM locations. No consent needed.','Публичные условия продуктов, тарифы, отделения и банкоматы. Согласие не нужно.'],
+  eps:[['GET','/products','Product list'],['GET','/atms','ATM locations']]}
+];
+const BANKS=[['Aurel Bank','#2f6fd0','AB'],['NorthCrest','#0e9a72','NC'],['Banca Litora','#b0483e','BL'],['Zenith Mutual','#7a5bd0','ZM']];
+const TPPS0=[
+ ['FinTrack Ltd','AISP+PISP','PSD-0041','#d08a2f','active',412800,.4],['Spendly','AISP','PSD-0057','#3a8fd8','active',288100,.3],['PayNow Go','PISP','PSD-0063','#0e9a72','active',190400,.6],
+ ['Lendwise Credit','AISP','PSD-0072','#7a5bd0','active',96500,1.1],['TaxBuddy','AISP','PSD-0088','#c45a8c','active',41200,.2],['QuickLoan Pro','AISP+PISP','PSD-0091','#b0483e','watch',58300,6.8],
+ ['GreenSave','AISP','—','#3fa060','pending',0,0],['Remitly East','PISP','—','#5a6fd0','pending',0,0]
+];
+function seed(){
+  const r=rng(77);const days=14,traffic=[],lat=[],err=[];
+  for(let i=0;i<days;i++){const w=new Date(NOW0-(days-1-i)*864e5).getDay();const base=(w===0||w===6)?3.1:4.6;traffic.push(Math.round((base+r()*.9+i*.05)*100)/100);lat.push(Math.round(170+r()*70+(i===9?140:0)));err.push(Math.round((.25+r()*.35+(i===9?1.6:0))*100)/100)}
+  const tpps=TPPS0.map((t,i)=>({id:'TPP-'+(1100+i),n:t[0],role:t[1],lic:t[2],c:t[3],st:t[4],calls:t[5],err:t[6],since:NOW0-(400-i*40)*864e5,cert:'eIDAS QWAC',country:['AU','AU','AU','LT','AU','AU','AU','PH'][i]}));
+  const ago=d=>NOW0-d*864e5;
+  const consents=[
+   {id:'aac-7f21c0',tpp:'Spendly',bank:'Aurel Bank',perms:['accounts','balances','transactions'],acc:['Everyday ••4471'],st:'active',at:ago(41),exp:ago(-49)},
+   {id:'aac-31b9e4',tpp:'TaxBuddy',bank:'NorthCrest',perms:['accounts','transactions'],acc:['Savings ••0912'],st:'active',at:ago(12),exp:ago(-78)},
+   {id:'pdc-a03c18',tpp:'PayNow Go',bank:'Aurel Bank',perms:['payment'],acc:['Everyday ••4471'],st:'consumed',at:ago(3),exp:ago(3),amt:120},
+   {id:'aac-0d55a2',tpp:'Lendwise Credit',bank:'Aurel Bank',perms:['accounts','balances'],acc:['Everyday ••4471'],st:'expired',at:ago(130),exp:ago(40)}
+  ];
+  return{auth:false,view:'cat',api:'ais',ep:0,q:'',tokens:null,hist:[],consents,tpps,
+    tr:{traffic,lat,err,today:2841000},tppF:'all',
+    j:{step:0,tpp:'FinTrack Ltd',bank:0,perms:{accounts:true,balances:true,transactions:true,beneficiaries:false,standing:false},acc:[0],days:90,err:''}};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+
+/* ---------- charts ---------- */
+function lineChart(o){const W=o.w||640,H=o.h||220,pl=46,pr=14,pt=12,pb=26;const all=o.series.flatMap(s=>s.v);let mn=o.min!=null?o.min:Math.min(...all),mx=Math.max(...all);if(mx===mn)mx=mn+1;const pad=(mx-mn)*.12;if(o.min==null)mn-=pad;mx+=pad;
+  const n=o.series[0].v.length,X=i=>pl+(W-pl-pr)*i/(n-1),Y=v=>pt+(H-pt-pb)*(1-(v-mn)/(mx-mn));let g='';
+  for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v).toFixed(1);g+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="${cssv('--line')}"/><text x="${pl-6}" y="${+y+4}" text-anchor="end" font-size="10.5" fill="${cssv('--dim')}">${o.fmt(v)}</text>`}
+  o.labels.forEach((l,i)=>{if(l)g+=`<text x="${X(i)}" y="${H-7}" text-anchor="middle" font-size="10.5" fill="${cssv('--dim')}">${l}</text>`});
+  if(o.th!=null){const y=Y(o.th);g+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="${cssv('--red')}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${y-5}" text-anchor="end" font-size="10.5" fill="${cssv('--red')}" font-weight="700">${o.thL}</text>`}
+  o.series.forEach(s=>{const pts=s.v.map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1));if(s.fill)g+=`<path d="M${X(0)},${H-pb} L${pts.join(' L')} L${X(n-1)},${H-pb} Z" fill="${s.c}" opacity=".13"/>`;
+    g+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${s.c}" stroke-width="2.4" stroke-linejoin="round"/>`;s.v.forEach((v,i)=>{g+=`<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="${i===n-1?4.5:2.5}" fill="${s.c}"><title>${o.labels[i]||''} ${o.fmt(v)}</title></circle>`})});
+  return `<svg viewBox="0 0 ${W} ${H}" role="img">${g}</svg>`}
+function barChart(o){const W=o.w||640,H=o.h||200,pl=44,pr=10,pt=10,pb=26;const mx=Math.max(1,...o.series.flatMap(s=>s.v))*1.1;const n=o.labels.length,gw=(W-pl-pr)/n,bw=Math.max(2,gw*.7/o.series.length);let g='';
+  for(let k=0;k<=3;k++){const v=mx*k/3,y=pt+(H-pt-pb)*(1-k/3);g+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="${cssv('--line')}"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10.5" fill="${cssv('--dim')}">${o.fmt(v)}</text>`}
+  o.labels.forEach((l,i)=>{o.series.forEach((s,j)=>{const v=s.v[i],h=(H-pt-pb)*v/mx,x=pl+gw*i+gw*.15+bw*j;g+=`<rect x="${x.toFixed(1)}" y="${(H-pb-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="${s.c}"><title>${l}: ${o.fmt(v)}</title></rect>`});
+    if(l)g+=`<text x="${pl+gw*i+gw/2}" y="${H-7}" text-anchor="middle" font-size="10.5" fill="${cssv('--dim')}">${l}</text>`});
+  return `<svg viewBox="0 0 ${W} ${H}" role="img">${g}</svg>`}
+function donut(parts){const R=54,C=2*Math.PI*R;let off=0,g='';const tot=parts.reduce((a,p)=>a+p.v,0)||1;
+  parts.forEach(p=>{const L=C*p.v/tot;g+=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${p.c}" stroke-width="20" stroke-dasharray="${L.toFixed(2)} ${(C-L).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 70 70)"/>`;off+=L});
+  return `<svg viewBox="0 0 140 140" width="140" height="140" style="flex:none">${g}<text x="70" y="68" text-anchor="middle" font-size="18" font-weight="800" fill="${cssv('--text')}">${num(tot/1e6,1)}M</text><text x="70" y="86" text-anchor="middle" font-size="10" fill="${cssv('--muted')}">${T('calls/day','вызовов/день')}</text></svg>`}
+
+/* ---------- shell ---------- */
+const VIEWS=[['cat','📚','API catalogue','Каталог API','D'],['try','⌨','Try-it console','Консоль запросов','D'],['journey','🙋','Consent journey','Путь согласия','C'],['mine','🛡','My consents','Мои согласия','C'],['traffic','📈','API traffic','Трафик API','B'],['tpp','🏢','TPP registry','Реестр TPP','B']];
+function nav(){const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';if(v[0]==='tpp'){const n=S.tpps.filter(t=>t.st==='pending').length;if(n)x=`<span class="cnt">${n}</span>`}if(v[0]==='mine'){const n=S.consents.filter(c=>c.st==='active').length;if(n)x=`<span class="cnt">${n}</span>`}
+  return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navD').innerHTML=mk('D');$('#navC').innerHTML=mk('C');$('#navB').innerHTML=mk('B');$$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v))}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0})}
+function render(){
+  $('#loginV').hidden=S.auth;$('#app').hidden=!S.auth;if(!S.auth)return;
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);
+  $('#crumb').textContent={D:T('Developer portal · FinTrack Ltd (sandbox)','Портал разработчика · FinTrack Ltd (песочница)'),C:T('Customer · Daniel Hart · Aurel Bank','Клиент · Daniel Hart · Aurel Bank'),B:T('Central bank · open banking supervision','Центральный банк · надзор за open banking')}[v[4]];
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({cat:rCat,try:rTry,journey:rJourney,mine:rMine,traffic:rTraffic,tpp:rTpp})[v[0]]();
+}
+
+/* ---------- CATALOGUE ---------- */
+function rCat(){const el=$('#v-cat');const q=(S.q||'').toLowerCase();
+  const list=APIS.filter(a=>!q||(a.n[0]+a.n[1]+a.d[0]+a.d[1]+a.eps.map(e=>e[1]).join(' ')).toLowerCase().includes(q));
+  const a=APIS.find(x=>x.id===S.api)||APIS[0];
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Published APIs','Опубликованных API')}</div><div class="v">${APIS.length}</div><div class="d">${APIS.reduce((s,a)=>s+a.eps.length,0)} ${T('endpoints','методов')}</div></div>
+   <div class="card kpi"><div class="l">${T('Connected banks','Подключённых банков')}</div><div class="v">${BANKS.length+19}</div><div class="d">${T('98.6% of retail accounts','98,6% розничных счетов')}</div></div>
+   <div class="card kpi"><div class="l">${T('Your app','Ваше приложение')}</div><div class="v ok-t">${T('Active','Активно')}</div><div class="d">client_id ft-7c21</div></div>
+   <div class="card kpi"><div class="l">${T('Sandbox calls today','Вызовов в песочнице сегодня')}</div><div class="v">${num(1290+S.hist.length)}</div><div class="d">${T('limit 50,000','лимит 50 000')}</div></div></div>
+  <div class="card" style="margin-bottom:14px"><h3>${T('API catalogue','Каталог API')}<span class="sp"></span><input class="input search" id="q" placeholder="${T('Search APIs and endpoints…','Поиск API и методов…')}" value="${esc(S.q)}"></h3>
+   <div class="apis">${list.map(x=>`<div class="card api" data-api="${x.id}" style="${x.id===a.id?'border-color:var(--mal)':''}"><div class="top"><div class="ico">${x.ico}</div><div><h4>${T(x.n[0],x.n[1])}</h4><span class="muted mono" style="font-size:11.5px">${x.v} · ${x.eps.length} ${T('endpoints','методов')}</span></div></div><p>${T(x.d[0],x.d[1])}</p>
+     <div class="meta">${x.scope?`<span class="pill gold">scope: ${x.scope}</span><span class="pill">FAPI 2.0</span>`:`<span class="pill ok">${T('open data','открытые данные')}</span>`}</div></div>`).join('')||`<div class="muted">${T('Nothing found','Ничего не найдено')}</div>`}</div></div>
+  <div class="card"><h3>${a.ico} ${T(a.n[0],a.n[1])} <span class="pill mono">${a.v}</span><span class="sp"></span><span class="muted mono" style="font-size:12px">https://sandbox.openrail.cb/open-banking/${a.v}/${a.id}</span></h3>
+   ${a.eps.map((e,i)=>`<div class="ep"><span class="m ${e[0]}">${e[0]}</span><code>${e[1]}</code><span class="muted">${e[2]}</span><button class="btn sm pri" data-tryit="${i}">${T('Try it','Попробовать')} →</button></div>`).join('')}</div>`;
+  const qi=$('#q');qi.oninput=e=>{S.q=e.target.value;save();const p=qi.selectionStart;rCat();const n=$('#q');n.focus();n.setSelectionRange(p,p)};
+  $$('[data-api]',el).forEach(c=>c.onclick=()=>{S.api=c.dataset.api;save();rCat()});
+  $$('[data-tryit]',el).forEach(b=>b.onclick=()=>{S.ep=+b.dataset.tryit;go('try')});
+}
+
+/* ---------- TRY-IT CONSOLE ---------- */
+let conTab='body',lastRes=null;
+function hl(o){return esc(JSON.stringify(o,null,2)).replace(/(&quot;[^&]*?&quot;)(\s*:)/g,'<span class="k">$1</span>$2').replace(/: (&quot;.*?&quot;)/g,': <span class="s">$1</span>').replace(/: (-?\d+\.?\d*|true|false|null)/g,': <span class="n">$1</span>')}
+function mockBody(a,e,body){const id=hex(6);const ac=[{AccountId:'acc-4471',Currency:'AUD',Nickname:'Everyday',AccountType:'Personal',AccountSubType:'CurrentAccount',Account:{SchemeName:'AU.BSB',Identification:'062-000 1234 4471',Name:'Daniel Hart'}},{AccountId:'acc-0912',Currency:'AUD',Nickname:'Savings',AccountType:'Personal',AccountSubType:'Savings',Account:{SchemeName:'AU.BSB',Identification:'062-000 5512 0912',Name:'Daniel Hart'}}];
+  const p=e[1];
+  if(p==='/accounts')return{Data:{Account:ac},Links:{Self:'/accounts'},Meta:{TotalPages:1}};
+  if(p.endsWith('/balances'))return{Data:{Balance:[{AccountId:'acc-4471',Amount:{Amount:'2846.19',Currency:'AUD'},CreditDebitIndicator:'Credit',Type:'InterimAvailable',DateTime:new Date().toISOString()}]}};
+  if(p.endsWith('/transactions'))return{Data:{Transaction:[['Coffee Lab',-5.4],['Salary NorthCrest',3120],['Metro card',-40],['Grocer & Co',-86.35]].map((t,i)=>({TransactionId:'tx-'+(9180-i),Amount:{Amount:Math.abs(t[1]).toFixed(2),Currency:'AUD'},CreditDebitIndicator:t[1]>0?'Credit':'Debit',BookingDateTime:new Date(NOW0-i*86400e3).toISOString(),TransactionInformation:t[0]}))}};
+  if(p.endsWith('/standing-orders'))return{Data:{StandingOrder:[{StandingOrderId:'so-12',Frequency:'EvryMnth:01',Reference:'Rent',NextPaymentAmount:{Amount:'1450.00',Currency:'AUD'}}]}};
+  if(p.includes('payment-consents')||p.includes('vrp-consents'))return{Data:{ConsentId:'pdc-'+id,Status:'AwaitingAuthorisation',CreationDateTime:new Date().toISOString(),Initiation:body.Initiation||body},Links:{Self:p+'/pdc-'+id,Authorise:'https://auth.aurelbank.demo/authorize?request_uri=urn:par:'+hex(10)}};
+  if(p==='/domestic-payments'||p==='/domestic-vrps')return{Data:{DomesticPaymentId:'dp-'+id,ConsentId:body.ConsentId||'pdc-'+id,Status:'AcceptedSettlementCompleted',CreationDateTime:new Date().toISOString()}};
+  if(p.startsWith('/domestic-payments/'))return{Data:{DomesticPaymentId:'dp-'+id,Status:'AcceptedSettlementCompleted',StatusUpdateDateTime:new Date().toISOString()}};
+  if(p==='/funds-confirmations'){const amt=parseFloat(((body.Data||{}).InstructedAmount||{}).Amount);return{Data:{FundsConfirmationId:'fc-'+id,FundsAvailable:amt<=2846.19,CreationDateTime:new Date().toISOString()}}}
+  if(p.startsWith('/consents/'))return e[0]==='DELETE'?null:{Data:{ConsentId:'aac-7f21c0',Status:'Authorised',Permissions:['ReadAccountsBasic','ReadBalances','ReadTransactionsDetail'],ExpirationDateTime:new Date(NOW0+49*864e5).toISOString()}};
+  if(p==='/products')return{Data:{Product:[{ProductId:'everyday',Name:'Everyday Account',MonthlyFee:'0.00',InterestRate:'0.00%'},{ProductId:'saver',Name:'Bonus Saver',InterestRate:'4.85%'}]}};
+  if(p==='/atms')return{Data:{ATM:[{Id:'atm-221',Address:'12 Harbour St',Lat:-33.861,Lon:151.21,Access:'24/7'},{Id:'atm-317',Address:'Central Station, Concourse 2',Lat:-33.883,Lon:151.206,Access:'24/7'}]}};
+  return{Data:{}}}
+function defBody(e){const p=e[1];
+  if(p.includes('payment-consents'))return{Data:{Initiation:{InstructionIdentification:'FT-'+hex(4),EndToEndIdentification:'E2E-'+hex(6),InstructedAmount:{Amount:'120.00',Currency:'AUD'},CreditorAccount:{SchemeName:'AU.PayID',Identification:'lena@aurel.demo',Name:'Lena Weber'},RemittanceInformation:{Reference:'Invoice 1042'}}},Risk:{PaymentContextCode:'PartyToParty'}};
+  if(p==='/domestic-payments')return{Data:{ConsentId:'pdc-a03c18',Initiation:{InstructedAmount:{Amount:'120.00',Currency:'AUD'}}}};
+  if(p==='/funds-confirmations')return{Data:{ConsentId:'cof-55e1',InstructedAmount:{Amount:'500.00',Currency:'AUD'}}};
+  if(p.includes('vrp-consents'))return{Data:{ControlParameters:{MaximumIndividualAmount:{Amount:'300.00',Currency:'AUD'},PeriodicLimits:[{PeriodType:'Month',Amount:'1000.00'}]}}};
+  if(p==='/domestic-vrps')return{Data:{ConsentId:'vrp-0091',Instruction:{InstructedAmount:{Amount:'45.00',Currency:'AUD'}}}};
+  return null}
+function rTry(){const el=$('#v-try');const a=APIS.find(x=>x.id===S.api)||APIS[0];const e=a.eps[S.ep]||a.eps[0];const db=defBody(e);
+  const tk=S.tokens;
+  el.innerHTML=`<div class="con"><div class="card"><h3>⌨ ${T('Request','Запрос')}</h3>
+   <div class="fgrid"><div class="f"><label>API</label><select class="input" id="cApi">${APIS.map(x=>`<option value="${x.id}" ${x.id===a.id?'selected':''}>${T(x.n[0],x.n[1])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Endpoint','Метод')}</label><select class="input" id="cEp">${a.eps.map((x,i)=>`<option value="${i}" ${i===S.ep?'selected':''}>${x[0]} ${x[1]}</option>`).join('')}</select></div>
+    <div class="f full"><label>${T('Bank (ASPSP)','Банк (ASPSP)')}</label><select class="input" id="cBank">${BANKS.map((b,i)=>`<option value="${i}">${b[0]}</option>`).join('')}</select></div></div>
+   <div class="tok" style="margin-top:12px"><b>Authorization:</b> ${tk?'Bearer '+tk.access.slice(0,28)+'…':`<span class="warn-t">${T('no token — get one first','нет токена — сначала получите')}</span>`}<br><b>x-fapi-interaction-id:</b> <span id="fid">${uuid()}</span><br><b>x-jws-signature:</b> ${tk?'eyJhbGciOiJQUzI1NiJ9..'+hex(16):'—'}</div>
+   <div class="row" style="margin:10px 0"><button class="btn sm gold" id="getTok">🔑 ${T('Get token (client credentials + mTLS)','Получить токен (client credentials + mTLS)')}</button>${tk?`<span class="pill ok">scope: ${esc(tk.scope)} · ${T('expires','истекает')} ${fmtH(tk.exp)}</span>`:''}</div>
+   ${db?`<div class="f"><label>${T('Request body (JSON)','Тело запроса (JSON)')}</label><textarea class="input" id="cBody" rows="9">${esc(JSON.stringify(db,null,2))}</textarea></div>`:`<div class="muted" style="font-size:12.5px">${T('No request body for this endpoint.','У этого метода нет тела запроса.')}</div>`}
+   <div class="err" id="cErr"></div>
+   <div class="row"><button class="btn pri" id="send">▶ ${T('Send request','Отправить запрос')}</button><label class="row" style="font-size:12.5px;cursor:pointer"><input type="checkbox" id="badTok" style="accent-color:var(--red)"> ${T('simulate expired token','имитировать просроченный токен')}</label></div>
+  </div>
+  <div class="card"><h3>📨 ${T('Response','Ответ')}</h3><div id="resp"></div></div></div>
+  <div class="card" style="margin-top:14px"><h3>🕘 ${T('History','История')}<span class="sp"></span><span class="pill">${S.hist.length}</span></h3><div class="tw"><table><thead><tr><th>${T('Time','Время')}</th><th>${T('Method','Метод')}</th><th>${T('Path','Путь')}</th><th>${T('Bank','Банк')}</th><th>${T('Status','Статус')}</th><th style="text-align:right">ms</th></tr></thead><tbody>
+   ${S.hist.slice(0,12).map(h=>`<tr><td>${fmtH(h.t)}</td><td><span class="m ${h.m}">${h.m}</span></td><td class="mono">${esc(h.p)}</td><td>${esc(h.b)}</td><td><span class="pill ${h.s<300?'ok':h.s<500?'warn':'bad'}">${h.s}</span></td><td class="mono" style="text-align:right">${h.ms}</td></tr>`).join('')||`<tr><td colspan="6" class="muted">${T('No requests yet','Запросов пока нет')}</td></tr>`}</tbody></table></div></div>`;
+  const showRes=()=>{const r=$('#resp');if(!lastRes){r.innerHTML=`<div class="muted" style="padding:30px 0;text-align:center">${T('Send a request to see the response.','Отправьте запрос, чтобы увидеть ответ.')}</div>`;return}
+    const R=lastRes;r.innerHTML=`<div class="resh"><span class="pill ${R.s<300?'ok':R.s<500?'warn':'bad'}" style="font-size:13px">${R.s} ${R.st}</span><span class="muted mono">${R.ms} ms</span><span class="muted mono">${R.m} ${esc(R.p)}</span></div>
+      <div class="tabs">${[['body','Body','Тело'],['headers','Headers','Заголовки'],['curl','cURL','cURL']].map(t=>`<button class="tab ${conTab===t[0]?'on':''}" data-ct="${t[0]}">${T(t[1],t[2])}</button>`).join('')}</div>
+      <pre class="code">${conTab==='body'?(R.body==null?'<span class="c">// 204 No Content</span>':hl(R.body)):conTab==='headers'?esc(Object.entries(R.h).map(([k,v])=>k+': '+v).join('\n')):esc(R.curl)}</pre>`;
+    $$('[data-ct]',r).forEach(b=>b.onclick=()=>{conTab=b.dataset.ct;showRes()})};
+  showRes();
+  $('#cApi').onchange=e=>{S.api=e.target.value;S.ep=0;lastRes=null;save();rTry()};
+  $('#cEp').onchange=e=>{S.ep=+e.target.value;lastRes=null;save();rTry()};
+  $('#getTok').onclick=()=>{S.tokens={access:'eyJ'+hex(40),scope:'openid accounts payments fundsconfirmations',exp:now()+3600e3};save();rTry();toast(T('Access token issued (TLS client cert bound)','Токен выдан (привязан к TLS-сертификату)'))};
+  $('#send').onclick=()=>{const er=$('#cErr');er.textContent='';let body=null;const ta=$('#cBody');
+    if(ta){try{body=JSON.parse(ta.value)}catch(x){er.textContent=T('Request body is not valid JSON: ','Тело запроса — неверный JSON: ')+x.message;return}}
+    const b=BANKS[+$('#cBank').value][0];const p=e[1].replace('{id}',e[1].includes('payments')?'dp-'+hex(6):'acc-4471');
+    const ms=Math.round(90+Math.random()*220);let s,st,out;
+    if(!S.tokens&&a.scope){s=401;st='Unauthorized';out={Code:'401',Message:'Missing bearer token',Errors:[{ErrorCode:'UK.OBIE.Header.Missing',Message:'Authorization header required'}]}}
+    else if($('#badTok').checked){s=401;st='Unauthorized';out={Code:'401',Message:'invalid_token',Errors:[{ErrorCode:'UK.OBIE.Unauthorized',Message:'Access token expired'}]}}
+    else if(e[1].includes('payment')&&e[0]==='POST'&&body&&body.Data&&body.Data.Initiation&&body.Data.Initiation.InstructedAmount&&!(parseFloat(body.Data.Initiation.InstructedAmount.Amount)>0)){s=400;st='Bad Request';out={Code:'400',Errors:[{ErrorCode:'UK.OBIE.Field.Invalid',Path:'Data.Initiation.InstructedAmount.Amount',Message:'Amount must be > 0'}]}}
+    else{out=mockBody(a,e,body&&body.Data||{});s=e[0]==='DELETE'?204:e[0]==='POST'?201:200;st={200:'OK',201:'Created',204:'No Content'}[s]}
+    const fid=$('#fid').textContent;
+    lastRes={s,st,ms,m:e[0],p,body:out,h:{'content-type':'application/json; charset=utf-8','x-fapi-interaction-id':fid,'x-ratelimit-remaining':String(4980-S.hist.length),'strict-transport-security':'max-age=31536000',date:new Date().toUTCString()},
+      curl:`curl -X ${e[0]} https://sandbox.openrail.cb/open-banking/${a.v}/${a.id}${p} \\\n  --cert client.pem --key client.key \\\n  -H "Authorization: Bearer ${S.tokens?S.tokens.access.slice(0,20)+'…':'<token>'}" \\\n  -H "x-fapi-interaction-id: ${fid}"${body?` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(body)}'`:''}`};
+    S.hist.unshift({t:now(),m:e[0],p,b,s,ms});S.hist.length=Math.min(S.hist.length,40);S.tr.today++;conTab='body';save();rTry();
+    toast(s<300?T(e[0]+' '+p+' → '+s,e[0]+' '+p+' → '+s):T('Request failed: '+s+' '+st,'Ошибка запроса: '+s+' '+st),s<300?'':'bad')};
+}
+
+/* ---------- CONSENT JOURNEY ---------- */
+const PERMS=[['accounts','Account names and numbers','Названия и номера счетов'],['balances','Balances','Остатки'],['transactions','Transactions (last 12 months)','Операции (за 12 месяцев)'],['beneficiaries','Saved payees','Сохранённые получатели'],['standing','Standing orders & direct debits','Регулярные платежи и автосписания']];
+const ACCS=[['Everyday','••4471','$2,846.19'],['Savings','••0912','$14,302.55'],['Credit card','••8830','−$612.40']];
+function rJourney(){const el=$('#v-journey');const j=S.j;const B=BANKS[j.bank];
+  const stp=[T('App request','Запрос приложения'),T('Choose bank','Выбор банка'),T('Authenticate','Аутентификация'),T('Review & approve','Проверка и одобрение'),T('Done','Готово')];
+  let scr='';
+  if(j.step===0)scr=`<div class="tpp"><div class="logo" style="background:#d08a2f">FT</div><div><b>FinTrack</b><br><small class="muted">${T('Budgeting app · licensed AISP PSD-0041','Приложение для бюджета · лицензия AISP PSD-0041')}</small></div></div>
+    <h4>${T('Connect your bank to see all your spending in one place','Подключите банк, чтобы видеть все траты в одном месте')}</h4>
+    <div class="muted" style="font-size:13px">${T('FinTrack will ask your bank for read-only access. FinTrack never sees your bank password.','FinTrack попросит у банка доступ только на чтение. Пароль от банка FinTrack не видит.')}</div>
+    <div class="f"><label>${T('Access for','Доступ на')}</label><div class="chips">${[30,90,180,365].map(d=>`<button class="chip ${j.days===d?'on':''}" data-days="${d}">${d} ${T('days','дн.')}</button>`).join('')}</div></div>
+    <div class="grow"></div><button class="btn pri blk" data-next>${T('Connect a bank','Подключить банк')}</button>`;
+  else if(j.step===1)scr=`<h4>${T('Choose your bank','Выберите банк')}</h4>${BANKS.map((b,i)=>`<div class="acc ${j.bank===i?'on':''}" data-bank="${i}"><div class="logo" style="background:${b[1]}">${b[2]}</div><span><b>${b[0]}</b><br><small class="muted">${T('Redirect · app-to-app','Перенаправление · app-to-app')}</small></span>${j.bank===i?'✓':''}</div>`).join('')}
+    <div class="grow"></div><div class="row"><button class="btn" data-back>${T('Back','Назад')}</button><button class="btn pri" data-next style="flex:1;justify-content:center">${T('Continue to','Перейти в')} ${B[0]} →</button></div>`;
+  else if(j.step===2)scr=`<div class="bankh"><div class="logo" style="background:${B[1]};width:30px;height:30px;font-size:12px">${B[2]}</div>${B[0]}<span class="sp" style="flex:1"></span><span class="pill ok">🔒 ${T('secure','защищено')}</span></div>
+    <div class="muted" style="font-size:12.5px">${T('You were redirected from FinTrack. Sign in to your bank.','Вы перешли из FinTrack. Войдите в свой банк.')}</div>
+    <div class="f"><label>${T('Customer number','Номер клиента')}</label><input class="input" id="jUser" value="40912877"></div>
+    <div class="f"><label>${T('One-time code sent to •••• 218','Одноразовый код отправлен на •••• 218')} <span class="muted">(${T('demo code','демо-код')}: 482913)</span></label><div class="otp">${[4,8,2,9,1,3].map((d,i)=>`<input class="input" maxlength="1" inputmode="numeric" data-otp="${i}" value="${d}">`).join('')}</div></div>
+    <div class="err" style="text-align:center">${esc(j.err)}</div>
+    <div class="grow"></div><div class="row"><button class="btn" data-back>${T('Cancel','Отмена')}</button><button class="btn pri" data-auth style="flex:1;justify-content:center">${T('Verify & sign in','Подтвердить и войти')}</button></div>`;
+  else if(j.step===3)scr=`<div class="bankh"><div class="logo" style="background:${B[1]};width:30px;height:30px;font-size:12px">${B[2]}</div>${B[0]}</div>
+    <h4>${T('FinTrack is asking to access:','FinTrack запрашивает доступ к:')}</h4>
+    ${PERMS.map(p=>`<label class="perm"><input type="checkbox" data-perm="${p[0]}" ${j.perms[p[0]]?'checked':''} ${p[0]==='accounts'?'disabled':''}><span>${T(p[1],p[2])}${p[0]==='accounts'?`<small>${T('required','обязательно')}</small>`:''}</span></label>`).join('')}
+    <div class="f"><label>${T('From these accounts','С этих счетов')}</label>${ACCS.map((a,i)=>`<label class="perm"><input type="checkbox" data-acc="${i}" ${j.acc.includes(i)?'checked':''}><span>${T(a[0],['Повседневный','Сберегательный','Кредитная карта'][i])} ${a[1]}<small>${a[2]}</small></span></label>`).join('')}</div>
+    <div class="muted" style="font-size:12px">${T('Valid until','Действует до')} <b>${fmtD(now()+j.days*864e5)}</b>. ${T('You can revoke at any time.','Можно отозвать в любой момент.')}</div>
+    <div class="err">${esc(j.err)}</div>
+    <div class="row"><button class="btn danger" data-deny>${T('Deny','Отклонить')}</button><button class="btn pri" data-approve style="flex:1;justify-content:center">${T('Approve access','Разрешить доступ')}</button></div>`;
+  else{const c=S.consents[0];scr=`<div style="text-align:center;padding-top:20px"><div style="font-size:52px">✅</div><h4>${T('FinTrack is connected','FinTrack подключён')}</h4><div class="muted" style="font-size:13px;margin:6px 0 14px">${T('Your accounts will sync in a few seconds.','Счета синхронизируются через несколько секунд.')}</div></div>
+    <div class="tpp" style="flex-direction:column;align-items:stretch;font-size:12.5px"><div class="row" style="justify-content:space-between"><span class="muted">Consent ID</span><b class="mono">${c?c.id:''}</b></div><div class="row" style="justify-content:space-between"><span class="muted">${T('Bank','Банк')}</span><b>${c?c.bank:''}</b></div><div class="row" style="justify-content:space-between"><span class="muted">${T('Expires','Истекает')}</span><b>${c?fmtD(c.exp):''}</b></div></div>
+    <div class="grow"></div><button class="btn pri blk" data-go="mine">${T('Manage my consents','Управлять согласиями')}</button><button class="btn blk" data-restart>${T('Start again','Начать заново')}</button>`}
+  const flow=[['TPP','POST /par','PAR request_uri'],['TPP→Bank','302 /authorize','redirect + PKCE'],['Bank','SCA','OTP / biometrics'],['Bank','consent Authorised','code → token'],['TPP','GET /accounts','access token']];
+  el.innerHTML=`<div class="steps">${stp.map((s,i)=>`<div class="st ${i===j.step?'on':i<j.step?'done':''}"><b>${i<j.step?'✓':i+1}</b>${s}</div>`).join('')}</div>
+  <div class="split"><div class="phone"><div class="bar"><i></i></div><div class="scr">${scr}</div></div>
+  <div class="card"><h3>🔍 ${T('What happens under the hood','Что происходит внутри')}</h3>
+    ${flow.map((f,i)=>`<div class="ep" style="opacity:${i<=j.step?1:.4}"><span class="pill ${i<j.step?'ok':i===j.step?'gold':''}" style="min-width:76px;justify-content:center">${f[0]}</span><code>${f[1]}</code><span class="muted">${f[2]}</span></div>`).join('')}
+    <div class="log" style="margin-top:12px" id="jlog">${(j.log||[]).map(l=>`<div>${esc(l)}</div>`).join('')||`<div class="muted">${T('Event log will appear here…','Здесь появится журнал событий…')}</div>`}</div>
+    <div class="muted" style="font-size:12.5px;margin-top:12px">${T('Profile: FAPI 2.0 Security Profile — PAR, PKCE S256, sender-constrained tokens (mTLS), signed JARM responses.','Профиль: FAPI 2.0 — PAR, PKCE S256, токены с привязкой к отправителю (mTLS), подписанные JARM-ответы.')}</div></div></div>`;
+  const lg=m=>{j.log=j.log||[];j.log.push(new Date().toLocaleTimeString(loc())+'  '+m);if(j.log.length>12)j.log.shift()};
+  $$('[data-days]',el).forEach(b=>b.onclick=()=>{j.days=+b.dataset.days;save();rJourney()});
+  $$('[data-bank]',el).forEach(b=>b.onclick=()=>{j.bank=+b.dataset.bank;save();rJourney()});
+  $$('[data-next]',el).forEach(b=>b.onclick=()=>{j.err='';if(j.step===0){j.log=[];lg('POST /par → 201 request_uri=urn:par:'+hex(8))}if(j.step===1)lg('302 → '+BANKS[j.bank][0]+' /authorize (PKCE S256)');j.step++;save();rJourney()});
+  $$('[data-back]',el).forEach(b=>b.onclick=()=>{j.err='';j.step=Math.max(0,j.step-1);save();rJourney()});
+  $$('[data-otp]',el).forEach(i=>i.oninput=()=>{i.value=i.value.replace(/\D/g,'').slice(0,1);const n=$(`[data-otp="${+i.dataset.otp+1}"]`,el);if(i.value&&n)n.focus()});
+  const au=$('[data-auth]',el);if(au)au.onclick=()=>{const code=$$('[data-otp]',el).map(i=>i.value).join('');const u=$('#jUser').value.trim();
+    if(!/^\d{6,10}$/.test(u)){j.err=T('Customer number must be 6–10 digits','Номер клиента — 6–10 цифр');save();rJourney();return}
+    if(code!=='482913'){j.err=T('Wrong code. Try 482913.','Неверный код. Введите 482913.');lg('SCA failed: OTP mismatch');save();rJourney();return}
+    j.err='';lg('SCA passed · 2 factors (knowledge + possession)');j.step=3;save();rJourney()};
+  $$('[data-perm]',el).forEach(c=>c.onchange=()=>{j.perms[c.dataset.perm]=c.checked;save()});
+  $$('[data-acc]',el).forEach(c=>c.onchange=()=>{const i=+c.dataset.acc;j.acc=c.checked?[...new Set([...j.acc,i])]:j.acc.filter(x=>x!==i);save()});
+  const dn=$('[data-deny]',el);if(dn)dn.onclick=()=>{lg('consent Rejected by PSU → redirect error=access_denied');j.step=0;save();rJourney();toast(T('Access denied. FinTrack received nothing.','Доступ отклонён. FinTrack ничего не получил.'),'bad')};
+  const ap=$('[data-approve]',el);if(ap)ap.onclick=()=>{if(!j.acc.length){j.err=T('Select at least one account','Выберите хотя бы один счёт');save();rJourney();return}
+    const perms=Object.keys(j.perms).filter(k=>j.perms[k]||k==='accounts');const id='aac-'+hex(6);
+    S.consents.unshift({id,tpp:'FinTrack Ltd',bank:BANKS[j.bank][0],perms,acc:j.acc.map(i=>ACCS[i][0]+' '+ACCS[i][1]),st:'active',at:now(),exp:now()+j.days*864e5});
+    lg('consent '+id+' Authorised · '+perms.length+' permissions');lg('POST /token → 200 (mTLS bound) · GET /accounts → 200');j.err='';j.step=4;save();render();toast(T('Consent granted to FinTrack','Согласие выдано FinTrack'))};
+  $$('[data-go]',el).forEach(b=>b.onclick=()=>go(b.dataset.go));
+  const rs=$('[data-restart]',el);if(rs)rs.onclick=()=>{j.step=0;j.log=[];save();rJourney()};
+}
+
+/* ---------- MY CONSENTS ---------- */
+let mineF='all';
+const PERM_L={accounts:['Accounts','Счета'],balances:['Balances','Остатки'],transactions:['Transactions','Операции'],beneficiaries:['Payees','Получатели'],standing:['Standing orders','Рег. платежи'],payment:['One payment','Один платёж']};
+function rMine(){const el=$('#v-mine');const list=S.consents.filter(c=>mineF==='all'||c.st===mineF);const stL={active:['Active','Активно','ok'],revoked:['Revoked','Отозвано','bad'],expired:['Expired','Истекло',''],consumed:['Used','Использовано','gold']};
+  el.innerHTML=`<div class="card"><h3>🛡 ${T('Apps with access to your bank data','Приложения с доступом к вашим банковским данным')}<span class="sp"></span><span class="chips">${[['all','All','Все'],['active','Active','Активные'],['revoked','Revoked','Отозванные'],['expired','Expired','Истёкшие']].map(c=>`<button class="chip ${mineF===c[0]?'on':''}" data-mf="${c[0]}">${T(c[1],c[2])}</button>`).join('')}</span></h3>
+   ${list.map(c=>{const t=S.tpps.find(x=>x.n===c.tpp)||{c:'#888'};const s=stL[c.st];const left=Math.ceil((c.exp-now())/864e5);
+    return `<div class="cons"><div class="logo" style="background:${t.c}">${c.tpp.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><div class="b"><b>${esc(c.tpp)}</b> · ${esc(c.bank)} <span class="pill ${s[2]}">${T(s[0],s[1])}</span><small>${c.perms.map(p=>T(...(PERM_L[p]||[p,p]))).join(' · ')} — ${c.acc.map(esc).join(', ')}</small><small class="mono">${c.id} · ${T('granted','выдано')} ${fmtD(c.at)}${c.st==='active'?' · '+T(left+' days left',left+' дн. осталось'):''}</small></div>
+     ${c.st==='active'?`<button class="btn sm" data-ext="${c.id}">${T('Extend 90 days','Продлить на 90 дн.')}</button><button class="btn sm danger" data-rev="${c.id}">${T('Revoke','Отозвать')}</button>`:''}</div>`}).join('')||`<div class="muted">${T('No consents in this filter','Нет согласий в этом фильтре')}</div>`}
+   <div class="row" style="margin-top:12px"><button class="btn pri sm" data-go="journey">+ ${T('Connect a new app','Подключить приложение')}</button></div></div>`;
+  $$('[data-mf]',el).forEach(b=>b.onclick=()=>{mineF=b.dataset.mf;rMine()});
+  $$('[data-go]',el).forEach(b=>b.onclick=()=>{S.j.step=0;S.j.log=[];go(b.dataset.go)});
+  $$('[data-ext]',el).forEach(b=>b.onclick=()=>{const c=S.consents.find(x=>x.id===b.dataset.ext);c.exp=Math.max(c.exp,now())+90*864e5;save();rMine();toast(T('Extended until '+fmtD(c.exp),'Продлено до '+fmtD(c.exp)))});
+  $$('[data-rev]',el).forEach(b=>b.onclick=()=>{const c=S.consents.find(x=>x.id===b.dataset.rev);if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent=T('Confirm revoke','Точно отозвать');return}
+    c.st='revoked';save();render();toast(T(c.tpp+' can no longer access your data. The bank notified the app.',c.tpp+' больше не имеет доступа. Банк уведомил приложение.'),'gold')});
+}
+
+/* ---------- TRAFFIC ---------- */
+const FEED=[];const EPS=['GET /accounts','GET /accounts/{id}/balances','GET /accounts/{id}/transactions','POST /domestic-payments','POST /funds-confirmations','POST /domestic-payment-consents','GET /products'];
+function feedLine(){const t=S.tpps.filter(x=>x.st==='active');const tp=t[Math.floor(Math.random()*t.length)]||{n:'—',err:0};const er=Math.random()*100<tp.err*3;
+  return{t:now(),tpp:tp.n,ep:EPS[Math.floor(Math.random()*EPS.length)],b:BANKS[Math.floor(Math.random()*4)][0],s:er?[429,401,500][Math.floor(Math.random()*3)]:200,ms:Math.round(80+Math.random()*260)}}
+for(let i=0;i<10;i++)FEED.push(Object.assign(feedLine(),{t:NOW0-i*1300}));
+setInterval(()=>{if(!S.auth||document.hidden||S.view!=='traffic')return;FEED.unshift(feedLine());FEED.length=12;S.tr.today+=Math.floor(20+Math.random()*60);const f=$('#tfeed');if(f)f.innerHTML=feedHtml();const c=$('#tToday');if(c)c.textContent=num(S.tr.today)},1500);
+function feedHtml(){return FEED.map(f=>`<div><span class="muted">${fmtH(f.t)}</span>  <span class="${f.s<300?'ok-t':'bad-t'}">${f.s}</span>  ${esc(f.ep.padEnd(30))} ${esc(f.tpp)} → ${esc(f.b)} · ${f.ms}ms</div>`).join('')}
+let rng7=7;
+function rTraffic(){const el=$('#v-traffic');const tr=S.tr;const n=tr.traffic.length;const lbl=tr.traffic.map((_,i)=>{const d=new Date(NOW0-(n-1-i)*864e5);return i%2===1?d.toLocaleDateString(loc(),{day:'numeric',month:'short'}):''});
+  const act=S.tpps.filter(t=>t.st==='active');const top=[...S.tpps].filter(t=>t.calls>0).sort((a,b)=>b.calls-a.calls);const mx=top[0]?top[0].calls:1;
+  const days=rng7===7?7:14;const sl=x=>x.slice(-days);const lb=lbl.slice(-days);
+  const ok=99.6-tr.err[n-1]*.2;
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('API calls today','Вызовов API сегодня')}</div><div class="v" id="tToday">${num(tr.today)}</div><div class="d"><span class="live"></span> ${T('live','онлайн')}</div></div>
+   <div class="card kpi"><div class="l">${T('p95 latency','Задержка p95')}</div><div class="v">${tr.lat[n-1]} ms</div><div class="d">${T('SLA 500 ms','SLA 500 мс')}</div></div>
+   <div class="card kpi"><div class="l">${T('Error rate (5xx+4xx)','Доля ошибок (5xx+4xx)')}</div><div class="v ${tr.err[n-1]>1?'bad-t':''}">${num(tr.err[n-1],2)}%</div><div class="d">${T('availability','доступность')} ${num(ok,2)}%</div></div>
+   <div class="card kpi"><div class="l">${T('Active consents','Активных согласий')}</div><div class="v">${num(1840000+S.consents.filter(c=>c.st==='active').length)}</div><div class="d">${act.length} ${T('active TPPs','активных TPP')}</div></div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('API calls per day, millions','Вызовов API в день, млн')}<span class="sp"></span><span class="chips">${[7,14].map(d=>`<button class="chip ${days===d?'on':''}" data-rd="${d}">${d} ${T('days','дн.')}</button>`).join('')}</span></h3>
+    ${barChart({labels:lb,series:[{v:sl(tr.traffic),c:cssv('--mal')}],fmt:v=>num(v,1),h:210})}</div>
+   <div class="card"><h3>${T('Traffic by API','Трафик по API')}</h3><div class="row" style="flex-wrap:nowrap;gap:16px">${donut([{v:1.62e6,c:cssv('--mal')},{v:.71e6,c:cssv('--gold')},{v:.29e6,c:cssv('--blue')},{v:.14e6,c:cssv('--violet')},{v:.08e6,c:cssv('--dim')}])}
+    <div class="legend" style="flex-direction:column;gap:6px">${[['AIS',57,'--mal'],['PIS',25,'--gold'],['CoF',10,'--blue'],['VRP',5,'--violet'],[T('Open data','Откр. данные'),3,'--dim']].map(x=>`<span><i style="background:${cssv(x[2])}"></i>${x[0]} · ${x[1]}%</span>`).join('')}</div></div></div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('p95 latency, ms','Задержка p95, мс')}<span class="sp"></span><span class="legend"><span><i style="background:${cssv('--blue')}"></i>p95</span><span><i style="background:${cssv('--red')}"></i>${T('error rate %','ошибки %')}</span></span></h3>
+    ${lineChart({series:[{v:sl(tr.lat),c:cssv('--blue'),fill:1}],labels:lb,fmt:v=>Math.round(v),min:0,th:500,thL:'SLA 500 ms'})}
+    ${lineChart({series:[{v:sl(tr.err),c:cssv('--red')}],labels:lb,fmt:v=>num(v,1)+'%',min:0,h:150})}
+    <div class="muted" style="font-size:12px">${T('Spike on day 10: NorthCrest gateway certificate rotation (incident INC-2291, resolved).','Всплеск на 10-й день: смена сертификата шлюза NorthCrest (инцидент INC-2291, закрыт).')}</div></div>
+   <div class="card"><h3>${T('Top TPPs by calls today','Топ TPP по вызовам сегодня')}</h3><div class="bars">${top.slice(0,6).map(t=>`<div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.n)}</span><i style="width:${(t.calls/mx*100).toFixed(1)}%;${t.err>3?'background:linear-gradient(90deg,var(--amber),var(--red))':''}"></i><em>${num(t.calls/1000,0)}k</em></div>`).join('')}</div>
+    <h3 style="margin-top:18px">${T('Live gateway log','Журнал шлюза')}<span class="sp"></span><span class="live"></span></h3><div class="log" id="tfeed" style="max-height:220px">${feedHtml()}</div></div></div>`;
+  $$('[data-rd]',el).forEach(b=>b.onclick=()=>{rng7=+b.dataset.rd;rTraffic()});
+}
+
+/* ---------- TPP REGISTRY ---------- */
+function rTpp(){const el=$('#v-tpp');const f=S.tppF;const stL={active:['Active','Активен','ok'],pending:['Application','Заявка','gold'],watch:['Under watch','Под наблюдением','warn'],suspended:['Suspended','Приостановлен','bad'],rejected:['Rejected','Отклонён','bad']};
+  const list=S.tpps.filter(t=>f==='all'||t.st===f);
+  el.innerHTML=`<div class="split"><div class="card"><h3>🏢 ${T('Register a new third-party provider','Регистрация нового стороннего провайдера')}</h3>
+   <div class="fgrid"><div class="f full"><label>${T('Legal name','Юридическое название')}</label><input class="input" id="nName" placeholder="Acme Payments Pty Ltd"></div>
+    <div class="f"><label>${T('Role','Роль')}</label><select class="input" id="nRole"><option>AISP</option><option>PISP</option><option>AISP+PISP</option><option>CBPII</option></select></div>
+    <div class="f"><label>${T('Country','Страна')}</label><select class="input" id="nCty"><option>AU</option><option>PH</option><option>LT</option><option>SG</option></select></div>
+    <div class="f full"><label>${T('Redirect URI (https)','Redirect URI (https)')}</label><input class="input" id="nUri" placeholder="https://app.acme.io/callback"></div>
+    <div class="f full"><label>${T('Software statement (SSA) JWKS URL','URL JWKS программного заявления (SSA)')}</label><input class="input" id="nJwks" placeholder="https://keystore.openrail.cb/acme/jwks.json"></div></div>
+   <div class="err" id="nErr"></div><button class="btn pri" id="nGo">${T('Submit application','Подать заявку')}</button></div>
+  <div class="card"><h3>📋 ${T('Registry overview','Обзор реестра')}</h3>
+   <div class="kpis" style="grid-template-columns:repeat(2,minmax(0,1fr));margin:0">${Object.keys(stL).map(k=>`<div class="card kpi" style="padding:12px"><div class="l">${T(stL[k][0],stL[k][1])}</div><div class="v">${S.tpps.filter(t=>t.st===k).length}</div></div>`).join('')}</div>
+   <div class="muted" style="font-size:12.5px;margin-top:10px">${T('Every action is written to the public register and pushed to all banks within 60 seconds (directory sync).','Каждое действие записывается в публичный реестр и рассылается всем банкам за 60 секунд (синхронизация каталога).')}</div></div></div>
+  <div class="card"><h3>${T('Third-party providers','Сторонние провайдеры')}<span class="sp"></span><span class="chips">${[['all','All','Все'],['pending','Applications','Заявки'],['active','Active','Активные'],['watch','Watch','Наблюдение'],['suspended','Suspended','Приостановлены']].map(c=>`<button class="chip ${f===c[0]?'on':''}" data-tf="${c[0]}">${T(c[1],c[2])}</button>`).join('')}</span></h3>
+   <div class="tw"><table><thead><tr><th>${T('Provider','Провайдер')}</th><th>${T('Role','Роль')}</th><th>${T('Licence','Лицензия')}</th><th>${T('Country','Страна')}</th><th style="text-align:right">${T('Calls today','Вызовов сегодня')}</th><th style="text-align:right">${T('Errors','Ошибки')}</th><th>${T('Status','Статус')}</th><th>${T('Actions','Действия')}</th></tr></thead><tbody>
+   ${list.map(t=>{const s=stL[t.st];return `<tr><td><div class="row" style="flex-wrap:nowrap"><div class="logo" style="background:${t.c};width:28px;height:28px;font-size:11px">${t.n.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><b>${esc(t.n)}</b></div></td><td>${t.role}</td><td class="mono">${t.lic}</td><td>${t.country}</td><td class="mono" style="text-align:right">${num(t.calls)}</td><td class="mono ${t.err>3?'bad-t':''}" style="text-align:right">${num(t.err,1)}%</td><td><span class="pill ${s[2]}">${T(s[0],s[1])}</span></td>
+    <td><div class="row" style="flex-wrap:nowrap">${t.st==='pending'?`<button class="btn sm pri" data-ta="approve" data-id="${t.id}">${T('Approve','Одобрить')}</button><button class="btn sm danger" data-ta="reject" data-id="${t.id}">${T('Reject','Отклонить')}</button>`:t.st==='active'||t.st==='watch'?`<button class="btn sm danger" data-ta="suspend" data-id="${t.id}">${T('Suspend','Приостановить')}</button>`:t.st==='suspended'?`<button class="btn sm" data-ta="reinstate" data-id="${t.id}">${T('Reinstate','Восстановить')}</button>`:''}<button class="btn sm" data-tv="${t.id}">${T('Details','Детали')}</button></div></td></tr>`}).join('')||`<tr><td colspan="8" class="muted">${T('No providers','Нет провайдеров')}</td></tr>`}</tbody></table></div></div>`;
+  $$('[data-tf]',el).forEach(b=>b.onclick=()=>{S.tppF=b.dataset.tf;save();rTpp()});
+  $$('[data-ta]',el).forEach(b=>b.onclick=()=>{const t=S.tpps.find(x=>x.id===b.dataset.id);const a=b.dataset.ta;
+    if(a==='approve'){t.st='active';t.lic='PSD-0'+(100+S.tpps.length);t.calls=Math.round(Math.random()*900);t.err=.3;toast(T(t.n+' approved — licence '+t.lic+' published',t.n+' одобрен — лицензия '+t.lic+' опубликована'))}
+    if(a==='reject'){t.st='rejected';toast(T(t.n+' application rejected','Заявка '+t.n+' отклонена'),'bad')}
+    if(a==='suspend'){t.st='suspended';const n=S.consents.filter(c=>c.tpp===t.n&&c.st==='active').length;S.consents.forEach(c=>{if(c.tpp===t.n&&c.st==='active')c.st='revoked'});toast(T(t.n+' suspended. Tokens revoked at all banks'+(n?', '+n+' consent(s) closed':'')+'.',t.n+' приостановлен. Токены отозваны во всех банках'+(n?', закрыто согласий: '+n:'')+'.'),'gold')}
+    if(a==='reinstate'){t.st='active';toast(T(t.n+' reinstated',t.n+' восстановлен'))}
+    save();render()});
+  $$('[data-tv]',el).forEach(b=>b.onclick=()=>openTpp(b.dataset.tv));
+  $('#nGo').onclick=()=>{const n=$('#nName').value.trim(),u=$('#nUri').value.trim(),j=$('#nJwks').value.trim();let er='';
+    if(n.length<3)er=T('Enter the legal name','Введите юридическое название');else if(S.tpps.some(t=>t.n.toLowerCase()===n.toLowerCase()))er=T('This provider is already registered','Этот провайдер уже зарегистрирован');
+    else if(!/^https:\/\/[^\s/]+\.[^\s]+$/.test(u))er=T('Redirect URI must be an https:// URL','Redirect URI должен начинаться с https://');
+    else if(!/^https:\/\/[^\s]+\.json$/.test(j))er=T('JWKS URL must be https:// and end with .json','URL JWKS должен быть https:// и оканчиваться на .json');
+    if(er){$('#nErr').textContent=er;return}
+    const cols=['#c4733a','#3a8fd8','#8a5bd0','#3fa060','#c45a8c'];S.tpps.unshift({id:'TPP-'+(1200+S.tpps.length),n,role:$('#nRole').value,lic:'—',c:cols[S.tpps.length%5],st:'pending',calls:0,err:0,since:now(),cert:'eIDAS QWAC',country:$('#nCty').value,uri:u});
+    S.tppF='pending';save();render();toast(T('Application from '+n+' received — review it below','Заявка '+n+' получена — проверьте ниже'),'gold')};
+}
+function openTpp(id){const t=S.tpps.find(x=>x.id===id);if(!t)return;const cons=S.consents.filter(c=>c.tpp===t.n);
+  $('#drawerRoot').innerHTML=`<div class="drawer" id="drw"><div class="in"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><div class="row" style="flex-wrap:nowrap"><div class="logo" style="background:${t.c}">${t.n.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><h3 style="margin:0">${esc(t.n)}</h3></div><button class="btn sm" id="drwX">✕</button></div>
+   <div class="tpp" style="flex-direction:column;align-items:stretch;margin-top:14px;font-size:13px">${[[T('ID','ID'),t.id],[T('Role','Роль'),t.role],[T('Licence','Лицензия'),t.lic],[T('Certificate','Сертификат'),t.cert+' · '+T('valid','действует')],[T('Registered','Зарегистрирован'),fmtD(t.since)],[T('Country','Страна'),t.country],[T('Calls today','Вызовов сегодня'),num(t.calls)],[T('Error rate','Ошибки'),num(t.err,1)+'%']].map(r=>`<div class="row" style="justify-content:space-between"><span class="muted">${r[0]}</span><b class="mono">${esc(r[1])}</b></div>`).join('')}</div>
+   ${t.err>3?`<div class="pill warn" style="margin-top:12px;white-space:normal">⚠ ${T('High error rate: 4.1% of calls hit 429 rate limits — possible screen-scraping fallback.','Высокая доля ошибок: 4,1% вызовов упираются в лимит 429 — возможен возврат к скрейпингу.')}</div>`:''}
+   <h3 style="margin-top:18px">${T('Consents in this demo','Согласия в этом демо')}</h3>${cons.map(c=>`<div class="ep"><code>${c.id}</code><span class="pill">${c.st}</span></div>`).join('')||`<div class="muted">${T('None','Нет')}</div>`}</div></div>`;
+  const close=()=>{$('#drawerRoot').innerHTML=''};$('#drwX').onclick=close;$('#drw').onclick=e=>{if(e.target.id==='drw')close()}}
+
+/* ---------- login & wiring ---------- */
+let startView='cat';
+$$('#roles .role').forEach(b=>b.onclick=()=>{startView=b.dataset.role;$$('#roles .role').forEach(x=>x.classList.toggle('on',x===b))});
+$('#login').onclick=()=>{const u=$('#lgU').value.trim(),p=$('#lgP').value;if(!/^\S+@\S+\.\S+$/.test(u)){$('#lgErr').textContent=T('Enter a valid email','Введите корректную почту');return}
+  if(p.length<6){$('#lgErr').textContent=T('Password must be at least 6 characters','Пароль — минимум 6 символов');return}
+  $('#lgErr').textContent='';S.auth=true;S.view=startView;save();render();toast(T('Signed in to OpenRail sandbox','Вход в песочницу OpenRail выполнен'))};
+$('#logout').onclick=()=>{S.auth=false;save();render()};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();S=seed();S.auth=true;lastRes=null;mineF='all';$('#drawerRoot').innerHTML='';save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>{render();$('#drawerRoot').innerHTML=''});
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

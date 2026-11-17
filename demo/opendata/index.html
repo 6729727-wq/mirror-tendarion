@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Open Data Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 12px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:conic-gradient(from 200deg,var(--mal),var(--gold),var(--mal3),var(--mal));color:#fff;font-size:12px;letter-spacing:-.03em}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:3px;margin-bottom:10px}
+.seg button{border:0;background:none;padding:7px 4px;border-radius:9px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--muted)}
+.seg button.on{background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff}
+.grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:10px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:13.5px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav i{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-style:normal;font-size:12px;background:var(--panel2);border:1px solid var(--line);flex:none}
+.nav.on i{border-color:var(--mal);color:var(--mal3)}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.side .grow{flex:1}
+.rolebox{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);margin-top:10px}
+.rolebox label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:700}
+main{padding:20px 26px 60px;min-width:0}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.howto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.howto div{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-size:13px;line-height:1.4}
+.howto b{width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:12px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;padding:12px 14px}
+.facts dt{color:var(--muted)}.facts dd{margin:0;font-weight:600}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.head h1{font-size:23px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim);margin-bottom:2px}
+.menu-btn{display:none}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.g21{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.clk{cursor:pointer} tr.clk:hover td{background:color-mix(in srgb,var(--mal) 6%,transparent)}
+td.miss{background:color-mix(in srgb,var(--amber) 14%,transparent)}
+td.bad{background:color-mix(in srgb,var(--red) 16%,transparent);color:var(--red)}
+td.pii{background:color-mix(in srgb,var(--violet) 16%,transparent)}
+td.add{background:color-mix(in srgb,var(--mal) 16%,transparent)}
+td.del{background:color-mix(in srgb,var(--red) 12%,transparent);text-decoration:line-through;color:var(--muted)}
+td.chg{background:color-mix(in srgb,var(--amber) 16%,transparent)}
+.old{color:var(--red);text-decoration:line-through;margin-right:5px;font-size:11.5px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.tools .input{width:auto;min-width:150px;flex:1;max-width:320px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f label code{font-family:var(--mono);font-size:10.5px;color:var(--gold2);margin-left:4px}
+.wsteps{display:flex;margin:0 0 16px;overflow-x:auto}
+.wst{flex:1;min-width:90px;text-align:center;position:relative;font-size:12px;color:var(--muted);cursor:pointer;background:none;border:0;padding:0}
+.wst:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.wst:first-child:before{display:none}
+.wst .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 5px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800;color:var(--text)}
+.wst.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.wst.ok:before,.wst.cur:before{background:var(--mal)}
+.wst.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.wst.cur{color:var(--text);font-weight:700}
+.drop{border:2px dashed var(--line2);border-radius:16px;padding:30px 16px;text-align:center;background:var(--bg2);transition:.15s;cursor:pointer;display:block}
+.drop:hover,.drop.ov{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 6%,var(--bg2))}
+.drop .big{font-size:34px;line-height:1}
+.drop input{display:none}
+.lics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lic{border:1px solid var(--line2);border-radius:12px;padding:10px;cursor:pointer;background:var(--bg2);text-align:left;font-size:12px}
+.lic b{display:block;font-size:13px;margin-bottom:3px}
+.lic.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,var(--bg2));box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 18%,transparent)}
+.lic.closed.on{border-color:var(--red);background:color-mix(in srgb,var(--red) 8%,var(--bg2));box-shadow:none}
+.lic .tg{display:inline-block;margin:4px 4px 0 0;font-size:10.5px;padding:1px 6px;border-radius:6px;background:var(--panel2);color:var(--muted)}
+pre.code{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;margin:0;max-height:330px;white-space:pre;line-height:1.55}
+pre.code .k{color:var(--gold2)} pre.code .s{color:var(--mal3)} pre.code .c{color:var(--dim)}
+.stars{color:var(--gold);letter-spacing:1px;white-space:nowrap}
+.stars s{color:var(--line2);text-decoration:none}
+.star5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.star5 div{border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px;background:var(--bg2);color:var(--muted)}
+.star5 div b{display:block;color:var(--text);font-size:13px;margin-bottom:2px}
+.star5 div.on{border-color:color-mix(in srgb,var(--gold) 60%,transparent);background:color-mix(in srgb,var(--gold) 10%,var(--bg2))}
+.star5 div.on b:before{content:"★ ";color:var(--gold)}
+.star5 div:not(.on) b:before{content:"☆ ";color:var(--dim)}
+.dsl{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.dsc{cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:6px}
+.dsc:hover{border-color:var(--mal);transform:translateY(-2px)}
+.dsc .t{font-weight:700;font-size:15px}
+.dsc .m{font-size:12px;color:var(--muted)}
+.dsc .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:auto}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:9px 13px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--text);border-bottom-color:var(--mal)}
+.chart svg{width:100%;height:auto;display:block}
+.vote{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:58px;border:1px solid var(--line2);border-radius:12px;padding:6px;cursor:pointer;background:var(--bg2);font-weight:800}
+.vote small{font-size:10px;color:var(--muted);font-weight:600}
+.vote.on{border-color:var(--mal);color:var(--mal3);background:color-mix(in srgb,var(--mal) 10%,var(--bg2))}
+.reqc{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.reqc .bd{flex:1;min-width:0}
+.reply{margin-top:8px;padding:8px 10px;border-left:3px solid var(--gold);background:var(--bg2);border-radius:0 10px 10px 0;font-size:12.5px}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.appc .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:21px;margin-bottom:8px}
+.log{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;max-height:300px;overflow:auto;line-height:1.6}
+.log .ok{color:var(--mal3)}.log .w{color:var(--amber)}.log .e{color:var(--red)}.log .t{color:var(--dim)}
+.meter{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .3s}
+.meter i.hot{background:linear-gradient(90deg,var(--amber),var(--red))}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3))}
+.medal{width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;font-weight:800;font-size:12px;background:var(--panel2);border:1px solid var(--line2)}
+.medal.m1{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;border:0}
+.medal.m2{background:linear-gradient(135deg,#e3e8e6,#9fb0aa);color:#1a1306;border:0}
+.medal.m3{background:linear-gradient(135deg,#e6b48a,#a8673a);color:#1a1306;border:0}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.ok-big{text-align:center;padding:26px 10px}
+.ok-big .ck{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:30px;animation:pop .4s}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.on{display:flex}
+.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);padding:22px;box-shadow:var(--shadow);animation:pop .18s ease}
+.modal h2{margin:0 0 14px;font-size:19px}
+.modal .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:330px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}
+.view{animation:fade .2s}@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.sm{font-size:12.5px}.xs{font-size:11.5px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;cursor:pointer;margin:6px 0}
+.chk input{margin-top:3px;accent-color:var(--mal)}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+@media (max-width:1150px){.intro{grid-template-columns:minmax(0,1fr)}.g21{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:264px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 16px 50px}
+  .head h1{font-size:19px}
+  .g2{grid-template-columns:minmax(0,1fr)}
+  .howto{grid-template-columns:minmax(0,1fr)}
+  .toasts{left:16px;right:16px;top:auto;bottom:16px}.toast{max-width:none}
+}
+@media (max-width:560px){.fgrid{grid-template-columns:minmax(0,1fr)}.lics{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.star5{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.kpi .v{font-size:20px}.tools .input{max-width:none}.wst{min-width:70px;font-size:11px}}
+</style>
+</head>
+<body data-demo-en="Open Data Hub — open data portal &amp; BI for ministries" data-demo-ru="Open Data Hub — портал открытых данных и BI министерств">
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>ODH</b><div>Open Data Hub<small data-en="Republic of Velmara" data-ru="Республика Велмара"></small></div></div>
+    <div class="seg"><button data-act="mode" data-m="pub" id="mPub" data-en="Publisher" data-ru="Издатель"></button><button data-act="mode" data-m="web" id="mWeb" data-en="Public portal" data-ru="Портал"></button></div>
+    <div id="navs"></div>
+    <div class="grow"></div>
+    <div class="rolebox" id="minbox"><label data-en="Publishing as" data-ru="Публикует"></label><select class="input" id="minSel" style="margin-top:6px"></select></div>
+    <button class="btn sm" data-act="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo data" data-ru="Сбросить данные"></button>
+  </aside>
+  <main>
+    <div class="intro">
+      <div class="howto">
+        <div><b>1</b><span data-en="In <strong>Publisher</strong>, upload a CSV (or the sample with planted issues) — schema and types are inferred." data-ru="В режиме <strong>Издатель</strong> загрузите CSV (или пример с ошибками) — схема и типы определятся сами."></span></div>
+        <div><b>2</b><span data-en="Fill DCAT-AP metadata, pick a licence, mask the PII the validator flags." data-ru="Заполните метаданные DCAT-AP, выберите лицензию, замаскируйте найденные персональные данные."></span></div>
+        <div><b>3</b><span data-en="Publish, then open it on the <strong>Public portal</strong>: charts, map, API key, request board." data-ru="Опубликуйте и откройте на <strong>Портале</strong>: графики, карта, API-ключ, доска запросов."></span></div>
+      </div>
+      <dl class="card facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Open data portal" data-ru="Портал открытых данных"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2024 · € 9M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Republic of Velmara (fictional EU-style state)" data-ru="Республика Велмара (вымышленное государство ЕС)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd class="mono" style="font-size:11.5px">CKAN-class · Trino · Superset-class · DCAT-AP</dd>
+      </dl>
+    </div>
+    <div class="head">
+      <button class="btn sm menu-btn" data-act="menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div><div id="hacts" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+    <div id="view" class="view"></div>
+  </main>
+</div>
+<div class="modal-bg" id="mb"><div class="modal" id="md"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+const $=s=>document.querySelector(s), T=(e,r)=>PT.t(e,r);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>Number(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-GB');
+const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const st={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function toast(m,c){const d=document.createElement('div');d.className='toast '+(c||'');d.innerHTML=m;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),3600)}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const today=()=>new Date().toISOString().slice(0,10);
+
+/* ---------- reference data ---------- */
+const MIN={edu:['Ministry of Education','Министерство образования'],hea:['Ministry of Health','Министерство здравоохранения'],env:['Ministry of Environment','Министерство экологии'],tra:['Ministry of Transport','Министерство транспорта'],fin:['Ministry of Finance','Министерство финансов'],eco:['Ministry of Economy','Министерство экономики'],int:['Ministry of Interior','Министерство внутренних дел']};
+const mn=id=>T(MIN[id][0],MIN[id][1]);
+const REG={Arlen:[46.9,20.1],Brask:[47.6,21.8],Coriva:[45.4,19.0],Dunmere:[44.8,21.5],Estvale:[46.2,23.1],Fennick:[47.9,19.2],Galmor:[45.7,22.3]};
+const RN=Object.keys(REG);
+const THEMES={EDUC:['Education, culture and sport','Образование, культура, спорт'],HEAL:['Health','Здравоохранение'],ENVI:['Environment','Окружающая среда'],TRAN:['Transport','Транспорт'],ECON:['Economy and finance','Экономика и финансы'],GOVE:['Government and public sector','Госуправление'],REGI:['Regions and cities','Регионы и города'],JUST:['Justice and public safety','Правосудие и безопасность'],SOCI:['Population and society','Население и общество']};
+const LIC=[{id:'cc0',n:'CC0 1.0',open:1,tags:[['public domain','общественное достояние']]},{id:'ccby',n:'CC BY 4.0',open:1,tags:[['attribution','указание автора'],['commercial','коммерция']]},{id:'ccbysa',n:'CC BY-SA 4.0',open:1,tags:[['attribution','указание автора'],['share-alike','та же лицензия']]},{id:'vogl',n:'Velmara OGL 2.0',open:1,tags:[['national','национальная'],['attribution','указание автора']]},{id:'odbl',n:'ODbL 1.0',open:1,tags:[['databases','базы данных'],['share-alike','та же лицензия']]},{id:'restr',n:'Restricted',open:0,tags:[['not open','не открытая']]}];
+const licN=id=>(LIC.find(l=>l.id===id)||{}).n||id;
+const FREQ={daily:['Daily','Ежедневно'],weekly:['Weekly','Еженедельно'],monthly:['Monthly','Ежемесячно'],quarterly:['Quarterly','Ежеквартально'],annual:['Annual','Ежегодно'],irregular:['Irregular','Нерегулярно']};
+
+/* ---------- seed ---------- */
+function ver(v,date,note,cols,rows){return{v,date,note,cols,rows}}
+function mkds(o){return Object.assign({dl:0,api:true,linked:false,fmt:'CSV',freq:'monthly',geo:false,src:'',kw:[],desc:['',''],contact:'opendata@gov.velmara.example'},o)}
+function seed(){
+  const R=rng(42),ri=(a,b)=>Math.floor(a+R()*(b-a+1)),rf=(a,b,d=1)=>+(a+R()*(b-a)).toFixed(d);
+  const aq=[];RN.forEach((r,i)=>{for(let k=0;k<4;k++){const[la,lo]=REG[r];aq.push(['AQ-'+(i*4+k+101),r+' '+['North','Centre','Park','Port'][k],r,rf(la-.35,la+.35,3),rf(lo-.45,lo+.45,3),rf(6,38),ri(9,61),'2026-10-'+String(ri(1,28)).padStart(2,'0')])}});
+  const hosp1=[],hosp2=[];RN.forEach(r=>{for(let k=0;k<2;k++){const b=ri(180,920),row=[r,r+(k?' Regional':' University')+' Hospital',b,Math.round(b*rf(.62,.93,2)),ri(8,46),2025];hosp1.push(row);const r2=row.slice();r2[5]=2026;if(R()<.5){r2[2]=b+ri(-30,60);r2[3]=Math.round(r2[2]*rf(.6,.95,2))}hosp2.push(r2)}});
+  hosp2.splice(3,1);hosp2.push(['Galmor','Galmor Children Hospital',240,188,12,2026],['Arlen','Arlen Trauma Centre',310,276,38,2026]);
+  const tr=[];['L1 Ringline','L2 Riverside','T4 Tram East'].forEach((l,i)=>{for(let m=1;m<=12;m++)tr.push(['2025-'+String(m).padStart(2,'0')+'-01',l,i<2?'Metro':'Tram',Math.round((i===0?2.1e6:i===1?1.4e6:.8e6)*(1+.18*Math.sin(m/1.9)+R()*.08))])});
+  const bud=[];['Q1','Q2','Q3'].forEach(q=>Object.keys(MIN).forEach(m=>{const p=rf(80,940,1);bud.push(['2026-'+q,MIN[m][0],p,+(p*rf(.18,.31,2)*(+q[1])).toFixed(1)])}));
+  const sch=[];RN.forEach((r,i)=>{for(let k=0;k<3;k++){const[la,lo]=REG[r];sch.push(['SCH-'+String(i*3+k+1).padStart(4,'0'),r+' '+['Lyceum','Primary School No. '+(k+2),'Gymnasium'][k],r,ri(180,960),ri(14,70),rf(la-.3,la+.3,3),rf(lo-.4,lo+.4,3)])}});
+  const biz=[];RN.forEach(r=>['Agriculture','Manufacturing','IT services','Tourism','Retail'].forEach(s=>biz.push([r,s,ri(120,4800),ri(10,620)])));
+  const acc=[];for(let i=0;i<40;i++){const r=RN[ri(0,6)],[la,lo]=REG[r];acc.push(['2026-'+String(ri(1,10)).padStart(2,'0')+'-'+String(ri(1,28)).padStart(2,'0'),r,['slight','serious','fatal'][R()<.75?0:R()<.85?1:2],rf(la-.5,la+.5,3),rf(lo-.6,lo+.6,3)])}
+  const C=(...a)=>a.map(x=>{const[n,t]=x.split(':');return{n,t}});
+  const ds=[
+    mkds({id:'air-quality',min:'env',t:['Air quality monitoring stations','Станции мониторинга качества воздуха'],theme:'ENVI',lic:'ccby',linked:true,geo:true,freq:'daily',dl:18420,kw:['air','PM2.5','NO2'],desc:['Hourly-aggregated PM2.5 and NO2 readings from the national monitoring network.','Агрегированные показания PM2.5 и NO2 национальной сети мониторинга.'],versions:[ver('3.0','2026-11-14','Daily refresh',C('station_id:string','station:string','region:string','lat:lat','lon:lon','pm25:decimal','no2:integer','measured:date'),aq)]}),
+    mkds({id:'hospital-beds',min:'hea',t:['Hospital bed capacity by region','Коечный фонд больниц по регионам'],theme:'HEAL',lic:'vogl',freq:'annual',dl:9310,kw:['hospitals','beds','ICU'],desc:['Beds, occupancy and ICU capacity of public hospitals.','Койки, загрузка и места в реанимации государственных больниц.'],versions:[ver('1.0','2025-12-20','Annual census 2025',C('region:string','hospital:string','beds:integer','occupied:integer','icu:integer','year:integer'),hosp1),ver('1.1','2026-10-30','Annual census 2026',C('region:string','hospital:string','beds:integer','occupied:integer','icu:integer','year:integer'),hosp2)]}),
+    mkds({id:'transit-ridership',min:'tra',t:['Public transport ridership','Пассажиропоток общественного транспорта'],theme:'TRAN',lic:'cc0',linked:true,dl:12050,kw:['metro','tram','passengers'],desc:['Monthly validated journeys per line in the Arlen metropolitan network.','Ежемесячные поездки по линиям транспортной сети Арлена.'],versions:[ver('2.4','2026-11-02','October data',C('month:date','line:string','mode:string','passengers:integer'),tr)]}),
+    mkds({id:'budget-execution',min:'fin',t:['State budget execution by ministry','Исполнение госбюджета по министерствам'],theme:'ECON',lic:'ccby',freq:'quarterly',dl:7720,kw:['budget','spending'],desc:['Planned vs spent appropriations, € million.','План и факт расходов, млн €.'],versions:[ver('1.3','2026-10-05','Q3 close',C('quarter:string','ministry:string','planned_m:decimal','spent_m:decimal'),bud)]}),
+    mkds({id:'schools-register',min:'edu',t:['Register of public schools','Реестр государственных школ'],theme:'EDUC',lic:'vogl',api:false,geo:true,freq:'annual',dl:5210,kw:['schools','pupils'],desc:['Location, pupils and teachers of public schools.','Расположение, число учеников и учителей государственных школ.'],versions:[ver('1.0','2025-09-15','School year 2025/26',C('school_id:string','name:string','region:string','pupils:integer','teachers:integer','lat:lat','lon:lon'),sch)]}),
+    mkds({id:'business-register',min:'eco',t:['Active businesses by sector','Действующие предприятия по отраслям'],theme:'ECON',lic:'odbl',fmt:'XLSX',api:false,freq:'quarterly',dl:3380,kw:['companies','SME'],desc:['Count of active and newly registered businesses.','Число действующих и новых предприятий.'],versions:[ver('1.0','2026-04-01','Q1 snapshot',C('region:string','sector:string','active:integer','new_2026:integer'),biz)]}),
+    mkds({id:'road-accidents',min:'int',t:['Road traffic accidents','Дорожно-транспортные происшествия'],theme:'JUST',lic:'ccby',api:false,geo:true,dl:4410,kw:['road safety'],desc:['Geo-located accidents reported by traffic police.','Геопривязанные ДТП по данным дорожной полиции.'],versions:[ver('1.2','2026-06-30','H1 2026',C('date:date','region:string','severity:string','lat:lat','lon:lon'),acc)]})
+  ];
+  return{mode:'pub',view:'publish',min:'edu',cur:'air-quality',dtab:'preview',ds,voted:{},
+    req:[{id:1,t:['Real-time bus positions (GTFS-RT)','Положение автобусов в реальном времени (GTFS-RT)'],min:'tra',votes:214,st:'planned',by:'Mila K.',d:'2026-08-12',reply:['Feed is in testing; public launch with API keys planned for Q1 2027.','Поток на тестировании; публичный запуск с API-ключами — I кв. 2027.']},
+      {id:2,t:['Exam results by school','Результаты экзаменов по школам'],min:'edu',votes:167,st:'review',by:'Parents Union Arlen',d:'2026-09-01',reply:null},
+      {id:3,t:['Hospital waiting times by specialty','Сроки ожидания в больницах по специальностям'],min:'hea',votes:143,st:'open',by:'J. Novak',d:'2026-09-20',reply:null},
+      {id:4,t:['Public procurement contracts','Госконтракты и закупки'],min:'fin',votes:121,st:'published',by:'Transparency Velmara',d:'2026-03-02',reply:['Published as part of budget execution; contract-level data follows.','Опубликовано в исполнении бюджета; данные по контрактам — следующим шагом.']},
+      {id:5,t:['Noise maps near the airport','Карты шума у аэропорта'],min:'env',votes:58,st:'declined',by:'Estvale residents',d:'2026-05-14',reply:['Owned by the airport operator, not the ministry. Request forwarded.','Данные у оператора аэропорта, не у министерства. Запрос переслан.']},
+      {id:6,t:['Building permits by municipality','Разрешения на строительство по муниципалитетам'],min:'eco',votes:44,st:'open',by:'A. Petrova',d:'2026-10-28',reply:null}],
+    apps:[{n:'CleanAir Now',ic:'🌬️',by:'Civic Lab Arlen',k:'mobile',ds:['air-quality'],u:48200,c:'#4ea4ff'},{n:'BedWatch',ic:'🏥',by:'Velmara Health Journalism',k:'web',ds:['hospital-beds'],u:12900,c:'#ef5a5a'},{n:'TransitPulse',ic:'🚇',by:'Open Mobility Coop',k:'web',ds:['transit-ridership'],u:31500,c:'#17b58a'},{n:'BudgetLens',ic:'💶',by:'Transparency Velmara',k:'web',ds:['budget-execution'],u:22700,c:'#d8b46a'},{n:'SchoolFinder',ic:'🏫',by:'EduMap studio',k:'mobile',ds:['schools-register'],u:9600,c:'#a78bfa'},{n:'SafeRoads study',ic:'📊',by:'University of Arlen',k:'research',ds:['road-accidents','transit-ridership'],u:1800,c:'#f0a83a'}],
+    keys:[{n:'Research notebook',k:'vlm_live_8f2c71d0a94e',tier:'free',used:0,w:0,c:'2026-10-03'}],
+    src:[{n:'Nordania national portal',u:'https://data.nordania.example/api/3',p:'CKAN API',cron:'daily 02:00',on:true,last:'2026-11-17 02:00',cnt:12},{n:'Velmara-East regional portal',u:'https://east.velmara.example/catalog.ttl',p:'DCAT-AP RDF',cron:'weekly Mon 03:00',on:true,last:'2026-11-10 03:00',cnt:5},{n:'Statistics Office of Velmara',u:'https://stat.velmara.example/sdmx',p:'SDMX 2.1',cron:'monthly 1st 04:00',on:false,last:'2026-11-01 04:00',cnt:0}],
+    hlog:[],draft:null,ws:1,vd:{id:'hospital-beds',a:0,b:1},api:{ds:'air-quality',key:0,resp:''}};
+}
+let S=st.get('odh-v1',null)||seed();
+function save(){st.set('odh-v1',S)}
+const ds=id=>S.ds.find(d=>d.id===id);
+const cur=d=>d.versions[d.versions.length-1];
+const isOpen=d=>(LIC.find(l=>l.id===d.lic)||{}).open;
+function stars(d){if(!isOpen(d))return 0;let s=1;if(d.fmt!=='PDF')s=2;if(d.fmt==='CSV'||d.fmt==='JSON')s=3;if(s===3&&d.api)s=4;if(s===4&&d.linked)s=5;return s}
+function quality(d){const c=cur(d);let cells=0,miss=0;c.rows.forEach(r=>r.forEach(v=>{cells++;if(v===''||v==null)miss++}));const comp=cells?100-miss/cells*100:0;const meta=[d.t[0],d.desc[0],d.theme,d.lic,d.freq,d.contact,d.kw.length].filter(Boolean).length/7*100;const age=(Date.now()-new Date(c.date))/864e5;const lim={daily:3,weekly:10,monthly:40,quarterly:100,annual:380,irregular:400}[d.freq]||60;const fresh=age<=lim?100:Math.max(0,100-(age-lim)/2);return Math.round(.4*comp+.3*meta+.3*fresh)}
+const starH=n=>'<span class="stars">'+'★'.repeat(n)+'<s>'+'★'.repeat(5-n)+'</s></span>';
+
+/* ---------- CSV parsing & inference ---------- */
+function parseCSV(txt){txt=txt.replace(/^﻿/,'');const first=txt.split(/\r?\n/)[0]||'';const dl=(first.split(';').length>first.split(',').length)?';':(first.split('\t').length>first.split(',').length?'\t':',');
+  const rows=[];let r=[],f='',q=false;for(let i=0;i<txt.length;i++){const c=txt[i];if(q){if(c==='"'){if(txt[i+1]==='"'){f+='"';i++}else q=false}else f+=c}else if(c==='"')q=true;else if(c===dl){r.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&txt[i+1]==='\n')i++;r.push(f);f='';if(r.length>1||r[0]!=='')rows.push(r);r=[]}else f+=c}
+  if(f!==''||r.length){r.push(f);rows.push(r)}return{dl,head:(rows.shift()||[]).map(h=>h.trim()),rows:rows.map(x=>x.map(v=>v.trim()))}}
+const MISS=/^(|na|n\/a|null|none|-|—|unknown|\?)$/i;
+const TY={integer:v=>/^-?\d+$/.test(v),decimal:v=>/^-?\d+([.,]\d+)?$/.test(v),date:v=>/^\d{4}-\d{2}-\d{2}$/.test(v)||/^\d{2}\.\d{2}\.\d{4}$/.test(v),boolean:v=>/^(true|false|yes|no)$/i.test(v),string:()=>true};
+TY.lat=v=>TY.decimal(v)&&Math.abs(parseFloat(v))<=90;TY.lon=v=>TY.decimal(v)&&Math.abs(parseFloat(v))<=180;
+const PII={email:v=>/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v),phone:v=>/^\+?[\d\s()-]{9,}$/.test(v)&&v.replace(/\D/g,'').length>=9&&/[\s+()-]/.test(v),id:v=>/^\d{6}-\d{4,5}$/.test(v)||/^[A-Z]{2}\d{7}$/.test(v)};
+function infer(name,vals){const nn=vals.filter(v=>!MISS.test(v));if(!nn.length)return'string';const fit=t=>nn.filter(TY[t]).length/nn.length;
+  if(/^(lat|latitude)$/i.test(name)&&fit('lat')>=.8)return'lat';if(/^(lon|lng|long|longitude)$/i.test(name)&&fit('lon')>=.8)return'lon';
+  for(const t of['boolean','integer','decimal','date'])if(fit(t)>=.8)return t;return'string'}
+function profile(cols,rows){return cols.map((c,i)=>{const vals=rows.map(r=>r[i]??'');let miss=0,bad=[],pii={email:0,phone:0,id:0};vals.forEach((v,ri)=>{if(MISS.test(v)){miss++;return}if(!TY[c.t](v))bad.push(ri);for(const k in PII)if(PII[k](v))pii[k]++});const pk=Object.keys(pii).filter(k=>pii[k]>0).sort((a,b)=>pii[b]-pii[a])[0];return{miss,bad,pii:pk?{k:pk,n:pii[pk]}:null,distinct:new Set(vals).size}})}
+function mask(v,k){if(MISS.test(v))return v;if(k==='email'){const[u,d]=v.split('@');return u[0]+'•••@•••.'+d.split('.').pop()}if(k==='phone'){const dg=v.replace(/\D/g,'');return '+'+dg.slice(0,3)+' ••• •• '+dg.slice(-2)}return v.slice(0,6)+'-•••••'}
+function sampleCSV(){const R=rng(7),ri=(a,b)=>Math.floor(a+R()*(b-a+1));const L=['school_id,name,region,pupils,teachers,opened,lat,lon,contact_email,phone,head_personal_code'];const kinds=['Lyceum','Primary School','Gymnasium','Arts School'];let n=1;
+  RN.forEach(r=>{for(let k=0;k<3;k++){const[la,lo]=REG[r];let pupils=String(ri(150,980)),teachers=String(ri(12,72)),opened=(1950+ri(0,70))+'-09-01',lat=(la+(R()-.5)*.6).toFixed(3),lon=(lo+(R()-.5)*.8).toFixed(3);
+    if(n===4)pupils='n/a';if(n===9)teachers='';if(n===13)opened='unknown';if(n===17)lat='';if(n===6)pupils='approx 400';if(n===19)teachers='forty';
+    const nm=r+' '+kinds[k]+(k===1?' No. '+n:''),slug=nm.toLowerCase().replace(/[^a-z]+/g,'-').replace(/-$/,'');
+    L.push(['SCH-'+String(100+n).padStart(4,'0'),'"'+nm+'"',r,pupils,teachers,opened,lat,lon,'office@'+slug+'.edu.velmara.example','+399 '+ri(20,29)+' '+ri(100,999)+' '+ri(1000,9999),String(ri(600101,891231))+'-'+ri(10000,99999)].join(','));n++}});
+  return L.join('\n')}
+
+/* ---------- charts ---------- */
+function hbar(labels,vals,col){const W=560,rh=26,H=labels.length*rh+8,mx=Math.max(...vals,1),lw=130;let s=`<svg viewBox="0 0 ${W} ${H}">`;labels.forEach((l,i)=>{const y=4+i*rh,w=(W-lw-70)*vals[i]/mx;s+=`<text x="${lw-8}" y="${y+16}" text-anchor="end" font-size="12" fill="${cv('--muted')}">${esc(String(l).slice(0,18))}</text><rect x="${lw}" y="${y+4}" width="${Math.max(2,w)}" height="16" rx="4" fill="${col||cv('--mal')}"/><text x="${lw+w+6}" y="${y+16}" font-size="11.5" fill="${cv('--text')}">${fmt(Math.round(vals[i]*10)/10)}</text>`});return s+'</svg>'}
+function line(xs,ys,col){const W=560,H=210,p=36,mx=Math.max(...ys,1),mn=Math.min(...ys,0);const X=i=>p+(W-p-10)*i/Math.max(1,xs.length-1),Y=v=>H-24-(H-40)*(v-mn)/(mx-mn||1);let s=`<svg viewBox="0 0 ${W} ${H}">`;for(let g=0;g<=4;g++){const y=16+(H-40)*g/4;s+=`<line x1="${p}" x2="${W-10}" y1="${y}" y2="${y}" stroke="${cv('--line')}"/><text x="${p-4}" y="${y+4}" font-size="10" text-anchor="end" fill="${cv('--dim')}">${fmt(Math.round(mx-(mx-mn)*g/4))}</text>`}
+  const pts=ys.map((v,i)=>X(i)+','+Y(v)).join(' ');s+=`<polygon points="${X(0)},${H-24} ${pts} ${X(ys.length-1)},${H-24}" fill="${col||cv('--mal')}" opacity=".14"/><polyline points="${pts}" fill="none" stroke="${col||cv('--mal')}" stroke-width="2.5" stroke-linejoin="round"/>`;if(ys.length<=40)ys.forEach((v,i)=>{s+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="${col||cv('--mal')}"><title>${xs[i]}: ${v}</title></circle>`});
+  xs.forEach((x,i)=>{if(xs.length<=12||i%Math.ceil(xs.length/8)===0)s+=`<text x="${X(i)}" y="${H-6}" font-size="10" text-anchor="middle" fill="${cv('--dim')}">${esc(String(x).length>7?String(x).slice(5,10):String(x))}</text>`});return s+'</svg>'}
+const OUT=[[48.4,18.6],[48.2,20.4],[48.5,21.6],[47.9,23.0],[47.2,23.9],[46.1,23.7],[45.3,23.2],[44.5,22.3],[44.3,20.8],[44.7,19.6],[45.2,18.4],[46.3,18.2],[47.4,18.3]];
+function mapSVG(pts,lab){const W=520,H=380,X=lo=>(lo-17.8)/(24.2-17.8)*W,Y=la=>(48.8-la)/(48.8-44)*H;let s=`<svg viewBox="0 0 ${W} ${H}"><defs><pattern id="gr" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="${cv('--line')}" stroke-width=".6"/></pattern></defs><rect width="${W}" height="${H}" fill="url(#gr)"/>`;
+  s+=`<polygon points="${OUT.map(([a,o])=>X(o)+','+Y(a)).join(' ')}" fill="${cv('--panel2')}" stroke="${cv('--line2')}" stroke-width="2"/>`;
+  RN.forEach(r=>{const[a,o]=REG[r];s+=`<text x="${X(o)}" y="${Y(a)-12}" font-size="11" text-anchor="middle" fill="${cv('--dim')}" font-weight="700">${r}</text>`});
+  const mx=Math.max(...pts.map(p=>p[2]||1),1);pts.forEach(([a,o,v,l])=>{if(isNaN(a)||isNaN(o))return;const r=4+8*(v||mx/2)/mx;s+=`<circle cx="${X(o)}" cy="${Y(a)}" r="${r}" fill="${cv('--gold')}" fill-opacity=".55" stroke="${cv('--gold2')}"><title>${esc(l)}${v!=null?' · '+lab+': '+v:''}</title></circle>`});
+  s+=`<circle cx="${X(20.1)}" cy="${Y(46.9)}" r="5" fill="none" stroke="${cv('--mal3')}" stroke-width="2"/></svg>`;return s}
+
+/* ---------- navigation ---------- */
+const NAV={pub:[['g','Ministry workspace','Кабинет министерства'],['publish','⇪','New dataset','Новый набор'],['mine','▤','My datasets','Мои наборы'],['versions','⇄','Versions & diff','Версии и сравнение'],['harvest','⟳','Harvesting','Сбор с порталов'],['inbox','✉','Data requests','Запросы данных']],
+  web:[['g','data.velmara (public)','data.velmara (публично)'],['catalog','◎','Catalogue','Каталог'],['dataset','▦','Dataset page','Страница набора'],['api','⌘','API keys','API-ключи'],['apps','✦','Apps on this data','Приложения на данных'],['requests','♥','Request board','Доска запросов'],['quality','★','Openness ranking','Рейтинг открытости']]};
+function renderNav(){$('#mPub').classList.toggle('on',S.mode==='pub');$('#mWeb').classList.toggle('on',S.mode==='web');$('#minbox').style.display=S.mode==='pub'?'':'none';
+  const open=S.req.filter(r=>r.min===S.min&&(r.st==='open'||r.st==='review')).length;
+  $('#navs').innerHTML=NAV[S.mode].map(n=>n[0]==='g'?`<div class="grp">${T(n[1],n[2])}</div>`:`<button class="nav ${S.view===n[0]?'on':''}" data-act="go" data-v="${n[0]}"><i>${n[1]}</i>${T(n[2],n[3])}${n[0]==='inbox'&&open?`<span class="cnt">${open}</span>`:''}</button>`).join('');
+  $('#minSel').innerHTML=Object.keys(MIN).map(k=>`<option value="${k}" ${k===S.min?'selected':''}>${mn(k)}</option>`).join('')}
+function render(){renderNav();const n=[...NAV.pub,...NAV.web].find(x=>x[0]===S.view)||NAV.pub[1];$('#crumb').textContent=S.mode==='pub'?T('Publisher workspace · ','Кабинет издателя · ')+mn(S.min):T('Public portal · data.velmara.example','Публичный портал · data.velmara.example');$('#title').textContent=T(n[2],n[3]);$('#hacts').innerHTML='';
+  const v=$('#view');v.classList.remove('view');void v.offsetWidth;v.classList.add('view');v.innerHTML=(V[S.view]||V.publish)();if(AFTER[S.view])AFTER[S.view]();save()}
+function go(v){S.view=v;S.mode=NAV.web.some(n=>n[0]===v)?'web':'pub';$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+
+/* ---------- views ---------- */
+const V={},AFTER={};
+V.publish=()=>{const d=S.draft,w=S.ws;const steps=[['Upload','Загрузка'],['Schema','Схема'],['Metadata','Метаданные'],['Validation','Проверка'],['Publish','Публикация']];
+  let h=`<div class="wsteps">${steps.map((s,i)=>`<button class="wst ${i+1<w?'ok':i+1===w?'cur':''}" data-act="ws" data-s="${i+1}"><div class="dot">${i+1<w?'✓':i+1}</div>${T(s[0],s[1])}</button>`).join('')}</div>`;
+  if(w===1||!d)return h+`<div class="g21"><div class="card"><label class="drop" id="drop"><input type="file" id="file" accept=".csv,.tsv,.txt,text/csv"><div class="big">⇪</div><div style="font-weight:700;margin:8px 0 4px">${T('Drop a CSV file here or click to choose','Перетащите CSV-файл сюда или нажмите, чтобы выбрать')}</div><div class="muted sm">${T('Comma, semicolon or tab separated · UTF-8 · parsed in your browser','Разделитель запятая, точка с запятой или табуляция · UTF-8 · разбор в браузере')}</div></label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center"><button class="btn gold" data-act="sample">✦ ${T('Use sample: schools register (with planted issues)','Пример: реестр школ (с ошибками)')}</button><button class="btn sm" data-act="dlsample">⇩ ${T('Download sample CSV','Скачать пример CSV')}</button></div></div>
+    <div class="card"><h3>${T('What happens next','Что будет дальше')}</h3><div class="sm muted" style="line-height:1.7">① ${T('Column types inferred: integer, decimal, date, boolean, latitude/longitude','Определяются типы: целое, дробное, дата, логическое, широта/долгота')}<br>② ${T('DCAT-AP 3.0 metadata with live RDF preview','Метаданные DCAT-AP 3.0 с живым RDF')}<br>③ ${T('Validation: missing values, wrong types, personal data (emails, phones, personal codes)','Проверка: пропуски, неверные типы, персональные данные (почта, телефоны, личные коды)')}<br>④ ${T('5-star openness score, versioning and diff','Оценка открытости 5★, версии и сравнение')}</div></div></div>`;
+  if(w===2){const pr=profile(d.cols,d.rows);return h+`<div class="card"><h3>${esc(d.file)} <span class="pill ok">${fmt(d.rows.length)} ${T('rows','строк')}</span><span class="pill">${d.cols.length} ${T('columns','столбцов')}</span><span class="pill mono">${T('delimiter','разделитель')} “${d.dl==='\t'?'TAB':d.dl}”</span><span class="sp"></span><button class="btn pri sm" data-act="ws" data-s="3">${T('Next: metadata','Далее: метаданные')} →</button></h3>
+    <div class="tw"><table><thead><tr><th>${T('Column','Столбец')}</th><th>${T('Inferred type','Тип')}</th><th class="num">${T('Distinct','Уникальных')}</th><th class="num">${T('Missing','Пропуски')}</th><th>${T('Sample values','Примеры')}</th></tr></thead><tbody>${d.cols.map((c,i)=>`<tr><td class="mono"><b>${esc(c.n)}</b></td><td><select class="input" style="padding:4px 8px;width:auto" data-in="type" data-i="${i}">${Object.keys(TY).map(t=>`<option ${t===c.t?'selected':''}>${t}</option>`).join('')}</select>${c.auto!==c.t?' <span class="pill gold">'+T('edited','изменён')+'</span>':''}</td><td class="num">${pr[i].distinct}</td><td class="num">${pr[i].miss}</td><td class="muted sm">${d.rows.slice(0,3).map(r=>esc(r[i])).join(' · ')}</td></tr>`).join('')}</tbody></table></div>
+    <h3 style="margin-top:16px">${T('Preview','Предпросмотр')}</h3>${tbl(d.cols,d.rows.slice(0,8))}</div>`}
+  if(w===3){const m=d.meta;return h+`<div class="g21"><div class="card"><div class="fgrid">
+    <div class="f full"><label>${T('Title','Название')}<code>dct:title</code></label><input class="input" data-in="meta" data-k="title" value="${esc(m.title)}"></div>
+    <div class="f full"><label>${T('Description','Описание')}<code>dct:description</code></label><textarea class="input" rows="2" data-in="meta" data-k="desc">${esc(m.desc)}</textarea></div>
+    <div class="f"><label>${T('Theme','Тема')}<code>dcat:theme</code></label><select class="input" data-in="meta" data-k="theme">${Object.keys(THEMES).map(k=>`<option value="${k}" ${k===m.theme?'selected':''}>${k} — ${T(THEMES[k][0],THEMES[k][1])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Update frequency','Периодичность')}<code>dct:accrualPeriodicity</code></label><select class="input" data-in="meta" data-k="freq">${Object.keys(FREQ).map(k=>`<option value="${k}" ${k===m.freq?'selected':''}>${T(FREQ[k][0],FREQ[k][1])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Keywords (comma)','Ключевые слова')}<code>dcat:keyword</code></label><input class="input" data-in="meta" data-k="kw" value="${esc(m.kw)}"></div>
+    <div class="f"><label>${T('Contact point','Контакт')}<code>dcat:contactPoint</code></label><input class="input" data-in="meta" data-k="contact" value="${esc(m.contact)}"></div>
+    <div class="f"><label>${T('Spatial coverage','Территория')}<code>dct:spatial</code></label><select class="input" data-in="meta" data-k="spatial">${['Velmara (national)',...RN].map(r=>`<option ${r===m.spatial?'selected':''}>${r}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Temporal coverage','Период')}<code>dct:temporal</code></label><input class="input" data-in="meta" data-k="temporal" value="${esc(m.temporal)}"></div>
+    <div class="f full"><label>${T('Licence','Лицензия')}<code>dct:license</code></label><div class="lics">${LIC.map(l=>`<button class="lic ${l.open?'':'closed'} ${m.lic===l.id?'on':''}" data-act="lic" data-l="${l.id}"><b>${l.n}</b>${l.tags.map(t=>`<span class="tg">${T(t[0],t[1])}</span>`).join('')}</button>`).join('')}</div></div>
+    </div><div style="display:flex;justify-content:space-between;margin-top:14px;gap:8px;flex-wrap:wrap"><span class="sm muted" id="metaok"></span><button class="btn pri sm" data-act="ws" data-s="4">${T('Next: validate','Далее: проверка')} →</button></div></div>
+    <div class="card"><h3>DCAT-AP · Turtle <span class="sp"></span><span class="pill ok">${T('live','живой')}</span></h3><pre class="code" id="ttl"></pre></div></div>`}
+  if(w===4){const pr=profile(d.cols,d.rows);const piiCols=d.cols.map((c,i)=>pr[i].pii?i:-1).filter(i=>i>=0);const unres=piiCols.filter(i=>!d.act[i]);const tm=pr.reduce((a,p)=>a+p.miss,0),tb=pr.reduce((a,p)=>a+p.bad.length,0);const score=Math.max(0,Math.round(100-tm/(d.rows.length*d.cols.length)*300-tb*2-unres.length*12));
+    return h+`<div class="kpis"><div class="card kpi"><div class="l">${T('Data quality score','Оценка качества')}</div><div class="v" style="color:${score>80?'var(--mal3)':score>60?'var(--amber)':'var(--red)'}">${score}/100</div></div><div class="card kpi"><div class="l">${T('Missing values','Пропуски')}</div><div class="v">${tm}</div></div><div class="card kpi"><div class="l">${T('Wrong type','Неверный тип')}</div><div class="v">${tb}</div></div><div class="card kpi"><div class="l">${T('PII columns unresolved','Персональные данные')}</div><div class="v" style="color:${unres.length?'var(--red)':'var(--mal3)'}">${unres.length} / ${piiCols.length}</div></div></div>
+    ${piiCols.length?`<div class="card" style="margin-bottom:14px;border-color:color-mix(in srgb,var(--violet) 50%,transparent)"><h3>⚠ ${T('Personal data detector','Детектор персональных данных')}<span class="sp"></span><span class="pill bad">GDPR-style</span></h3>${piiCols.map(i=>{const p=pr[i].pii,lab={email:T('e-mail addresses','адреса почты'),phone:T('phone numbers','телефоны'),id:T('personal ID codes','личные коды')}[p.k];const ex=d.rows.find(r=>PII[p.k](r[i]||''))||[];return`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px dashed var(--line)"><b class="mono">${esc(d.cols[i].n)}</b><span class="pill" style="color:var(--violet)">${p.n} ${lab}</span><span class="mono xs muted">${esc(ex[i])} → ${esc(mask(ex[i]||'',p.k))}</span><span class="sp" style="flex:1"></span>${['mask','drop','keep'].map(a=>`<button class="btn sm ${d.act[i]===a?'pri':''}" data-act="pii" data-i="${i}" data-a="${a}">${{mask:T('Mask','Маскировать'),drop:T('Drop column','Удалить столбец'),keep:T('Not personal','Не ПДн')}[a]}</button>`).join('')}</div>`}).join('')}</div>`:''}
+    <div class="card"><h3>${T('Column report','Отчёт по столбцам')}<span class="sp"></span><button class="btn sm" data-act="coerce">${T('Set invalid values to empty','Неверные значения → пусто')}</button><button class="btn pri sm" data-act="ws" data-s="5" ${unres.length?'disabled':''}>${T('Next: publish','Далее: публикация')} →</button></h3>
+    <div class="tw"><table><thead><tr><th>${T('Column','Столбец')}</th><th>${T('Type','Тип')}</th><th class="num">${T('Missing','Пропуски')}</th><th class="num">${T('Wrong type','Неверный тип')}</th><th>${T('Finding','Находка')}</th></tr></thead><tbody>${d.cols.map((c,i)=>{const p=pr[i];const bad=p.bad.slice(0,2).map(r=>T('row ','стр. ')+(r+2)+': “'+esc(d.rows[r][i])+'”').join(', ');return`<tr><td class="mono">${esc(c.n)}</td><td>${c.t}</td><td class="num ${p.miss?'miss':''}">${p.miss}</td><td class="num ${p.bad.length?'bad':''}">${p.bad.length}</td><td class="sm">${p.pii?`<span class="pill" style="color:var(--violet)">PII · ${p.pii.k}</span> ${d.act[i]?'→ '+d.act[i]:''}`:bad||(p.miss?'<span class="muted">'+T('gaps — consider documenting','пропуски — опишите в метаданных')+'</span>':'<span class="pill ok">OK</span>')}</td></tr>`}).join('')}</tbody></table></div>
+    ${unres.length?`<div class="sm" style="color:var(--red);margin-top:10px">${T('Resolve every personal-data column before publishing.','Решите судьбу каждого столбца с персональными данными перед публикацией.')}</div>`:''}<h3 style="margin-top:16px">${T('Rows with issues','Строки с проблемами')}</h3>${tbl(d.cols,d.rows.slice(0,24),pr,d.act)}</div>`}
+  if(w===5){if(d.done)return h+`<div class="card ok-big"><div class="ck">✓</div><h2 style="margin:0 0 6px">${T('Published','Опубликовано')} · ${starH(d.done.s)}</h2><div class="muted">${esc(d.done.t)} · v${d.done.v} · ${T('available on the portal, API and DCAT-AP feed','доступно на портале, в API и ленте DCAT-AP')}</div><div style="display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="btn pri" data-act="open" data-id="${d.done.id}">${T('Open public dataset page','Открыть страницу набора')} →</button>${d.done.v!=='1.0'?`<button class="btn" data-act="go" data-v="versions">⇄ ${T('See diff','Сравнить версии')}</button>`:''}<button class="btn" data-act="newdraft">${T('Publish another','Опубликовать ещё')}</button></div></div>`;
+    const tmp=draftDs();const s=stars(tmp),mine=S.ds.filter(x=>x.min===S.min);
+    return h+`<div class="card" style="margin-bottom:14px"><h3>${T('Five-star openness','Пять звёзд открытости')}<span class="sp"></span>${starH(s)}</h3><div class="star5">${[['Open licence','Открытая лицензия'],['Structured data','Структурированные'],['Open format (CSV)','Открытый формат (CSV)'],['URI per record / API','URI записей / API'],['Linked to vocabularies','Связаны со словарями']].map((x,i)=>`<div class="${s>i?'on':''}"><b>${T(x[0],x[1])}</b></div>`).join('')}</div>
+    <label class="chk"><input type="checkbox" data-in="dflag" data-k="api" ${d.api?'checked':''}> ${T('Expose rows via REST API (Trino-backed) with stable record URIs','Отдавать строки через REST API (Trino) со стабильными URI записей')}</label>
+    <label class="chk"><input type="checkbox" data-in="dflag" data-k="linked" ${d.linked?'checked':''}> ${T('Link <b>region</b> values to the national gazetteer URIs','Связать значения <b>region</b> с URI национального справочника')}</label></div>
+    <div class="card"><div class="fgrid"><div class="f"><label>${T('Publish as','Публиковать как')}</label><select class="input" data-in="target"><option value="">${T('New dataset','Новый набор')}</option>${mine.map(x=>`<option value="${x.id}" ${d.target===x.id?'selected':''}>${T('New version of: ','Новая версия: ')}${esc(T(x.t[0],x.t[1]))} (v${cur(x).v})</option>`).join('')}</select></div><div class="f"><label>${T('Change note','Комментарий к версии')}</label><input class="input" data-in="note" value="${esc(d.note||'')}" data-en-ph="e.g. School year 2026/27" data-ru-ph="напр. Учебный год 2026/27" placeholder="${T('e.g. School year 2026/27','напр. Учебный год 2026/27')}"></div></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap"><button class="btn pri" data-act="publish" id="pubBtn">⇪ ${T('Publish to portal','Опубликовать на портале')}</button><span class="sm muted">${esc(d.meta.title)} · ${licN(d.meta.lic)} · ${d.rows.length} ${T('rows','строк')}</span></div></div>`}
+  return h};
+function tbl(cols,rows,pr,act){return`<div class="tw" style="max-height:340px;overflow:auto"><table><thead><tr><th>#</th>${cols.map(c=>`<th>${esc(c.n)}</th>`).join('')}</tr></thead><tbody>${rows.map((r,ri)=>`<tr><td class="muted">${ri+1}</td>${cols.map((c,i)=>{const v=r[i]??'';let cl='';let out=esc(v);if(pr){if(MISS.test(v))cl='miss';else if(!TY[c.t](v))cl='bad';else if(pr[i].pii&&act){cl='pii';if(act[i]==='mask')out=esc(mask(v,pr[i].pii.k));if(act[i]==='drop')out='<span class="muted">—</span>'}}return`<td class="${cl}">${out||'<span class="muted">∅</span>'}</td>`}).join('')}</tr>`).join('')}</tbody></table></div>`}
+function ttl(){const m=S.draft.meta,slug=slugify(m.title);return`<span class="c">@prefix dcat: &lt;http://www.w3.org/ns/dcat#&gt; .
+@prefix dct:  &lt;http://purl.org/dc/terms/&gt; .</span>
+
+&lt;https://data.velmara.example/dataset/${slug}&gt;
+  <span class="k">a</span> dcat:Dataset ;
+  <span class="k">dct:title</span> <span class="s">"${esc(m.title)}"@${PT.lang}</span> ;
+  <span class="k">dct:description</span> <span class="s">"${esc(m.desc)}"</span> ;
+  <span class="k">dct:publisher</span> &lt;https://gov.velmara.example/org/${S.min}&gt; ;
+  <span class="k">dcat:theme</span> &lt;http://publications.europa.eu/resource/authority/data-theme/${m.theme}&gt; ;
+  <span class="k">dcat:keyword</span> ${m.kw.split(',').filter(x=>x.trim()).map(k=>'<span class="s">"'+esc(k.trim())+'"</span>').join(', ')||'<span class="s">""</span>'} ;
+  <span class="k">dct:accrualPeriodicity</span> freq:${m.freq.toUpperCase()} ;
+  <span class="k">dct:spatial</span> <span class="s">"${esc(m.spatial)}"</span> ;
+  <span class="k">dct:temporal</span> <span class="s">"${esc(m.temporal)}"</span> ;
+  <span class="k">dcat:contactPoint</span> [ vcard:hasEmail &lt;mailto:${esc(m.contact)}&gt; ] ;
+  <span class="k">dcat:distribution</span> [
+    a dcat:Distribution ;
+    <span class="k">dct:format</span> &lt;…/file-type/CSV&gt; ;
+    <span class="k">dct:license</span> <span class="s">"${licN(m.lic)}"</span> ;
+    <span class="k">dcat:byteSize</span> ${S.draft.size} ] .`}
+const slugify=s=>String(s).toLowerCase().replace(/[^a-z0-9а-я]+/gi,'-').replace(/^-|-$/g,'').slice(0,40)||'dataset';
+function draftDs(){const d=S.draft;return{lic:d.meta.lic,fmt:'CSV',api:d.api,linked:d.linked}}
+function loadDraft(file,txt){const p=parseCSV(txt);if(!p.head.length||!p.rows.length){toast(T('Could not read rows from this file','Не удалось прочитать строки файла'),'bad');return}
+  const cols=p.head.map((n,i)=>{const t=infer(n,p.rows.map(r=>r[i]??''));return{n:n||('col_'+(i+1)),t,auto:t}});const base=file.replace(/\.[a-z]+$/i,'').replace(/[_-]+/g,' ');
+  S.draft={file,size:txt.length,dl:p.dl,cols,rows:p.rows.slice(0,2000),act:{},api:true,linked:false,target:'',note:'',meta:{title:base.charAt(0).toUpperCase()+base.slice(1),desc:'',theme:'EDUC',freq:'annual',kw:'',contact:'opendata@'+S.min+'.gov.velmara.example',spatial:'Velmara (national)',temporal:'2025-01-01/2026-12-31',lic:'ccby'}};
+  if(S.draft.rows.length<p.rows.length)toast(T('Preview limited to the first 2 000 rows','Предпросмотр ограничен первыми 2 000 строками'),'gold');
+  S.ws=2;render();toast(T(`Parsed ${p.rows.length} rows · ${cols.length} columns`,`Прочитано строк: ${p.rows.length} · столбцов: ${cols.length}`))}
+AFTER.publish=()=>{const f=$('#file'),dr=$('#drop');if(f){f.onchange=()=>{const fl=f.files[0];if(!fl)return;const r=new FileReader();r.onload=()=>loadDraft(fl.name,r.result);r.readAsText(fl)};
+  dr.ondragover=e=>{e.preventDefault();dr.classList.add('ov')};dr.ondragleave=()=>dr.classList.remove('ov');dr.ondrop=e=>{e.preventDefault();dr.classList.remove('ov');const fl=e.dataTransfer.files[0];if(fl){const r=new FileReader();r.onload=()=>loadDraft(fl.name,r.result);r.readAsText(fl)}}}
+  if($('#ttl'))updTTL()};
+function updTTL(){$('#ttl').innerHTML=ttl();const m=S.draft.meta,miss=[['title',m.title],['description',m.desc],['keywords',m.kw],['contact',m.contact]].filter(x=>!String(x[1]).trim()).map(x=>x[0]);$('#metaok').innerHTML=miss.length?'<span style="color:var(--amber)">'+T('Recommended fields empty: ','Не заполнены рекомендуемые поля: ')+miss.join(', ')+'</span>':'<span style="color:var(--mal3)">✓ '+T('All mandatory and recommended DCAT-AP fields filled','Все обязательные и рекомендуемые поля DCAT-AP заполнены')+'</span>'}
+
+V.mine=()=>{const L=S.ds.filter(d=>d.min===S.min);return`<div class="tools"><span class="muted sm">${L.length} ${T('datasets published by','наборов публикует')} ${mn(S.min)}</span><span style="flex:1"></span><button class="btn pri sm" data-act="go" data-v="publish">＋ ${T('New dataset','Новый набор')}</button></div>`+(L.length?`<div class="tw"><table><thead><tr><th>${T('Dataset','Набор')}</th><th>${T('Version','Версия')}</th><th>${T('Openness','Открытость')}</th><th class="num">${T('Quality','Качество')}</th><th class="num">${T('Downloads','Скачивания')}</th><th>${T('Updated','Обновлён')}</th><th></th></tr></thead><tbody>${L.map(d=>`<tr><td><b>${esc(T(d.t[0],d.t[1]))}</b>${d.src?' <span class="pill">'+T('harvested','собран')+'</span>':''}</td><td class="mono">v${cur(d).v} <span class="muted">(${d.versions.length})</span></td><td>${starH(stars(d))}</td><td class="num">${quality(d)}%</td><td class="num">${fmt(d.dl)}</td><td class="mono sm">${cur(d).date}</td><td><button class="btn sm" data-act="simver" data-id="${d.id}">⟳ ${T('Simulate next export','Следующая выгрузка')}</button> <button class="btn sm" data-act="open" data-id="${d.id}">${T('Public page','Страница')} →</button></td></tr>`).join('')}</tbody></table></div>`:`<div class="card muted">${T('No datasets yet — publish the first one.','Наборов пока нет — опубликуйте первый.')}</div>`)};
+
+function diff(A,B){const key=0,ka=new Map(A.rows.map(r=>[r[key]+'|'+(r[1]||''),r])),kb=new Map(B.rows.map(r=>[r[key]+'|'+(r[1]||''),r]));const an=A.cols.map(c=>c.n),bn=B.cols.map(c=>c.n);
+  const out=[];B.rows.forEach(r=>{const k=r[key]+'|'+(r[1]||'');const o=ka.get(k);if(!o)out.push({s:'add',r});else{const ch=bn.map((n,i)=>{const j=an.indexOf(n);return j<0?false:String(o[j])!==String(r[i])?o[j]:false});if(ch.some(x=>x!==false))out.push({s:'chg',r,ch})}});
+  A.rows.forEach(r=>{if(!kb.has(r[key]+'|'+(r[1]||'')))out.push({s:'del',r:bn.map(n=>{const j=an.indexOf(n);return j<0?'':r[j]})})});
+  return{out,addC:bn.filter(n=>!an.includes(n)),delC:an.filter(n=>!bn.includes(n)),typC:B.cols.filter(c=>{const o=A.cols.find(x=>x.n===c.n);return o&&o.t!==c.t}).map(c=>c.n),same:B.rows.length-out.filter(x=>x.s!=='del').length}}
+V.versions=()=>{const L=S.ds.filter(d=>d.versions.length>1);if(!L.find(d=>d.id===S.vd.id)&&L[0])S.vd={id:L[0].id,a:L[0].versions.length-2,b:L[0].versions.length-1};const d=ds(S.vd.id);if(!d)return`<div class="card muted">${T('No dataset has two versions yet. Use “Simulate next export” in My datasets.','Пока нет наборов с двумя версиями. Нажмите «Следующая выгрузка» в «Мои наборы».')}</div>`;
+  const A=d.versions[S.vd.a],B=d.versions[S.vd.b],df=diff(A,B),c={add:0,chg:0,del:0};df.out.forEach(x=>c[x.s]++);
+  return`<div class="card" style="margin-bottom:14px"><div class="fgrid" style="grid-template-columns:2fr 1fr 1fr"><div class="f"><label>${T('Dataset','Набор')}</label><select class="input" data-in="vdid">${L.map(x=>`<option value="${x.id}" ${x.id===d.id?'selected':''}>${esc(T(x.t[0],x.t[1]))}</option>`).join('')}</select></div>${['a','b'].map(k=>`<div class="f"><label>${k==='a'?T('Base','Базовая'):T('Compare','Сравнить')}</label><select class="input" data-in="vd" data-k="${k}">${d.versions.map((v,i)=>`<option value="${i}" ${S.vd[k]===i?'selected':''}>v${v.v} · ${v.date}</option>`).join('')}</select></div>`).join('')}</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><span class="pill ok">+${c.add} ${T('rows added','строк добавлено')}</span><span class="pill warn">~${c.chg} ${T('changed','изменено')}</span><span class="pill bad">−${c.del} ${T('removed','удалено')}</span><span class="pill">${df.same} ${T('unchanged','без изменений')}</span>${df.addC.map(n=>`<span class="pill ok mono">+col ${esc(n)}</span>`).join('')}${df.delC.map(n=>`<span class="pill bad mono">−col ${esc(n)}</span>`).join('')}${df.typC.map(n=>`<span class="pill warn mono">type ${esc(n)}</span>`).join('')}</div>
+  <div class="sm muted" style="margin-top:8px">“${esc(A.note)}” → “${esc(B.note)}”</div></div>
+  <div class="tw" style="max-height:480px;overflow:auto"><table><thead><tr><th></th>${B.cols.map(x=>`<th>${esc(x.n)}</th>`).join('')}</tr></thead><tbody>${df.out.length?df.out.map(x=>`<tr><td><b style="color:${x.s==='add'?'var(--mal3)':x.s==='del'?'var(--red)':'var(--amber)'}">${{add:'+',del:'−',chg:'~'}[x.s]}</b></td>${B.cols.map((_,i)=>x.s==='chg'?(x.ch[i]!==false?`<td class="chg"><span class="old">${esc(x.ch[i])}</span>${esc(x.r[i])}</td>`:`<td>${esc(x.r[i])}</td>`):`<td class="${x.s}">${esc(x.r[i])}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${B.cols.length+1}" class="muted">${T('Versions are identical','Версии совпадают')}</td></tr>`}</tbody></table></div>`};
+
+V.harvest=()=>`<div class="g21"><div><div class="tw"><table><thead><tr><th>${T('Source','Источник')}</th><th>${T('Protocol','Протокол')}</th><th>${T('Schedule','Расписание')}</th><th>${T('Last run','Последний запуск')}</th><th class="num">${T('Datasets','Наборов')}</th><th></th></tr></thead><tbody>${S.src.map((s,i)=>`<tr><td><b>${esc(s.n)}</b><div class="xs muted mono">${esc(s.u)}</div></td><td><span class="pill">${s.p}</span></td><td><select class="input" style="padding:4px 8px;width:auto" data-in="cron" data-i="${i}">${['hourly','daily 02:00','weekly Mon 03:00','monthly 1st 04:00'].map(c=>`<option ${c===s.cron?'selected':''}>${c}</option>`).join('')}</select> <label class="chk" style="display:inline-flex;margin:0 0 0 6px"><input type="checkbox" data-in="son" data-i="${i}" ${s.on?'checked':''}>${T('on','вкл')}</label></td><td class="mono sm">${s.last}</td><td class="num">${s.cnt}</td><td><button class="btn sm pri" data-act="harv" data-i="${i}">▶ ${T('Run now','Запустить')}</button></td></tr>`).join('')}</tbody></table></div>
+  <div class="card" style="margin-top:14px"><h3>${T('Add source','Добавить источник')}</h3><div class="fgrid"><div class="f"><label>${T('Name','Название')}</label><input class="input" id="hsN" value="City of Arlen open data"></div><div class="f"><label>${T('Protocol','Протокол')}</label><select class="input" id="hsP"><option>CKAN API</option><option>DCAT-AP RDF</option><option>DCAT-AP JSON-LD</option><option>SDMX 2.1</option><option>OAI-PMH</option></select></div><div class="f full"><label>URL</label><input class="input mono" id="hsU" value="https://data.arlen.example/catalog.jsonld"></div></div><button class="btn sm" style="margin-top:10px" data-act="addsrc">＋ ${T('Add & schedule','Добавить и запланировать')}</button></div></div>
+  <div class="card"><h3>${T('Harvest job log','Журнал сбора')}<span class="sp"></span><button class="btn sm" data-act="clrlog">${T('Clear','Очистить')}</button></h3><div class="log" id="hlog">${S.hlog.length?S.hlog.map(l=>`<div class="${l[1]}"><span class="t">${l[0]}</span> ${esc(l[2])}</div>`).join(''):`<span class="t">${T('No runs in this session yet — press Run now.','Запусков ещё не было — нажмите «Запустить».')}</span>`}</div></div></div>`;
+
+V.inbox=()=>reqBoard(true);V.requests=()=>reqBoard(false);
+const RST={open:['Open','Открыт',''],review:['Under review','На рассмотрении','warn'],planned:['Planned','Запланирован','gold'],published:['Published','Опубликован','ok'],declined:['Declined','Отклонён','bad']};
+function reqBoard(pub){let L=S.req.slice();if(pub)L=L.filter(r=>r.min===S.min);L.sort((a,b)=>S.rsort==='new'?b.d.localeCompare(a.d):b.votes-a.votes);
+  return`<div class="g21"><div><div class="tools"><button class="btn sm ${S.rsort!=='new'?'pri':''}" data-act="rsort" data-s="top">♥ ${T('Most voted','Популярные')}</button><button class="btn sm ${S.rsort==='new'?'pri':''}" data-act="rsort" data-s="new">${T('Newest','Новые')}</button>${pub?`<span class="muted sm">${T('Requests addressed to','Запросы к')} ${mn(S.min)}</span>`:''}</div>
+  ${L.map(r=>`<div class="card reqc"><button class="vote ${S.voted[r.id]?'on':''}" data-act="vote" data-id="${r.id}">▲<span>${r.votes}</span><small>${T('votes','голосов')}</small></button><div class="bd"><b>${esc(T(r.t[0],r.t[1]))}</b><div class="xs muted" style="margin:3px 0 6px">${mn(r.min)} · ${esc(r.by)} · ${r.d}</div><span class="pill ${RST[r.st][2]}">${T(RST[r.st][0],RST[r.st][1])}</span>${r.reply?`<div class="reply"><b class="xs" style="color:var(--gold2)">${T('Ministry response','Ответ министерства')}:</b> ${esc(T(r.reply[0],r.reply[1]))}</div>`:''}${pub?`<div style="margin-top:8px"><button class="btn sm" data-act="respond" data-id="${r.id}">✎ ${T('Respond','Ответить')}</button></div>`:''}</div></div>`).join('')||`<div class="card muted">${T('No requests for this ministry.','Запросов к министерству нет.')}</div>`}</div>
+  <div class="card"><h3>${pub?T('How it works','Как это работает'):T('Request a dataset','Запросить набор данных')}</h3>${pub?`<div class="sm muted" style="line-height:1.7">${T('Citizens, researchers and companies request data and upvote. Each ministry must answer within 30 days; the response rate feeds the openness ranking.','Граждане, исследователи и компании запрашивают данные и голосуют. Министерство отвечает в течение 30 дней; доля ответов входит в рейтинг открытости.')}</div>`:`<div class="f"><label>${T('What data do you need?','Какие данные нужны?')}</label><input class="input" id="rqT" data-en-ph="e.g. Daily pharmacy stock levels" data-ru-ph="напр. Остатки лекарств в аптеках" placeholder="${T('e.g. Daily pharmacy stock levels','напр. Остатки лекарств в аптеках')}"></div><div class="f" style="margin-top:10px"><label>${T('Ministry','Министерство')}</label><select class="input" id="rqM">${Object.keys(MIN).map(k=>`<option value="${k}">${mn(k)}</option>`).join('')}</select></div><div class="f" style="margin-top:10px"><label>${T('Your name or organisation','Имя или организация')}</label><input class="input" id="rqB" value="Guest researcher"></div><button class="btn pri" style="margin-top:12px" data-act="newreq">${T('Submit request','Отправить запрос')}</button>`}</div></div>`}
+
+V.catalog=()=>{const q=(S.q||'').toLowerCase();const L=S.ds.filter(d=>(!S.fm||d.min===S.fm)&&(!S.fs||stars(d)>=S.fs)&&(!q||(d.t.join(' ')+d.kw.join(' ')).toLowerCase().includes(q)));const tot=S.ds.reduce((a,d)=>a+d.dl,0);
+  return`<div class="kpis"><div class="card kpi"><div class="l">${T('Datasets','Наборы')}</div><div class="v">${S.ds.length}</div></div><div class="card kpi"><div class="l">${T('Downloads','Скачивания')}</div><div class="v">${fmt(tot)}</div></div><div class="card kpi"><div class="l">${T('Apps built','Приложений')}</div><div class="v">${S.apps.length}</div></div><div class="card kpi"><div class="l">${T('Avg openness','Средняя открытость')}</div><div class="v" style="color:var(--gold2)">${(S.ds.reduce((a,d)=>a+stars(d),0)/S.ds.length).toFixed(1)}★</div></div></div>
+  <div class="tools"><input class="input" data-in="q" value="${esc(S.q||'')}" data-en-ph="Search datasets, keywords…" data-ru-ph="Поиск наборов, ключевых слов…" placeholder="${T('Search datasets, keywords…','Поиск наборов, ключевых слов…')}"><select class="input" data-in="fm" style="max-width:240px"><option value="">${T('All publishers','Все издатели')}</option>${Object.keys(MIN).map(k=>`<option value="${k}" ${S.fm===k?'selected':''}>${mn(k)}</option>`).join('')}</select><select class="input" data-in="fs" style="max-width:150px">${[0,3,4,5].map(n=>`<option value="${n}" ${+S.fs===n?'selected':''}>${n?n+'★ +':T('Any openness','Любая')}</option>`).join('')}</select></div>
+  <div class="dsl" id="dsl">${L.map(d=>`<div class="card dsc" data-act="open" data-id="${d.id}"><div class="t">${esc(T(d.t[0],d.t[1]))}</div><div class="m">${mn(d.min)}</div><div class="sm muted">${esc(T(d.desc[0],d.desc[1])||T('Harvested dataset','Собранный набор'))}</div><div class="row">${starH(stars(d))}<span class="pill">${d.fmt}</span><span class="pill">${licN(d.lic)}</span>${d.geo?'<span class="pill gold">⌖ '+T('map','карта')+'</span>':''}${d.src?'<span class="pill">⟳ '+esc(d.src)+'</span>':''}</div><div class="xs muted">v${cur(d).v} · ${cur(d).date} · ⇩ ${fmt(d.dl)}</div></div>`).join('')||`<div class="card muted">${T('Nothing matches the filter.','Ничего не найдено.')}</div>`}</div>`};
+
+V.dataset=()=>{const d=ds(S.cur)||S.ds[0];S.cur=d.id;const c=cur(d),s=stars(d);const tabs=[['preview','Preview','Таблица'],['charts','Auto charts','Авто-графики'],...(d.geo?[['map','Map','Карта']]:[]),['api','API','API'],['meta','Metadata','Метаданные']];if(!tabs.find(t=>t[0]===S.dtab))S.dtab='preview';
+  let body='';const ni=c.cols.findIndex(x=>x.t==='integer'||x.t==='decimal'),ci=c.cols.findIndex(x=>x.t==='string'&&new Set(c.rows.map(r=>r[c.cols.indexOf(x)])).size<=12),di=c.cols.findIndex(x=>x.t==='date');
+  if(S.dtab==='preview')body=tbl(c.cols,c.rows.slice(0,60))+`<div class="xs muted" style="margin-top:6px">${T('Showing','Показано')} ${Math.min(60,c.rows.length)} / ${c.rows.length}</div>`;
+  if(S.dtab==='charts'){const nums=c.cols.map((x,i)=>i).filter(i=>c.cols[i].t==='integer'||c.cols[i].t==='decimal');const m=S.cm!=null&&nums.includes(+S.cm)?+S.cm:ni;
+    body=`<div class="tools"><span class="sm muted">${T('Measure','Показатель')}</span><select class="input" data-in="cm" style="max-width:200px">${nums.map(i=>`<option value="${i}" ${i===m?'selected':''}>${esc(c.cols[i].n)}</option>`).join('')}</select><span class="pill">${T('Superset-class chart engine · auto-detected','Движок графиков Superset-класса · авто')}</span></div><div class="g2">`;
+    if(ci>=0&&m>=0){const agg={};c.rows.forEach(r=>{const k=r[ci];agg[k]=(agg[k]||0)+(parseFloat(r[m])||0)});const ks=Object.keys(agg).sort((a,b)=>agg[b]-agg[a]);body+=`<div class="card chart"><h3>Σ ${esc(c.cols[m].n)} ${T('by','по')} ${esc(c.cols[ci].n)}</h3>${hbar(ks,ks.map(k=>agg[k]))}</div>`}
+    if(di>=0&&m>=0){const by=n=>{const a={},k2={};c.rows.forEach(r=>{const v=parseFloat(r[m]);if(isNaN(v))return;const k=String(r[di]).slice(0,n);a[k]=(a[k]||0)+v;k2[k]=(k2[k]||0)+1});Object.keys(a).forEach(k=>a[k]=Math.round(a[k]/k2[k]*10)/10);return a};let agg=by(7);if(Object.keys(agg).length<3)agg=by(10);const ks=Object.keys(agg).sort();body+=`<div class="card chart"><h3>${T('Avg','Среднее')} ${esc(c.cols[m].n)} ${T('over time','во времени')}</h3>${line(ks,ks.map(k=>agg[k]))}</div>`}
+    body+=`<div class="card"><h3>${T('Column profile','Профиль столбцов')}</h3><div class="tw"><table><thead><tr><th>${T('Column','Столбец')}</th><th class="num">min</th><th class="num">${T('mean','среднее')}</th><th class="num">max</th></tr></thead><tbody>${nums.map(i=>{const v=c.rows.map(r=>parseFloat(r[i])).filter(x=>!isNaN(x));return`<tr><td class="mono">${esc(c.cols[i].n)}</td><td class="num">${fmt(Math.min(...v))}</td><td class="num">${fmt(Math.round(v.reduce((a,b)=>a+b,0)/v.length*10)/10)}</td><td class="num">${fmt(Math.max(...v))}</td></tr>`}).join('')}</tbody></table></div></div></div>`}
+  if(S.dtab==='map'){const la=c.cols.findIndex(x=>x.t==='lat'),lo=c.cols.findIndex(x=>x.t==='lon'),lb=c.cols.findIndex(x=>x.t==='string');const pts=c.rows.map(r=>[parseFloat(r[la]),parseFloat(r[lo]),ni>=0?parseFloat(r[ni]):null,r[lb>=0?lb:0]]);
+    body=`<div class="g21"><div class="card chart">${mapSVG(pts,ni>=0?c.cols[ni].n:'')}</div><div class="card"><h3>${T('Map preview','Предпросмотр карты')}</h3><div class="sm muted" style="line-height:1.6">${T('Detected coordinate columns','Найдены координаты')}: <b class="mono">${esc(c.cols[la].n)}, ${esc(c.cols[lo].n)}</b><br>${T('Circle size','Размер круга')}: <b class="mono">${ni>=0?esc(c.cols[ni].n):'—'}</b><br>${pts.filter(p=>!isNaN(p[0])).length} ${T('points plotted · hover for details','точек · наведите для деталей')}<br>${T('Projection: WGS84 → simplified national grid','Проекция: WGS84 → упрощённая национальная сетка')}</div><div class="legend" style="margin-top:12px"><span><i style="background:var(--gold)"></i>${T('record','запись')}</span><span><i style="background:none;border:2px solid var(--mal3);border-radius:50%"></i>${T('capital Arlen','столица Арлен')}</span></div></div></div>`}
+  if(S.dtab==='api')body=`<div class="card"><h3>REST · SQL (Trino)</h3><pre class="code">${curl(d)}</pre><pre class="code" style="margin-top:10px"><span class="c">-- SQL endpoint, federated by Trino</span>
+<span class="k">SELECT</span> ${c.cols.slice(0,3).map(x=>x.n).join(', ')}
+<span class="k">FROM</span> opendata.${S.min}.${d.id.replace(/-/g,'_')}
+<span class="k">LIMIT</span> 100;</pre><div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">${d.api?'<span class="pill ok">✓ '+T('API enabled','API включён')+'</span>':'<span class="pill warn">'+T('API not enabled — file download only (3★ max)','API не включён — только файл (макс. 3★)')+'</span>'}<button class="btn sm pri" data-act="apifor" data-id="${d.id}">⌘ ${T('Get API key & try','Получить ключ и попробовать')}</button></div></div>`;
+  if(S.dtab==='meta')body=`<div class="card"><dl class="facts" style="padding:0">${[['dct:publisher',mn(d.min)],['dcat:theme',d.theme+' — '+T(THEMES[d.theme][0],THEMES[d.theme][1])],['dct:license',licN(d.lic)],['dct:accrualPeriodicity',T(FREQ[d.freq][0],FREQ[d.freq][1])],['dcat:keyword',d.kw.join(', ')],['dcat:contactPoint',d.contact],['dct:format',d.fmt],['dct:modified',c.date],['adms:version',c.v],['dct:source',d.src||'—']].map(x=>`<dt class="mono">${x[0]}</dt><dd>${esc(x[1])}</dd>`).join('')}</dl></div>`;
+  const apps=S.apps.filter(a=>a.ds.includes(d.id));
+  return`<div class="card" style="margin-bottom:14px"><div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start"><div style="flex:1;min-width:220px"><div class="xs muted">${mn(d.min)} · ${d.theme}</div><h2 style="margin:4px 0 6px;font-size:21px">${esc(T(d.t[0],d.t[1]))}</h2><div class="sm muted">${esc(T(d.desc[0],d.desc[1]))}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px"><span class="pill">${licN(d.lic)}</span><span class="pill">v${c.v} · ${c.date}</span><span class="pill">${c.rows.length} ${T('rows','строк')}</span><span class="pill">⇩ ${fmt(d.dl)}</span>${d.kw.map(k=>`<span class="pill">#${esc(k)}</span>`).join('')}</div></div>
+  <div style="text-align:right"><div style="font-size:22px">${starH(s)}</div><div class="xs muted">${T('openness','открытость')} ${s}/5 · ${T('quality','качество')} ${quality(d)}%</div><div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end;flex-wrap:wrap"><select class="input" data-in="cur" style="width:auto;padding:6px 8px">${S.ds.map(x=>`<option value="${x.id}" ${x.id===d.id?'selected':''}>${esc(T(x.t[0],x.t[1]).slice(0,32))}</option>`).join('')}</select><button class="btn pri sm" data-act="dlcsv" data-id="${d.id}">⇩ CSV</button></div></div></div></div>
+  <div class="tabs">${tabs.map(t=>`<button class="${S.dtab===t[0]?'on':''}" data-act="dtab" data-t="${t[0]}">${T(t[1],t[2])}</button>`).join('')}</div>${body}
+  ${apps.length?`<h3 style="margin:18px 0 10px;font-size:15px">${T('Apps built on this data','Приложения на этих данных')}</h3><div class="apps">${apps.map(appCard).join('')}</div>`:''}`};
+function curl(d,key){return`<span class="c"># ${T('first 5 rows as JSON','первые 5 строк в JSON')}</span>
+curl -H <span class="s">"X-API-Key: ${key||'&lt;your-key&gt;'}"</span> \\
+  <span class="s">"https://api.data.velmara.example/v1/datasets/${d.id}/rows?limit=5&amp;format=json"</span>`}
+
+V.api=()=>{const k=S.keys[S.api.key],d=ds(S.api.ds)||S.ds[0],TL={free:[60,'Free'],research:[600,'Researcher'],partner:[6000,'Partner']};const now=Date.now();
+  return`<div class="g21"><div><div class="card" style="margin-bottom:14px"><h3>${T('Your API keys','Ваши API-ключи')}</h3>${S.keys.length?`<div class="tw"><table><thead><tr><th>${T('Name','Имя')}</th><th>${T('Key','Ключ')}</th><th>${T('Tier','Тариф')}</th><th>${T('Rate (this minute)','Лимит (эта минута)')}</th><th></th></tr></thead><tbody>${S.keys.map((x,i)=>{const lim=TL[x.tier][0],u=now-x.w<6e4?x.used:0;return`<tr class="clk" data-act="selkey" data-i="${i}" style="${i===S.api.key?'outline:2px solid var(--mal);outline-offset:-2px':''}"><td><b>${esc(x.n)}</b><div class="xs muted">${x.c}</div></td><td class="mono sm">${x.k.slice(0,12)}••••${x.k.slice(-4)}</td><td>${TL[x.tier][1]} <span class="xs muted">${fmt(lim)}/min</span></td><td style="min-width:120px"><div class="meter"><i class="${u/lim>.8?'hot':''}" style="width:${Math.min(100,u/lim*100)}%"></i></div><div class="xs muted">${u} / ${fmt(lim)}</div></td><td><button class="btn sm danger" data-act="revoke" data-i="${i}">${T('Revoke','Отозвать')}</button></td></tr>`}).join('')}</tbody></table></div>`:`<div class="muted sm">${T('No keys yet.','Ключей нет.')}</div>`}
+  <div class="fgrid" style="margin-top:12px"><div class="f"><label>${T('Key name','Имя ключа')}</label><input class="input" id="kN" value="My weather app"></div><div class="f"><label>${T('Tier','Тариф')}</label><select class="input" id="kT"><option value="free">Free · 60 req/min</option><option value="research">Researcher · 600 req/min</option><option value="partner">Partner · 6 000 req/min</option></select></div></div><button class="btn pri sm" style="margin-top:10px" data-act="newkey">＋ ${T('Create key','Создать ключ')}</button></div>
+  <div class="card"><h3>${T('Try it','Попробовать')}<span class="sp"></span><select class="input" data-in="apids" style="width:auto;padding:6px 8px">${S.ds.filter(x=>x.api).map(x=>`<option value="${x.id}" ${x.id===d.id?'selected':''}>${x.id}</option>`).join('')}</select></h3><pre class="code">${curl(d,k?k.k:'')}</pre><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn pri sm" data-act="call" ${k?'':'disabled'}>▶ ${T('Send request','Отправить запрос')}</button><button class="btn sm" data-act="burst" ${k?'':'disabled'}>⚡ ${T('Burst ×100 (test rate limit)','Залп ×100 (проверить лимит)')}</button><button class="btn sm" data-act="copycurl">⧉ ${T('Copy curl','Копировать curl')}</button></div></div></div>
+  <div class="card"><h3>${T('Response','Ответ')}</h3><pre class="code" id="resp" style="max-height:520px">${S.api.resp||'<span class="c">'+T('// press Send request','// нажмите «Отправить запрос»')+'</span>'}</pre></div></div>`};
+AFTER.api=()=>{clearInterval(window._ai);window._ai=setInterval(()=>{if(S.view!=='api'){clearInterval(window._ai);return}const k=S.keys[S.api.key];if(k&&k.used&&Date.now()-k.w>6e4){k.used=0;render()}},1500)};
+function apiCall(n){const k=S.keys[S.api.key],lim={free:60,research:600,partner:6000}[k.tier],d=ds(S.api.ds)||S.ds[0];if(Date.now()-k.w>6e4){k.w=Date.now();k.used=0}let ok=0,no=0;for(let i=0;i<n;i++){if(k.used<lim){k.used++;ok++}else no++}
+  const c=cur(d),lat=40+Math.round(Math.random()*90),rem=Math.max(0,lim-k.used);
+  const hdr=`<span class="c">HTTP/2 ${no&&!ok?'429 Too Many Requests':'200 OK'}  · ${lat} ms
+x-ratelimit-limit: ${lim}
+x-ratelimit-remaining: ${rem}
+x-ratelimit-reset: ${Math.ceil((6e4-(Date.now()-k.w))/1000)}s${n>1?`\n# burst: ${ok} × 200, ${no} × 429`:''}</span>\n`;
+  const body=no&&!ok?{error:'rate_limited',message:'Limit '+lim+' req/min for tier '+k.tier}:{dataset:d.id,version:c.v,license:licN(d.lic),total:c.rows.length,rows:c.rows.slice(0,5).map(r=>Object.fromEntries(c.cols.map((x,i)=>[x.n,x.t==='integer'||x.t==='decimal'||x.t==='lat'||x.t==='lon'?+r[i]:r[i]])))};
+  S.api.resp=hdr+esc(JSON.stringify(body,null,2)).replace(/(&quot;[^&]*?&quot;)(:)/g,'<span class="k">$1</span>$2');d.dl+=ok;render();if(no)toast(T(`${no} requests rejected with 429 — rate limit works`,`${no} запросов отклонены с кодом 429 — лимит работает`),'gold')}
+
+function appCard(a){return`<div class="card appc"><div class="ic" style="background:color-mix(in srgb,${a.c} 20%,transparent)">${a.ic}</div><b>${esc(a.n)}</b><div class="xs muted">${esc(a.by)} · ${{mobile:T('mobile app','мобильное'),web:T('web app','веб'),research:T('research','исследование')}[a.k]}</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin:8px 0">${a.ds.map(x=>`<span class="pill" style="cursor:pointer" data-act="open" data-id="${x}">${x}</span>`).join('')}</div><div class="xs muted">${fmt(a.u)} ${T('monthly users','пользователей в месяц')}</div></div>`}
+V.apps=()=>`<div class="tools"><select class="input" data-in="af" style="max-width:280px"><option value="">${T('All datasets','Все наборы')}</option>${S.ds.map(x=>`<option value="${x.id}" ${S.af===x.id?'selected':''}>${esc(T(x.t[0],x.t[1]))}</option>`).join('')}</select><span style="flex:1"></span><button class="btn pri sm" data-act="submitapp">＋ ${T('Submit your app','Добавить приложение')}</button></div><div class="apps">${S.apps.filter(a=>!S.af||a.ds.includes(S.af)).map(appCard).join('')}</div>`;
+
+function minStats(){return Object.keys(MIN).map(m=>{const L=S.ds.filter(d=>d.min===m),R=S.req.filter(r=>r.min===m),ans=R.filter(r=>r.reply).length;const st_=L.length?L.reduce((a,d)=>a+stars(d),0)/L.length:0,q=L.length?L.reduce((a,d)=>a+quality(d),0)/L.length:0,resp=R.length?ans/R.length*100:100;return{m,n:L.length,st:st_,q,resp,score:Math.round(st_/5*45+q*.35+resp*.2)}}).sort((a,b)=>b.score-a.score)}
+V.quality=()=>{const M=minStats();return`<div class="g21"><div class="card"><h3>${T('Ministry openness leaderboard','Рейтинг открытости министерств')}<span class="sp"></span><span class="pill gold">${T('updated live','обновляется сразу')}</span></h3><div class="tw"><table><thead><tr><th>#</th><th>${T('Ministry','Министерство')}</th><th class="num">${T('Datasets','Наборов')}</th><th>${T('Avg stars','Средн. звёзды')}</th><th class="num">${T('Quality','Качество')}</th><th class="num">${T('Requests answered','Ответы')}</th><th>${T('Score','Балл')}</th></tr></thead><tbody>${M.map((x,i)=>`<tr ${x.m===S.min&&S.mode==='pub'?'style="background:color-mix(in srgb,var(--gold) 8%,transparent)"':''}><td><span class="medal ${i<3?'m'+(i+1):''}">${i+1}</span></td><td><b>${mn(x.m)}</b></td><td class="num">${x.n}</td><td>${starH(Math.round(x.st))} <span class="xs muted">${x.st.toFixed(1)}</span></td><td class="num">${Math.round(x.q)}%</td><td class="num">${Math.round(x.resp)}%</td><td style="min-width:110px"><div class="bar"><i style="width:${x.score}%"></i></div><b class="xs">${x.score}</b></td></tr>`).join('')}</tbody></table></div><div class="xs muted" style="margin-top:8px">${T('Score = 45% openness stars + 35% data quality (completeness, metadata, freshness) + 20% request response rate','Балл = 45% звёзды открытости + 35% качество (полнота, метаданные, свежесть) + 20% доля ответов на запросы')}</div></div>
+  <div class="card"><h3>${T('Datasets by openness','Наборы по открытости')}</h3>${[5,4,3,2,1,0].map(n=>{const c=S.ds.filter(d=>stars(d)===n).length;return`<div style="display:flex;gap:10px;align-items:center;margin:8px 0"><span style="width:84px">${starH(n)}</span><div class="bar" style="flex:1;height:10px"><i style="width:${c/S.ds.length*100}%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></i></div><b class="sm" style="width:20px;text-align:right">${c}</b></div>`}).join('')}
+  <h3 style="margin-top:18px">${T('Lowest scoring — fix first','Худшие — исправить первыми')}</h3>${S.ds.slice().sort((a,b)=>quality(a)+stars(a)*10-quality(b)-stars(b)*10).slice(0,4).map(d=>`<div class="sm" style="display:flex;gap:8px;align-items:center;padding:6px 0;border-top:1px dashed var(--line);cursor:pointer" data-act="open" data-id="${d.id}"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(T(d.t[0],d.t[1]))}</span>${starH(stars(d))}<b>${quality(d)}%</b></div>`).join('')}</div></div>`};
+
+/* ---------- actions ---------- */
+function modal(h){$('#md').innerHTML=h;$('#mb').classList.add('on')}
+const closeM=()=>$('#mb').classList.remove('on');
+$('#mb').addEventListener('click',e=>{if(e.target.id==='mb')closeM()});
+const A={
+  mode:el=>{S.mode=el.dataset.m;go(S.mode==='pub'?'publish':'catalog')},
+  go:el=>go(el.dataset.v), menu:()=>$('#side').classList.toggle('open'),
+  reset:()=>{try{localStorage.removeItem('odh-v1')}catch(e){}S=seed();render();toast(T('Demo data reset','Данные сброшены'))},
+  sample:()=>loadDraft('schools_register_2026.csv',sampleCSV()),
+  dlsample:()=>dl('schools_register_2026.csv',sampleCSV()),
+  newdraft:()=>{S.draft=null;S.ws=1;render()},
+  ws:el=>{if(!S.draft){toast(T('Upload a CSV first','Сначала загрузите CSV'),'bad');return}S.ws=+el.dataset.s;render()},
+  lic:el=>{S.draft.meta.lic=el.dataset.l;render()},
+  pii:el=>{S.draft.act[el.dataset.i]=el.dataset.a;render()},
+  coerce:()=>{const d=S.draft;let n=0;d.rows.forEach(r=>d.cols.forEach((c,i)=>{const v=r[i]??'';if(!MISS.test(v)&&!TY[c.t](v)){r[i]='';n++}}));render();toast(T(`${n} invalid values cleared`,`Очищено неверных значений: ${n}`))},
+  publish:async()=>{const d=S.draft,b=$('#pubBtn');b.disabled=true;b.innerHTML='⏳ '+T('Writing to object store, registering in Trino…','Запись в хранилище, регистрация в Trino…');await sleep(900);
+    const pr=profile(d.cols,d.rows);const keep=d.cols.map((c,i)=>d.act[i]!=='drop');const cols=d.cols.filter((c,i)=>keep[i]).map(c=>({n:c.n,t:c.t}));const rows=d.rows.map(r=>r.filter((v,i)=>keep[i]).map((v,j)=>{const i=d.cols.indexOf(d.cols.filter((c,k)=>keep[k])[j]);return d.act[i]==='mask'&&pr[i].pii?mask(v,pr[i].pii.k):v}));
+    let t;if(d.target){t=ds(d.target);const pv=cur(t).v.split('.');const nv=pv[0]+'.'+(+pv[1]+1);t.versions.push(ver(nv,today(),d.note||d.meta.title,cols,rows));t.lic=d.meta.lic;t.api=d.api;t.linked=d.linked;S.vd={id:t.id,a:t.versions.length-2,b:t.versions.length-1}}
+    else{let id=slugify(d.meta.title);while(ds(id))id+='-2';t=mkds({id,min:S.min,t:[d.meta.title,d.meta.title],desc:[d.meta.desc,d.meta.desc],theme:d.meta.theme,lic:d.meta.lic,freq:d.meta.freq,api:d.api,linked:d.linked,contact:d.meta.contact,kw:d.meta.kw.split(',').map(x=>x.trim()).filter(Boolean),geo:cols.some(c=>c.t==='lat')&&cols.some(c=>c.t==='lon'),versions:[ver('1.0',today(),d.note||'Initial release',cols,rows)]});S.ds.unshift(t)}
+    S.cur=t.id;d.done={id:t.id,t:T(t.t[0],t.t[1]),v:cur(t).v,s:stars(t)};render();toast(T('Dataset published · DCAT-AP feed updated','Набор опубликован · лента DCAT-AP обновлена'),'gold')},
+  simver:el=>{const d=ds(el.dataset.id),c=cur(d),R=rng(d.versions.length*91+7);const rows=c.rows.map(r=>r.slice());c.cols.forEach((x,i)=>{if(x.t==='integer'||x.t==='decimal')rows.forEach(r=>{if(R()<.25&&!/id|year/i.test(x.n)){const v=parseFloat(r[i])*(1+(R()-.45)*.2);r[i]=x.t==='integer'?String(Math.round(v)):v.toFixed(1)}})});
+    rows.splice(Math.floor(R()*rows.length),1);const nr=rows[0].slice();nr[0]=/^[A-Z]+-\d+$/.test(nr[0])?nr[0].replace(/\d+$/,m=>String(+m+900)):nr[0];if(nr[1]!=null)nr[1]=nr[1]+' (new)';rows.push(nr);
+    const pv=c.v.split('.');d.versions.push(ver(pv[0]+'.'+(+pv[1]+1),today(),T('Automated export','Автоматическая выгрузка')+' '+today(),c.cols.map(x=>({...x})),rows));S.vd={id:d.id,a:d.versions.length-2,b:d.versions.length-1};toast(T('New version created — showing diff','Создана новая версия — показываю отличия'));go('versions')},
+  open:el=>{S.cur=el.dataset.id;S.dtab='preview';const d=ds(S.cur);if(d)d.dl++;go('dataset')},
+  dtab:el=>{S.dtab=el.dataset.t;render()},
+  dlcsv:el=>{const d=ds(el.dataset.id),c=cur(d);d.dl++;dl(d.id+'-v'+c.v+'.csv',[c.cols.map(x=>x.n).join(','),...c.rows.map(r=>r.map(v=>/[",;\n]/.test(v)?'"'+String(v).replace(/"/g,'""')+'"':v).join(','))].join('\n'));render()},
+  apifor:el=>{S.api.ds=el.dataset.id;go('api')},
+  selkey:el=>{S.api.key=+el.dataset.i;render()},
+  newkey:()=>{const n=$('#kN').value.trim()||'Key',hex=[...crypto.getRandomValues(new Uint8Array(6))].map(b=>b.toString(16).padStart(2,'0')).join('');S.keys.push({n,k:'vlm_live_'+hex,tier:$('#kT').value,used:0,w:0,c:today()});S.api.key=S.keys.length-1;render();modal(`<h2>${T('Key created','Ключ создан')}</h2><div class="sm muted">${T('Copy it now — it will be shown masked afterwards.','Скопируйте сейчас — потом он будет скрыт.')}</div><pre class="code" style="margin-top:10px">${S.keys[S.api.key].k}</pre><div class="acts"><button class="btn pri" data-act="closem">OK</button></div>`)},
+  revoke:(el,e)=>{e.stopPropagation();S.keys.splice(+el.dataset.i,1);S.api.key=0;S.api.resp='';render();toast(T('Key revoked','Ключ отозван'),'bad')},
+  call:()=>apiCall(1), burst:()=>apiCall(100),
+  copycurl:()=>{const t=$('pre.code').innerText;try{navigator.clipboard.writeText(t);toast(T('curl copied','curl скопирован'))}catch(e){}},
+  closem:closeM,
+  rsort:el=>{S.rsort=el.dataset.s;render()},
+  vote:el=>{const r=S.req.find(x=>x.id===+el.dataset.id);if(S.voted[r.id]){r.votes--;delete S.voted[r.id]}else{r.votes++;S.voted[r.id]=1}render()},
+  newreq:()=>{const t=$('#rqT').value.trim();if(!t){toast(T('Describe the data you need','Опишите нужные данные'),'bad');return}const id=Date.now();S.req.unshift({id,t:[t,t],min:$('#rqM').value,votes:1,st:'open',by:$('#rqB').value||'Guest',d:today(),reply:null});S.voted[id]=1;render();toast(T('Request submitted — ministry notified','Запрос отправлен — министерство уведомлено'))},
+  respond:el=>{const r=S.req.find(x=>x.id===+el.dataset.id);modal(`<h2>${T('Respond to request','Ответ на запрос')}</h2><div class="sm" style="margin-bottom:12px"><b>${esc(T(r.t[0],r.t[1]))}</b> · ▲${r.votes}</div><div class="f"><label>${T('Status','Статус')}</label><select class="input" id="rsS">${Object.keys(RST).map(k=>`<option value="${k}" ${k===r.st?'selected':''}>${T(RST[k][0],RST[k][1])}</option>`).join('')}</select></div><div class="f" style="margin-top:10px"><label>${T('Public answer','Публичный ответ')}</label><textarea class="input" id="rsT" rows="3">${esc(r.reply?T(r.reply[0],r.reply[1]):T('Thank you — we are preparing this dataset and will publish it on the portal.','Спасибо — мы готовим этот набор и опубликуем его на портале.'))}</textarea></div><div class="acts"><button class="btn" data-act="closem">${T('Cancel','Отмена')}</button><button class="btn pri" data-act="sendresp" data-id="${r.id}">${T('Publish answer','Опубликовать ответ')}</button></div>`)},
+  sendresp:el=>{const r=S.req.find(x=>x.id===+el.dataset.id);r.st=$('#rsS').value;const t=$('#rsT').value;r.reply=[t,t];closeM();render();toast(T('Answer published · response rate updated in ranking','Ответ опубликован · доля ответов в рейтинге обновлена'),'gold')},
+  submitapp:()=>modal(`<h2>${T('Submit your app','Добавить приложение')}</h2><div class="fgrid"><div class="f"><label>${T('App name','Название')}</label><input class="input" id="apN" value="AirAlert Velmara"></div><div class="f"><label>${T('Type','Тип')}</label><select class="input" id="apK"><option value="mobile">mobile</option><option value="web">web</option><option value="research">research</option></select></div><div class="f full"><label>${T('Made by','Автор')}</label><input class="input" id="apB" value="Indie developer"></div><div class="f full"><label>${T('Datasets used','Наборы')}</label><select class="input" id="apD" multiple size="4">${S.ds.map((x,i)=>`<option value="${x.id}" ${i===0?'selected':''}>${x.id}</option>`).join('')}</select></div></div><div class="acts"><button class="btn" data-act="closem">${T('Cancel','Отмена')}</button><button class="btn pri" data-act="saveapp">${T('Submit','Отправить')}</button></div>`),
+  saveapp:()=>{const sel=[...$('#apD').selectedOptions].map(o=>o.value);S.apps.unshift({n:$('#apN').value||'App',ic:'🚀',by:$('#apB').value,k:$('#apK').value,ds:sel.length?sel:[S.ds[0].id],u:0,c:'#36e0ae'});closeM();render();toast(T('App added to the showcase','Приложение добавлено в витрину'))},
+  harv:async el=>{const s=S.src[+el.dataset.i];if(S.view!=='harvest')return;el.disabled=true;const L=(c,m)=>{const t=new Date().toTimeString().slice(0,8);S.hlog.push([t,c,m]);const h=$('#hlog');if(h){h.innerHTML=S.hlog.map(l=>`<div class="${l[1]}"><span class="t">${l[0]}</span> ${esc(l[2])}</div>`).join('');h.scrollTop=1e6}};
+    const R=rng(Date.now()%9999),n=2+Math.floor(R()*3);L('','▶ '+s.n+' · '+s.p);await sleep(350);L('','GET '+s.u+(s.p==='CKAN API'?'/action/package_search?rows=100&start=0':'')+' → 200 ('+(200+Math.floor(R()*500))+' ms)');await sleep(500);
+    L('ok','✓ '+T('fetched','получено')+' '+(40+Math.floor(R()*80))+' '+T('records','записей'));await sleep(350);L('','↻ '+T('mapping','маппинг')+' '+s.p+' → DCAT-AP 3.0');await sleep(400);
+    L('w','⚠ '+T('2 records without dct:license → set to “Restricted”, flagged to source','2 записи без dct:license → «Restricted», источник уведомлён'));await sleep(300);L('','≡ '+T('dedupe by dct:identifier: 3 duplicates skipped','дедупликация по dct:identifier: пропущено 3 дубля'));await sleep(400);
+    const names=[['Regional population estimates','Оценка численности населения регионов','SOCI'],['Cross-border freight volumes','Объём трансграничных грузоперевозок','TRAN'],['Renewable energy capacity','Мощности возобновляемой энергетики','ENVI'],['Tourist arrivals by month','Турпоток по месяцам','ECON']];
+    for(let i=0;i<n;i++){const nm=names[(S.hlog.length+i)%names.length];const id=slugify(nm[0])+'-'+s.n.split(' ')[0].toLowerCase();if(ds(id))continue;const rows=RN.map(r=>[r,'2026',String(1000+Math.floor(R()*9000))]);S.ds.push(mkds({id,min:['eco','tra','env','int'][i%4],t:[nm[0],nm[1]],desc:['Harvested from '+s.n+'.','Собрано с портала: '+s.n+'.'],theme:nm[2],lic:'ccby',api:true,src:s.n,freq:'monthly',kw:['harvested'],versions:[ver('1.0',today(),'Harvested',[{n:'region',t:'string'},{n:'year',t:'integer'},{n:'value',t:'integer'}],rows)]}));s.cnt++}
+    L('ok','✓ upsert: +'+n+' '+T('new','новых')+', '+(5+Math.floor(R()*9))+' '+T('updated · catalogue re-indexed','обновлено · каталог переиндексирован'));s.last=new Date().toISOString().slice(0,16).replace('T',' ');save();await sleep(300);render();toast(T(`Harvest done: ${n} new datasets in the catalogue`,`Сбор завершён: ${n} новых наборов в каталоге`))},
+  clrlog:()=>{S.hlog=[];render()},
+  addsrc:()=>{S.src.push({n:$('#hsN').value||'Source',u:$('#hsU').value,p:$('#hsP').value,cron:'daily 02:00',on:true,last:'—',cnt:0});render();toast(T('Source added and scheduled','Источник добавлен и запланирован'))}
+};
+function dl(name,txt){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;if(el.tagName==='LABEL')return;const f=A[el.dataset.act];if(f){if(el.classList.contains('lic'))e.preventDefault();f(el,e)}});
+let qT;
+document.addEventListener('input',e=>{const el=e.target,k=el.dataset.in;if(!k)return;
+  if(k==='meta'){S.draft.meta[el.dataset.k]=el.value;updTTL();save();return}
+  if(k==='note'){S.draft.note=el.value;return}
+  if(k==='q'){S.q=el.value;clearTimeout(qT);qT=setTimeout(()=>{render();const i=document.querySelector('[data-in=q]');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250);return}});
+document.addEventListener('change',e=>{const el=e.target,k=el.dataset.in;if(!k)return;
+  const m={type:()=>{S.draft.cols[+el.dataset.i].t=el.value},meta:()=>{S.draft.meta[el.dataset.k]=el.value},dflag:()=>{S.draft[el.dataset.k]=el.checked;if(el.dataset.k==='linked'&&el.checked)S.draft.api=true},target:()=>{S.draft.target=el.value},
+    vdid:()=>{const d=ds(el.value);S.vd={id:d.id,a:d.versions.length-2,b:d.versions.length-1}},vd:()=>{S.vd[el.dataset.k]=+el.value},cron:()=>{S.src[+el.dataset.i].cron=el.value},son:()=>{S.src[+el.dataset.i].on=el.checked},
+    fm:()=>{S.fm=el.value},fs:()=>{S.fs=+el.value},cur:()=>{S.cur=el.value},cm:()=>{S.cm=el.value},apids:()=>{S.api.ds=el.value},af:()=>{S.af=el.value}}[k];
+  if(m){m();if(k!=='meta'&&k!=='note'&&k!=='q')render();else save()}});
+$('#minSel').addEventListener('change',e=>{S.min=e.target.value;if(S.draft)S.draft.meta.contact='opendata@'+S.min+'.gov.velmara.example';render()});
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',render);
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VoltNet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.hide{display:none!important}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0}
+.hero{padding:56px 48px;background:radial-gradient(circle at 20% 20%,color-mix(in srgb,var(--mal) 22%,transparent),transparent 55%),radial-gradient(circle at 90% 90%,color-mix(in srgb,var(--gold) 16%,transparent),transparent 50%),var(--bg2);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:22px;min-width:0}
+.hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em}
+.hero h2 em{font-style:normal;color:var(--mal3)}
+.hero p{margin:0;color:var(--muted);max-width:520px}
+.hstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:560px}
+.hstats div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.hstats b{display:block;font-size:22px;letter-spacing:-.02em} .hstats span{font-size:12px;color:var(--muted)}
+.hfeat{list-style:none;padding:0;margin:0;display:grid;gap:10px;max-width:560px}
+.hfeat li{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.hfeat li i{font-style:normal;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 18%,transparent);color:var(--mal3);flex:none;font-size:13px}
+.lform{display:grid;place-items:center;padding:40px 24px}
+.lcard{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:28px;box-shadow:var(--shadow)}
+.lcard h3{margin:0 0 4px;font-size:21px}
+.lcard .f{margin-top:14px}
+.err{color:var(--red);font-size:12.5px;min-height:18px;margin-top:6px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+/* app shell */
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;min-height:42px}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--red);color:#fff;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.g{background:var(--mal)}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--panel);font-size:13px;display:flex;gap:10px;align-items:center}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who div{min-width:0} .who b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .who span{font-size:11.5px;color:var(--muted)}
+.sbtns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.sbtns .btn{justify-content:center}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mal3);box-shadow:0 0 0 0 var(--mal3);animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack{display:grid;gap:14px;min-width:0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:7px 12px;cursor:pointer;font-size:13px;font-weight:600;min-height:34px}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.input.bad{border-color:var(--red)}
+select.input{appearance:auto}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+/* map */
+.map{position:relative}
+.map svg{width:100%;height:auto;display:block}
+.map .st{cursor:pointer}
+.map .st:hover circle.c{stroke-width:3}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.slist{display:grid;gap:8px;max-height:420px;overflow:auto;padding-right:2px}
+.sitem{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.sitem.on{border-color:var(--mal)}
+.sitem .m{flex:1;min-width:0} .sitem b{display:block;font-size:13.5px;overflow-wrap:anywhere} .sitem span{font-size:12px;color:var(--muted)}
+.av{font-family:var(--mono);font-weight:700;font-size:13px;border-radius:8px;padding:3px 8px;flex:none}
+.av.ok{background:color-mix(in srgb,var(--mal) 16%,transparent);color:var(--mal3)}
+.av.warn{background:color-mix(in srgb,var(--amber) 16%,transparent);color:var(--amber)}
+.av.bad{background:color-mix(in srgb,var(--red) 16%,transparent);color:var(--red)}
+.ports{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin:10px 0}
+.port{border:1px solid var(--line2);border-radius:12px;padding:9px 10px;background:var(--bg2);font-size:12.5px}
+.port b{display:block;font-size:13px}
+.port.avail{border-color:color-mix(in srgb,var(--mal) 60%,transparent)}
+.port.busy{border-color:color-mix(in srgb,var(--amber) 60%,transparent)}
+.port.fault,.port.off{border-color:color-mix(in srgb,var(--red) 60%,transparent)}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+/* charge */
+.meter{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;align-items:center}
+.ring svg{width:100%;max-width:200px;height:auto;display:block;margin:auto}
+.mstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mstats div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.mstats span{display:block;font-size:11.5px;color:var(--muted)} .mstats b{font-size:20px;font-family:var(--mono)}
+canvas{display:block;width:100%}
+.est{background:var(--bg2);border:1px dashed var(--line2);border-radius:12px;padding:12px;font-size:13px;display:grid;gap:4px}
+.est div{display:flex;justify-content:space-between;gap:10px}
+.est b{font-family:var(--mono)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+input[type=range]{width:100%;accent-color:var(--mal)}
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.ub{display:inline-block;width:70px;height:6px;border-radius:6px;background:var(--line);vertical-align:middle;margin-right:8px;overflow:hidden}
+.ub i{display:block;height:100%}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;height:240px;overflow:auto}
+.log div{padding:2px 0;overflow-wrap:anywhere} .log .t{color:var(--dim)} .log .k{color:var(--gold2)}
+.chart svg{width:100%;height:auto;display:block}
+.inc{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)}
+.inc .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.inc .top b{flex:1;min-width:150px;overflow-wrap:anywhere}
+.inc .meta{font-size:12.5px;color:var(--muted);margin:6px 0 8px;overflow-wrap:anywhere}
+.tl{display:flex;margin-top:8px}
+.tl div{flex:1;position:relative;text-align:center;font-size:11px;color:var(--dim);min-width:0}
+.tl div:before{content:"";position:absolute;top:6px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.tl div:first-child:before{display:none}
+.tl i{display:block;width:14px;height:14px;border-radius:50%;margin:0 auto 4px;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1}
+.tl .ok i{background:var(--mal);border-color:var(--mal)} .tl .ok:before,.tl .cur:before{background:var(--mal)}
+.tl .cur i{border-color:var(--gold);background:var(--gold)} .tl .ok,.tl .cur{color:var(--text)}
+.tl span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.chk{list-style:none;padding:0;margin:0;font-size:13px}
+.chk li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line)}
+.chk li span{flex:1;min-width:0}.chk li span:first-child{flex:none;width:14px}
+.chk li em{font-style:normal;font-family:var(--mono);font-size:12px;flex:none}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.scrim{display:none}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .login{grid-template-columns:minmax(0,1fr)}
+  .hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .hero h2{font-size:26px}
+  .lform{padding:22px 14px 40px}
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .scrim.on{display:block;position:fixed;inset:45px 0 0 0;background:rgba(0,0,0,.35);z-index:1400}
+  .menu-btn{display:inline-flex;min-height:38px}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .meter{grid-template-columns:minmax(0,1fr)}
+  .slist{max-height:none}
+}
+@media (max-width:560px){
+  .fgrid,.roles,.opts3{grid-template-columns:minmax(0,1fr)}
+  .hstats{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.hstats b{font-size:17px}.hstats div{padding:10px}
+  .kpi .v{font-size:20px}.kpis{gap:10px}
+  .card{padding:14px}
+  .lcard{padding:20px}
+  .tl span{font-size:9.5px}
+  .mstats b{font-size:17px}
+}
+</style>
+</head>
+<body data-demo-en="VoltNet — National EV charging network" data-demo-ru="VoltNet — Национальная сеть зарядки электромобилей">
+
+<section class="login" id="login">
+  <div class="hero">
+    <div class="brand" style="padding:0"><b>⚡</b><div>VoltNet<small data-en="Federal Highway Administration · Republic of Avalor" data-ru="Федеральное управление дорог · Республика Авалор"></small></div></div>
+    <h2 data-en="One national network. <em>Every charger, live.</em>" data-ru="Одна национальная сеть. <em>Каждая зарядка — онлайн.</em>"></h2>
+    <p data-en="Federally funded fast-charging corridors across five states: drivers find a free connector, start and pay in seconds; operators and the agency track uptime and funding compliance in real time over OCPP 2.0.1 and OCPI 2.2." data-ru="Скоростные коридоры зарядки в пяти штатах на федеральные средства: водитель находит свободный разъём, запускает и оплачивает за секунды; операторы и агентство следят за доступностью и соблюдением условий финансирования в реальном времени через OCPP 2.0.1 и OCPI 2.2."></p>
+    <div class="hstats">
+      <div><b>24</b><span data-en="corridor sites" data-ru="площадки"></span></div>
+      <div><b id="hPorts">–</b><span data-en="DC fast ports" data-ru="быстрых разъёмов"></span></div>
+      <div><b>97%</b><span data-en="uptime target" data-ru="цель доступности"></span></div>
+    </div>
+    <ul class="hfeat">
+      <li><i>◉</i><span data-en="Live charger map with per-connector availability" data-ru="Живая карта зарядок с доступностью каждого разъёма"></span></li>
+      <li><i>▶</i><span data-en="Start a session, pay by card, wallet or RFID, get a receipt" data-ru="Запуск сессии, оплата картой, кошельком или RFID, чек"></span></li>
+      <li><i>◷</i><span data-en="Station uptime monitor, OCPP message feed and incident dispatch" data-ru="Монитор доступности станций, поток сообщений OCPP и выезд техников"></span></li>
+      <li><i>▤</i><span data-en="Quarterly funding-compliance reports for the program office" data-ru="Квартальные отчёты о соблюдении условий финансирования"></span></li>
+    </ul>
+  </div>
+  <div class="lform">
+    <div class="lcard">
+      <h3 data-en="Sign in to VoltNet" data-ru="Вход в VoltNet"></h3>
+      <div class="muted" style="font-size:13px" data-en="Demo credentials are prefilled." data-ru="Демо-данные уже заполнены."></div>
+      <div class="f"><label data-en="Email" data-ru="Эл. почта"></label><input class="input" id="lEmail" value="demo@voltnet.example" autocomplete="off"></div>
+      <div class="f"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lPass" type="password" value="charge-2025"></div>
+      <div class="f"><label data-en="Sign in as" data-ru="Войти как"></label>
+        <div class="roles">
+          <button class="opt on" data-role="driver"><b data-en="Driver" data-ru="Водитель"></b><span data-en="Find, charge, pay" data-ru="Найти, зарядить, оплатить"></span></button>
+          <button class="opt" data-role="operator"><b data-en="Operator / agency" data-ru="Оператор / агентство"></b><span data-en="Uptime, incidents, reports" data-ru="Доступность, инциденты, отчёты"></span></button>
+        </div>
+      </div>
+      <div class="err" id="lErr"></div>
+      <button class="btn pri" id="loginBtn" style="width:100%;justify-content:center;padding:12px" data-en="Sign in" data-ru="Войти"></button>
+      <div class="muted" style="font-size:11.5px;margin-top:12px;text-align:center" data-en="Protected federal system. Fictional demo data." data-ru="Защищённая федеральная система. Вымышленные демо-данные."></div>
+    </div>
+  </div>
+</section>
+
+<div class="app hide" id="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>⚡</b><div>VoltNet<small data-en="National EV network · Avalor" data-ru="Нац. сеть зарядки · Авалор"></small></div></div>
+    <div class="sec" data-en="Drivers" data-ru="Водителям"></div>
+    <button class="nav" data-view="map"><span class="ic">◉</span><span data-en="Charger map" data-ru="Карта зарядок"></span><span class="cnt g" id="cAvail"></span></button>
+    <button class="nav" data-view="charge"><span class="ic">▶</span><span data-en="Charge &amp; pay" data-ru="Зарядка и оплата"></span><span class="cnt g hide" id="cLive">●</span></button>
+    <button class="nav" data-view="history"><span class="ic">▦</span><span data-en="Receipts &amp; wallet" data-ru="Чеки и кошелёк"></span></button>
+    <div class="sec" data-en="Operations" data-ru="Эксплуатация"></div>
+    <button class="nav" data-view="uptime"><span class="ic">◷</span><span data-en="Uptime monitor" data-ru="Монитор доступности"></span></button>
+    <button class="nav" data-view="incidents"><span class="ic">⚠</span><span data-en="Incidents" data-ru="Инциденты"></span><span class="cnt" id="cInc"></span></button>
+    <div class="sec" data-en="Program office" data-ru="Программа"></div>
+    <button class="nav" data-view="reports"><span class="ic">▤</span><span data-en="Funding compliance" data-ru="Условия финансирования"></span></button>
+    <div class="grow"></div>
+    <div class="who"><div class="av" id="whoAv">D</div><div><b id="whoName"></b><span id="whoRole"></span></div></div>
+    <div class="sbtns">
+      <button class="btn sm" id="reset" data-en="Reset demo" data-ru="Сбросить"></button>
+      <button class="btn sm" id="logout" data-en="Log out" data-ru="Выйти"></button>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill ok"><span class="live-dot"></span><span data-en="Live · OCPP 2.0.1" data-ru="Онлайн · OCPP 2.0.1"></span></span>
+    </div>
+    <section class="view" id="v-map"></section>
+    <section class="view" id="v-charge"></section>
+    <section class="view" id="v-history"></section>
+    <section class="view" id="v-uptime"></section>
+    <section class="view" id="v-incidents"></section>
+    <section class="view" id="v-reports"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const P='pt_ev_', KEY=P+'state', AUTH=P+'auth';
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},
+  clear(){try{Object.keys(localStorage).filter(k=>k.startsWith(P)).forEach(k=>localStorage.removeItem(k))}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const num=(n,d=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:d,maximumFractionDigits:d});
+const usd=n=>'$'+num(n,2);
+const fmtDT=d=>new Date(d).toLocaleString(loc(),{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const fmtT=d=>new Date(d).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const ago=ts=>{const s=Math.max(0,Math.round((Date.now()-ts)/1000));return s<60?T(s+' s ago',s+' с назад'):s<3600?T(Math.round(s/60)+' min ago',Math.round(s/60)+' мин назад'):T(Math.round(s/3600)+' h ago',Math.round(s/3600)+' ч назад')};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+
+/* ---------- reference data ---------- */
+const STATES=[['Corvane','Корвейн'],['Halden','Халден'],['Teralt','Тералт'],['Ostmark','Остмарк'],['Bellmoor','Беллмур']];
+const stateOf=(x,y)=>x<300?0:x<520?(y<310?1:2):x<740?3:4;
+const CORR={'AV-80':[[90,200],[300,170],[520,180],[740,160],[910,190]],'AV-10':[[120,430],[300,450],[520,470],[740,440],[890,470]],
+ 'AV-5':[[140,110],[160,260],[140,460]],'AV-35':[[420,80],[430,300],[440,540]],'AV-95':[[860,110],[900,300],[860,510]]};
+const SITES=[['Brightwater','Брайтуотер',150,130,'AV-5'],['Cedar Gap','Сидар-Гэп',210,186,'AV-80'],['Redmesa','Редмеса',158,330,'AV-5'],['Fallon Ridge','Фэллон-Ридж',220,440,'AV-10'],
+ ['Pine Hollow','Пайн-Холлоу',360,175,'AV-80'],['Saltmarsh','Солтмарш',424,120,'AV-35'],['Ironvale','Айронвейл',430,250,'AV-35'],['Dunmore','Данмор',480,176,'AV-80'],
+ ['Elk Crossing','Элк-Кроссинг',434,370,'AV-35'],['Harbor Point','Харбор-Пойнт',380,458,'AV-10'],['Kestrel Flats','Кестрел-Флэтс',440,520,'AV-35'],['Lakemont','Лейкмонт',600,174,'AV-80'],
+ ['Millbrook','Миллбрук',680,166,'AV-80'],['North Fork','Норт-Форк',590,460,'AV-10'],['Oakridge','Оукридж',690,447,'AV-10'],['Prairie View','Прери-Вью',560,310,'AV-80'],
+ ['Quarry Bend','Куорри-Бенд',800,170,'AV-80'],['Riverton','Ривертон',875,160,'AV-95'],['Stonegate','Стоунгейт',890,260,'AV-95'],['Timberline','Тимберлайн',895,350,'AV-95'],
+ ['Union Plaza','Юнион-Плаза',875,450,'AV-95'],['Westfield','Уэстфилд',800,452,'AV-10'],['Yellow Bluff','Йеллоу-Блафф',150,240,'AV-5'],['Zephyr Junction','Зефир-Джанкшн',300,450,'AV-10']];
+const OPS=['AmpRoute','Corridor Charge Co.','Helios Grid','Plugline'];
+const VEH=[['Aster Hatch 58','Астер Хэтч 58',58,135],['Norda SUV 77','Норда SUV 77',77,230],['Kepler Sedan 82','Кеплер Седан 82',82,250],['Ridgeback Pickup 131','Риджбэк пикап 131',131,300],['Metro Van 90','Метро фургон 90',90,120]];
+const FCODES=[['GroundFailure','Ground fault detected','Обнаружено замыкание на землю'],['ConnectorLockFailure','Connector lock failure','Сбой фиксатора разъёма'],['PowerMeterFailure','Power meter failure','Сбой счётчика энергии'],['OverCurrentFailure','Over-current trip','Отключение по перегрузке тока'],['EVCommunicationError','EV communication error','Ошибка связи с автомобилем'],['ReaderFailure','Payment reader failure','Сбой платёжного терминала']];
+const TECHS=['R. Okafor','L. Brennan','S. Ito','M. Delacroix','J. Varga'];
+const QS=['Q1 2025','Q2 2025','Q3 2025','Q4 2025'];
+const PST={avail:['Available','Свободен','ok'],busy:['Charging','Заряжает','warn'],fault:['Faulted','Неисправен','bad'],off:['Offline','Нет связи','bad']};
+const MIN30=30*1440;
+
+function seed(){
+  const r=rng(2025), now=Date.now();
+  const stations=SITES.map((s,i)=>{
+    const n=r()<.35?6:4, ports=[];
+    for(let p=0;p<n;p++){
+      let t='CCS',kw=r()<.4?350:150;
+      if(p===n-1&&r()<.45){t='J3400';kw=250}
+      if(p===n-1&&i%7===3){t='CHAdeMO';kw=50}
+      const st=r()<.42?'busy':'avail';
+      ports.push({t,kw,st,down:Math.round(40+r()*700)});
+    }
+    if([2,9,17].includes(i)) ports.forEach(p=>p.down=Math.round(1500+r()*1600));
+    return {id:'VN-'+String(101+i*7).padStart(4,'0'),n:[s[0],s[1]],x:s[2],y:s[3],cor:s[4],st:stateOf(s[2],s[3]),op:OPS[i%4],
+      price:+(0.42+r()*.14).toFixed(2),ports,hb:now-Math.round(r()*40000),ses:Math.round(380+r()*900),kwh:Math.round(14000+r()*30000),
+      spacing:!(i===22),ocpi:i!==17,yr:2023+(i%3)};
+  });
+  stations[9].ports.forEach(p=>p.st='off'); stations[9].hb=now-26*60000;
+  stations[2].ports[1].st='fault';
+  const incidents=[
+    {id:'INC-4180',sid:stations[9].id,port:-1,code:'CommunicationLost',txt:['Station offline — no heartbeat','Станция не на связи — нет heartbeat'],opened:now-26*60000,status:'dispatched',tech:TECHS[0]},
+    {id:'INC-4181',sid:stations[2].id,port:1,code:'GroundFailure',opened:now-48*60000,status:'open'}];
+  for(let k=0;k<5;k++){const s=stations[Math.floor(r()*24)];incidents.push({id:'INC-'+(4170+k),sid:s.id,port:Math.floor(r()*4),code:FCODES[k][0],opened:now-(k+1)*86400000-3600000*k,status:'resolved',tech:TECHS[k%5],closed:now-(k+1)*86400000+3600000*(1+k%3)})}
+  const trend=[];for(let d=0;d<30;d++)trend.push(+(97.2+r()*2.3-(d===11||d===19?1.6:0)).toFixed(2));
+  const receipts=[];
+  for(let k=0;k<5;k++){const s=stations[[1,4,7,11,0][k]];const kwh=+(22+r()*38).toFixed(1);receipts.push({id:'RCP-'+(90412+k*13),sid:s.id,kwh,min:Math.round(kwh/1.9),cost:+(kwh*s.price).toFixed(2),pay:['card','wallet','rfid','card','wallet'][k],ts:now-(k*3+1)*86400000-r()*36e5,veh:1,tx:'TX'+Math.floor(1e7+r()*9e7)})}
+  const reports=[{id:'RPT-2025-Q1',q:0,state:-1,created:now-200*864e5,status:'accepted',score:96},{id:'RPT-2025-Q2',q:1,state:-1,created:now-110*864e5,status:'accepted',score:94}];
+  const funding=STATES.map((s,i)=>({ob:[118,96,84,132,107][i],dis:[71,52,49,88,58][i]}));
+  const log=[];for(let k=0;k<14;k++){const s=stations[Math.floor(r()*24)];log.push({ts:now-k*4000-r()*3000,sid:s.id,m:['Heartbeat','StatusNotification','TransactionEvent','MeterValues'][k%4],d:k%4===1?'evse 1 → Available':k%4===2?'Updated':k%4===3?Math.round(40+r()*200)+' kW':''})}
+  return {stations,incidents,trend,receipts,reports,funding,log,wallet:64.5,rfid:'VN-RFID-7731',veh:1,active:null,ui:{sel:stations[1].id,flt:'all',con:'any',q:2,rst:-1}};
+}
+let S=null; try{S=JSON.parse(ls.get(KEY))}catch(e){}
+if(!S||!S.stations) S=seed();
+const save=()=>ls.set(KEY,JSON.stringify(S));
+let auth=null; try{auth=JSON.parse(ls.get(AUTH))}catch(e){}
+let view=null;
+
+const stById=id=>S.stations.find(s=>s.id===id);
+const nm=s=>T(s.n[0],s.n[1]);
+const stName=i=>i<0?T('All states','Все штаты'):T(STATES[i][0],STATES[i][1]);
+const availOf=s=>s.ports.filter(p=>p.st==='avail').length;
+const upOf=s=>{const d=s.ports.reduce((a,p)=>a+p.down,0)/s.ports.length;return Math.max(0,100*(1-d/MIN30))};
+const netUp=()=>S.stations.reduce((a,s)=>a+upOf(s),0)/S.stations.length;
+const stCls=s=>{const a=availOf(s);if(s.ports.every(p=>p.st==='off'||p.st==='fault'))return 'bad';return a?'ok':'warn'};
+const colOf=c=>c==='ok'?'var(--mal)':c==='warn'?'var(--amber)':'var(--red)';
+const pill=(k,txt)=>`<span class="pill ${k}">${txt}</span>`;
+const fcode=c=>{const f=FCODES.find(x=>x[0]===c);return f?T(f[1],f[2]):T('Communication lost','Потеря связи')};
+
+/* ---------- login ---------- */
+let role='driver';
+$$('.roles .opt').forEach(b=>b.onclick=()=>{role=b.dataset.role;$$('.roles .opt').forEach(x=>x.classList.toggle('on',x===b))});
+$('#loginBtn').onclick=()=>{
+  const e=$('#lEmail'),p=$('#lPass');e.classList.toggle('bad',!e.value.trim());p.classList.toggle('bad',!p.value.trim());
+  if(!e.value.trim()||!p.value.trim()){$('#lErr').textContent=T('Enter email and password','Введите почту и пароль');return}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e.value.trim())){e.classList.add('bad');$('#lErr').textContent=T('Email looks invalid','Неверный формат почты');return}
+  $('#lErr').textContent='';auth={email:e.value.trim(),role};ls.set(AUTH,JSON.stringify(auth));enter();
+};
+function enter(){
+  $('#login').classList.add('hide');$('#app').classList.remove('hide');
+  go(auth.role==='operator'?'uptime':'map');startSim();
+  toast(T('Signed in as ','Вход выполнен: ')+esc(auth.email));
+}
+$('#logout').onclick=()=>{ls.set(AUTH,'');auth=null;stopSim();$('#app').classList.add('hide');$('#login').classList.remove('hide');closeMenu()};
+$('#reset').onclick=()=>{ls.clear();location.reload()};
+const closeMenu=()=>{$('#side').classList.remove('open');$('#scrim').classList.remove('on')};
+$('#menuBtn').onclick=()=>{$('#side').classList.toggle('open');$('#scrim').classList.toggle('on',$('#side').classList.contains('open'))};
+$('#scrim').onclick=closeMenu;
+$$('.nav[data-view]').forEach(b=>b.onclick=()=>{go(b.dataset.view);closeMenu()});
+
+const TITLES={map:['Charger map','Карта зарядок','Drivers','Водителям'],charge:['Charge & pay','Зарядка и оплата','Drivers','Водителям'],history:['Receipts & wallet','Чеки и кошелёк','Drivers','Водителям'],
+ uptime:['Station uptime monitor','Монитор доступности станций','Operations','Эксплуатация'],incidents:['Incidents & field service','Инциденты и выезды','Operations','Эксплуатация'],reports:['Funding compliance reporting','Отчётность по финансированию','Program office','Программа']};
+function go(v){view=v;$$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.view===v));$$('.view').forEach(x=>{const on=x.id==='v-'+v;x.classList.toggle('on',on);if(!on){x.innerHTML='';delete x.dataset.built}});render();scrollTo(0,0)}
+function render(){
+  if(!auth)return;
+  const t=TITLES[view];$('#title').textContent=T(t[0],t[1]);$('#crumb').textContent='VoltNet / '+T(t[2],t[3]);
+  $('#whoName').textContent=auth.email;$('#whoRole').textContent=auth.role==='operator'?T('Operator · agency','Оператор · агентство'):T('Driver account','Аккаунт водителя');
+  $('#whoAv').textContent=auth.email[0].toUpperCase();
+  badges();
+  ({map:rMap,charge:rCharge,history:rHistory,uptime:rUptime,incidents:rInc,reports:rReports})[view]();
+}
+function badges(){
+  $('#cAvail').textContent=S.stations.reduce((a,s)=>a+availOf(s),0);
+  const o=S.incidents.filter(i=>i.status!=='resolved').length;$('#cInc').textContent=o;$('#cInc').classList.toggle('hide',!o);
+  $('#cLive').classList.toggle('hide',!S.active);
+}
+
+/* ---------- MAP ---------- */
+const OUTLINE='60,120 180,70 360,60 520,80 700,60 860,90 940,160 930,260 900,330 940,420 880,520 760,540 640,500 520,560 380,540 260,520 140,470 80,380 50,260';
+function polyLen(pts){let L=0;for(let i=1;i<pts.length;i++)L+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);return L}
+function polyAt(pts,f){let L=polyLen(pts)*f;for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<=l){const k=l?L/l:0;return [a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k]}L-=l}return pts[pts.length-1]}
+const cars=[];{const r=rng(9);Object.keys(CORR).forEach(c=>{for(let k=0;k<3;k++)cars.push({c,f:r(),v:(.0018+r()*.002)*(r()<.5?1:-1)})})}
+function passes(s){
+  const f=S.ui.flt,c=S.ui.con;
+  if(f==='avail'&&!availOf(s))return false;
+  if(f==='150'&&!s.ports.some(p=>p.kw>=150&&p.st==='avail'))return false;
+  if(f==='350'&&!s.ports.some(p=>p.kw>=350))return false;
+  if(c!=='any'&&!s.ports.some(p=>p.t===c))return false;
+  const q=(S.ui.q2||'').toLowerCase();if(q&&!(s.n[0]+' '+s.n[1]+' '+s.id+' '+s.cor).toLowerCase().includes(q))return false;
+  return true;
+}
+function mapSVG(){
+  const borders=`<path d="M300 40 L300 580 M520 40 L520 580 M740 40 L740 580 M300 310 L520 310" />`;
+  const corr=Object.entries(CORR).map(([k,p])=>`<polyline points="${p.map(q=>q.join(',')).join(' ')}" style="fill:none;stroke:var(--line2);stroke-width:7;stroke-linecap:round;stroke-linejoin:round"/><polyline points="${p.map(q=>q.join(',')).join(' ')}" style="fill:none;stroke:var(--gold);stroke-width:2;stroke-dasharray:10 8;opacity:.75"/>`).join('');
+  const shields=Object.entries(CORR).map(([k,p])=>{const a=p[0];return `<g transform="translate(${a[0]-22},${a[1]-26})"><rect width="44" height="18" rx="5" style="fill:var(--panel2);stroke:var(--gold)"/><text x="22" y="13" text-anchor="middle" style="fill:var(--gold2);font:700 10px var(--mono)">${k}</text></g>`}).join('');
+  const labels=[[170,560-60],[410,110],[400,420],[630,260],[850,560-60]].map((p,i)=>`<text x="${[200,330,330,560,770][i]}" y="${[80,100,530,90,95][i]}" style="fill:var(--dim);font:700 12px var(--font);letter-spacing:.14em;text-transform:uppercase">${esc(stName(i)).toUpperCase()}</text>`).join('');
+  const dots=S.stations.map(s=>{const c=stCls(s),sel=s.id===S.ui.sel,dim=!passes(s);
+    return `<g class="st" data-id="${s.id}" style="opacity:${dim?.25:1}">${sel?`<circle cx="${s.x}" cy="${s.y}" r="17" style="fill:none;stroke:var(--gold2);stroke-width:2.5"><animate attributeName="r" values="14;20;14" dur="1.8s" repeatCount="indefinite"/></circle>`:''}<circle class="c" cx="${s.x}" cy="${s.y}" r="11" style="fill:${colOf(c)};stroke:var(--bg);stroke-width:2"/><text x="${s.x}" y="${s.y+4}" text-anchor="middle" style="fill:#fff;font:800 10.5px var(--mono);pointer-events:none">${availOf(s)}</text></g>`}).join('');
+  return `<svg viewBox="0 0 1000 600" role="img" aria-label="${T('Map of chargers','Карта зарядок')}"><defs><clipPath id="clipC"><polygon points="${OUTLINE}"/></clipPath></defs>
+  <polygon points="${OUTLINE}" style="fill:var(--bg2);stroke:var(--line2);stroke-width:2"/>
+  <g clip-path="url(#clipC)" style="fill:none;stroke:var(--line);stroke-width:1.5;stroke-dasharray:4 5">${borders}</g>
+  ${labels}${corr}${shields}<g id="cars">${cars.map(()=>`<circle r="3.5" style="fill:var(--blue)"/>`).join('')}</g>${dots}</svg>`;
+}
+function moveCars(){
+  const g=$('#cars');if(!g||view!=='map')return;const cs=g.children;
+  cars.forEach((c,i)=>{c.f+=c.v;if(c.f>1)c.f-=1;if(c.f<0)c.f+=1;const p=polyAt(CORR[c.c],c.f);if(cs[i]){cs[i].setAttribute('cx',p[0].toFixed(1));cs[i].setAttribute('cy',p[1].toFixed(1))}});
+}
+function rMap(){
+  const v=$('#v-map');
+  if(!v.dataset.built||v.dataset.lang!==PT.lang){
+    v.dataset.built=1;v.dataset.lang=PT.lang;
+    const F=[['all','All','Все'],['avail','Available now','Свободные'],['150','≥150 kW free','≥150 кВт свободно'],['350','350 kW sites','Площадки 350 кВт']];
+    const C=[['any','Any connector','Любой разъём'],['CCS','CCS'],['J3400','J3400'],['CHAdeMO','CHAdeMO']];
+    v.innerHTML=`<div class="kpis" id="mK"></div>
+    <div class="grid2"><div class="card map"><h3><span>${T('Corridor network — live availability','Сеть коридоров — доступность онлайн')}</span><span class="sp"></span><span class="pill" id="mUpd"></span></h3>
+      <div id="mSvg"></div>
+      <div class="legend"><span><i style="background:var(--mal)"></i>${T('Free connector','Есть свободный')}</span><span><i style="background:var(--amber)"></i>${T('All busy','Все заняты')}</span><span><i style="background:var(--red)"></i>${T('Out of service','Не работает')}</span><span><i style="background:var(--blue)"></i>${T('EVs on corridor','Электромобили в пути')}</span></div></div>
+      <div class="stack"><div class="card"><h3>${T('Find a charger','Найти зарядку')}</h3>
+        <input class="input" id="mQ" placeholder="${T('Search site, ID or corridor','Поиск: площадка, ID или трасса')}" value="${esc(S.ui.q2||'')}">
+        <div class="chips" style="margin-top:10px" id="mF">${F.map(f=>`<button class="chip${S.ui.flt===f[0]?' on':''}" data-f="${f[0]}">${T(f[1],f[2])}</button>`).join('')}</div>
+        <div class="chips" style="margin-top:8px" id="mC">${C.map(f=>`<button class="chip${S.ui.con===f[0]?' on':''}" data-c="${f[0]}">${f.length>2?T(f[1],f[2]):f[1]}</button>`).join('')}</div></div>
+        <div class="card" id="mDet"></div>
+        <div class="card"><h3>${T('Sites','Площадки')}<span class="sp"></span><span class="muted" style="font-size:12px" id="mCnt"></span></h3><div class="slist" id="mList"></div></div></div></div>`;
+    $('#mQ').oninput=e=>{S.ui.q2=e.target.value;save();mapDyn()};
+    $$('#mF .chip').forEach(b=>b.onclick=()=>{S.ui.flt=b.dataset.f;save();$$('#mF .chip').forEach(x=>x.classList.toggle('on',x===b));mapDyn()});
+    $$('#mC .chip').forEach(b=>b.onclick=()=>{S.ui.con=b.dataset.c;save();$$('#mC .chip').forEach(x=>x.classList.toggle('on',x===b));mapDyn()});
+    v.addEventListener('click',e=>{const g=e.target.closest('[data-id]');if(g&&v.contains(g)&&!e.target.closest('[data-start]')){S.ui.sel=g.dataset.id;save();mapDyn()}
+      const st=e.target.closest('[data-start]');if(st){S.ui.pre={sid:S.ui.sel,port:+st.dataset.start};save();go('charge')}});
+  }
+  mapDyn();
+}
+function mapDyn(){
+  if(view!=='map')return;
+  const all=S.stations.flatMap(s=>s.ports),av=all.filter(p=>p.st==='avail').length,bz=all.filter(p=>p.st==='busy').length,fl=all.filter(p=>p.st==='fault'||p.st==='off').length;
+  $('#mK').innerHTML=[[T('Free ports now','Свободно сейчас'),av,T('of '+all.length+' DC fast ports','из '+all.length+' быстрых разъёмов')],[T('Charging now','Заряжаются'),bz,T('active sessions network-wide','активных сессий в сети')],[T('Out of service','Не работают'),fl,T('ports faulted or offline','разъёмов с ошибкой или без связи')],[T('Network uptime (30 d)','Доступность сети (30 дн)'),num(netUp(),2)+'%',T('target 97.00%','цель 97,00%')]]
+    .map((k,i)=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v" style="color:${['var(--mal3)','var(--amber)','var(--red)','var(--text)'][i]}">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('');
+  $('#mUpd').textContent=T('updated ','обновлено ')+fmtT(Date.now());
+  $('#mSvg').innerHTML=mapSVG();moveCars();
+  const list=S.stations.filter(passes).sort((a,b)=>availOf(b)-availOf(a));
+  $('#mCnt').textContent=list.length+' / '+S.stations.length;
+  $('#mList').innerHTML=list.length?list.map(s=>{const c=stCls(s);return `<button class="sitem${s.id===S.ui.sel?' on':''}" data-id="${s.id}"><span class="av ${c}">${availOf(s)}/${s.ports.length}</span><span class="m"><b>${esc(nm(s))}</b><span>${s.id} · ${s.cor} · ${stName(s.st)} · ${Math.max(...s.ports.map(p=>p.kw))} ${T('kW','кВт')}</span></span><span class="mono" style="font-size:12px">${usd(s.price)}</span></button>`}).join(''):`<div class="empty">${T('No sites match the filters','Нет площадок по фильтрам')}</div>`;
+  const s=stById(S.ui.sel);
+  $('#mDet').innerHTML=s?`<h3><span>${esc(nm(s))}</span><span class="sp"></span>${pill(stCls(s),stCls(s)==='ok'?T('Open','Работает'):stCls(s)==='warn'?T('Busy','Занято'):T('Down','Не работает'))}</h3>
+    <dl class="facts"><dt>${T('Site ID','ID площадки')}</dt><dd class="mono">${s.id}</dd><dt>${T('Corridor','Коридор')}</dt><dd>${s.cor} · ${stName(s.st)}</dd><dt>${T('Operator','Оператор')}</dt><dd>${s.op}</dd><dt>${T('Price','Цена')}</dt><dd>${usd(s.price)} / ${T('kWh','кВт·ч')}</dd><dt>${T('Heartbeat','Heartbeat')}</dt><dd>${ago(s.hb)}</dd></dl>
+    <div class="ports">${s.ports.map((p,i)=>`<div class="port ${p.st}"><b>#${i+1} ${p.t}</b>${p.kw} ${T('kW','кВт')}<div class="${PST[p.st][2]}-t" style="font-weight:600">${T(PST[p.st][0],PST[p.st][1])}</div>${p.st==='avail'&&!S.active?`<button class="btn sm pri" style="margin-top:6px" data-start="${i}">${T('Start','Старт')}</button>`:''}</div>`).join('')}</div>
+    ${S.active?`<div class="muted" style="font-size:12.5px">${T('You already have an active session.','У вас уже идёт сессия.')}</div>`:''}`:'';
+}
+
+/* ---------- CHARGE ---------- */
+let payM='card';
+function luhn(n){n=n.replace(/\D/g,'');if(n.length<13)return false;let s=0,d=false;for(let i=n.length-1;i>=0;i--){let x=+n[i];if(d){x*=2;if(x>9)x-=9}s+=x;d=!d}return s%10===0}
+function rCharge(){
+  const v=$('#v-charge');
+  if(S.active){rLive(v);return}
+  const pre=S.ui.pre||{};const sts=S.stations.filter(s=>availOf(s));
+  const sid=(pre.sid&&stById(pre.sid)&&availOf(stById(pre.sid)))?pre.sid:(sts[0]&&sts[0].id);
+  v.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Start a charging session','Начать сессию зарядки')}</h3>
+    <div class="fgrid">
+      <div class="f full"><label>${T('Charging site','Площадка')}</label><select class="input" id="cS">${sts.map(s=>`<option value="${s.id}"${s.id===sid?' selected':''}>${esc(nm(s))} · ${s.id} (${availOf(s)} ${T('free','своб.')})</option>`).join('')}</select></div>
+      <div class="f"><label>${T('Connector','Разъём')}</label><select class="input" id="cP"></select></div>
+      <div class="f"><label>${T('Vehicle','Автомобиль')}</label><select class="input" id="cV">${VEH.map((x,i)=>`<option value="${i}"${i===S.veh?' selected':''}>${T(x[0],x[1])}</option>`).join('')}</select></div>
+      <div class="f"><label>${T('Battery now','Заряд сейчас')}: <b id="cSocL"></b></label><input type="range" id="cSoc" min="5" max="70" value="${pre.soc||22}"></div>
+      <div class="f"><label>${T('Stop at','Остановить на')}: <b id="cTgtL"></b></label><input type="range" id="cTgt" min="50" max="100" step="5" value="${pre.tgt||80}"></div>
+      <div class="f full"><label>${T('Payment method','Способ оплаты')}</label><div class="opts3" id="cPay">
+        ${[['card','Bank card','Банковская карта','Pre-auth hold $50','Предавторизация $50'],['wallet','VoltNet wallet','Кошелёк VoltNet',T('Balance ','Баланс ')+usd(S.wallet),T('Balance ','Баланс ')+usd(S.wallet)],['rfid','RFID card','RFID-карта',S.rfid,S.rfid]].map(o=>`<button class="opt${payM===o[0]?' on':''}" data-pay="${o[0]}"><b>${T(o[1],o[2])}</b><span>${T(o[3],o[4])}</span></button>`).join('')}</div></div>
+      <div class="full" id="cCard">
+        <div class="fgrid">
+          <div class="f full"><label>${T('Card number','Номер карты')}</label><input class="input mono" id="ccN" inputmode="numeric" value="4111 1111 1111 1111"></div>
+          <div class="f"><label>${T('Expiry (MM/YY)','Срок (ММ/ГГ)')}</label><input class="input mono" id="ccE" value="09/28"></div>
+          <div class="f"><label>CVC</label><input class="input mono" id="ccC" inputmode="numeric" value="123" maxlength="4"></div>
+          <div class="f full"><label>${T('Name on card','Имя на карте')}</label><input class="input" id="ccH" value="Jordan Avery"></div>
+        </div></div>
+    </div>
+    <div class="err" id="cErr"></div>
+    <div class="row"><button class="btn pri" id="cGo">▶ ${T('Authorize & start','Авторизовать и начать')}</button><span class="muted" style="font-size:12px">OCPP RequestStartTransaction · ISO 15118</span></div></div>
+    <div class="stack"><div class="card"><h3>${T('Estimate','Расчёт')}</h3><div class="est" id="cEst"></div></div>
+    <div class="card"><h3>${T('How it works','Как это работает')}</h3><ol style="margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:grid;gap:6px">
+      <li>${T('Pick a free connector — the map shows live status from each charger.','Выберите свободный разъём — карта показывает живой статус каждой зарядки.')}</li>
+      <li>${T('Payment is pre-authorized, then the charger receives a remote start.','Оплата предавторизуется, затем зарядка получает удалённый старт.')}</li>
+      <li>${T('Watch power and cost in real time; stop any time. Receipt is issued instantly.','Следите за мощностью и стоимостью; остановите в любой момент. Чек — сразу.')}</li></ol></div></div></div>`;
+  const fillPorts=()=>{const s=stById($('#cS').value);$('#cP').innerHTML=s?s.ports.map((p,i)=>p.st==='avail'?`<option value="${i}"${i===pre.port?' selected':''}>#${i+1} ${p.t} · ${p.kw} ${T('kW','кВт')}</option>`:'').join(''):'';est()};
+  const est=()=>{const s=stById($('#cS').value);if(!s){$('#cEst').innerHTML=`<div>${T('No free connectors right now','Сейчас нет свободных разъёмов')}</div>`;return}
+    const p=s.ports[+$('#cP').value]||s.ports[0],vh=VEH[+$('#cV').value],a=+$('#cSoc').value,b=Math.max(a+5,+$('#cTgt').value);
+    $('#cSocL').textContent=a+'%';$('#cTgtL').textContent=b+'%';
+    const kwh=vh[2]*(b-a)/100;const sim=simulate(Math.min(p.kw,vh[3]),vh[2],a,b);
+    $('#cEst').innerHTML=`<div><span>${T('Energy','Энергия')}</span><b>${num(kwh,1)} ${T('kWh','кВт·ч')}</b></div><div><span>${T('Peak power','Пиковая мощность')}</span><b>${Math.min(p.kw,vh[3])} ${T('kW','кВт')}</b></div><div><span>${T('Time','Время')}</span><b>≈ ${sim} ${T('min','мин')}</b></div><div><span>${T('Tariff','Тариф')}</span><b>${usd(s.price)}/${T('kWh','кВт·ч')}</b></div><div style="border-top:1px solid var(--line);padding-top:6px"><span>${T('Estimated total','Итого (оценка)')}</span><b style="color:var(--mal3)">${usd(kwh*s.price)}</b></div>`};
+  $('#cS').onchange=fillPorts;$('#cP').onchange=est;$('#cV').onchange=e=>{S.veh=+e.target.value;save();est()};$('#cSoc').oninput=est;$('#cTgt').oninput=est;
+  const showPay=()=>{$('#cCard').classList.toggle('hide',payM!=='card')};
+  $$('#cPay .opt').forEach(b=>b.onclick=()=>{payM=b.dataset.pay;$$('#cPay .opt').forEach(x=>x.classList.toggle('on',x===b));showPay()});
+  showPay();fillPorts();
+  $('#cGo').onclick=startSession;
+}
+function powerAt(maxKw,soc){return maxKw*(soc<55?1:Math.max(.22,1-(soc-55)/55))}
+function simulate(maxKw,batt,a,b){let soc=a,m=0;while(soc<b&&m<600){soc+=powerAt(maxKw,soc)/60/batt*100;m++}return m}
+function startSession(){
+  const err=$('#cErr');err.textContent='';$$('#v-charge .input').forEach(i=>i.classList.remove('bad'));
+  const s=stById($('#cS').value);if(!s){err.textContent=T('Choose a site with a free connector','Выберите площадку со свободным разъёмом');return}
+  const pi=+$('#cP').value;if(isNaN(pi)||!s.ports[pi]||s.ports[pi].st!=='avail'){err.textContent=T('Connector is no longer free — pick another','Разъём уже занят — выберите другой');return}
+  const a=+$('#cSoc').value,b=+$('#cTgt').value;if(b<=a+4){err.textContent=T('Target must be at least 5% above current charge','Цель должна быть минимум на 5% выше текущего заряда');return}
+  if(payM==='card'){
+    const bad=[];if(!luhn($('#ccN').value))bad.push(['#ccN',T('Card number is invalid','Неверный номер карты')]);
+    const m=$('#ccE').value.match(/^(\d{2})\/(\d{2})$/);const ok=m&&+m[1]>=1&&+m[1]<=12&&new Date(2000+ +m[2],+m[1],1)>new Date();if(!ok)bad.push(['#ccE',T('Expiry is invalid or past','Срок неверен или истёк')]);
+    if(!/^\d{3,4}$/.test($('#ccC').value))bad.push(['#ccC',T('CVC must be 3–4 digits','CVC — 3–4 цифры')]);
+    if(!$('#ccH').value.trim())bad.push(['#ccH',T('Enter the cardholder name','Введите имя держателя')]);
+    if(bad.length){bad.forEach(x=>$(x[0]).classList.add('bad'));err.textContent=bad.map(x=>x[1]).join(' · ');return}
+  }
+  if(payM==='wallet'&&S.wallet<20){err.textContent=T('Wallet balance below $20 — top up in Receipts & wallet','Баланс кошелька меньше $20 — пополните в «Чеки и кошелёк»');return}
+  const vh=+$('#cV').value;
+  s.ports[pi].st='busy';
+  S.active={sid:s.id,port:pi,veh:vh,soc:a,soc0:a,tgt:b,kwh:0,min:0,pay:payM,start:Date.now(),tx:'TX'+Math.floor(1e7+Math.random()*9e7),curve:[],card:payM==='card'?$('#ccN').value.replace(/\D/g,'').slice(-4):''};
+  S.ui.pre=null;logMsg(s.id,'RequestStartTransaction',`evse ${pi+1} · ${S.active.tx}`);logMsg(s.id,'TransactionEvent','Started');
+  save();toast(T('Payment authorized — charging started','Оплата авторизована — зарядка началась'));render();
+}
+function rLive(v){
+  const a=S.active,s=stById(a.sid),p=s.ports[a.port],vh=VEH[a.veh];
+  v.innerHTML=`<div class="grid2"><div class="card"><h3><span>${T('Charging','Зарядка')} · ${esc(nm(s))}</span><span class="sp"></span>${pill('ok','<span class="live-dot"></span> '+T('Live','Онлайн'))}</h3>
+    <div class="meter"><div class="ring" id="lRing"></div><div class="mstats">
+      <div><span>${T('Power','Мощность')}</span><b id="lKw"></b></div><div><span>${T('Energy','Энергия')}</span><b id="lKwh"></b></div>
+      <div><span>${T('Elapsed','Прошло')}</span><b id="lMin"></b></div><div><span>${T('Cost so far','Стоимость')}</span><b id="lCost" style="color:var(--mal3)"></b></div></div></div>
+    <h3 style="margin-top:16px">${T('Power curve','Кривая мощности')}<span class="sp"></span><span class="muted" style="font-size:12px">${T('1 s = 1 min (demo speed)','1 с = 1 мин (ускорено)')}</span></h3>
+    <canvas id="lCv" height="170"></canvas>
+    <div class="row" style="margin-top:14px"><button class="btn danger" id="lStop">■ ${T('Stop & pay','Остановить и оплатить')}</button><span class="muted" style="font-size:12px" id="lEta"></span></div></div>
+    <div class="card"><h3>${T('Session','Сессия')}</h3><dl class="facts">
+      <dt>${T('Transaction','Транзакция')}</dt><dd class="mono">${a.tx}</dd><dt>${T('Site','Площадка')}</dt><dd>${esc(nm(s))} · ${s.id}</dd>
+      <dt>${T('Connector','Разъём')}</dt><dd>#${a.port+1} ${p.t} · ${p.kw} ${T('kW','кВт')}</dd><dt>${T('Vehicle','Автомобиль')}</dt><dd>${T(vh[0],vh[1])}</dd>
+      <dt>${T('Target','Цель')}</dt><dd>${a.tgt}%</dd><dt>${T('Tariff','Тариф')}</dt><dd>${usd(s.price)}/${T('kWh','кВт·ч')}</dd>
+      <dt>${T('Payment','Оплата')}</dt><dd>${payName(a.pay,a.card)}</dd><dt>${T('Started','Начало')}</dt><dd>${fmtT(a.start)}</dd></dl></div></div>`;
+  $('#lStop').onclick=()=>stopSession(false);liveUpd();
+}
+const payName=(m,c)=>m==='card'?T('Card','Карта')+' •••• '+(c||'1111'):m==='wallet'?T('VoltNet wallet','Кошелёк VoltNet'):'RFID '+S.rfid;
+function liveUpd(){
+  const a=S.active;if(!a||view!=='charge'||!$('#lKw'))return;const s=stById(a.sid),vh=VEH[a.veh],kw=a.curve.length?a.curve[a.curve.length-1][1]:0;
+  $('#lKw').textContent=num(kw,0)+' '+T('kW','кВт');$('#lKwh').textContent=num(a.kwh,1)+' '+T('kWh','кВт·ч');$('#lMin').textContent=a.min+' '+T('min','мин');$('#lCost').textContent=usd(a.kwh*s.price);
+  const rem=simulate(Math.min(s.ports[a.port].kw,vh[3]),vh[2],a.soc,a.tgt);$('#lEta').textContent=T('≈ '+rem+' min to '+a.tgt+'%','≈ '+rem+' мин до '+a.tgt+'%');
+  const R=80,C=2*Math.PI*R,f=Math.min(1,a.soc/100);
+  $('#lRing').innerHTML=`<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="${R}" style="fill:none;stroke:var(--line);stroke-width:14"/><circle cx="100" cy="100" r="${R}" transform="rotate(-90 100 100)" style="fill:none;stroke:var(--mal);stroke-width:14;stroke-linecap:round;stroke-dasharray:${C*f} ${C};transition:stroke-dasharray .6s"/><circle cx="100" cy="100" r="${R}" transform="rotate(${-90+360*a.tgt/100} 100 100)" style="fill:none;stroke:var(--gold);stroke-width:16;stroke-dasharray:3 ${C}"/><text x="100" y="104" text-anchor="middle" style="fill:var(--text);font:800 34px var(--font)">${Math.floor(a.soc)}%</text><text x="100" y="128" text-anchor="middle" style="fill:var(--muted);font:600 11px var(--font)">${T('battery','батарея')}</text></svg>`;
+  drawCurve();
+}
+function drawCurve(){
+  const cv=$('#lCv');if(!cv||!S.active)return;const a=S.active,dpr=devicePixelRatio||1,W=cv.clientWidth||300,H=170;
+  cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext('2d');g.scale(dpr,dpr);
+  const s=stById(a.sid),vh=VEH[a.veh],max=Math.min(s.ports[a.port].kw,vh[3]),tot=Math.max(10,simulate(max,vh[2],a.soc0,a.tgt));
+  const L=34,B=20,w=W-L-6,h=H-B-8,x=m=>L+w*m/tot,y=k=>8+h*(1-k/(max*1.1));
+  g.font='10px '+cssv('--mono').split(',')[0];g.fillStyle=cssv('--dim');g.strokeStyle=cssv('--line');g.lineWidth=1;
+  for(let i=0;i<=4;i++){const k=max*1.1*i/4;g.beginPath();g.moveTo(L,y(k));g.lineTo(W-6,y(k));g.stroke();g.fillText(Math.round(k),2,y(k)+3)}
+  g.fillText('0',L,H-5);g.fillText(tot+' '+T('min','мин'),W-50,H-5);
+  // projected
+  g.setLineDash([4,4]);g.strokeStyle=cssv('--gold');g.beginPath();let soc=a.soc0;for(let m=0;m<=tot;m++){const k=powerAt(max,soc);m?g.lineTo(x(m),y(k)):g.moveTo(x(m),y(k));soc+=k/60/vh[2]*100}g.stroke();g.setLineDash([]);
+  if(a.curve.length){const grad=g.createLinearGradient(0,8,0,H-B);const mc=cssv('--mal');grad.addColorStop(0,mc+'88');grad.addColorStop(1,mc+'00');
+    g.beginPath();g.moveTo(x(0),y(0));a.curve.forEach(c=>g.lineTo(x(c[0]),y(c[1])));g.lineTo(x(a.curve[a.curve.length-1][0]),y(0));g.closePath();g.fillStyle=grad;g.fill();
+    g.beginPath();a.curve.forEach((c,i)=>i?g.lineTo(x(c[0]),y(c[1])):g.moveTo(x(c[0]),y(c[1])));g.strokeStyle=cssv('--mal3');g.lineWidth=2.5;g.stroke()}
+}
+function tickSession(){
+  const a=S.active;if(!a)return;const s=stById(a.sid),vh=VEH[a.veh],p=s.ports[a.port];
+  if(p.st==='fault'||p.st==='off'){toast(T('Charger reported a fault — session stopped','Зарядка сообщила об ошибке — сессия остановлена'),'bad');stopSession(true);return}
+  const kw=powerAt(Math.min(p.kw,vh[3]),a.soc)*(0.97+Math.random()*.05);a.min++;a.kwh+=kw/60;a.soc=Math.min(100,a.soc+kw/60/vh[2]*100);a.curve.push([a.min,kw]);
+  if(a.min%5===0)logMsg(s.id,'TransactionEvent',`Updated · ${a.tx} · ${num(a.kwh,1)} kWh`);
+  if(a.soc>=a.tgt){toast(T('Target reached — session completed','Цель достигнута — сессия завершена'),'gold');stopSession(false);return}
+  save();liveUpd();
+}
+function stopSession(fault){
+  const a=S.active;if(!a)return;const s=stById(a.sid);const cost=+(a.kwh*s.price).toFixed(2);
+  if(a.pay==='wallet')S.wallet=+(S.wallet-cost).toFixed(2);
+  if(!fault&&s.ports[a.port].st==='busy')s.ports[a.port].st='avail';
+  s.ses++;s.kwh+=Math.round(a.kwh);
+  const rc={id:'RCP-'+Math.floor(90500+Math.random()*9000),sid:s.id,kwh:+a.kwh.toFixed(1),min:a.min,cost,pay:a.pay,card:a.card,ts:Date.now(),veh:a.veh,tx:a.tx,soc:[Math.round(a.soc0),Math.round(a.soc)]};
+  S.receipts.unshift(rc);logMsg(s.id,'TransactionEvent',`Ended · ${a.tx} · ${num(a.kwh,1)} kWh`);S.active=null;S.ui.rsel=rc.id;save();
+  toast(T('Paid ','Оплачено ')+usd(cost)+' · '+T('receipt ','чек ')+rc.id);go('history');
+}
+
+/* ---------- HISTORY ---------- */
+function rHistory(){
+  const v=$('#v-history'),R=S.receipts,sel=R.find(r=>r.id===S.ui.rsel)||R[0];
+  const tot=R.reduce((a,r)=>a+r.cost,0),kwh=R.reduce((a,r)=>a+r.kwh,0);
+  v.innerHTML=`<div class="kpis">${[[T('Wallet balance','Баланс кошелька'),usd(S.wallet),S.wallet<20?T('top up recommended','рекомендуем пополнить'):T('ready to charge','готов к зарядке')],[T('Sessions','Сессии'),R.length,T('all time','за всё время')],[T('Energy','Энергия'),num(kwh,1)+' '+T('kWh','кВт·ч'),T('charged on VoltNet','заряжено в VoltNet')],[T('Spent','Потрачено'),usd(tot),T('avg ','в среднем ')+usd(R.length?tot/R.length:0)]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('')}</div>
+  <div class="grid2"><div class="card"><h3>${T('Receipts','Чеки')}<span class="sp"></span><button class="btn sm" id="hCsv">⤓ CSV</button></h3>
+    ${R.length?`<div class="tw"><table><thead><tr><th>${T('Date','Дата')}</th><th>${T('Site','Площадка')}</th><th>${T('Energy','Энергия')}</th><th>${T('Time','Время')}</th><th>${T('Payment','Оплата')}</th><th>${T('Total','Итого')}</th></tr></thead><tbody>
+    ${R.map(r=>{const s=stById(r.sid);return `<tr class="clk${sel&&r.id===sel.id?' sel':''}" data-r="${r.id}"><td>${fmtDT(r.ts)}</td><td>${esc(nm(s))}</td><td class="mono">${num(r.kwh,1)}</td><td>${r.min} ${T('min','мин')}</td><td>${payName(r.pay,r.card)}</td><td class="mono"><b>${usd(r.cost)}</b></td></tr>`}).join('')}</tbody></table></div>`:`<div class="empty">${T('No sessions yet','Сессий пока нет')}</div>`}</div>
+    <div class="stack">${sel?(()=>{const s=stById(sel.sid);return `<div class="card"><h3>${T('Receipt','Чек')} <span class="mono" style="font-size:13px;color:var(--muted)">${sel.id}</span></h3>
+      <dl class="facts"><dt>${T('Date','Дата')}</dt><dd>${fmtDT(sel.ts)}</dd><dt>${T('Site','Площадка')}</dt><dd>${esc(nm(s))} · ${s.id}</dd><dt>${T('Operator','Оператор')}</dt><dd>${s.op}</dd><dt>${T('Transaction','Транзакция')}</dt><dd class="mono">${sel.tx}</dd>
+      <dt>${T('Energy','Энергия')}</dt><dd>${num(sel.kwh,1)} ${T('kWh','кВт·ч')} × ${usd(s.price)}</dd>${sel.soc?`<dt>${T('Battery','Батарея')}</dt><dd>${sel.soc[0]}% → ${sel.soc[1]}%</dd>`:''}<dt>${T('Paid with','Оплата')}</dt><dd>${payName(sel.pay,sel.card)}</dd><dt>${T('Total','Итого')}</dt><dd style="font-size:18px;color:var(--mal3)">${usd(sel.cost)}</dd></dl>
+      <div class="row" style="margin-top:12px"><button class="btn sm" id="hMail">✉ ${T('Email receipt','Отправить на почту')}</button><button class="btn sm" id="hDisp">${T('Dispute charge','Оспорить')}</button></div>${sel.disp?`<div style="margin-top:8px">${pill('warn',T('Dispute opened','Спор открыт'))}</div>`:''}</div>`})():''}
+      <div class="card"><h3>${T('Top up wallet','Пополнить кошелёк')}</h3><div class="chips" id="hAmt">${[10,25,50,100].map(x=>`<button class="chip" data-a="${x}">$${x}</button>`).join('')}</div>
+      <div class="f" style="margin-top:10px"><label>${T('Custom amount ($5–500)','Своя сумма ($5–500)')}</label><div class="row"><input class="input" id="hTop" inputmode="decimal" style="flex:1;min-width:0" placeholder="${T('e.g. 40','напр. 40')}"><button class="btn pri" id="hTopBtn">${T('Add funds','Пополнить')}</button></div></div><div class="err" id="hErr"></div>
+      <div class="muted" style="font-size:12px">RFID: <span class="mono">${S.rfid}</span> · ${T('linked to wallet','привязана к кошельку')}</div></div></div></div>`;
+  $$('#v-history tr[data-r]').forEach(t=>t.onclick=()=>{S.ui.rsel=t.dataset.r;save();rHistory()});
+  $$('#hAmt .chip').forEach(b=>b.onclick=()=>{$('#hTop').value=b.dataset.a});
+  $('#hTopBtn').onclick=()=>{const x=parseFloat(($('#hTop').value||'').replace(',','.'));if(!(x>=5&&x<=500)){$('#hTop').classList.add('bad');$('#hErr').textContent=T('Enter an amount from $5 to $500','Введите сумму от $5 до $500');return}
+    S.wallet=+(S.wallet+x).toFixed(2);save();toast(T('Wallet topped up by ','Кошелёк пополнен на ')+usd(x));rHistory()};
+  if($('#hMail'))$('#hMail').onclick=()=>toast(T('Receipt sent to ','Чек отправлен на ')+esc(auth.email));
+  if($('#hDisp'))$('#hDisp').onclick=()=>{sel.disp=1;save();toast(T('Dispute opened — operator will reply within 5 business days','Спор открыт — оператор ответит в течение 5 рабочих дней'),'gold');rHistory()};
+  $('#hCsv').onclick=()=>download('voltnet-receipts.csv',[['receipt','date','site','kwh','minutes','total_usd','payment'],...R.map(r=>[r.id,new Date(r.ts).toISOString(),r.sid,r.kwh,r.min,r.cost,r.pay])]);
+}
+function download(name,rows){const csv=rows.map(r=>r.map(c=>/[",\n]/.test(String(c))?'"'+String(c).replace(/"/g,'""')+'"':c).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast(T('Downloaded ','Скачано ')+name)}
+
+/* ---------- UPTIME ---------- */
+function trendSVG(){
+  const d=[...S.trend.slice(1),+netUp().toFixed(2)],W=600,H=200,L=36,lo=94,hi=100,x=i=>L+(W-L-8)*i/(d.length-1),y=v=>10+(H-34)*(1-(v-lo)/(hi-lo));
+  const pts=d.map((v,i)=>x(i).toFixed(1)+','+y(v).toFixed(1)).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}">${[94,96,97,98,100].map(v=>`<line x1="${L}" x2="${W-8}" y1="${y(v)}" y2="${y(v)}" style="stroke:var(--line)"/><text x="4" y="${y(v)+4}" style="fill:var(--dim);font:10px var(--mono)">${v}%</text>`).join('')}
+  <line x1="${L}" x2="${W-8}" y1="${y(97)}" y2="${y(97)}" style="stroke:var(--red);stroke-dasharray:6 5;stroke-width:1.5"/><text x="${W-10}" y="${y(97)-5}" text-anchor="end" style="fill:var(--red);font:600 10px var(--font)">${T('97% requirement','Требование 97%')}</text>
+  <polygon points="${L},${y(lo)} ${pts} ${W-8},${y(lo)}" style="fill:var(--mal);opacity:.14"/><polyline points="${pts}" style="fill:none;stroke:var(--mal3);stroke-width:2.5;stroke-linejoin:round"/>
+  ${d.map((v,i)=>v<97?`<circle cx="${x(i)}" cy="${y(v)}" r="4" style="fill:var(--red)"/>`:'').join('')}
+  <text x="${L}" y="${H-6}" style="fill:var(--dim);font:10px var(--font)">${T('30 days ago','30 дн. назад')}</text><text x="${W-8}" y="${H-6}" text-anchor="end" style="fill:var(--dim);font:10px var(--font)">${T('today','сегодня')}</text></svg>`;
+}
+function rUptime(){
+  const v=$('#v-uptime');
+  if(v.dataset.lang!==PT.lang||!v.dataset.built||v.dataset.th!==cssv('--bg')){v.dataset.built=1;v.dataset.lang=PT.lang;v.dataset.th=cssv('--bg');
+    v.innerHTML=`<div class="kpis" id="uK"></div><div class="grid2"><div class="card chart"><h3>${T('Network uptime, daily','Доступность сети по дням')}<span class="sp"></span><span class="muted" style="font-size:12px">${T('per port, excl. scheduled maintenance','по разъёмам, без плановых работ')}</span></h3><div id="uTr"></div></div>
+    <div class="card"><h3>${T('OCPP message feed','Поток сообщений OCPP')}<span class="sp"></span><span class="live-dot"></span></h3><div class="log" id="uLog"></div></div></div>
+    <div class="card" style="margin-top:14px"><h3>${T('Stations','Станции')}<span class="sp"></span><div class="chips" id="uF">${[['all','All','Все'],['low','Below 97%','Ниже 97%'],['down','Has faults','С неисправностями']].map(f=>`<button class="chip${(S.ui.uf||'all')===f[0]?' on':''}" data-u="${f[0]}">${T(f[1],f[2])}</button>`).join('')}</div></h3><div class="tw"><table><thead><tr><th>ID</th><th>${T('Site','Площадка')}</th><th>${T('State','Штат')}</th><th>${T('Operator','Оператор')}</th><th>${T('Ports','Разъёмы')}</th><th>${T('Uptime 30 d','Доступность 30 дн')}</th><th>${T('Heartbeat','Heartbeat')}</th><th></th></tr></thead><tbody id="uT"></tbody></table></div></div>`;
+    $$('#uF .chip').forEach(b=>b.onclick=()=>{S.ui.uf=b.dataset.u;save();$$('#uF .chip').forEach(x=>x.classList.toggle('on',x===b));upDyn()});
+    v.addEventListener('click',e=>{const b=e.target.closest('[data-reb]');if(b){const s=stById(b.dataset.reb);logMsg(s.id,'Reset','Immediate · accepted');s.hb=Date.now();
+      setTimeout(()=>{let fixed=0;s.ports.forEach(p=>{if((p.st==='off'||p.st==='fault')&&Math.random()<.6){p.st='avail';fixed++}});s.hb=Date.now();logMsg(s.id,'BootNotification','RemoteReset');
+        S.incidents.forEach(i=>{if(i.sid===s.id&&i.status!=='resolved'&&(i.port<0?s.ports.every(p=>p.st!=='off'):s.ports[i.port].st==='avail')){i.status='resolved';i.closed=Date.now();i.tech=T('Remote reset','Удалённый сброс')}});
+        save();toast(fixed?T('Remote reset restored '+fixed+' port(s) at ','Удалённый сброс восстановил разъёмов: '+fixed+' — ')+s.id:T('Reset done, fault persists — dispatch a technician','Сброс выполнен, неисправность осталась — нужен выезд'),fixed?'':'bad');render()},1600);
+      toast(T('Remote reset sent to ','Удалённый сброс отправлен на ')+s.id,'gold')}});
+  }
+  upDyn();
+}
+function upDyn(){
+  if(view!=='uptime')return;
+  const low=S.stations.filter(s=>upOf(s)<97),open=S.incidents.filter(i=>i.status!=='resolved'),res=S.incidents.filter(i=>i.closed),mttr=res.length?res.reduce((a,i)=>a+(i.closed-i.opened),0)/res.length/36e5:0;
+  $('#uK').innerHTML=[[T('Network uptime','Доступность сети'),num(netUp(),2)+'%',T('rolling 30 days','скользящие 30 дней'),netUp()>=97?'var(--mal3)':'var(--red)'],[T('Sites below 97%','Площадок ниже 97%'),low.length,T('of ','из ')+S.stations.length,low.length?'var(--amber)':'var(--mal3)'],[T('Open incidents','Открытые инциденты'),open.length,T('auto-created from OCPP','созданы из OCPP'),open.length?'var(--red)':'var(--mal3)'],[T('Mean time to repair','Среднее время ремонта'),num(mttr,1)+' '+T('h','ч'),T('last 30 days','за 30 дней'),'var(--text)']]
+    .map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v" style="color:${k[3]}">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('');
+  $('#uTr').innerHTML=trendSVG();
+  $('#uLog').innerHTML=S.log.slice(0,60).map(l=>`<div><span class="t">${fmtT(l.ts)}</span> <span class="k">${l.sid}</span> ${esc(l.m)} <span class="t">${esc(l.d)}</span></div>`).join('')||`<div class="t">${T('Waiting for messages…','Ожидание сообщений…')}</div>`;
+  const f=S.ui.uf||'all';const list=S.stations.filter(s=>f==='low'?upOf(s)<97:f==='down'?s.ports.some(p=>p.st==='fault'||p.st==='off'):true).sort((a,b)=>upOf(a)-upOf(b));
+  $('#uT').innerHTML=list.map(s=>{const u=upOf(s),c=u>=97?'var(--mal)':u>=95?'var(--amber)':'var(--red)',bad=s.ports.filter(p=>p.st==='fault'||p.st==='off').length,stale=Date.now()-s.hb>120000;
+    return `<tr><td class="mono">${s.id}</td><td>${esc(nm(s))}</td><td>${stName(s.st)}</td><td>${s.op}</td><td>${s.ports.length-bad}/${s.ports.length}${bad?' '+pill('bad',bad+' '+T('down','не раб.')):''}</td><td><span class="ub"><i style="width:${Math.max(4,(u-90)*10)}%;background:${c}"></i></span><b class="mono" style="color:${c}">${num(u,2)}%</b></td><td class="${stale?'bad-t':'muted'}">${ago(s.hb)}</td><td>${bad?`<button class="btn sm" data-reb="${s.id}">↻ ${T('Remote reset','Удалённый сброс')}</button>`:''}</td></tr>`}).join('');
+}
+
+/* ---------- INCIDENTS ---------- */
+const ISTEPS=[['Opened','Открыт'],['Dispatched','Выезд'],['On site','На месте'],['Resolved','Решён']];
+function rInc(){
+  const v=$('#v-incidents'),f=S.ui.if||'open';
+  const list=S.incidents.filter(i=>f==='open'?i.status!=='resolved':i.status==='resolved').sort((a,b)=>b.opened-a.opened);
+  v.innerHTML=`<div class="grid2"><div class="card"><h3><div class="chips">${[['open','Active','Активные'],['res','Resolved','Решённые']].map(x=>`<button class="chip${f===x[0]?' on':''}" data-if="${x[0]}">${T(x[1],x[2])} (${S.incidents.filter(i=>x[0]==='open'?i.status!=='resolved':i.status==='resolved').length})</button>`).join('')}</div></h3>
+    ${list.length?list.map(i=>{const s=stById(i.sid),k=['open','dispatched','onsite','resolved'].indexOf(i.status);
+      return `<div class="inc"><div class="top"><b>${i.txt?T(i.txt[0],i.txt[1]):fcode(i.code)}</b>${pill(i.status==='resolved'?'ok':i.status==='open'?'bad':'warn',T(ISTEPS[k][0],ISTEPS[k][1]))}</div>
+      <div class="meta"><span class="mono">${i.id}</span> · ${esc(nm(s))} (${s.id})${i.port>=0?' · '+T('port','разъём')+' #'+(i.port+1):''} · <span class="mono">${i.code}</span> · ${T('opened','открыт')} ${fmtDT(i.opened)}${i.tech?' · '+T('tech: ','техник: ')+esc(i.tech):''}${i.closed?' · '+T('closed','закрыт')+' '+fmtDT(i.closed):''}</div>
+      <div class="tl">${ISTEPS.map((x,j)=>`<div class="${j<k||k===3?'ok':j===k?'cur':''}"><i></i><span>${T(x[0],x[1])}</span></div>`).join('')}</div>
+      ${i.status!=='resolved'?`<div class="row" style="margin-top:10px">${i.status==='open'?`<button class="btn sm pri" data-act="disp" data-i="${i.id}">${T('Dispatch technician','Отправить техника')}</button>`:''}${i.status==='dispatched'?`<button class="btn sm" data-act="site" data-i="${i.id}">${T('Mark on site','Техник на месте')}</button>`:''}${i.status!=='open'?`<button class="btn sm pri" data-act="fix" data-i="${i.id}">✓ ${T('Resolve & restore port','Решить и вернуть разъём')}</button>`:''}</div>`:''}</div>`}).join(''):`<div class="empty">${T('No incidents here','Инцидентов нет')}</div>`}</div>
+    <div class="stack"><div class="card"><h3>${T('Report a problem','Сообщить о проблеме')}</h3><div class="fgrid">
+      <div class="f full"><label>${T('Site','Площадка')}</label><select class="input" id="iS">${S.stations.map(s=>`<option value="${s.id}">${s.id} · ${esc(nm(s))}</option>`).join('')}</select></div>
+      <div class="f"><label>${T('Port','Разъём')}</label><select class="input" id="iP"></select></div>
+      <div class="f"><label>${T('Fault type','Тип неисправности')}</label><select class="input" id="iC">${FCODES.map(c=>`<option value="${c[0]}">${T(c[1],c[2])}</option>`).join('')}</select></div>
+      <div class="f full"><label>${T('Notes','Комментарий')}</label><input class="input" id="iN" placeholder="${T('What did the driver see?','Что увидел водитель?')}"></div></div>
+      <div class="err" id="iErr"></div><button class="btn pri" id="iGo">${T('Create incident','Создать инцидент')}</button></div>
+      <div class="card"><h3>${T('Field technicians','Выездные техники')}</h3>${TECHS.map(t=>{const busy=S.incidents.some(i=>i.tech===t&&i.status!=='resolved'&&i.status!=='open');return `<div class="row" style="justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13px"><span>${t}</span>${pill(busy?'warn':'ok',busy?T('On job','На выезде'):T('Available','Свободен'))}</div>`}).join('')}</div></div></div>`;
+  $$('[data-if]',v).forEach(b=>b.onclick=()=>{S.ui.if=b.dataset.if;save();rInc()});
+  $$('[data-act]',v).forEach(b=>b.onclick=()=>incAct(b.dataset.i,b.dataset.act));
+  const fp=()=>{const s=stById($('#iS').value);$('#iP').innerHTML=s.ports.map((p,i)=>`<option value="${i}">#${i+1} ${p.t} · ${T(PST[p.st][0],PST[p.st][1])}</option>`).join('')};$('#iS').onchange=fp;fp();
+  $('#iGo').onclick=()=>{const s=stById($('#iS').value),pi=+$('#iP').value;
+    if(S.incidents.some(i=>i.sid===s.id&&i.port===pi&&i.status!=='resolved')){$('#iErr').textContent=T('An active incident already exists for this port','Для этого разъёма уже есть активный инцидент');return}
+    $('#iErr').textContent='';if(s.ports[pi].st!=='off'){if(S.active&&S.active.sid===s.id&&S.active.port===pi){$('#iErr').textContent=T('Port has an active driver session','На разъёме идёт сессия водителя');return}s.ports[pi].st='fault'}
+    const inc={id:'INC-'+(4200+S.incidents.length),sid:s.id,port:pi,code:$('#iC').value,opened:Date.now(),status:'open',note:$('#iN').value.trim()};S.incidents.push(inc);logMsg(s.id,'NotifyEvent',inc.code+' · manual');S.ui.if='open';save();toast(T('Incident ','Инцидент ')+inc.id+T(' created',' создан'),'gold');render()};
+}
+function incAct(id,act){
+  const i=S.incidents.find(x=>x.id===id);if(!i)return;const s=stById(i.sid);
+  if(act==='disp'){const free=TECHS.find(t=>!S.incidents.some(x=>x.tech===t&&x.status!=='resolved'&&x.status!=='open'))||TECHS[0];i.tech=free;i.status='dispatched';toast(T('Technician ','Техник ')+free+T(' dispatched',' отправлен'))}
+  if(act==='site'){i.status='onsite';toast(T('Technician on site at ','Техник на месте: ')+s.id)}
+  if(act==='fix'){i.status='resolved';i.closed=Date.now();if(i.port<0)s.ports.forEach(p=>p.st='avail');else s.ports[i.port].st='avail';s.hb=Date.now();logMsg(s.id,'StatusNotification',(i.port<0?'all':'evse '+(i.port+1))+' → Available');toast(T('Resolved — port back in service','Решено — разъём снова в работе'))}
+  save();render();
+}
+
+/* ---------- REPORTS ---------- */
+function compliance(q,st){
+  const sts=S.stations.filter(s=>st<0||s.st===st);
+  const ports4=sts.filter(s=>s.ports.filter(p=>p.t==='CCS'&&p.kw>=150).length>=4).length;
+  const up=sts.filter(s=>upOf(s)>=97).length,sp=sts.filter(s=>s.spacing).length,oc=sts.filter(s=>s.ocpi).length;
+  const items=[[T('≥4 CCS ports at ≥150 kW per site','≥4 разъёма CCS ≥150 кВт на площадке'),ports4,sts.length],[T('Port uptime ≥97% (rolling 12 mo)','Доступность разъёмов ≥97%'),up,sts.length],[T('Max 50 mi spacing along corridor','Расстояние ≤50 миль по коридору'),sp,sts.length],[T('Real-time status via OCPI 2.2','Статус в реальном времени через OCPI 2.2'),oc,sts.length],[T('Price per kWh shown before session','Цена за кВт·ч до начала сессии'),sts.length,sts.length]];
+  const score=Math.round(items.reduce((a,i)=>a+i[1]/Math.max(1,i[2]),0)/items.length*100);
+  return {sts,items,score,ses:sts.reduce((a,s)=>a+s.ses,0),mwh:sts.reduce((a,s)=>a+s.kwh,0)/1000};
+}
+function fundSVG(){
+  const W=600,H=220,L=40,bw=26,mx=140,y=v=>12+(H-44)*(1-v/mx),gw=(W-L)/5;
+  return `<svg viewBox="0 0 ${W} ${H}">${[0,35,70,105,140].map(v=>`<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" style="stroke:var(--line)"/><text x="2" y="${y(v)+4}" style="fill:var(--dim);font:10px var(--mono)">$${v}M</text>`).join('')}
+  ${S.funding.map((f,i)=>{const x=L+gw*i+gw/2;return `<rect x="${x-bw-2}" y="${y(f.ob)}" width="${bw}" height="${y(0)-y(f.ob)}" rx="4" style="fill:var(--line2)"/><rect x="${x+2}" y="${y(f.dis)}" width="${bw}" height="${y(0)-y(f.dis)}" rx="4" style="fill:var(--mal)"/><text x="${x+2+bw/2}" y="${y(f.dis)-5}" text-anchor="middle" style="fill:var(--text);font:600 10px var(--mono)">${Math.round(f.dis/f.ob*100)}%</text><text x="${x}" y="${H-8}" text-anchor="middle" style="fill:var(--muted);font:600 11px var(--font)">${esc(stName(i))}</text>`}).join('')}</svg>`;
+}
+const RST={draft:['Draft','Черновик','pill'],submitted:['Submitted','Отправлен','warn'],review:['Under review','На проверке','warn'],accepted:['Accepted','Принят','ok'],returned:['Returned','Возвращён','bad']};
+function rReports(){
+  const v=$('#v-reports'),q=S.ui.q,st=S.ui.rst,c=compliance(q,st),ob=S.funding.reduce((a,f)=>a+f.ob,0),dis=S.funding.reduce((a,f)=>a+f.dis,0);
+  v.innerHTML=`<div class="kpis">${[[T('Formula funds obligated','Обязательства по программе'),'$'+ob+'M',T('5 states, FY2023–25','5 штатов, 2023–25 фин. гг.')],[T('Reimbursed to date','Возмещено'),'$'+dis+'M',Math.round(dis/ob*100)+'% '+T('of obligated','от обязательств')],[T('Compliance score','Оценка соответствия'),c.score+'%',stName(st)],[T('Sessions · energy','Сессии · энергия'),num(c.ses),num(c.mwh,1)+' '+T('MWh delivered','МВт·ч отпущено')]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('')}</div>
+  <div class="grid2e"><div class="card"><h3>${T('Build quarterly report','Квартальный отчёт')}</h3><div class="fgrid">
+    <div class="f"><label>${T('Quarter','Квартал')}</label><select class="input" id="rQ">${QS.map((x,i)=>`<option value="${i}"${i===q?' selected':''}>${x}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('State','Штат')}</label><select class="input" id="rS"><option value="-1">${stName(-1)}</option>${STATES.map((x,i)=>`<option value="${i}"${i===st?' selected':''}>${stName(i)}</option>`).join('')}</select></div></div>
+    <ul class="chk" style="margin-top:12px">${c.items.map(i=>{const ok=i[1]===i[2];return `<li><span class="${ok?'ok-t':'warn-t'}">${ok?'✓':'!'}</span><span>${i[0]}</span><em class="${ok?'ok-t':'warn-t'}">${i[1]}/${i[2]}</em></li>`}).join('')}</ul>
+    <div class="row" style="margin-top:12px"><button class="btn pri" id="rGen">${T('Generate report','Сформировать отчёт')}</button><button class="btn sm" id="rCsv">⤓ ${T('Site data CSV','Данные площадок CSV')}</button></div></div>
+    <div class="card chart"><h3>${T('Obligated vs reimbursed by state','Обязательства и возмещение по штатам')}</h3>${fundSVG()}<div class="legend"><span><i style="background:var(--line2);border-radius:3px"></i>${T('Obligated','Обязательства')}</span><span><i style="background:var(--mal);border-radius:3px"></i>${T('Reimbursed','Возмещено')}</span></div></div></div>
+  <div class="card" style="margin-top:14px"><h3>${T('Submitted reports','Отчёты')}</h3><div class="tw"><table><thead><tr><th>ID</th><th>${T('Quarter','Квартал')}</th><th>${T('Scope','Охват')}</th><th>${T('Created','Создан')}</th><th>${T('Score','Оценка')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+  ${S.reports.slice().reverse().map(r=>{const k=RST[r.status];return `<tr><td class="mono">${r.id}</td><td>${QS[r.q]}</td><td>${stName(r.state)}</td><td>${fmtDT(r.created)}</td><td class="mono">${r.score}%</td><td>${pill(k[2],T(k[0],k[1]))}${r.note?`<div class="muted" style="font-size:11.5px;white-space:normal;min-width:180px">${T(r.note[0],r.note[1])}</div>`:''}</td><td>${r.status==='draft'||r.status==='returned'?`<button class="btn sm pri" data-sub="${r.id}">${T('Submit','Отправить')}</button>`:''} <button class="btn sm" data-dl="${r.id}">⤓</button></td></tr>`}).join('')}</tbody></table></div></div>`;
+  $('#rQ').onchange=e=>{S.ui.q=+e.target.value;save();rReports()};$('#rS').onchange=e=>{S.ui.rst=+e.target.value;save();rReports()};
+  $('#rGen').onclick=()=>{const id='RPT-'+QS[q].replace(' ','-').split('-').reverse().join('-')+(st<0?'':'-'+STATES[st][0].slice(0,3).toUpperCase())+'-'+(S.reports.length+1);
+    S.reports.push({id,q,state:st,created:Date.now(),status:'draft',score:c.score});save();toast(T('Draft report ','Черновик отчёта ')+id+T(' created',' создан'));rReports()};
+  $('#rCsv').onclick=()=>download('voltnet-sites-'+QS[q].replace(' ','-')+'.csv',[['site_id','name','state','corridor','operator','ports','ccs_150kw','uptime_pct','sessions','kwh','ocpi'],...c.sts.map(s=>[s.id,s.n[0],STATES[s.st][0],s.cor,s.op,s.ports.length,s.ports.filter(p=>p.t==='CCS'&&p.kw>=150).length,upOf(s).toFixed(2),s.ses,s.kwh,s.ocpi?'yes':'no'])]);
+  $$('[data-sub]',v).forEach(b=>b.onclick=()=>{const r=S.reports.find(x=>x.id===b.dataset.sub);r.status='submitted';r.note=null;save();toast(T('Report submitted to the program office','Отчёт отправлен в офис программы'));rReports();
+    setTimeout(()=>{r.status='review';save();if(view==='reports')rReports()},2500);
+    setTimeout(()=>{const ok=r.score>=90;r.status=ok?'accepted':'returned';r.note=ok?null:['Returned: uptime and spacing gaps — attach corrective action plan','Возвращён: недобор доступности и расстояний — приложите план исправлений'];save();toast(ok?T('Report '+r.id+' accepted','Отчёт '+r.id+' принят'):T('Report '+r.id+' returned for corrections','Отчёт '+r.id+' возвращён на доработку'),ok?'':'bad');if(view==='reports')rReports()},6000)});
+  $$('[data-dl]',v).forEach(b=>b.onclick=()=>{const r=S.reports.find(x=>x.id===b.dataset.dl),cc=compliance(r.q,r.state);download(r.id+'.csv',[['report',r.id],['quarter',QS[r.q]],['scope',r.state<0?'All states':STATES[r.state][0]],['score_pct',r.score],['status',r.status],[],['requirement','met','total'],...cc.items.map((i,k)=>[['ports_4x150kw','uptime_97','spacing_50mi','ocpi_realtime','price_display'][k],i[1],i[2]])])});
+}
+
+/* ---------- simulation ---------- */
+function logMsg(sid,m,d){S.log.unshift({ts:Date.now(),sid,m,d});if(S.log.length>80)S.log.length=80}
+let T1=null,T2=null,T3=null;
+function netTick(){
+  const r=Math.random,now=Date.now();
+  for(let k=0;k<3;k++){const s=S.stations[Math.floor(r()*S.stations.length)];if(s.ports.every(p=>p.st==='off'))continue;const i=Math.floor(r()*s.ports.length),p=s.ports[i];
+    if(S.active&&S.active.sid===s.id&&S.active.port===i)continue;
+    if(p.st==='avail'&&r()<.55){p.st='busy';s.ses++;logMsg(s.id,'TransactionEvent',`Started · evse ${i+1}`)}
+    else if(p.st==='busy'&&r()<.6){p.st='avail';const e=Math.round(18+r()*45);s.kwh+=e;logMsg(s.id,'TransactionEvent',`Ended · evse ${i+1} · ${e} kWh`)}
+    s.hb=now;}
+  const hs=S.stations[Math.floor(r()*S.stations.length)];if(!hs.ports.every(p=>p.st==='off')){hs.hb=now;logMsg(hs.id,'Heartbeat','')}
+  if(r()<.07&&S.incidents.filter(i=>i.status!=='resolved').length<6){const s=S.stations[Math.floor(r()*S.stations.length)],i=Math.floor(r()*s.ports.length);
+    if(s.ports[i].st==='avail'){s.ports[i].st='fault';const f=FCODES[Math.floor(r()*FCODES.length)];S.incidents.push({id:'INC-'+(4200+S.incidents.length),sid:s.id,port:i,code:f[0],opened:now,status:'open'});logMsg(s.id,'StatusNotification',`evse ${i+1} → Faulted (${f[0]})`);toast(T('New incident: ','Новый инцидент: ')+fcode(f[0])+' · '+s.id,'bad')}}
+  S.stations.forEach(s=>s.ports.forEach(p=>{if(p.st==='fault'||p.st==='off')p.down+=2}));
+  save();badges();
+  if(view==='map')mapDyn();else if(view==='uptime')upDyn();
+}
+function startSim(){stopSim();T1=setInterval(netTick,3000);T2=setInterval(tickSession,1000);T3=setInterval(moveCars,120)}
+function stopSim(){clearInterval(T1);clearInterval(T2);clearInterval(T3)}
+
+PT.onLang(()=>{$$('.view:not(.on)').forEach(x=>{x.innerHTML='';delete x.dataset.built});if(auth)render()});
+addEventListener('resize',()=>{if(view==='charge')drawCurve()});
+$('#hPorts').textContent=S.stations.reduce((a,s)=>a+s.ports.length,0);
+if(auth&&auth.email){enter()}
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

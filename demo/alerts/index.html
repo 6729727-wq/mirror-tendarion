@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AlertNet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}.app[hidden],.login[hidden]{display:none}.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--red),var(--amber));color:#fff;font-size:16px;flex:none}.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}.nav{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}.nav:hover{background:var(--panel);color:var(--text)}.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}.nav .ic{width:20px;text-align:center;flex:none}.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}.nav .cnt.r{background:var(--red);color:#fff}.grow{flex:1}.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;flex-direction:column;gap:8px}.who .u{display:flex;gap:10px;align-items:center}.who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);font-weight:800;flex:none}.who small{display:block;color:var(--muted);font-size:11.5px}main{padding:20px 26px 60px;min-width:0}.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.head h1{font-size:24px;margin:0;letter-spacing:-.01em}.head .sp{flex:1}.crumb{font-size:12px;color:var(--dim)}.menu-btn{display:none}.clock{font-family:var(--mono);font-size:12.5px;color:var(--muted)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mal3);box-shadow:0 0 0 0 var(--mal3);animation:pulse 1.6s infinite}@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--mal3) 60%,transparent)}100%{box-shadow:0 0 0 8px transparent}}.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:14px}.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}.facts dt{color:var(--muted)}.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.card h3 .sp{flex:1}.view{display:none}.view.on{display:block;animation:fade .2s}@keyframes fade{from{opacity:0;transform:translateY(4px)}}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}.kpi .l{font-size:12px;color:var(--muted);font-weight:600}.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}.kpi .d{font-size:12px;color:var(--muted)}.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:14px}.cmp{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start}.col{display:flex;flex-direction:column;gap:14px;min-width:0}.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.fgrid .full{grid-column:1/-1}.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}.f .hint{font-size:11.5px;color:var(--dim);margin-top:4px}.input.err{border-color:var(--red);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 18%,transparent)}textarea.input{resize:vertical;min-height:70px}select.input{appearance:auto}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.btn:disabled{opacity:.42;cursor:not-allowed}.btn.sm{padding:6px 12px;font-size:12.5px}.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}.btn.red{background:linear-gradient(135deg,var(--red),color-mix(in srgb,var(--red) 70%,#000));border-color:transparent;color:#fff}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600;min-height:34px}.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}.sev{border:1px solid var(--line2);background:var(--panel2);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;min-height:38px}.sev i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}.sev.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}.opt b{display:block}.opt span{font-size:12.5px;color:var(--muted)}.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}/* map */.map{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--bg2)}.map svg{width:100%;height:auto;display:block;touch-action:manipulation}.map.draw svg{cursor:crosshair}.m-sea{fill:var(--bg2)}.m-grid{stroke:var(--line);stroke-width:.5;opacity:.5}.m-land{fill:var(--panel2);stroke:var(--line2);stroke-width:1.5;stroke-linejoin:round}.m-h{fill:var(--mal)}.m-riv{fill:none;stroke:var(--blue);stroke-width:2.2;opacity:.55;stroke-linecap:round}.m-city{fill:var(--text)}.m-lbl{fill:var(--muted);font-size:12px;font-weight:600;font-family:var(--font);paint-order:stroke;stroke:var(--panel2);stroke-width:3px}.m-tw{fill:var(--gold)}.m-cap{fill:none;stroke:var(--text);stroke-width:1.4}.m-poly{fill:var(--c);fill-opacity:.2;stroke:var(--c);stroke-width:2;stroke-linejoin:round}.m-poly.live{animation:blink 2s infinite}@keyframes blink{50%{fill-opacity:.38}}.m-dr{fill:var(--gold);fill-opacity:.18;stroke:var(--gold);stroke-width:2;stroke-dasharray:6 4}.m-v{fill:var(--panel);stroke:var(--gold);stroke-width:2.5}.m-cmp{fill:var(--dim);font-size:11px;font-family:var(--mono)}.mapbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.mhint{position:absolute;left:10px;bottom:10px;font-size:12px;background:color-mix(in srgb,var(--panel) 88%,transparent);border:1px solid var(--line);border-radius:8px;padding:4px 8px;color:var(--muted);pointer-events:none;max-width:calc(100% - 20px)}.estim{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}.estim div{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0}.estim span{display:block;font-size:11px;color:var(--muted)}.estim b{font-size:15px}/* phone */.phone{width:250px;max-width:100%;margin:0 auto;border:9px solid var(--line2);border-radius:36px;background:var(--bg);padding:10px 10px 18px;min-height:430px;position:relative;box-shadow:var(--shadow)}.phone:before{content:"";display:block;width:70px;height:18px;border-radius:12px;background:var(--line2);margin:-4px auto 8px}.psb{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--muted);padding:0 6px 10px;font-family:var(--mono)}.ptime{text-align:center;font-size:44px;font-weight:300;letter-spacing:-.02em;line-height:1;margin:6px 0 2px}.pdate{text-align:center;font-size:11.5px;color:var(--muted);margin-bottom:14px}.acard{background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;font-size:12.5px;animation:fade .25s}.acard .ah{background:var(--c);color:#fff;padding:7px 10px;font-weight:800;font-size:12px;display:flex;gap:6px;align-items:center}.acard .ab{padding:9px 11px;overflow-wrap:anywhere}.acard .ab b{display:block;font-size:13.5px;margin-bottom:4px}.acard .ab p{margin:0 0 6px;color:var(--text)}.acard .af{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:7px 11px;font-size:10.5px;color:var(--muted);font-family:var(--mono)}.acard .ok{display:block;text-align:center;border-top:1px solid var(--line);padding:8px;font-weight:700;color:var(--mal3)}.sms{background:var(--panel2);border:1px solid var(--line);border-radius:16px 16px 16px 4px;padding:9px 11px;font-size:12.5px;overflow-wrap:anywhere;margin-top:6px}.ptabs{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}.cnt2{font-size:11.5px;color:var(--muted);text-align:center;margin-top:10px}/* channels */.chk{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:12px;margin-bottom:7px;cursor:pointer;background:var(--bg2);width:100%;text-align:left;min-height:44px}.chk.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 9%,transparent)}.chk.off{opacity:.5;cursor:not-allowed}.chk .bx{width:18px;height:18px;border-radius:5px;border:2px solid var(--line2);display:grid;place-items:center;flex:none;font-size:12px;color:#fff}.chk.on .bx{background:var(--mal);border-color:var(--mal)}.chk .nm{flex:1;min-width:0;font-size:13px;font-weight:600}.chk .nm small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}.chk .rv{font-family:var(--mono);font-size:12px;color:var(--muted);flex:none}.sw{width:40px;height:22px;border-radius:22px;background:var(--line2);position:relative;flex:none;border:0;cursor:pointer;transition:.2s}.sw:after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}.sw.on{background:var(--mal)}.sw.on:after{left:20px}pre.cap{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;margin:0;max-height:300px;white-space:pre}details summary{cursor:pointer;font-weight:700;font-size:14px;list-style:none;display:flex;align-items:center;gap:8px}details summary::-webkit-details-marker{display:none}details[open] summary{margin-bottom:10px}/* tables */.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}table{border-collapse:collapse;width:100%;font-size:13.5px}th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}tr:last-child td{border-bottom:none}tbody tr.clk{cursor:pointer}tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}.sp-t{display:inline-flex;align-items:center;gap:6px;font-weight:700}.sp-t i{width:9px;height:9px;border-radius:50%;background:var(--c)}.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .5s}.bars .b{display:grid;grid-template-columns:minmax(0,130px) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:12.5px;margin-bottom:8px}.bars .b .mono{font-size:12px;text-align:right}.split{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}.dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 12px;font-size:12.5px;margin:12px 0}.dl dt{color:var(--muted)}.dl dd{margin:0;font-weight:600;overflow-wrap:anywhere}.tml{list-style:none;padding:0;margin:0;font-size:12.5px}.tml li{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}.tml li span{flex:1;min-width:0;overflow-wrap:anywhere}.tml .t{font-family:var(--mono);color:var(--dim);font-size:11.5px;flex:none}.feed{display:flex;flex-direction:column;gap:8px;max-height:430px;overflow:auto}.fi{border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:9px 11px;background:var(--bg2);font-size:13px;animation:fade .3s}.fi .top{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--muted);margin-bottom:3px}.fi .top .sp{flex:1}.fi p{margin:0 0 6px;overflow-wrap:anywhere}.al{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px;cursor:pointer}.al:last-child{border-bottom:0}.al .tx{flex:1;min-width:0}.al .tx b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.al .tx small{color:var(--muted)}.chart svg{width:100%;height:auto;display:block}.c-ax{stroke:var(--line);stroke-width:1}.c-tx{fill:var(--muted);font-size:11px;font-family:var(--font)}.c-bar{fill:var(--mal);opacity:.75}.c-bar.now{fill:var(--gold);opacity:1}.c-ln{fill:none;stroke:var(--mal3);stroke-width:2.2;stroke-linejoin:round}.c-ar{fill:var(--mal);opacity:.15}.c-v{fill:var(--text);font-size:11px;font-weight:700;font-family:var(--font)}.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}.ok-t{color:var(--mal3)}.bad-t{color:var(--red)}.warn-t{color:var(--amber)}.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s;overflow-wrap:anywhere}.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}.modal{position:fixed;inset:0;z-index:2500;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px}.modal .card{width:min(520px,100%);max-height:calc(100vh - 32px);overflow:auto;box-shadow:var(--shadow)}.empty{text-align:center;color:var(--muted);padding:30px 10px;font-size:13.5px}/* login */.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px}.lg{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);max-width:960px;width:100%;padding:0;overflow:hidden;box-shadow:var(--shadow)}.lg-hero{padding:26px;background:linear-gradient(160deg,color-mix(in srgb,var(--red) 12%,var(--panel2)),var(--panel2));border-right:1px solid var(--line);display:flex;flex-direction:column;gap:14px;min-width:0}.lg-hero h2{margin:0;font-size:24px;letter-spacing:-.01em}.lg-hero p{margin:0;color:var(--muted);font-size:13.5px}.lg-st{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.lg-st div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:11.5px;color:var(--muted)}.lg-st b{display:block;font-size:17px;color:var(--text)}.lg-f{padding:26px;display:flex;flex-direction:column;gap:14px;min-width:0}.lg-f h2{margin:0;font-size:20px}.lg-f .btn.pri{justify-content:center;padding:12px 16px;font-size:15px}.small{font-size:12px}@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.split,.intro,.cmp{grid-template-columns:minmax(0,1fr)}}@media (max-width:860px){.app{grid-template-columns:minmax(0,1fr)}.side{position:fixed;left:0;top:45px;z-index:1500;width:270px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}.side.open{transform:none}.menu-btn{display:inline-flex}main{padding:14px 14px 50px}.head h1{font-size:20px}.lg{grid-template-columns:minmax(0,1fr)}.lg-hero{border-right:0;border-bottom:1px solid var(--line)}}@media (max-width:560px){.how,.fgrid,.opts{grid-template-columns:minmax(0,1fr)}.estim{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.lg-hero,.lg-f{padding:18px}.bars .b{grid-template-columns:minmax(0,96px) minmax(0,1fr) auto}.clock{display:none}}</style>
+</head>
+<body data-demo-en="AlertNet — Early warning &amp; cell broadcast alerts" data-demo-ru="AlertNet — Раннее оповещение и cell broadcast">
+<section class="login" id="login">
+  <div class="card lg">
+    <div class="lg-hero">
+      <div class="brand" style="padding:0"><b>⚠</b><div>AlertNet<small data-en="Civil Emergency Management Agency · Republic of Calvera" data-ru="Агентство по чрезвычайным ситуациям · Республика Кальвера"></small></div></div>
+      <h2 data-en="National early warning console" data-ru="Национальная консоль раннего оповещения"></h2>
+      <p data-en="Draw the affected area, set CAP severity, preview what phones will show and broadcast through cell broadcast, SMS, apps, TV/radio and sirens — in one step." data-ru="Нарисуйте зону бедствия, задайте уровень по CAP, посмотрите, что покажут телефоны, и разошлите через cell broadcast, SMS, приложения, ТВ/радио и сирены — за один шаг."></p>
+      <div class="map" id="lgMap"></div>
+      <div class="lg-st">
+        <div><b>6.84M</b><span data-en="population covered" data-ru="жителей в охвате"></span></div>
+        <div><b>3</b><span data-en="mobile operators" data-ru="мобильных оператора"></span></div>
+        <div><b>&lt; 60 s</b><span data-en="to every phone" data-ru="до каждого телефона"></span></div>
+      </div>
+    </div>
+    <div class="lg-f">
+      <h2 data-en="Sign in" data-ru="Вход"></h2>
+      <div class="f"><label data-en="Officer ID" data-ru="Табельный номер"></label><input class="input mono" id="lgId" value="DO-4471" autocomplete="off"></div>
+      <div class="f"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lgPw" type="password" value="calvera-demo"></div>
+      <div class="f"><label data-en="Role" data-ru="Роль"></label>
+        <div class="opts">
+          <button class="opt on" data-role="officer"><b data-en="Duty officer" data-ru="Дежурный"></b><span data-en="Compose and submit alerts" data-ru="Готовит и подаёт оповещения"></span></button>
+          <button class="opt" data-role="super"><b data-en="Supervisor" data-ru="Руководитель смены"></b><span data-en="Approve and broadcast" data-ru="Утверждает и рассылает"></span></button>
+        </div></div>
+      <button class="btn pri" id="loginBtn" data-en="Sign in to console" data-ru="Войти в консоль"></button>
+      <p class="muted small" style="margin:0" data-en="Demo credentials are prefilled. Smart-card MFA is skipped in this prototype." data-ru="Демо-данные уже заполнены. Вход по смарт-карте в прототипе пропущен."></p>
+    </div>
+  </div>
+</section>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>⚠</b><div>AlertNet<small data-en="CEMA · Republic of Calvera" data-ru="АЧС · Республика Кальвера"></small></div></div>
+    <div class="sec" data-en="Warning centre" data-ru="Центр оповещения"></div>
+    <div id="navBox"></div>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="clock" id="clock"></span>
+      <span class="pill ok"><span class="dot"></span><span data-en="Live" data-ru="В эфире"></span></span>
+    </div>
+    <section class="view" id="v-ops"></section>
+    <section class="view" id="v-compose"></section>
+    <section class="view" id="v-log"></section>
+    <section class="view" id="v-channels"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div id="modalBox"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const SK='pt_alerts_state',SS='pt_alerts_session';
+const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const L=x=>x==null?'':typeof x==='string'?x:T(x.en,x.ru);
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const num=n=>Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+const kfmt=n=>n>=1e6?(n/1e6).toFixed(2)+T('M',' млн'):n>=1e4?(n/1e3).toFixed(0)+T('k',' тыс.'):num(n);
+const H=3600e3;
+const fT=ts=>{const d=new Date(ts),n=new Date();const same=d.toDateString()===n.toDateString();return d.toLocaleString(loc(),same?{hour:'2-digit',minute:'2-digit'}:{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};
+const rel=ts=>{const m=Math.round((Date.now()-ts)/60000);if(m<1)return T('just now','только что');if(m<60)return T(m+' min ago',m+' мин назад');const h=Math.round(m/60);if(h<48)return T(h+' h ago',h+' ч назад');return T(Math.round(h/24)+' d ago',Math.round(h/24)+' дн. назад')};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+
+/* ---------- geography (fictional Republic of Calvera) ---------- */
+const LAND=[[70,62],[160,42],[250,56],[330,36],[420,60],[500,50],[560,95],[548,160],[502,192],[522,250],[482,300],[422,322],[392,372],[332,388],[282,358],[222,378],[160,350],[118,300],[60,282],[40,210],[70,160],[50,110]];
+const ISLE=[[455,358],[490,348],[506,372],[476,392],[450,382]];
+const CITIES=[{en:'Port Halven',ru:'Порт-Халвен',x:300,y:342,p:2.1,cap:1},{en:'Brask',ru:'Браск',x:180,y:150,p:.62},{en:'Orvel',ru:'Орвель',x:430,y:120,p:.48},{en:'Tessin',ru:'Тессин',x:468,y:262,p:.41},{en:'Kalda',ru:'Кальда',x:112,y:245,p:.3},{en:'Mirro',ru:'Мирро',x:345,y:215,p:.36},{en:'Ivra',ru:'Ивра',x:235,y:265,p:.26},{en:'Sel',ru:'Сель',x:477,y:370,p:.05}];
+function pip(x,y,P){let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=P[i],[xj,yj]=P[j];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c}return c}
+const CS=12,CELLS=[];
+for(let gx=CS/2;gx<600;gx+=CS)for(let gy=CS/2;gy<420;gy+=CS){if(pip(gx,gy,LAND)||pip(gx,gy,ISLE)){let w=.03;CITIES.forEach(c=>{const s=14+c.p*11;w+=c.p*Math.exp(-((gx-c.x)**2+(gy-c.y)**2)/(2*s*s))});CELLS.push({x:gx,y:gy,w})}}
+(function(){const tot=CELLS.reduce((a,c)=>a+c.w,0);CELLS.forEach(c=>c.p=c.w/tot*6840000)})();
+const MAXP=Math.max(...CELLS.map(c=>c.p));
+const TOWERS=[];(function(){const r=rng(5);let n=0;while(TOWERS.length<170&&n<5000){n++;let x,y;if(r()<.62){const c=CITIES[Math.floor(r()*CITIES.length)];x=c.x+(r()-.5)*60;y=c.y+(r()-.5)*50}else{x=40+r()*520;y=36+r()*360}if(pip(x,y,LAND)||pip(x,y,ISLE))TOWERS.push([Math.round(x),Math.round(y)])}})();
+const smooth=P=>{const m=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2];let s=m(P[P.length-1],P[0]);let d=`M${s[0]},${s[1]}`;P.forEach((p,i)=>{const q=m(p,P[(i+1)%P.length]);d+=` Q${p[0]},${p[1]} ${q[0]},${q[1]}`});return d+'Z'};
+const ring=(cx,cy,r,n)=>Array.from({length:n},(_,i)=>[Math.round(cx+r*Math.cos(i/n*Math.PI*2)),Math.round(cy+r*.85*Math.sin(i/n*Math.PI*2))]);
+const PRE={
+coast:{en:'Southern coast',ru:'Южное побережье',pts:[[200,340],[270,322],[340,312],[425,298],[445,330],[400,388],[330,400],[275,372],[215,392],[188,366]]},
+river:{en:'Velo river valley',ru:'Долина реки Вело',pts:[[308,52],[352,58],[346,140],[378,212],[348,286],[328,330],[292,330],[292,278],[314,214],[300,140]]},
+north:{en:'Northern forests',ru:'Северные леса',pts:[[88,70],[250,58],[262,118],[205,128],[140,132],[76,118]]},
+east:{en:'East coast · Tessin',ru:'Восточное побережье · Тессин',pts:[[440,190],[540,168],[560,250],[505,322],[432,302],[418,240]]},
+west:{en:'Kalda region',ru:'Регион Кальда',pts:[[45,198],[112,186],[168,228],[160,302],[110,306],[52,282]]},
+orv:{en:'Orvel district',ru:'Округ Орвель',pts:ring(430,118,46,9)},
+bra:{en:'Brask industrial park',ru:'Промзона Браска',pts:ring(196,164,24,7)},
+nat:{en:'Nationwide',ru:'Вся страна',pts:LAND.concat()}
+};
+function est(poly,chans){const o={pop:0,tw:0,area:0,ch:{},uniq:0};if(!poly||poly.length<3)return o;
+CELLS.forEach(c=>{if(pip(c.x,c.y,poly))o.pop+=c.p});TOWERS.forEach(t=>{if(pip(t[0],t[1],poly))o.tw++});
+let a=0;poly.forEach((p,i)=>{const q=poly[(i+1)%poly.length];a+=p[0]*q[1]-q[0]*p[1]});o.area=Math.abs(a/2)*.81;
+let miss=1;(chans||[]).forEach(k=>{const r=CH[k].rate;o.ch[k]=Math.round(o.pop*r);miss*=1-r});o.uniq=Math.round(o.pop*(1-miss));return o}
+
+/* ---------- dictionaries ---------- */
+const CH={cb:{ic:'📶',en:'Cell broadcast',ru:'Cell broadcast',den:'All phones in area, no subscription',dru:'Все телефоны в зоне, без подписки',rate:.93,spd:.2},
+sms:{ic:'✉',en:'Location-based SMS',ru:'SMS по местоположению',den:'Subscribers last seen in area',dru:'Абоненты, замеченные в зоне',rate:.68,spd:.05},
+app:{ic:'🔔',en:'CalveraSafe app push',ru:'Пуш приложения CalveraSafe',den:'Users with location sharing',dru:'Пользователи с геолокацией',rate:.21,spd:.3},
+tv:{ic:'📺',en:'TV & radio (EAS)',ru:'ТВ и радио (EAS)',den:'Crawl + audio break-in',dru:'Бегущая строка и звук',rate:.55,spd:.45},
+siren:{ic:'📢',en:'Outdoor sirens',ru:'Уличные сирены',den:'Coastal & urban siren network',dru:'Сеть сирен городов и побережья',rate:.3,spd:.6},
+social:{ic:'🌐',en:'Web & social feeds',ru:'Сайт и соцсети',den:'CAP feed, website banner, socials',dru:'CAP-лента, баннер сайта, соцсети',rate:.24,spd:.12}};
+const CHK=Object.keys(CH);
+const SEV={Extreme:{en:'Extreme',ru:'Чрезвычайная',c:'--red',ch:4371},Severe:{en:'Severe',ru:'Серьёзная',c:'--amber',ch:4373},Moderate:{en:'Moderate',ru:'Умеренная',c:'--gold',ch:4375},Minor:{en:'Minor',ru:'Незначительная',c:'--blue',ch:4378}};
+const URG={Immediate:['Immediate','Немедленно'],Expected:['Expected','Ожидается'],Future:['Future','В будущем']};
+const CER={Observed:['Observed','Наблюдается'],Likely:['Likely','Вероятно'],Possible:['Possible','Возможно']};
+const EV={flood:['💧','Flood','Наводнение','Met'],tsun:['🌊','Tsunami','Цунами','Geo'],quake:['🏚','Earthquake','Землетрясение','Geo'],fire:['🔥','Wildfire','Лесной пожар','Fire'],cyclone:['🌀','Cyclone','Циклон','Met'],heat:['🌡','Extreme heat','Аномальная жара','Met'],chem:['☣','Chemical release','Химический выброс','CBRNE'],amber:['🧒','Child abduction','Похищение ребёнка','Rescue']};
+const ST={pending:['Awaiting approval','Ждёт утверждения','warn'],delivering:['Broadcasting','Рассылка','gold'],active:['Active','Активно','ok'],expired:['Expired','Истекло',''],cancelled:['Cancelled','Отменено','bad'],superseded:['Superseded','Заменено',''],rejected:['Rejected','Отклонено','bad']};
+const USERS={officer:{n:'L. Moreno',id:'DO-4471',en:'Duty officer',ru:'Дежурный'},super:{n:'A. Kestrel',id:'SV-1029',en:'Supervisor',ru:'Руководитель смены'}};
+const sevC=s=>`--c:var(${SEV[s].c})`;
+const sevP=s=>`<span class="sp-t" style="${sevC(s)}"><i></i>${T(SEV[s].en,SEV[s].ru)}</span>`;
+const stP=s=>`<span class="pill ${ST[s][2]}">${T(ST[s][0],ST[s][1])}</span>`;
+const evN=e=>EV[e][0]+' '+T(EV[e][1],EV[e][2]);
+const TPL0=[
+{id:'flood',ev:'flood',sev:'Severe',urg:'Immediate',cert:'Likely',pre:'river',exp:6,name:{en:'Flash flood — river valley',ru:'Паводок — долина реки'},head:{en:'Flash flood warning: Velo river valley',ru:'Угроза паводка: долина реки Вело'},desc:{en:'Water levels on the Velo river are rising fast. Flooding of low-lying streets is expected within 2 hours.',ru:'Уровень воды в реке Вело быстро растёт. Подтопление низин ожидается в течение 2 часов.'},instr:{en:'Move to higher ground now. Do not walk or drive through flood water.',ru:'Немедленно поднимитесь на возвышенность. Не переходите и не переезжайте затопленные участки.'}},
+{id:'tsun',ev:'tsun',sev:'Extreme',urg:'Immediate',cert:'Observed',pre:'coast',exp:3,name:{en:'Tsunami — southern coast',ru:'Цунами — южное побережье'},head:{en:'Tsunami warning: southern coast',ru:'Угроза цунами: южное побережье'},desc:{en:'A tsunami wave may reach the southern coast within 40 minutes.',ru:'Волна цунами может достичь южного побережья в течение 40 минут.'},instr:{en:'Leave the shore immediately. Go to high ground or the 4th floor or higher.',ru:'Немедленно покиньте берег. Поднимитесь на возвышенность или на 4-й этаж и выше.'}},
+{id:'fire',ev:'fire',sev:'Severe',urg:'Immediate',cert:'Observed',pre:'north',exp:6,name:{en:'Wildfire evacuation',ru:'Эвакуация при пожаре'},head:{en:'Wildfire evacuation order: northern forests',ru:'Эвакуация из-за лесного пожара: северные леса'},desc:{en:'A fast-moving wildfire is spreading south-east towards settlements.',ru:'Быстро распространяющийся пожар движется на юго-восток к населённым пунктам.'},instr:{en:'Evacuate now via Route 4 to Brask. Follow police directions.',ru:'Эвакуируйтесь сейчас по трассе 4 в Браск. Следуйте указаниям полиции.'}},
+{id:'cyclone',ev:'cyclone',sev:'Extreme',urg:'Expected',cert:'Likely',pre:'east',exp:24,name:{en:'Cyclone landfall',ru:'Выход циклона на сушу'},head:{en:'Cyclone Ilsa: landfall expected tonight',ru:'Циклон «Ильза»: выход на сушу ночью'},desc:{en:'Winds over 150 km/h and a storm surge up to 3 m are expected on the east coast.',ru:'На восточном побережье ожидается ветер более 150 км/ч и нагонная волна до 3 м.'},instr:{en:'Secure property, stock water and go to an official shelter before 20:00.',ru:'Закрепите имущество, запаситесь водой и до 20:00 пройдите в официальное укрытие.'}},
+{id:'chem',ev:'chem',sev:'Severe',urg:'Immediate',cert:'Observed',pre:'bra',exp:3,name:{en:'Chemical — shelter in place',ru:'Химия — оставаться в помещении'},head:{en:'Chemical release: shelter in place',ru:'Выброс химикатов: оставайтесь в помещении'},desc:{en:'An ammonia leak at the Brask industrial park is drifting north-east.',ru:'Утечка аммиака в промзоне Браска смещается на северо-восток.'},instr:{en:'Go indoors, close windows and switch off ventilation until the all clear.',ru:'Зайдите в помещение, закройте окна и выключите вентиляцию до отбоя.'}}];
+const FEEDS=[
+{ev:'flood',lvl:'--red',tpl:'flood',en:'River gauge VR-12 (Velo at Mirro): {a} m, rising {b} m/h',ru:'Гидропост VR-12 (Вело у Мирро): {a} м, рост {b} м/ч',a:[4.2,5.6,2],b:[.12,.44,2]},
+{ev:'quake',lvl:'--amber',tpl:'tsun',en:'Seismic event M{a}, {b} km NE of Orvel, depth 11 km',ru:'Сейсмособытие M{a}, {b} км к СВ от Орвеля, глубина 11 км',a:[3.1,5.3,1],b:[6,30,0]},
+{ev:'cyclone',lvl:'--amber',tpl:'cyclone',en:'Buoy TB-4 off Tessin: gusts {a} km/h, pressure {b} hPa',ru:'Буй TB-4 у Тессина: порывы {a} км/ч, давление {b} гПа',a:[78,142,0],b:[962,991,0]},
+{ev:'fire',lvl:'--red',tpl:'fire',en:'Satellite hotspot cluster: {a} detections in northern forests',ru:'Спутник: кластер очагов — {a} обнаружений в северных лесах',a:[6,38,0],b:[0,0,0]},
+{ev:'heat',lvl:'--gold',tpl:'fire',en:'Heat index {a} °C at Kalda weather station',ru:'Индекс жары {a} °C на метеостанции Кальда',a:[38,45,1],b:[0,0,0]},
+{ev:'tsun',lvl:'--red',tpl:'tsun',en:'Tide gauge Port Halven: sea-level anomaly +{a} m',ru:'Мареограф Порт-Халвен: аномалия уровня моря +{a} м',a:[.3,1.4,2],b:[0,0,0]},
+{ev:'chem',lvl:'--amber',tpl:'chem',en:'Air sensor AQ-7 Brask: NH₃ {a} ppm',ru:'Датчик воздуха AQ-7 Браск: NH₃ {a} ppm',a:[18,90,0],b:[0,0,0]}];
+function feedItem(r){const f=FEEDS[Math.floor(r()*FEEDS.length)];const v=x=>(x[0]+r()*(x[1]-x[0])).toFixed(x[2]);const a=v(f.a),b=v(f.b);
+return{t:Date.now(),ev:f.ev,lvl:f.lvl,tpl:f.tpl,en:f.en.replace('{a}',a).replace('{b}',b),ru:f.ru.replace('{a}',a.replace('.',',')).replace('{b}',b.replace('.',','))}}
+
+/* ---------- state ---------- */
+const blankDraft=()=>({poly:[],pre:null,ev:'flood',sev:'Severe',urg:'Immediate',cert:'Likely',exp:6,head:'',desc:'',instr:'',area:'',chans:['cb','sms','app','tv'],msg:'Alert',ref:null,tab:'cb',heat:true,tw:false});
+function seed(){const now=Date.now(),r=rng(31);
+const mk=(n,agoMin,tid,chans,status,by,exp)=>{const tp=TPL0.find(x=>x.id===tid);const poly=PRE[tp.pre].pts;const e=est(poly,chans);const t=now-agoMin*60000;
+const a={id:'CEMA-2026-0'+n,t,ev:tp.ev,sev:tp.sev,urg:tp.urg,cert:tp.cert,head:tp.head,desc:tp.desc,instr:tp.instr,area:{en:PRE[tp.pre].en,ru:PRE[tp.pre].ru},poly,chans,target:e.ch,uniq:e.uniq,dlv:{},status,exp:exp||tp.exp,by,msg:'Alert',hist:[]};
+chans.forEach(k=>a.dlv[k]=status==='pending'?0:e.ch[k]);
+a.hist.push({t,en:'Drafted by '+USERS[by].n,ru:'Подготовил '+USERS[by].n});
+if(status!=='pending'){a.hist.push({t:t+90e3,en:'Approved by A. Kestrel',ru:'Утвердил A. Kestrel'},{t:t+95e3,en:'Broadcast started on '+chans.length+' channels',ru:'Рассылка начата по '+chans.length+' каналам'},{t:t+160e3,en:'Delivery complete',ru:'Доставка завершена'})}
+if(status==='cancelled')a.hist.push({t:t+3.2*H,en:'All clear issued (CAP Cancel)',ru:'Отбой тревоги (CAP Cancel)'});
+return a};
+const alerts=[mk(146,4,'chem',['cb','sms','app'],'pending','officer'),mk(145,50,'fire',['cb','sms','app','tv'],'active','super'),mk(144,190,'cyclone',CHK.slice(),'active','super'),mk(143,540,'tsun',['cb','sms','app'],'cancelled','officer'),mk(142,1560,'flood',['cb','sms','app','tv','siren'],'expired','officer',12),mk(141,2880,'chem',['cb','sms','tv','social'],'expired','super',24)];
+const feed=[];for(let i=0;i<5;i++){const f=feedItem(r);f.t=now-(i*7+2)*60000;feed.push(f)}
+return{view:'ops',next:147,alerts,feed,sel:'CEMA-2026-0146',lf:'all',q:'',d:blankDraft(),
+chs:{cb:{on:true},sms:{on:true},app:{on:true},tv:{on:true},siren:{on:true},social:{on:false}},
+ops:[{id:'tel',n:'Telvia',share:.52,cells:2140,lat:610,st:'ok',test:now-26*H},{id:'kav',n:'Kavo Mobile',share:.31,cells:1380,lat:740,st:'ok',test:now-50*H},{id:'orb',n:'Orbis Net',share:.17,cells:690,lat:1180,st:'deg',test:now-8*24*H}],
+tpls:TPL0.map(x=>Object.assign({},x)),days:Array.from({length:13},()=>Math.round(40000+r()*r()*900000))}}
+let S=ls.get(SK);if(!S||!S.alerts)S=seed();
+let SESS=ls.get(SS)||{on:false,role:'officer'};
+const save=()=>ls.set(SK,S);
+const saveSess=()=>ls.set(SS,SESS);
+const role=()=>SESS.role||'officer';
+const isSup=()=>role()==='super';
+
+/* ---------- map ---------- */
+function mapSVG(o){o=o||{};let s=`<svg viewBox="0 0 600 420" role="img" aria-label="map"><rect class="m-sea" width="600" height="420"/>`;
+for(let x=50;x<600;x+=100)s+=`<line class="m-grid" x1="${x}" x2="${x}" y1="0" y2="420"/>`;for(let y=60;y<420;y+=100)s+=`<line class="m-grid" x1="0" x2="600" y1="${y}" y2="${y}"/>`;
+s+=`<path class="m-land" d="${smooth(LAND)}"/><path class="m-land" d="${smooth(ISLE)}"/>`;
+if(o.heat)CELLS.forEach(c=>{const v=Math.sqrt(c.p/MAXP);if(v>.12)s+=`<rect class="m-h" x="${c.x-CS/2+1}" y="${c.y-CS/2+1}" width="${CS-2}" height="${CS-2}" rx="2" fill-opacity="${(v*.55).toFixed(2)}"/>`});
+s+=`<path class="m-riv" d="M330,40 C318,100 352,150 345,215 S300,290 300,342"/><path class="m-riv" d="M122,88 C150,150 140,200 112,245"/>`;
+(o.polys||[]).forEach(p=>{s+=`<polygon class="m-poly ${p.live?'live':''}" style="${sevC(p.sev)}" points="${p.pts.map(q=>q.join(',')).join(' ')}" ${p.id?`data-aid="${p.id}"`:''}>${p.id?`<title>${p.id}</title>`:''}</polygon>`});
+if(o.tw)TOWERS.forEach(t=>s+=`<circle class="m-tw" cx="${t[0]}" cy="${t[1]}" r="2.2"/>`);
+if(o.draft&&o.draft.length){const d=o.draft;if(d.length>=3)s+=`<polygon class="m-dr" points="${d.map(q=>q.join(',')).join(' ')}"/>`;else if(d.length===2)s+=`<line x1="${d[0][0]}" y1="${d[0][1]}" x2="${d[1][0]}" y2="${d[1][1]}" stroke="var(--gold)" stroke-width="2" stroke-dasharray="6 4"/>`;d.forEach(q=>s+=`<circle class="m-v" cx="${q[0]}" cy="${q[1]}" r="5.5"/>`)}
+if(!o.nolbl)CITIES.forEach(c=>{s+=c.cap?`<circle class="m-cap" cx="${c.x}" cy="${c.y}" r="7"/>`:'';s+=`<circle class="m-city" cx="${c.x}" cy="${c.y}" r="${c.cap?3.5:2.8}"/><text class="m-lbl" x="${c.x+9}" y="${c.y+4}">${T(c.en,c.ru)}</text>`});
+s+=`<text class="m-cmp" x="565" y="24" text-anchor="middle">N</text><path d="M565 28 l-5 14 l5 -4 l5 4z" fill="var(--dim)"/><line x1="20" x2="120" y1="402" y2="402" stroke="var(--dim)" stroke-width="2"/><text class="m-cmp" x="20" y="395">0</text><text class="m-cmp" x="120" y="395" text-anchor="end">90 ${T('km','км')}</text></svg>`;return s}
+function svgPt(svg,e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const m=svg.getScreenCTM();if(!m)return null;const q=p.matrixTransform(m.inverse());return[Math.round(Math.max(0,Math.min(600,q.x))),Math.round(Math.max(0,Math.min(420,q.y)))]}
+
+/* ---------- nav / shell ---------- */
+const VIEWS=[['ops','◉','Operations','Обстановка'],['compose','✎','Compose alert','Новое оповещение'],['log','☰','Sent alerts','Журнал оповещений'],['channels','📡','Channels & CBC','Каналы и CBC']];
+function nav(){$('#navBox').innerHTML=VIEWS.map(v=>{let x='';
+if(v[0]==='ops'){const n=S.alerts.filter(a=>a.status==='active'||a.status==='delivering').length;if(n)x=`<span class="cnt r">${n}</span>`}
+if(v[0]==='log'){const n=S.alerts.filter(a=>a.status==='pending').length;if(n)x=`<span class="cnt">${n}</span>`}
+return `<button class="nav ${S.view===v[0]?'on':''}" data-view="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+$$('#navBox .nav').forEach(b=>b.onclick=()=>go(b.dataset.view));
+const u=USERS[role()];
+$('#who').innerHTML=`<div class="u"><span class="av">${u.n.split(' ').map(w=>w[0]).join('')}</span><div>${u.n}<small>${T(u.en,u.ru)} · <span class="mono">${u.id}</span></small></div></div><div class="row"><button class="btn sm" id="swRole">${T('Switch role','Сменить роль')}</button><button class="btn sm" id="logout">${T('Log out','Выйти')}</button></div>`;
+$('#swRole').onclick=()=>{SESS.role=isSup()?'officer':'super';saveSess();render();toast(T('Signed in as ','Вход как ')+T(USERS[role()].en,USERS[role()].ru),'gold')};
+$('#logout').onclick=()=>{SESS.on=false;saveSess();$('#side').classList.remove('open');showLogin()}}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0})}
+function render(){if(!SESS.on){showLogin();return}
+nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+$('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=T('CEMA National Warning Centre','Национальный центр оповещения АЧС');
+$$('.view').forEach(e=>{const on=e.id==='v-'+v[0];e.classList.toggle('on',on);if(!on)e.innerHTML=''});
+({ops:rOps,compose:rCompose,log:rLog,channels:rChannels})[v[0]]();clock()}
+function clock(){const c=$('#clock');if(c)c.textContent=new Date().toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' CVT'}
+function showLogin(){$('#app').hidden=true;$('#login').hidden=false;$('#lgMap').innerHTML=mapSVG({heat:true,nolbl:true,polys:S.alerts.filter(a=>a.status==='active').map(a=>({pts:a.poly,sev:a.sev,live:1}))});
+$$('#login [data-role]').forEach(b=>b.classList.toggle('on',b.dataset.role===role()))}
+function showApp(){$('#login').hidden=true;$('#app').hidden=false;render()}
+$$('#login [data-role]').forEach(b=>b.onclick=()=>{SESS.role=b.dataset.role;$('#lgId').value=USERS[SESS.role].id;$$('#login [data-role]').forEach(x=>x.classList.toggle('on',x===b))});
+$('#loginBtn').onclick=()=>{const id=$('#lgId'),pw=$('#lgPw');let ok=true;[id,pw].forEach(i=>{const bad=!i.value.trim();i.classList.toggle('err',bad);if(bad)ok=false});
+if(!ok){toast(T('Enter officer ID and password','Введите табельный номер и пароль'),'bad');return}
+SESS.on=true;saveSess();showApp();toast(T('Welcome, ','Добро пожаловать, ')+USERS[role()].n)};
+
+/* ---------- OPS ---------- */
+const liveA=()=>S.alerts.filter(a=>a.status==='active'||a.status==='delivering');
+function reached24(){const lim=Date.now()-24*H;return S.alerts.filter(a=>a.t>lim&&!['pending','rejected'].includes(a.status)).reduce((s,a)=>{const tg=a.chans.reduce((x,k)=>x+(a.target[k]||0),0)||1,dv=a.chans.reduce((x,k)=>x+(a.dlv[k]||0),0);return s+a.uniq*dv/tg},0)}
+function rOps(){const el=$('#v-ops');const act=liveA();const pend=S.alerts.filter(a=>a.status==='pending').length;
+const on=CHK.filter(k=>S.chs[k].on).length;
+el.innerHTML=`<div class="intro"><div class="card"><h3>${T('How to try it','Как попробовать')}</h3><div class="how">
+<div><b>1</b><span>${T('Watch the live hazard feed; press <b>Draft alert</b> on a sensor trigger, or open <b>Compose alert</b>.','Следите за лентой датчиков; нажмите <b>Создать оповещение</b> у сработки или откройте <b>Новое оповещение</b>.')}</span></div>
+<div><b>2</b><span>${T('Draw the polygon on the map, set severity, pick channels and check the phone preview and CAP XML.','Нарисуйте полигон на карте, задайте уровень, выберите каналы, проверьте вид на телефоне и CAP XML.')}</span></div>
+<div><b>3</b><span>${T('As duty officer you submit; switch role to supervisor to approve. Watch reach grow in <b>Sent alerts</b>.','Дежурный подаёт; смените роль на руководителя, чтобы утвердить. Охват растёт в <b>Журнале</b>.')}</span></div></div></div>
+<div class="card"><dl class="facts"><dt>${T('Tender','Тендер')}</dt><dd>${T('Early warning & cell broadcast alerts','Раннее оповещение и cell broadcast')}</dd><dt>${T('Year · budget','Год · бюджет')}</dt><dd>2025 · $60M</dd><dt>${T('Client','Заказчик')}</dt><dd>${T('Disaster management agency, Republic of Calvera (fictional)','Агентство по ЧС, Республика Кальвера (вымышл.)')}</dd><dt>${T('Funding','Финансирование')}</dt><dd>${T('Development programme grant','Грант программы развития')}</dd><dt>${T('Stack','Стек')}</dt><dd>CAP 1.2 · cell broadcast · multi-channel</dd></dl></div></div>
+<div class="kpis">
+<div class="card kpi"><div class="l">${T('Active alerts','Активные оповещения')}</div><div class="v ${act.length?'bad-t':''}">${act.length}</div><div class="d">${T('in force right now','действуют сейчас')}</div></div>
+<div class="card kpi"><div class="l">${T('People reached · 24 h','Охват людей · 24 ч')}</div><div class="v" data-k="r24">${kfmt(reached24())}</div><div class="d">${T('unique, all channels','уникальных, все каналы')}</div></div>
+<div class="card kpi"><div class="l">${T('Awaiting approval','Ждут утверждения')}</div><div class="v ${pend?'warn-t':''}">${pend}</div><div class="d">${T('two-person rule','правило двух подписей')}</div></div>
+<div class="card kpi"><div class="l">${T('Channels online','Каналов в работе')}</div><div class="v">${on}/${CHK.length}</div><div class="d">${T('CB median delivery 38 s','CB медиана доставки 38 с')}</div></div></div>
+<div class="grid2"><div class="card"><h3>${T('Situation map','Карта обстановки')}<span class="sp"></span><span class="legend">${Object.keys(SEV).map(k=>`<span><i style="background:var(${SEV[k].c})"></i>${T(SEV[k].en,SEV[k].ru)}</span>`).join('')}</span></h3>
+<div class="map" id="opsMap">${mapSVG({heat:true,tw:true,polys:act.map(a=>({pts:a.poly,sev:a.sev,id:a.id,live:1}))})}<div class="mhint">${T('Tap a coloured area to open the alert','Нажмите на цветную зону, чтобы открыть оповещение')}</div></div></div>
+<div class="card"><h3>${T('Live hazard feed','Лента датчиков')}<span class="sp"></span><span class="pill ok"><span class="dot"></span>${T('streaming','поток')}</span></h3><div class="feed" id="feed"></div></div></div>
+<div class="grid2"><div class="card chart"><h3>${T('People reached per day','Охват по дням')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('previous days','прошлые дни')}</span><span><i style="background:var(--gold)"></i>${T('today','сегодня')}</span></span></h3><div id="dayChart"></div></div>
+<div class="card"><h3>${T('Alerts in force','Действующие оповещения')}</h3>${act.length?act.map(a=>`<div class="al" data-open="${a.id}"><span style="font-size:20px">${EV[a.ev][0]}</span><div class="tx"><b>${esc(L(a.head))}</b><small>${a.id} · ${rel(a.t)} · ${T('expires','истекает')} ${fT(a.t+a.exp*H)}</small></div>${sevP(a.sev)}</div>`).join(''):`<div class="empty">${T('No alerts in force','Нет действующих оповещений')}</div>`}</div></div>`;
+rFeed();rDays();
+$$('#opsMap [data-aid]').forEach(p=>p.addEventListener('click',()=>{S.sel=p.getAttribute('data-aid');go('log')}));
+$$('[data-open]',el).forEach(b=>b.onclick=()=>{S.sel=b.dataset.open;go('log')})}
+function rFeed(){const f=$('#feed');if(!f)return;f.innerHTML=S.feed.map((x,i)=>`<div class="fi" style="--c:var(${x.lvl})"><div class="top"><span>${EV[x.ev][0]} ${T(EV[x.ev][1],EV[x.ev][2])}</span><span class="sp"></span><span class="mono">${fT(x.t)}</span></div><p>${esc(T(x.en,x.ru))}</p><button class="btn sm" data-fd="${i}">${T('Draft alert','Создать оповещение')} →</button></div>`).join('');
+$$('[data-fd]',f).forEach(b=>b.onclick=()=>{const x=S.feed[+b.dataset.fd];const tp=S.tpls.find(t=>t.id===x.tpl)||TPL0.find(t=>t.id===x.tpl);useTpl(tp);toast(T('Draft created from sensor trigger','Черновик создан по сработке датчика'),'gold')})}
+function rDays(){const c=$('#dayChart');if(!c)return;const today=Math.round(reached24());const vals=S.days.concat([today]);const W=640,Hh=230,p=44,bw=(W-p-10)/vals.length,mx=Math.max(...vals,1)*1.12;
+let s=`<svg viewBox="0 0 ${W} ${Hh}">`;for(let i=0;i<=4;i++){const y=12+i*(Hh-46)/4;s+=`<line class="c-ax" x1="${p}" x2="${W-6}" y1="${y}" y2="${y}"/><text class="c-tx" x="${p-6}" y="${y+4}" text-anchor="end">${kfmt(mx*(1-i/4))}</text>`}
+vals.forEach((v,i)=>{const h=v/mx*(Hh-46),x=p+i*bw+3,y=12+(Hh-46)-h;const d=new Date(Date.now()-(vals.length-1-i)*24*H);
+s+=`<rect class="c-bar ${i===vals.length-1?'now':''}" x="${x}" y="${y}" width="${bw-6}" height="${Math.max(h,1)}" rx="4"><title>${num(v)}</title></rect>`;
+if(i%2===0||i===vals.length-1)s+=`<text class="c-tx" x="${x+(bw-6)/2}" y="${Hh-16}" text-anchor="middle">${d.toLocaleDateString(loc(),{day:'numeric',month:'short'})}</text>`});
+c.innerHTML=s+'</svg>'}
+
+/* ---------- COMPOSE ---------- */
+function useTpl(tp){const d=S.d;Object.assign(d,{ev:tp.ev,sev:tp.sev,urg:tp.urg,cert:tp.cert,exp:tp.exp,head:L(tp.head),desc:L(tp.desc),instr:L(tp.instr),msg:'Alert',ref:null});
+if(tp.pre&&PRE[tp.pre]){d.poly=PRE[tp.pre].pts.map(p=>p.slice());d.pre=tp.pre;d.area=T(PRE[tp.pre].en,PRE[tp.pre].ru)}save();go('compose')}
+function cbCh(d){return d.ev==='amber'?4379:SEV[d.sev].ch}
+function rCompose(){const el=$('#v-compose'),d=S.d;
+el.innerHTML=`<div class="cmp"><div class="col">
+<div class="card"><h3>${T('1 · Alert area','1 · Зона оповещения')}<span class="sp"></span>${d.msg==='Update'?`<span class="pill gold">${T('CAP Update of ','CAP Update для ')}${d.ref}</span>`:''}</h3>
+<div class="mapbar">${Object.keys(PRE).map(k=>`<button class="chip ${d.pre===k?'on':''}" data-pre="${k}">${T(PRE[k].en,PRE[k].ru)}</button>`).join('')}</div>
+<div class="map draw" id="cMap"></div>
+<div class="row" style="margin-top:10px"><button class="btn sm" id="undo">↶ ${T('Undo point','Отменить точку')}</button><button class="btn sm" id="clr">✕ ${T('Clear area','Очистить зону')}</button><span class="sp" style="flex:1"></span><button class="chip ${d.heat?'on':''}" id="lyH">${T('Population','Население')}</button><button class="chip ${d.tw?'on':''}" id="lyT">${T('Cell sites','Базовые станции')}</button></div>
+<div class="estim" id="estim"></div></div>
+<div class="card"><h3>${T('2 · Message (CAP 1.2)','2 · Сообщение (CAP 1.2)')}</h3><div class="fgrid">
+<div class="f"><label>${T('Event','Событие')}</label><select class="input" id="fEv">${Object.keys(EV).map(k=>`<option value="${k}" ${d.ev===k?'selected':''}>${evN(k)}</option>`).join('')}</select></div>
+<div class="f"><label>${T('Expires in','Действует')}</label><select class="input" id="fExp">${[1,3,6,12,24,48].map(h=>`<option value="${h}" ${+d.exp===h?'selected':''}>${h} ${T('h','ч')}</option>`).join('')}</select></div>
+<div class="f full"><label>${T('Severity','Уровень опасности')}</label><div class="chips" id="fSev">${Object.keys(SEV).map(k=>`<button class="sev ${d.sev===k?'on':''}" style="${sevC(k)}" data-sev="${k}"><i></i>${T(SEV[k].en,SEV[k].ru)}</button>`).join('')}</div></div>
+<div class="f"><label>${T('Urgency','Срочность')}</label><select class="input" id="fUrg">${Object.keys(URG).map(k=>`<option value="${k}" ${d.urg===k?'selected':''}>${T(URG[k][0],URG[k][1])}</option>`).join('')}</select></div>
+<div class="f"><label>${T('Certainty','Достоверность')}</label><select class="input" id="fCer">${Object.keys(CER).map(k=>`<option value="${k}" ${d.cert===k?'selected':''}>${T(CER[k][0],CER[k][1])}</option>`).join('')}</select></div>
+<div class="f full"><label>${T('Area description','Описание зоны')}</label><input class="input" id="fArea" maxlength="80" value="${esc(d.area)}" placeholder="${T('e.g. Velo river valley','например, долина реки Вело')}"></div>
+<div class="f full"><label>${T('Headline','Заголовок')}</label><input class="input" id="fHead" maxlength="90" value="${esc(d.head)}" placeholder="${T('Short, action-first headline','Короткий заголовок с главным действием')}"></div>
+<div class="f full"><label>${T('Description','Описание')}</label><textarea class="input" id="fDesc" rows="3" placeholder="${T('What is happening and where','Что происходит и где')}">${esc(d.desc)}</textarea></div>
+<div class="f full"><label>${T('Instruction','Что делать')}</label><textarea class="input" id="fIns" rows="2" placeholder="${T('What people must do now','Что людям делать сейчас')}">${esc(d.instr)}</textarea><div class="hint" id="len"></div></div></div>
+<div class="row" style="margin-top:12px"><span class="muted small">${T('Quick fill:','Быстро:')}</span>${S.tpls.slice(0,4).map(t=>`<button class="chip" data-qt="${t.id}">${EV[t.ev][0]} ${esc(L(t.name))}</button>`).join('')}</div></div></div>
+<div class="col">
+<div class="card"><h3>${T('Phone preview','Вид на телефоне')}</h3><div class="ptabs">${[['cb','Cell broadcast','Cell broadcast'],['sms','SMS','SMS'],['app','App','Приложение']].map(x=>`<button class="chip ${d.tab===x[0]?'on':''}" data-tab="${x[0]}">${T(x[1],x[2])}</button>`).join('')}</div><div id="phone"></div></div>
+<div class="card"><h3>${T('3 · Channels','3 · Каналы')}<span class="sp"></span><span class="muted small" id="uniq"></span></h3><div id="chs"></div></div>
+<div class="card"><details id="capD"><summary>▸ ${T('CAP 1.2 XML preview','Просмотр CAP 1.2 XML')}</summary><pre class="cap" id="capX"></pre></details></div>
+<div class="card"><div class="row"><button class="btn red" id="send">${isSup()?T('Broadcast alert','Разослать оповещение'):T('Submit for approval','Отправить на утверждение')}</button><button class="btn sm danger" id="discard">${T('Discard','Сбросить')}</button></div>
+<p class="muted small" style="margin:10px 0 0">${isSup()?T('Supervisor: alerts go out immediately after confirmation.','Руководитель: оповещение уходит сразу после подтверждения.'):T('Duty officer: a supervisor must approve before broadcast (two-person rule).','Дежурный: перед рассылкой нужно утверждение руководителя (правило двух подписей).')}</p></div></div></div>`;
+rCMap();rEst();rPhone();rChs();rCap();
+$$('[data-pre]',el).forEach(b=>b.onclick=()=>{const k=b.dataset.pre;d.poly=PRE[k].pts.map(p=>p.slice());d.pre=k;d.area=T(PRE[k].en,PRE[k].ru);$('#fArea').value=d.area;$('#fArea').classList.remove('err');save();$$('[data-pre]',el).forEach(x=>x.classList.toggle('on',x===b));upd()});
+$('#undo').onclick=()=>{d.poly.pop();d.pre=null;save();upd()};
+$('#clr').onclick=()=>{d.poly=[];d.pre=null;save();$$('[data-pre]',el).forEach(x=>x.classList.remove('on'));upd()};
+$('#lyH').onclick=()=>{d.heat=!d.heat;save();$('#lyH').classList.toggle('on',d.heat);rCMap()};
+$('#lyT').onclick=()=>{d.tw=!d.tw;save();$('#lyT').classList.toggle('on',d.tw);rCMap()};
+const bind=(id,k,ev)=>$(id).addEventListener(ev||'input',e=>{d[k]=e.target.value;e.target.classList.remove('err');save();rPhone();rCap()});
+bind('#fHead','head');bind('#fDesc','desc');bind('#fIns','instr');bind('#fArea','area');bind('#fEv','ev','change');bind('#fUrg','urg','change');bind('#fCer','cert','change');bind('#fExp','exp','change');
+$$('[data-sev]',el).forEach(b=>b.onclick=()=>{d.sev=b.dataset.sev;save();$$('[data-sev]',el).forEach(x=>x.classList.toggle('on',x===b));rPhone();rCap()});
+$$('[data-tab]',el).forEach(b=>b.onclick=()=>{d.tab=b.dataset.tab;save();$$('[data-tab]',el).forEach(x=>x.classList.toggle('on',x===b));rPhone()});
+$$('[data-qt]',el).forEach(b=>b.onclick=()=>useTpl(S.tpls.find(t=>t.id===b.dataset.qt)));
+$('#capD').addEventListener('toggle',()=>{$('#capD summary').firstChild.textContent=$('#capD').open?'▾ ':'▸ '});
+$('#send').onclick=trySend;
+$('#discard').onclick=()=>{S.d=blankDraft();save();rCompose();toast(T('Draft discarded','Черновик сброшен'))}}
+function upd(){rCMap();rEst();rChs();rCap()}
+function rCMap(){const d=S.d,m=$('#cMap');if(!m)return;
+m.innerHTML=mapSVG({heat:d.heat,tw:d.tw,draft:d.poly})+`<div class="mhint">${d.poly.length<3?T('Tap the map to add polygon points ('+d.poly.length+'/3+)','Нажимайте на карту, чтобы добавить точки ('+d.poly.length+'/3+)'):T(d.poly.length+' points · tap to add more','Точек: '+d.poly.length+' · нажмите, чтобы добавить')}</div>`;
+const svg=$('svg',m);svg.addEventListener('click',e=>{const p=svgPt(svg,e);if(!p)return;if(d.poly.length>=24){toast(T('Max 24 points','Не более 24 точек'),'bad');return}d.poly.push(p);d.pre=null;$$('[data-pre]').forEach(x=>x.classList.remove('on'));
+if(!d.area.trim()&&d.poly.length===3){d.area=T('Custom area','Своя зона');$('#fArea').value=d.area}save();upd()})}
+function rEst(){const e=est(S.d.poly,[]);$('#estim').innerHTML=`<div><span>${T('Population','Население')}</span><b>${kfmt(e.pop)}</b></div><div><span>${T('Cell sites','Базовые станции')}</span><b>${e.tw} <small class="muted">· ${e.tw*3} ${T('sectors','секторов')}</small></b></div><div><span>${T('Area','Площадь')}</span><b>${num(e.area)} ${T('km²','км²')}</b></div><div><span>${T('Polygon','Полигон')}</span><b class="${S.d.poly.length>=3?'ok-t':'warn-t'}">${S.d.poly.length>=3?T('valid','готов'):T('incomplete','не готов')}</b></div>`}
+function rPhone(){const d=S.d,el=$('#phone');if(!el)return;const now=new Date();
+const head=esc(d.head)||`<span class="muted">${T('Headline','Заголовок')}</span>`,desc=esc(d.desc),ins=esc(d.instr);
+const full=[d.head,d.desc,d.instr].filter(Boolean).join(' ');const pages=Math.max(1,Math.ceil(full.length/93));
+let body;
+if(d.tab==='cb')body=`<div class="acard" style="${sevC(d.sev)}"><div class="ah">⚠ ${d.ev==='amber'?T('AMBER alert','Розыск ребёнка'):T('Emergency alert','Экстренное оповещение')} · ${T(SEV[d.sev].en,SEV[d.sev].ru)}</div><div class="ab"><b>${head}</b>${desc?`<p>${desc}</p>`:''}${ins?`<p><b style="display:inline;font-size:12.5px">${T('Action:','Действия:')}</b> ${ins}</p>`:''}</div><div class="af"><span>CH ${cbCh(d)}</span><span>CEMA</span></div><span class="ok">OK</span></div>`;
+else if(d.tab==='sms')body=`<div class="muted small" style="text-align:center">CEMA-ALERT</div><div class="sms">[${T(SEV[d.sev].en,SEV[d.sev].ru).toUpperCase()}] ${head}${desc?' '+desc:''}${ins?' '+ins:''} ${T('More','Подробнее')}: alerts.cema.cv</div>`;
+else body=`<div class="acard"><div class="af" style="border:0;border-bottom:1px solid var(--line)"><span>🛡 CalveraSafe</span><span>${T('now','сейчас')}</span></div><div class="ab"><b>${EV[d.ev][0]} ${head}</b>${desc?`<p>${desc}</p>`:''}<p class="muted">${T('Tap for map & shelters','Нажмите: карта и укрытия')}</p></div></div>`;
+el.innerHTML=`<div class="phone"><div class="psb"><span>${T('Telvia','Telvia')} 5G</span><span>▮▮▮ 82%</span></div><div class="ptime">${now.toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'})}</div><div class="pdate">${now.toLocaleDateString(loc(),{weekday:'long',day:'numeric',month:'long'})}</div>${body}</div>
+<div class="cnt2">${full.length} ${T('chars','симв.')} · ${d.tab==='sms'?Math.max(1,Math.ceil(full.length/153))+' '+T('SMS segments','SMS-сегм.'):pages+'/15 '+T('CB pages (93 chars)','страниц CB (по 93)')}${pages>15?` · <span class="bad-t">${T('too long','слишком длинно')}</span>`:''}</div>`;
+const ln=$('#len');if(ln)ln.textContent=T(full.length+' characters total · keep under 360 for best readability','Всего символов: '+full.length+' · лучше до 360')}
+function rChs(){const d=S.d,el=$('#chs');if(!el)return;const e=est(d.poly,d.chans.filter(k=>S.chs[k].on));
+el.innerHTML=CHK.map(k=>{const off=!S.chs[k].on,on=!off&&d.chans.includes(k);return `<button class="chk ${on?'on':''} ${off?'off':''}" data-ch="${k}"><span class="bx">${on?'✓':''}</span><span style="font-size:17px">${CH[k].ic}</span><span class="nm">${T(CH[k].en,CH[k].ru)}<small>${off?T('Offline — enable in Channels','Отключён — включите в Каналах'):T(CH[k].den,CH[k].dru)}</small></span><span class="rv">${on?kfmt(e.ch[k]||0):'—'}</span></button>`}).join('');
+$('#uniq').textContent=T('Unique reach ≈ ','Уникальный охват ≈ ')+kfmt(e.uniq);
+$$('[data-ch]',el).forEach(b=>b.onclick=()=>{const k=b.dataset.ch;if(!S.chs[k].on){toast(T('Channel is offline','Канал отключён'),'bad');return}d.chans=d.chans.includes(k)?d.chans.filter(x=>x!==k):d.chans.concat(k);save();rChs();rCap()})}
+const ll=p=>`${(14.2-p[1]*.0062).toFixed(4)},${(38.6+p[0]*.0071).toFixed(4)}`;
+const xe=s=>esc(s);
+function capXML(a){const pts=a.poly.length>=3?a.poly.concat([a.poly[0]]).map(ll).join(' '):'';const sent=new Date(a.t||Date.now()),exp=new Date((a.t||Date.now())+a.exp*H);const iso=d=>d.toISOString().replace(/\.\d+Z$/,'+00:00');
+return `<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+<identifier>${a.id||'CEMA-2026-0'+S.next}</identifier>
+<sender>warning@cema.cv</sender>
+<sent>${iso(sent)}</sent>
+<status>Actual</status>
+<msgType>${a.msg||'Alert'}</msgType>${a.ref?`\n  <references>warning@cema.cv,${a.ref}</references>`:''}
+<scope>Public</scope>
+<info>
+<language>${PT.lang==='ru'?'ru-RU':'en-US'}</language>
+<category>${EV[a.ev][3]}</category>
+<event>${EV[a.ev][1]}</event>
+<urgency>${a.urg}</urgency>
+<severity>${a.sev}</severity>
+<certainty>${a.cert}</certainty>
+<expires>${iso(exp)}</expires>
+<senderName>Civil Emergency Management Agency</senderName>
+<headline>${xe(L(a.head))}</headline>
+<description>${xe(L(a.desc))}</description>
+<instruction>${xe(L(a.instr))}</instruction>
+<parameter><valueName>CMAMtext</valueName><value>CH ${a.ev==='amber'?4379:SEV[a.sev].ch}</value></parameter>
+<area>
+<areaDesc>${xe(L(a.area))}</areaDesc>
+<polygon>${pts}</polygon>
+</area>
+</info>
+</alert>`}
+function rCap(){const x=$('#capX');if(x)x.textContent=capXML(S.d)}
+function trySend(){const d=S.d;let bad=[];
+if(d.poly.length<3)bad.push(T('draw an area (3+ points)','нарисуйте зону (3+ точки)'));
+[['#fArea','area',2,T('area description','описание зоны')],['#fHead','head',5,T('headline','заголовок')],['#fDesc','desc',10,T('description','описание')]].forEach(f=>{if(d[f[1]].trim().length<f[2]){$(f[0]).classList.add('err');bad.push(f[3])}});
+const chans=d.chans.filter(k=>S.chs[k].on);if(!chans.length)bad.push(T('at least one channel','хотя бы один канал'));
+if(bad.length){toast(T('Please fix: ','Исправьте: ')+bad.join(', '),'bad');return}
+const e=est(d.poly,chans);if(e.pop<1){toast(T('The area has no population — draw it over land','В зоне нет населения — нарисуйте её над сушей'),'bad');return}
+modal(`<h3>${isSup()?T('Confirm broadcast','Подтвердите рассылку'):T('Submit for approval','Отправить на утверждение')}</h3>
+<div class="acard" style="${sevC(d.sev)};margin-bottom:12px"><div class="ah">⚠ ${T(SEV[d.sev].en,SEV[d.sev].ru)} · ${evN(d.ev)}</div><div class="ab"><b>${esc(d.head)}</b></div></div>
+<dl class="dl"><dt>${T('Area','Зона')}</dt><dd>${esc(d.area)}</dd><dt>${T('Population','Население')}</dt><dd>${num(e.pop)}</dd><dt>${T('Est. unique reach','Оценка охвата')}</dt><dd>${num(e.uniq)}</dd><dt>${T('Channels','Каналы')}</dt><dd>${chans.map(k=>T(CH[k].en,CH[k].ru)).join(', ')}</dd><dt>${T('Expires','Истекает')}</dt><dd>${d.exp} ${T('h','ч')}</dd></dl>
+<div class="row"><button class="btn red" id="mOk">${isSup()?T('Broadcast now','Разослать сейчас'):T('Submit','Отправить')}</button><button class="btn" id="mNo">${T('Cancel','Отмена')}</button></div>`);
+$('#mNo').onclick=closeModal;
+$('#mOk').onclick=()=>{closeModal();const now=Date.now(),id='CEMA-2026-0'+(S.next++),u=USERS[role()];
+const a={id,t:now,ev:d.ev,sev:d.sev,urg:d.urg,cert:d.cert,head:d.head.trim(),desc:d.desc.trim(),instr:d.instr.trim(),area:d.area.trim(),poly:d.poly.map(p=>p.slice()),chans,target:e.ch,uniq:e.uniq,dlv:{},status:isSup()?'delivering':'pending',exp:+d.exp,by:role(),msg:d.msg,ref:d.ref,hist:[{t:now,en:'Drafted by '+u.n,ru:'Подготовил '+u.n}]};
+chans.forEach(k=>a.dlv[k]=0);
+if(isSup())a.hist.push({t:now,en:'Approved by '+u.n,ru:'Утвердил '+u.n},{t:now,en:'Broadcast started on '+chans.length+' channels',ru:'Рассылка начата по '+chans.length+' каналам'});
+if(d.ref){const o=S.alerts.find(x=>x.id===d.ref);if(o&&isSup()){o.status='superseded';o.hist.push({t:now,en:'Superseded by '+id,ru:'Заменено на '+id})}}
+S.alerts.unshift(a);S.sel=id;S.lf='all';S.d=blankDraft();save();
+toast(isSup()?T('Broadcasting '+id+' to '+kfmt(e.uniq)+' people','Рассылка '+id+' на '+kfmt(e.uniq)+' чел.'):T(id+' submitted — waiting for supervisor','Подано '+id+' — ждёт руководителя'),'gold');go('log')}}
+function modal(h){$('#modalBox').innerHTML=`<div class="modal"><div class="card">${h}</div></div>`;$('#modalBox .modal').onclick=e=>{if(e.target.classList.contains('modal'))closeModal()}}
+function closeModal(){$('#modalBox').innerHTML=''}
+
+/* ---------- LOG ---------- */
+const prog=a=>{const tg=a.chans.reduce((x,k)=>x+(a.target[k]||0),0)||1;return a.chans.reduce((x,k)=>x+(a.dlv[k]||0),0)/tg};
+const reachA=a=>Math.round(a.uniq*prog(a));
+function rLog(){const el=$('#v-log');const F={all:['All','Все'],pending:['Awaiting approval','Ждут утверждения'],live:['In force','Действуют'],ended:['Ended','Завершены']};
+const q=(S.q||'').toLowerCase();
+const list=S.alerts.filter(a=>S.lf==='all'||(S.lf==='pending'&&a.status==='pending')||(S.lf==='live'&&['active','delivering'].includes(a.status))||(S.lf==='ended'&&['expired','cancelled','superseded','rejected'].includes(a.status))).filter(a=>!q||(a.id+' '+L(a.head)+' '+L(a.area)+' '+T(EV[a.ev][1],EV[a.ev][2])).toLowerCase().includes(q));
+if(!S.alerts.find(a=>a.id===S.sel))S.sel=S.alerts[0]&&S.alerts[0].id;
+const tot=S.alerts.filter(a=>!['pending','rejected'].includes(a.status)).reduce((s,a)=>s+reachA(a),0);
+el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Alerts this month','Оповещений за месяц')}</div><div class="v">${S.alerts.length+38}</div><div class="d">${T('incl. 2 national tests','вкл. 2 нац. теста')}</div></div><div class="card kpi"><div class="l">${T('Total reach (log)','Охват (журнал)')}</div><div class="v" data-k="tot">${kfmt(tot)}</div><div class="d">${T('unique people','уникальных людей')}</div></div><div class="card kpi"><div class="l">${T('Median approval time','Медиана утверждения')}</div><div class="v">1:42</div><div class="d">${T('min:sec, target < 3:00','мин:сек, цель < 3:00')}</div></div><div class="card kpi"><div class="l">${T('Awaiting approval','Ждут утверждения')}</div><div class="v ${S.alerts.some(a=>a.status==='pending')?'warn-t':''}">${S.alerts.filter(a=>a.status==='pending').length}</div><div class="d">${isSup()?T('you can approve','вы можете утвердить'):T('supervisor required','нужен руководитель')}</div></div></div>
+<div class="row" style="margin-bottom:12px">${Object.keys(F).map(k=>`<button class="chip ${S.lf===k?'on':''}" data-lf="${k}">${T(F[k][0],F[k][1])}</button>`).join('')}<input class="input" id="lq" style="max-width:260px;flex:1;min-width:150px" value="${esc(S.q||'')}" placeholder="${T('Search ID, event, area…','Поиск: ID, событие, зона…')}"></div>
+<div class="split"><div class="tw"><table><thead><tr><th>ID</th><th>${T('Sent','Время')}</th><th>${T('Event','Событие')}</th><th>${T('Severity','Уровень')}</th><th>${T('Area','Зона')}</th><th>${T('Channels','Каналы')}</th><th>${T('Reach','Охват')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+${list.length?list.map(a=>`<tr class="clk ${a.id===S.sel?'sel':''}" data-id="${a.id}"><td class="mono">${a.id}${a.msg==='Update'?' <span class="pill gold">UPD</span>':''}</td><td>${fT(a.t)}</td><td>${evN(a.ev)}</td><td>${sevP(a.sev)}</td><td>${esc(L(a.area))}</td><td>${a.chans.map(k=>CH[k].ic).join(' ')}</td><td class="mono" data-reach="${a.id}">${a.status==='pending'||a.status==='rejected'?'—':kfmt(reachA(a))}</td><td data-st="${a.id}">${stP(a.status)}</td></tr>`).join(''):`<tr><td colspan="8" class="empty">${T('No alerts match the filter','Нет оповещений по фильтру')}</td></tr>`}</tbody></table></div>
+<div class="card" id="det"></div></div>`;
+rDet();
+$$('[data-lf]',el).forEach(b=>b.onclick=()=>{S.lf=b.dataset.lf;save();rLog()});
+$('#lq').addEventListener('input',e=>{S.q=e.target.value;save();const p=e.target.selectionStart;rLog();const i=$('#lq');i.focus();try{i.setSelectionRange(p,p)}catch(x){}});
+$$('tr[data-id]',el).forEach(r=>r.onclick=()=>{S.sel=r.dataset.id;save();$$('tr[data-id]',el).forEach(x=>x.classList.toggle('sel',x===r));rDet();if(innerWidth<1100)$('#det').scrollIntoView({behavior:'smooth',block:'start'})})}
+function rDet(){const el=$('#det'),a=S.alerts.find(x=>x.id===S.sel);if(!el)return;if(!a){el.innerHTML=`<div class="empty">${T('Select an alert','Выберите оповещение')}</div>`;return}
+const live=['active','delivering'].includes(a.status);
+el.innerHTML=`<h3><span class="mono">${a.id}</span><span data-st2="1">${stP(a.status)}</span><span class="sp"></span>${sevP(a.sev)}</h3>
+<div style="font-weight:700;font-size:15px;margin-bottom:4px;overflow-wrap:anywhere">${EV[a.ev][0]} ${esc(L(a.head))}</div>
+<div class="muted small" style="overflow-wrap:anywhere">${esc(L(a.desc))} ${esc(L(a.instr))}</div>
+<div class="map" style="margin-top:12px">${mapSVG({polys:[{pts:a.poly,sev:a.sev,live}],heat:true,nolbl:false})}</div>
+<dl class="dl"><dt>${T('Area','Зона')}</dt><dd>${esc(L(a.area))}</dd><dt>CAP</dt><dd>${a.msg} · ${T(URG[a.urg][0],URG[a.urg][1])} · ${T(CER[a.cert][0],CER[a.cert][1])}</dd><dt>${T('Sent','Отправлено')}</dt><dd>${fT(a.t)} · ${rel(a.t)}</dd><dt>${T('Expires','Истекает')}</dt><dd>${fT(a.t+a.exp*H)}</dd><dt>${T('Est. unique reach','Оценка охвата')}</dt><dd>${num(a.uniq)}</dd><dt>CB</dt><dd class="mono">CH ${a.ev==='amber'?4379:SEV[a.sev].ch}</dd></dl>
+<div style="font-weight:700;font-size:13px;margin:6px 0 8px">${T('Delivery by channel','Доставка по каналам')}</div>
+<div class="bars">${a.chans.map(k=>{const t=a.target[k]||1,v=a.dlv[k]||0;return `<div class="b"><span>${CH[k].ic} ${T(CH[k].en,CH[k].ru)}</span><div class="prog"><i data-bar="${a.id}:${k}" style="width:${(v/t*100).toFixed(1)}%"></i></div><span class="mono" data-bv="${a.id}:${k}">${kfmt(v)}</span></div>`}).join('')}</div>
+<div class="row" style="margin:12px 0">${a.status==='pending'?(isSup()?`<button class="btn red" data-act="approve">${T('Approve & broadcast','Утвердить и разослать')}</button><button class="btn danger" data-act="reject">${T('Reject','Отклонить')}</button>`:`<span class="pill warn">${T('Waiting for a supervisor — use “Switch role”','Ждёт руководителя — нажмите «Сменить роль»')}</span>`):''}
+${live?`<button class="btn" data-act="update">${T('Issue update','Выпустить обновление')}</button><button class="btn danger" data-act="cancel">${T('Cancel / all clear','Отменить / отбой')}</button>`:''}
+<button class="btn sm" data-act="cap">⤓ CAP XML</button><button class="btn sm" data-act="clone">${T('Duplicate','Дублировать')}</button></div>
+<div style="font-weight:700;font-size:13px;margin:6px 0 4px">${T('Audit trail','Журнал действий')}</div>
+<ul class="tml">${a.hist.slice().reverse().map(h=>`<li><span class="t">${fT(h.t)}</span><span>${esc(T(h.en,h.ru))}</span></li>`).join('')}</ul>`;
+$$('[data-act]',el).forEach(b=>b.onclick=()=>act(a,b.dataset.act))}
+function act(a,k){const now=Date.now(),u=USERS[role()];
+if(k==='approve'){a.status='delivering';a.hist.push({t:now,en:'Approved by '+u.n,ru:'Утвердил '+u.n},{t:now,en:'Broadcast started on '+a.chans.length+' channels',ru:'Рассылка начата по '+a.chans.length+' каналам'});
+if(a.ref){const o=S.alerts.find(x=>x.id===a.ref);if(o&&['active','delivering'].includes(o.status)){o.status='superseded';o.hist.push({t:now,en:'Superseded by '+a.id,ru:'Заменено на '+a.id})}}
+toast(T(a.id+' approved — broadcasting',a.id+' утверждено — идёт рассылка'),'gold')}
+else if(k==='reject'){a.status='rejected';a.hist.push({t:now,en:'Rejected by '+u.n,ru:'Отклонил '+u.n});toast(T(a.id+' rejected',a.id+' отклонено'),'bad')}
+else if(k==='cancel'){modal(`<h3>${T('Cancel alert '+a.id+'?','Отменить оповещение '+a.id+'?')}</h3><p class="muted">${T('A CAP Cancel message and an “All clear” notice will be sent on the same channels.','По тем же каналам уйдёт CAP Cancel и сообщение «Отбой».')}</p><div class="row"><button class="btn red" id="mOk">${T('Send all clear','Отправить отбой')}</button><button class="btn" id="mNo">${T('Keep alert','Оставить')}</button></div>`);
+$('#mNo').onclick=closeModal;$('#mOk').onclick=()=>{closeModal();a.status='cancelled';a.hist.push({t:Date.now(),en:'All clear issued by '+u.n+' (CAP Cancel)',ru:'Отбой выпустил '+u.n+' (CAP Cancel)'});save();rLog();nav();toast(T('All clear sent for ','Отбой отправлен для ')+a.id)};return}
+else if(k==='update'||k==='clone'){S.d=Object.assign(blankDraft(),{poly:a.poly.map(p=>p.slice()),ev:a.ev,sev:a.sev,urg:a.urg,cert:a.cert,exp:a.exp,head:L(a.head),desc:L(a.desc),instr:L(a.instr),area:L(a.area),chans:a.chans.slice(),msg:k==='update'?'Update':'Alert',ref:k==='update'?a.id:null});save();go('compose');toast(k==='update'?T('Editing CAP Update for '+a.id,'Обновление CAP для '+a.id):T('Copied to a new draft','Скопировано в новый черновик'));return}
+else if(k==='cap'){try{const b=new Blob([capXML(a)],{type:'application/xml'});const l=document.createElement('a');l.href=URL.createObjectURL(b);l.download=a.id+'.xml';document.body.append(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(l.href),1000)}catch(e){}toast(T('CAP file downloaded','CAP-файл скачан'));return}
+save();rLog();nav()}
+
+/* ---------- CHANNELS ---------- */
+const THR=[];for(let i=0;i<60;i++)THR.push(90+Math.sin(i/5)*14+Math.random()*12);
+function rChannels(){const el=$('#v-channels');const avg=Math.round(S.ops.reduce((s,o)=>s+o.lat*o.share,0));
+el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Gateway throughput','Пропускная способность')}</div><div class="v" data-k="thr">${Math.round(THR[THR.length-1])}</div><div class="d">${T('messages / s, live','сообщений/с, онлайн')}</div></div><div class="card kpi"><div class="l">${T('CBC latency (weighted)','Задержка CBC (средн.)')}</div><div class="v" data-k="lat">${avg} ${T('ms','мс')}</div><div class="d">${T('alert to first cell','от оповещения до соты')}</div></div><div class="card kpi"><div class="l">${T('Cells covered','Сот в охвате')}</div><div class="v">${num(S.ops.reduce((s,o)=>s+o.cells,0))}</div><div class="d">${T('3 operators','3 оператора')}</div></div><div class="card kpi"><div class="l">${T('Channels online','Каналов в работе')}</div><div class="v">${CHK.filter(k=>S.chs[k].on).length}/${CHK.length}</div><div class="d">${T('toggle below','переключатели ниже')}</div></div></div>
+<div class="grid2"><div class="card"><h3>${T('Delivery channels','Каналы доставки')}</h3><div class="tw"><table><thead><tr><th>${T('Channel','Канал')}</th><th>${T('Coverage','Охват')}</th><th>${T('Speed','Скорость')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>${CHK.map(k=>`<tr><td>${CH[k].ic} ${T(CH[k].en,CH[k].ru)}</td><td class="mono">${Math.round(CH[k].rate*100)}%</td><td class="mono">~${Math.round(8/CH[k].spd)} ${T('s','с')}</td><td style="white-space:nowrap"><button class="sw ${S.chs[k].on?'on':''}" data-sw="${k}" aria-label="toggle" style="vertical-align:middle"></button> <span style="font-size:12px;color:var(--muted)">${S.chs[k].on?T('Online','В работе'):T('Off','Выкл')}</span></td></tr>`).join('')}</tbody></table></div></div>
+<div class="card chart"><h3>${T('SMS / CB gateway throughput','Поток шлюза SMS / CB')}<span class="sp"></span><span class="pill ok"><span class="dot"></span>${T('live','онлайн')}</span></h3><div id="thr"></div></div></div>
+<div class="card"><h3>${T('Cell broadcast centres (CBC) by operator','Центры cell broadcast (CBC) операторов')}</h3><div class="tw"><table><thead><tr><th>${T('Operator','Оператор')}</th><th>${T('Subscribers','Абоненты')}</th><th>${T('Cells','Соты')}</th><th>${T('Latency','Задержка')}</th><th>${T('Status','Статус')}</th><th>${T('Last test (CH 4380)','Последний тест (CH 4380)')}</th><th></th></tr></thead><tbody>${S.ops.map(o=>`<tr><td><b>${o.n}</b></td><td class="mono">${Math.round(o.share*100)}%</td><td class="mono">${num(o.cells)}</td><td class="mono" data-lat="${o.id}">${o.lat} ${T('ms','мс')}</td><td>${o.st==='ok'?`<span class="pill ok">${T('Connected','Подключён')}</span>`:`<span class="pill warn">${T('Degraded','С задержками')}</span>`}</td><td>${rel(o.test)}</td><td><button class="btn sm" data-test="${o.id}">${T('Send test','Тест')}</button></td></tr>`).join('')}</tbody></table></div>
+<p class="muted small" style="margin:10px 0 0">${T('Required monthly test on CH 4380 is not shown to the public. A degraded CBC is retried and its alerts are also sent via location SMS.','Обязательный ежемесячный тест на CH 4380 не показывается людям. При сбоях CBC повторяет отправку, оповещение дублируется SMS.')}</p></div>`;
+rThr();
+$$('[data-sw]',el).forEach(b=>b.onclick=()=>{const k=b.dataset.sw;if(k==='cb'&&S.chs.cb.on&&!confirmCb()){return}S.chs[k].on=!S.chs[k].on;if(!S.chs[k].on)S.d.chans=S.d.chans.filter(x=>x!==k);save();rChannels();nav();toast(T(CH[k].en,CH[k].ru)+' · '+(S.chs[k].on?T('enabled','включён'):T('disabled','выключен')),S.chs[k].on?'':'bad')});
+$$('[data-test]',el).forEach(b=>b.onclick=()=>{const o=S.ops.find(x=>x.id===b.dataset.test);b.disabled=true;b.textContent=T('Testing…','Проверка…');
+setTimeout(()=>{o.test=Date.now();o.lat=Math.round(o.lat*(.75+Math.random()*.2));if(o.st==='deg'&&Math.random()<.7)o.st='ok';save();if(S.view==='channels')rChannels();toast(T(o.n+': test received by probe handsets in '+o.lat+' ms',o.n+': тест принят контрольными телефонами за '+o.lat+' мс'))},1400)})}
+let cbWarned=false;function confirmCb(){if(cbWarned)return true;cbWarned=true;toast(T('Cell broadcast is the primary channel. Press again to disable it.','Cell broadcast — основной канал. Нажмите ещё раз, чтобы выключить.'),'bad');return false}
+function rThr(){const c=$('#thr');if(!c)return;const W=620,Hh=220,p=36,mx=Math.max(...THR)*1.15,step=(W-p-6)/(THR.length-1);
+const pts=THR.map((v,i)=>[p+i*step,10+(Hh-36)*(1-v/mx)]);
+let s=`<svg viewBox="0 0 ${W} ${Hh}">`;for(let i=0;i<=3;i++){const y=10+i*(Hh-36)/3;s+=`<line class="c-ax" x1="${p}" x2="${W-6}" y1="${y}" y2="${y}"/><text class="c-tx" x="${p-6}" y="${y+4}" text-anchor="end">${Math.round(mx*(1-i/3))}</text>`}
+s+=`<path class="c-ar" d="M${pts[0][0]},${Hh-26} L${pts.map(q=>q.map(n=>n.toFixed(1)).join(',')).join(' L')} L${pts[pts.length-1][0]},${Hh-26}Z"/><polyline class="c-ln" points="${pts.map(q=>q.map(n=>n.toFixed(1)).join(',')).join(' ')}"/><circle cx="${pts[pts.length-1][0]}" cy="${pts[pts.length-1][1]}" r="4" fill="var(--gold)"/>`;
+s+=`<text class="c-tx" x="${p}" y="${Hh-8}">−60 ${T('s','с')}</text><text class="c-tx" x="${W-6}" y="${Hh-8}" text-anchor="end">${T('now','сейчас')}</text></svg>`;c.innerHTML=s}
+
+/* ---------- live simulation ---------- */
+let tk=0;const fr=rng(Date.now()%100000);
+function tick(){tk++;clock();if(!SESS.on)return;const now=Date.now();let changed=false,stChange=false;
+S.alerts.forEach(a=>{if(a.status==='delivering'){a.chans.forEach(k=>{const t=a.target[k]||0;if(a.dlv[k]<t){const inc=Math.max(1,Math.round(t*CH[k].spd*(.6+Math.random()*.8)));a.dlv[k]=Math.min(t,a.dlv[k]+inc);changed=true}});
+if(a.chans.every(k=>a.dlv[k]>=(a.target[k]||0))){a.status='active';a.hist.push({t:now,en:'Delivery complete · '+num(a.uniq)+' people reached',ru:'Доставка завершена · охват '+num(a.uniq)+' чел.'});stChange=true;toast(T(a.id+': delivery complete',a.id+': доставка завершена'))}}
+if(a.status==='active'&&now>a.t+a.exp*H){a.status='expired';a.hist.push({t:now,en:'Expired',ru:'Истекло'});stChange=true}});
+const busy=S.alerts.filter(a=>a.status==='delivering').length;
+THR.push(Math.max(20,85+Math.sin(tk/6)*14+Math.random()*16+busy*260*(0.7+Math.random()*.5)));THR.shift();
+if(tk%3===0)S.ops.forEach(o=>{o.lat=Math.max(380,Math.round(o.lat+(Math.random()-.5)*40))});
+let newFeed=false;if(tk%9===0){S.feed.unshift(feedItem(fr));S.feed=S.feed.slice(0,8);newFeed=true}
+if(changed||stChange||newFeed||tk%5===0)save();
+const typing=document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+if(stChange){nav();if(!typing&&(S.view==='log'||S.view==='ops'))render();return}
+if(S.view==='log'){S.alerts.forEach(a=>{const c=$(`[data-reach="${a.id}"]`);if(c&&a.status!=='pending'&&a.status!=='rejected')c.textContent=kfmt(reachA(a));a.chans.forEach(k=>{const b=$(`[data-bar="${a.id}:${k}"]`);if(b){b.style.width=((a.dlv[k]||0)/(a.target[k]||1)*100).toFixed(1)+'%';$(`[data-bv="${a.id}:${k}"]`).textContent=kfmt(a.dlv[k]||0)}})});
+const tt=$('[data-k="tot"]');if(tt)tt.textContent=kfmt(S.alerts.filter(a=>!['pending','rejected'].includes(a.status)).reduce((s,a)=>s+reachA(a),0))}
+if(S.view==='ops'){const r=$('[data-k="r24"]');if(r)r.textContent=kfmt(reached24());if(newFeed)rFeed();if(changed)rDays()}
+if(S.view==='channels'){rThr();const t=$('[data-k="thr"]');if(t)t.textContent=Math.round(THR[THR.length-1]);S.ops.forEach(o=>{const c=$(`[data-lat="${o.id}"]`);if(c)c.textContent=o.lat+' '+T('ms','мс')});const l=$('[data-k="lat"]');if(l)l.textContent=Math.round(S.ops.reduce((s,o)=>s+o.lat*o.share,0))+' '+T('ms','мс')}
+if(S.view==='compose'&&tk%30===0)rPhone()}
+setInterval(tick,1000);
+
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+document.addEventListener('click',e=>{const sd=$('#side');if(sd.classList.contains('open')&&!sd.contains(e.target)&&e.target.id!=='menuBtn')sd.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+$('#reset').onclick=()=>{try{Object.keys(localStorage).filter(k=>k.startsWith('pt_alerts_')).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()};
+PT.onLang(()=>{if(SESS.on)render();else showLogin()});
+document.addEventListener('DOMContentLoaded',()=>{if(SESS.on)showApp();else showLogin()});
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

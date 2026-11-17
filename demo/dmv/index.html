@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DriveDesk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px;line-height:1.2}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center;margin-top:8px}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+.who span{color:var(--muted)}
+.sidebtns{display:flex;gap:6px;margin-top:8px}
+.sidebtns .btn{flex:1;justify-content:center}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.intro.hide{display:none}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.card{min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h3 .x{font-size:12px;color:var(--muted);font-weight:500}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fgrid .full{grid-column:1/-1}
+.f{min-width:0}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px;display:none}
+.f.bad .input{border-color:var(--red)} .f.bad .err{display:block}
+select.input{appearance:auto}
+textarea.input{resize:vertical}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row .sp{flex:1}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 9px;font-size:12px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)} .blue-t{color:var(--blue)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.prog.gold i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.prog.red i{background:var(--red)} .prog.amber i{background:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;overflow-wrap:anywhere}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack>*+*{margin-top:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.risk{display:inline-block;min-width:38px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:8px;padding:2px 6px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;min-width:0}
+.li:last-child{border-bottom:0}
+.li>.grow{min-width:0}
+.li small{display:block;color:var(--muted);font-size:12px}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:100px;max-height:240px;overflow:auto;overflow-wrap:anywhere}
+.log div{padding:2px 0} .log .t{color:var(--dim)}
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 10%,transparent);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.alert.warn{border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.alert.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.alert b{display:block}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow:auto;padding:20px;animation:fade .2s}
+.modal .box h3{margin:0 0 14px;font-size:17px;display:flex;gap:8px;align-items:center}
+.modal .box h3 .sp{flex:1}
+.mclose{border:0;background:none;font-size:20px;cursor:pointer;color:var(--muted);padding:0 4px}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.lg-hero{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 60%),radial-gradient(90% 80% at 100% 100%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 60%),var(--bg2);border-right:1px solid var(--line);padding:48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.lg-hero .bigb{display:flex;align-items:center;gap:14px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+.lg-hero .bigb b{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:26px}
+.lg-hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em;max-width:560px}
+.lg-hero p{color:var(--muted);margin:0;max-width:520px}
+.lg-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px}
+.lg-feats div{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 70%,transparent);border-radius:12px;padding:10px 12px;font-size:13px}
+.lg-feats div b{display:block;font-size:13.5px}
+.lg-form{display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-form .card{width:100%;max-width:420px;padding:26px}
+.lg-form h3{font-size:20px;margin:0 0 4px}
+.lg-form .f{margin-top:12px}
+.lg-demo{border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-top:14px;color:var(--muted)}
+.lg-demo b{color:var(--gold2)}
+.lg-sec{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--dim);margin-top:14px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.split,.intro,.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .lg-hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .lg-hero h2{font-size:24px}
+  .lg-form{padding:20px 14px 40px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.fgrid.c3,.opts,.lg-feats{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.step span{font-size:10px}.lg-form .card{padding:18px}.modal .box{padding:16px}}
+.btn.xs{padding:3px 10px;font-size:11.5px;min-height:28px}
+#headx{min-width:0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;border:1px solid var(--line2);color:var(--muted)}
+.mt{margin-top:14px}
+
+.ed{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:10px;font-size:13px;margin-bottom:5px;border:1px solid var(--line)}
+.ed>span:first-child{width:18px;text-align:center;font-weight:700}
+.ed.ok{border-color:color-mix(in srgb,var(--mal) 35%,transparent);background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.ed.ok>span:first-child{color:var(--mal)}
+.ed.no{border-color:color-mix(in srgb,var(--red) 40%,transparent);background:color-mix(in srgb,var(--red) 8%,transparent)}
+.ed.no>span:first-child{color:var(--red)}
+.ed .grow{flex:1;min-width:0}.ed small{color:var(--muted);font-size:11.5px}
+.dl2{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 14px;font-size:13px;margin:0}
+.dl2 dt{color:var(--muted)}.dl2 dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.chk{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;margin:6px 0;cursor:pointer;font-weight:400;line-height:1.35}
+.chk input{margin-top:2px;flex:none}
+.steps{display:flex;gap:6px}
+.steps .st{flex:1;display:flex;align-items:center;gap:7px;padding:8px;border-radius:10px;border:1px solid var(--line);font-size:12.5px;color:var(--muted);min-width:0}
+.steps .st b{width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:11.5px;background:color-mix(in srgb,var(--muted) 15%,transparent)}
+.steps .st span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.steps .st.on{border-color:var(--blue);color:var(--text)}.steps .st.on b{background:var(--blue);color:#fff}
+.steps .st.ok b{background:var(--mal);color:#fff}
+.up{display:grid;gap:6px}
+.upf{display:flex;align-items:center;gap:8px;border:1.5px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:13px;cursor:pointer;position:relative;overflow:hidden}
+.upf:hover{border-color:var(--blue)}
+.upf input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upf span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tr.tot td{border-top:2px solid var(--line)}
+.done{text-align:center;padding:10px 0}.done .big{font-size:44px}.done .row{gap:8px;flex-wrap:wrap}
+.dlc{border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#1d4e89,#2f7a6b);color:#fff;box-shadow:var(--shadow);max-width:380px}
+.dlh{display:flex;gap:10px;align-items:center;padding:9px 14px;font-size:11px;letter-spacing:.12em;font-weight:700;background:rgba(0,0,0,.18)}
+.dlh .star{margin-left:auto;color:#ffd166;font-size:16px}
+.dlb{display:flex;gap:14px;padding:14px}
+.dlb .ph{width:64px;height:78px;flex:none;border-radius:8px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:22px;font-weight:800}
+.dlb .grow{min-width:0}.dlb b{display:block;font-size:15px;margin-bottom:3px}
+.dlb small{display:block;font-size:11.5px;opacity:.9;font-family:var(--mono)}
+.dlb small.don{color:#ffb4b4}
+.vg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.veh .row{flex-wrap:wrap;gap:6px}
+.plate{font-family:var(--mono);font-weight:800;padding:3px 9px;border:2px solid var(--text);border-radius:6px;letter-spacing:.06em;font-size:13px}
+.sh{margin:0 0 10px}
+.slots{border-collapse:separate;border-spacing:3px;min-width:640px;width:100%}
+.slots th{font-size:11.5px;font-weight:600;color:var(--muted);text-align:center;padding:3px}
+.slots th small{font-weight:400}
+.slots td{padding:0;text-align:center}
+.sl{display:block;width:100%;padding:7px 0;border-radius:7px;font-size:11.5px;border:0;font-family:inherit}
+.sl.fr{background:color-mix(in srgb,var(--mal) 16%,transparent);color:var(--mal);cursor:pointer;font-weight:700;transition:.3s}
+.sl.fr:hover{background:var(--mal);color:#fff}
+.sl.fr.gone{background:var(--red);color:#fff;transform:scale(.8);opacity:.3}
+.sl.tk{background:color-mix(in srgb,var(--line) 60%,transparent);color:var(--muted)}
+.sl.me{background:var(--blue);color:#fff;font-weight:700}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--mal);font-weight:600}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--mal);animation:dmvp 1.4s infinite}
+@keyframes dmvp{50%{opacity:.25}}
+.mdl{display:flex;justify-content:center}
+.phone{width:100%;max-width:330px;border:10px solid #1b1f27;border-radius:34px;padding:16px 12px;background:var(--panel);display:grid;gap:14px}
+.dlc.big2{max-width:none}
+.qrw{text-align:center;display:grid;gap:6px;justify-items:center}
+.qr{width:210px;max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+.qrs{font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:99px}
+.qrs.ok{color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.qrs.bad{color:var(--red);background:color-mix(in srgb,var(--red) 12%,transparent)}
+.pay{font-family:var(--mono);font-size:12px;background:color-mix(in srgb,var(--muted) 10%,transparent);padding:10px;border-radius:10px;white-space:pre-wrap;word-break:break-all;margin:0}
+.rq{border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:10px}
+.rq .row{gap:6px;flex-wrap:wrap}
+.li .btn.xs{margin-left:4px}
+@media(max-width:600px){.steps .st span{display:none}.steps .st{justify-content:center}.dl2{grid-template-columns:1fr;gap:2px}.dl2 dd{margin-bottom:6px}}
+
+</style>
+</head>
+<body data-demo-en="DriveDesk — Motor vehicles portal: licences, registration, road tests" data-demo-ru="DriveDesk — портал ГИБДД: права, регистрация, экзамены">
+<div class="login" id="login" hidden></div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side"></aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <div id="headx" class="row"></div>
+      <button class="btn sm" id="showIntro" hidden title="How to try it">?</button>
+    </div>
+    <div class="intro" id="intro"></div>
+    <section class="view on" id="view"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div class="modal" id="modal"></div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const TT=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtDS=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+const fmtN=(n,dg=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:dg,maximumFractionDigits:dg});
+const pct=(n,dg=0)=>fmtN(n,dg)+'%';
+const uid=(p)=>(p||'')+Math.random().toString(36).slice(2,8).toUpperCase();
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body,mount){const m=$('#modal');m.innerHTML=`<div class="box" role="dialog"><h3><span>${title}</span><span class="sp"></span><button class="mclose" aria-label="Close">×</button></h3>${body}</div>`;m.classList.add('on');$('.mclose',m).onclick=closeModal;m.onclick=e=>{if(e.target===m)closeModal()};if(mount)mount($('.box',m))}
+function closeModal(){const m=$('#modal');m.classList.remove('on');m.innerHTML=''}
+/* form validation: fields = [[id, test(v)->bool, [en,ru] message]] ; returns true if ok */
+function validate(fields,root){let ok=true;fields.forEach(([id,test,msg])=>{const el=$('#'+id,root||document);if(!el)return;const f=el.closest('.f');const good=test(el.type==='checkbox'?el.checked:el.value.trim());if(f){f.classList.toggle('bad',!good);let e=$('.err',f);if(!e){e=document.createElement('div');e.className='err';f.append(e)}e.textContent=TT(msg)}if(!good)ok=false});if(!ok)toast(T('Please fix the highlighted fields','Исправьте выделенные поля'),'bad');return ok}
+const fld=(id,label,inner,cls)=>`<div class="f ${cls||''}"><label for="${id}">${label}</label>${inner}</div>`;
+const inp=(id,label,val,cls,type,attrs)=>fld(id,label,`<input class="input" id="${id}" type="${type||'text'}" value="${esc(val==null?'':val)}" ${attrs||''}>`,cls);
+const sel=(id,label,opts,val,cls)=>fld(id,label,`<select class="input" id="${id}">${opts.map(o=>`<option value="${esc(o[0])}" ${String(o[0])===String(val)?'selected':''}>${esc(o.length>2?T(o[1],o[2]):o[1])}</option>`).join('')}</select>`,cls);
+const pill=(txt,cls)=>`<span class="pill ${cls||''}">${txt}</span>`;
+const kpi=(l,v,d,cls)=>`<div class="card kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}</div>${d!=null?`<div class="d">${d}</div>`:''}</div>`;
+const chipsH=(items,cur,attr)=>items.map(x=>`<button class="chip ${String(cur)===String(x[0])?'on':''}" data-${attr}="${esc(x[0])}">${x.length>2?T(x[1],x[2]):x[1]}</button>`).join('');
+const bind=(root,attr,fn)=>$$('[data-'+attr+']',root).forEach(b=>b.onclick=e=>{e.stopPropagation();fn(b.dataset[attr.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())],b,e)});
+const tbl=(heads,rows,empty)=>`<div class="tw"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${heads.length}" class="muted">${empty||T('Nothing here yet','Пока пусто')}</td></tr>`}</tbody></table></div>`;
+function dl(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type||'text/plain'}));a.download=name;document.body.append(a);a.click();a.remove()}catch(e){}}
+/* ---- inline SVG charts (theme-aware via CSS vars in style attrs) ---- */
+const C=['var(--mal)','var(--gold)','var(--blue)','var(--violet)','var(--amber)','var(--red)','var(--mal3)'];
+function lineChart(o){/* o:{series:[{name,data:[...],color,dash,area}], labels:[...], w,h, yfmt, min,max, band:[y0,y1,color]} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=12,pt=14,pb=28;const all=o.series.flatMap(s=>s.data).filter(v=>v!=null);
+  let mn=o.min!=null?o.min:Math.min(...all),mx=o.max!=null?o.max:Math.max(...all);if(mx===mn)mx=mn+1;const pad=(mx-mn)*.08;if(o.min==null)mn-=pad;if(o.max==null)mx+=pad;
+  const n=Math.max(...o.series.map(s=>s.data.length));const X=i=>pl+(n<2?0:i*(W-pl-pr)/(n-1)),Y=v=>pt+(1-(v-mn)/(mx-mn))*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  if(o.band){s+=`<rect x="${pl}" y="${Y(o.band[1])}" width="${W-pl-pr}" height="${Math.max(0,Y(o.band[0])-Y(o.band[1]))}" style="fill:${o.band[2]||'var(--mal)'};opacity:.1"/>`}
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/8);(o.labels||[]).forEach((l,i)=>{if(i%step===0||i===n-1)s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  o.series.forEach((se,k)=>{const col=se.color||C[k%C.length];const pts=se.data.map((v,i)=>v==null?null:[X(i),Y(v)]).filter(Boolean);if(!pts.length)return;const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+    if(se.area)s+=`<path d="${d}L${pts[pts.length-1][0]} ${H-pb}L${pts[0][0]} ${H-pb}Z" style="fill:${col};opacity:.14"/>`;
+    s+=`<path d="${d}" fill="none" style="stroke:${col}" stroke-width="${se.width||2.2}" stroke-linejoin="round" stroke-linecap="round" ${se.dash?'stroke-dasharray="6 5"':''}/>`;
+    if(se.dots!==false&&pts.length<=40)pts.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${se.dots===true?3.2:2.4}" style="fill:${col}"><title>${esc((o.labels||[])[i]||'')} · ${yf(se.data[i])}</title></circle>`})});
+  return s+'</svg>'}
+function barChart(o){/* o:{labels,series:[{name,data,color}],stacked,w,h,yfmt,hl:index} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=10,pt=16,pb=30;const n=o.labels.length;const sums=o.labels.map((_,i)=>o.stacked?o.series.reduce((a,s)=>a+(s.data[i]||0),0):Math.max(...o.series.map(s=>s.data[i]||0)));
+  const mx=(o.max||Math.max(...sums,1))*1.08;const bw=(W-pl-pr)/n;const Y=v=>pt+(1-v/mx)*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let i=0;i<=4;i++){const v=mx*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/12);
+  o.labels.forEach((l,i)=>{const x0=pl+i*bw;let acc=0;const ns=o.series.length;
+    o.series.forEach((se,k)=>{const v=se.data[i]||0;const col=se.color||C[k%C.length];
+      if(o.stacked){const y=Y(acc+v),h=Y(acc)-y;s+=`<rect x="${x0+bw*.18}" y="${y}" width="${bw*.64}" height="${Math.max(0,h)}" rx="3" style="fill:${col}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`;acc+=v}
+      else{const w=bw*.7/ns;const y=Y(v);s+=`<rect x="${x0+bw*.15+k*w}" y="${y}" width="${Math.max(1,w-2)}" height="${Math.max(0,H-pb-y)}" rx="3" style="fill:${col};opacity:${o.hl!=null&&o.hl!==i?.45:1}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`}});
+    if(i%step===0)s+=`<text x="${x0+bw/2}" y="${H-10}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  return s+'</svg>'}
+function hbars(items,o){/* items:[[label,value,color?]] */o=o||{};const mx=o.max||Math.max(...items.map(x=>x[1]),1);const f=o.fmt||(v=>fmtN(v));
+  return items.map(x=>`<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:7px"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x[0]}</span><div class="prog" style="width:${o.w||110}px;flex:none"><i style="width:${x[1]/mx*100}%;${x[2]?'background:'+x[2]:''}"></i></div><span class="mono" style="width:${o.vw||48}px;text-align:right;flex:none">${f(x[1])}</span></div>`).join('')}
+function donut(parts,o){/* parts:[[label,value,color]] */o=o||{};const sz=o.size||140,r=sz/2-12,c=2*Math.PI*r;const tot=parts.reduce((a,p)=>a+p[1],0)||1;let off=0;
+  let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" style="flex:none"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="16"/>`;
+  parts.forEach((p,i)=>{const L=c*p[1]/tot;s+=`<circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:${p[2]||C[i%C.length]}" stroke-width="16" stroke-dasharray="${L} ${c-L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${sz/2} ${sz/2})"><title>${esc(p[0])}: ${fmtN(p[1])}</title></circle>`;off+=L});
+  s+=`<text x="${sz/2}" y="${sz/2+2}" text-anchor="middle" font-size="${o.fs||20}" font-weight="800" style="fill:var(--text)">${o.center!=null?o.center:fmtN(tot)}</text>${o.sub?`<text x="${sz/2}" y="${sz/2+18}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(o.sub)}</text>`:''}</svg>`;
+  const leg=`<div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;min-width:0">${parts.map((p,i)=>`<div style="display:flex;gap:8px;align-items:center"><i style="width:10px;height:10px;border-radius:3px;background:${p[2]||C[i%C.length]};flex:none"></i><span style="flex:1;min-width:0">${p[0]}</span><b class="mono">${o.fmt?o.fmt(p[1]):fmtN(p[1])}</b></div>`).join('')}</div>`;
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${s}${leg}</div>`}
+function gauge(p,o){o=o||{};const r=50,c=Math.PI*r;const col=o.color||(p>=90?'var(--red)':p>=75?'var(--amber)':'var(--mal)');
+  return `<svg viewBox="0 0 120 70" style="width:${o.w||150}px;max-width:100%"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:var(--line)" stroke-width="11" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${c*clamp(p,0,100)/100} ${c}"/><text x="60" y="58" text-anchor="middle" font-size="19" font-weight="800" style="fill:var(--text)">${o.label!=null?o.label:Math.round(p)+'%'}</text></svg>`}
+function spark(data,col){const W=110,H=30,mn=Math.min(...data),mx=Math.max(...data)||1;const d=data.map((v,i)=>(i?'L':'M')+(i*W/(data.length-1)).toFixed(1)+' '+(H-3-(v-mn)/((mx-mn)||1)*(H-6)).toFixed(1)).join('');return `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;flex:none"><path d="${d}" fill="none" style="stroke:${col||'var(--mal)'}" stroke-width="2"/></svg>`}
+
+//@demo DriveDesk|Motor vehicles portal: licences, registration, road tests|портал ГИБДД: права, регистрация, экзамены
+
+const QR=(()=>{const N=33;
+const mul=(x,y)=>{let z=0;for(let i=7;i>=0;i--){z=(z<<1)^((z>>>7)*0x11d);z^=((y>>>i)&1)*x}return z&255};
+const div=d=>{const r=new Array(d).fill(0);r[d-1]=1;let root=1;for(let i=0;i<d;i++){for(let j=0;j<d;j++){r[j]=mul(r[j],root);if(j+1<d)r[j]^=r[j+1]}root=mul(root,2)}return r};
+const rem=(data,dv)=>{const r=new Array(dv.length).fill(0);data.forEach(b=>{const f=b^r.shift();r.push(0);dv.forEach((c,i)=>r[i]^=mul(c,f))});return r};
+return text=>{let bytes=[...new TextEncoder().encode(text)].slice(0,78);const bits=[];const put=(v,n)=>{for(let i=n-1;i>=0;i--)bits.push((v>>>i)&1)};
+put(4,4);put(bytes.length,8);bytes.forEach(b=>put(b,8));const cap=80*8;put(0,Math.min(4,cap-bits.length));while(bits.length%8)bits.push(0);
+const cw=[];for(let i=0;i<bits.length;i+=8)cw.push(parseInt(bits.slice(i,i+8).join(''),2));for(let p=0xEC;cw.length<80;p^=0xEC^0x11)cw.push(p);
+const all=cw.concat(rem(cw,div(20)));
+const M=[...Array(N)].map(()=>Array(N).fill(false)),F=[...Array(N)].map(()=>Array(N).fill(false));const set=(x,y,v)=>{M[y][x]=v;F[y][x]=true};
+for(let i=0;i<N;i++){set(6,i,i%2===0);set(i,6,i%2===0)}
+[[3,3],[N-4,3],[3,N-4]].forEach(([cx,cy])=>{for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){const x=cx+dx,y=cy+dy;if(x<0||y<0||x>=N||y>=N)continue;const d=Math.max(Math.abs(dx),Math.abs(dy));set(x,y,d!==2&&d!==4)}});
+for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)set(26+dx,26+dy,Math.max(Math.abs(dx),Math.abs(dy))!==1);
+const fmt=()=>{const data=(1<<3)|0;let r=data;for(let i=0;i<10;i++)r=(r<<1)^((r>>>9)*0x537);const b=((data<<10)|r)^0x5412;const g=i=>((b>>>i)&1)===1;
+for(let i=0;i<=5;i++)set(8,i,g(i));set(8,7,g(6));set(8,8,g(7));set(7,8,g(8));for(let i=9;i<15;i++)set(14-i,8,g(i));
+for(let i=0;i<8;i++)set(N-1-i,8,g(i));for(let i=8;i<15;i++)set(8,N-15+i,g(i));set(8,N-8,true)};
+fmt();let k=0;for(let right=N-1;right>=1;right-=2){if(right===6)right=5;for(let v=0;v<N;v++)for(let j=0;j<2;j++){const x=right-j,up=((right+1)&2)===0,y=up?N-1-v:v;if(!F[y][x]&&k<all.length*8){M[y][x]=((all[k>>>3]>>>(7-(k&7)))&1)===1;k++}}}
+for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!F[y][x]&&(x+y)%2===0)M[y][x]=!M[y][x];fmt();
+let d='';for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(M[y][x])d+=`M${x+4} ${y+4}h1v1h-1z`;
+return `<svg viewBox="0 0 ${N+8} ${N+8}" class="qr" shape-rendering="crispEdges"><rect width="${N+8}" height="${N+8}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`}})();
+
+
+const CTR=[['ng','Northgate DMV','ДМВ Нортгейт'],['hb','Harbor DMV','ДМВ Харбор'],['lk','Lakeside DMV','ДМВ Лейксайд']];
+const TIMES=['08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00'];
+const VT=[['car','Passenger car','Легковой автомобиль',46],['suv','SUV / light truck','Внедорожник / пикап',58],['ev','Electric vehicle','Электромобиль',46],['moto','Motorcycle','Мотоцикл',28],['truck','Commercial truck','Грузовик',120],['trl','Trailer','Прицеп',18]];
+const DEP=[1,.85,.72,.61,.52,.44,.37,.31,.26,.22,.18,.15,.13,.11,.1];
+const FN=['Liam','Ava','Noah','Mia','Ethan','Chloe','Lucas','Ella','Mateo','Nora','Arjun','Iris','Kofi','Yara','Jonas','Elif'];
+const LN=['Hale','Moreno','Kim','Price','Larsen','Novak','Osei','Ward','Silva','Bauer','Chen','Dunn'];
+let RN=0,CT='ng',LIVE=null,LQ='',LSEL=null,SHARE='full',RT=null;
+function regFee(v){const t=VT.find(x=>x[0]===v.t),age=clamp(new Date().getFullYear()-v.y,0,14);const it=[];
+it.push(['Base registration','Базовый сбор',t[3]]);
+const w=+v.kg;let wf=0;if(v.t!=='moto'&&v.t!=='trl'){wf=w<=1800?0:w<=2700?22:w<=4500?48:96+Math.round((w-4500)*.04)}else if(v.t==='trl')wf=w>1000?Math.round((w-1000)*.02):0;
+if(wf)it.push([`Weight fee (${fmtN(w)} kg)`,`Весовой сбор (${fmtN(w)} кг)`,wf]);
+if(v.t==='ev')it.push(['EV road-use fee','Дорожный сбор для электромобилей',100]);
+const val=Math.round(v.msrp*DEP[age]);it.push([`Vehicle licence tax 0.65% of $${fmtN(val)} (age ${age})`,`Налог 0,65% от $${fmtN(val)} (возраст ${age})`,Math.round(val*.0065)]);
+it.push(['Plate & county fees','Номера и окружной сбор',17]);
+const late=v.exp&&v.exp<today()?Math.min(60,10+2*Math.floor((new Date(today())-new Date(v.exp))/2592e6)):0;if(late)it.push(['Late penalty','Штраф за просрочку',late]);
+return{it,total:it.reduce((a,x)=>a+x[2],0),age}}
+const luhn=n=>{n=n.replace(/\D/g,'');if(n.length<13)return false;let s=0;for(let i=n.length-1,d=false;i>=0;i--,d=!d){let k=+n[i];if(d){k*=2;if(k>9)k-=9}s+=k}return s%10===0};
+const CIT=['renew','reg','test','mdl'];
+function syncRole(){if(!S.user)return;const want=CIT.includes(S.view)?'ci':'ag';if(S.role===want)return;S.role=want;const r=APP.login.roles.find(x=>x[0]===want);S.user.role=[r[1],r[2]];S.user.rk=want;S.user.name=want==='ci'?APP.login.name:'Officer Ray Holm'}
+const slotK=(c,d,t)=>c+'|'+d+'|'+t;
+const days=()=>{const r=[];let d=1;while(r.length<10){const x=addDays(today(),d++);const w=new Date(x).getDay();if(w&&w<6)r.push(x)}return r};
+const lic=()=>S.lic;
+const tx=(en,ru,amt,ch)=>{S.tx.unshift({id:uid(),en,ru,amt,ch:ch||'online',d:today(),t:Date.now()})};
+
+const APP={slug:'dmv',ver:1,icon:'🚗',name:'DriveDesk',sub:['Department of Motor Vehicles','Управление автотранспорта'],
+login:{user:'s.marin',pass:'drivedesk-demo',name:'Sofia Marin',role:['Resident','Житель'],
+roles:[['ci','Resident','Житель'],['ag','DMV agent','Сотрудник ДМВ']],tag:['Skip the line — do it online','Без очереди — онлайн'],
+hero:['Licences, plates and road tests without the queue','Права, номера и экзамены без очереди'],
+heroP:['Residents renew a licence, calculate and pay vehicle registration, book a road test and carry a mobile licence with a verifiable QR. Agents work the back office queue on the same records.','Жители продлевают права, считают и платят регистрацию, записываются на экзамен и носят мобильные права с QR. Сотрудники ведут очередь на тех же данных.'],
+feats:[['🪪','Licence renewal','Продление прав','Online, 4 steps','Онлайн, 4 шага'],['🚙','Registration fees','Регистрационные сборы','Type · weight · age','Тип · вес · возраст'],['📅','Road-test slots','Запись на экзамен','Live availability','Свободные слоты онлайн'],['📱','Mobile licence','Мобильные права','QR with selective disclosure','QR с выборочным раскрытием']]},
+how:[['<b>Renew licence</b>: identity is prefilled — tick <b>REAL ID</b> to send it to an agent for document review, pay with card 4111 1111 1111 1111.','<b>Продление</b>: данные заполнены — отметьте <b>REAL ID</b>, чтобы заявка ушла сотруднику, оплата картой 4111 1111 1111 1111.'],
+['<b>Road test</b>: pick a free slot — it disappears for everyone. Other residents book slots live too.','<b>Экзамен</b>: выберите свободный слот — он исчезнет у всех. Другие жители тоже записываются в реальном времени.'],
+['Open <b>Back office</b> (the role switches to agent): approve REAL ID, record the road-test result — the mobile licence updates.','Откройте <b>Бэк-офис</b> (роль сменится на сотрудника): одобрите REAL ID, внесите результат экзамена — мобильные права обновятся.']],
+facts:[['Tender','Тендер','DMV digital services modernisation','Модернизация цифровых услуг ДМВ'],['Year · budget','Год · бюджет','2024 · $96M'],['Client','Заказчик','Department of Motor Vehicles, Republic of Nordania (fictional)','Управление автотранспорта, Республика Нордания (вымышл.)'],['Stack','Стек','ISO 18013-5 mDL · Payments · Scheduling']],
+groups:[['ci','Resident','Житель'],['ag','Agent','Сотрудник']],
+views:[['renew','🪪','Renew licence','Продление прав','ci'],['reg','🚙','Vehicle registration','Регистрация авто','ci'],['test','📅','Road test','Экзамен по вождению','ci'],['mdl','📱','Mobile licence','Мобильные права','ci'],['desk','🗂','Back office','Бэк-офис','ag'],['look','🔎','Customer lookup','Поиск клиента','ag'],['stats','📊','Statistics','Статистика','ag']],
+badge(id){if(id==='renew')syncRole();if(id==='renew'){const d=Math.round((new Date(lic().exp)-new Date(today()))/864e5);return d<60?[d<0?'!':d+T('d','д'),1]:null}
+if(id==='reg'){const n=S.veh.filter(v=>v.exp<addDays(today(),30)).length;return n?[n,1]:null}
+if(id==='desk'){const n=S.req.filter(r=>r.st==='review').length+Object.values(S.slots).filter(s=>s&&s.who==='me'&&!s.res).length;return n?[n,0]:null}return null},
+head(){return `<select class="input" id="roleSel" style="width:auto;padding:6px 10px">${this.login.roles.map(r=>`<option value="${r[0]}" ${S.role===r[0]?'selected':''}>${r[0]==='ci'?'🏠 ':'🧑‍💼 '}${T(r[1],r[2])}</option>`).join('')}</select>`},
+bindHead(){$('#roleSel').onchange=e=>{audit('Role → '+e.target.value,'Роль → '+e.target.value,'auth');go(e.target.value==='ci'?'renew':'desk')}},
+leave(){if(LIVE){clearInterval(LIVE);LIVE=null}},
+seed(){const R=rng(77);const slots={};const ds=days();CTR.forEach(c=>ds.forEach((d,di)=>TIMES.forEach(t=>{const p=di<3?.8:di<6?.55:.3;slots[slotK(c[0],d,t)]=R()<p?{who:'x'}:null})));
+const people=[];for(let i=0;i<34;i++){const f=FN[R()*16|0],l=LN[R()*12|0];people.push({id:'D'+(4100000+(R()*899999|0)),n:f+' '+l,dob:(1950+(R()*55|0))+'-'+String(1+(R()*12|0)).padStart(2,'0')+'-'+String(1+(R()*27|0)).padStart(2,'0'),cls:R()<.15?'C, M':'C',exp:addDays(today(),-60+(R()*2800|0)),st:R()<.06?'susp':'valid',pts:R()<.7?0:1+(R()*7|0),real:R()<.6})}
+const req=[];for(let i=0;i<5;i++){const p=people[i*3];req.push({id:'RQ'+(70210+i*13),pid:p.id,n:p.n,k:i%2?'real':'addr',st:'review',d:addDays(today(),-(i%3)),docs:[['Passport','Паспорт',R()<.85],['Proof of address','Подтверждение адреса',R()<.7],['SSN card','Карточка SSN',true]]})}
+const hist=[];for(let i=29;i>=0;i--){const d=addDays(today(),-i),w=new Date(d).getDay();const k=w===0||w===6?.35:1;hist.push({d,on:Math.round((620+R()*180)*k),off:Math.round((340+R()*90)*k),kiosk:Math.round((120+R()*60)*k),wait:+(18+R()*22*(1-i/60)).toFixed(1)})}
+return{role:'ci',lic:{no:'D4821773',n:'Sofia Marin',dob:'1988-03-14',ssn4:'4417',cls:'C',exp:addDays(today(),41),iss:'2018-02-20',photo:'2018-02-20',addr:'14 Linden Row, Arvel 30117',real:false,donor:true,restr:'',permit:{cls:'M',iss:addDays(today(),-45)},pts:0,st:'valid'},
+veh:[{id:'v1',plate:'NRD 4K21',mk:'Toyota RAV4 Hybrid',t:'suv',y:2021,kg:1710,msrp:34500,exp:addDays(today(),-12)},{id:'v2',plate:'NRD 7P03',mk:'Kia EV6',t:'ev',y:2024,kg:2090,msrp:48700,exp:addDays(today(),190)}],
+calc:{t:'car',y:2022,kg:1500,msrp:28000},slots,people,req,hist,tx:[],mine:null,rn:{step:0,real:false,donor:true,lens:false,addr:''}}},
+R:{}
+};
+
+
+APP.R.renew=el=>{const L=lic(),r=S.rn;const dl_=Math.round((new Date(L.exp)-new Date(today()))/864e5);const age=Math.floor((new Date(today())-new Date(L.dob))/31557600000);
+const term=age>=70?4:8,fee=age>=70?20:36,late=dl_<0?10:0,photoAge=Math.floor((new Date(today())-new Date(L.photo))/31557600000);
+const ST=[['Identity','Личность'],['Details','Данные'],['Payment','Оплата'],['Done','Готово']];
+let body='';
+if(r.step===0)body=`<h3>${T('Confirm your identity','Подтвердите личность')}</h3><div class="fgrid">${inp('rNo',T('Licence number','Номер прав'),L.no)}${inp('rDob',T('Date of birth','Дата рождения'),L.dob,'','date')}${inp('rSsn',T('Last 4 of SSN','Последние 4 цифры SSN'),L.ssn4,'','text','maxlength="4" inputmode="numeric"')}</div>
+<div class="ck mt">${[[dl_<=180,T(`Expires in ${dl_} days — renewal window open (≤ 180 days)`,`Истекает через ${dl_} дн. — окно продления открыто (≤ 180 дн.)`)],[L.st==='valid',T('No suspension on record','Нет лишения прав')],[photoAge<8,T(`Photo is ${photoAge} years old — can be reused (< 8)`,`Фото ${photoAge} лет — можно использовать (< 8)`)],[L.pts<6,T(`Driving record: ${L.pts} points`,`Штрафные баллы: ${L.pts}`)]].map(c=>`<div class="ed ${c[0]?'ok':'no'}"><span>${c[0]?'✓':'✕'}</span><span class="grow">${c[1]}</span></div>`).join('')}</div>`;
+if(r.step===1)body=`<h3>${T('Licence details','Данные прав')}</h3>${inp('rAddr',T('Mailing address','Почтовый адрес'),r.addr||L.addr)}
+<label class="chk mt"><input type="checkbox" id="rLens" ${r.lens?'checked':''}> ${T('I wear corrective lenses while driving (restriction B)','Вожу в очках/линзах (ограничение B)')}</label>
+<label class="chk"><input type="checkbox" id="rVis" ${r.vis?'checked':''}> ${T('I certify my vision meets 20/40 in at least one eye','Подтверждаю зрение не ниже 20/40 хотя бы на один глаз')}</label>
+<label class="chk"><input type="checkbox" id="rDon" ${r.donor?'checked':''}> ${T('Organ donor','Донор органов')}</label>
+<label class="chk"><input type="checkbox" id="rReal" ${r.real?'checked':''} ${L.real?'disabled':''}> ${L.real?T('Already REAL ID ★','Уже REAL ID ★'):T('Upgrade to REAL ID ★ (needs document review by an agent)','Перейти на REAL ID ★ (проверка документов сотрудником)')}</label>
+${r.real?`<div class="up mt">${[['Passport or birth certificate','Паспорт или свид. о рождении'],['Proof of address (2)','Подтверждение адреса (2)'],['SSN card or W-2','Карточка SSN или W-2']].map((d,i)=>`<label class="upf"><input type="file" data-up="${i}"><span>${(r.docs||[])[i]?'📎 '+esc(r.docs[i]):'⬆ '+T(d[0],d[1])}</span></label>`).join('')}</div>`:''}`;
+if(r.step===2)body=`<h3>${T('Fee and payment','Сбор и оплата')}</h3>${tbl([T('Item','Позиция'),T('Amount','Сумма')],[`<tr><td>${T(`Class ${L.cls} licence, ${term}-year term`,`Права кат. ${L.cls}, срок ${term} лет`)}</td><td>$${fee}</td></tr>`,late?`<tr><td>${T('Late renewal','Просрочка')}</td><td>$${late}</td></tr>`:'',r.real?`<tr><td>${T('REAL ID upgrade','Переход на REAL ID')}</td><td>$0</td></tr>`:'',`<tr class="tot"><td><b>${T('Total','Итого')}</b></td><td><b>$${fee+late}</b></td></tr>`])}
+<div class="fgrid mt">${inp('rCard',T('Card number','Номер карты'),'4111 1111 1111 1111','full')}${inp('rExp',T('Expiry MM/YY','Срок MM/YY'),'09/29')}${inp('rCvc','CVC','123','','text','maxlength="4"')}</div>`;
+if(r.step===3){const q=S.req.find(x=>x.id===r.req);body=`<div class="done"><div class="big">✅</div><h3>${T('Licence renewed','Права продлены')}</h3><p class="muted">${T('New expiry ','Новый срок ')}<b>${fmtD(L.exp)}</b>. ${T('Your plastic card is mailed in 7–10 days; the mobile licence is already updated.','Пластиковая карта придёт по почте; мобильные права уже обновлены.')}</p>
+${q?`<div class="alert warn"><span>★</span><div>${T('REAL ID request ','Заявка REAL ID ')}<b>${q.id}</b> — ${q.st==='review'?T('waiting for agent document review','ждёт проверки документов сотрудником'):q.st==='ok'?T('approved','одобрена'):T('rejected: ','отклонена: ')+esc(q.why||'')}</div></div>`:''}
+<div class="row" style="justify-content:center"><button class="btn" id="rTmp">⬇ ${T('Temporary licence','Временное удостоверение')}</button><button class="btn pri" id="rMdl">📱 ${T('Open mobile licence','Открыть мобильные права')}</button></div><button class="btn xs mt" id="rAgain">${T('Start over','Начать заново')}</button></div>`}
+el.innerHTML=`<div class="grid2"><div class="card"><div class="steps">${ST.map((s,i)=>`<div class="st ${i<r.step?'ok':i===r.step?'on':''}"><b>${i<r.step?'✓':i+1}</b><span>${T(...s)}</span></div>`).join('')}</div><div class="mt">${body}</div>
+${r.step<3?`<div class="row mt">${r.step?`<button class="btn" id="rBack">← ${T('Back','Назад')}</button>`:''}<div class="sp"></div><button class="btn pri" id="rNext">${r.step===2?T('Pay','Оплатить')+' $'+(fee+late):T('Continue','Далее')} →</button></div>`:''}</div>
+<div class="card"><h3>${T('Current licence','Текущие права')}</h3>${card()}<dl class="dl2 mt"><dt>${T('Status','Статус')}</dt><dd>${dl_<0?pill(T('Expired','Истекли'),'bad'):dl_<60?pill(T(`Expires in ${dl_} d`,`Истекает через ${dl_} дн.`),'warn'):pill(T('Valid','Действуют'),'ok')}</dd><dt>${T('Classes','Категории')}</dt><dd>${L.cls}${L.permit?` · ${T('learner permit ','ученическое ')}${L.permit.cls}`:''}</dd><dt>${T('Restrictions','Ограничения')}</dt><dd>${L.restr||'—'}</dd><dt>${T('Address','Адрес')}</dt><dd>${esc(L.addr)}</dd></dl></div></div>`;
+const nx=$('#rNext'),bk=$('#rBack');if(bk)bk.onclick=()=>{r.step--;save();APP.R.renew(el)};
+if(r.step===1){$('#rLens').onchange=e=>r.lens=e.target.checked;$('#rVis').onchange=e=>r.vis=e.target.checked;$('#rDon').onchange=e=>r.donor=e.target.checked;$('#rAddr').oninput=e=>r.addr=e.target.value;
+$('#rReal').onchange=e=>{r.real=e.target.checked;r.addr=$('#rAddr').value;APP.R.renew(el)};$$('[data-up]',el).forEach(f=>f.onchange=()=>{r.docs=r.docs||[];r.docs[+f.dataset.up]=f.files[0]?f.files[0].name:'';save();APP.R.renew(el)})}
+if(nx)nx.onclick=()=>{
+if(r.step===0){if(!validate([['rNo',v=>v.trim().toUpperCase()===L.no,['Licence number not found','Номер не найден']],['rDob',v=>v===L.dob,['Does not match our record','Не совпадает с записью']],['rSsn',v=>v===L.ssn4,['Does not match our record','Не совпадает с записью']]],el))return;if(dl_>180){toast(T('Too early to renew','Слишком рано для продления'),'bad');return}}
+if(r.step===1){if(!r.vis){toast(T('Vision certification is required','Нужно подтвердить зрение'),'bad');return}if(!validate([['rAddr',v=>v.trim().length>8,['Enter a full address','Введите полный адрес']]],el))return;r.addr=$('#rAddr').value.trim();
+if(r.real&&(r.docs||[]).filter(Boolean).length<3){toast(T('Attach all 3 documents for REAL ID','Приложите все 3 документа для REAL ID'),'bad');return}}
+if(r.step===2){if(!validate([['rCard',luhn,['Card number is invalid','Неверный номер карты']],['rExp',v=>{const m=v.match(/^(\d\d)\/(\d\d)$/);return m&&+m[1]>=1&&+m[1]<=12&&new Date(2000+ +m[2],+m[1],0)>=new Date()},['Card expired or wrong format','Карта просрочена или неверный формат']],['rCvc',v=>/^\d{3,4}$/.test(v),['3–4 digits','3–4 цифры']]],el))return;
+const base=dl_<0?today():L.exp;L.exp=addDays(base,term*365+Math.floor(term/4));L.addr=r.addr||L.addr;L.donor=r.donor;L.restr=r.lens?'B — '+T('corrective lenses','очки/линзы'):'';
+tx(`Licence renewal ${L.no}`,`Продление прав ${L.no}`,fee+late);audit(`Licence ${L.no} renewed to ${L.exp}`,`Права ${L.no} продлены до ${L.exp}`,'renew');
+if(r.real){const q={id:'RQ'+(70300+S.req.length),pid:L.no,n:L.n,k:'real',st:'review',d:today(),docs:[['Passport','Паспорт',true],['Proof of address','Подтверждение адреса',true],['SSN card','Карточка SSN',true]],me:1};S.req.unshift(q);r.req=q.id}
+toast(T('Payment approved','Оплата прошла'),'ok')}
+r.step++;save();rerender()};
+if(r.step===3){$('#rTmp').onclick=()=>{dl('temporary-licence-'+L.no+'.txt',`DRIVEDESK — TEMPORARY DRIVER LICENCE\nValid 60 days from ${today()}\n\nName: ${L.n}\nLicence: ${L.no}  Class: ${L.cls}\nDOB: ${L.dob}\nExpires: ${L.exp}\nAddress: ${L.addr}\nRestrictions: ${L.restr||'none'}\n\nRepublic of Nordania (fictional) — demo document`);toast(T('Downloaded','Скачано'),'ok')};
+$('#rMdl').onclick=()=>go('mdl');$('#rAgain').onclick=()=>{S.rn={step:0,real:false,donor:L.donor,lens:!!L.restr,addr:''};save();APP.R.renew(el)}}
+};
+function card(){const L=lic();return `<div class="dlc"><div class="dlh"><span>NORDANIA</span><span>${T('DRIVER LICENCE','ВОДИТЕЛЬСКОЕ')}</span>${L.real?'<span class="star">★</span>':''}</div><div class="dlb"><div class="ph">${L.n.split(' ').map(x=>x[0]).join('')}</div><div class="grow"><b>${esc(L.n.toUpperCase())}</b><small>DL ${L.no}</small><small>DOB ${L.dob} · ${T('CLASS ','КАТ. ')}${L.cls}</small><small>EXP <b>${L.exp}</b></small>${L.donor?'<small class="don">♥ DONOR</small>':''}</div></div></div>`}
+
+
+APP.R.reg=el=>{const c=S.calc,f=regFee(c);const curve=DEP.map((_,a)=>regFee({...c,y:new Date().getFullYear()-a,exp:null}).total);
+el.innerHTML=`<h3 class="sh">${T('My vehicles','Мои автомобили')}</h3><div class="vg">${S.veh.map(v=>{const g=regFee(v),od=v.exp<today(),soon=v.exp<addDays(today(),30);return `<div class="card veh"><div class="row"><span class="plate">${v.plate}</span><div class="sp"></div>${od?pill(T('Expired','Просрочена'),'bad'):soon?pill(T('Due soon','Скоро'),'warn'):pill(T('Valid','Действует'),'ok')}</div><b class="mt" style="display:block">${esc(v.mk)} · ${v.y}</b><small class="muted">${T(...VT.find(x=>x[0]===v.t).slice(1,3))} · ${fmtN(v.kg)} ${T('kg','кг')} · ${T('expires ','до ')}${fmtDS(v.exp)}</small>
+<div class="row mt"><b style="font-size:20px">$${g.total}</b><div class="sp"></div><button class="btn xs" data-vc="${v.id}">${T('Breakdown','Расчёт')}</button>${od||soon?`<button class="btn xs pri" data-vp="${v.id}">${T('Renew','Продлить')}</button>`:''}</div></div>`}).join('')}</div>
+<div class="grid2 mt"><div class="card"><h3>${T('Fee calculator','Калькулятор сборов')}</h3><div class="fgrid">${sel('cT',T('Vehicle type','Тип'),VT.map(v=>[v[0],v[1],v[2]]),c.t)}${inp('cY',T('Model year','Год выпуска'),c.y,'','number','min="1980" max="'+(new Date().getFullYear()+1)+'"')}${inp('cK',T('Weight, kg','Масса, кг'),c.kg,'','number','min="100" max="40000" step="10"')}${inp('cM',T('Original price (MSRP), $','Цена нового (MSRP), $'),c.msrp,'','number','min="500" step="500"')}</div>
+${tbl([T('Item','Позиция'),'$'],f.it.map(x=>`<tr><td>${T(x[0],x[1])}</td><td>${fmtN(x[2])}</td></tr>`).concat([`<tr class="tot"><td><b>${T('Total per year','Итого за год')}</b></td><td><b>${fmtN(f.total)}</b></td></tr>`]))}</div>
+<div class="card"><h3>${T('Annual fee by vehicle age','Сбор в год по возрасту авто')}</h3><div class="chart">${barChart({labels:curve.map((_,a)=>String(a)),series:[{name:'$',data:curve,color:'var(--blue)'}],hl:f.age})}</div><div class="muted" style="font-size:12px">${T('Years since model year. The licence tax falls as the vehicle depreciates; highlighted — your vehicle.','Лет с года выпуска. Налог падает вместе с остаточной стоимостью; выделено — ваш автомобиль.')}</div>
+<div class="mt">${hbars(f.it.map(x=>[T(x[0],x[1]).split(' (')[0],x[2],'var(--mal)']),{fmt:v=>'$'+v})}</div></div></div>
+<div class="card mt"><h3>${T('Payment history','История платежей')}</h3>${tbl([T('Date','Дата'),T('Transaction','Операция'),'$'],S.tx.map(t=>`<tr><td>${fmtDS(t.d)}</td><td>${T(t.en,t.ru)}</td><td>${t.amt}</td></tr>`),T('No payments yet','Платежей пока нет'))}</div>`;
+['cT','cY','cK','cM'].forEach(id=>$('#'+id).onchange=e=>{const k={cT:'t',cY:'y',cK:'kg',cM:'msrp'}[id];let v=e.target.value;if(k!=='t'){v=+v;if(k==='y')v=clamp(v||2020,1980,new Date().getFullYear()+1);if(k==='kg')v=clamp(v||1500,100,40000);if(k==='msrp')v=clamp(v||20000,500,500000)}c[k]=v;if(k==='t'){c.kg={car:1500,suv:2000,ev:2100,moto:220,truck:9000,trl:800}[v]}save();APP.R.reg(el)});
+bind(el,'vc',id=>{const v=S.veh.find(x=>x.id===id),g=regFee(v);modal(v.plate+' · '+esc(v.mk),tbl([T('Item','Позиция'),'$'],g.it.map(x=>`<tr><td>${T(x[0],x[1])}</td><td>${x[2]}</td></tr>`).concat([`<tr class="tot"><td><b>${T('Total','Итого')}</b></td><td><b>${g.total}</b></td></tr>`])))});
+bind(el,'vp',id=>{const v=S.veh.find(x=>x.id===id),g=regFee(v);modal(T('Renew registration','Продление регистрации')+' · '+v.plate,`<p>${T('Amount due','К оплате')}: <b>$${g.total}</b>${v.exp<today()?' '+T('(includes late penalty)','(со штрафом)'):''}</p>${inp('vCard',T('Card number','Номер карты'),'4111 1111 1111 1111')}<label class="chk mt"><input type="checkbox" id="vIns" checked> ${T('Insurance on file: Nordic Mutual, policy NM-221873','Страховка: Nordic Mutual, полис NM-221873')}</label><div class="row mt"><div class="sp"></div><button class="btn pri" id="vGo">${T('Pay','Оплатить')} $${g.total}</button></div>`,m=>{$('#vGo',m).onclick=()=>{if(!validate([['vCard',luhn,['Card number is invalid','Неверный номер карты']]],m))return;if(!$('#vIns',m).checked){toast(T('Proof of insurance is required','Нужна страховка'),'bad');return}
+const base=v.exp<today()?today():v.exp;v.exp=addDays(base,365);tx(`Registration ${v.plate}`,`Регистрация ${v.plate}`,g.total);audit(`Registration ${v.plate} renewed to ${v.exp}`,`Регистрация ${v.plate} продлена до ${v.exp}`,'reg');save();closeModal();rerender();toast(T('Registration renewed — new sticker mailed','Регистрация продлена — наклейка придёт по почте'),'ok')}})});
+};
+
+
+APP.R.test=el=>{const L=lic(),ds=days(),held=L.permit?Math.floor((new Date(today())-new Date(L.permit.iss))/864e5):0,mine=S.mine&&S.slots[S.mine]?S.mine:null;const free=ds.reduce((a,d)=>a+TIMES.filter(t=>!S.slots[slotK(CT,d,t)]).length,0);
+el.innerHTML=`<div class="kpis">${kpi(T('Free slots at this office','Свободно в этом офисе'),free,T('next 10 working days','10 рабочих дней'))}${kpi(T('Permit held','Ученическое'),held+T(' days',' дн.'),held>=30?T('≥ 30 required — OK','нужно ≥ 30 — OK'):T('30 required','нужно 30'),held>=30?'ok-t':'bad-t')}${kpi(T('Test class','Категория'),L.permit?L.permit.cls:'—',T('motorcycle','мотоцикл'))}${kpi(T('Your booking','Ваша запись'),mine?mine.split('|')[2]:'—',mine?fmtDS(mine.split('|')[1])+' · '+T(...CTR.find(c=>c[0]===mine.split('|')[0]).slice(1)):'')}</div>
+${mine?`<div class="alert ok"><span>📅</span><div><b>${T('Booked: ','Записаны: ')}${fmtD(mine.split('|')[1])} ${mine.split('|')[2]} · ${T(...CTR.find(c=>c[0]===mine.split('|')[0]).slice(1))}</b>${S.slots[mine].res?T('Result: ','Результат: ')+(S.slots[mine].res==='pass'?T('passed ✅','сдан ✅'):T('failed ❌','не сдан ❌')):T('Bring your permit, a registered motorcycle and a helmet.','Возьмите ученическое, зарегистрированный мотоцикл и шлем.')}</div><div class="sp"></div>${S.slots[mine].res?'':`<button class="btn xs" id="tCan">${T('Cancel','Отменить')}</button>`}</div>`:''}
+<div class="card"><div class="row"><div class="chips">${chipsH(CTR.map(c=>[c[0],c[1],c[2]]),CT,'ct')}</div><div class="sp"></div><span class="live"><i></i>${T('live','онлайн')}</span></div>
+<div class="tw mt"><table class="slots"><thead><tr><th></th>${ds.map(d=>`<th>${new Date(d).toLocaleDateString(loc(),{weekday:'short'})}<br><small>${fmtDS(d)}</small></th>`).join('')}</tr></thead><tbody>${TIMES.map(t=>`<tr><th>${t}</th>${ds.map(d=>{const k=slotK(CT,d,t),s=S.slots[k];return `<td>${s?(s.who==='me'?`<span class="sl me">${T('You','Вы')}</span>`:`<span class="sl tk">—</span>`):`<button class="sl fr" data-sl="${k}" aria-label="${d} ${t}">${t}</button>`}</td>`}).join('')}</tr>`).join('')}</tbody></table></div>
+<div class="legend mt"><span><i style="background:var(--mal)"></i>${T('Free','Свободно')}</span><span><i style="background:var(--blue)"></i>${T('Your booking','Ваша запись')}</span><span><i style="background:var(--line)"></i>${T('Taken','Занято')}</span></div></div>`;
+bind(el,'ct',v=>{CT=v;APP.R.test(el)});
+const can=$('#tCan');if(can)can.onclick=()=>{S.slots[S.mine]=null;audit('Road test cancelled '+S.mine,'Экзамен отменён '+S.mine,'test');S.mine=null;save();rerender();toast(T('Booking cancelled — the slot is free again','Запись отменена — слот снова свободен'))};
+bind(el,'sl',k=>{if(held<30){toast(T('Learner permit must be held at least 30 days','Ученическое должно быть не менее 30 дней'),'bad');return}const [c,d,t]=k.split('|');
+modal(T('Book road test','Запись на экзамен'),`<p><b>${fmtD(d)} · ${t}</b><br>${T(...CTR.find(x=>x[0]===c).slice(1))}</p>${mine?`<div class="alert warn"><span>↺</span><div>${T('Your current booking will be released.','Текущая запись будет освобождена.')}</div></div>`:''}<label class="chk"><input type="checkbox" id="bV"> ${T('Test vehicle is registered and insured','ТС для экзамена зарегистрировано и застраховано')}</label><label class="chk"><input type="checkbox" id="bH"> ${T('I will bring a DOT-approved helmet','Возьму сертифицированный шлем')}</label><div class="row mt"><div class="sp"></div><button class="btn pri" id="bGo">${T('Confirm booking','Подтвердить')}</button></div>`,m=>{$('#bGo',m).onclick=()=>{if(!$('#bV',m).checked||!$('#bH',m).checked){toast(T('Confirm both requirements','Подтвердите оба условия'),'bad');return}
+if(S.slots[k]){closeModal();toast(T('Sorry — someone just took this slot','Увы, слот только что заняли'),'bad');rerender();return}
+if(S.mine)S.slots[S.mine]=null;S.slots[k]={who:'me',n:L.n,cls:L.permit.cls};S.mine=k;audit('Road test booked '+k,'Запись на экзамен '+k,'test');save();closeModal();rerender();toast(T('Booked — the slot is now gone for everyone else','Записано — слот исчез для остальных'),'ok')}})});
+LIVE=setInterval(()=>{if(!document.body.contains(el)){clearInterval(LIVE);LIVE=null;return}const fr=Object.keys(S.slots).filter(k=>!S.slots[k]&&k.startsWith(CT+'|'));if(!fr.length)return;const k=fr[Math.random()*fr.length|0];S.slots[k]={who:'x'};save();const b=$(`[data-sl="${k}"]`,el);if(b){b.classList.add('gone');setTimeout(()=>{if(b.isConnected)b.outerHTML='<span class="sl tk">—</span>'},600)}},7000);
+};
+
+
+APP.R.mdl=el=>{const L=lic();const ok=L.exp>=today()&&L.st==='valid';const age=Math.floor((new Date(today())-new Date(L.dob))/31557600000);
+const pay=SHARE==='age'?`mDL|NRD|${L.no.slice(0,2)}***|AGE21:${age>=21?'Y':'N'}|V:${ok?1:0}|${today()}`:SHARE==='id'?`mDL|NRD|${L.no}|${L.n}|DOB:${L.dob}|V:${ok?1:0}|EXP:${L.exp}`:`mDL|NRD|${L.no}|${L.n}|DOB:${L.dob}|CL:${L.cls.replace(/ /g,'')}|EXP:${L.exp}|${L.real?'RID':'STD'}|V:${ok?1:0}`;
+el.innerHTML=`<div class="grid2e"><div class="card mdl"><div class="phone"><div class="dlc big2">${card().replace('<div class="dlc">','').replace(/<\/div>$/,'')}</div>
+<div class="qrw">${QR(pay)}<div class="qrs ${ok?'ok':'bad'}">${ok?T('Valid · verified by DriveDesk','Действительны · проверено DriveDesk'):T('Not valid','Недействительны')}</div><div class="muted" style="font-size:11px">${T('Refreshes in ','Обновится через ')}<b id="qrT">30</b>${T(' s',' с')}</div></div></div></div>
+<div class="card"><h3>${T('What to share','Что показать')}</h3><p class="muted" style="font-size:13px">${T('Selective disclosure — the QR carries only what you choose. A bar only needs to know you are over 21.','Выборочное раскрытие — QR содержит только выбранное. Бару нужно знать лишь, что вам больше 21.')}</p>
+<div class="chips">${chipsH([['full','Full licence','Полные права'],['id','Identity only','Только личность'],['age','Age over 21','Старше 21']],SHARE,'sh')}</div>
+<h3 class="mt">${T('QR payload','Содержимое QR')}</h3><pre class="pay">${esc(pay.split('|').join('\n'))}</pre>
+<div class="row mt"><button class="btn" id="mVer">🔍 ${T('Verify as a police officer','Проверить как полиция')}</button><button class="btn" id="mDl">⬇ ${T('Save QR','Сохранить QR')}</button></div>
+<h3 class="mt">${T('Card details','Данные')}</h3><dl class="dl2"><dt>${T('Standard','Стандарт')}</dt><dd>ISO/IEC 18013-5</dd><dt>REAL ID</dt><dd>${L.real?'★ '+T('Yes','Да'):T('No','Нет')}</dd><dt>${T('Restrictions','Ограничения')}</dt><dd>${L.restr||'—'}</dd></dl></div></div>`;
+bind(el,'sh',v=>{SHARE=v;APP.R.mdl(el)});
+$('#mDl').onclick=()=>{dl('mobile-licence-qr.svg',$('.qr',el).outerHTML,'image/svg+xml');toast(T('QR saved','QR сохранён'),'ok')};
+$('#mVer').onclick=()=>{const f=pay.split('|');modal(T('Verifier result','Результат проверки'),`<div class="alert ${ok?'ok':''}"><span>${ok?'✓':'✕'}</span><div><b>${ok?T('Signature valid · licence active','Подпись верна · права действуют'):T('Licence not valid','Права недействительны')}</b>${T('Issuer: Republic of Nordania DMV','Выдал: ДМВ Республики Нордания')}</div></div>${tbl([T('Field','Поле'),T('Value','Значение')],f.slice(2).map(x=>{const [k,v]=x.includes(':')?x.split(':'):['',x];return `<tr><td>${k||'—'}</td><td>${esc(v)}</td></tr>`}))}<p class="muted" style="font-size:12px">${T('Fields not shared are invisible to the verifier.','Нераскрытые поля проверяющему не видны.')}</p>`)};
+let n=30;clearInterval(RT);RT=setInterval(()=>{const e=$('#qrT');if(!e){clearInterval(RT);return}n--;if(n<=0){APP.R.mdl(el);return}e.textContent=n},1000);
+};
+
+
+APP.R.desk=el=>{const tests=Object.entries(S.slots).filter(([k,s])=>s&&s.who==='me');const pend=S.req.filter(r=>r.st==='review');
+el.innerHTML=`<div class="kpis">${kpi(T('Document reviews','Проверки документов'),pend.length)}${kpi(T('Road tests to record','Экзамены к внесению'),tests.filter(t=>!t[1].res).length)}${kpi(T('Online transactions today','Онлайн-операций сегодня'),fmtN(S.hist[S.hist.length-1].on+S.tx.filter(t=>t.d===today()).length))}${kpi(T('Avg office wait','Ожидание в офисе'),S.hist[S.hist.length-1].wait+T(' min',' мин'))}</div>
+<div class="grid2"><div class="card"><h3>${T('Document review queue','Очередь проверки документов')}</h3>${pend.length?pend.map(r=>`<div class="rq"><div class="row"><b>${esc(r.n)}</b>${r.me?pill(T('new','новая'),'gold'):''}<div class="sp"></div><span class="mono muted">${r.id}</span></div><small class="muted">${r.k==='real'?T('REAL ID upgrade','Переход на REAL ID'):T('Address change','Смена адреса')} · ${fmtDS(r.d)}</small>
+<div class="mt">${r.docs.map(d=>`<div class="ed ${d[2]?'ok':'no'}"><span>${d[2]?'✓':'✕'}</span><span class="grow">${T(d[0],d[1])}</span><small>${d[2]?T('legible, matches','читаемо, совпадает'):T('missing / unreadable','нет / нечитаемо')}</small></div>`).join('')}</div>
+<div class="row mt"><div class="sp"></div><button class="btn xs" data-rr="${r.id}">${T('Reject','Отклонить')}</button><button class="btn xs pri" data-ra="${r.id}">${T('Approve','Одобрить')}</button></div></div>`).join(''):`<div class="empty">${T('Queue is empty','Очередь пуста')}</div>`}</div>
+<div class="card"><h3>${T('Road tests','Экзамены')}</h3>${tests.length?tests.map(([k,s])=>{const [c,d,t]=k.split('|');return `<div class="li"><span>🏍</span><div class="grow"><b>${esc(s.n)} · ${T('class ','кат. ')}${s.cls}</b><small>${fmtDS(d)} ${t} · ${T(...CTR.find(x=>x[0]===c).slice(1))}</small></div>${s.res?pill(s.res==='pass'?T('Passed','Сдан'):T('Failed','Не сдан'),s.res==='pass'?'ok':'bad'):`<button class="btn xs" data-tf="${k}">${T('Fail','Не сдал')}</button><button class="btn xs pri" data-tp="${k}">${T('Pass','Сдал')}</button>`}</div>`}).join(''):`<div class="empty">${T('No resident bookings yet — book one in Road test.','Записей нет — запишитесь в разделе «Экзамен».')}</div>`}
+<h3 class="mt">${T('Recent transactions','Последние операции')}</h3>${S.tx.slice(0,6).map(t=>`<div class="li"><span>💳</span><div class="grow">${T(t.en,t.ru)}<small>${fmtT(t.t)}</small></div><b>$${t.amt}</b></div>`).join('')||`<div class="muted">${T('None yet','Пока нет')}</div>`}</div></div>`;
+bind(el,'ra',id=>{const r=S.req.find(x=>x.id===id);if(r.docs.some(d=>!d[2])){toast(T('Cannot approve — a document is missing','Нельзя одобрить — не хватает документа'),'bad');return}r.st='ok';if(r.me&&r.k==='real')lic().real=true;const p=S.people.find(x=>x.id===r.pid);if(p&&r.k==='real')p.real=true;audit(`${id} approved`,`${id} одобрена`,'desk');save();rerender();toast(T('Approved','Одобрено')+(r.me?T(' — REAL ID ★ added to the mobile licence',' — REAL ID ★ добавлен в мобильные права'):''),'ok')});
+bind(el,'rr',id=>modal(T('Reject request','Отклонить заявку'),`${sel('rrW',T('Reason','Причина'),[['doc','Document missing or unreadable','Документ отсутствует или нечитаем'],['nm','Name mismatch between documents','Несовпадение имени в документах'],['addr','Address proof older than 60 days','Подтверждение адреса старше 60 дней']],'doc')}<div class="row mt"><div class="sp"></div><button class="btn danger" id="rrGo">${T('Reject and notify','Отклонить и уведомить')}</button></div>`,m=>{$('#rrGo',m).onclick=()=>{const r=S.req.find(x=>x.id===id);r.st='rej';r.why=$('#rrW',m).selectedOptions[0].textContent;audit(`${id} rejected: ${r.why}`,`${id} отклонена: ${r.why}`,'desk');save();closeModal();rerender();toast(T('Rejected — the resident was notified','Отклонено — житель уведомлён'))}}));
+const res=(k,v)=>{S.slots[k].res=v;if(v==='pass'){const L=lic();if(!L.cls.includes(S.slots[k].cls))L.cls+=', '+S.slots[k].cls;L.permit=null}audit(`Road test ${k}: ${v}`,`Экзамен ${k}: ${v==='pass'?'сдан':'не сдан'}`,'desk');save();rerender();toast(v==='pass'?T('Class M added to the licence','Категория M добавлена в права'):T('Result recorded — resident may rebook after 7 days','Результат внесён — пересдача через 7 дней'),v==='pass'?'ok':'')};
+bind(el,'tp',k=>res(k,'pass'));bind(el,'tf',k=>res(k,'fail'));
+};
+
+
+APP.R.look=el=>{const L=lic();const all=[{id:L.no,n:L.n,dob:L.dob,cls:L.cls,exp:L.exp,st:L.st,pts:L.pts,real:L.real,me:1}].concat(S.people);const q=LQ.toLowerCase();const F=all.filter(p=>!q||p.n.toLowerCase().includes(q)||p.id.toLowerCase().includes(q));const p=LSEL&&all.find(x=>x.id===LSEL);
+el.innerHTML=`<div class="card"><div class="row"><input class="input" id="lQ" placeholder="${T('Search name or licence number…','Имя или номер прав…')}" value="${esc(LQ)}" style="flex:1;min-width:0"><span class="muted">${F.length}</span></div>
+${tbl([T('Licence','Права'),T('Name','Имя'),T('Class','Кат.'),T('Expires','Истекает'),T('Points','Баллы'),T('Status','Статус')],F.slice(0,25).map(x=>`<tr data-lp="${x.id}" class="${x.id===LSEL?'sel':''}" style="cursor:pointer"><td class="mono">${x.id}${x.real?' ★':''}</td><td><b>${esc(x.n)}</b></td><td>${x.cls}</td><td>${x.exp<today()?`<span style="color:var(--red)">${fmtDS(x.exp)}</span>`:fmtDS(x.exp)}</td><td>${x.pts>=6?`<b style="color:var(--red)">${x.pts}</b>`:x.pts}</td><td>${x.st==='susp'?pill(T('Suspended','Лишён'),'bad'):x.exp<today()?pill(T('Expired','Истекли'),'warn'):pill(T('Valid','Действуют'),'ok')}</td></tr>`),T('No match','Ничего не найдено'))}</div>
+${p?`<div class="card mt"><div class="row"><h3 style="margin:0">${esc(p.n)}</h3><div class="sp"></div><span class="mono">${p.id}</span></div><dl class="dl2 mt"><dt>DOB</dt><dd>${p.dob}</dd><dt>${T('Class','Кат.')}</dt><dd>${p.cls}</dd><dt>${T('Points (12 mo)','Баллы (12 мес.)')}</dt><dd>${p.pts}${p.pts>=6?' — '+T('suspension threshold','порог лишения'):''}</dd></dl>
+<div class="row mt">${inp('lPts',T('Add points (violation)','Добавить баллы'),2,'','number','min="1" max="6"')}<button class="btn" id="lAdd" style="align-self:flex-end">${T('Record violation','Внести нарушение')}</button><div class="sp"></div>${p.st==='susp'?`<button class="btn pri" id="lSt">${T('Reinstate','Восстановить')}</button>`:`<button class="btn danger" id="lSt">${T('Suspend','Лишить')}</button>`}</div></div>`:''}`;
+const q_=$('#lQ');q_.oninput=e=>{LQ=e.target.value;const pos=e.target.selectionStart;APP.R.look(el);const n=$('#lQ');n.focus();n.setSelectionRange(pos,pos)};
+$$('[data-lp]',el).forEach(r=>r.onclick=()=>{LSEL=r.dataset.lp;APP.R.look(el)});
+const rec=x=>x.me?lic():S.people.find(y=>y.id===x.id);
+if(p){$('#lAdd').onclick=()=>{const n=clamp(+$('#lPts').value||0,1,6);const r=rec(p);r.pts+=n;audit(`${p.id} +${n} points`,`${p.id} +${n} баллов`,'look');if(r.pts>=6&&r.st!=='susp'){r.st='susp';toast(T('6+ points — licence suspended automatically','6+ баллов — права приостановлены автоматически'),'bad')}save();rerender()};
+$('#lSt').onclick=()=>{const r=rec(p);r.st=r.st==='susp'?'valid':'susp';if(r.st==='valid')r.pts=Math.min(r.pts,5);audit(`${p.id} ${r.st==='susp'?'suspended':'reinstated'}`,`${p.id} ${r.st==='susp'?'лишён прав':'восстановлен'}`,'look');save();rerender();toast(r.st==='susp'?T('Suspended — mobile licence now shows invalid','Лишён — мобильные права показывают «недействительны»'):T('Reinstated','Восстановлен'),r.st==='susp'?'bad':'ok')}}
+};
+
+
+APP.R.stats=el=>{const H=S.hist,lb=H.map(h=>h.d.slice(8));const tot=H.reduce((a,h)=>({on:a.on+h.on,off:a.off+h.off,k:a.k+h.kiosk}),{on:0,off:0,k:0});
+const taken=Object.values(S.slots).filter(Boolean).length,all=Object.keys(S.slots).length;
+el.innerHTML=`<div class="kpis">${kpi(T('Transactions, 30 days','Операций за 30 дней'),fmtN(tot.on+tot.off+tot.k))}${kpi(T('Online share','Доля онлайн'),pct(tot.on/(tot.on+tot.off+tot.k)*100),'','ok-t')}${kpi(T('Road-test utilisation','Загрузка экзаменов'),pct(taken/all*100))}${kpi(T('Office wait today','Ожидание сегодня'),H[H.length-1].wait+T(' min',' мин'),'','warn-t')}</div>
+<div class="grid2"><div class="card"><h3>${T('Transactions per day by channel','Операции по каналам в день')}</h3><div class="chart">${barChart({labels:lb,series:[{name:T('Online','Онлайн'),data:H.map(h=>h.on),color:'var(--mal)'},{name:T('Office','Офис'),data:H.map(h=>h.off),color:'var(--blue)'},{name:T('Kiosk','Киоск'),data:H.map(h=>h.kiosk),color:'var(--gold)'}],stacked:1})}</div><div class="legend"><span><i style="background:var(--mal)"></i>${T('Online','Онлайн')}</span><span><i style="background:var(--blue)"></i>${T('Office','Офис')}</span><span><i style="background:var(--gold)"></i>${T('Kiosk','Киоск')}</span></div></div>
+<div class="card"><h3>${T('Channel mix','Каналы')}</h3>${donut([[T('Online','Онлайн'),tot.on,'var(--mal)'],[T('Office','Офис'),tot.off,'var(--blue)'],[T('Kiosk','Киоск'),tot.k,'var(--gold)']],{center:pct(tot.on/(tot.on+tot.off+tot.k)*100),sub:T('online','онлайн')})}</div></div>
+<div class="grid2 mt"><div class="card"><h3>${T('Average office wait, min','Ожидание в офисе, мин')}</h3><div class="chart">${lineChart({labels:lb,series:[{name:T('min','мин'),data:H.map(h=>h.wait),color:'var(--amber)',area:1}],min:0,hlines:[{v:20,label:T('target 20','цель 20'),color:'var(--red)'}]})}</div></div>
+<div class="card"><h3>${T('Road-test slots taken by office','Занятость экзаменов по офисам')}</h3>${hbars(CTR.map(c=>{const ks=Object.keys(S.slots).filter(k=>k.startsWith(c[0]+'|'));return [T(c[1],c[2]),Math.round(ks.filter(k=>S.slots[k]).length/ks.length*100),'var(--blue)']}),{max:100,fmt:v=>v+'%'})}</div></div>`;
+};
+
+/* ---- boot: state, login, shell, router ---- */
+const KEY='pt_'+APP.slug+'_state';
+let S=null;
+function fresh(){const s=APP.seed();s.v=APP.ver||1;s.view=APP.views[0][0];s.user=null;s.intro=true;s.audit=s.audit||[];return s}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||S.v!==(APP.ver||1))S=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function audit(en,ru,kind){S.audit=S.audit||[];S.audit.unshift({t:Date.now(),en,ru,k:kind||'',u:S.user?S.user.name:'system'});if(S.audit.length>300)S.audit.length=300;save()}
+const auditTxt=a=>PT.lang==='ru'?a.ru:a.en;
+let lgVals=null;
+function rerender(){if(!S.user){renderLogin();return}renderShell();renderView()}
+function go(id){S.view=id;save();closeSide();renderShell();renderView();window.scrollTo(0,0)}
+function closeSide(){const s=$('#side');if(s)s.classList.remove('open')}
+function renderLogin(){
+  $('#app').hidden=true;const L=$('#login');L.hidden=false;const lg=APP.login;
+  const v=lgVals||{u:lg.user,p:lg.pass,r:(lg.roles||[[0]])[0][0]};
+  L.innerHTML=`<div class="lg-hero">
+    <div class="bigb"><b>${APP.icon}</b><div>${esc(APP.name)}<div style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0">${TT(APP.sub)}</div></div></div>
+    <h2>${TT(lg.hero)}</h2><p>${TT(lg.heroP)}</p>
+    <div class="lg-feats">${lg.feats.map(f=>`<div><b>${f[0]} ${T(f[1],f[2])}</b>${T(f[3],f[4])}</div>`).join('')}</div>
+  </div>
+  <div class="lg-form"><div class="card">
+    <h3>${T('Sign in to','Вход в')} ${esc(APP.name)}</h3><div class="muted" style="font-size:13px">${TT(lg.tag)}</div>
+    ${inp('lgU',T('User ID','Логин'),v.u,'','text','autocomplete="username"')}
+    ${inp('lgP',T('Password','Пароль'),v.p,'','password','autocomplete="current-password"')}
+    ${lg.roles?sel('lgR',T('Sign in as','Войти как'),lg.roles.map(r=>[r[0],r[1],r[2]]),v.r):''}
+    <button class="btn pri" id="lgGo" style="width:100%;justify-content:center;margin-top:16px;padding:12px">${T('Sign in','Войти')} →</button>
+    <div class="lg-demo">${T('<b>Demo access.</b> Credentials are prefilled — press <b>Sign in</b>. All data is synthetic and stays in this browser.','<b>Демо-доступ.</b> Логин и пароль уже введены — нажмите <b>Войти</b>. Все данные вымышленные и хранятся только в этом браузере.')}</div>
+    <div class="lg-sec">🔒 <span>${TT(lg.secure||['Demo environment · MFA simulated · session in local storage','Демо-среда · MFA имитируется · сессия в локальном хранилище'])}</span></div>
+  </div></div>`;
+  const keep=()=>{lgVals={u:$('#lgU').value,p:$('#lgP').value,r:$('#lgR')?$('#lgR').value:v.r}};
+  $$('input,select',L).forEach(i=>i.oninput=keep);
+  const go2=()=>{keep();if(!validate([['lgU',x=>x.length>=3,['Enter your user ID','Введите логин']],['lgP',x=>x.length>=4,['Enter the password','Введите пароль']]],L))return;
+    const role=lg.roles?lg.roles.find(r=>String(r[0])===String(lgVals.r)):null;
+    S.user={id:lgVals.u,name:lg.name,role:role?[role[1],role[2]]:lg.role,rk:role?role[0]:null};
+    if(APP.onLogin)APP.onLogin(role?role[0]:null);
+    audit('Signed in as '+lgVals.u,'Вход: '+lgVals.u,'auth');save();
+    toast(T('Welcome, ','Добро пожаловать, ')+esc(lg.name.split(' ')[0]),'ok');lgVals=null;rerender()};
+  $('#lgGo').onclick=go2;$$('input',L).forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')go2()});
+}
+function renderShell(){
+  $('#login').hidden=true;$('#app').hidden=false;const u=S.user;
+  const groups=APP.groups||[[null]];
+  $('#side').innerHTML=`<div class="brand"><b>${APP.icon}</b><div>${esc(APP.name)}<small>${TT(APP.sub)}</small></div></div>
+    ${groups.map(g=>`${g[0]!=null&&g[1]?`<div class="sec">${T(g[1],g[2])}</div>`:''}${APP.views.filter(v=>(v[4]||null)===g[0]&&(!APP.visible||APP.visible(v[0]))).map(v=>{const b=APP.badge?APP.badge(v[0]):null;return `<button class="nav ${S.view===v[0]?'on':''}" data-go="${v[0]}"><span class="ic">${v[1]}</span><span>${T(v[2],v[3])}</span>${b&&b[0]?`<span class="cnt ${b[1]?'r':''}">${b[0]}</span>`:''}</button>`}).join('')}`).join('')}
+    <div class="grow"></div>
+    ${APP.sideExtra?APP.sideExtra():''}
+    <div class="who"><div class="av">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</div><div style="min-width:0"><b>${esc(u.name)}</b><span>${TT(u.role)}</span></div></div>
+    <div class="sidebtns"><button class="btn sm" id="sOut">${T('Sign out','Выйти')}</button><button class="btn sm" id="sReset">${T('Reset demo','Сбросить демо')}</button></div>`;
+  bind($('#side'),'go',id=>go(id));
+  if(APP.bindSide)APP.bindSide($('#side'));
+  $('#sOut').onclick=()=>{audit('Signed out','Выход','auth');S.user=null;save();closeModal();rerender()};
+  $('#sReset').onclick=()=>{if(!confirmReset())return;try{Object.keys(localStorage).filter(k=>k.indexOf('pt_'+APP.slug+'_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}const u=S.user;S=fresh();S.user=u;if(APP.onLogin)APP.onLogin(u.rk);save();closeModal();rerender();toast(T('Demo data reset','Демо-данные сброшены'),'ok')};
+  const cur=APP.views.find(v=>v[0]===S.view)||APP.views[0];
+  const g=groups.find(x=>x[0]===(cur[4]||null));
+  $('#crumb').innerHTML=esc(APP.name)+(g&&g[1]?' · '+T(g[1],g[2]):'');
+  $('#title').innerHTML=T(cur[2],cur[3]);
+  $('#headx').innerHTML=APP.head?APP.head():'';
+  if(APP.bindHead)APP.bindHead($('#headx'));
+  const I=$('#intro');
+  if(S.intro){I.className='intro';I.innerHTML=`<div class="card"><h3><span>${T('How to try it','Как попробовать')}</span><span class="sp"></span><button class="btn xs" id="introX">${T('Hide','Скрыть')}</button></h3><div class="how">${APP.how.map((h,i)=>`<div><b>${i+1}</b><span>${TT(h)}</span></div>`).join('')}</div></div>
+    <div class="card"><dl class="facts">${APP.facts.map(f=>`<dt>${T(f[0],f[1])}</dt><dd>${f.length>3?T(f[2],f[3]):f[2]}</dd>`).join('')}</dl></div>`;
+    $('#introX').onclick=()=>{S.intro=false;save();renderShell()}}
+  else{I.className='intro hide';I.innerHTML=''}
+  $('#showIntro').hidden=S.intro;
+}
+let confirmReset=()=>true;
+function renderView(){
+  if(!APP.views.find(v=>v[0]===S.view))S.view=APP.views[0][0];
+  const el=$('#view');el.className='view on';el.dataset.v=S.view;
+  if(APP.leave)APP.leave();
+  try{APP.R[S.view](el)}catch(e){console.error(e);el.innerHTML='<div class="card">'+esc(e.message)+'</div>'}
+}
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+$('#showIntro').onclick=()=>{S.intro=true;save();renderShell()};
+document.addEventListener('click',e=>{const s=$('#side');if(s&&s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+let booted=false;
+PT.onLang(()=>{booted=true;rerender()});
+if(document.readyState!=='loading')setTimeout(()=>{if(!booted)rerender()},0);
+
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

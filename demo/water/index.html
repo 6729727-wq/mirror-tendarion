@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AquaTwin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;flex:none}
+.brand b svg{width:20px;height:20px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;min-height:42px}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--red);color:#fff;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.g{background:var(--gold);color:#1a1306}
+.grow{flex:1}
+.box{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.box b.h{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+.box .who{display:flex;gap:10px;align-items:center;min-width:0}
+.box .who i{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);display:grid;place-items:center;font-style:normal;font-weight:800;flex:none}
+.box .who div{min-width:0;overflow-wrap:anywhere}
+.box .who small{display:block;color:var(--muted);font-size:11.5px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.clock{font-family:var(--mono);font-size:12.5px}
+.dotl{width:8px;height:8px;border-radius:50%;background:var(--mal3);display:inline-block;box-shadow:0 0 0 0 var(--mal3);animation:pulse 1.6s infinite}
+.dotl.off{background:var(--dim);animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--mal3) 60%,transparent)}100%{box-shadow:0 0 0 9px transparent}}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card{min-width:0}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:13px;color:var(--muted);font-weight:600;margin-left:4px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.split{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;align-items:start}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{min-height:38px}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px;min-height:34px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:7px 12px;cursor:pointer;font-size:13px;font-weight:600;min-height:36px}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .er{color:var(--red);font-size:12px;min-height:0;margin-top:3px}
+.input.bad{border-color:var(--red)}
+textarea.input{resize:vertical;min-height:70px}
+select.input{min-height:42px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red);font-weight:700} .warn-t{color:var(--amber);font-weight:700}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;height:250px;overflow:auto}
+.log div{padding:3px 0;display:flex;gap:8px;border-bottom:1px dashed var(--line)}
+.log .t{color:var(--dim);flex:none}
+.log .bad{color:var(--red)} .log .warn{color:var(--amber)} .log .ok{color:var(--mal3)}
+.chart canvas{width:100%;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:28px 16px;background:radial-gradient(900px 420px at 15% -10%,color-mix(in srgb,var(--mal) 16%,transparent),transparent),radial-gradient(700px 380px at 100% 110%,color-mix(in srgb,var(--blue) 12%,transparent),transparent),var(--bg)}
+.lwrap{width:100%;max-width:960px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:stretch}
+.lhero{padding:26px;display:flex;flex-direction:column;gap:14px;background:linear-gradient(160deg,color-mix(in srgb,var(--mal) 16%,var(--panel)),var(--panel))}
+.lhero h2{margin:0;font-size:28px;letter-spacing:-.02em;line-height:1.15}
+.lhero p{margin:0;color:var(--muted);font-size:14px}
+.lhero svg{width:100%;height:auto;display:block}
+.lstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lstats div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:11.5px;color:var(--muted)}
+.lstats b{display:block;font-size:17px;color:var(--text)}
+.lform{padding:24px;display:flex;flex-direction:column;gap:12px}
+.lform h3{margin:0;font-size:19px}
+.hint{font-size:12px;color:var(--muted);background:var(--bg2);border:1px dashed var(--line2);border-radius:10px;padding:8px 10px}
+#loginBtn{justify-content:center;width:100%;min-height:46px;font-size:15px}
+/* network */
+.net{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg2)}
+.net svg{display:block;width:100%;min-width:540px;height:auto}
+.pipe-bg{fill:none;stroke:var(--line2);stroke-linecap:round;stroke-linejoin:round}
+.pipe{fill:none;stroke:var(--mal2);stroke-linecap:round;stroke-linejoin:round;transition:stroke-width .5s}
+.pipe.hi{stroke:var(--blue)} .pipe.leak{stroke:var(--red)} .pipe.idle{stroke:var(--line2)}
+.flowd{fill:none;stroke:var(--mal3);stroke-width:2.2;stroke-dasharray:5 15;stroke-linecap:round;animation:flow 1.2s linear infinite;pointer-events:none}
+.flowd.idle{opacity:0}
+@keyframes flow{to{stroke-dashoffset:-20}}
+.hit{fill:none;stroke:transparent;stroke-width:22;cursor:pointer}
+.ng{cursor:pointer}
+.ng.sel .halo{stroke:var(--gold);stroke-width:3}
+.pg.sel .pipe-bg{stroke:var(--gold)}
+.halo{fill:none;stroke:transparent}
+.nd{fill:var(--panel);stroke:var(--mal);stroke-width:3}
+.nd.warn{stroke:var(--amber);fill:color-mix(in srgb,var(--amber) 22%,var(--panel))}
+.nd.bad{stroke:var(--red);fill:color-mix(in srgb,var(--red) 25%,var(--panel))}
+.nd.off{stroke:var(--dim)}
+.tk{fill:var(--panel);stroke:var(--blue);stroke-width:2.5}
+.tkf{fill:color-mix(in srgb,var(--blue) 55%,transparent)}
+.lbl{fill:var(--text);font:600 12.5px var(--font);paint-order:stroke;stroke:var(--bg2);stroke-width:4px;stroke-linejoin:round}
+.val{fill:var(--mal3);font:700 12px var(--mono);paint-order:stroke;stroke:var(--bg2);stroke-width:4px}
+.val.warn{fill:var(--amber)} .val.bad{fill:var(--red)}
+.fl{fill:var(--muted);font:600 11px var(--mono);paint-order:stroke;stroke:var(--bg2);stroke-width:4px}
+.vlv{fill:var(--panel);stroke:var(--muted);stroke-width:2}
+.vlv.open{fill:var(--mal);stroke:var(--mal)}
+.vline{stroke:var(--line2);stroke-width:3;stroke-dasharray:4 6;fill:none}
+.vline.open{stroke:var(--mal);stroke-dasharray:none}
+.icon{fill:none;stroke:var(--text);stroke-width:1.8}
+.facts2{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;font-size:13px;margin:0 0 12px}
+.facts2 dt{color:var(--muted)} .facts2 dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+/* tanks */
+.tank{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:start}
+.tank svg{width:96px;height:auto;display:block}
+.tank .st{font-size:13px}
+.tank .st div{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed var(--line)}
+.tank .st span{color:var(--muted)}
+.mini{display:flex;flex-direction:column;gap:10px}
+.mini .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;font-size:13px}
+.bar{grid-column:1/-1;height:9px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--blue),var(--mal3));transition:width .5s}
+.bar i.warn{background:var(--amber)} .bar i.bad{background:var(--red)}
+.ctl{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.sp2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr)) auto;gap:8px;align-items:end}
+/* alerts */
+.alert{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)}
+.alert.new{border-color:color-mix(in srgb,var(--red) 55%,transparent)}
+.alert .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.alert .top b{flex:1;min-width:150px}
+.alert .meta{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12.5px;color:var(--muted);margin-top:6px}
+.alert .meta strong{color:var(--text)}
+.tl{display:flex;margin:12px 0 10px}
+.tl div{flex:1;position:relative;text-align:center;font-size:11px;color:var(--dim);min-width:0}
+.tl div:before{content:"";position:absolute;top:6px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.tl div:first-child:before{display:none}
+.tl i{display:block;width:14px;height:14px;border-radius:50%;margin:0 auto 4px;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1}
+.tl .ok i{background:var(--mal);border-color:var(--mal)} .tl .ok:before,.tl .cur:before{background:var(--mal)}
+.tl .cur i{border-color:var(--gold);background:var(--gold)} .tl .ok,.tl .cur{color:var(--text)}
+.tl span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:13.5px}
+.svgc svg{width:100%;height:auto;display:block}
+/* quality */
+.qgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.qc{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--panel);cursor:pointer;text-align:left;width:100%;display:block}
+.qc.on{border-color:var(--mal);box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 18%,transparent)}
+.qc.badq{border-color:color-mix(in srgb,var(--red) 60%,transparent)}
+.qc .nm{display:flex;gap:8px;align-items:center;justify-content:space-between;font-weight:700;font-size:13.5px}
+.qc .nm span{min-width:0;overflow-wrap:anywhere}
+.qc .zn{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.qv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.qv div{background:var(--bg2);border-radius:9px;padding:6px 7px;font-size:10.5px;color:var(--muted);min-width:0}
+.qv b{display:block;font-family:var(--mono);font-size:14px;color:var(--text)}
+.qv b.bad-t{color:var(--red)} .qv b.warn-t{color:var(--amber)}
+.scrim{display:none}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.split,.intro,.lwrap{grid-template-columns:minmax(0,1fr)}.qgrid,.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .scrim.on{display:block;position:fixed;inset:45px 0 0 0;background:rgba(0,0,0,.35);z-index:1400}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .lhero{display:none}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.opts,.qgrid,.grid3,.sp2{grid-template-columns:minmax(0,1fr)}.kpi .v{font-size:20px}.kpis{gap:10px}.tl span{font-size:9.5px}.card{padding:14px}.tank{grid-template-columns:72px minmax(0,1fr)}.tank svg{width:72px}.lform{padding:18px}}
+</style>
+</head>
+<body data-demo-en="AquaTwin — Water utility digital twin &amp; SCADA" data-demo-ru="AquaTwin — Цифровой двойник водоканала и SCADA">
+
+<div class="login" id="login">
+  <div class="lwrap">
+    <div class="card lhero">
+      <div class="brand" style="padding:0"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.5c3.5 4.4 6.5 8 6.5 11.5a6.5 6.5 0 0 1-13 0c0-3.5 3-7.1 6.5-11.5z"/><path d="M8.5 14.5a3.5 3.5 0 0 0 3.5 3.5"/></svg></b><div>AquaTwin<small data-en="Port Meridal Water Board" data-ru="Водоканал Порт-Меридаля"></small></div></div>
+      <h2 data-en="One live twin of the whole water network" data-ru="Живой цифровой двойник всей водопроводной сети"></h2>
+      <p data-en="SCADA telemetry and a calibrated hydraulic model in one control room: pressures and flows, leak alerts, reservoir levels, field work orders and water quality." data-ru="Телеметрия SCADA и откалиброванная гидравлическая модель в одной диспетчерской: давление и расходы, сигналы утечек, уровни резервуаров, наряды бригадам и качество воды."></p>
+      <svg viewBox="0 0 400 120" aria-hidden="true"><path d="M10 90 C60 40 110 100 160 60 S260 20 300 60 S370 90 390 40" fill="none" style="stroke:var(--mal3)" stroke-width="3"/><path d="M10 100 C70 80 120 110 180 85 S280 70 330 90 S380 100 390 80" fill="none" style="stroke:var(--gold)" stroke-width="2" stroke-dasharray="6 6"/><g style="fill:var(--panel);stroke:var(--mal)" stroke-width="3"><circle cx="160" cy="60" r="7"/><circle cx="300" cy="60" r="7"/><circle cx="60" cy="62" r="7"/></g></svg>
+      <div class="lstats"><div><b>1,840 km</b><span data-en="mains modelled" data-ru="сетей в модели"></span></div><div><b>6</b><span data-en="DMAs metered" data-ru="зон учёта"></span></div><div><b>2 s</b><span data-en="telemetry scan" data-ru="опрос телеметрии"></span></div></div>
+    </div>
+    <div class="card lform">
+      <h3 data-en="Sign in to the control room" data-ru="Вход в диспетчерскую"></h3>
+      <div class="f"><label for="lu" data-en="Username" data-ru="Имя пользователя"></label><input class="input" id="lu" value="k.varela" autocomplete="username"></div>
+      <div class="f"><label for="lp" data-en="Password" data-ru="Пароль"></label><input class="input" id="lp" type="password" value="demo-2025" autocomplete="current-password"></div>
+      <div class="f"><label data-en="Role" data-ru="Роль"></label>
+        <div class="opts" id="roles">
+          <button class="opt on" data-role="ops" type="button"><b data-en="Control room" data-ru="Диспетчер"></b><span data-en="Full SCADA control" data-ru="Полное управление SCADA"></span></button>
+          <button class="opt" data-role="field" type="button"><b data-en="Field engineer" data-ru="Инженер бригады"></b><span data-en="Work orders, view-only SCADA" data-ru="Наряды, SCADA только просмотр"></span></button>
+        </div></div>
+      <div class="er bad-t" id="lerr" style="font-size:13px"></div>
+      <button class="btn pri" id="loginBtn" type="button" data-en="Sign in" data-ru="Войти"></button>
+      <div class="hint" data-en="Demo credentials are prefilled. Single sign-on and hardware tokens are enabled in production." data-ru="Демо-данные уже заполнены. В рабочей версии — единый вход и аппаратные токены."></div>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.5c3.5 4.4 6.5 8 6.5 11.5a6.5 6.5 0 0 1-13 0c0-3.5 3-7.1 6.5-11.5z"/><path d="M8.5 14.5a3.5 3.5 0 0 0 3.5 3.5"/></svg></b><div>AquaTwin<small data-en="Port Meridal Water Board" data-ru="Водоканал Порт-Меридаля"></small></div></div>
+    <div class="sec" data-en="Operations" data-ru="Эксплуатация"></div>
+    <div id="navA"></div>
+    <div class="sec" data-en="Field &amp; compliance" data-ru="Бригады и контроль"></div>
+    <div id="navB"></div>
+    <div class="grow"></div>
+    <div class="box">
+      <b class="h" data-en="Simulation" data-ru="Симуляция"></b>
+      <div class="row"><span class="dotl" id="simDot"></span><span class="clock" id="simClock"></span></div>
+      <button class="btn sm" id="pauseBtn" style="justify-content:center"></button>
+    </div>
+    <div class="box">
+      <div class="who"><i id="uIni">K</i><div><b id="uName"></b><small id="uRole"></small></div></div>
+      <button class="btn sm" id="logout" style="justify-content:center" data-en="Log out" data-ru="Выйти"></button>
+    </div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill ok"><span class="dotl" id="hdDot"></span><span class="clock" id="hdClock"></span></span>
+      <span class="pill gold" id="rolePill"></span>
+    </div>
+    <section class="view" id="v-overview">
+      <div class="intro">
+        <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+          <div class="how">
+            <div><b>1</b><span data-en="Watch live pressures and flows on the <b>Network</b> schematic. Click a pipe and inject a training burst." data-ru="Смотрите живое давление и расходы на <b>схеме сети</b>. Нажмите на трубу и создайте учебный порыв."></span></div>
+            <div><b>2</b><span data-en="In <b>Leak alerts</b> acknowledge an alert and dispatch a crew — a work order is created automatically." data-ru="В разделе <b>Утечки</b> подтвердите сигнал и отправьте бригаду — наряд создастся сам."></span></div>
+            <div><b>3</b><span data-en="Close the order in <b>Work orders</b>, tune <b>Reservoir</b> setpoints, log a lab sample in <b>Water quality</b>." data-ru="Закройте наряд в <b>Нарядах</b>, настройте уставки <b>резервуаров</b>, внесите пробу в <b>Качестве воды</b>."></span></div>
+          </div></div>
+        <div class="card"><dl class="facts">
+          <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Water utility digital twin &amp; SCADA" data-ru="Цифровой двойник водоканала и SCADA"></dd>
+          <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $85M</dd>
+          <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Port Meridal Water Board, Republic of Calvessa (fictional)" data-ru="Водоканал Порт-Меридаля, Республика Кальвесса (вымышл.)"></dd>
+          <dt data-en="Stack" data-ru="Стек"></dt><dd>SCADA · hydraulic model</dd>
+        </dl></div>
+      </div>
+      <div id="ovDyn"></div>
+    </section>
+    <section class="view" id="v-network"></section>
+    <section class="view" id="v-leaks"></section>
+    <section class="view" id="v-res"></section>
+    <section class="view" id="v-wo"></section>
+    <section class="view" id="v-quality"></section>
+  </main>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const nf=(v,d=0)=>Number(v).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const U={ls:()=>T('L/s','л/с'),bar:()=>T('bar','бар'),m:()=>T('m','м'),mgl:()=>T('mg/L','мг/л'),us:()=>T('µS/cm','мкСм/см')};
+const PFX='pt_water_', KEY=PFX+'state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),4200)}
+const fmtT=t=>T('Day ','День ')+(Math.floor(t/1440)+1)+' · '+pad(Math.floor(t%1440/60))+':'+pad(t%60);
+const hm=t=>pad(Math.floor(t%1440/60))+':'+pad(t%60);
+
+/* ---------- network model ---------- */
+const NODES={
+ SRC:{t:'src',x:70,y:290,n:['Kessel Lake intake','Водозабор «Кессель»','Kessel Lake','Кессель']},
+ WTP:{t:'wtp',x:200,y:290,n:['Meridal treatment plant','Очистная станция «Меридаль»','Treatment','Очистка']},
+ PS1:{t:'ps',x:340,y:290,n:['Lowgate pumping station','Насосная станция «Лоугейт»','Lowgate PS','НС «Лоугейт»']},
+ T1:{t:'tank',x:530,y:100,el:62,n:['Hilltop reservoir','Резервуар «Холм»','Hilltop','Холм']},
+ T2:{t:'tank',x:540,y:290,el:48,n:['Eastgate reservoir','Резервуар «Истгейт»','Eastgate','Истгейт']},
+ T3:{t:'tank',x:530,y:470,el:55,n:['Southmere reservoir','Резервуар «Саутмир»','Southmere','Саутмир']},
+ J1:{t:'j',x:710,y:80,el:18,n:['Old Town DMA','Зона «Старый город»','Old Town','Старый город']},
+ J2:{t:'j',x:890,y:120,el:30,n:['Northfield DMA','Зона «Нортфилд»','Northfield','Нортфилд']},
+ J3:{t:'j',x:730,y:265,el:6,n:['Harbour DMA','Зона «Гавань»','Harbour','Гавань']},
+ J4:{t:'j',x:895,y:300,el:12,n:['Riverside DMA','Зона «Набережная»','Riverside','Набережная']},
+ J5:{t:'j',x:715,y:470,el:15,n:['Mill Quarter DMA','Зона «Мельничный квартал»','Mill Quarter','Мельничный кв.']},
+ J6:{t:'j',x:890,y:445,el:22,n:['Airport Road DMA','Зона «Аэропортовая»','Airport Rd','Аэропортовая']}
+};
+const VALVES={V1:{a:'J2',b:'J4',n:['Interconnect valve V-12','Перемычка, задвижка V-12','V-12','V-12']},V2:{a:'J4',b:'J6',n:['Interconnect valve V-27','Перемычка, задвижка V-27','V-27','V-27']}};
+const MATS=[['Steel','Сталь'],['Ductile iron','Высокопрочный чугун'],['PVC','ПВХ'],['PE100','ПЭ100'],['Asbestos cement','Асбестоцемент']];
+const PIPES=[['P0','SRC','WTP',900,2400,0,0,1968],['P1','WTP','PS1',900,1800,0,0,1968],['PA','PS1','T1',500,3200,1,0,1984],['PB','PS1','T2',500,2100,1,0,1991],['PC','PS1','T3',450,2900,1,0,1979],
+ ['P1a','T1','J1',400,1600,1,.00011,1972],['P1b','J1','J2',300,1900,2,.00022,1996],['P2a','T2','J3',400,1400,1,.0001,1988],['P2b','J3','J4',300,1700,3,.0002,2011],['P3a','T3','J5',355,1500,1,.00014,1981],['P3b','J5','J6',250,2200,4,.0003,1964]];
+const PI=Object.fromEntries(PIPES.map(p=>[p[0],p]));
+const DIST=['P1a','P1b','P2a','P2b','P3a','P3b'];
+const LINES={T1:{pump:'A',pipe:'PA',seg:['P1a','P1b'],j:['J1','J2'],crew:0},T2:{pump:'B',pipe:'PB',seg:['P2a','P2b'],j:['J3','J4'],crew:1},T3:{pump:'C',pipe:'PC',seg:['P3a','P3b'],j:['J5','J6'],crew:2}};
+const BASE={J1:38,J2:26,J3:44,J4:30,J5:34,J6:22};
+const zoneOf=p=>Object.keys(LINES).find(t=>LINES[t].seg.includes(p));
+const pipeName=id=>{const p=PI[id];return id+' · '+L(NODES[p[1]].n.slice(2))+' → '+L(NODES[p[2]].n.slice(2))};
+const assetName=id=>NODES[id]?L(NODES[id].n):VALVES[id]?L(VALVES[id].n):PI[id]?pipeName(id):id;
+const PUMPN={A:['Pump A → Hilltop','Насос A → Холм'],B:['Pump B → Eastgate','Насос B → Истгейт'],C:['Pump C → Southmere','Насос C → Саутмир']};
+
+const KINDS=[['Pressure drop with flow rise','Падение давления и рост расхода'],['Night-flow anomaly','Аномалия ночного расхода'],['Acoustic logger noise','Шум акустического логгера']];
+const AST={new:['Detected','Обнаружено'],ack:['Acknowledged','Подтверждено'],disp:['Crew dispatched','Бригада выехала'],fixed:['Repaired','Устранено'],dism:['Dismissed','Отклонено']};
+const WTYPES={leak:['Leak repair','Ремонт утечки'],valve:['Valve exercise','Проверка задвижки'],flush:['Mains flushing','Промывка сети'],pump:['Pump maintenance','Обслуживание насоса'],meter:['Meter replacement','Замена счётчика'],sample:['Water resampling','Повторный отбор проб']};
+const WST={open:['Open','Открыт'],assigned:['Assigned','Назначен'],progress:['In progress','В работе'],done:['Completed','Выполнен'],cancelled:['Cancelled','Отменён']};
+const PRI={high:['High','Высокий'],med:['Medium','Средний'],low:['Low','Низкий']};
+const CREWS=[['Crew N1 · Northfield','Бригада С1 · Нортфилд'],['Crew H2 · Harbour','Бригада Г2 · Гавань'],['Crew M3 · Trunk mains','Бригада М3 · магистрали'],['Crew Q4 · Quality & meters','Бригада К4 · качество и учёт']];
+const QP=[['QP1',['Treatment plant outlet','Выход очистной станции'],'WTP',1.15,.12,7.4,410],['QP2',['Hilltop reservoir outlet','Выход резервуара «Холм»'],'T1',.85,.18,7.5,420],['QP3',['Eastgate reservoir outlet','Выход резервуара «Истгейт»'],'T2',.8,.2,7.45,428],
+ ['QP4',['Harbour hydrant H-41','Гидрант H-41, Гавань'],'J3',.56,.3,7.6,446],['QP5',['Mill Quarter school tap','Кран школы, Мельничный кв.'],'J5',.47,.28,7.55,440],['QP6',['Airport Rd end-of-line','Конец линии, Аэропортовая'],'J6',.27,.34,7.7,455]];
+const PARAMS=[['cl',['Free chlorine','Свободный хлор'],'mgl',.2,2,2],['tu',['Turbidity','Мутность'],'ntu',0,1,2],['ph',['pH','pH'],'',6.5,8.5,2],['ec',['Conductivity','Электропроводность'],'us',0,1000,0]];
+const unitOf=k=>k==='mgl'?U.mgl():k==='us'?U.us():k==='ntu'?'NTU':'';
+const qBad=(k,v)=>{const p=PARAMS.find(x=>x[0]===k);return v<p[3]||v>p[4]};
+const qWarn=(k,v)=>{const p=PARAMS.find(x=>x[0]===k);const r=p[4]-p[3];return v<p[3]+r*.06||v>p[4]-r*.08};
+
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let R=rng(20251117);
+const diurnal=h=>.42+.4*Math.exp(-((h-7.5)**2)/3)+.44*Math.exp(-((h-19.5)**2)/4.5)+.14*Math.exp(-((h-13)**2)/6);
+
+function calc(){
+  const h=(S.t%1440)/60, f=diurnal(h), d={}, q={}, p={}, out={}, lk={};
+  for(const j in BASE) d[j]=BASE[j]*f*S.noise[j];
+  S.leaks.forEach(l=>lk[l.pipe]=(lk[l.pipe]||0)+l.rate);
+  for(const t in LINES){const Ln=LINES[t],[pa,pb]=Ln.seg,[ja,jb]=Ln.j,tank=S.tanks[t];
+    q[pb]=d[jb]+(lk[pb]||0); q[pa]=d[ja]+q[pb]+(lk[pa]||0);
+    const head=NODES[t].el+tank.lvl;
+    p[ja]=(head-NODES[ja].el)/10.2-PI[pa][6]*q[pa]**2-(lk[pa]||0)*.04;
+    p[jb]=p[ja]+(NODES[ja].el-NODES[jb].el)/10.2-PI[pb][6]*q[pb]**2-((lk[pb]||0)+(lk[pa]||0)*.4)*.045;
+    out[t]=q[pa]; q[Ln.pipe]=S.pumps[Ln.pump].on?S.pumps[Ln.pump].rate*(0.97+0.03*S.noise.J1):0;}
+  q.P1=q.PA+q.PB+q.PC; q.P0=Math.max(q.P1,.6*(q.P1+(out.T1+out.T2+out.T3)));
+  for(const v in VALVES){const V=VALVES[v];if(S.valves[v]){const dd=p[V.a]-p[V.b];q[v]=Math.abs(dd)*14;const m=(p[V.a]+p[V.b])/2;p[V.a]=m+dd*.15;p[V.b]=m-dd*.15}else q[v]=0}
+  const demand=Object.values(d).reduce((a,b)=>a+b,0), leakSum=Object.values(lk).reduce((a,b)=>a+b,0);
+  const ps=Object.values(p);
+  return{f,d,q,p,out,lk,demand,leakSum,avgP:ps.reduce((a,b)=>a+b,0)/ps.length,minJ:Object.keys(p).sort((a,b)=>p[a]-p[b])[0],nrw:(leakSum+.07*demand)/(demand+leakSum)*100};
+}
+
+/* ---------- state ---------- */
+function seed(){
+  R=rng(20251117);
+  const s={v:1,auth:false,role:'ops',user:'',view:'overview',t:5*60,paused:false,
+    noise:{J1:1,J2:1,J3:1,J4:1,J5:1,J6:1},
+    tanks:{T1:{lvl:4.1,max:6,lo:2.2,hi:5.4,area:400,h:[]},T2:{lvl:3.4,max:6.5,lo:2.4,hi:5.8,area:420,h:[]},T3:{lvl:2.9,max:5.5,lo:2,hi:5,area:380,h:[]}},
+    pumps:{A:{on:true,auto:true,rate:120},B:{on:false,auto:true,rate:135},C:{on:true,auto:true,rate:105}},
+    valves:{V1:false,V2:false},
+    leaks:[{id:'L1',pipe:'P2b',rate:9.5,age:40,delay:3,alerted:true},{id:'L2',pipe:'P3b',rate:13.8,age:12,delay:4,alerted:true},{id:'L3',pipe:'P1a',rate:4.2,age:0,delay:999,alerted:false}],
+    alerts:[],wos:[],lab:[],ev:[],dh:[],sel:'J3',wf:'all',af:'active',qsel:'QP6',qpar:'cl',nextA:4103,nextW:3384,nextL:1046,nextLeak:4,
+    qp:QP.map(q=>({id:q[0],cl:q[3],tu:q[4],ph:q[5],ec:q[6],h:{cl:[],tu:[],ph:[],ec:[]},bad:{}}))};
+  s.alerts=[
+    {id:'LA-4100',pipe:'P1b',leak:null,kind:2,loss:6.1,conf:71,st:'fixed',t:-600,det:20,wo:'WO-3380'},
+    {id:'LA-4101',pipe:'P2b',leak:'L1',kind:1,loss:9.1,conf:88,st:'ack',t:170,det:15,wo:null},
+    {id:'LA-4102',pipe:'P3b',leak:'L2',kind:0,loss:14.6,conf:93,st:'new',t:290,det:20,wo:null}];
+  const W=(id,type,asset,pri,crew,st,t,note,alert)=>({id,type,asset,pri,crew,st,t,note,alert:alert||null});
+  s.wos=[W('WO-3376','valve','V1','low',2,'done',-1500,'Annual exercise of interconnect valve, 22 turns, no passing.'),
+    W('WO-3377','meter','J4','med',3,'progress',-900,'Replace DMA inlet meter MAG-8 (drift +4.2%).'),
+    W('WO-3378','pump','PS1','med',2,'assigned',-700,'Pump B bearing temperature trend, inspect and grease.'),
+    W('WO-3379','flush','J6','high',3,'open',-300,'Unidirectional flushing, end-of-line chlorine below 0.3 mg/L.'),
+    W('WO-3380','leak','P1b','high',0,'done',-580,'Joint failure at Brook St, clamp fitted.','LA-4100'),
+    W('WO-3381','sample','J3','low',null,'open',-120,'Resample hydrant H-41 after customer complaint (taste).')];
+  const labs=[['QP1',.98,.11,7.38,412,'R. Duarte'],['QP4',.52,.41,7.62,448,'M. Okafor'],['QP6',.24,.37,7.71,457,'M. Okafor'],['QP3',.79,.19,7.44,430,'R. Duarte'],['QP5',.44,1.18,7.58,441,'L. Brandt']];
+  s.lab=labs.map((x,i)=>({id:'LS-'+(1041-i),pt:x[0],t:-60-i*180,cl:x[1],tu:x[2],ph:x[3],ec:x[4],by:x[5]}));
+  return s;
+}
+let S=store.load(), H;
+const save=()=>store.save();
+function addEv(en,ru,c){S.ev.unshift({t:S.t,en,ru,c:c||''});S.ev.length=Math.min(S.ev.length,60)}
+
+function step(silent){
+  S.t+=5;
+  for(const j in S.noise) S.noise[j]=clamp(S.noise[j]+(R()-.5)*.05+(1-S.noise[j])*.1,.88,1.12);
+  H=calc();
+  for(const t in LINES){const tk=S.tanks[t],pm=S.pumps[LINES[t].pump];
+    const net=(H.q[LINES[t].pipe]-H.out[t]); const was=tk.lvl;
+    tk.lvl=clamp(tk.lvl+net*300/(tk.area*1000),0.1,tk.max);
+    if(pm.auto){if(tk.lvl<=tk.lo&&!pm.on){pm.on=true;if(!silent)addEv(PUMPN[LINES[t].pump][0]+' started (low setpoint)',PUMPN[LINES[t].pump][1]+' включён (нижняя уставка)','ok')}
+      if(tk.lvl>=tk.hi&&pm.on){pm.on=false;if(!silent)addEv(PUMPN[LINES[t].pump][0]+' stopped (high setpoint)',PUMPN[LINES[t].pump][1]+' остановлен (верхняя уставка)','')}}
+    if(tk.lvl<tk.lo-0.6&&was>=tk.lo-0.6&&!silent){addEv(NODES[t].n[0]+' level critically low',NODES[t].n[1]+': критически низкий уровень','bad');toast('⚠ '+T(NODES[t].n[0]+' level critically low',NODES[t].n[1]+': критически низкий уровень'),'bad')}
+    tk.h.push(+tk.lvl.toFixed(3)); if(tk.h.length>72) tk.h.shift();}
+  H=calc();
+  S.dh.push([S.t,+(H.demand+H.leakSum).toFixed(1),+H.q.P0.toFixed(1)]); if(S.dh.length>72) S.dh.shift();
+  // leaks
+  if(!silent&&R()<.03&&S.leaks.filter(l=>l.rate>0).length<3){const free=DIST.filter(p=>!S.leaks.some(l=>l.pipe===p));
+    if(free.length){const p=free[Math.floor(R()*free.length)];S.leaks.push({id:'L'+(S.nextLeak++),pipe:p,rate:+(5+R()*13).toFixed(1),age:0,delay:2+Math.floor(R()*4),alerted:false})}}
+  S.leaks.forEach(l=>{l.age++;if(!l.alerted&&l.age>=l.delay&&!silent)raise(l,null)});
+  // quality
+  S.qp.forEach((q,i)=>{const b=QP[i],z=NODES[b[2]]?b[2]:'J1';const lz=S.leaks.some(l=>{const zz=zoneOf(l.pipe);return zz&&(LINES[zz].j.includes(b[2])||zz===b[2])});
+    q.cl=clamp(q.cl+(b[3]-q.cl)*.12+(R()-.5)*.05,0,3); q.tu=clamp(q.tu+(b[4]+(lz?.38:0)-q.tu)*.15+(R()-.5)*.05,.02,5);
+    q.ph=clamp(q.ph+(b[5]-q.ph)*.15+(R()-.5)*.04,6,9); q.ec=clamp(q.ec+(b[6]-q.ec)*.15+(R()-.5)*8,200,1200);
+    PARAMS.forEach(p=>{const k=p[0];q.h[k].push(+q[k].toFixed(3));if(q.h[k].length>48)q.h[k].shift();
+      const bad=qBad(k,q[k]);if(bad&&!q.bad[k]&&!silent){addEv(b[1][0]+': '+p[1][0]+' out of limit ('+q[k].toFixed(p[5])+')',b[1][1]+': '+p[1][1]+' вне нормы ('+q[k].toFixed(p[5])+')','warn');toast('💧 '+T(b[1][0]+': '+p[1][0].toLowerCase()+' out of limit',b[1][1]+': '+p[1][1].toLowerCase()+' вне нормы'),'gold')}
+      q.bad[k]=bad})});
+  // low pressure
+  for(const j in H.p){if(H.p[j]<1.5&&!S.lowP?.[j]&&!silent){addEv(NODES[j].n[0]+' pressure below 1.5 bar',NODES[j].n[1]+': давление ниже 1,5 бар','bad')}S.lowP=S.lowP||{};S.lowP[j]=H.p[j]<1.5}
+}
+function raise(l,kind){
+  l.alerted=true;const k=kind!=null?kind:(l.rate>10?0:(S.t%1440<300?1:Math.floor(R()*3)));
+  const a={id:'LA-'+(S.nextA++),pipe:l.pipe,leak:l.id,kind:k,loss:+(l.rate*(0.85+R()*.3)).toFixed(1),conf:Math.round(70+R()*27),st:'new',t:S.t,det:l.age*5,wo:null};
+  S.alerts.unshift(a);
+  const dn=NODES[PI[l.pipe][2]].n;
+  addEv('Leak alert '+a.id+' on '+l.pipe+' ('+dn[0]+'), ~'+a.loss+' L/s','Сигнал утечки '+a.id+' на '+l.pipe+' ('+dn[1]+'), ~'+a.loss+' л/с','bad');
+  toast('🚨 '+T('Leak alert ','Сигнал утечки ')+a.id+' · '+esc(L(dn))+' · ~'+nf(a.loss,1)+' '+U.ls(),'bad');
+}
+if(!S||S.v!==1){S=seed();for(let i=0;i<72;i++)step(true);
+  S.ev=[];[[-200,'Shift handover: 3 open alarms, 4 crews on duty','Пересменка: 3 открытых сигнала, 4 бригады на смене',''],[-120,'Hydraulic model recalibrated against 412 SCADA tags (R² 0.97)','Гидравлическая модель откалибрована по 412 тегам SCADA (R² 0,97)','ok'],[-60,'Leak alert LA-4102 on P3b (Airport Road DMA)','Сигнал утечки LA-4102 на P3b (зона «Аэропортовая»)','bad'],[-20,'Lab sample LS-1037: turbidity 1.18 NTU at Mill Quarter','Проба LS-1037: мутность 1,18 NTU, Мельничный кв.','warn']]
+   .forEach(e=>S.ev.push({t:S.t+e[0],en:e[1],ru:e[2],c:e[3]}));S.ev.reverse();
+  S.alerts.forEach(a=>{if(a.t>0)a.t=S.t-(a.id==='LA-4101'?150:60)});S.wos.forEach(w=>w.t=S.t+w.t);S.lab.forEach(x=>x.t=S.t+x.t);save()}
+R=rng(Date.now()%100000);
+H=calc();
+
+/* ---------- shell ---------- */
+const VIEWS=[['overview','◉','Overview','Обзор','A'],['network','⌘','Network schematic','Схема сети','A'],['leaks','🚨','Leak alerts','Утечки','A'],['res','◫','Reservoirs','Резервуары','A'],['wo','🛠','Work orders','Наряды','B'],['quality','💧','Water quality','Качество воды','B']];
+const canCtl=()=>S.role==='ops';
+let navSig='';
+function nav(force){
+  const na=S.alerts.filter(a=>a.st==='new').length, nw=S.wos.filter(w=>w.st==='open').length;
+  const sig=S.view+na+'/'+nw+PT.lang; if(sig===navSig&&!force)return; navSig=sig;
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';if(v[0]==='leaks'&&na)x=`<span class="cnt">${na}</span>`;if(v[0]==='wo'&&nw)x=`<span class="cnt g">${nw}</span>`;
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-view="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navA').innerHTML=mk('A');$('#navB').innerHTML=mk('B');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.view));
+}
+function go(v){S.view=v;save();closeSide();render();window.scrollTo({top:0})}
+function closeSide(){$('#side').classList.remove('open');$('#scrim').classList.remove('on')}
+function shell(){
+  const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);
+  $('#crumb').textContent=T('Port Meridal Water Board · ','Водоканал Порт-Меридаля · ')+(v[4]==='A'?T('Control room','Диспетчерская'):T('Field & compliance','Бригады и контроль'));
+  $('#rolePill').textContent=S.role==='ops'?T('Control room','Диспетчер'):T('Field engineer · view-only SCADA','Инженер бригады · SCADA просмотр');
+  $('#uName').textContent=S.user;$('#uIni').textContent=(S.user||'?')[0].toUpperCase();
+  $('#uRole').textContent=S.role==='ops'?T('Control room operator','Оператор диспетчерской'):T('Field engineer','Инженер бригады');
+  clock();
+}
+function clock(){$('#simClock').textContent=fmtT(S.t);$('#hdClock').textContent=fmtT(S.t);
+  $('#pauseBtn').textContent=S.paused?T('▶ Resume telemetry','▶ Продолжить'):T('❚❚ Pause telemetry','❚❚ Пауза');
+  $('#simDot').classList.toggle('off',S.paused);$('#hdDot').classList.toggle('off',S.paused)}
+function render(){
+  nav(true);shell();
+  $$('.view').forEach(s=>{const on=s.id==='v-'+S.view;s.classList.toggle('on',on);if(!on){if(s.id==='v-overview')$('#ovDyn').innerHTML='';else s.innerHTML=''}});
+  ({overview:rOverview,network:rNetwork,leaks:rLeaks,res:rRes,wo:rWo,quality:rQuality}[S.view]||rOverview)();
+}
+function live(){
+  nav();clock();
+  if(S.view==='overview')ovLive();else if(S.view==='network')netLive();else if(S.view==='leaks')lkLive();else if(S.view==='res')resLive();else if(S.view==='quality')qLive();else if(S.view==='wo')woKpis();
+}
+
+/* ---------- charts ---------- */
+function lineCanvas(cv,series,o){
+  if(!cv)return;const w=cv.clientWidth||600,h=o.h||220,dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);cv.style.height=h+'px';
+  const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);
+  const pl=42,pr=10,pt=10,pb=24,W=w-pl-pr,Hh=h-pt-pb;
+  let all=series.flatMap(s=>s.v);let mn=o.min!=null?o.min:Math.min(...all),mx=o.max!=null?o.max:Math.max(...all);
+  if(o.min==null){const pd=(mx-mn)*.12||1;mn=Math.max(0,mn-pd);mx+=pd}
+  const n=Math.max(2,series[0].v.length),X=i=>pl+i*W/(n-1),Y=v=>pt+Hh-(v-mn)/(mx-mn)*Hh;
+  c.font='11px '+(cssv('--mono')||'monospace');c.lineWidth=1;
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);c.strokeStyle=cssv('--line');c.beginPath();c.moveTo(pl,y);c.lineTo(w-pr,y);c.stroke();c.fillStyle=cssv('--dim');c.textAlign='right';c.fillText(v.toFixed(o.dec||0),pl-6,y+4)}
+  if(o.xl){c.textAlign='center';c.fillStyle=cssv('--dim');const k=Math.max(1,Math.floor(n/(w<420?3:6)));for(let i=0;i<n;i+=k){if(o.xl[i]!=null)c.fillText(o.xl[i],clamp(X(i),pl+14,w-pr-16),h-6)}}
+  (o.bands||[]).forEach(b=>{c.strokeStyle=cssv(b.c);c.setLineDash([5,5]);c.beginPath();c.moveTo(pl,Y(b.v));c.lineTo(w-pr,Y(b.v));c.stroke();c.setLineDash([])});
+  series.forEach(s=>{const col=cssv(s.c);if(s.fill){c.globalAlpha=.13;c.fillStyle=col;c.beginPath();c.moveTo(X(0),Y(mn));s.v.forEach((v,i)=>c.lineTo(X(i),Y(v)));c.lineTo(X(s.v.length-1),Y(mn));c.fill();c.globalAlpha=1}
+    c.strokeStyle=col;c.lineWidth=s.w||2;c.setLineDash(s.dash||[]);c.beginPath();s.v.forEach((v,i)=>i?c.lineTo(X(i),Y(v)):c.moveTo(X(i),Y(v)));c.stroke();c.setLineDash([]);
+    const lv=s.v[s.v.length-1];c.fillStyle=col;c.beginPath();c.arc(X(s.v.length-1),Y(lv),3.5,0,7);c.fill()});
+}
+
+/* ---------- overview ---------- */
+function kpi(l,v,u,d,cls){return `<div class="card kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}<small>${u||''}</small></div><div class="d">${d}</div></div>`}
+function ovKpis(){
+  const act=S.alerts.filter(a=>a.st==='new'||a.st==='ack').length, qb=S.qp.filter(q=>Object.values(q.bad).some(Boolean)).length;
+  return kpi(T('System demand','Потребление сети'),nf(H.demand+H.leakSum),U.ls(),T('incl. ','в т. ч. ')+nf(H.leakSum,1)+' '+U.ls()+T(' leakage',' утечки'))+
+   kpi(T('Average pressure','Среднее давление'),nf(H.avgP,2),U.bar(),T('lowest: ','минимум: ')+L(NODES[H.minJ].n.slice(2))+' '+nf(H.p[H.minJ],2),H.p[H.minJ]<2?'warn-t':'')+
+   kpi(T('Non-revenue water','Неучтённая вода'),nf(H.nrw,1),'%',T('target ≤ 12% (IWA band B)','цель ≤ 12% (класс IWA B)'),H.nrw>12?'warn-t':'ok-t')+
+   kpi(T('Open alarms','Открытые сигналы'),act+qb,'',act+T(' leak · ',' утечки · ')+qb+T(' quality',' качество'),act+qb?'bad-t':'ok-t');
+}
+function rOverview(){
+  $('#ovDyn').innerHTML=`<div class="kpis" id="ovK">${ovKpis()}</div>
+  <div class="grid2"><div class="card chart"><h3>${T('Demand vs. plant output · last 6 h','Потребление и подача станции · 6 ч')}<span class="sp"></span><span class="legend"><span><i style="background:var(--gold)"></i>${T('Demand','Потребление')}</span><span><i style="background:var(--mal3)"></i>${T('Plant output','Подача станции')}</span></span></h3><canvas id="cvDem"></canvas></div>
+   <div class="card"><h3>${T('Reservoirs','Резервуары')}<span class="sp"></span><button class="btn sm" data-go="res">${T('Open','Открыть')}</button></h3><div class="mini" id="ovT"></div></div></div>
+  <div class="grid2"><div class="card"><h3>${T('Live event log','Журнал событий')}<span class="sp"></span><span class="pill">${T('SCADA · 412 tags','SCADA · 412 тегов')}</span></h3><div class="log" id="ovLog"></div></div>
+   <div class="card"><h3>${T('Pressure by DMA','Давление по зонам')}<span class="sp"></span><button class="btn sm" data-go="network">${T('Schematic','Схема')}</button></h3><div class="mini" id="ovP"></div></div></div>`;
+  $$('[data-go]',$('#ovDyn')).forEach(b=>b.onclick=()=>go(b.dataset.go));
+  ovLive(true);
+}
+function ovLive(){
+  $('#ovK').innerHTML=ovKpis();
+  lineCanvas($('#cvDem'),[{v:S.dh.map(x=>x[1]),c:'--gold',fill:true},{v:S.dh.map(x=>x[2]),c:'--mal3'}],{h:230,xl:S.dh.map(x=>hm(x[0]))});
+  $('#ovT').innerHTML=Object.keys(LINES).map(t=>{const tk=S.tanks[t],pc=tk.lvl/tk.max*100,pm=S.pumps[LINES[t].pump];
+    return `<div class="r"><span><b>${L(NODES[t].n.slice(2))}</b> <span class="muted">· ${pm.on?T('filling','наполнение'):T('drawing down','расход')}</span></span><span class="mono">${nf(tk.lvl,2)} ${U.m()} · ${nf(pc)}%</span><div class="bar"><i class="${tk.lvl<tk.lo?'bad':pc<45?'warn':''}" style="width:${pc}%"></i></div></div>`}).join('');
+  $('#ovLog').innerHTML=S.ev.slice(0,30).map(e=>`<div><span class="t">${hm(e.t)}</span><span class="${e.c}">${esc(L([e.en,e.ru]))}</span></div>`).join('');
+  $('#ovP').innerHTML=Object.keys(BASE).map(j=>{const p=H.p[j],c=p<1.5?'bad':p<2.2?'warn':'';return `<div class="r"><span>${L(NODES[j].n.slice(2))} <span class="muted">· ${nf(H.d[j],1)} ${U.ls()}</span></span><span class="mono ${c?c+'-t':''}">${nf(p,2)} ${U.bar()}</span><div class="bar"><i class="${c}" style="width:${clamp(p/6*100,2,100)}%"></i></div></div>`}).join('');
+}
+
+/* ---------- network ---------- */
+function pPts(p){const a=NODES[p[1]],b=NODES[p[2]];if(p[0]==='PA'||p[0]==='PC')return [[a.x,a.y],[430,a.y],[430,b.y],[b.x,b.y]];return [[a.x,a.y],[b.x,b.y]]}
+const ptsStr=pts=>pts.map(x=>x.join(',')).join(' ');
+function midOf(pts){if(pts.length===4)return [pts[1][0],(pts[1][1]+pts[2][1])/2];return [(pts[0][0]+pts[1][0])/2,(pts[0][1]+pts[1][1])/2]}
+function netSvg(){
+  let s='<svg viewBox="0 0 1000 560" id="netSvg" role="img">';
+  s+=`<g opacity=".5"><path d="M20 520 L980 520" style="stroke:var(--line)" stroke-dasharray="2 6"/></g>`;
+  for(const v in VALVES){const V=VALVES[v],a=NODES[V.a],b=NODES[V.b],mx=(a.x+b.x)/2+40,my=(a.y+b.y)/2;
+    s+=`<g class="ng" data-sel="${v}"><polyline id="vl-${v}" class="vline" points="${a.x},${a.y} ${mx},${a.y+20} ${mx},${b.y-20} ${b.x},${b.y}"/><circle class="halo" cx="${mx}" cy="${my}" r="16"/><path id="vs-${v}" class="vlv" d="M${mx-10} ${my-8} L${mx+10} ${my+8} L${mx+10} ${my-8} L${mx-10} ${my+8}Z"/><text class="fl" x="${mx+16}" y="${my+4}">${v}</text></g>`}
+  PIPES.forEach(p=>{const pts=ptsStr(pPts(p));s+=`<g class="pg" data-sel="${p[0]}"><polyline class="pipe-bg" points="${pts}" stroke-width="${p[3]/40}"/><polyline id="pp-${p[0]}" class="pipe" points="${pts}"/><polyline id="pf-${p[0]}" class="flowd" points="${pts}"/><polyline class="hit" points="${pts}"/></g>`});
+  PIPES.forEach(p=>{const m=midOf(pPts(p));const vert=p[0]==='PA'||p[0]==='PC';s+=`<text class="fl" id="fl-${p[0]}" x="${m[0]+(vert?8:0)}" y="${m[1]-(vert?0:9)}" text-anchor="${vert?'start':'middle'}"></text>`});
+  for(const id in NODES){const n=NODES[id],x=n.x,y=n.y;let g='';
+    if(n.t==='src')g=`<circle class="halo" cx="${x}" cy="${y}" r="30"/><ellipse cx="${x}" cy="${y}" rx="34" ry="20" style="fill:color-mix(in srgb,var(--blue) 30%,var(--panel));stroke:var(--blue)" stroke-width="2"/><path class="icon" d="M${x-18} ${y} q6 -6 12 0 t12 0 t12 0"/>`;
+    else if(n.t==='wtp')g=`<rect class="halo" x="${x-34}" y="${y-28}" width="68" height="56" rx="14"/><rect x="${x-28}" y="${y-22}" width="56" height="44" rx="10" class="nd"/><text x="${x}" y="${y+5}" text-anchor="middle" class="val">WTP</text>`;
+    else if(n.t==='ps')g=`<circle class="halo" cx="${x}" cy="${y}" r="30"/><circle cx="${x}" cy="${y}" r="24" class="nd"/><path class="icon" d="M${x-9} ${y-11} L${x+12} ${y} L${x-9} ${y+11} Z"/>`;
+    else if(n.t==='tank')g=`<rect class="halo" x="${x-30}" y="${y-36}" width="60" height="72" rx="10"/><rect class="tk" x="${x-24}" y="${y-30}" width="48" height="60" rx="6"/><clipPath id="cp-${id}"><rect x="${x-22}" y="${y-28}" width="44" height="56" rx="5"/></clipPath><rect id="tf-${id}" class="tkf" clip-path="url(#cp-${id})" x="${x-22}" y="${y}" width="44" height="28"/>`;
+    else g=`<circle class="halo" cx="${x}" cy="${y}" r="20"/><circle id="nc-${id}" cx="${x}" cy="${y}" r="13" class="nd"/>`;
+    const ly=n.t==='tank'?y+52:n.t==='j'?y+32:y+46;
+    s+=`<g class="ng" data-sel="${id}">${g}<text class="lbl" x="${x}" y="${ly}" text-anchor="middle">${L(n.n.slice(2))}</text>${n.t==='j'||n.t==='tank'||n.t==='ps'?`<text class="val" id="nv-${id}" x="${x}" y="${ly+16}" text-anchor="middle"></text>`:''}</g>`}
+  return s+'</svg>';
+}
+function rNetwork(){
+  $('#v-network').innerHTML=`<div class="split"><div class="card"><h3>${T('Live network schematic','Живая схема сети')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('pressure OK','давление в норме')}</span><span><i style="background:var(--amber)"></i>&lt; 2.2 ${U.bar()}</span><span><i style="background:var(--red)"></i>${T('leak / < 1.5 bar','утечка / < 1,5 бар')}</span><span><i style="background:var(--blue)"></i>${T('trunk main','магистраль')}</span></span></h3>
+    <div class="net">${netSvg()}</div><div class="muted" style="font-size:12px;margin-top:8px">${T('Hydraulic model re-solved every 2 s against SCADA telemetry. Tap any node, pipe or valve.','Гидравлическая модель пересчитывается каждые 2 с по телеметрии SCADA. Нажмите на узел, трубу или задвижку.')}</div></div>
+   <div class="card" id="netInfo"></div></div>`;
+  $$('#netSvg [data-sel]').forEach(g=>g.onclick=e=>{e.stopPropagation();S.sel=g.dataset.sel;save();netLive()});
+  netLive();
+}
+function netLive(){
+  const alertPipes=new Set(S.alerts.filter(a=>a.st!=='fixed'&&a.st!=='dism').map(a=>a.pipe));
+  PIPES.forEach(p=>{const id=p[0],q=H.q[id]||0,el=$('#pp-'+id),fd=$('#pf-'+id);if(!el)return;
+    el.setAttribute('stroke-width',(2.5+Math.min(8,q/22)).toFixed(1));
+    el.setAttribute('class','pipe'+(alertPipes.has(id)?' leak':q<.5?' idle':p[3]>=500?' hi':''));
+    fd.setAttribute('class','flowd'+(q<.5?' idle':''));const dur=clamp(2.6-q/80,.35,2.6).toFixed(1)+'s';if(fd.style.animationDuration!==dur)fd.style.animationDuration=dur;
+    $('#fl-'+id).textContent=nf(q)+' '+U.ls()});
+  for(const v in VALVES){const o=S.valves[v];$('#vl-'+v).setAttribute('class','vline'+(o?' open':''));$('#vs-'+v).setAttribute('class','vlv'+(o?' open':''))}
+  for(const j in BASE){const p=H.p[j],c=p<1.5?'bad':p<2.2?'warn':'';$('#nc-'+j).setAttribute('class','nd '+c);const t=$('#nv-'+j);t.textContent=nf(p,2)+' '+U.bar();t.setAttribute('class','val '+c)}
+  for(const t in LINES){const tk=S.tanks[t],n=NODES[t],h=56*tk.lvl/tk.max,r=$('#tf-'+t);r.setAttribute('y',(n.y+28-h).toFixed(1));r.setAttribute('height',h.toFixed(1));$('#nv-'+t).textContent=nf(tk.lvl,2)+' '+U.m()}
+  const on=Object.values(S.pumps).filter(p=>p.on).length;$('#nv-PS1').textContent=on+'/3 '+T('pumps','нас.');
+  $$('#netSvg [data-sel]').forEach(g=>g.classList.toggle('sel',g.dataset.sel===S.sel));
+  netInfo();
+}
+function dl(rows){return '<dl class="facts2">'+rows.map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('')+'</dl>'}
+function netInfo(){
+  const id=S.sel,box=$('#netInfo');let h='';const ro=!canCtl()?`<div class="hint">${T('Remote control requires the control-room role.','Удалённое управление доступно только диспетчеру.')}</div>`:'';
+  if(PI[id]){const p=PI[id],q=H.q[id]||0,a=Math.PI*(p[3]/2000)**2,al=S.alerts.find(x=>x.pipe===id&&x.st!=='fixed'&&x.st!=='dism');
+    h=`<h3>${T('Pipe ','Труба ')}${id}<span class="sp"></span>${al?`<span class="pill bad">${al.id}</span>`:`<span class="pill ok">${T('normal','норма')}</span>`}</h3>`+dl([[T('Route','Трасса'),L(NODES[p[1]].n.slice(2))+' → '+L(NODES[p[2]].n.slice(2))],[T('Flow','Расход'),nf(q,1)+' '+U.ls()],[T('Velocity','Скорость'),nf(q/1000/a,2)+' '+T('m/s','м/с')],[T('Diameter','Диаметр'),'DN '+p[3]],[T('Length','Длина'),nf(p[4])+' '+U.m()],[T('Material · laid','Материал · год'),L(MATS[p[5]])+' · '+p[7]],[T('Headloss coefficient','Коэф. потерь'),p[6]?p[6].toExponential(1):'—']]);
+    if(DIST.includes(id))h+=`<div class="row"><button class="btn sm danger" id="burst" ${canCtl()?'':'disabled'}>${T('Inject training burst','Учебный порыв')}</button><button class="btn sm" id="woFrom">${T('Create work order','Создать наряд')}</button></div>`+ro;
+    else h+=`<div class="row"><button class="btn sm" id="woFrom">${T('Create work order','Создать наряд')}</button></div>`;}
+  else if(VALVES[id]){const V=VALVES[id],o=S.valves[id];
+    h=`<h3>${L(V.n)}<span class="sp"></span><span class="pill ${o?'ok':''}">${o?T('open','открыта'):T('closed','закрыта')}</span></h3>`+dl([[T('Connects','Соединяет'),L(NODES[V.a].n.slice(2))+' ↔ '+L(NODES[V.b].n.slice(2))],[T('Transfer flow','Переток'),nf(H.q[id]||0,1)+' '+U.ls()],[T('Type','Тип'),T('Motorised butterfly DN 200','Поворотный затвор DN 200 с приводом')]])+
+     `<div class="row"><button class="btn sm ${o?'':'pri'}" id="vTog" ${canCtl()?'':'disabled'}>${o?T('Close valve','Закрыть'):T('Open valve','Открыть')}</button></div>`+ro+`<p class="muted" style="font-size:12.5px">${T('Opening an interconnect equalises pressure between zones — useful while a main is isolated for repair.','Открытие перемычки выравнивает давление между зонами — полезно, пока магистраль отключена на ремонт.')}</p>`;}
+  else if(id==='PS1'){h=`<h3>${L(NODES.PS1.n)}</h3>`+Object.keys(S.pumps).map(k=>{const pm=S.pumps[k];return `<div class="alert" style="padding:10px 12px"><div class="top"><b>${L(PUMPN[k])}</b><span class="pill ${pm.on?'ok':''}">${pm.on?T('running','в работе'):T('stopped','стоп')}</span><span class="pill">${pm.auto?T('auto','авто'):T('manual','ручной')}</span></div><div class="meta">${T('Rated','Номинал')} <strong>${pm.rate} ${U.ls()}</strong> · ${T('now','сейчас')} <strong>${nf(H.q['P'+k],0)} ${U.ls()}</strong></div><div class="row" style="margin-top:8px"><button class="btn sm" data-pump="${k}" ${canCtl()?'':'disabled'}>${pm.on?T('Stop','Стоп'):T('Start','Пуск')}</button><button class="btn sm" data-auto="${k}" ${canCtl()&&!pm.auto?'':'disabled'}>${T('Return to auto','Вернуть в авто')}</button></div></div>`}).join('')+ro;}
+  else if(NODES[id]){const n=NODES[id];
+    if(n.t==='j')h=`<h3>${L(n.n)}<span class="sp"></span><span class="pill ${H.p[id]<1.5?'bad':H.p[id]<2.2?'warn':'ok'}">${nf(H.p[id],2)} ${U.bar()}</span></h3>`+dl([[T('Demand now','Потребление'),nf(H.d[id],1)+' '+U.ls()],[T('Pressure','Давление'),nf(H.p[id],2)+' '+U.bar()+' · '+nf(H.p[id]*10.2,1)+' '+T('m head','м напора')],[T('Elevation','Отметка'),n.el+' '+U.m()],[T('Customers','Абонентов'),nf(BASE[id]*412)],[T('Night flow (03:00)','Ночной расход (03:00)'),nf(BASE[id]*.42+(S.leaks.filter(l=>PI[l.pipe][2]===id).reduce((a,l)=>a+l.rate,0)),1)+' '+U.ls()]])+`<div class="row"><button class="btn sm" id="woFrom">${T('Create work order','Создать наряд')}</button></div>`;
+    else if(n.t==='tank'){const tk=S.tanks[id];h=`<h3>${L(n.n)}</h3>`+dl([[T('Level','Уровень'),nf(tk.lvl,2)+' / '+tk.max+' '+U.m()],[T('Volume','Объём'),nf(tk.lvl*tk.area)+' m³'],[T('Inflow · outflow','Приток · отбор'),nf(H.q[LINES[id].pipe],0)+' · '+nf(H.out[id],0)+' '+U.ls()],[T('Setpoints','Уставки'),tk.lo+' – '+tk.hi+' '+U.m()]])+`<button class="btn sm" data-go="res">${T('Open reservoir panel','Панель резервуара')}</button>`;}
+    else h=`<h3>${L(n.n)}</h3>`+dl([[T('Output','Подача'),nf(H.q.P0,0)+' '+U.ls()],[T('Today','За сутки'),nf(H.q.P0*86.4/1000,1)+' ML'],[T('Status','Статус'),T('Normal','Норма')]]);}
+  box.innerHTML=h||`<div class="empty">${T('Select an element','Выберите элемент')}</div>`;
+  const b=$('#burst',box);if(b)b.onclick=()=>{if(S.leaks.some(l=>l.pipe===id)){toast(T('A leak is already active on this pipe','На этой трубе уже есть утечка'),'gold');return}S.leaks.push({id:'L'+(S.nextLeak++),pipe:id,rate:22,age:0,delay:1,alerted:false});addEv('Training burst injected on '+id,'Учебный порыв на '+id,'warn');save();toast(T('Burst injected — watch pressure drop and the leak alert','Порыв создан — следите за давлением и сигналом утечки'),'gold')};
+  const vt=$('#vTog',box);if(vt)vt.onclick=()=>{S.valves[id]=!S.valves[id];addEv(VALVES[id].n[0]+(S.valves[id]?' opened':' closed'),VALVES[id].n[1]+(S.valves[id]?' открыта':' закрыта'),'');H=calc();save();netLive()};
+  $$('[data-pump]',box).forEach(x=>x.onclick=()=>{const k=x.dataset.pump,pm=S.pumps[k];pm.on=!pm.on;pm.auto=false;addEv(PUMPN[k][0]+(pm.on?' started':' stopped')+' (manual)',PUMPN[k][1]+(pm.on?' включён':' остановлен')+' (вручную)','');H=calc();save();live()});
+  $$('[data-auto]',box).forEach(x=>x.onclick=()=>{S.pumps[x.dataset.auto].auto=true;save();live()});
+  const wf=$('#woFrom',box);if(wf)wf.onclick=()=>{woDraft={asset:id,type:PI[id]?'leak':'valve'};go('wo')};
+  $$('[data-go]',box).forEach(x=>x.onclick=()=>go(x.dataset.go));
+}
+
+/* ---------- leaks ---------- */
+let lkSig='';
+function rLeaks(){
+  $('#v-leaks').innerHTML=`<div class="kpis" id="lkK"></div>
+  <div class="row" style="margin-bottom:12px"><div class="chips" id="afC"></div><span class="grow"></span><button class="btn sm gold" id="nfa">${T('Run night-flow analysis','Анализ ночного расхода')}</button></div>
+  <div class="split"><div id="lkL"></div><div><div class="card svgc" style="margin-bottom:14px"><h3>${T('Estimated loss by DMA','Оценка потерь по зонам')}</h3><div id="lkB"></div></div>
+   <div class="card"><h3>${T('How detection works','Как работает обнаружение')}</h3><div style="font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:8px">
+   <div>① ${T('The twin compares measured pressure and flow with the calibrated model every scan.','Двойник каждый опрос сравнивает измеренные давление и расход с моделью.')}</div>
+   <div>② ${T('Residuals above 3σ for several scans raise an alert with an estimated loss.','Отклонения выше 3σ несколько опросов подряд дают сигнал с оценкой потерь.')}</div>
+   <div>③ ${T('Night-flow analysis (02:00–04:00) finds small background leaks that pressure misses.','Анализ ночного расхода (02:00–04:00) находит мелкие скрытые утечки.')}</div></div></div></div></div>`;
+  $('#nfa').onclick=()=>{const b=$('#nfa');b.disabled=true;b.textContent=T('Analysing 6 DMAs…','Анализ 6 зон…');
+    setTimeout(()=>{const hid=S.leaks.filter(l=>!l.alerted);hid.forEach(l=>raise(l,1));if(!hid.length)toast(T('Night-flow analysis: no hidden leaks found','Анализ ночного расхода: скрытых утечек нет'));save();lkSig='';if(S.view==='leaks')rLeaks()},1200)};
+  lkSig='';lkLive();
+}
+function lkLive(){
+  const act=S.alerts.filter(a=>a.st==='new'||a.st==='ack'||a.st==='disp'),loss=act.reduce((s,a)=>s+a.loss,0),det=S.alerts.filter(a=>a.det).map(a=>a.det);
+  $('#lkK').innerHTML=kpi(T('Active alerts','Активные сигналы'),act.length,'',S.alerts.filter(a=>a.st==='new').length+T(' awaiting acknowledgement',' ждут подтверждения'),act.length?'bad-t':'ok-t')+kpi(T('Estimated loss','Оценка потерь'),nf(loss,1),U.ls(),T('from active alerts','по активным сигналам'))+kpi(T('Loss per day','Потери в сутки'),nf(loss*86.4),'m³',T('≈ ','≈ ')+nf(loss*86.4*.62)+T(' NDC production cost',' NDC себестоимости'))+kpi(T('Mean time to detect','Среднее время обнаружения'),nf(det.reduce((a,b)=>a+b,0)/Math.max(1,det.length)),T('min','мин'),T('target ≤ 30 min','цель ≤ 30 мин'));
+  const sig=S.alerts.map(a=>a.id+a.st).join()+S.af+PT.lang;if(sig===lkSig)return;lkSig=sig;
+  $('#afC').innerHTML=[['active',T('Active','Активные')],['all',T('All','Все')],['fixed',T('Repaired','Устранённые')]].map(c=>`<button class="chip ${S.af===c[0]?'on':''}" data-af="${c[0]}">${c[1]}</button>`).join('');
+  $$('[data-af]').forEach(b=>b.onclick=()=>{S.af=b.dataset.af;save();lkLive()});
+  const list=S.alerts.filter(a=>S.af==='all'||(S.af==='fixed'?a.st==='fixed':['new','ack','disp'].includes(a.st)));
+  const order=['new','ack','disp','fixed'];
+  $('#lkL').innerHTML=list.length?list.map(a=>{const p=PI[a.pipe],dn=NODES[p[2]].n,si=order.indexOf(a.st);
+    const pc=a.st==='new'?'bad':a.st==='ack'?'warn':a.st==='disp'?'gold':a.st==='fixed'?'ok':'';
+    let btn='';if(a.st==='new')btn=`<button class="btn sm pri" data-ack="${a.id}">${T('Acknowledge','Подтвердить')}</button><button class="btn sm" data-dism="${a.id}">${T('False alarm','Ложный сигнал')}</button>`;
+    else if(a.st==='ack')btn=`<button class="btn sm gold" data-disp="${a.id}">${T('Dispatch crew','Отправить бригаду')}</button><button class="btn sm" data-dism="${a.id}">${T('False alarm','Ложный сигнал')}</button>`;
+    else if(a.st==='disp')btn=`<button class="btn sm" data-wo="${a.wo}">${T('Open ','Открыть ')}${a.wo}</button>`;
+    else if(a.wo)btn=`<span class="muted" style="font-size:12.5px">${T('Closed by ','Закрыто нарядом ')}${a.wo}</span>`;
+    return `<div class="alert ${a.st==='new'?'new':''}"><div class="top"><span class="mono">${a.id}</span><b>${L(KINDS[a.kind])}</b><span class="pill ${pc}">${L(AST[a.st])}</span></div>
+     <div class="meta"><span>${T('Pipe','Труба')} <strong>${a.pipe}</strong> · ${L(dn)}</span><span>${T('Loss','Потери')} <strong>~${nf(a.loss,1)} ${U.ls()}</strong></span><span>${T('Confidence','Достоверность')} <strong>${a.conf}%</strong></span><span>${T('Detected','Обнаружено')} <strong>${fmtT(a.t)}</strong></span></div>
+     ${a.st==='dism'?'':`<div class="tl">${order.map((o,i)=>`<div class="${i<si?'ok':i===si?(o==='fixed'?'ok':'cur'):''}"><i></i><span>${L(AST[o])}</span></div>`).join('')}</div>`}<div class="row">${btn}</div></div>`}).join(''):`<div class="card empty">${T('No alerts in this filter. The network is tight.','Нет сигналов по фильтру. Сеть герметична.')}</div>`;
+  $$('[data-ack]').forEach(b=>b.onclick=()=>{const a=S.alerts.find(x=>x.id===b.dataset.ack);a.st='ack';addEv(a.id+' acknowledged by '+S.user,a.id+' подтверждён: '+S.user,'');save();toast(T('Alert acknowledged','Сигнал подтверждён'));lkLive();nav()});
+  $$('[data-dism]').forEach(b=>b.onclick=()=>{const a=S.alerts.find(x=>x.id===b.dataset.dism);a.st='dism';addEv(a.id+' marked as false alarm',a.id+' отмечен как ложный','');save();toast(T('Marked as false alarm — the model will be retrained','Отмечено как ложное — модель дообучится'),'gold');lkLive();nav()});
+  $$('[data-disp]').forEach(b=>b.onclick=()=>{const a=S.alerts.find(x=>x.id===b.dataset.disp);const z=zoneOf(a.pipe),crew=z?LINES[z].crew:2,id='WO-'+(S.nextW++);
+    S.wos.unshift({id,type:'leak',asset:a.pipe,pri:'high',crew,st:'assigned',t:S.t,note:L(KINDS[a.kind])+', ~'+a.loss+' L/s, '+a.id,alert:a.id});a.st='disp';a.wo=id;
+    addEv(id+' dispatched to '+CREWS[crew][0]+' for '+a.id,id+' выдан: '+CREWS[crew][1]+' по '+a.id,'ok');save();toast(T('Work order ','Наряд ')+id+T(' sent to ',' отправлен: ')+L(CREWS[crew]));lkLive();nav()});
+  $$('[data-wo]').forEach(b=>b.onclick=()=>{S.wf='all';go('wo')});
+  const by={};act.forEach(a=>{const j=PI[a.pipe][2];by[j]=(by[j]||0)+a.loss});const keys=Object.keys(BASE),mx=Math.max(5,...Object.values(by));
+  $('#lkB').innerHTML=`<svg viewBox="0 0 320 ${keys.length*30+6}">`+keys.map((j,i)=>{const v=by[j]||0,w=v/mx*170;return `<text x="0" y="${i*30+19}" style="fill:var(--muted);font:12px var(--font)">${esc(L(NODES[j].n.slice(2)))}</text><rect x="110" y="${i*30+6}" width="180" height="18" rx="5" style="fill:var(--bg2)"/><rect x="110" y="${i*30+6}" width="${Math.max(v?4:0,w)}" height="18" rx="5" style="fill:${v>10?'var(--red)':'var(--amber)'}"/><text x="${116+Math.max(w,0)}" y="${i*30+19}" style="fill:var(--text);font:600 11px var(--mono)">${v?nf(v,1):''}</text>`}).join('')+'</svg>';
+}
+
+/* ---------- reservoirs ---------- */
+function tankSvg(t){const tk=S.tanks[t],h=150*tk.lvl/tk.max,ylo=170-150*tk.lo/tk.max,yhi=170-150*tk.hi/tk.max;
+  return `<svg viewBox="0 0 100 190"><rect x="10" y="16" width="80" height="158" rx="10" style="fill:var(--bg2);stroke:var(--line2)" stroke-width="2"/><rect x="14" y="${170-h}" width="72" height="${h}" rx="6" style="fill:color-mix(in srgb,var(--blue) 50%,transparent)"/><rect x="14" y="${170-h}" width="72" height="3" style="fill:var(--mal3)"/>
+  <line x1="6" x2="94" y1="${yhi}" y2="${yhi}" style="stroke:var(--gold)" stroke-dasharray="4 3"/><line x1="6" x2="94" y1="${ylo}" y2="${ylo}" style="stroke:var(--red)" stroke-dasharray="4 3"/><text x="50" y="12" text-anchor="middle" style="fill:var(--text);font:700 12px var(--mono)">${nf(tk.lvl/tk.max*100)}%</text></svg>`}
+function rRes(){
+  $('#v-res').innerHTML=`<div class="grid3">${Object.keys(LINES).map(t=>{const tk=S.tanks[t],pk=LINES[t].pump,pm=S.pumps[pk];
+    return `<div class="card"><h3>${L(NODES[t].n)}</h3><div class="tank"><div id="tg-${t}">${tankSvg(t)}</div><div class="st" id="ts-${t}"></div></div>
+    <div class="ctl"><div class="row"><b style="font-size:13px">${L(PUMPN[pk])}</b><span class="grow"></span><button class="btn sm" data-tp="${pk}" ${canCtl()?'':'disabled'}>${pm.on?T('Stop pump','Остановить'):T('Start pump','Запустить')}</button><button class="btn sm ${pm.auto?'pri':''}" data-ta="${pk}" ${canCtl()?'':'disabled'}>${pm.auto?T('Auto ✓','Авто ✓'):T('Set auto','В авто')}</button></div>
+    <div class="sp2"><div class="f"><label>${T('Pump on below, m','Пуск ниже, м')}</label><input class="input" id="lo-${t}" inputmode="decimal" value="${tk.lo}" ${canCtl()?'':'disabled'}></div><div class="f"><label>${T('Pump off above, m','Стоп выше, м')}</label><input class="input" id="hi-${t}" inputmode="decimal" value="${tk.hi}" ${canCtl()?'':'disabled'}></div><button class="btn sm" data-sv="${t}" ${canCtl()?'':'disabled'}>${T('Save','Сохранить')}</button></div><div class="er bad-t" id="er-${t}" style="font-size:12px"></div></div></div>`}).join('')}</div>
+   <div class="card chart"><h3>${T('Reservoir levels · last 6 h','Уровни резервуаров · 6 ч')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal3)"></i>${L(NODES.T1.n.slice(2))}</span><span><i style="background:var(--gold)"></i>${L(NODES.T2.n.slice(2))}</span><span><i style="background:var(--blue)"></i>${L(NODES.T3.n.slice(2))}</span></span></h3><canvas id="cvRes"></canvas></div>`;
+  $$('[data-tp]').forEach(b=>b.onclick=()=>{const k=b.dataset.tp,pm=S.pumps[k];pm.on=!pm.on;pm.auto=false;addEv(PUMPN[k][0]+(pm.on?' started':' stopped')+' (manual)',PUMPN[k][1]+(pm.on?' включён':' остановлен')+' (вручную)','');H=calc();save();rRes()});
+  $$('[data-ta]').forEach(b=>b.onclick=()=>{S.pumps[b.dataset.ta].auto=true;save();toast(T('Pump returned to automatic control','Насос переведён в автоматический режим'));rRes()});
+  $$('[data-sv]').forEach(b=>b.onclick=()=>{const t=b.dataset.sv,tk=S.tanks[t],lo=parseFloat($('#lo-'+t).value.replace(',','.')),hi=parseFloat($('#hi-'+t).value.replace(',','.'));let e='';
+    if(isNaN(lo)||isNaN(hi))e=T('Enter numbers for both setpoints','Введите обе уставки числами');else if(lo<0.5)e=T('Low setpoint must be ≥ 0.5 m','Нижняя уставка ≥ 0,5 м');else if(hi>tk.max-0.2)e=T('High setpoint must be ≤ ','Верхняя уставка ≤ ')+(tk.max-0.2).toFixed(1)+' '+U.m();else if(hi-lo<1)e=T('Keep at least 1 m between setpoints','Разница уставок — не меньше 1 м');
+    $('#er-'+t).textContent=e;$('#lo-'+t).classList.toggle('bad',!!e);$('#hi-'+t).classList.toggle('bad',!!e);if(e)return;
+    tk.lo=+lo.toFixed(2);tk.hi=+hi.toFixed(2);addEv(NODES[t].n[0]+' setpoints changed to '+tk.lo+'–'+tk.hi+' m',NODES[t].n[1]+': уставки '+tk.lo+'–'+tk.hi+' м','ok');save();toast(T('Setpoints saved and sent to the RTU','Уставки сохранены и отправлены в контроллер'));resLive()});
+  resLive();
+}
+function resLive(){
+  for(const t in LINES){const tk=S.tanks[t],inf=H.q[LINES[t].pipe],out=H.out[t],net=inf-out,pm=S.pumps[LINES[t].pump];
+    $('#tg-'+t).innerHTML=tankSvg(t);
+    const eta=net>0?(tk.hi-tk.lvl)*tk.area*1000/net/60:(tk.lvl-tk.lo)*tk.area*1000/(-net||1)/60;
+    $('#ts-'+t).innerHTML=`<div><span>${T('Level','Уровень')}</span><b>${nf(tk.lvl,2)} / ${tk.max} ${U.m()}</b></div><div><span>${T('Volume','Объём')}</span><b>${nf(tk.lvl*tk.area)} m³</b></div><div><span>${T('Inflow','Приток')}</span><b>${nf(inf)} ${U.ls()}</b></div><div><span>${T('Outflow','Отбор')}</span><b>${nf(out)} ${U.ls()}</b></div><div><span>${T('Net','Баланс')}</span><b class="${net>=0?'ok-t':'warn-t'}">${net>=0?'+':''}${nf(net)} ${U.ls()}</b></div><div><span>${net>=0?T('To pump-off','До остановки'):T('To pump-on','До пуска')}</span><b>${eta>0&&eta<10000?nf(eta)+' '+T('min','мин'):'—'}</b></div><div><span>${T('Pump','Насос')}</span><b>${pm.on?T('running','в работе'):T('stopped','стоп')} · ${pm.auto?T('auto','авто'):T('manual','ручн.')}</b></div>`;}
+  const tb=$('[data-tp="A"]');if(tb){['A','B','C'].forEach(k=>{const b=$('[data-tp="'+k+'"]');b.textContent=S.pumps[k].on?T('Stop pump','Остановить'):T('Start pump','Запустить')})}
+  lineCanvas($('#cvRes'),[{v:S.tanks.T1.h.map((v)=>v/S.tanks.T1.max*100),c:'--mal3'},{v:S.tanks.T2.h.map(v=>v/S.tanks.T2.max*100),c:'--gold'},{v:S.tanks.T3.h.map(v=>v/S.tanks.T3.max*100),c:'--blue'}],{h:220,min:0,max:100,xl:S.dh.map(x=>hm(x[0]))});
+}
+
+/* ---------- work orders ---------- */
+let woDraft=null;
+function opts(list,sel){return list.map(o=>`<option value="${o[0]}" ${o[0]===sel?'selected':''}>${esc(o[1])}</option>`).join('')}
+function assetOpts(){return [...Object.keys(NODES).map(k=>[k,L(NODES[k].n)]),...Object.keys(VALVES).map(k=>[k,L(VALVES[k].n)]),...PIPES.map(p=>[p[0],pipeName(p[0])])]}
+function woKpis(){const c=s=>S.wos.filter(w=>w.st===s).length;const k=$('#woK');if(!k)return;
+  k.innerHTML=kpi(L(WST.open),c('open'),'',T('need a crew','без бригады'),c('open')?'warn-t':'')+kpi(L(WST.assigned),c('assigned'),'',T('crew notified','бригада уведомлена'))+kpi(L(WST.progress),c('progress'),'',T('on site now','на объекте'))+kpi(L(WST.done),c('done'),'',T('this week','за неделю'),'ok-t')}
+function rWo(){
+  const d=woDraft||{};
+  $('#v-wo').innerHTML=`<div class="kpis" id="woK"></div><div class="split"><div><div class="row" style="margin-bottom:12px"><div class="chips">${[['all',T('All','Все')],...Object.keys(WST).filter(k=>k!=='cancelled').map(k=>[k,L(WST[k])])].map(c=>`<button class="chip ${S.wf===c[0]?'on':''}" data-wf="${c[0]}">${c[1]}</button>`).join('')}</div></div><div class="tw" id="woT"></div></div>
+  <div class="card"><h3>${T('New work order','Новый наряд')}</h3><div class="fgrid">
+   <div class="f"><label for="wType">${T('Type','Тип работ')}</label><select class="input" id="wType">${opts(Object.keys(WTYPES).map(k=>[k,L(WTYPES[k])]),d.type)}</select></div>
+   <div class="f"><label for="wPri">${T('Priority','Приоритет')}</label><select class="input" id="wPri">${opts(Object.keys(PRI).map(k=>[k,L(PRI[k])]),'med')}</select></div>
+   <div class="f full"><label for="wAsset">${T('Asset','Объект')}</label><select class="input" id="wAsset"><option value="">${T('— choose asset —','— выберите объект —')}</option>${opts(assetOpts(),d.asset)}</select><div class="er" id="eAsset"></div></div>
+   <div class="f full"><label for="wCrew">${T('Crew','Бригада')}</label><select class="input" id="wCrew"><option value="">${T('Unassigned','Не назначена')}</option>${opts(CREWS.map((c,i)=>[String(i),L(c)]))}</select></div>
+   <div class="f full"><label for="wNote">${T('Description','Описание')}</label><textarea class="input" id="wNote" placeholder="${T('What needs to be done, access notes…','Что сделать, доступ к объекту…')}"></textarea><div class="er" id="eNote"></div></div>
+   <div class="full"><button class="btn pri" id="wSave">${T('Create work order','Создать наряд')}</button></div></div></div></div>`;
+  woDraft=null;
+  $$('[data-wf]').forEach(b=>b.onclick=()=>{S.wf=b.dataset.wf;save();rWo()});
+  $('#wSave').onclick=()=>{const a=$('#wAsset').value,n=$('#wNote').value.trim();$('#eAsset').textContent=a?'':T('Choose an asset','Выберите объект');$('#eNote').textContent=n.length>=5?'':T('At least 5 characters','Не меньше 5 символов');
+    $('#wAsset').classList.toggle('bad',!a);$('#wNote').classList.toggle('bad',n.length<5);if(!a||n.length<5)return;
+    const cr=$('#wCrew').value,id='WO-'+(S.nextW++);S.wos.unshift({id,type:$('#wType').value,asset:a,pri:$('#wPri').value,crew:cr===''?null:+cr,st:cr===''?'open':'assigned',t:S.t,note:n,alert:null});
+    addEv(id+' created: '+WTYPES[$('#wType').value][0]+' at '+a,id+' создан: '+WTYPES[$('#wType').value][1]+', '+a,'ok');save();toast(T('Work order ','Наряд ')+id+T(' created',' создан'));S.wf='all';rWo()};
+  woTable();woKpis();
+}
+function woTable(){
+  const list=S.wos.filter(w=>S.wf==='all'||w.st===S.wf);
+  const next={open:['assigned',T('Assign','Назначить')],assigned:['progress',T('Start work','Начать')],progress:['done',T('Complete','Завершить')]};
+  $('#woT').innerHTML=`<table><thead><tr><th>ID</th><th>${T('Type','Тип')}</th><th>${T('Asset','Объект')}</th><th>${T('Priority','Приоритет')}</th><th>${T('Crew','Бригада')}</th><th>${T('Status','Статус')}</th><th>${T('Created','Создан')}</th><th>${T('Action','Действие')}</th></tr></thead><tbody>`+
+   (list.length?list.map(w=>{const n=next[w.st];const sc=w.st==='done'?'ok':w.st==='progress'?'gold':w.st==='open'?'warn':w.st==='cancelled'?'':'';
+    return `<tr title="${esc(w.note)}"><td class="mono">${w.id}</td><td>${L(WTYPES[w.type])}</td><td>${esc(assetName(w.asset))}</td><td><span class="pill ${w.pri==='high'?'bad':w.pri==='med'?'warn':''}">${L(PRI[w.pri])}</span></td><td>${w.crew==null?'<span class="muted">—</span>':L(CREWS[w.crew])}</td><td><span class="pill ${sc}">${L(WST[w.st])}</span></td><td class="mono">${fmtT(w.t)}</td><td><div class="row" style="flex-wrap:nowrap">${n?`<button class="btn sm ${n[0]==='done'?'pri':''}" data-adv="${w.id}">${n[1]}</button><button class="btn sm danger" data-can="${w.id}">✕</button>`:'<span class="muted">—</span>'}</div></td></tr>`}).join(''):`<tr><td colspan="8" class="empty">${T('No work orders','Нарядов нет')}</td></tr>`)+'</tbody></table>';
+  $$('[data-adv]').forEach(b=>b.onclick=()=>{const w=S.wos.find(x=>x.id===b.dataset.adv),n=next[w.st][0];
+    if(n==='assigned'&&w.crew==null){const z=zoneOf(w.asset);w.crew=z?LINES[z].crew:(w.type==='sample'||w.type==='meter'||w.type==='flush'?3:2)}
+    w.st=n;addEv(w.id+' → '+WST[n][0],w.id+' → '+WST[n][1],n==='done'?'ok':'');
+    if(n==='done'&&w.type==='leak'){const before=S.leaks.length;S.leaks=S.leaks.filter(l=>l.pipe!==w.asset);const a=S.alerts.find(x=>x.id===w.alert)||S.alerts.find(x=>x.pipe===w.asset&&['new','ack','disp'].includes(x.st));
+      if(a){a.st='fixed';a.wo=w.id}if(before!==S.leaks.length){H=calc();addEv('Leak on '+w.asset+' repaired, pressure restored','Утечка на '+w.asset+' устранена, давление восстановлено','ok');toast(T('Leak repaired — losses removed from the model','Утечка устранена — потери убраны из модели'))}}
+    else if(n==='done'&&w.type==='flush'){const q=S.qp.find(q=>QP.find(x=>x[0]===q.id)[2]===w.asset);if(q){q.cl+=.35;q.tu=Math.max(.1,q.tu-.3)}toast(T('Flushing complete — chlorine residual recovering','Промывка завершена — остаточный хлор восстанавливается'))}
+    else toast(w.id+' → '+L(WST[n]));
+    save();woTable();woKpis();nav()});
+  $$('[data-can]').forEach(b=>b.onclick=()=>{const w=S.wos.find(x=>x.id===b.dataset.can);w.st='cancelled';const a=S.alerts.find(x=>x.wo===w.id&&x.st==='disp');if(a){a.st='ack';a.wo=null}addEv(w.id+' cancelled',w.id+' отменён','');save();toast(T('Work order cancelled','Наряд отменён'),'gold');woTable();woKpis();nav()});
+}
+
+/* ---------- quality ---------- */
+function qCards(){return S.qp.map((q,i)=>{const b=QP[i],bad=PARAMS.some(p=>qBad(p[0],q[p[0]]));
+  return `<button class="qc ${S.qsel===q.id?'on':''} ${bad?'badq':''}" data-qp="${q.id}"><div class="nm"><span>${L(b[1])}</span><span class="pill ${bad?'bad':'ok'}">${bad?T('Exceedance','Превышение'):T('Compliant','Норма')}</span></div><div class="zn">${q.id} · ${L(NODES[b[2]].n.slice(2))}</div>
+   <div class="qv">${PARAMS.map(p=>{const v=q[p[0]];return `<div>${p[0]==='cl'?'Cl₂':p[0]==='tu'?T('Turb.','Мутн.'):p[0]==='ph'?'pH':T('EC','ЭП')}<b class="${qBad(p[0],v)?'bad-t':qWarn(p[0],v)?'warn-t':''}">${nf(v,p[5])}</b></div>`}).join('')}</div></button>`}).join('')}
+function rQuality(){
+  $('#v-quality').innerHTML=`<div class="qgrid" id="qG"></div>
+  <div class="grid2"><div class="card svgc"><h3><span id="qT"></span><span class="sp"></span><span class="chips">${PARAMS.map(p=>`<button class="chip ${S.qpar===p[0]?'on':''}" data-qpar="${p[0]}">${p[0]==='ph'?'pH':L(p[1])}</button>`).join('')}</span></h3><div id="qC"></div><div class="row" id="qAct" style="margin-top:10px"></div></div>
+   <div class="card"><h3>${T('Log lab sample','Внести лабораторную пробу')}</h3><div class="fgrid">
+    <div class="f full"><label for="sPt">${T('Sampling point','Точка отбора')}</label><select class="input" id="sPt">${opts(QP.map(q=>[q[0],q[0]+' · '+L(q[1])]),S.qsel)}</select></div>
+    <div class="f"><label for="sCl">${T('Free chlorine, mg/L','Своб. хлор, мг/л')}</label><input class="input" id="sCl" inputmode="decimal" placeholder="0.50"></div>
+    <div class="f"><label for="sTu">${T('Turbidity, NTU','Мутность, NTU')}</label><input class="input" id="sTu" inputmode="decimal" placeholder="0.25"></div>
+    <div class="f"><label for="sPh">pH</label><input class="input" id="sPh" inputmode="decimal" placeholder="7.5"></div>
+    <div class="f"><label for="sEc">${T('Conductivity, µS/cm','ЭП, мкСм/см')}</label><input class="input" id="sEc" inputmode="decimal" placeholder="430"></div>
+    <div class="f full"><label for="sBy">${T('Sampled by','Отобрал')}</label><input class="input" id="sBy" value="${esc(S.user)}"></div>
+    <div class="full er bad-t" id="sErr" style="font-size:12.5px"></div>
+    <div class="full"><button class="btn pri" id="sSave">${T('Save sample','Сохранить пробу')}</button></div></div></div></div>
+  <div class="card"><h3>${T('Laboratory results','Результаты лаборатории')}<span class="sp"></span><span class="pill">${T('Limits: Cl₂ 0.2–2.0 · turbidity ≤ 1 · pH 6.5–8.5 · EC ≤ 1000','Нормы: Cl₂ 0,2–2,0 · мутность ≤ 1 · pH 6,5–8,5 · ЭП ≤ 1000')}</span></h3><div class="tw" id="labT"></div></div>`;
+  $$('[data-qpar]').forEach(b=>b.onclick=()=>{S.qpar=b.dataset.qpar;save();rQuality()});
+  $('#sSave').onclick=()=>{const g=id=>parseFloat($(id).value.replace(',','.'));const v={cl:g('#sCl'),tu:g('#sTu'),ph:g('#sPh'),ec:g('#sEc')},by=$('#sBy').value.trim();
+    const rng={cl:[0,5],tu:[0,50],ph:[0,14],ec:[0,5000]};let err=[];
+    for(const k in v){const ok=!isNaN(v[k])&&v[k]>=rng[k][0]&&v[k]<=rng[k][1];$({cl:'#sCl',tu:'#sTu',ph:'#sPh',ec:'#sEc'}[k]).classList.toggle('bad',!ok);if(!ok)err.push(k==='cl'?'Cl₂':k==='tu'?T('turbidity','мутность'):k==='ph'?'pH':T('conductivity','ЭП'))}
+    $('#sBy').classList.toggle('bad',!by);if(!by)err.push(T('sampler','отборщик'));
+    if(err.length){$('#sErr').textContent=T('Check: ','Проверьте: ')+err.join(', ');return}
+    const id='LS-'+(S.nextL++),pt=$('#sPt').value;S.lab.unshift({id,pt,t:S.t,...v,by});const bad=PARAMS.some(p=>qBad(p[0],v[p[0]]));
+    addEv('Lab sample '+id+' at '+pt+(bad?': EXCEEDANCE':': compliant'),'Проба '+id+', '+pt+(bad?': ПРЕВЫШЕНИЕ':': норма'),bad?'warn':'ok');save();
+    toast(bad?T('Sample '+id+' exceeds limits — consider a flushing order','Проба '+id+' вне нормы — назначьте промывку'):T('Sample '+id+' saved — compliant','Проба '+id+' сохранена — норма'),bad?'bad':'');rQuality()};
+  qLive();labTable();
+}
+function qLive(){
+  $('#qG').innerHTML=qCards();$$('[data-qp]').forEach(b=>b.onclick=()=>{S.qsel=b.dataset.qp;save();qLive()});
+  const i=QP.findIndex(x=>x[0]===S.qsel),q=S.qp[i],p=PARAMS.find(x=>x[0]===S.qpar),vals=q.h[p[0]];
+  $('#qT').textContent=L(QP[i][1])+' · '+(p[0]==='ph'?'pH':L(p[1]));
+  const w=560,h=200,pl=44,pr=10,pt=12,pb=22;let mn=Math.min(...vals,p[3]),mx=Math.max(...vals,p[4]===1000?Math.max(...vals)*1.05:p[4]);
+  if(p[0]==='ec'){mn=Math.min(...vals)*.95;mx=Math.max(1000,...vals)*1.02}if(p[0]==='ph'){mn=6.2;mx=8.8}if(p[0]==='cl'){mn=0;mx=Math.max(1.4,...vals)}if(p[0]==='tu'){mn=0;mx=Math.max(1.3,...vals)}
+  const X=k=>pl+k*(w-pl-pr)/Math.max(1,vals.length-1),Y=v=>pt+(h-pt-pb)*(1-(v-mn)/(mx-mn));
+  let s=`<svg viewBox="0 0 ${w} ${h}">`;for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4;s+=`<line x1="${pl}" x2="${w-pr}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line)"/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end" style="fill:var(--dim);font:10.5px var(--mono)">${v.toFixed(p[5]===0?0:2)}</text>`}
+  [p[3],p[4]].forEach(l=>{if(l>mn&&l<mx)s+=`<line x1="${pl}" x2="${w-pr}" y1="${Y(l)}" y2="${Y(l)}" style="stroke:var(--red)" stroke-dasharray="5 4"/><text x="${w-pr}" y="${Y(l)-4}" text-anchor="end" style="fill:var(--red);font:600 10.5px var(--font)">${T('limit','норма')} ${l}</text>`});
+  const path=vals.map((v,k)=>(k?'L':'M')+X(k).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+  s+=`<path d="${path} L${X(vals.length-1)} ${h-pb} L${pl} ${h-pb}Z" style="fill:color-mix(in srgb,var(--mal) 14%,transparent)"/><path d="${path}" fill="none" style="stroke:var(--mal3)" stroke-width="2.2"/>`;
+  vals.forEach((v,k)=>{if(qBad(p[0],v))s+=`<circle cx="${X(k)}" cy="${Y(v)}" r="3.5" style="fill:var(--red)"/>`});
+  [0,Math.floor(vals.length/2),vals.length-1].forEach(k=>{s+=`<text x="${clamp(X(k),pl+16,w-pr-16)}" y="${h-5}" text-anchor="middle" style="fill:var(--dim);font:10.5px var(--mono)">${hm(S.t-(vals.length-1-k)*5)}</text>`});
+  $('#qC').innerHTML=s+'</svg>';
+  const bad=PARAMS.some(pp=>qBad(pp[0],q[pp[0]])),z=QP[i][2],has=S.wos.some(w=>w.asset===z&&w.type==='flush'&&!['done','cancelled'].includes(w.st));
+  const sig='q'+bad+has+S.qsel+PT.lang;if($('#qAct').dataset.sig!==sig){$('#qAct').dataset.sig=sig;
+  $('#qAct').innerHTML=bad?(has?`<span class="pill gold">${T('Flushing order already open','Наряд на промывку уже открыт')}</span>`:`<button class="btn sm gold" id="qFlush">${T('Create flushing order','Создать наряд на промывку')}</button>`):`<span class="pill ok">${T('Within regulatory limits','В пределах нормативов')}</span>`;
+  const f=$('#qFlush');if(f)f.onclick=()=>{const id='WO-'+(S.nextW++);S.wos.unshift({id,type:'flush',asset:z,pri:'high',crew:3,st:'assigned',t:S.t,note:'Water quality exceedance at '+QP[i][0],alert:null});addEv(id+' flushing ordered at '+QP[i][0],id+': промывка, '+QP[i][0],'ok');save();toast(T('Flushing order ','Наряд на промывку ')+id+T(' sent to Crew Q4',' отправлен бригаде К4'));qLive();nav()}}
+}
+function labTable(){
+  $('#labT').innerHTML=`<table><thead><tr><th>ID</th><th>${T('Point','Точка')}</th><th>${T('Time','Время')}</th><th>Cl₂</th><th>${T('Turbidity','Мутность')}</th><th>pH</th><th>${T('EC','ЭП')}</th><th>${T('Sampled by','Отобрал')}</th><th>${T('Result','Итог')}</th></tr></thead><tbody>`+
+   S.lab.map(x=>{const bad=PARAMS.some(p=>qBad(p[0],x[p[0]]));const c=k=>qBad(k,x[k])?'bad-t':'';const q=QP.find(z=>z[0]===x.pt);
+   return `<tr><td class="mono">${x.id}</td><td>${x.pt} · ${esc(L(q[1]))}</td><td class="mono">${fmtT(x.t)}</td><td class="${c('cl')}">${nf(x.cl,2)}</td><td class="${c('tu')}">${nf(x.tu,2)}</td><td class="${c('ph')}">${nf(x.ph,2)}</td><td class="${c('ec')}">${nf(x.ec)}</td><td>${esc(x.by)}</td><td><span class="pill ${bad?'bad':'ok'}">${bad?T('Exceedance','Превышение'):T('Compliant','Норма')}</span></td></tr>`}).join('')+'</tbody></table>';
+}
+
+/* ---------- boot ---------- */
+let role='ops';
+$$('#roles .opt').forEach(b=>b.onclick=()=>{role=b.dataset.role;$$('#roles .opt').forEach(x=>x.classList.toggle('on',x===b))});
+function show(){const a=!!S.auth;$('#login').hidden=a;$('#app').hidden=!a;if(a)render()}
+$('#loginBtn').onclick=()=>{const u=$('#lu').value.trim(),p=$('#lp').value;let e='';if(!u)e=T('Enter a username','Введите имя пользователя');else if(!p)e=T('Enter a password','Введите пароль');
+  $('#lerr').textContent=e;$('#lu').classList.toggle('bad',!u);$('#lp').classList.toggle('bad',!p);if(e)return;
+  S.auth=true;S.user=u;S.role=role;S.view=role==='field'?'wo':'overview';addEv(u+' signed in ('+(role==='ops'?'control room':'field engineer')+')',u+' вошёл ('+(role==='ops'?'диспетчер':'инженер бригады')+')','');save();show();toast(T('Welcome, ','Добро пожаловать, ')+esc(u))};
+$('#lp').addEventListener('keydown',e=>{if(e.key==='Enter')$('#loginBtn').click()});
+$('#logout').onclick=()=>{S.auth=false;save();closeSide();show()};
+$('#reset').onclick=()=>{try{Object.keys(localStorage).filter(k=>k.startsWith(PFX)).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()};
+$('#pauseBtn').onclick=()=>{S.paused=!S.paused;save();clock()};
+$('#menuBtn').onclick=()=>{$('#side').classList.add('open');$('#scrim').classList.add('on')};
+$('#scrim').onclick=closeSide;
+PT.onLang(()=>{if(S.auth)render();else $('#lerr').textContent=''});
+let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(S.auth&&(S.view==='overview'||S.view==='res'))live()},150)});
+setInterval(()=>{if(S.paused||!S.auth)return;step(false);H=calc();save();live()},2000);
+document.addEventListener('DOMContentLoaded',show);
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

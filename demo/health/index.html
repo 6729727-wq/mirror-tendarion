@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vitalia Health App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1420px;margin:0 auto;padding:18px 20px 60px}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.top h1{margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
+.top h1 b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#ff7d8e,#c8344f);color:#fff;font-size:15px}
+.top .sp{flex:1}.stk{font-family:var(--mono);font-size:11.5px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.how>div{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.4}
+.how>div>b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:12px}
+.how>div>span{min-width:0;overflow-wrap:anywhere}
+.layout{display:grid;grid-template-columns:minmax(0,.9fr) 392px minmax(0,1.2fr);grid-template-areas:"feat phone cons";gap:20px;align-items:start}
+.a-feat{grid-area:feat;display:flex;flex-direction:column;gap:14px;min-width:0}
+.a-phone{grid-area:phone;min-width:0}
+.a-cons{grid-area:cons;display:flex;flex-direction:column;gap:14px;min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h4{margin:14px 0 8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 14px;font-size:13px;margin:0}
+.facts dt{color:var(--muted)}.facts dd{margin:0;font-weight:600}
+.feat{display:flex;gap:11px;padding:9px 8px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:.15s}
+.feat:hover{border-color:var(--line2);background:var(--panel2)}
+.feat .fi{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);font-size:16px}
+.feat b{display:block;font-size:13.5px}.feat span{font-size:12.3px;color:var(--muted);line-height:1.4;display:block}
+/* phone */
+.phone{border-radius:50px;padding:12px;background:linear-gradient(160deg,#2a3b35,#0b1512);box-shadow:var(--shadow),inset 0 0 0 2px #3a4f47;position:sticky;top:60px}
+.scr{border-radius:38px;overflow:hidden;background:var(--bg);height:770px;display:flex;flex-direction:column;position:relative;isolation:isolate}
+.sbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:12.5px;font-weight:700;flex:none}
+.sbar .isl{width:96px;height:24px;background:#000;border-radius:14px}
+.ahd{display:flex;align-items:center;gap:8px;padding:4px 14px 8px;flex:none}
+.ahd .lg{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#ff7d8e,#c8344f);color:#fff;font-size:14px;flex:none}
+.ahd .tt{flex:1;font-weight:800;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ibtn{position:relative;width:36px;height:36px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);display:grid;place-items:center;cursor:pointer;flex:none;padding:0;font-size:15px}
+.ibtn.offl{color:var(--amber);border-color:var(--amber)}
+.ibtn .bd{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 4px;border:2px solid var(--bg)}
+.pava{width:36px;height:36px;border-radius:50%;border:2px solid var(--mal);display:grid;place-items:center;font-weight:800;font-size:12px;cursor:pointer;flex:none;padding:0;color:#1a1306}
+.ban{margin:0 14px 6px;border-radius:12px;padding:7px 11px;font-size:12px;font-weight:600;background:color-mix(in srgb,var(--amber) 14%,transparent);color:var(--amber);border:1px solid color-mix(in srgb,var(--amber) 40%,transparent);flex:none}
+.pbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 14px 18px;scrollbar-width:thin;position:relative}
+.ptr{height:0;overflow:hidden;display:grid;place-items:center;color:var(--muted);font-size:12px;transition:height .25s}
+.ptr.drag{transition:none}
+.ptr i{width:20px;height:20px;border:2px solid var(--line2);border-top-color:var(--mal3);border-radius:50%;display:inline-block}
+.ptr.spin i{animation:sp .7s linear infinite}
+.view{animation:vin .28s cubic-bezier(.2,1,.4,1)}
+@keyframes vin{from{opacity:0;transform:translateX(14px)}}
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);padding:6px 4px 14px;flex:none}
+.tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:600;color:var(--dim);cursor:pointer;padding:4px 0;min-width:0}
+.tabbar button i{font-style:normal;font-size:19px;filter:grayscale(1);opacity:.7;transition:.2s}
+.tabbar button.on{color:var(--mal3)}.tabbar button.on i{filter:none;opacity:1;transform:translateY(-2px) scale(1.1)}
+.tabbar button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+button:active,.li:active,.tile:active{transform:scale(.96)}
+.xs{font-size:11.5px}.sm{font-size:12.5px}
+.row{display:flex;align-items:center;gap:10px}.row .sp{flex:1;min-width:0}
+.fam{display:flex;gap:8px;margin:2px 0 12px;overflow-x:auto;scrollbar-width:none}
+.fam button{flex:none;display:flex;align-items:center;gap:6px;border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:4px 10px 4px 4px;cursor:pointer;font-size:12.5px;font-weight:600}
+.fam button.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:800;color:#1a1306;flex:none}
+.hid{border-radius:18px;padding:14px;color:#fff;background:radial-gradient(130% 120% at 0 0,#21c99a 0,#0e7458 50%,#093a2e 100%);position:relative;overflow:hidden;cursor:pointer;display:flex;gap:12px;box-shadow:0 10px 30px rgba(6,40,30,.3);margin-bottom:12px}
+.hid:after{content:"";position:absolute;right:-50px;top:-60px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(255,125,142,.45),transparent 68%);pointer-events:none}
+.hid .l{flex:1;min-width:0;position:relative;z-index:1}
+.hid .t1{font-size:9.5px;font-weight:800;letter-spacing:.14em;opacity:.85}
+.hid .nm{font-size:18px;font-weight:800;margin:6px 0 2px}
+.hid i{display:block;font-style:normal;font-size:9px;opacity:.7;text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+.hid b{font-size:12.5px}
+.hid .q{width:92px;flex:none;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9.5px;opacity:.95}
+.hid .q svg{width:92px;height:92px;border-radius:8px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:6px}
+.tile{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);padding:0;min-width:0}
+.tile i{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);transition:.15s;font-style:normal;font-size:22px}
+.tile:hover i{border-color:var(--gold)}.tile span{text-align:center;line-height:1.2}
+.sect{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px}
+.sect button{border:0;background:none;color:var(--mal3);font-weight:700;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;padding:0}
+.li{display:flex;align-items:center;gap:11px;padding:11px 12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;cursor:pointer;transition:.15s;width:100%;text-align:left}
+.li:hover{border-color:var(--line2)}
+.li .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--panel2);flex:none;font-size:17px}
+.li .sp{flex:1;min-width:0}
+.li .sp b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .sp div{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .r{font-size:12.5px;font-weight:700;text-align:right;white-space:nowrap;flex:none}
+.back{border:0;background:none;color:var(--muted);cursor:pointer;font-weight:600;padding:2px 0 8px;font-size:13px}
+.h2{font-size:19px;font-weight:800;margin:2px 0 4px;line-height:1.25}
+.sub{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.pbtn{width:100%;justify-content:center;margin-top:8px}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:4px 0 10px;scrollbar-width:none}
+.chip{flex:none;border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip.on{color:#fff;background:var(--mal2);border-color:var(--mal)}
+.tl{position:relative;padding-left:22px}
+.tl:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line2)}
+.tl .mo{font-size:11px;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:10px 0 6px}
+.tl .li{position:relative}
+.tl .li:before{content:"";position:absolute;left:-20px;top:20px;width:10px;height:10px;border-radius:50%;background:var(--c,var(--mal));box-shadow:0 0 0 3px var(--bg)}
+.tl .li.new{animation:fl 2.2s}
+@keyframes fl{0%{background:color-mix(in srgb,var(--gold) 30%,var(--panel))}}
+.spark{display:block}
+.flag{font-size:10px;font-weight:800;padding:1px 6px;border-radius:6px;margin-left:4px}
+.flag.H{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}.flag.L{background:color-mix(in srgb,var(--blue) 18%,transparent);color:var(--blue)}
+.big{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;font-size:12.5px;margin:10px 0}
+.kv span{color:var(--muted)}.kv b{font-weight:600;overflow-wrap:anywhere}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{border:1px solid var(--line2);background:var(--panel);border-radius:14px;padding:12px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);transition:.15s}
+.opt b{color:var(--text);font-size:13.5px}.opt i{font-style:normal;font-size:22px}
+.opt:hover{border-color:var(--mal)}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.slot{border:1px solid var(--line2);background:var(--panel);border-radius:10px;padding:8px 0;font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--mono)}
+.slot[disabled]{opacity:.3;text-decoration:line-through;cursor:not-allowed}
+.slot.on{background:var(--mal);color:#fff;border-color:var(--mal)}
+.seg{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:10px}
+.seg button{flex:1;border:0;background:none;padding:6px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--muted)}
+.seg button.on{background:var(--panel2);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.tri{border-radius:16px;padding:16px;color:#fff;margin:6px 0 12px;animation:pop .35s}
+.tri.red{background:linear-gradient(135deg,#e5484d,#9c1f2b)}.tri.amber{background:linear-gradient(135deg,#f0a83a,#b8641a)}.tri.green{background:linear-gradient(135deg,#21c99a,#0e7458)}
+.tri b{font-size:18px;display:block;margin:4px 0}
+.crumbs{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.ans{width:100%;text-align:left;justify-content:flex-start;margin-bottom:8px;border-radius:14px;padding:12px 14px}
+.sw{position:relative;width:40px;height:22px;flex:none;display:inline-block}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line2);transition:.2s;cursor:pointer}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+i{background:var(--mal)}.sw input:checked+i:after{transform:translateX(18px)}
+.push{position:absolute;left:10px;right:10px;top:8px;z-index:40;border-radius:18px;padding:11px 12px;display:flex;gap:10px;cursor:pointer;background:color-mix(in srgb,var(--panel2) 90%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line2);box-shadow:0 14px 34px rgba(0,0,0,.35);animation:pdrop .45s cubic-bezier(.2,1.3,.4,1)}
+.push.out{animation:pup .3s forwards}
+.push .ic{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,#ff7d8e,#c8344f);color:#fff;font-size:15px}
+.push .sp{flex:1;min-width:0}.push .hd{font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.push b{display:block;font-size:13px}.push p{margin:1px 0 0;font-size:12px;color:var(--muted);line-height:1.35}
+@keyframes pdrop{from{transform:translateY(-130%);opacity:0}}@keyframes pup{to{transform:translateY(-130%);opacity:0}}
+.shade{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.45);animation:fade .2s}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:21;background:var(--panel);border-radius:24px 24px 0 0;border-top:1px solid var(--line2);padding:10px 16px 22px;max-height:88%;overflow:auto;animation:sup .3s cubic-bezier(.2,1,.4,1)}
+.sheet:before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--line2);margin:0 auto 12px}
+.sheet h4{margin:0 0 4px;font-size:17px}
+.qrbox{background:#fff;border-radius:18px;padding:12px;width:220px;margin:12px auto;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.qrbox svg{display:block;width:100%;height:auto}
+@keyframes sup{from{transform:translateY(100%)}}@keyframes fade{from{opacity:0}}@keyframes pop{from{transform:scale(.85);opacity:0}}@keyframes sp{to{transform:rotate(360deg)}}
+/* call */
+.call{position:absolute;inset:0;z-index:30;background:#05100c;color:#fff;display:flex;flex-direction:column;animation:fade .3s}
+.call .vid{flex:1;position:relative;background:radial-gradient(80% 60% at 50% 35%,#1d4a3c,#06120e);display:grid;place-items:center;min-height:0}
+.call .doc{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;font-size:36px;font-weight:800;background:linear-gradient(135deg,#f3d79a,#c69a3e);color:#1a1306;animation:talk 1.6s infinite}
+@keyframes talk{0%{box-shadow:0 0 0 0 rgba(54,224,174,.55)}100%{box-shadow:0 0 0 26px rgba(54,224,174,0)}}
+.call .me{position:absolute;right:12px;top:44px;width:84px;height:116px;border-radius:14px;background:linear-gradient(160deg,#2c3e38,#122019);border:2px solid rgba(255,255,255,.3);display:grid;place-items:center;font-size:12px}
+.call .cap{position:absolute;left:14px;top:12px;font-size:12px;line-height:1.35}
+.call .cap b{font-size:15px;display:block}
+.call .rec{position:absolute;left:14px;bottom:10px;font-family:var(--mono);font-size:12px;background:rgba(0,0,0,.4);padding:3px 8px;border-radius:8px}
+.call .rec:before{content:"●";color:#ff5a5a;margin-right:5px;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.2}}
+.call .chat{height:200px;background:#0b1a15;border-top:1px solid #1f3a31;display:flex;flex-direction:column}
+.call .msgs{flex:1;overflow:auto;padding:8px 12px;font-size:12.5px;display:flex;flex-direction:column;gap:6px}
+.call .m{max-width:82%;padding:6px 10px;border-radius:12px;background:#163128;align-self:flex-start;animation:pop .25s}
+.call .m.me2{align-self:flex-end;background:#0e7458}
+.call .cin{display:flex;gap:6px;padding:8px}
+.call .cin input{flex:1;min-width:0;background:#132620;border:1px solid #2a4d41;border-radius:10px;padding:8px 10px;color:#fff;outline:none}
+.call .ctr{display:flex;justify-content:center;gap:14px;padding:12px 0 18px;background:#05100c}
+.call .ctr button{width:50px;height:50px;border-radius:50%;border:0;background:#1f3a31;color:#fff;font-size:19px;cursor:pointer}
+.call .ctr button.off{background:#fff;color:#111}.call .ctr .end{background:#e5484d}
+/* console */
+.kp4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.kp4 div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:0}
+.kp4 span{display:block;font-size:11px;line-height:1.25;color:var(--muted);font-weight:600}
+.kp4 b{font-family:var(--mono);font-size:17px}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:300px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:440px}
+th{position:sticky;top:0;background:var(--panel2);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:7px 10px}
+td{padding:8px 10px;border-top:1px solid var(--line);white-space:nowrap}
+tbody tr{cursor:pointer}tbody tr:hover td{background:var(--panel2)}tbody tr.sel td{background:color-mix(in srgb,var(--mal) 10%,transparent)}
+tr.fresh td{animation:fl 2.4s}
+.f{margin-bottom:10px}.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.chart{display:flex;gap:12px;align-items:center;padding:10px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
+.lock{text-align:center;padding:18px;border:1px dashed var(--red);border-radius:12px;color:var(--red);font-size:13px}
+.json{font-family:var(--mono);font-size:11.8px;line-height:1.55;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;max-height:380px;overflow:auto}
+.json details{margin:0}.json summary{cursor:pointer;list-style:none;white-space:nowrap}
+.json summary::-webkit-details-marker{display:none}
+.json summary:before{content:"▸";display:inline-block;width:12px;color:var(--dim);transition:.15s}
+.json details[open]>summary:before{transform:rotate(90deg)}
+.json details[open]>summary .cn{display:none}
+.json .jin{padding-left:16px;border-left:1px dashed var(--line2);margin-left:5px}
+.json .ln{white-space:nowrap;padding-left:12px}
+.jk{color:var(--violet)}.js{color:var(--mal3)}.jn{color:var(--gold2)}.jb{color:var(--blue)}.cn{color:var(--dim);font-size:10.5px;margin-left:6px}
+.alog{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;max-height:150px;overflow:auto;line-height:1.6}
+.alog div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:330px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}.toast.warn{border-left-color:var(--amber)}
+@media (max-width:1180px){
+  .layout{grid-template-columns:392px minmax(0,1fr);grid-template-areas:"phone cons" "feat feat"}
+  .a-feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+}
+@media (max-width:860px){
+  .wrap{padding:14px 16px 50px}
+  .how{grid-template-columns:minmax(0,1fr);gap:6px}
+  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"phone" "cons" "feat"}
+  .a-feat{display:flex}
+  .a-phone{margin:0 -16px}
+  .phone{position:static;padding:0;background:none;box-shadow:none;border-radius:0}
+  .scr{border-radius:0;height:calc(100svh - 44px);min-height:560px;max-height:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .sbar{display:none}
+  .toasts{left:16px;right:16px;top:auto;bottom:16px}.toast{max-width:none}
+}
+@media (max-width:520px){.kp4{grid-template-columns:repeat(2,minmax(0,1fr))}.f2{grid-template-columns:minmax(0,1fr)}.top h1{font-size:19px}.pbody{padding:4px 12px 16px}}
+@media (max-width:380px){.tile i{width:46px;height:46px}.hid .q,.hid .q svg{width:78px}.hid .q svg{height:78px}.slots{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body data-demo-en="Vitalia — national health app" data-demo-ru="Vitalia — национальное приложение здоровья">
+<div class="wrap">
+  <div class="top">
+    <h1><b>♥</b>Vitalia</h1>
+    <span class="pill gold" data-en="Tender · National health app · $5.2M" data-ru="Тендер · Национальное приложение здоровья · $5.2M"></span>
+    <span class="sp"></span>
+    <span class="pill ok stk">Flutter</span><span class="pill ok stk">HL7 FHIR R4</span><span class="pill ok stk">OIDC</span><span class="pill ok stk">offline-first</span>
+  </div>
+  <div class="how">
+    <div><b>1</b><span data-en="In the app, open <b>Records</b> → tap any lab result: see the trend, then <b>FHIR JSON</b> appears in the console." data-ru="В приложении откройте <b>Записи</b> → нажмите анализ: тренд, а справа — его <b>FHIR JSON</b>."></span></div>
+    <div><b>2</b><span data-en="In the <b>doctor console</b> open Elin Varga, add a diagnosis + prescription and sign — it lands in the app with a push." data-ru="В <b>консоли врача</b> откройте Элин Варгу, добавьте диагноз и рецепт, подпишите — он придёт в приложение пушем."></span></div>
+    <div><b>3</b><span data-en="In <b>Medicines</b> reserve it at a pharmacy, show the pickup QR, then press <b>Scan</b> at the pharmacy counter." data-ru="В <b>Лекарствах</b> зарезервируйте рецепт в аптеке, покажите QR и нажмите <b>Сканировать</b> в аптеке."></span></div>
+  </div>
+  <div class="layout">
+    <aside class="a-feat">
+      <div class="card">
+        <h3><span data-en="Project facts" data-ru="О проекте"></span></h3>
+        <dl class="facts">
+          <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="National health app" data-ru="Национальное приложение здоровья"></dd>
+          <dt data-en="Year" data-ru="Год"></dt><dd>2025</dd>
+          <dt data-en="Budget" data-ru="Бюджет"></dt><dd>$5.2M</dd>
+          <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Ministry of Health, Republic of Nordania" data-ru="Минздрав Республики Нордания"></dd>
+          <dt data-en="Stack" data-ru="Стек"></dt><dd class="mono" style="font-size:12.5px">Flutter · HL7 FHIR · OIDC · offline-first</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <h3><span data-en="What the app does" data-ru="Что умеет приложение"></span><span class="sp"></span><span class="pill" data-en="tap to open" data-ru="нажмите"></span></h3>
+        <div id="feats"></div>
+        <button class="btn" id="resetBtn" style="margin-top:10px" data-en="Reset demo data" data-ru="Сбросить данные демо"></button>
+      </div>
+    </aside>
+    <div class="a-phone">
+      <div class="phone">
+        <div class="scr" id="scr">
+          <div class="sbar"><span id="clock">9:41</span><span class="isl"></span><span id="sig">●●● 5G 🔋</span></div>
+          <div class="ahd"><span class="lg">♥</span><span class="tt" id="ptitle">Vitalia</span>
+            <button class="ibtn" id="netBtn" data-a="net"></button>
+            <button class="ibtn" id="bellBtn" data-a="notes">🔔</button>
+            <button class="pava" id="pavaBtn" data-a="famSheet"></button>
+          </div>
+          <div id="banner"></div>
+          <div class="pbody" id="pbody"><div class="ptr" id="ptr"><span><i></i></span></div><div id="view"></div></div>
+          <nav class="tabbar" id="tabbar"></nav>
+          <div id="sheetHost"></div><div id="callHost"></div><div id="pushHost"></div>
+        </div>
+      </div>
+    </div>
+    <section class="a-cons">
+      <div class="card">
+        <h3><span>🩺</span><span data-en="Doctor console · Nordhavn City Clinic" data-ru="Консоль врача · Городская клиника Нордхавна"></span><span class="sp"></span><span class="pill gold">Dr. Anna Lind · GP</span></h3>
+        <div class="kp4">
+          <div><span data-en="Patients today" data-ru="Пациентов сегодня"></span><b id="kPat">—</b></div>
+          <div><span data-en="Waiting" data-ru="Ожидают"></span><b id="kWait">—</b></div>
+          <div><span data-en="e-Rx signed" data-ru="e-рецептов"></span><b id="kRx">—</b></div>
+          <div><span data-en="FHIR sync" data-ru="Синхр. FHIR"></span><b id="kSync" style="color:var(--mal3)">200 OK</b></div>
+        </div>
+        <div class="tw"><table><thead><tr><th data-en="Time" data-ru="Время"></th><th data-en="Patient" data-ru="Пациент"></th><th data-en="Reason" data-ru="Причина"></th><th data-en="Type" data-ru="Тип"></th><th data-en="Status" data-ru="Статус"></th></tr></thead><tbody id="queue"></tbody></table></div>
+      </div>
+      <div class="card" id="chartCard"></div>
+      <div class="card">
+        <h3><span>{ }</span><span data-en="FHIR resource viewer" data-ru="Просмотр FHIR-ресурса"></span><span class="sp"></span>
+          <button class="btn" style="padding:5px 11px;font-size:12px" id="jExp" data-en="Expand" data-ru="Раскрыть"></button>
+          <button class="btn" style="padding:5px 11px;font-size:12px" id="jCol" data-en="Collapse" data-ru="Свернуть"></button>
+          <button class="btn" style="padding:5px 11px;font-size:12px" id="jDl">⬇ .json</button></h3>
+        <div class="sm muted" id="jHead" style="margin-bottom:8px"></div>
+        <div class="json" id="json"></div>
+      </div>
+      <div class="card">
+        <h3><span>💊</span><span data-en="Pharmacy counter · Apotek Nordia, Harbour St" data-ru="Аптека · Apotek Nordia, Портовая ул."></span></h3>
+        <div id="pharm"></div>
+        <h4 data-en="National e-Rx registry log" data-ru="Журнал нацреестра e-рецептов"></h4>
+        <div class="alog" id="rxlog"></div>
+      </div>
+    </section>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru), L=()=>PT.lang==='ru'?'ru':'en', tx=a=>Array.isArray(a)?(PT.lang==='ru'?a[1]:a[0]):a;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const hash=s=>{let h=2166136261;for(const c of String(s))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+const rng=seed=>()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const buzz=()=>{try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}};
+const pad=n=>String(n).padStart(2,'0'), hhmm=d=>pad(d.getHours())+':'+pad(d.getMinutes());
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const addD=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const fmtD=s=>new Date(s+'T12:00:00').toLocaleDateString(L()==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtM=s=>new Date(s+'T12:00:00').toLocaleDateString(L()==='ru'?'ru-RU':'en-GB',{month:'long',year:'numeric'});
+const KEY='pt-health-v1';
+function qr(txt){const r=rng(hash(txt)),N=25;let p='';const fz=(x,y)=>(x<8&&y<8)||(x>N-9&&y<8)||(x<8&&y>N-9);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!fz(x,y)&&r()<.48)p+=`M${x+2} ${y+2}h1v1h-1z`;
+  const f=(x,y)=>`M${x+2} ${y+2}h7v7h-7zM${x+3} ${y+3}v5h5v-5zM${x+4} ${y+4}h3v3h-3z`;
+  return `<svg viewBox="0 0 29 29" shape-rendering="crispEdges"><rect width="29" height="29" fill="#fff"/><path fill="#0b1512" fill-rule="evenodd" d="${f(0,0)+f(N-7,0)+f(0,N-7)+p}"/></svg>`}
+/* ---------- data ---------- */
+const FAM=[{id:'p1',n:['Elin Varga','Элин Варга'],rel:['Me','Я'],born:'1988-04-12',nhi:'NHI 4402-1188-73',blood:'A+',all:['Penicillin','Пенициллин'],g:'linear-gradient(135deg,#f3d79a,#c69a3e)'},
+ {id:'p2',n:['Mila Varga','Мила Варга'],rel:['Daughter · guardian access','Дочь · опекунский доступ'],born:'2017-09-03',nhi:'NHI 4402-7731-05',blood:'A+',all:['None','Нет'],g:'linear-gradient(135deg,#9be7ff,#4ea4ff)'},
+ {id:'p3',n:['Oskar Varga','Оскар Варга'],rel:['Father · delegated','Отец · по доверенности'],born:'1956-01-20',nhi:'NHI 4402-0412-66',blood:'0+',all:['None','Нет'],g:'linear-gradient(135deg,#c4b5fd,#7c5ce0)'}];
+const OTHERS={x1:['Henrik Aas','Хенрик Ос','1979-06-02'],x2:['Sofia Berg','София Берг','1993-11-15'],x3:['Jonas Lund','Йонас Лунд','1968-03-08'],x4:['Karin Holm','Карин Хольм','2001-07-27']};
+const ICD=[['J06.9','Acute upper respiratory infection','Острая инфекция верхних дыхательных путей'],['I10','Essential hypertension','Эссенциальная гипертензия'],['E78.0','Pure hypercholesterolaemia','Гиперхолестеринемия'],['J45.9','Asthma, unspecified','Астма неуточнённая'],['M54.5','Low back pain','Боль в пояснице'],['L30.9','Dermatitis, unspecified','Дерматит неуточнённый']];
+const MEDS=[['J01CA04','Amoxicillin 500 mg capsules',['1 capsule 3× daily, 7 days','1 капсула 3 раза в день, 7 дней'],7],['M01AE01','Ibuprofen 400 mg tablets',['1 tablet up to 3× daily after food','1 таблетка до 3 раз в день после еды'],10],['C09AA03','Lisinopril 10 mg tablets',['1 tablet every morning','1 таблетка утром'],90],['R03AC02','Salbutamol inhaler 100 mcg',['2 puffs when needed, max 8/day','2 вдоха при необходимости, до 8 в день'],30],['C10AA05','Atorvastatin 20 mg tablets',['1 tablet in the evening','1 таблетка вечером'],90],['R06AE07','Cetirizine 10 mg tablets',['1 tablet daily','1 таблетка в день'],14]];
+const SPECS=[['gp','🩺','General practitioner','Терапевт',1],['card','❤️','Cardiology','Кардиология',0],['derm','🧴','Dermatology','Дерматология',1],['ped','🧸','Pediatrics','Педиатрия',1],['oph','👁','Ophthalmology','Офтальмология',0],['dent','🦷','Dentistry','Стоматология',0]];
+const CLIN=[['c1','Nordhavn City Clinic','Городская клиника Нордхавна',1.2,['gp','derm','ped','card'],'Dr. Anna Lind'],['c2','Harbour Medical Centre','Медцентр «Гавань»',2.8,['gp','card','oph','dent'],'Dr. Pål Strand'],['c3','St. Brigid Hospital (outpatient)','Больница Св. Бригиды (амбулатория)',4.5,['card','derm','oph','ped'],'Dr. Ida Moen'],['c4','Vesterby Family Practice','Семейная практика Вестербю',6.1,['gp','ped','dent'],'Dr. Lars Eik']];
+const PHARMS=[['Apotek Nordia, Harbour St','Apotek Nordia, Портовая ул.','0.6 km',1],['Linden Pharmacy','Аптека «Липа»','1.4 km',1],['Apotek Nordia, Central Station','Apotek Nordia, Центральный вокзал','2.2 km',0]];
+function seedRes(){let i=0;const R=[],id=t=>t.slice(0,3).toLowerCase()+'-'+(1000+ ++i);
+ const enc=(pid,date,t,by,org,note,cls)=>R.push({id:id('Enc'),pid,rt:'Encounter',date,title:t,by,org,note,cls:cls||'AMB'});
+ const obs=(pid,code,name,unit,lo,hi,vals,ds)=>R.push({id:id('Obs'),pid,rt:'Observation',date:ds[ds.length-1],code,name,unit,lo,hi,vals,ds});
+ const med=(pid,date,atc,m,dose,st,by,days)=>R.push({id:id('Med'),pid,rt:'MedicationRequest',date,atc,med:m,dose,status:st,by,days});
+ const imm=(pid,date,cvx,vac,lot,dose)=>R.push({id:id('Imm'),pid,rt:'Immunization',date,cvx,vac,lot,dose});
+ const cond=(pid,date,icd,name,by)=>R.push({id:id('Con'),pid,rt:'Condition',date,icd,name,by});
+ const D=['2025-11-04','2026-02-10','2026-05-06','2026-08-12','2026-10-28'];
+ enc('p1','2026-10-28',['Annual check-up','Ежегодный осмотр'],'Dr. Anna Lind','Nordhavn City Clinic',['BP 124/79. Advised diet review, repeat lipids in 3 months.','АД 124/79. Рекомендован пересмотр питания, липиды повторить через 3 мес.']);
+ obs('p1','2093-3',['Total cholesterol','Общий холестерин'],'mmol/L',3.0,5.2,[6.2,6.0,5.7,5.4,5.1],D);
+ obs('p1','1558-6',['Fasting glucose','Глюкоза натощак'],'mmol/L',3.9,5.5,[5.3,5.5,5.8,6.0,5.7],D);
+ obs('p1','718-7',['Haemoglobin','Гемоглобин'],'g/L',120,150,[131,134,128,137,136],D);
+ obs('p1','1989-3',['Vitamin D (25-OH)','Витамин D (25-OH)'],'nmol/L',50,125,[38,41,55,66,72],D);
+ cond('p1','2025-11-04','E78.0',['Pure hypercholesterolaemia','Гиперхолестеринемия'],'Dr. Anna Lind');
+ med('p1','2025-11-04','C10AA05','Atorvastatin 10 mg tablets',['1 tablet in the evening','1 таблетка вечером'],'dispensed','Dr. Anna Lind',90);
+ med('p1','2026-10-28','A11CC05','Cholecalciferol 1000 IU',['1 capsule daily with food','1 капсула в день во время еды'],'active','Dr. Anna Lind',60);
+ imm('p1','2026-10-05','140',['Influenza, seasonal 2026/27','Грипп, сезонная 2026/27'],'FLU-26-4471',1);
+ imm('p1','2025-10-12','308',['COVID-19 mRNA booster','COVID-19 мРНК, бустер'],'CV-25-9912',4);
+ imm('p1','2021-03-18','115',['Tetanus, diphtheria, pertussis (Tdap)','Столбняк, дифтерия, коклюш (Tdap)'],'TD-21-0087',1);
+ enc('p1','2026-03-02',['Dermatology: mole check','Дерматолог: осмотр родинок'],'Dr. Ida Moen','St. Brigid Hospital',['Dermoscopy normal. Next check in 12 months.','Дерматоскопия в норме. Следующий осмотр через 12 мес.']);
+ enc('p2','2026-09-15',['Pediatric check-up, age 9','Осмотр педиатра, 9 лет'],'Dr. Lars Eik','Vesterby Family Practice',['Height 134 cm (P55), weight 29 kg. Healthy.','Рост 134 см (P55), вес 29 кг. Здорова.']);
+ imm('p2','2018-10-03','03',['MMR (measles, mumps, rubella)','Корь, паротит, краснуха (MMR)'],'MMR-18-221',2);
+ imm('p2','2023-09-20','20',['DTaP booster','АКДС, бустер'],'DT-23-554',5);
+ obs('p2','718-7',['Haemoglobin','Гемоглобин'],'g/L',115,145,[118,121,124],['2024-09-10','2025-09-12','2026-09-15']);
+ cond('p3','2019-05-14','I10',['Essential hypertension','Эссенциальная гипертензия'],'Dr. Pål Strand');
+ obs('p3','8480-6',['Systolic blood pressure','Систолическое давление'],'mmHg',90,135,[152,146,141,138,132],D);
+ med('p3','2026-08-12','C09AA03','Lisinopril 10 mg tablets',['1 tablet every morning','1 таблетка утром'],'active','Dr. Pål Strand',90);
+ imm('p3','2026-10-01','140',['Influenza, seasonal 2026/27','Грипп, сезонная 2026/27'],'FLU-26-4102',1);
+ cond('x3','2024-02-01','I10',['Essential hypertension','Эссенциальная гипертензия'],'Dr. Anna Lind');
+ cond('x4','2022-06-11','J45.9',['Asthma, unspecified','Астма неуточнённая'],'Dr. Anna Lind');
+ return R}
+function fresh(){return{pid:'p1',online:true,res:seedRes(),seq:2000,
+  appts:[{id:'apt-1',pid:'p1',spec:'gp',clinic:'c1',doc:'Dr. Anna Lind',date:addD(0),time:'15:30',mode:'video',st:'booked',reason:['Cholesterol follow-up','Контроль холестерина']}],
+  queue:[{t:'09:00',pid:'x1',r:['Sore throat','Боль в горле'],m:'clinic',st:'done'},{t:'09:20',pid:'x2',r:['Back pain','Боль в спине'],m:'clinic',st:'done'},{t:'09:40',pid:'x3',r:['BP review','Контроль давления'],m:'clinic',st:'waiting'},{t:'10:00',pid:'p2',r:['Cough, 5 days','Кашель 5 дней'],m:'clinic',st:'waiting'},{t:'10:20',pid:'x4',r:['Inhaler renewal','Продление ингалятора'],m:'video',st:'waiting'},{t:'15:30',pid:'p1',r:['Cholesterol follow-up','Контроль холестерина'],m:'video',st:'waiting'}],
+  consents:[{id:'k1',org:['Nordhavn City Clinic (your GP)','Городская клиника Нордхавна (ваш терапевт)'],scope:['Full record','Вся медкарта'],on:true},{id:'k2',org:['Pharmacies (national e-Rx)','Аптеки (нацреестр e-рецептов)'],scope:['Prescriptions only','Только рецепты'],on:true},{id:'k3',org:['St. Brigid Hospital','Больница Св. Бригиды'],scope:['Labs + diagnoses, until 2027-03','Анализы и диагнозы, до 03.2027'],on:true},{id:'k4',org:['Nordania Health Insurance Fund','Фонд медстрахования Нордании'],scope:['Billing summary','Сводка счетов'],on:true},{id:'k5',org:['National research registry','Национальный исследовательский регистр'],scope:['Anonymised data','Обезличенные данные'],on:false}],
+  access:[{at:'2026-11-12 10:14',who:'Dr. Anna Lind · Nordhavn City Clinic',what:['viewed labs','просмотр анализов']},{at:'2026-11-03 16:40',who:'Apotek Nordia, Harbour St',what:['dispensed e-Rx','выдача по e-рецепту']}],
+  notes:[],unread:0,outbox:[],rxlog:[],sel:null,open:null}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){S=null}
+if(!S||!S.res)S=fresh();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const ui={tab:'home',sub:null,filt:'all',bk:null,sym:null,sheet:null,call:null,pushQ:[],pushOn:false,fresh:null,qrT:30};
+const prof=pid=>FAM.find(f=>f.id===pid);
+const pname=pid=>{const f=prof(pid);if(f)return tx(f.n);const o=OTHERS[pid];return o?(L()==='ru'?o[1]:o[0]):pid};
+const age=b=>{const d=new Date(b),n=new Date();let a=n.getFullYear()-d.getFullYear();if(n<new Date(n.getFullYear(),d.getMonth(),d.getDate()))a--;return a};
+const ini=pid=>pname(pid).split(' ').map(w=>w[0]).join('');
+const P=()=>prof(S.pid);
+const mine=()=>S.res.filter(r=>r.pid===S.pid);
+const TY={Encounter:['🏥','var(--blue)',['Visit','Визит']],Observation:['🧪','var(--violet)',['Lab result','Анализ']],MedicationRequest:['💊','var(--gold)',['Prescription','Рецепт']],Immunization:['💉','var(--mal3)',['Vaccination','Прививка']],Condition:['📋','var(--red)',['Diagnosis','Диагноз']]};
+const rTitle=r=>r.rt==='Observation'?tx(r.name):r.rt==='MedicationRequest'?r.med:r.rt==='Immunization'?tx(r.vac):r.rt==='Condition'?r.icd+' · '+tx(r.name):tx(r.title);
+const flag=r=>{const v=r.vals[r.vals.length-1];return v>r.hi?'H':v<r.lo?'L':''};
+const RXST={active:['Ready to reserve','Можно зарезервировать','ok'],reserving:['Pharmacy confirming…','Аптека подтверждает…','warn'],ready:['Ready for pickup','Готов к выдаче','gold'],dispensed:['Dispensed','Выдан','']};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function push(title,body,go,ic){S.notes.unshift({at:hhmm(new Date()),title,body,go,ic:ic||'♥'});S.unread++;save();ui.pushQ.push(S.notes[0]);runPush();renderHead()}
+async function runPush(){if(ui.pushOn)return;ui.pushOn=true;while(ui.pushQ.length){const n=ui.pushQ.shift();const h=$('#pushHost');h.innerHTML=`<div class="push" data-a="pushGo" data-v="${n.go||''}"><div class="ic">${n.ic}</div><div class="sp"><div class="hd">Vitalia · ${T('now','сейчас')}</div><b>${esc(tx(n.title))}</b><p>${esc(tx(n.body))}</p></div></div>`;buzz();await sleep(4000);const p=h.firstChild;if(p){p.classList.add('out');await sleep(300)}h.innerHTML=''}ui.pushOn=false}
+function rxlog(m){S.rxlog.unshift(hhmm(new Date())+'  '+m);S.rxlog=S.rxlog.slice(0,40);save();renderPharm()}
+function spark(r,w,h){const v=r.vals,mn=Math.min(r.lo,...v)*.92,mx=Math.max(r.hi,...v)*1.06,X=i=>4+i*(w-8)/(v.length-1||1),Y=x=>h-4-(x-mn)/(mx-mn)*(h-8);
+  const pts=v.map((x,i)=>X(i).toFixed(1)+','+Y(x).toFixed(1)).join(' '),l=v.length-1,f=flag(r);
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect x="0" y="${Y(r.hi).toFixed(1)}" width="${w}" height="${(Y(r.lo)-Y(r.hi)).toFixed(1)}" style="fill:var(--mal);opacity:.13" rx="3"/><polyline points="${pts}" style="fill:none;stroke:var(--mal3);stroke-width:2;stroke-linejoin:round;stroke-linecap:round"/>${v.map((x,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(x).toFixed(1)}" r="${i===l?3.6:2}" style="fill:${i===l?(f?'var(--red)':'var(--mal3)'):'var(--panel)'};stroke:var(--mal3);stroke-width:1.5"/>`).join('')}</svg>`}
+/* ---------- phone ---------- */
+const TABS=[['home','🏠','Home','Главная'],['rec','📁','Records','Записи'],['care','🩺','Care','Помощь'],['rx','💊','Medicines','Лекарства'],['me','👤','Profile','Профиль']];
+function renderHead(){const p=P();$('#pavaBtn').style.background=p.g;$('#pavaBtn').textContent=ini(p.id);
+  $('#netBtn').className='ibtn'+(S.online?'':' offl');$('#netBtn').textContent=S.online?'☁️':'⚡';$('#netBtn').title=T('Toggle offline mode','Офлайн-режим');
+  $('#bellBtn').innerHTML='🔔'+(S.unread?`<span class="bd">${S.unread}</span>`:'');
+  $('#banner').innerHTML=S.online?'':`<div class="ban">⚡ ${T('Offline — showing encrypted local copy. Health ID & QR still work.','Офлайн — показана зашифрованная копия. Health ID и QR работают.')}${S.outbox.length?' · '+S.outbox.length+T(' queued',' в очереди'):''}</div>`;
+  $('#tabbar').innerHTML=TABS.map(t=>`<button data-a="tab" data-v="${t[0]}" class="${ui.tab===t[0]?'on':''}"><i>${t[1]}</i><span>${L()==='ru'?t[3]:t[2]}</span></button>`).join('');
+  $('#ptitle').textContent=ui.tab==='home'?'Vitalia':(TABS.find(t=>t[0]===ui.tab)||[])[L()==='ru'?3:2]}
+function famRow(){return `<div class="fam">${FAM.map(f=>`<button data-a="prof" data-v="${f.id}" class="${S.pid===f.id?'on':''}"><span class="av" style="background:${f.g}">${ini(f.id)}</span>${esc(tx(f.n).split(' ')[0])}</button>`).join('')}</div>`}
+function apptLi(a){const c=CLIN.find(x=>x[0]===a.clinic),sp=SPECS.find(x=>x[0]===a.spec),today=a.date===addD(0);
+  return `<div class="li" data-a="apptSheet" data-v="${a.id}"><div class="ic">${a.mode==='video'?'📹':'🏥'}</div><div class="sp"><b>${today?T('Today','Сегодня'):fmtD(a.date)} · ${a.time} · ${L()==='ru'?sp[3]:sp[2]}</b><div>${a.doc} · ${L()==='ru'?c[2]:c[1]}</div></div>${a.st==='pending'?`<span class="pill warn">${T('sync','очередь')}</span>`:a.mode==='video'?`<button class="btn pri" style="padding:6px 12px;font-size:12px" data-a="join" data-v="${a.id}">${T('Join','Войти')}</button>`:`<span class="pill ok">${T('booked','записан')}</span>`}</div>`}
+function vHome(){const p=P(),ap=S.appts.filter(a=>a.pid===S.pid&&a.st!=='done'),rx=mine().filter(r=>r.rt==='MedicationRequest'&&r.status!=='dispensed'),labs=mine().filter(r=>r.rt==='Observation').slice(0,2);
+  return famRow()+`<div class="hid" data-a="idSheet"><div class="l"><div class="t1">${T('REPUBLIC OF NORDANIA · HEALTH ID','РЕСПУБЛИКА НОРДАНИЯ · HEALTH ID')}</div><div class="nm">${esc(tx(p.n))}</div>
+   <i>${T('Health number','Номер')}</i><b class="mono">${p.nhi}</b><div class="row" style="gap:16px"><div><i>${T('Born','Рожд.')}</i><b>${fmtD(p.born)}</b></div><div><i>${T('Blood','Кровь')}</i><b>${p.blood}</b></div></div><i>${T('Allergies','Аллергии')}</i><b>${tx(p.all)}</b></div>
+   <div class="q">${qr(p.nhi+ui.qrT)}<span>${T('Tap to enlarge','Нажмите')}</span></div></div>
+  <div class="tiles"><button class="tile" data-a="go" data-v="care:book"><i>📅</i><span>${T('Book doctor','Запись')}</span></button><button class="tile" data-a="go" data-v="care:sym"><i>🧭</i><span>${T('Symptoms','Симптомы')}</span></button><button class="tile" data-a="certSheet"><i>💉</i><span>${T('Vaccine pass','Прививки')}</span></button><button class="tile" data-a="go" data-v="me:"><i>🔐</i><span>${T('Who sees data','Доступы')}</span></button></div>
+  <div class="sect"><span>${T('Upcoming','Предстоящие')}</span><button data-a="go" data-v="care:book">+ ${T('Book','Записаться')}</button></div>${ap.length?ap.map(apptLi).join(''):`<div class="sub">${T('No appointments.','Записей нет.')}</div>`}
+  ${rx.length?`<div class="sect"><span>${T('Prescriptions','Рецепты')}</span><button data-a="tab" data-v="rx">${T('All','Все')}</button></div>`+rx.map(rxLi).join(''):''}
+  ${labs.length?`<div class="sect"><span>${T('Latest results','Последние анализы')}</span><button data-a="tab" data-v="rec">${T('Timeline','Лента')}</button></div>`+labs.map(resLi).join(''):''}
+  <div class="xs muted" style="text-align:center;margin-top:10px">↓ ${T('Pull down to sync with the national record','Потяните вниз — синхронизация с нацкартой')}</div>`}
+function resLi(r){const t=TY[r.rt];let right='';
+  if(r.rt==='Observation'){const f=flag(r);right=`<div style="text-align:right">${spark(r,64,26)}<div class="xs"><b>${r.vals[r.vals.length-1]}</b> ${r.unit}${f?`<span class="flag ${f}">${f}</span>`:''}</div></div>`}
+  else if(r.rt==='MedicationRequest'){const s=RXST[r.status];right=`<span class="pill ${s[2]}" style="font-size:10.5px">${T(s[0],s[1])}</span>`}
+  return `<div class="li${ui.fresh===r.id?' new':''}" style="--c:${t[1]}" data-a="res" data-v="${r.id}"><div class="ic">${t[0]}</div><div class="sp"><b>${esc(rTitle(r))}</b><div>${tx(t[2])} · ${fmtD(r.date)}${r.by?' · '+r.by:''}</div></div>${right}</div>`}
+const rxLi=resLi;
+function vRec(){if(ui.sub&&ui.sub.startsWith('res:'))return vResDetail(ui.sub.slice(4));
+  const F=[['all','All','Все'],['Encounter','Visits','Визиты'],['Observation','Labs','Анализы'],['MedicationRequest','Medicines','Рецепты'],['Immunization','Vaccines','Прививки'],['Condition','Diagnoses','Диагнозы']];
+  const list=mine().filter(r=>ui.filt==='all'||r.rt===ui.filt).sort((a,b)=>b.date.localeCompare(a.date));let mo='',h='';
+  list.forEach(r=>{const m=r.date.slice(0,7);if(m!==mo){mo=m;h+=`<div class="mo">${fmtM(r.date)}</div>`}h+=resLi(r)});
+  return famRow()+`<div class="chips">${F.map(f=>`<button class="chip ${ui.filt===f[0]?'on':''}" data-a="filt" data-v="${f[0]}">${L()==='ru'?f[2]:f[1]}</button>`).join('')}</div>
+  ${ui.filt==='Immunization'?`<button class="btn gold pbtn" data-a="certSheet" style="margin:0 0 10px">💉 ${T('Vaccination certificate (QR)','Сертификат о прививках (QR)')}</button>`:''}
+  <div class="tl">${h||`<div class="sub">${T('Nothing here yet.','Пока пусто.')}</div>`}</div>`}
+function vResDetail(id){const r=S.res.find(x=>x.id===id);if(!r){ui.sub=null;return vRec()}const t=TY[r.rt];let b='';
+  if(r.rt==='Observation'){const f=flag(r),v=r.vals[r.vals.length-1];
+    b=`<div class="card" style="padding:14px"><div class="row"><div class="sp"><div class="xs muted">${T('Latest','Последнее')} · ${fmtD(r.date)}</div><div class="big">${v} <span class="sm muted">${r.unit}</span>${f?`<span class="flag ${f}">${f==='H'?T('HIGH','ВЫШЕ'):T('LOW','НИЖЕ')}</span>`:''}</div></div><span class="pill ${f?'warn':'ok'}">${f?T('out of range','вне нормы'):T('in range','в норме')}</span></div>
+    <div style="margin:10px 0 4px">${spark(r,300,90).replace('class="spark"','class="spark" style="width:100%;height:auto"')}</div><div class="xs muted">▬ ${T('reference range','референс')} ${r.lo}–${r.hi} ${r.unit} · LOINC ${r.code}</div></div>
+    <div class="sect"><span>${T('History','История')}</span></div>${r.vals.map((x,i)=>`<div class="row sm" style="padding:6px 2px;border-bottom:1px solid var(--line)"><span class="sp">${fmtD(r.ds[i])}</span><b class="mono">${x} ${r.unit}</b></div>`).reverse().join('')}`}
+  else if(r.rt==='MedicationRequest')b=`<div class="kv"><span>${T('Dosage','Приём')}</span><b>${tx(r.dose)}</b><span>ATC</span><b class="mono">${r.atc}</b><span>${T('Prescriber','Врач')}</span><b>${r.by}</b><span>${T('Valid','Действует')}</span><b>${r.days} ${T('days','дн.')}</b><span>${T('Status','Статус')}</span><b>${T(RXST[r.status][0],RXST[r.status][1])}</b></div><button class="btn pri pbtn" data-a="tab" data-v="rx">💊 ${T('Open in Medicines','Открыть в Лекарствах')}</button>`;
+  else if(r.rt==='Immunization')b=`<div class="kv"><span>CVX</span><b class="mono">${r.cvx}</b><span>${T('Lot','Серия')}</span><b class="mono">${r.lot}</b><span>${T('Dose #','Доза №')}</span><b>${r.dose}</b></div><button class="btn gold pbtn" data-a="certSheet">💉 ${T('Show certificate QR','Показать QR-сертификат')}</button>`;
+  else if(r.rt==='Condition')b=`<div class="kv"><span>ICD-10</span><b class="mono">${r.icd}</b><span>${T('Recorded by','Записал')}</span><b>${r.by}</b><span>${T('Status','Статус')}</span><b>${T('active','активный')}</b></div>`;
+  else b=`<div class="kv"><span>${T('Doctor','Врач')}</span><b>${r.by}</b><span>${T('Clinic','Клиника')}</span><b>${r.org}</b></div><div class="card sm" style="padding:12px">${esc(tx(r.note))}</div>`;
+  return `<div class="view"><button class="back" data-a="sub" data-v="">‹ ${T('Records','Записи')}</button><div class="row"><div class="li" style="border:0;padding:0;margin:0;background:none;cursor:default"><div class="ic">${t[0]}</div><div class="sp"><div class="xs muted">${tx(t[2])}</div><div class="h2">${esc(rTitle(r))}</div></div></div></div>${b}
+  <div class="grid2" style="margin-top:10px"><button class="btn" data-a="fhir" data-v="${r.id}" style="justify-content:center">{ } FHIR JSON</button><button class="btn" data-a="shareRes" style="justify-content:center">↗ ${T('Share','Поделиться')}</button></div></div>`}
+function vCare(){if(ui.sub==='book')return vBook();if(ui.sub==='sym')return vSym();
+  const ap=S.appts.filter(a=>a.pid===S.pid&&a.mode==='video'&&a.st==='booked');
+  return famRow()+`<div class="grid2"><button class="opt" data-a="go" data-v="care:book"><i>📅</i><b>${T('Book a doctor','Запись к врачу')}</b>${T('Specialty → clinic → time','Специальность → клиника → время')}</button><button class="opt" data-a="go" data-v="care:sym"><i>🧭</i><b>${T('Symptom checker','Проверка симптомов')}</b>${T('Triage in 1 minute','Сортировка за 1 минуту')}</button><button class="opt" data-a="${ap.length?'join':'go'}" data-v="${ap.length?ap[0].id:'care:book'}"><i>📹</i><b>${T('Video visit','Видеоприём')}</b>${ap.length?T('Your doctor is ready','Врач на связи'):T('Book a video slot','Запишитесь на видео')}</button><button class="opt" data-a="call112"><i>🚑</i><b>${T('Emergency 112','Экстренно 112')}</b>${T('Shares location + ID','Передаёт место и ID')}</button></div>
+  <div class="sect"><span>${T('Appointments','Записи')}</span></div>${S.appts.filter(a=>a.pid===S.pid).map(apptLi).join('')||`<div class="sub">${T('None yet.','Пока нет.')}</div>`}`}
+function vBook(){const b=ui.bk||(ui.bk={step:'spec',mode:'clinic',day:0});const back=`<button class="back" data-a="bkBack">‹ ${b.step==='spec'?T('Care','Помощь'):T('Back','Назад')}</button>`;
+  const steps=['spec','clinic','slot'],si=steps.indexOf(b.step);
+  const bar=`<div style="display:flex;gap:4px;margin:0 0 12px">${steps.map((s,i)=>`<i style="flex:1;height:3px;border-radius:2px;background:${i<=si?'var(--mal)':'var(--line2)'}"></i>`).join('')}</div>`;
+  if(b.step==='spec')return `<div class="view">${back}${bar}<div class="h2">${T('Which specialist?','Какой специалист?')}</div><div class="sub">${T('For','Для')}: ${esc(tx(P().n))}</div><div class="grid2">${SPECS.map(s=>`<button class="opt" data-a="bkSpec" data-v="${s[0]}"><i>${s[1]}</i><b>${L()==='ru'?s[3]:s[2]}</b>${s[4]?'📹 '+T('video available','есть видео'):T('in person','очно')}</button>`).join('')}</div></div>`;
+  const sp=SPECS.find(s=>s[0]===b.spec);
+  if(b.step==='clinic'){const cl=CLIN.filter(c=>c[4].includes(b.spec));return `<div class="view">${back}${bar}<div class="h2">${L()==='ru'?sp[3]:sp[2]}</div><div class="sub">${T('Clinics near you, sorted by distance','Клиники рядом, по расстоянию')}</div>${cl.map(c=>{const r=rng(hash(c[0]+b.spec))();return `<div class="li" data-a="bkClin" data-v="${c[0]}"><div class="ic">🏥</div><div class="sp"><b>${L()==='ru'?c[2]:c[1]}</b><div>${c[5]} · ${c[3]} km · ★ ${(4.3+r*.6).toFixed(1)}</div></div><div class="r" style="color:var(--mal3)">${r<.5?T('today','сегодня'):T('tomorrow','завтра')}</div></div>`}).join('')}</div>`}
+  const c=CLIN.find(x=>x[0]===b.clinic),days=[0,1,2].map(addD),r=rng(hash(b.clinic+b.spec+days[b.day]+b.mode)),now=new Date();
+  const slots=[];for(let m=8*60;m<=16*60+40;m+=20){const t=pad(m/60|0)+':'+pad(m%60);const past=b.day===0&&m<now.getHours()*60+now.getMinutes()+30;slots.push([t,past||r()<.45])}
+  return `<div class="view">${back}${bar}<div class="h2">${c[5]}</div><div class="sub">${L()==='ru'?sp[3]:sp[2]} · ${L()==='ru'?c[2]:c[1]}</div>
+   ${sp[4]?`<div class="seg"><button class="${b.mode==='clinic'?'on':''}" data-a="bkMode" data-v="clinic">🏥 ${T('In clinic','В клинике')}</button><button class="${b.mode==='video'?'on':''}" data-a="bkMode" data-v="video">📹 ${T('Video','Видео')}</button></div>`:''}
+   <div class="chips">${days.map((d,i)=>`<button class="chip ${b.day===i?'on':''}" data-a="bkDay" data-v="${i}">${i===0?T('Today','Сегодня'):i===1?T('Tomorrow','Завтра'):fmtD(d)}</button>`).join('')}</div>
+   <div class="slots">${slots.map(s=>`<button class="slot ${b.slot===s[0]?'on':''}" ${s[1]?'disabled':''} data-a="bkSlot" data-v="${s[0]}">${s[0]}</button>`).join('')}</div>
+   <button class="btn pri pbtn" data-a="bkConfirm" ${b.slot?'':'disabled style="opacity:.5"'}>${b.slot?T('Book ','Записаться на ')+b.slot:T('Pick a time','Выберите время')}</button></div>`}
+const TREE={start:[['What bothers you most?','Что беспокоит больше всего?'],[['🌡 Fever','🌡 Температура','fever'],['💔 Chest pain','💔 Боль в груди','chest'],['😮‍💨 Cough','😮‍💨 Кашель','cough'],['🔴 Skin rash','🔴 Сыпь','rash']]],
+ fever:[['How high, and for how long?','Насколько высокая и как долго?'],[['Above 39.5 °C, or stiff neck / confusion','Выше 39,5 °C, скованность шеи или спутанность','R1'],['38–39.5 °C for more than 3 days','38–39,5 °C дольше 3 дней','A1'],['Below 38.5 °C, 1–2 days','Ниже 38,5 °C, 1–2 дня','G1']]],
+ chest:[['Does the pain spread to the arm or jaw, or come with shortness of breath or sweating?','Отдаёт в руку или челюсть, есть одышка или пот?'],[['Yes','Да','R2'],['No','Нет','chest2']]],
+ chest2:[['Does it get worse when you press on the chest or move?','Усиливается при нажатии на грудь или движении?'],[['Yes','Да','A2'],['No / not sure','Нет / не знаю','A3']]],
+ cough:[['How long have you been coughing?','Как долго кашель?'],[['Less than 2 weeks','Меньше 2 недель','cough2'],['More than 3 weeks','Больше 3 недель','A4'],['Coughing up blood','С кровью','R3']]],
+ cough2:[['Any shortness of breath at rest?','Есть одышка в покое?'],[['Yes','Да','R4'],['No','Нет','G2']]],
+ rash:[['Press a glass on the rash. Does it fade?','Прижмите стакан к сыпи. Бледнеет?'],[['No, it stays visible','Нет, видна','R5'],['Yes, and it itches','Да, и чешется','G3'],['Spreading fast with fever','Быстро растёт, есть температура','A5']]]};
+const OUT={R:['red',['Emergency — call 112 now','Экстренно — звоните 112'],['Possible serious condition. Do not drive yourself. Your Health ID and location will be shared with the ambulance.','Возможно серьёзное состояние. Не садитесь за руль. Health ID и место передадутся скорой.']],
+ A:['amber',['See a doctor within 24 hours','К врачу в течение 24 часов'],['Not an emergency, but needs an examination. We found same-day GP slots near you.','Не экстренно, но нужен осмотр. Есть слоты терапевта на сегодня рядом.']],
+ G:['green',['Self-care at home','Можно лечиться дома'],['Rest, fluids, paracetamol if needed. If it lasts longer than 3 days or gets worse — check again.','Покой, питьё, парацетамол при необходимости. Дольше 3 дней или хуже — проверьте снова.']]};
+function vSym(){const s=ui.sym||(ui.sym={node:'start',path:[]});const back=`<button class="back" data-a="symBack">‹ ${s.path.length?T('Back','Назад'):T('Care','Помощь')}</button>`;
+  const crumbs=s.path.length?`<div class="crumbs">${s.path.map(p=>esc(p)).join(' › ')}</div>`:'';
+  if(/^[RAG]\d$/.test(s.node)){const o=OUT[s.node[0]];return `<div class="view">${back}${crumbs}<div class="tri ${o[0]}"><div class="xs" style="opacity:.85;font-weight:700;letter-spacing:.08em">${T('TRIAGE','СОРТИРОВКА')} · ${o[0].toUpperCase()}</div><b>${tx(o[1])}</b><div class="sm">${tx(o[2])}</div></div>
+   ${o[0]==='red'?`<button class="btn pbtn" style="background:#e5484d;color:#fff;border:0" data-a="call112">📞 ${T('Call 112','Позвонить 112')}</button>`:o[0]==='amber'?`<button class="btn pri pbtn" data-a="symBook">📅 ${T('Book GP today','Записаться к терапевту')}</button><button class="btn pbtn" data-a="symVideo">📹 ${T('Video visit instead','Лучше видеоприём')}</button>`:`<button class="btn pri pbtn" data-a="symSave">✓ ${T('Save to my record','Сохранить в карту')}</button>`}
+   <button class="btn pbtn" data-a="symReset">↺ ${T('Start over','Начать заново')}</button><div class="xs muted" style="margin-top:12px">${T('Decision support based on the national triage protocol v4. Not a diagnosis.','Поддержка решения по нацпротоколу сортировки v4. Не является диагнозом.')}</div></div>`}
+  const n=TREE[s.node];return `<div class="view">${back}<div class="h2">🧭 ${T('Symptom checker','Проверка симптомов')}</div>${crumbs}<div class="sub" style="font-size:14px;color:var(--text);font-weight:600">${tx(n[0])}</div>${n[1].map(a=>`<button class="btn ans" data-a="symAns" data-v="${a[2]}|${esc(L()==='ru'?a[1]:a[0])}">${L()==='ru'?a[1]:a[0]}</button>`).join('')}</div>`}
+function vRx(){const rx=mine().filter(r=>r.rt==='MedicationRequest').sort((a,b)=>b.date.localeCompare(a.date));
+  return famRow()+`<div class="sub">${T('E-prescriptions from the national registry. Reserve one and pick it up with a QR — no paper.','E-рецепты из нацреестра. Зарезервируйте и заберите по QR — без бумаги.')}</div>`+(rx.map(r=>{const s=RXST[r.status];let act='';
+   if(r.status==='active')act=`<button class="btn pri" style="padding:6px 12px;font-size:12px" data-a="rxRes" data-v="${r.id}">${T('Reserve','Резерв')}</button>`;
+   else if(r.status==='ready')act=`<button class="btn gold" style="padding:6px 12px;font-size:12px" data-a="rxQr" data-v="${r.id}">QR</button>`;
+   else if(r.status==='reserving')act=`<span class="ptr spin" style="height:auto"><span><i></i></span></span>`;
+   return `<div class="card${ui.fresh===r.id?' new':''}" style="padding:12px;margin-bottom:8px"><div class="row"><div class="sp"><b style="font-size:14px">💊 ${esc(r.med)}</b><div class="xs muted">${tx(r.dose)}</div><div class="xs muted">${r.by} · ${fmtD(r.date)}${r.pharm?' · '+esc(tx(r.pharm)):''}</div></div>${act}</div><div style="margin-top:8px" class="row"><span class="pill ${s[2]}">${T(s[0],s[1])}</span><span class="sp"></span><button class="sect" style="margin:0" data-a="res" data-v="${r.id}"><span style="color:var(--mal3);text-transform:none">${T('Details','Подробнее')} ›</span></button></div></div>`}).join('')||`<div class="sub">${T('No prescriptions.','Рецептов нет.')}</div>`)}
+function vMe(){return `<div class="sect"><span>${T('Family profiles','Семейные профили')}</span><button data-a="famAdd">+ ${T('Add','Добавить')}</button></div>
+  ${FAM.map(f=>`<div class="li" data-a="prof" data-v="${f.id}"><span class="av" style="background:${f.g};width:38px;height:38px">${ini(f.id)}</span><div class="sp"><b>${esc(tx(f.n))} · ${age(f.born)}</b><div>${tx(f.rel)}</div></div>${S.pid===f.id?'<span class="pill ok">✓</span>':''}</div>`).join('')}
+  <div class="sect"><span>🔐 ${T('Who can see my data','Кто видит мои данные')}</span></div>
+  ${S.consents.map(c=>`<div class="li" style="cursor:default"><div class="sp"><b style="white-space:normal">${esc(tx(c.org))}</b><div>${esc(tx(c.scope))}</div></div><label class="sw"><input type="checkbox" data-a="consent" data-v="${c.id}" ${c.on?'checked':''}><i></i></label></div>`).join('')}
+  <div class="sect"><span>👁 ${T('Access log','Журнал доступа')}</span></div>
+  ${S.access.slice(0,6).map(a=>`<div class="row xs" style="padding:6px 2px;border-bottom:1px solid var(--line)"><span class="mono muted">${a.at.slice(5)}</span><span class="sp">${esc(a.who)} — ${tx(a.what)}</span></div>`).join('')}
+  <div class="sect"><span>${T('Device','Устройство')}</span></div>
+  <div class="li" style="cursor:default"><div class="sp"><b>${T('Offline mode','Офлайн-режим')}</b><div>${T('Encrypted local FHIR store · 14 days','Шифрованное хранилище FHIR · 14 дней')}</div></div><label class="sw"><input type="checkbox" data-a="net" ${S.online?'':'checked'}><i></i></label></div>
+  <div class="li" data-a="signout"><div class="sp"><b>${T('Signed in with National eID (OIDC)','Вход через госID (OIDC)')}</b><div>${T('Biometric unlock · token 5 min','Биометрия · токен 5 мин')}</div></div><span class="r" style="color:var(--red)">${T('Sign out','Выйти')}</span></div>`}
+function renderPhone(anim){renderHead();const V={home:vHome,rec:vRec,care:vCare,rx:vRx,me:vMe}[ui.tab];$('#view').innerHTML=`<div class="${anim?'view':''}">${V()}</div>`;if(anim)$('#pbody').scrollTop=0;ui.fresh=null}
+function sheet(h){ui.sheet=h;$('#sheetHost').innerHTML=h?`<div class="shade" data-a="closeSheet"></div><div class="sheet">${h}</div>`:''}
+/* ---------- call ---------- */
+function renderCall(){const c=ui.call;if(!c){$('#callHost').innerHTML='';return}const s=Math.floor((Date.now()-c.t0)/1000);
+  $('#callHost').innerHTML=`<div class="call"><div class="vid"><div class="cap"><b>Dr. Anna Lind</b>${T('GP · Nordhavn City Clinic','Терапевт · Городская клиника Нордхавна')}<br><span style="color:#36e0ae">🔒 ${T('End-to-end encrypted','Сквозное шифрование')}</span></div>${c.conn?'<div class="doc">AL</div>':`<div style="text-align:center"><div class="ptr spin" style="height:auto"><span><i></i></span></div><div class="sm" style="margin-top:8px">${T('Connecting…','Соединение…')}</div></div>`}<div class="me">${c.cam?'🙂 '+T('You','Вы'):'📷✕'}</div><div class="rec" id="ctime">${pad(s/60|0)}:${pad(s%60)}</div></div>
+   <div class="chat"><div class="msgs" id="msgs">${c.msgs.map(m=>`<div class="m ${m.me?'me2':''}">${esc(m.me?m.t:tx(m.t))}</div>`).join('')}</div><div class="cin"><input id="cin" placeholder="${T('Message the doctor…','Сообщение врачу…')}"><button class="btn pri" style="padding:6px 12px" data-a="csend">➤</button></div></div>
+   <div class="ctr"><button class="${c.mute?'off':''}" data-a="cmute">${c.mute?'🔇':'🎙'}</button><button class="${c.cam?'':'off'}" data-a="ccam">📷</button><button data-a="cshare" title="share">📎</button><button class="end" data-a="cend">✕</button></div></div>`;
+  const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight}
+async function startCall(id){const a=S.appts.find(x=>x.id===id);if(!a)return;if(!S.online)return toast(T('Video visits need a connection','Для видеоприёма нужна связь'),'warn');
+  ui.call={id,t0:Date.now(),conn:false,msgs:[],mute:false,cam:true};sheet(null);renderCall();const q=S.queue.find(x=>x.pid===a.pid&&x.m==='video'&&x.st!=='done');if(q){q.st='call';renderQueue()}
+  await sleep(1500);if(!ui.call)return;ui.call.conn=true;renderCall();
+  const script=[['Hello Elin! I can see your latest lipid panel.','Здравствуйте, Элин! Вижу ваш липидный профиль.'],['Cholesterol went down from 6.2 to 5.1 — good progress.','Холестерин снизился с 6,2 до 5,1 — хороший прогресс.'],['Glucose is slightly high. I will add a note and order an HbA1c test.','Глюкоза чуть выше нормы. Добавлю запись и назначу HbA1c.']];
+  for(const s of script){await sleep(2600);if(!ui.call)return;ui.call.msgs.push({t:s});renderCall();buzz()}}
+async function endCall(){const c=ui.call;if(!c)return;const dur=Math.max(1,Math.round((Date.now()-c.t0)/60000));ui.call=null;renderCall();const a=S.appts.find(x=>x.id===c.id);
+  if(a){a.st='done';const r={id:'enc-'+ ++S.seq,pid:a.pid,rt:'Encounter',date:addD(0),title:['Video consultation','Видеоконсультация'],by:a.doc,org:'Nordhavn City Clinic',note:[`Telemedicine visit, ${dur} min. Lipids improving; HbA1c ordered.`,`Телемедицина, ${dur} мин. Липиды улучшаются; назначен HbA1c.`],cls:'VR'};S.res.push(r);ui.fresh=r.id;S.sel=r.id;
+   const q=S.queue.find(x=>x.pid===a.pid&&x.m==='video'&&x.st!=='done');if(q)q.st='done'}
+  save();renderAll();toast('✓ '+T('Visit summary saved to your record','Итог визита сохранён в карту'))}
+/* ---------- actions ---------- */
+const A={
+ tab:v=>{ui.tab=v;ui.sub=null;if(v==='care'){ui.bk=null;ui.sym=null}renderPhone(true)},
+ go:v=>{const[t,s]=v.split(':');ui.tab=t;ui.sub=s||null;ui.bk=null;ui.sym=null;renderPhone(true)},
+ sub:v=>{ui.sub=v||null;renderPhone(true)},
+ prof:v=>{S.pid=v;ui.sub=null;save();sheet(null);renderPhone(true);toast(T('Switched to ','Профиль: ')+esc(pname(v)))},
+ filt:v=>{ui.filt=v;renderPhone()},
+ res:v=>{ui.tab='rec';ui.sub='res:'+v;S.sel=v;save();renderPhone(true);renderFhir()},
+ fhir:v=>{S.sel=v;save();renderFhir();const j=$('#json');if(j){j.scrollIntoView({behavior:'smooth',block:'center'});j.parentElement.animate([{boxShadow:'0 0 0 3px var(--gold)'},{boxShadow:'0 0 0 0 transparent'}],1400)}},
+ shareRes:()=>sheet(`<h4>${T('Share securely','Поделиться защищённо')}</h4><div class="sub">${T('A one-time link valid for 24 h, signed by the national FHIR gateway.','Одноразовая ссылка на 24 ч, подписанная нацшлюзом FHIR.')}</div><div class="input mono" style="font-size:12px;overflow-wrap:anywhere">https://share.vitalia.nd/r/${(hash(Date.now())%1e8).toString(36)}</div><button class="btn pri pbtn" data-a="copied">${T('Copy link','Копировать')}</button>`),
+ copied:()=>{sheet(null);toast('🔗 '+T('Link copied (expires in 24 h)','Ссылка скопирована (24 ч)'))},
+ closeSheet:()=>sheet(null),
+ net:()=>{S.online=!S.online;save();renderPhone();if(S.online){const n=S.outbox.length;S.outbox.forEach(id=>{const a=S.appts.find(x=>x.id===id);if(a){a.st='booked';addQueue(a)}});S.outbox=[];save();renderPhone();renderQueue();toast(n?'✓ '+n+T(' queued action(s) synced',' действий из очереди отправлено'):T('Back online','Снова онлайн'))}else toast(T('Offline: records, Health ID and QR stay available','Офлайн: карта, Health ID и QR доступны'),'warn')},
+ notes:()=>{S.unread=0;save();renderHead();sheet(`<h4>${T('Notifications','Уведомления')}</h4>`+(S.notes.length?S.notes.map(n=>`<div class="li" data-a="pushGo" data-v="${n.go||''}"><div class="ic">${n.ic}</div><div class="sp"><b>${esc(tx(n.title))}</b><div>${esc(tx(n.body))}</div></div><span class="xs muted">${n.at}</span></div>`).join(''):`<div class="sub">${T('No notifications yet. Try the doctor console →','Пока пусто. Попробуйте консоль врача →')}</div>`))},
+ pushGo:v=>{$('#pushHost').innerHTML='';sheet(null);if(v){if(v.startsWith('res:'))A.res(v.slice(4));else A.tab(v)}},
+ famSheet:()=>sheet(`<h4>${T('Switch profile','Сменить профиль')}</h4><div class="sub">${T('Guardian & delegated access, recorded in the national registry.','Опекунский и доверенный доступ — по данным нацреестра.')}</div>`+FAM.map(f=>`<div class="li" data-a="prof" data-v="${f.id}"><span class="av" style="background:${f.g};width:38px;height:38px">${ini(f.id)}</span><div class="sp"><b>${esc(tx(f.n))}</b><div>${tx(f.rel)}</div></div>${S.pid===f.id?'✓':''}</div>`).join('')),
+ famAdd:()=>sheet(`<h4>${T('Add family member','Добавить члена семьи')}</h4><div class="sub">${T('Child under 18 — automatic via birth registry. Adult — they confirm in their own app.','Ребёнок до 18 — автоматически по реестру рождений. Взрослый подтверждает в своём приложении.')}</div><div class="f"><label>${T('Health number','Номер Health ID')}</label><input class="input mono" id="famNhi" placeholder="NHI 4402-xxxx-xx"></div><div class="seg"><button class="on">${T('Child','Ребёнок')}</button><button>${T('Parent','Родитель')}</button><button>${T('Partner','Партнёр')}</button></div><button class="btn pri pbtn" data-a="famReq">${T('Send request','Отправить запрос')}</button>`),
+ famReq:async()=>{const v=($('#famNhi')||{}).value||'';if(!/\d{4}/.test(v))return toast(T('Enter a valid Health number','Введите корректный номер'),'bad');sheet(null);toast(T('Request sent to the population registry…','Запрос отправлен в реестр населения…'));await sleep(2200);push(['Family request pending','Запрос ожидает'],['The person must approve in their Vitalia app (demo: 3 profiles max).','Человек должен подтвердить в своём Vitalia (в демо максимум 3 профиля).'],'me','👪')},
+ consent:(v,el)=>{const c=S.consents.find(x=>x.id===v);if(!c)return;if(c.on){el.checked=true;sheet(`<h4>${T('Revoke access?','Отозвать доступ?')}</h4><div class="sub"><b>${esc(tx(c.org))}</b> — ${esc(tx(c.scope))}</div><div class="sub">${T('They will lose access immediately. Emergency (break-glass) access stays possible and is always logged.','Доступ пропадёт сразу. Экстренный доступ («разбить стекло») остаётся и всегда журналируется.')}</div><button class="btn pbtn" style="background:var(--red);color:#fff;border:0" data-a="revoke" data-v="${v}">${T('Revoke','Отозвать')}</button><button class="btn pbtn" data-a="closeSheet">${T('Cancel','Отмена')}</button>`)}else{c.on=true;save();logAccess('You','grant');toast('✓ '+T('Access granted: ','Доступ выдан: ')+esc(tx(c.org)));renderPhone();renderChart()}},
+ revoke:v=>{const c=S.consents.find(x=>x.id===v);c.on=false;save();sheet(null);logAccess('You','revoke');renderPhone();renderChart();toast('🔒 '+T('Access revoked: ','Доступ отозван: ')+esc(tx(c.org)),'warn')},
+ signout:()=>toast(T('Demo: you stay signed in (National eID session)','Демо: вы остаётесь в системе (сессия госID)'),'warn'),
+ idSheet:()=>{const p=P();ui.qrT=30;sheet(`<h4>${T('Health ID','Health ID')} · ${esc(tx(p.n))}</h4><div class="sub">${T('Show at reception. Code rotates every 30 s and works offline (signed, device-bound).','Покажите в регистратуре. Код меняется каждые 30 с и работает офлайн (подписан, привязан к устройству).')}</div><div class="qrbox" id="bigqr">${qr(p.nhi+Date.now())}</div><div style="text-align:center" class="mono sm">${p.nhi} · <span id="qrt">30</span>s</div>`)},
+ certSheet:()=>{const p=P(),v=S.res.filter(r=>r.pid===p.id&&r.rt==='Immunization');sheet(`<h4>💉 ${T('Vaccination certificate','Сертификат о прививках')}</h4><div class="sub">${esc(tx(p.n))} · ${fmtD(p.born)} · ${T('signed by Ministry of Health of Nordania (ES256)','подписано Минздравом Нордании (ES256)')}</div><div class="qrbox">${qr('VC'+p.nhi+v.length)}</div>${v.map(r=>`<div class="row sm" style="padding:6px 0;border-bottom:1px solid var(--line)"><span class="sp">${esc(tx(r.vac))}</span><span class="mono xs muted">${r.date}</span></div>`).join('')}<button class="btn gold pbtn" data-a="certDl">⬇ ${T('Save as file (.json)','Сохранить файл (.json)')}</button>`)},
+ certDl:()=>{const p=P(),b=new Blob([JSON.stringify({resourceType:'Bundle',type:'document',entry:S.res.filter(r=>r.pid===p.id&&r.rt==='Immunization').map(r=>({resource:fhir(r)}))},null,2)],{type:'application/fhir+json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='vaccination-certificate.json';a.click();toast(T('Certificate saved','Сертификат сохранён'))},
+ apptSheet:v=>{const a=S.appts.find(x=>x.id===v);if(!a)return;const c=CLIN.find(x=>x[0]===a.clinic);sheet(`<h4>${a.mode==='video'?'📹':'🏥'} ${a.doc}</h4><div class="kv"><span>${T('When','Когда')}</span><b>${fmtD(a.date)} · ${a.time}</b><span>${T('Where','Где')}</span><b>${a.mode==='video'?T('Video in the app','Видео в приложении'):(L()==='ru'?c[2]:c[1])}</b><span>${T('Patient','Пациент')}</span><b>${esc(pname(a.pid))}</b><span>${T('Status','Статус')}</span><b>${a.st}</b></div>${a.mode==='video'&&a.st==='booked'?`<button class="btn pri pbtn" data-a="join" data-v="${a.id}">📹 ${T('Join video visit','Войти в видеоприём')}</button>`:''}${a.st!=='done'?`<button class="btn pbtn" data-a="apptCancel" data-v="${a.id}">${T('Cancel appointment','Отменить запись')}</button>`:''}`)},
+ apptCancel:v=>{S.appts=S.appts.filter(a=>a.id!==v);save();sheet(null);renderPhone();toast(T('Appointment cancelled — slot released','Запись отменена — слот освобождён'))},
+ join:(v,el,e)=>{e&&e.stopPropagation();startCall(v)},
+ cmute:()=>{ui.call.mute=!ui.call.mute;renderCall()},ccam:()=>{ui.call.cam=!ui.call.cam;renderCall()},
+ cshare:()=>{ui.call.msgs.push({me:1,t:'📎 '+T('Shared: lipid panel','Отправлено: липидный профиль')});renderCall()},
+ csend:()=>{const i=$('#cin');if(!i||!i.value.trim())return;ui.call.msgs.push({me:1,t:i.value.trim()});renderCall();setTimeout(()=>{if(ui.call){ui.call.msgs.push({t:['Noted — I will add that to your visit notes.','Поняла — добавлю в заметки визита.']});renderCall()}},1400)},
+ cend:()=>endCall(),
+ call112:()=>toast('🚑 '+T('Demo: would dial 112 and share GPS + Health ID','Демо: набор 112 и передача GPS + Health ID'),'bad'),
+ bkBack:()=>{const b=ui.bk;if(!b||b.step==='spec'){ui.sub=null;ui.bk=null}else b.step=b.step==='slot'?'clinic':'spec';renderPhone(true)},
+ bkSpec:v=>{ui.bk.spec=v;ui.bk.step='clinic';ui.bk.mode='clinic';renderPhone(true)},
+ bkClin:v=>{ui.bk.clinic=v;ui.bk.step='slot';ui.bk.slot=null;renderPhone(true)},
+ bkMode:v=>{ui.bk.mode=v;ui.bk.slot=null;renderPhone()},bkDay:v=>{ui.bk.day=+v;ui.bk.slot=null;renderPhone()},bkSlot:v=>{ui.bk.slot=v;renderPhone()},
+ bkConfirm:()=>{const b=ui.bk;if(!b.slot)return;const c=CLIN.find(x=>x[0]===b.clinic);sheet(`<h4>${T('Confirm booking','Подтвердите запись')}</h4><div class="kv"><span>${T('Patient','Пациент')}</span><b>${esc(tx(P().n))}</b><span>${T('Doctor','Врач')}</span><b>${c[5]}</b><span>${T('When','Когда')}</span><b>${fmtD(addD(b.day))} · ${b.slot}</b><span>${T('Type','Тип')}</span><b>${b.mode==='video'?'📹 '+T('Video','Видео'):'🏥 '+(L()==='ru'?c[2]:c[1])}</b><span>${T('Cost','Цена')}</span><b>${T('Covered by national insurance','Покрывается нацстраховкой')}</b></div><div class="f"><label>${T('Reason (optional)','Причина (необязательно)')}</label><input class="input" id="bkWhy" data-x placeholder="${T('e.g. persistent cough','напр. затяжной кашель')}"></div><button class="btn pri pbtn" data-a="bkGo">✓ ${T('Confirm','Подтвердить')}</button>`)},
+ bkGo:async()=>{const b=ui.bk,c=CLIN.find(x=>x[0]===b.clinic),why=(($('#bkWhy')||{}).value||'').trim();const a={id:'apt-'+ ++S.seq,pid:S.pid,spec:b.spec,clinic:b.clinic,doc:c[5],date:addD(b.day),time:b.slot,mode:b.mode,st:S.online?'booked':'pending',reason:why?[why,why]:['Booked in app','Запись из приложения']};
+  sheet(`<div style="text-align:center;padding:30px 0"><div class="ptr spin" style="height:auto"><span><i></i></span></div><div class="sm muted" style="margin-top:10px">${S.online?T('Booking via FHIR Appointment API…','Запись через FHIR Appointment API…'):T('Saving to offline outbox…','Сохранение в офлайн-очередь…')}</div></div>`);await sleep(900);
+  S.appts.push(a);if(S.online)addQueue(a);else S.outbox.push(a.id);S.sel='appt:'+a.id;save();sheet(null);ui.bk=null;ui.sub=null;ui.tab='home';renderAll();
+  if(S.online){toast('✓ '+T('Booked — ','Записано — ')+a.time);setTimeout(()=>push(['Appointment confirmed','Запись подтверждена'],[`${a.doc} · ${fmtD(a.date)} ${a.time}. Reminder 2 h before.`,`${a.doc} · ${fmtD(a.date)} ${a.time}. Напомним за 2 часа.`],'home','📅'),1200)}else toast(T('Saved offline — will sync when online','Сохранено офлайн — отправится при связи'),'warn')},
+ symAns:v=>{const[n,l]=v.split('|');ui.sym.path.push(l);ui.sym.hist=(ui.sym.hist||[]).concat(ui.sym.node);ui.sym.node=n;renderPhone(true)},
+ symBack:()=>{const s=ui.sym;if(!s||!s.path.length){ui.sub=null;ui.sym=null}else{s.path.pop();s.node=s.hist.pop()}renderPhone(true)},
+ symReset:()=>{ui.sym=null;renderPhone(true)},
+ symBook:()=>{ui.sub='book';ui.bk={step:'clinic',spec:'gp',mode:'clinic',day:0};renderPhone(true)},
+ symVideo:()=>{ui.sub='book';ui.bk={step:'slot',spec:'gp',clinic:'c1',mode:'video',day:0};renderPhone(true)},
+ symSave:()=>{const r={id:'enc-'+ ++S.seq,pid:S.pid,rt:'Encounter',date:addD(0),title:['Self-triage: self-care','Самопроверка: лечение дома'],by:'Vitalia triage v4',org:'Vitalia',note:[ui.sym.path.join(' › '),ui.sym.path.join(' › ')]};S.res.push(r);ui.fresh=r.id;save();ui.sym=null;ui.sub=null;ui.tab='rec';ui.filt='all';renderPhone(true);toast('✓ '+T('Saved to your timeline','Сохранено в ленту'))},
+ rxRes:v=>sheet(`<h4>${T('Reserve at a pharmacy','Резерв в аптеке')}</h4><div class="sub">${T('Live stock from pharmacies that accept national e-Rx.','Наличие в аптеках, принимающих нацрецепты.')}</div>`+PHARMS.map((p,i)=>`<div class="li" data-a="rxPick" data-v="${v}|${i}"><div class="ic">🏪</div><div class="sp"><b>${L()==='ru'?p[1]:p[0]}</b><div>${p[2]} · ${p[3]?T('in stock','в наличии'):T('order, ready tomorrow','под заказ, завтра')}</div></div><span class="pill ${p[3]?'ok':'warn'}">${p[3]?'✓':'1d'}</span></div>`).join('')),
+ rxPick:async v=>{const[id,i]=v.split('|'),r=S.res.find(x=>x.id===id),p=PHARMS[+i];if(!S.online)return toast(T('Reservation needs a connection','Для резерва нужна связь'),'warn');sheet(null);r.status='reserving';r.pharm=[p[0],p[1]];r.code=String(100000+hash(id+Date.now())%900000);save();renderPhone();renderPharm();rxlog(`RESERVE ${id} → ${p[0]}`);
+  await sleep(2600);r.status='ready';save();renderPhone();renderPharm();rxlog(`READY ${id} code ${r.code}`);push(['Ready for pickup','Готово к выдаче'],[`${r.med} at ${p[0]}. Show the QR at the counter.`,`${r.med} — ${p[1]}. Покажите QR на кассе.`],'rx','💊')},
+ rxQr:v=>{const r=S.res.find(x=>x.id===v);sheet(`<h4>💊 ${T('Pickup QR','QR для получения')}</h4><div class="sub">${esc(r.med)} · ${esc(tx(r.pharm))}</div><div class="qrbox">${qr('RX'+r.id+r.code)}</div><div class="mono" style="text-align:center;font-size:18px">${T('Code','Код')} <b style="font-size:20px;letter-spacing:.12em">${r.code}</b></div><div class="xs muted" style="text-align:center;margin-top:8px">${T('→ Now press “Scan” at the pharmacy counter in the console','→ Теперь нажмите «Сканировать» в аптеке справа')}</div>`)}
+};
+function addQueue(a){if(a.clinic!=='c1'||a.date!==addD(0))return;S.queue.push({t:a.time,pid:a.pid,r:a.reason,m:a.mode,st:'waiting',fresh:1});S.queue.sort((x,y)=>x.t.localeCompare(y.t))}
+function logAccess(who,what){const d=new Date();S.access.unshift({at:iso(d)+' '+hhmm(d),who,what:what==='revoke'?['revoked a consent','отозвал согласие']:what==='grant'?['granted a consent','выдал согласие']:what==='glass'?['EMERGENCY break-glass access','ЭКСТРЕННЫЙ доступ «разбить стекло»']:what==='write'?['added diagnosis & e-Rx','добавил диагноз и e-рецепт']:['opened your record','открыл вашу карту']});save()}
+$('#scr').addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||!$('#scr').contains(el))return;const f=A[el.dataset.a];if(!f)return;if(el.tagName==='INPUT'&&el.type==='checkbox'){f(el.dataset.v,el,e);return}e.preventDefault();e.stopPropagation();buzz();f(el.dataset.v,el,e)});
+$('#scr').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='cin')A.csend()});
+/* pull to refresh */
+(function(){const pb=$('#pbody'),ind=$('#ptr');let y0=null,dy=0;
+ const st=y=>{if(pb.scrollTop<=0){y0=y;dy=0}},mv=(y,e)=>{if(y0==null)return;dy=y-y0;if(dy>0){ind.classList.add('drag');ind.style.height=Math.min(dy*.5,64)+'px';ind.querySelector('i').style.transform=`rotate(${dy*2}deg)`;if(e&&e.cancelable&&dy>8)e.preventDefault()}};
+ const en=async()=>{if(y0==null)return;y0=null;ind.classList.remove('drag');if(dy>90){ind.style.height='48px';ind.classList.add('spin');await sleep(1100);ind.classList.remove('spin');ind.style.height='0';S.online?toast('✓ '+T('Synced with the national health record (FHIR $everything)','Синхронизировано с нацкартой (FHIR $everything)')):toast(T('Offline — showing local copy','Офлайн — локальная копия'),'warn')}else ind.style.height='0'};
+ pb.addEventListener('touchstart',e=>st(e.touches[0].clientY),{passive:true});pb.addEventListener('touchmove',e=>mv(e.touches[0].clientY,e),{passive:false});pb.addEventListener('touchend',en);
+ pb.addEventListener('mousedown',e=>{if(!e.target.closest('button,input,.li'))st(e.clientY)});addEventListener('mousemove',e=>{if(y0!=null)mv(e.clientY)});addEventListener('mouseup',en)})();
+/* ---------- FHIR ---------- */
+function fhir(r){if(!r)return null;const subj={reference:'Patient/'+r.pid,display:pname(r.pid)},meta={versionId:'1',lastUpdated:r.date+'T09:00:00+01:00',profile:['https://fhir.health.nd/StructureDefinition/nd-'+r.rt]};
+ if(r.rt==='Observation'){const v=r.vals[r.vals.length-1],f=flag(r);return{resourceType:'Observation',id:r.id,meta,status:'final',category:[{coding:[{system:'http://terminology.hl7.org/CodeSystem/observation-category',code:'laboratory'}]}],code:{coding:[{system:'http://loinc.org',code:r.code,display:r.name[0]}]},subject:subj,effectiveDateTime:r.date,valueQuantity:{value:v,unit:r.unit,system:'http://unitsofmeasure.org'},interpretation:[{coding:[{system:'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation',code:f||'N'}]}],referenceRange:[{low:{value:r.lo,unit:r.unit},high:{value:r.hi,unit:r.unit}}]}}
+ if(r.rt==='MedicationRequest')return{resourceType:'MedicationRequest',id:r.id,meta,status:r.status==='dispensed'?'completed':'active',intent:'order',medicationCodeableConcept:{coding:[{system:'http://www.whocc.no/atc',code:r.atc,display:r.med}]},subject:subj,authoredOn:r.date,requester:{display:r.by},dosageInstruction:[{text:r.dose[0]}],dispenseRequest:{validityPeriod:{start:r.date},expectedSupplyDuration:{value:r.days,unit:'d'},performer:r.pharm?{display:r.pharm[0]}:undefined},extension:[{url:'https://fhir.health.nd/ext/erx-status',valueCode:r.status}]};
+ if(r.rt==='Immunization')return{resourceType:'Immunization',id:r.id,meta,status:'completed',vaccineCode:{coding:[{system:'http://hl7.org/fhir/sid/cvx',code:r.cvx,display:r.vac[0]}]},patient:subj,occurrenceDateTime:r.date,lotNumber:r.lot,protocolApplied:[{doseNumberPositiveInt:r.dose}]};
+ if(r.rt==='Condition')return{resourceType:'Condition',id:r.id,meta,clinicalStatus:{coding:[{system:'http://terminology.hl7.org/CodeSystem/condition-clinical',code:'active'}]},code:{coding:[{system:'http://hl7.org/fhir/sid/icd-10',code:r.icd,display:r.name[0]}]},subject:subj,recordedDate:r.date,recorder:{display:r.by}};
+ return{resourceType:'Encounter',id:r.id,meta,status:'finished',class:{system:'http://terminology.hl7.org/CodeSystem/v3-ActCode',code:r.cls||'AMB'},type:[{text:r.title[0]}],subject:subj,participant:[{individual:{display:r.by}}],period:{start:r.date},serviceProvider:{display:r.org},reasonCode:[{text:r.note[0]}]}}
+function fhirSel(){const s=S.sel;if(!s){const r=S.res.find(x=>x.pid==='p1'&&x.rt==='Observation');return fhir(r)}
+ if(s.startsWith('appt:')){const a=S.appts.find(x=>x.id===s.slice(5));return a&&{resourceType:'Appointment',id:a.id,status:a.st==='pending'?'proposed':a.st==='done'?'fulfilled':'booked',serviceType:[{text:SPECS.find(x=>x[0]===a.spec)[2]}],appointmentType:{coding:[{system:'http://terminology.hl7.org/CodeSystem/v2-0276',code:a.mode==='video'?'VIDEO':'ROUTINE'}]},start:a.date+'T'+a.time+':00+01:00',minutesDuration:20,participant:[{actor:{reference:'Patient/'+a.pid,display:pname(a.pid)},status:'accepted'},{actor:{display:a.doc},status:'accepted'}]}}
+ if(s.startsWith('pat:')){const pid=s.slice(4),f=prof(pid),o=OTHERS[pid];return{resourceType:'Patient',id:pid,identifier:[{system:'https://fhir.health.nd/sid/nhi',value:f?f.nhi:'NHI 4402-'+(hash(pid)%9000+1000)+'-'+pad(hash(pid)%97)}],name:[{text:pname(pid)}],birthDate:f?f.born:o[2],generalPractitioner:[{display:'Dr. Anna Lind'}],managingOrganization:{display:'Nordhavn City Clinic'}}}
+ return fhir(S.res.find(x=>x.id===s))}
+function jv(v,k,d){const key=k!=null?`<span class="jk">"${esc(k)}"</span>: `:'';
+ if(v&&typeof v==='object'){const arr=Array.isArray(v),ks=Object.keys(v).filter(x=>v[x]!==undefined);return `<details ${d<3?'open':''}><summary>${key}${arr?'[':'{'}<span class="cn">${ks.length} ${arr?T('items','эл.'):T('keys','ключ.')} ${arr?']':'}'}</span></summary><div class="jin">${ks.map(x=>jv(v[x],arr?null:x,d+1)).join('')}</div>${arr?']':'}'}</details>`}
+ const val=typeof v==='string'?`<span class="js">"${esc(v)}"</span>`:typeof v==='number'?`<span class="jn">${v}</span>`:`<span class="jb">${v}</span>`;return `<div class="ln">${key}${val}</div>`}
+function renderFhir(){const j=fhirSel();$('#jHead').innerHTML=j?`<span class="pill ok mono">${j.resourceType}/${esc(j.id)}</span> GET /fhir/R4/${j.resourceType}/${esc(j.id)} · <span style="color:var(--mal3)">200</span> · application/fhir+json`:'';$('#json').innerHTML=j?jv(j,null,0):''}
+$('#jExp').onclick=()=>$$('#json details').forEach(d=>d.open=true);$('#jCol').onclick=()=>$$('#json details').forEach((d,i)=>d.open=i===0);
+$('#jDl').onclick=()=>{const j=fhirSel();if(!j)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(j,null,2)],{type:'application/fhir+json'}));a.download=j.resourceType+'-'+j.id+'.json';a.click()};
+/* ---------- console ---------- */
+const QST={done:['Done','Принят','ok'],waiting:['Waiting','Ожидает','warn'],call:['In call','На связи','gold'],open:['In room','В кабинете','gold']};
+function renderQueue(){$('#queue').innerHTML=S.queue.map((q,i)=>{const s=QST[q.st];return `<tr data-i="${i}" class="${S.open===i?'sel':''} ${q.fresh?'fresh':''}"><td class="mono">${q.t}</td><td><b>${esc(pname(q.pid))}</b>${prof(q.pid)?' <span title="demo phone">📱</span>':''}</td><td>${esc(tx(q.r))}</td><td>${q.m==='video'?'📹':'🏥'}</td><td><span class="pill ${s[2]}">${T(s[0],s[1])}</span></td></tr>`}).join('');S.queue.forEach(q=>delete q.fresh);
+ $('#kPat').textContent=S.queue.length;$('#kWait').textContent=S.queue.filter(q=>q.st==='waiting').length;$('#kRx').textContent=S.res.filter(r=>r.rt==='MedicationRequest'&&r.date===addD(0)).length}
+$('#queue').addEventListener('click',e=>{const tr=e.target.closest('tr');if(!tr)return;S.open=+tr.dataset.i;const q=S.queue[S.open];S.glass=null;if(q.st==='waiting')q.st='open';S.sel='pat:'+q.pid;
+ if(prof(q.pid)&&consentOk())logAccess('Dr. Anna Lind · Nordhavn City Clinic','open');save();renderQueue();renderChart();renderFhir();if(ui.tab==='me')renderPhone()});
+const consentOk=()=>S.consents.find(c=>c.id==='k1').on;
+function renderChart(){const c=$('#chartCard'),q=S.queue[S.open];
+ if(!q){c.innerHTML=`<h3>📂 ${T('Patient chart','Карта пациента')}</h3><div class="sub muted" style="font-size:13px">${T('Select a patient in the queue. <b>Elin Varga</b> and <b>Mila Varga</b> 📱 are linked to the demo phone.','Выберите пациента в очереди. <b>Элин</b> и <b>Мила Варга</b> 📱 связаны с телефоном демо.')}</div>`;return}
+ const pid=q.pid,f=prof(pid),locked=f&&!consentOk()&&S.glass!==pid,R=S.res.filter(r=>r.pid===pid);
+ const head=`<h3>📂 ${esc(pname(pid))}<span class="muted sm" style="font-weight:500">· ${age(f?f.born:OTHERS[pid][2])} ${T('y','лет')}</span><span class="sp"></span>${f?`<span class="pill ok">📱 ${T('Vitalia user','в Vitalia')}</span>`:''}<button class="btn" style="padding:5px 11px;font-size:12px" id="chDone">✓ ${T('Finish visit','Завершить приём')}</button></h3>`;
+ if(locked){c.innerHTML=head+`<div class="lock">🔒 ${T('Patient revoked consent for this clinic in the Vitalia app.','Пациент отозвал согласие для этой клиники в приложении Vitalia.')}<br><button class="btn" style="margin-top:10px;border-color:var(--red)" id="glass">🚨 ${T('Emergency break-glass access (logged)','Экстренный доступ «разбить стекло» (журналируется)')}</button></div>`;
+  $('#glass').onclick=()=>{S.glass=pid;logAccess('Dr. Anna Lind · BREAK-GLASS','glass');push(['Emergency access to your record','Экстренный доступ к вашей карте'],['Dr. Anna Lind used break-glass access. Reviewed by the data protection officer.','Dr. Anna Lind использовала экстренный доступ. Проверит офицер по защите данных.'],'me','🚨');renderChart();renderPhone()};bindDone();return}
+ const conds=R.filter(r=>r.rt==='Condition'),labs=R.filter(r=>r.rt==='Observation'),meds=R.filter(r=>r.rt==='MedicationRequest'&&r.status!=='dispensed');
+ c.innerHTML=head+`<div class="tags"><span class="pill bad">⚠ ${T('Allergy','Аллергия')}: ${f?tx(f.all):T('none known','нет')}</span>${conds.map(r=>`<span class="pill" data-sel="${r.id}" style="cursor:pointer">${r.icd} ${esc(tx(r.name))}</span>`).join('')}${meds.map(r=>`<span class="pill gold" data-sel="${r.id}" style="cursor:pointer">💊 ${esc(r.med)}</span>`).join('')}</div>
+ ${labs.map(r=>{const fl=flag(r);return `<div class="chart" data-sel="${r.id}" style="cursor:pointer">${spark(r,110,34)}<div style="flex:1;min-width:0"><b class="sm">${esc(tx(r.name))}</b><div class="xs muted">${r.vals[r.vals.length-1]} ${r.unit} · ${T('ref','норма')} ${r.lo}–${r.hi}${fl?` <span class="flag ${fl}">${fl}</span>`:''}</div></div></div>`}).join('')}
+ <h4>${T('Add diagnosis & e-prescription','Диагноз и e-рецепт')}</h4>
+ <div class="f2"><div class="f"><label>${T('Diagnosis (ICD-10)','Диагноз (МКБ-10)')}</label><select class="input" id="dx">${ICD.map((d,i)=>`<option value="${i}">${d[0]} · ${L()==='ru'?d[2]:d[1]}</option>`).join('')}</select></div>
+ <div class="f"><label>${T('Medication (ATC)','Препарат (АТХ)')}</label><select class="input" id="mx">${MEDS.map((m,i)=>`<option value="${i}">${m[1]}</option>`).join('')}</select></div></div>
+ <div class="f"><label>${T('Dosage instructions','Приём')}</label><input class="input" id="dose"></div><div id="warn"></div>
+ <button class="btn pri" id="sign" style="width:100%;justify-content:center">✍ ${T('Sign with doctor eID & send to patient','Подписать eID врача и отправить')}</button>`;
+ const upd=()=>{const m=MEDS[$('#mx').value];$('#dose').value=tx(m[2]);$('#warn').innerHTML=f&&f.id==='p1'&&m[0].startsWith('J01C')?`<div class="pill bad" style="margin-bottom:10px;white-space:normal">⚠ ${T('Allergy alert: penicillin — amoxicillin is a penicillin!','Аллергия: пенициллин — амоксициллин относится к пенициллинам!')}</div>`:''};
+ $('#mx').onchange=upd;upd();if(f&&f.id==='p2'){$('#dx').value=0;$('#mx').value=1;upd()}
+ $$('[data-sel]',c).forEach(el=>el.onclick=()=>{S.sel=el.dataset.sel;save();renderFhir()});
+ $('#sign').onclick=async()=>{const d=ICD[$('#dx').value],m=MEDS[$('#mx').value],b=$('#sign');b.disabled=true;b.innerHTML=T('Signing (ES256) & POST Bundle…','Подпись (ES256) и POST Bundle…');await sleep(1000);
+  const by='Dr. Anna Lind',dt=addD(0),cr={id:'con-'+ ++S.seq,pid,rt:'Condition',date:dt,icd:d[0],name:[d[1],d[2]],by},mr={id:'med-'+ ++S.seq,pid,rt:'MedicationRequest',date:dt,atc:m[0],med:m[1],dose:[$('#dose').value,$('#dose').value],status:'active',by,days:m[3]};
+  S.res.push(cr,mr);S.sel=mr.id;ui.fresh=mr.id;rxlog(`NEW ${mr.id} ${m[1]} → ${pname(pid)}`);if(f)logAccess(by+' · Nordhavn City Clinic','write');save();renderChart();renderFhir();renderQueue();
+  toast('✍ '+T('Signed: transaction Bundle → 201 Created','Подписано: транзакция Bundle → 201 Created'),'gold');
+  if(f){if(S.pid!==pid){S.pid=pid}setTimeout(()=>{ui.tab='rx';ui.sub=null;renderPhone(true);push(['New e-prescription','Новый e-рецепт'],[`${m[1]} from ${by}. Tap to reserve at a pharmacy.`,`${m[1]} от ${by}. Нажмите, чтобы зарезервировать.`],'rx','💊')},900)}};
+ bindDone()}
+function bindDone(){const b=$('#chDone');if(b)b.onclick=()=>{const q=S.queue[S.open];q.st='done';S.open=null;save();renderQueue();renderChart();toast(T('Visit closed · Encounter finished','Приём закрыт · Encounter finished'))}}
+function renderPharm(){const r=S.res.filter(x=>x.rt==='MedicationRequest'&&(x.status==='ready'||x.status==='reserving'));
+ $('#pharm').innerHTML=(r.length?r.map(x=>`<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)"><div class="sp"><b class="sm">${esc(x.med)}</b><div class="xs muted">${esc(pname(x.pid))} · ${x.code?T('code ','код ')+x.code:''}</div></div>${x.status==='ready'?`<button class="btn gold" style="padding:6px 12px;font-size:12px" data-scan="${x.id}">📷 ${T('Scan','Сканировать')}</button>`:`<span class="pill warn">${T('picking…','собирают…')}</span>`}</div>`).join(''):`<div class="sm muted">${T('No reservations. Reserve an e-Rx from the app’s Medicines tab.','Нет резервов. Зарезервируйте e-рецепт во вкладке «Лекарства».')}</div>`);
+ $$('[data-scan]').forEach(b=>b.onclick=async()=>{const x=S.res.find(y=>y.id===b.dataset.scan);b.disabled=true;b.textContent=T('Verifying…','Проверка…');await sleep(900);x.status='dispensed';rxlog(`DISPENSE ${x.id} ✓ signature, ✓ not expired, ✓ identity`);S.access.unshift({at:iso(new Date())+' '+hhmm(new Date()),who:tx(x.pharm),what:['dispensed e-Rx','выдача по e-рецепту']});save();sheet(null);renderPhone();renderPharm();renderQueue();
+  toast('✓ '+T('Dispensed: ','Выдано: ')+esc(x.med));if(prof(x.pid))push(['Medicine collected','Лекарство получено'],[`${x.med} dispensed. Take: ${x.dose[0]}`,`${x.med} выдан. Приём: ${x.dose[1]}`],'rx','✅')});
+ $('#rxlog').innerHTML=S.rxlog.map(l=>`<div>${esc(l)}</div>`).join('')||`<div class="muted">—</div>`}
+const FEATS=[['🪪','Health ID with rotating QR','Health ID с меняющимся QR','Works offline, device-bound signature','Работает офлайн, подпись привязана к устройству',()=>{A.tab('home');A.idSheet()}],
+ ['📁','Records timeline (FHIR)','Лента медкарты (FHIR)','Visits, labs with ranges & trends, Rx, vaccines','Визиты, анализы с нормами и трендом, рецепты, прививки',()=>A.go('rec:')],
+ ['📅','Book a doctor','Запись к врачу','Specialty → clinic → slot, offline outbox','Специальность → клиника → слот, офлайн-очередь',()=>A.go('care:book')],
+ ['📹','Telemedicine','Телемедицина','Video, chat, visit summary into record','Видео, чат, итог визита в карту',()=>A.join(S.appts.find(a=>a.mode==='video'&&a.st==='booked')?.id)],
+ ['🧭','Symptom checker','Проверка симптомов','Decision tree with red/amber/green triage','Дерево решений, сортировка красный/жёлтый/зелёный',()=>A.go('care:sym')],
+ ['💊','E-prescription → pharmacy QR','E-рецепт → QR в аптеке','Reserve, pick up, dispensed push','Резерв, получение, пуш о выдаче',()=>A.tab('rx')],
+ ['👪','Family profiles','Семейные профили','Guardian & delegated access','Опекунский и доверенный доступ',()=>A.famSheet()],
+ ['🔐','Consent manager','Управление согласиями','Revoke access, see who viewed data','Отзыв доступа, журнал просмотров',()=>A.go('me:')]];
+function renderFeats(){$('#feats').innerHTML=FEATS.map((f,i)=>`<div class="feat" data-i="${i}"><div class="fi">${f[0]}</div><div><b>${L()==='ru'?f[2]:f[1]}</b><span>${L()==='ru'?f[4]:f[3]}</span></div></div>`).join('');$$('#feats .feat').forEach(el=>el.onclick=()=>{FEATS[+el.dataset.i][5]();if(innerWidth<860)$('#scr').scrollIntoView({behavior:'smooth'})})}
+$('#resetBtn').onclick=()=>{S=fresh();save();ui.tab='home';ui.sub=null;ui.call=null;renderCall();sheet(null);renderAll();toast(T('Demo data reset','Данные демо сброшены'))};
+function renderAll(){renderPhone();renderQueue();renderChart();renderFhir();renderPharm();renderFeats()}
+setInterval(()=>{const d=new Date();$('#clock').textContent=hhmm(d);if(ui.call){const s=Math.floor((Date.now()-ui.call.t0)/1000),e=$('#ctime');if(e)e.textContent=pad(s/60|0)+':'+pad(s%60)}
+ const q=$('#qrt');if(q){ui.qrT--;if(ui.qrT<=0){ui.qrT=30;const b=$('#bigqr');if(b)b.innerHTML=qr(P().nhi+Date.now())}q.textContent=ui.qrT}},1000);
+PT.onLang(()=>{renderAll();if(ui.call)renderCall();if(ui.sheet)sheet(null)});
+document.addEventListener('DOMContentLoaded',()=>{renderAll();setTimeout(()=>{if(!S.notes.length)push(['Lab results available','Готовы результаты анализов'],['Total cholesterol 5.1 mmol/L — within target soon. Tap to view.','Общий холестерин 5,1 ммоль/л — почти в цели. Нажмите.'],'res:'+(S.res.find(r=>r.pid==='p1'&&r.rt==='Observation')||{}).id,'🧪')},2500)});
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

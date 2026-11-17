@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My City App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1400px;margin:0 auto;padding:18px 20px 60px}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.top h1{margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
+.top h1 b,.lg{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:12px;font-weight:800;flex:none}
+.top .sp{flex:1}
+.top .pill{white-space:normal;max-width:100%}
+.stk{font-family:var(--mono);font-size:11.5px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.how div{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.4}
+.how b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 20%,transparent);color:var(--mal3);font-size:12px}
+.layout{display:grid;width:100%;grid-template-columns:minmax(0,1fr) 392px minmax(0,1.15fr);grid-template-areas:"feat phone cons";gap:20px;align-items:start}
+.a-feat{grid-area:feat;display:flex;flex-direction:column;gap:14px;min-width:0}
+.a-phone{grid-area:phone;min-width:0}
+.a-cons{grid-area:cons;display:flex;flex-direction:column;gap:14px;min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h4{margin:14px 0 8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.feat{display:flex;gap:12px;padding:10px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:.15s}
+.feat:hover{border-color:var(--line2);background:var(--panel2)}
+.feat.on{border-color:color-mix(in srgb,var(--mal) 55%,transparent);background:color-mix(in srgb,var(--mal) 8%,transparent)}
+.feat .fi{width:36px;height:36px;border-radius:11px;flex:none;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);font-size:17px}
+.feat b{display:block;font-size:13.5px}.feat span{font-size:12.5px;color:var(--muted);line-height:1.45;display:block}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 14px;font-size:13px;margin:0}
+.facts dt{color:var(--muted)}.facts dd{margin:0;font-weight:600}
+/* phone */
+.phone{border-radius:50px;padding:12px;background:linear-gradient(160deg,#2a3b35,#0b1512);box-shadow:var(--shadow),inset 0 0 0 2px #3a4f47;position:sticky;top:60px}
+.scr{border-radius:38px;overflow:hidden;background:var(--bg);height:760px;display:flex;flex-direction:column;position:relative;isolation:isolate}
+.sbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:12.5px;font-weight:700;flex:none}
+.sbar .isl{width:96px;height:24px;background:#000;border-radius:14px}
+.ahd{display:flex;align-items:center;gap:8px;padding:4px 14px 8px;flex:none}
+.ahd .tt{flex:1;font-weight:800;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ibtn{position:relative;width:36px;height:36px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);display:grid;place-items:center;cursor:pointer;flex:none;padding:0;font-size:15px}
+.ibtn:hover{border-color:var(--mal)}
+.ibtn .bd{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 4px;border:2px solid var(--bg)}
+.ptr{height:0;overflow:hidden;display:grid;place-items:center;flex:none;transition:height .25s;color:var(--mal3);font-size:12px;font-weight:700}
+.ptr i{display:inline-block;width:18px;height:18px;border:2.5px solid var(--mal);border-top-color:transparent;border-radius:50%;margin-right:8px;vertical-align:-4px}
+.ptr.spin i{animation:rot .7s linear infinite}
+.pbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 14px 18px;scrollbar-width:thin;overscroll-behavior:contain}
+.pbody.enter{animation:slide .28s cubic-bezier(.2,.9,.3,1)}
+.tabbar{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);padding:6px 2px 14px;flex:none}
+.tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--dim);cursor:pointer;padding:4px 0;min-width:0;transition:transform .12s}
+.tabbar button:active{transform:scale(.88)}
+.tabbar button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.tabbar button.on{color:var(--mal3)}
+.tabbar svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button.on svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--mal) 60%,transparent));animation:pop .3s}
+.tap{transition:transform .12s}.tap:active{transform:scale(.96)}
+.xs{font-size:11.5px}.sm{font-size:12.5px}.b{font-weight:700}
+.row{display:flex;align-items:center;gap:10px}.row .sp{flex:1;min-width:0}
+.h2{font-size:19px;font-weight:800;margin:2px 0 4px;line-height:1.25}
+.sub{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.sect{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px}
+.sect button{border:0;background:none;color:var(--mal3);font-weight:700;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;padding:0}
+.li{display:flex;align-items:center;gap:11px;padding:11px 12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;cursor:pointer;transition:.15s;width:100%;text-align:left}
+.li:hover{border-color:var(--line2)}
+.li .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--panel2);flex:none;font-size:17px}
+.li .sp{flex:1;min-width:0}
+.li .sp b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .sp div{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .r{font-size:12.5px;font-weight:700;text-align:right;white-space:nowrap;flex:none}
+.back{border:0;background:none;color:var(--muted);cursor:pointer;font-weight:600;padding:2px 0 8px;font-size:13px}
+.back:hover{color:var(--text)}
+.pbtn{width:100%;justify-content:center;margin-top:8px}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.wx{border-radius:18px;padding:14px;color:#fff;background:radial-gradient(120% 140% at 100% 0,#3a7bd5 0,#1d4f8f 45%,#0e2c4f 100%);position:relative;overflow:hidden;margin-bottom:10px}
+.wx .tmp{font-size:40px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.wx .ico{position:absolute;right:14px;top:8px;font-size:52px}
+.wx .mt{display:flex;gap:12px;font-size:11.5px;opacity:.9;margin-top:8px;flex-wrap:wrap}
+.alert{border-radius:14px;padding:11px 12px;margin-bottom:10px;border:1px solid color-mix(in srgb,var(--red) 55%,transparent);background:color-mix(in srgb,var(--red) 13%,transparent);display:flex;gap:10px;animation:slide .35s}
+.alert.warn{border-color:color-mix(in srgb,var(--amber) 55%,transparent);background:color-mix(in srgb,var(--amber) 12%,transparent)}
+.alert.info{border-color:color-mix(in srgb,var(--blue) 50%,transparent);background:color-mix(in srgb,var(--blue) 11%,transparent)}
+.alert b{display:block;font-size:13.5px}.alert p{margin:2px 0 6px;font-size:12px;line-height:1.4}
+.alert .x{border:0;background:none;color:inherit;font-weight:700;font-size:12px;cursor:pointer;padding:0;text-decoration:underline}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 6px}
+.tile{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);padding:0;min-width:0}
+.tile i{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);font-style:normal;font-size:21px;transition:.15s}
+.tile:hover i{border-color:var(--gold)}.tile:active i{transform:scale(.9)}
+.prog{height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:5px}
+.prog i{display:block;height:100%;background:var(--mal);border-radius:2px;transition:width .6s}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+.chip.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 18%,transparent);color:var(--mal3)}
+.chip:active{transform:scale(.94)}
+.map{width:100%;display:block;border-radius:14px;border:1px solid var(--line);background:var(--bg2)}
+.mp-blk{fill:var(--panel2)}.mp-rd{stroke:var(--line2);stroke-width:5;fill:none}.mp-rv{stroke:color-mix(in srgb,var(--blue) 40%,transparent);stroke-width:13;fill:none;stroke-linecap:round}.mp-pk{fill:color-mix(in srgb,var(--mal) 22%,transparent)}
+.mp-t{fill:var(--dim);font-size:7px;font-family:var(--font);font-weight:600}
+.stop{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.stop .hd{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px}
+.stop .hd .sp{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.star{border:0;background:none;cursor:pointer;font-size:16px;color:var(--dim);padding:0}.star.on{color:var(--gold)}
+.arr{display:flex;align-items:center;gap:8px;font-size:12.5px;margin-top:6px}
+.rt{min-width:34px;text-align:center;border-radius:7px;padding:1px 6px;font-weight:800;font-size:11.5px;color:#fff}
+.arr .cd{margin-left:auto;font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
+.arr .cd.now{color:var(--mal3);animation:blink 1s infinite}
+.tkt{border-radius:18px;padding:14px;background:var(--panel);border:1px solid var(--line2);text-align:center;margin-bottom:10px}
+.tkt canvas{width:170px;height:170px;border-radius:10px;display:block;margin:8px auto}
+.anti{height:8px;border-radius:4px;margin:6px 0;background:linear-gradient(90deg,var(--mal),var(--gold),var(--blue),var(--mal));background-size:300% 100%;animation:flow 2.5s linear infinite}
+.big{font-family:var(--mono);font-size:28px;font-weight:600;font-variant-numeric:tabular-nums}
+.ring{position:relative;width:150px;height:150px;margin:6px auto}
+.ring svg{width:150px;height:150px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9}.ring .rb{stroke:var(--line)}.ring .rf{stroke:var(--mal);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.zone{cursor:pointer;transition:.15s;fill-opacity:.35;stroke-width:2}
+.zone.on{fill-opacity:.7;stroke-width:3}
+.photo{height:150px;border-radius:14px;border:2px dashed var(--line2);display:grid;place-items:center;cursor:pointer;position:relative;overflow:hidden;color:var(--muted);font-weight:600;font-size:13px;margin-bottom:10px;background:var(--bg2)}
+.photo svg{position:absolute;inset:0;width:100%;height:100%}
+.photo .flash{position:absolute;inset:0;background:#fff;animation:flash .45s forwards;pointer-events:none}
+.photo .ts{position:absolute;left:8px;bottom:6px;font-family:var(--mono);font-size:10px;color:#fff;background:rgba(0,0,0,.45);padding:1px 6px;border-radius:5px}
+.ta{min-height:64px;resize:vertical}
+.tl{border-left:2px solid var(--line2);margin:6px 0 0 8px;padding-left:14px}
+.tl div{position:relative;padding:0 0 12px;font-size:12.5px}
+.tl div:before{content:"";position:absolute;left:-21px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--line2);border:2px solid var(--bg)}
+.tl div.ok:before{background:var(--mal)}.tl div.cur:before{background:var(--gold);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 30%,transparent)}
+.tl small{display:block;color:var(--muted);font-size:11px}
+.ev{border-radius:16px;overflow:hidden;background:var(--panel);border:1px solid var(--line);margin-bottom:10px}
+.ev .cv{height:84px;position:relative;display:flex;align-items:flex-end;padding:8px 12px;color:#fff;font-weight:800;font-size:12px}
+.ev .cv span{background:rgba(0,0,0,.35);padding:2px 8px;border-radius:999px}
+.ev .bd{padding:10px 12px}.ev .bd b{display:block;font-size:14px}
+.ev .ac{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.stars{display:flex;gap:4px;font-size:24px}.stars button{border:0;background:none;cursor:pointer;color:var(--line2);padding:0;font-size:24px}.stars button.on{color:var(--gold)}
+/* push + sheet */
+.push{position:absolute;left:10px;right:10px;top:8px;z-index:30;border-radius:18px;padding:11px 12px;display:flex;gap:10px;cursor:pointer;background:color-mix(in srgb,var(--panel2) 90%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line2);box-shadow:0 14px 34px rgba(0,0,0,.35);animation:pdrop .45s cubic-bezier(.2,1.3,.4,1)}
+.push.crit{border-color:var(--red);box-shadow:0 0 0 2px color-mix(in srgb,var(--red) 35%,transparent),0 14px 34px rgba(0,0,0,.35)}
+.push.out{animation:pup .3s forwards}
+.push .ic{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));font-size:15px}
+.push.crit .ic{background:var(--red)}
+.push .sp{flex:1;min-width:0}
+.push .hd{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.push b{display:block;font-size:13px}.push p{margin:1px 0 0;font-size:12px;color:var(--muted);line-height:1.35}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:20;animation:fade .2s}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:21;background:var(--panel);border-radius:24px 24px 0 0;border-top:1px solid var(--line2);padding:10px 16px 22px;animation:sup .3s cubic-bezier(.2,.9,.3,1)}
+.sheet .grab{width:40px;height:5px;border-radius:3px;background:var(--line2);margin:0 auto 12px}
+.fid{width:74px;height:74px;margin:10px auto;border-radius:20px;border:3px solid var(--mal);display:grid;place-items:center;font-size:32px;animation:pulse 1s infinite}
+.kv2{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.kv2 span{color:var(--muted)}
+/* console */
+.kp4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.kp4 div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 10px;min-width:0}
+.kp4 span{display:block;font-size:11px;color:var(--muted);line-height:1.25;min-height:2.5em}
+.kp4 b{font-family:var(--mono);font-size:18px}
+.a-cons>.card,.a-feat>.card{min-width:0;max-width:100%}
+.tw{overflow-x:auto;max-width:100%;width:100%;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:560px}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--panel2)}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.mono{white-space:nowrap}
+tr.sel td{background:color-mix(in srgb,var(--gold) 9%,transparent)}
+tr.mine td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+td select{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:4px 6px;font-size:12px;max-width:150px}
+.f{margin-bottom:10px}.f label{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.f2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.log{font-family:var(--mono);font-size:11.5px;max-height:190px;overflow:auto;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.log div{padding:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log .tg{display:inline-block;min-width:44px;font-weight:600}.log .ok{color:var(--mal3)}.log .wa{color:var(--amber)}.log .bad{color:var(--red)}.log .in{color:var(--blue)}
+.deliv{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:8px}.deliv i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--amber));transition:width .2s}
+.pin{cursor:pointer}.pin.sel circle{stroke:var(--gold2);stroke-width:3}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}.toast.warn{border-left-color:var(--amber)}
+@keyframes pdrop{from{transform:translateY(-120%);opacity:0}}@keyframes pup{to{transform:translateY(-130%);opacity:0}}
+@keyframes sup{from{transform:translateY(100%)}}@keyframes fade{from{opacity:0}}@keyframes rot{to{transform:rotate(360deg)}}
+@keyframes slide{from{opacity:0;transform:translateX(14px)}}@keyframes pop{0%{transform:scale(.85)}60%{transform:scale(1.08)}}
+@keyframes flash{to{opacity:0}}@keyframes flow{to{background-position:300% 0}}@keyframes blink{50%{opacity:.4}}
+@keyframes pulse{50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--mal) 0%,transparent);transform:scale(.95)}}
+@media (max-width:1180px){
+  .layout{grid-template-columns:392px minmax(0,1fr);grid-template-areas:"phone cons" "feat feat"}
+  .a-feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+}
+@media (max-width:860px){
+  .wrap{padding:12px 16px 50px}
+  .how{grid-template-columns:minmax(0,1fr)}
+  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"phone" "cons" "feat"}
+  .a-feat{display:flex}
+  .a-phone{margin:0 -16px}
+  .phone{position:static;padding:0;background:none;box-shadow:none;border-radius:0}
+  .scr{border-radius:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);height:calc(100svh - 44px);min-height:560px;max-height:900px}
+  .sbar{display:none}
+  .toasts{left:16px;right:16px;top:auto;bottom:16px}.toast{max-width:none}
+}
+@media (max-width:520px){
+  .kp4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .f2{grid-template-columns:minmax(0,1fr)}
+  .top h1{font-size:19px}
+  .pbody{padding:4px 12px 16px}
+}
+@media (max-width:380px){.tile i{width:46px;height:46px}.tabbar button{font-size:9.5px}}
+</style>
+</head>
+<body data-demo-en="My City — city services app" data-demo-ru="Мой город — приложение городских услуг">
+<div class="wrap">
+  <div class="top">
+    <h1><b>MC</b><span data-en="My City" data-ru="Мой город"></span></h1>
+    <span class="pill gold" data-en="Tender · City IT department of Novograd · ₽ 95 M" data-ru="Тендер · Департамент ИТ г. Новоград · ₽ 95 млн"></span>
+    <span class="sp"></span>
+    <span class="pill ok stk">Flutter</span><span class="pill ok stk">Kotlin</span><span class="pill ok stk">push</span><span class="pill ok stk">SSO</span>
+  </div>
+  <div class="how">
+    <div><b>1</b><span data-en="In the app open <strong>Report</strong>: take a photo, pick a category, drop a pin and submit." data-ru="В приложении откройте <strong>Сообщить</strong>: сделайте фото, выберите категорию, поставьте точку и отправьте."></span></div>
+    <div><b>2</b><span data-en="In the <strong>operator console</strong> assign it to a service and close it — the citizen gets a push." data-ru="В <strong>консоли оператора</strong> передайте обращение в службу и закройте — житель получит push."></span></div>
+    <div><b>3</b><span data-en="Broadcast an <strong>emergency alert</strong>, buy a bus ticket, start parking, add an event to your calendar." data-ru="Разошлите <strong>экстренное оповещение</strong>, купите билет, оплатите парковку, добавьте событие в календарь."></span></div>
+  </div>
+  <div class="layout">
+    <aside class="a-feat">
+      <div class="card">
+        <h3><span data-en="What the app does" data-ru="Что умеет приложение"></span><span class="sp"></span><span class="pill" data-en="tap to open" data-ru="нажмите — откроется"></span></h3>
+        <div id="feats"></div>
+      </div>
+      <div class="card">
+        <h3 data-en="Project facts" data-ru="О проекте"></h3>
+        <dl class="facts">
+          <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="City mobile app" data-ru="Городское мобильное приложение"></dd>
+          <dt data-en="Year" data-ru="Год"></dt><dd>2024</dd>
+          <dt data-en="Budget" data-ru="Бюджет"></dt><dd data-en="₽ 95 M" data-ru="₽ 95 млн"></dd>
+          <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="City IT department of Novograd (fictional)" data-ru="Департамент ИТ г. Новоград (вымышленный)"></dd>
+          <dt data-en="Stack" data-ru="Стек"></dt><dd class="mono" style="font-size:12.5px">Flutter · Kotlin · push · national SSO</dd>
+          <dt data-en="Scale" data-ru="Масштаб"></dt><dd data-en="1.2 M residents · 640 k installs" data-ru="1,2 млн жителей · 640 тыс. установок"></dd>
+        </dl>
+      </div>
+    </aside>
+    <div class="a-phone">
+      <div class="phone">
+        <div class="scr" id="scr">
+          <div class="sbar"><span id="clock">9:41</span><span class="isl"></span><span class="xs">5G ▮▮▮ 87%</span></div>
+          <div class="ahd">
+            <span class="lg">MC</span>
+            <span class="tt" id="ptitle"></span>
+            <button class="ibtn tap" data-a="refresh" title="Refresh">↻</button>
+            <button class="ibtn tap" id="bell" data-a="notes" title="Notifications">🔔</button>
+          </div>
+          <div class="ptr" id="ptr"><span><i></i><span id="ptrT"></span></span></div>
+          <div class="pbody" id="pbody"></div>
+          <nav class="tabbar" id="tabbar"></nav>
+          <div id="sheetHost"></div>
+          <div id="pushHost"></div>
+        </div>
+      </div>
+    </div>
+    <section class="a-cons">
+      <div class="card">
+        <h3><span>🗺️</span><span data-en="City operator console" data-ru="Консоль оператора города"></span><span class="sp"></span><span class="pill gold" data-en="Back office" data-ru="Бэк-офис"></span></h3>
+        <div class="kp4">
+          <div><span data-en="Open requests" data-ru="Открытых обращений"></span><b id="kOpen">—</b></div>
+          <div><span data-en="Resolved today" data-ru="Решено сегодня"></span><b id="kDone">—</b></div>
+          <div><span data-en="Avg. resolve" data-ru="Среднее время"></span><b id="kAvg">—</b></div>
+          <div><span data-en="Users online" data-ru="Онлайн"></span><b id="kOn">—</b></div>
+        </div>
+        <svg class="map" id="cmap" viewBox="0 0 300 200"></svg>
+        <div class="chips" id="cFilt" style="margin-top:10px"></div>
+        <div class="tw"><table><thead><tr><th>ID</th><th data-en="Problem" data-ru="Проблема"></th><th data-en="Address" data-ru="Адрес"></th><th data-en="Status" data-ru="Статус"></th><th data-en="Service" data-ru="Служба"></th><th></th></tr></thead><tbody id="cRows"></tbody></table></div>
+      </div>
+      <div class="card">
+        <h3><span>🚨</span><span data-en="Emergency broadcast" data-ru="Экстренное оповещение"></span><span class="sp"></span><span class="pill bad" data-en="all users" data-ru="всем жителям"></span></h3>
+        <div class="chips" id="aTpl"></div>
+        <div class="f2">
+          <div class="f"><label data-en="Severity" data-ru="Уровень"></label><select class="input" id="aSev"></select></div>
+          <div class="f"><label data-en="Area" data-ru="Район"></label><select class="input" id="aArea"></select></div>
+        </div>
+        <div class="f"><label data-en="Title" data-ru="Заголовок"></label><input class="input" id="aTitle" maxlength="60"></div>
+        <div class="f"><label data-en="Message" data-ru="Текст"></label><textarea class="input ta" id="aBody" maxlength="200"></textarea></div>
+        <button class="btn pri pbtn" id="aSend" style="background:linear-gradient(135deg,#e05252,#a32d2d)"></button>
+        <div class="deliv"><i id="aBar"></i></div><div class="xs muted" id="aStat" style="margin-top:4px"></div>
+      </div>
+      <div class="card">
+        <h3><span>📡</span><span data-en="Event log · push gateway" data-ru="Журнал · push-шлюз"></span><span class="sp"></span><button class="btn sm" id="reset" data-en="Reset demo" data-ru="Сбросить демо"></button></h3>
+        <div class="log" id="log"></div>
+      </div>
+    </section>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru), L=o=>o?(o[PT.lang]||o.en):'';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const hap=()=>{try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}};
+const rub=n=>n.toLocaleString(PT.lang==='ru'?'ru-RU':'en-US',{maximumFractionDigits:2})+' ₽';
+const hhmm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+const mmss=s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
+function rng(seed){let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const hash=s=>{let h=2166136261;for(const c of String(s))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+const CATS={road:{en:'Pothole',ru:'Яма на дороге',ic:'🕳️',svc:'roads'},light:{en:'Street light out',ru:'Не горит фонарь',ic:'💡',svc:'light'},waste:{en:'Overflowing bins',ru:'Мусор не вывезен',ic:'🗑️',svc:'waste'},tree:{en:'Fallen tree',ru:'Упало дерево',ic:'🌳',svc:'parks'},water:{en:'Water leak',ru:'Протечка воды',ic:'💧',svc:'water'},ice:{en:'Snow / ice',ru:'Снег и наледь',ic:'❄️',svc:'roads'}};
+const SVC={roads:{en:'Road service',ru:'Дорожная служба'},light:{en:'City lighting',ru:'Горсвет'},waste:{en:'Waste management',ru:'Спецавтохозяйство'},parks:{en:'Parks & greenery',ru:'Зеленхоз'},water:{en:'Water utility',ru:'Водоканал'}};
+const ST=[{en:'Sent',ru:'Отправлено',c:''},{en:'Accepted',ru:'Принято',c:'gold'},{en:'Assigned',ru:'Передано в службу',c:'warn'},{en:'In progress',ru:'В работе',c:'warn'},{en:'Resolved',ru:'Решено',c:'ok'}];
+const STREETS=[['Lenina St','ул. Ленина'],['Sadovaya St','ул. Садовая'],['Embankment','Набережная'],['Mira Ave','пр. Мира'],['Pushkina St','ул. Пушкина'],['Gagarina St','ул. Гагарина'],['Sovetskaya St','ул. Советская'],['Lesnaya St','ул. Лесная']];
+const addr=(x,y)=>{const s=STREETS[(Math.floor(x/40)+Math.floor(y/30)*3)%8];const n=Math.floor(x*.7+y*.3)%58+1;return{en:s[0]+', '+n,ru:s[1]+', '+n}};
+const ROUTES=[{n:'7',col:'#17b58a',d:'M10 40 L120 40 L120 165 L290 165',int:6,per:70,bus:3},{n:'12',col:'#d8a43a',d:'M50 195 L50 80 L190 80 L190 12 L285 12',int:9,per:85,bus:2},{n:'T3',col:'#4e8cff',d:'M10 105 L250 105 L250 195',int:5,per:60,bus:3}];
+const STOPS=[{id:'s1',en:'Central Square',ru:'Центральная площадь',x:120,y:80,r:['7','12']},{id:'s2',en:'Railway Station',ru:'Вокзал',x:250,y:165,r:['7','T3']},{id:'s3',en:'University',ru:'Университет',x:50,y:105,r:['12','T3']},{id:'s4',en:'Park Gate',ru:'Ворота парка',x:190,y:40,r:['12']},{id:'s5',en:'Riverside',ru:'Набережная',x:120,y:140,r:['7']}];
+const ZONES=[{id:'101',en:'Centre',ru:'Центр',rate:120,col:'#ef5a5a',pts:'60,45 115,45 115,75 60,75'},{id:'102',en:'Embankment',ru:'Набережная',rate:80,col:'#f0a83a',pts:'125,45 185,45 185,75 125,75'},{id:'103',en:'Station',ru:'Вокзал',rate:60,col:'#4ea4ff',pts:'195,140 290,140 290,190 195,190'},{id:'104',en:'Park',ru:'Парк',rate:40,col:'#17b58a',pts:'200,20 275,20 275,65 200,65'}];
+const TKT=[{id:'s',en:'Single · 60 min',ru:'Разовый · 60 мин',p:46,sec:3600},{id:'d',en:'Day pass',ru:'Проездной на сутки',p:230,sec:86400},{id:'m',en:'30-day pass',ru:'Проездной на 30 дней',p:2150,sec:2592000}];
+const D0=new Date();D0.setHours(0,0,0,0);
+const EVENTS=[
+ {id:'e1',cat:'music',en:'Winter Jazz on the Embankment',ru:'Зимний джаз на Набережной',pl:{en:'River Stage',ru:'Речная сцена'},d:1,h:19,dur:2,price:0,g:'#1d4f8f,#6a3fb5'},
+ {id:'e2',cat:'expo',en:'Novograd 1924–2024: a century in photos',ru:'Новоград 1924–2024: век в фотографиях',pl:{en:'City Museum',ru:'Городской музей'},d:0,h:11,dur:6,price:250,g:'#7a5c2e,#d8b46a'},
+ {id:'e3',cat:'sport',en:'Ice rink opening night',ru:'Открытие катка',pl:{en:'Central Park',ru:'Центральный парк'},d:2,h:18,dur:3,price:0,g:'#0e7458,#4ea4ff'},
+ {id:'e4',cat:'kids',en:'Robotics workshop for kids 8–12',ru:'Мастер-класс по робототехнике 8–12 лет',pl:{en:'Library No. 3',ru:'Библиотека № 3'},d:3,h:12,dur:2,price:0,g:'#a33d6a,#f0a83a'},
+ {id:'e5',cat:'music',en:'Novograd Philharmonic: Rachmaninov',ru:'Филармония Новограда: Рахманинов',pl:{en:'Philharmonic Hall',ru:'Филармония'},d:5,h:19,dur:2,price:900,g:'#3b1d5c,#a78bfa'},
+ {id:'e6',cat:'city',en:'Public hearing: new tram line T4',ru:'Публичные слушания: трамвай T4',pl:{en:'City Hall',ru:'Мэрия'},d:4,h:17,dur:2,price:0,g:'#2a4d41,#17b58a'},
+ {id:'e7',cat:'sport',en:'Novograd Half-Marathon registration',ru:'Регистрация на полумарафон',pl:{en:'Stadium',ru:'Стадион'},d:6,h:9,dur:4,price:500,g:'#8f2d2d,#ef5a5a'}];
+const ECAT={all:{en:'All',ru:'Все'},music:{en:'Music',ru:'Музыка'},expo:{en:'Exhibitions',ru:'Выставки'},sport:{en:'Sport',ru:'Спорт'},kids:{en:'Kids',ru:'Детям'},city:{en:'City',ru:'Город'}};
+const ATPL={storm:{ic:'🌪️',sev:'crit',en:['Storm warning','Wind gusts up to 25 m/s from 18:00. Stay indoors, avoid trees and scaffolding.'],ru:['Штормовое предупреждение','С 18:00 порывы ветра до 25 м/с. Оставайтесь дома, не стойте у деревьев и лесов.']},water:{ic:'🚱',sev:'warn',en:['Water outage','No cold water on Lenina St 1–40 until 22:00 due to emergency repairs. Water tanks at No. 12.'],ru:['Отключение воды','Нет холодной воды на ул. Ленина 1–40 до 22:00 из-за аварии. Цистерна у дома 12.']},ice:{ic:'🧊',sev:'warn',en:['Black ice','Freezing rain tonight — roads and pavements are icy. Drive carefully.'],ru:['Гололёд','Ночью ледяной дождь — дороги и тротуары скользкие. Будьте осторожны.']},traffic:{ic:'🚧',sev:'info',en:['Bridge closed','Central bridge closed 23:00–05:00 for repairs. Use the North bridge.'],ru:['Мост закрыт','Центральный мост закрыт с 23:00 до 05:00 на ремонт. Объезд по Северному мосту.']}};
+const SEV={info:{en:'Info',ru:'Информация'},warn:{en:'Warning',ru:'Предупреждение'},crit:{en:'Critical',ru:'Критично'}};
+const AREA={all:{en:'Whole city',ru:'Весь город'},c:{en:'Centre',ru:'Центр'},r:{en:'Riverside',ru:'Заречье'},n:{en:'North',ru:'Северный'}};
+const K='pt-city-v1';
+function seedReports(){const r=rng(7),cats=Object.keys(CATS),out=[];for(let i=0;i<8;i++){const c=cats[Math.floor(r()*cats.length)],x=15+Math.round(r()*270),y=15+Math.round(r()*170),st=Math.floor(r()*4);out.push({id:'NG-'+(4180+i*7),cat:c,x,y,addr:addr(x,y),st,svc:st>=2?CATS[c].svc:'',mine:false,t:Date.now()-(20+Math.round(r()*600))*60000,hist:[]})}return out}
+function fresh(){return{reports:seedReports(),seq:4240,tickets:[],park:null,plate:'К 482 НВ 50',bills:[
+ {id:'b1',k:'util',ic:'⚡',en:'Electricity · October',ru:'Электроэнергия · октябрь',amt:2145.6},
+ {id:'b2',k:'util',ic:'💧',en:'Water & sewage · October',ru:'Вода и водоотведение · октябрь',amt:1180.25},
+ {id:'b3',k:'util',ic:'🔥',en:'Heating · October',ru:'Отопление · октябрь',amt:3420},
+ {id:'b4',k:'fine',ic:'🅿️',en:'Parking fine · Sadovaya St 14',ru:'Штраф за парковку · ул. Садовая, 14',amt:1500,disc:true},
+ {id:'b5',k:'fine',ic:'📷',en:'Speed camera · Mira Ave',ru:'Камера скорости · пр. Мира',amt:500,disc:true}],
+ pays:[],going:{},favs:['s1'],notes:[{id:1,ic:'👋',en:['Welcome to My City','Sign-in via national SSO completed.'],ru:['Добро пожаловать в «Мой город»','Вход через госуслуги выполнен.'],t:Date.now(),read:false}],alerts:[],wx:{t:-2,ic:'🌨️'},logs:[],resolved:31}}
+let S;try{S=JSON.parse(localStorage.getItem(K))}catch(e){}if(!S||!S.reports)S=fresh();
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const ui={tab:'home',sub:null,sheet:null,payCb:null,photo:false,cat:null,pin:null,desc:'',ef:'all',zone:null,dur:60,sel:null,cf:'open',atpl:'storm',pushQ:[],pushOn:false};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function log(tag,c,en,ru){S.logs.unshift({t:Date.now(),tag,c,en,ru});S.logs=S.logs.slice(0,60);renderLog()}
+function renderLog(){$('#log').innerHTML=S.logs.map(l=>'<div><span class="muted">'+hhmm(l.t)+'</span> <span class="tg '+l.c+'">'+l.tag+'</span> '+esc(PT.lang==='ru'?l.ru:l.en)+'</div>').join('')||'<div class="muted">—</div>'}
+/* push */
+function push(ic,en,ru,o){o=o||{};S.notes.unshift({id:Date.now()+Math.random(),ic,en,ru,t:Date.now(),read:false,go:o.go});S.notes=S.notes.slice(0,40);save();ui.pushQ.push({ic,en,ru,crit:o.crit,go:o.go});log('PUSH','in','FCM/APNs → device: '+en[0],'FCM/APNs → устройство: '+ru[0]);if(!ui.pushOn)nextPush();renderBell()}
+function nextPush(){const p=ui.pushQ.shift();if(!p){ui.pushOn=false;return}ui.pushOn=true;hap();const el=document.createElement('div');el.className='push'+(p.crit?' crit':'');
+ el.innerHTML='<div class="ic">'+p.ic+'</div><div class="sp"><div class="hd"><span>'+T('My City','Мой город')+'</span><span>'+T('now','сейчас')+'</span></div><b>'+esc(L({en:p.en[0],ru:p.ru[0]}))+'</b><p>'+esc(L({en:p.en[1],ru:p.ru[1]}))+'</p></div>';
+ el.onclick=()=>{if(p.go)go(p.go.tab,p.go.sub);el.classList.add('out')};$('#pushHost').append(el);
+ setTimeout(()=>{el.classList.add('out');setTimeout(()=>{el.remove();nextPush()},300)},p.crit?5200:3600)}
+function renderBell(){const n=S.notes.filter(x=>!x.read).length;$('#bell').innerHTML='🔔'+(n?'<span class="bd">'+n+'</span>':'')}
+/* icons */
+const IC={home:'<path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',tr:'<rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M8 21l1-3M16 21l-1-3"/><circle cx="8.5" cy="14.5" r=".8"/><circle cx="15.5" cy="14.5" r=".8"/>',park:'<rect x="4" y="3" width="16" height="18" rx="4"/><path d="M10 17V7h3a3 3 0 010 6h-3"/>',rep:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',ev:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',pay:'<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4"/>'};
+const TABS=[['home',{en:'Home',ru:'Главная'}],['tr',{en:'Transport',ru:'Транспорт'}],['park',{en:'Parking',ru:'Парковка'}],['rep',{en:'Report',ru:'Сообщить'}],['ev',{en:'Events',ru:'Афиша'}],['pay',{en:'Payments',ru:'Платежи'}]];
+function go(tab,sub){hap();ui.tab=tab;ui.sub=sub||null;renderPhone(true)}
+/* maps */
+function base(){return '<rect width="300" height="200" fill="transparent"/>'+[[15,10,95,25],[130,10,50,25],[60,45,55,30],[125,45,60,30],[15,115,95,45],[130,115,50,45],[195,115,45,20],[15,175,25,20]].map(b=>'<rect class="mp-blk" x="'+b[0]+'" y="'+b[1]+'" width="'+b[2]+'" height="'+b[3]+'" rx="4"/>').join('')+
+ '<rect class="mp-pk" x="200" y="18" width="78" height="50" rx="8"/><path class="mp-rv" d="M-5 128 C60 108 110 155 170 132 S260 92 305 112"/>'+
+ ['M0 40H300','M0 80H300','M0 165H300','M50 0V200','M120 0V200','M190 0V200','M250 0V200','M0 105H300'].map(d=>'<path class="mp-rd" d="'+d+'"/>').join('')+
+ '<text class="mp-t" x="226" y="46">'+T('Park','Парк')+'</text><text class="mp-t" x="14" y="137">'+T('River Nova','р. Нова')+'</text>'}
+const pinSvg=(x,y,col,extra)=>'<g class="pin '+(extra||'')+'" transform="translate('+x+' '+y+')"><path d="M0 0 C-6 -8 -8 -11 -8 -14 a8 8 0 0116 0 c0 3 -2 6 -8 14z" fill="'+col+'" stroke="#fff" stroke-width="1.2"/><circle cx="0" cy="-14" r="3" fill="#fff"/></g>';
+/* QR */
+function drawQR(cv,seed){const n=25,ctx=cv.getContext('2d'),W=cv.width=cv.height=250,c=W/(n+2);const r=rng(hash(seed));ctx.fillStyle='#fff';ctx.fillRect(0,0,W,W);ctx.fillStyle='#0d1f19';
+ const fin=(x,y)=>(x>=0&&x<7&&y>=0&&y<7)?((x==0||x==6||y==0||y==6)||(x>1&&x<5&&y>1&&y<5)):null;
+ for(let y=0;y<n;y++)for(let x=0;x<n;x++){let v=fin(x,y);if(v===null)v=fin(x-(n-7),y);if(v===null)v=fin(x,y-(n-7));const inF=(x<8&&y<8)||(x>n-9&&y<8)||(x<8&&y>n-9);if(v===null)v=inF?false:r()<.5;if(v)ctx.fillRect((x+1)*c,(y+1)*c,c+.3,c+.3)}}
+/* phone render */
+function renderTabbar(){$('#tabbar').innerHTML=TABS.map(t=>'<button class="'+(ui.tab===t[0]?'on':'')+'" data-a="tab" data-v="'+t[0]+'"><svg viewBox="0 0 24 24">'+IC[t[0]]+'</svg><span>'+L(t[1])+'</span></button>').join('')}
+function renderPhone(anim){const f=VIEWS[ui.tab];const pb=$('#pbody');pb.innerHTML=f();$('#ptitle').textContent=ui.sub==='notes'?T('Notifications','Уведомления'):L(TABS.find(t=>t[0]===ui.tab)[1]);
+ if(anim){pb.classList.remove('enter');void pb.offsetWidth;pb.classList.add('enter');pb.scrollTop=0}renderTabbar();renderBell();renderFeats();afterRender();tick()}
+function afterRender(){$$('canvas[data-qr]').forEach(cv=>drawQR(cv,cv.dataset.qr))}
+const myReps=()=>S.reports.filter(r=>r.mine).sort((a,b)=>b.t-a.t);
+const activeTkt=()=>S.tickets.filter(t=>t.until>Date.now());
+function repLi(r){return '<button class="li tap" data-a="rep" data-v="'+r.id+'"><span class="ic">'+CATS[r.cat].ic+'</span><span class="sp"><b>'+L(CATS[r.cat])+' · '+r.id+'</b><div>'+L(r.addr)+'</div><div class="prog"><i style="width:'+(r.st/4*100)+'%"></i></div></span><span class="pill '+ST[r.st].c+'" style="font-size:10.5px">'+L(ST[r.st])+'</span></button>'}
+const VIEWS={
+home(){if(ui.sub==='notes'){S.notes.forEach(n=>n.read=true);save();return '<button class="back" data-a="tab" data-v="home">‹ '+T('Back','Назад')+'</button>'+S.notes.map(n=>'<div class="li"><span class="ic">'+n.ic+'</span><span class="sp"><b>'+esc(L({en:n.en[0],ru:n.ru[0]}))+'</b><div style="white-space:normal">'+esc(L({en:n.en[1],ru:n.ru[1]}))+'</div></span><span class="xs muted">'+hhmm(n.t)+'</span></div>').join('')}
+ if(ui.sub&&ui.sub.startsWith('rep:'))return repDetail(ui.sub.slice(4));
+ const al=S.alerts.filter(a=>!a.dis).slice(0,2),tk=activeTkt()[0],h=new Date().getHours();
+ return al.map(a=>'<div class="alert '+(a.sev==='crit'?'':a.sev)+'"><span style="font-size:22px">'+a.ic+'</span><div><b>'+esc(a.title)+'</b><p>'+esc(a.body)+'</p><button class="x" data-a="adis" data-v="'+a.id+'">'+T('Got it','Понятно')+'</button></div></div>').join('')+
+ '<div class="row" style="margin:2px 0 10px"><div class="sp"><div class="xs muted">'+(h<12?T('Good morning','Доброе утро'):h<18?T('Good afternoon','Добрый день'):T('Good evening','Добрый вечер'))+'</div><div class="b" style="font-size:17px">'+T('Anna Volkova','Анна Волкова')+'</div></div><span class="pill ok xs">SSO ✓</span></div>'+
+ '<div class="wx"><div class="xs" style="opacity:.85">'+T('Novograd · now','Новоград · сейчас')+'</div><div class="tmp">'+(S.wx.t>0?'+':'')+S.wx.t+'°</div><div class="b sm">'+T('Light snow','Небольшой снег')+'</div><span class="ico">'+S.wx.ic+'</span><div class="mt"><span>💨 6 '+T('m/s','м/с')+'</span><span>💧 84%</span><span>AQI 31 · '+T('good','хорошо')+'</span><span>'+T('Pull down to refresh','Потяните вниз — обновить')+'</span></div></div>'+
+ '<div class="tiles">'+[['tr','🎫',T('Ticket','Билет')],['park','🅿️',T('Parking','Парковка')],['rep','📸',T('Report','Сообщить')],['pay','💳',T('Pay bills','Оплатить')]].map(x=>'<button class="tile" data-a="tab" data-v="'+x[0]+'"><i>'+x[1]+'</i><span>'+x[2]+'</span></button>').join('')+'</div>'+
+ (tk||S.park?'<div class="sect">'+T('Active now','Сейчас активно')+'</div>':'')+
+ (tk?'<button class="li tap" data-a="tab" data-v="tr"><span class="ic">🎫</span><span class="sp"><b>'+L(TKT.find(x=>x.id===tk.type))+'</b><div>'+T('valid','действует')+' <span data-until="'+tk.until+'"></span></div></span><span class="pill ok xs">QR</span></button>':'')+
+ (S.park?'<button class="li tap" data-a="tab" data-v="park"><span class="ic">🅿️</span><span class="sp"><b>'+T('Zone ','Зона ')+S.park.zone+' · '+S.park.plate+'</b><div>'+T('left','осталось')+' <span data-until="'+S.park.end+'"></span></div></span></button>':'')+
+ '<div class="sect">'+T('My requests','Мои обращения')+'<button data-a="tab" data-v="rep">+ '+T('New','Новое')+'</button></div>'+(myReps().map(repLi).join('')||'<div class="li" style="cursor:default"><span class="ic">📭</span><span class="sp"><b>'+T('No requests yet','Обращений пока нет')+'</b><div>'+T('Report a pothole, broken light…','Сообщите о яме, фонаре…')+'</div></span></div>')+
+ '<div class="sect">'+T('City news','Новости города')+'</div><div class="li"><span class="ic">🚋</span><span class="sp"><b>'+T('Tram T4 public hearing on Thursday','Слушания по трамваю T4 в четверг')+'</b><div>'+T('City Hall · 17:00','Мэрия · 17:00')+'</div></span></div>'},
+tr(){const now=Date.now()/1000,tk=activeTkt();
+ let h='<svg class="map" viewBox="0 0 300 200" id="trmap">'+base()+ROUTES.map((r,i)=>'<path id="rp'+i+'" d="'+r.d+'" stroke="'+r.col+'" stroke-width="3.5" fill="none" stroke-linejoin="round" opacity=".9"/>').join('')+STOPS.map(s=>'<circle cx="'+s.x+'" cy="'+s.y+'" r="4.5" fill="#fff" stroke="#0d1f19" stroke-width="1.5"/>').join('')+
+  ROUTES.map((r,i)=>Array.from({length:r.bus},(_,k)=>'<g class="bus" data-r="'+i+'" data-ph="'+(k/r.bus)+'"><rect x="-7" y="-5" width="14" height="10" rx="3" fill="'+r.col+'" stroke="#fff" stroke-width="1"/><text x="0" y="2.6" text-anchor="middle" fill="#fff" font-size="6.5" font-weight="800">'+r.n+'</text></g>').join('')).join('')+'</svg>';
+ h+='<div class="xs muted" style="margin:6px 0 4px">● '+T('Live GPS · buses update every second','GPS онлайн · автобусы обновляются каждую секунду')+'</div>';
+ if(tk.length){const t=tk[0];h+='<div class="tkt"><div class="row"><b class="sp" style="text-align:left">'+L(TKT.find(x=>x.id===t.type))+'</b><span class="pill ok xs">'+T('VALID','ДЕЙСТВУЕТ')+'</span></div><canvas data-qr="'+t.id+'"></canvas><div class="anti"></div><div class="mono sm">'+t.id+'</div><div class="xs muted">'+T('Show to the validator · expires in','Покажите валидатору · истекает через')+' <b data-until="'+t.until+'"></b></div></div>'}
+ h+='<div class="sect">'+T('Buy a ticket','Купить билет')+'</div>'+TKT.map(t=>'<button class="li tap" data-a="buyT" data-v="'+t.id+'"><span class="ic">🎫</span><span class="sp"><b>'+L(t)+'</b><div>'+T('Bus · trolleybus · tram','Автобус · троллейбус · трамвай')+'</div></span><span class="r">'+rub(t.p)+'</span></button>').join('');
+ const st=[...STOPS].sort((a,b)=>(S.favs.includes(b.id)?1:0)-(S.favs.includes(a.id)?1:0));
+ h+='<div class="sect">'+T('Stops nearby','Остановки рядом')+'</div>'+st.map(s=>'<div class="stop"><div class="hd"><span>🚏</span><span class="sp">'+L(s)+'</span><button class="star '+(S.favs.includes(s.id)?'on':'')+'" data-a="fav" data-v="'+s.id+'">★</button></div>'+
+  s.r.map(n=>{const r=ROUTES.find(x=>x.n===n),off=hash(s.id+n)%(r.int*60);return '<div class="arr"><span class="rt" style="background:'+r.col+'">'+n+'</span><span class="muted">'+T('then every ','далее каждые ')+r.int+T(' min',' мин')+'</span><span class="cd" data-arr="'+off+','+r.int*60+'"></span></div>'}).join('')+'</div>').join('');
+ return h},
+park(){const z=ZONES.find(x=>x.id===ui.zone);
+ if(S.park){const p=S.park,zz=ZONES.find(x=>x.id===p.zone);return '<div class="h2">'+T('Parking session','Парковочная сессия')+'</div><div class="sub">'+T('Zone ','Зона ')+p.zone+' · '+L(zz)+' · '+p.plate+'</div>'+
+  '<div class="ring"><svg viewBox="0 0 150 150"><circle class="rb" cx="75" cy="75" r="64"/><circle class="rf" id="pring" cx="75" cy="75" r="64" stroke-dasharray="402" stroke-dashoffset="0"/></svg><div><div class="big" data-until="'+p.end+'"></div><div class="xs muted">'+T('until ','до ')+hhmm(p.end)+'</div></div></div>'+
+  '<div class="kv2"><span>'+T('Rate','Тариф')+'</span><b>'+rub(zz.rate)+T('/h','/ч')+'</b></div><div class="kv2"><span>'+T('Paid so far','Оплачено')+'</span><b>'+rub(p.paid)+'</b></div>'+
+  '<div class="f2" style="margin-top:12px"><button class="btn pri pbtn tap" data-a="pExt" data-v="30">+30 '+T('min','мин')+' · '+rub(zz.rate/2)+'</button><button class="btn pbtn tap" data-a="pStop">'+T('Stop & refund','Завершить')+'</button></div>'+
+  '<div class="xs muted" style="margin-top:10px">'+T('You will get a push 10 minutes before the end.','За 10 минут до конца придёт push.')+'</div>'}
+ return '<div class="sub">'+T('Tap a zone on the map','Выберите зону на карте')+'</div><svg class="map" viewBox="0 0 300 200">'+base()+ZONES.map(x=>'<polygon class="zone '+(ui.zone===x.id?'on':'')+'" data-a="zone" data-v="'+x.id+'" points="'+x.pts+'" fill="'+x.col+'" stroke="'+x.col+'"/>').join('')+ZONES.map(x=>{const p=x.pts.split(' ')[0].split(',');return '<text x="'+(+p[0]+4)+'" y="'+(+p[1]+11)+'" font-size="9" font-weight="800" fill="'+x.col+'" pointer-events="none">'+x.id+'</text>'}).join('')+pinSvg(150,95,'#d8b46a')+'</svg>'+
+ '<div class="chips" style="margin-top:10px">'+ZONES.map(x=>'<button class="chip '+(ui.zone===x.id?'on':'')+'" data-a="zone" data-v="'+x.id+'">'+x.id+' · '+L(x)+' · '+x.rate+'₽</button>').join('')+'</div>'+
+ '<div class="f"><label>'+T('Vehicle plate','Госномер')+'</label><input class="input mono" id="plate" value="'+esc(S.plate)+'"></div>'+
+ '<div class="f"><label>'+T('Duration','Время')+'</label><div class="chips">'+[30,60,120,180].map(m=>'<button class="chip '+(ui.dur===m?'on':'')+'" data-a="dur" data-v="'+m+'">'+(m<60?m+T(' min',' мин'):m/60+T(' h',' ч'))+'</button>').join('')+'</div></div>'+
+ '<button class="btn pri pbtn tap" data-a="pStart" '+(z?'':'disabled')+'>'+(z?T('Start · ','Начать · ')+rub(z.rate*ui.dur/60):T('Choose a zone','Выберите зону'))+'</button>'},
+rep(){if(ui.sub&&ui.sub.startsWith('rep:'))return repDetail(ui.sub.slice(4));const ok=ui.photo&&ui.cat&&ui.pin;
+ return '<div class="h2">'+T('Report a problem','Сообщить о проблеме')+'</div><div class="sub">'+T('Goes straight to the right city service','Уходит прямо в нужную службу города')+'</div>'+
+ '<div class="photo" data-a="shot">'+(ui.photo?'<svg viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fa8b8"/><stop offset="1" stop-color="#c9d3d8"/></linearGradient></defs><rect width="300" height="150" fill="url(#sky)"/><rect y="80" width="300" height="70" fill="#5b6265"/><path d="M0 150 L120 80 H180 L300 150Z" fill="#6c7376"/><ellipse cx="150" cy="118" rx="38" ry="11" fill="#2d3133"/><ellipse cx="150" cy="116" rx="30" ry="7" fill="#7a8a95" opacity=".6"/><rect x="40" y="30" width="50" height="50" fill="#a59a8c"/><rect x="215" y="20" width="60" height="60" fill="#9b8f7f"/></svg><span class="ts">'+new Date().toLocaleString()+' · GPS ±4 m</span>':'<span>📷 '+T('Tap to take a photo','Нажмите — сделать фото')+'</span>')+'</div>'+
+ '<div class="f"><label>'+T('Category','Категория')+'</label><div class="chips">'+Object.entries(CATS).map(([k,c])=>'<button class="chip '+(ui.cat===k?'on':'')+'" data-a="cat" data-v="'+k+'">'+c.ic+' '+L(c)+'</button>').join('')+'</div></div>'+
+ '<div class="f"><label>'+T('Location — tap the map','Место — нажмите на карту')+'</label><svg class="map" id="rmap" viewBox="0 0 300 200">'+base()+(ui.pin?pinSvg(ui.pin[0],ui.pin[1],'#ef5a5a'):'')+'</svg><div class="row xs" style="margin-top:6px"><span class="sp muted">'+(ui.pin?'📍 '+L(addr(ui.pin[0],ui.pin[1])):T('No point yet','Точка не выбрана'))+'</span><button class="chip" data-a="gps">🎯 '+T('My location','Моё место')+'</button></div></div>'+
+ '<div class="f"><label>'+T('Comment (optional)','Комментарий (необязательно)')+'</label><textarea class="input ta" id="rdesc" placeholder="'+T('e.g. deep hole near the crossing','напр. глубокая яма у перехода')+'">'+esc(ui.desc)+'</textarea></div>'+
+ '<button class="btn pri pbtn tap" data-a="submit" '+(ok?'':'disabled')+'>'+(ok?T('Submit request','Отправить обращение'):T('Add photo, category and place','Добавьте фото, категорию и место'))+'</button>'},
+ev(){const list=EVENTS.filter(e=>ui.ef==='all'||e.cat===ui.ef).sort((a,b)=>a.d-b.d||a.h-b.h);
+ return '<div class="chips">'+Object.keys(ECAT).map(k=>'<button class="chip '+(ui.ef===k?'on':'')+'" data-a="ef" data-v="'+k+'">'+L(ECAT[k])+'</button>').join('')+'</div>'+
+ list.map(e=>{const d=new Date(D0.getTime()+e.d*864e5);return '<div class="ev"><div class="cv" style="background:linear-gradient(135deg,'+e.g+')"><span>'+L(ECAT[e.cat])+'</span></div><div class="bd"><b>'+L(e)+'</b><div class="sm muted">'+d.toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{weekday:'short',day:'numeric',month:'short'})+' · '+e.h+':00 · '+L(e.pl)+' · '+(e.price?rub(e.price):T('Free','Бесплатно'))+'</div><div class="ac"><button class="btn sm tap" data-a="ics" data-v="'+e.id+'">📅 '+T('Add to calendar','В календарь')+'</button><button class="btn sm tap '+(S.going[e.id]?'pri':'')+'" data-a="going" data-v="'+e.id+'">'+(S.going[e.id]?'✓ '+T('Going','Иду'):T('I\'ll go','Пойду'))+'</button></div></div></div>'}).join('')||'<div class="muted sm">'+T('Nothing in this category this week','На этой неделе ничего')+'</div>'},
+pay(){const open=S.bills.filter(b=>!b.paid),tot=open.reduce((s,b)=>s+(b.disc?b.amt/2:b.amt),0);
+ const li=b=>'<button class="li tap" data-a="bill" data-v="'+b.id+'"><span class="ic">'+b.ic+'</span><span class="sp"><b>'+L(b)+'</b><div>'+(b.disc?T('50% discount if paid within 20 days','Скидка 50% при оплате в течение 20 дней'):T('Account 4471-0932 · due 25th','Лицевой счёт 4471-0932 · до 25-го'))+'</div></span><span class="r">'+(b.disc?'<s class="muted xs">'+rub(b.amt)+'</s><br>'+rub(b.amt/2):rub(b.amt))+'</span></button>';
+ return '<div class="card" style="padding:14px;margin-bottom:6px"><div class="xs muted">'+T('To pay','К оплате')+'</div><div class="big">'+rub(tot)+'</div><div class="xs muted">'+T('Card •• 4417 · Fast payments','Карта •• 4417 · СБП')+'</div></div>'+
+ '<div class="sect">'+T('Utilities','Коммунальные услуги')+'</div>'+(open.filter(b=>b.k==='util').map(li).join('')||'<div class="sm muted">✓ '+T('All paid','Всё оплачено')+'</div>')+
+ '<div class="sect">'+T('Fines','Штрафы')+'</div>'+(open.filter(b=>b.k==='fine').map(li).join('')||'<div class="sm muted">✓ '+T('No fines','Штрафов нет')+'</div>')+
+ (S.pays.length?'<div class="sect">'+T('History','История')+'</div>'+S.pays.map(p=>'<div class="li" style="cursor:default"><span class="ic">✅</span><span class="sp"><b>'+esc(L(p.t))+'</b><div class="mono">'+p.id+' · '+hhmm(p.at)+'</div></span><span class="r">−'+rub(p.amt)+'</span></div>').join(''):'')}};
+function repDetail(id){const r=S.reports.find(x=>x.id===id);if(!r)return '';const steps=ST.map((s,i)=>'<div class="'+(i<r.st||r.st===4?'ok':i===r.st?'cur':'')+'"><b>'+L(s)+'</b>'+(i===2&&r.svc?' — '+L(SVC[r.svc]):'')+'<small>'+(r.hist[i]?hhmm(r.hist[i]):'—')+'</small></div>').join('');
+ return '<button class="back" data-a="tab" data-v="'+ui.tab+'">‹ '+T('Back','Назад')+'</button><div class="h2">'+CATS[r.cat].ic+' '+L(CATS[r.cat])+'</div><div class="sub mono">'+r.id+' · '+L(r.addr)+'</div>'+
+ '<svg class="map" viewBox="0 0 300 200">'+base()+pinSvg(r.x,r.y,'#ef5a5a')+'</svg><div class="sect">'+T('Status','Статус')+'</div><div class="tl">'+steps+'</div>'+
+ (r.st===4?'<div class="card" style="padding:12px"><b class="sm">'+T('Rate the result','Оцените результат')+'</b><div class="stars">'+[1,2,3,4,5].map(n=>'<button class="'+((r.rate||0)>=n?'on':'')+'" data-a="rate" data-v="'+r.id+':'+n+'">★</button>').join('')+'</div></div>':'<div class="xs muted">'+T('Updates arrive as push notifications. Operators work in the console on the right.','Обновления придут push-уведомлениями. Операторы работают в консоли справа.')+'</div>')}
+/* sheet */
+function sheet(html){$('#sheetHost').innerHTML=html?'<div class="ov" data-a="sclose"></div><div class="sheet"><div class="grab"></div>'+html+'</div>':''}
+function pay(title,amt,cb){ui.payCb=cb;ui.payT=title;ui.payA=amt;sheet('<div class="h2">'+T('Confirm payment','Подтвердите оплату')+'</div><div class="kv2"><span>'+T('For','За')+'</span><b style="text-align:right">'+esc(L(title))+'</b></div><div class="kv2"><span>'+T('Amount','Сумма')+'</span><b>'+rub(amt)+'</b></div><div class="kv2"><span>'+T('Card','Карта')+'</span><b>•• 4417</b></div><button class="btn pri pbtn tap" data-a="payGo">'+T('Pay with Face ID','Оплатить по Face ID')+'</button><button class="btn pbtn" data-a="sclose">'+T('Cancel','Отмена')+'</button>')}
+async function payGo(){sheet('<div style="text-align:center"><div class="fid">🙂</div><b>Face ID</b><div class="xs muted">'+T('Authorising with the bank…','Авторизация в банке…')+'</div></div>');hap();await sleep(1100);
+ const id='TX'+(Date.now()%1e7).toString(36).toUpperCase();S.pays.unshift({id,t:ui.payT,amt:ui.payA,at:Date.now()});log('PAY','ok','Payment '+id+' · '+ui.payA+' RUB · acquiring 200','Платёж '+id+' · '+ui.payA+' ₽ · эквайринг 200');
+ sheet('<div style="text-align:center"><div style="font-size:52px;animation:pop .4s">✅</div><div class="h2">'+T('Paid','Оплачено')+'</div><div class="big">'+rub(ui.payA)+'</div><div class="xs muted mono">'+id+'</div><button class="btn pri pbtn" data-a="sclose">'+T('Done','Готово')+'</button></div>');
+ const cb=ui.payCb;ui.payCb=null;if(cb)cb(id);save();renderPhone()}
+/* actions */
+const A={
+ tab:v=>go(v),notes:()=>{ui.tab='home';ui.sub='notes';renderPhone(true)},
+ rep:v=>{hap();ui.sub='rep:'+v;renderPhone(true)},
+ adis:v=>{const a=S.alerts.find(x=>x.id==v);if(a)a.dis=true;save();renderPhone()},
+ refresh:()=>doRefresh(),
+ fav:v=>{S.favs=S.favs.includes(v)?S.favs.filter(x=>x!==v):[...S.favs,v];hap();save();renderPhone()},
+ buyT:v=>{const t=TKT.find(x=>x.id===v);pay(t,t.p,()=>{const id='NV-'+Math.random().toString(36).slice(2,8).toUpperCase();S.tickets.unshift({id,type:v,until:Date.now()+t.sec*1000});log('TKT','ok','Ticket '+id+' issued · signed QR (ECDSA)','Билет '+id+' выпущен · подписанный QR (ECDSA)');toast('🎫 '+T('Ticket ready — QR on Transport tab','Билет готов — QR на вкладке «Транспорт»'))})},
+ zone:v=>{hap();ui.zone=v;renderPhone()},dur:v=>{ui.dur=+v;renderPhone()},
+ pStart:()=>{const z=ZONES.find(x=>x.id===ui.zone);S.plate=($('#plate').value||S.plate).toUpperCase();const amt=z.rate*ui.dur/60;pay({en:'Parking zone '+z.id+' · '+ui.dur+' min',ru:'Парковка, зона '+z.id+' · '+ui.dur+' мин'},amt,()=>{S.park={zone:z.id,plate:S.plate,start:Date.now(),end:Date.now()+ui.dur*60000,paid:amt,warned:false};log('PARK','ok','Session started · zone '+z.id+' · '+S.plate,'Сессия начата · зона '+z.id+' · '+S.plate)})},
+ pExt:v=>{const p=S.park,z=ZONES.find(x=>x.id===p.zone),amt=z.rate*v/60;pay({en:'Extend parking +'+v+' min',ru:'Продление парковки +'+v+' мин'},amt,()=>{p.end+=v*60000;p.paid+=amt;p.warned=false;toast('⏱ '+T('Extended until ','Продлено до ')+hhmm(p.end))})},
+ pStop:()=>{const p=S.park,z=ZONES.find(x=>x.id===p.zone),ref=Math.floor((p.end-Date.now())/60000)*z.rate/60;S.park=null;save();log('PARK','ok','Session stopped · refund '+ref.toFixed(0)+' RUB','Сессия завершена · возврат '+ref.toFixed(0)+' ₽');toast('🅿️ '+T('Parking stopped · refund ','Парковка завершена · возврат ')+rub(Math.round(ref)));renderPhone()},
+ shot:async()=>{hap();ui.photo=true;renderPhone();const ph=$('.photo');if(ph){const f=document.createElement('div');f.className='flash';ph.append(f)}},
+ cat:v=>{hap();ui.cat=v;ui.desc=($('#rdesc')||{}).value||ui.desc;renderPhone()},
+ gps:async()=>{ui.desc=($('#rdesc')||{}).value||ui.desc;toast('🎯 '+T('Locating…','Определяем место…'));await sleep(700);ui.pin=[132,92];renderPhone()},
+ submit:async()=>{ui.desc=($('#rdesc')||{}).value||'';const b=$('[data-a="submit"]');b.disabled=true;b.textContent=T('Uploading photo…','Загружаем фото…');await sleep(900);
+  const id='NG-'+(++S.seq),x=ui.pin[0],y=ui.pin[1];S.reports.unshift({id,cat:ui.cat,x,y,addr:addr(x,y),st:0,svc:'',mine:true,t:Date.now(),hist:[Date.now()],desc:ui.desc});
+  log('API','ok','POST /v2/requests → 201 '+id+' (photo 1.2 MB, EXIF geo)','POST /v2/requests → 201 '+id+' (фото 1,2 МБ, гео EXIF)');ui.photo=false;ui.cat=null;ui.pin=null;ui.desc='';ui.sel=id;save();
+  toast('✅ '+T('Request '+id+' sent','Обращение '+id+' отправлено'));ui.sub='rep:'+id;renderPhone(true);renderCons()},
+ rate:v=>{const [id,n]=v.split(':');const r=S.reports.find(x=>x.id===id);r.rate=+n;hap();save();renderPhone();toast('⭐ '+T('Thanks for the feedback','Спасибо за оценку'),'gold')},
+ ef:v=>{ui.ef=v;renderPhone()},
+ going:v=>{S.going[v]=!S.going[v];hap();save();renderPhone()},
+ ics:v=>{const e=EVENTS.find(x=>x.id===v),s=new Date(D0.getTime()+e.d*864e5+e.h*36e5),en=new Date(s.getTime()+e.dur*36e5),f=d=>d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  const txt=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Novograd City IT//My City//EN','BEGIN:VEVENT','UID:'+e.id+'-'+s.getTime()+'@mycity.novograd.example','DTSTAMP:'+f(new Date()),'DTSTART:'+f(s),'DTEND:'+f(en),'SUMMARY:'+L(e),'LOCATION:'+L(e.pl)+', Novograd','DESCRIPTION:'+T('From the My City app','Из приложения «Мой город»'),'BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY','DESCRIPTION:Reminder','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  try{const u=URL.createObjectURL(new Blob([txt],{type:'text/calendar'})),a=document.createElement('a');a.href=u;a.download=e.id+'-novograd.ics';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)}catch(err){}
+  toast('📅 '+T('Calendar file downloaded (.ics)','Файл календаря скачан (.ics)'))},
+ bill:v=>{const b=S.bills.find(x=>x.id===v);const amt=b.disc?b.amt/2:b.amt;pay(b,amt,()=>{b.paid=true;toast('💳 '+T('Paid: ','Оплачено: ')+L(b))})},
+ payGo:()=>payGo(),sclose:()=>sheet(''),
+ cf:v=>{ui.cf=v;renderCons()},sel:v=>{ui.sel=v;renderCons()},
+ adv:v=>advance(v),close:v=>setSt(v,4),
+ atpl:v=>{ui.atpl=v;fillTpl()}
+};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;
+ if(t.closest('#rmap')){}const f=A[t.dataset.a];if(f){if(t.disabled)return;f(t.dataset.v)}});
+document.addEventListener('click',e=>{const m=e.target.closest('#rmap');if(!m)return;const pt=m.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(m.getScreenCTM().inverse());ui.desc=($('#rdesc')||{}).value||ui.desc;ui.pin=[Math.round(p.x),Math.round(p.y)];hap();renderPhone()});
+/* report workflow */
+function setSt(id,st,auto){const r=S.reports.find(x=>x.id===id);if(!r||r.st>=st)return;for(let i=r.st+1;i<=st;i++)r.hist[i]=Date.now();r.st=st;if(st>=2&&!r.svc)r.svc=CATS[r.cat].svc;if(st===4)S.resolved++;
+ log(auto?'AUTO':'OPS',st===4?'ok':'wa',r.id+' → '+ST[st].en+(st===2?' · '+SVC[r.svc].en:''),r.id+' → '+ST[st].ru+(st===2?' · '+SVC[r.svc].ru:''));
+ if(r.mine){const m={1:['📥',['Request accepted',r.id+' was checked by the operator'],['Обращение принято',r.id+' проверено оператором']],2:['🛠️',['Passed to '+SVC[r.svc].en,r.id+': the service has the task'],['Передано: '+SVC[r.svc].ru,r.id+': задача у службы']],3:['🚧',['Work started',r.id+': crew is on site'],['Работы начались',r.id+': бригада на месте']],4:['✅',['Problem resolved',r.id+': '+CATS[r.cat].en+' fixed. Rate the result'],['Проблема решена',r.id+': '+CATS[r.cat].ru+' — устранено. Оцените результат']]}[st];
+  if(m)push(m[0],m[1],m[2],{go:{tab:'home',sub:'rep:'+r.id}})}
+ save();renderCons();if(!$('.sheet'))renderPhone()}
+function advance(id){const r=S.reports.find(x=>x.id===id);if(!r)return;const sel=$('#svc-'+id);if(sel&&sel.value)r.svc=sel.value;setSt(id,Math.max(2,r.st+1))}
+/* console */
+function renderCons(){const open=S.reports.filter(r=>r.st<4);$('#kOpen').textContent=open.length;$('#kDone').textContent=S.resolved;$('#kAvg').textContent='3.4'+T('h','ч');
+ const cnt={open:open.length,mine:S.reports.filter(r=>r.mine).length,all:S.reports.length};
+ $('#cFilt').innerHTML=[['open',T('Open','Открытые')],['mine',T('From demo citizen','От демо-жителя')],['all',T('All','Все')]].map(f=>'<button class="chip '+(ui.cf===f[0]?'on':'')+'" data-a="cf" data-v="'+f[0]+'">'+f[1]+' · '+cnt[f[0]]+'</button>').join('');
+ const list=S.reports.filter(r=>ui.cf==='all'||(ui.cf==='open'?r.st<4:r.mine)).sort((a,b)=>(b.mine-a.mine)||(b.t-a.t));
+ const col=st=>['#4ea4ff','#d8b46a','#f0a83a','#f0a83a','#17b58a'][st];
+ $('#cmap').innerHTML=base()+S.reports.map(r=>'<g data-a="sel" data-v="'+r.id+'">'+pinSvg(r.x,r.y,col(r.st),ui.sel===r.id?'sel':'')+(r.mine&&r.st<4?'<circle cx="'+r.x+'" cy="'+(r.y-14)+'" r="10" fill="none" stroke="#d8b46a" stroke-width="1.5"><animate attributeName="r" from="6" to="16" dur="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" from="1" to="0" dur="1.4s" repeatCount="indefinite"/></circle>':'')+'</g>').join('');
+ $('#cRows').innerHTML=list.map(r=>'<tr class="'+(ui.sel===r.id?'sel ':'')+(r.mine?'mine':'')+'" data-a="sel" data-v="'+r.id+'"><td class="mono">'+r.id+(r.mine?' <span class="pill gold" style="font-size:10px;padding:0 6px">'+T('demo','демо')+'</span>':'')+'</td><td>'+CATS[r.cat].ic+' '+L(CATS[r.cat])+'</td><td>'+L(r.addr)+'</td><td><span class="pill '+ST[r.st].c+'" style="font-size:11px">'+L(ST[r.st])+'</span></td><td>'+(r.st<4?'<select id="svc-'+r.id+'" onclick="event.stopPropagation()">'+Object.keys(SVC).map(k=>'<option value="'+k+'"'+((r.svc||CATS[r.cat].svc)===k?' selected':'')+'>'+L(SVC[k])+'</option>').join('')+'</select>':L(SVC[r.svc]||SVC[CATS[r.cat].svc]))+'</td><td style="white-space:nowrap">'+(r.st<4?'<button class="btn sm" data-a="adv" data-v="'+r.id+'">'+(r.st<2?T('Assign','Передать'):r.st===2?T('Start','В работу'):'→')+'</button> <button class="btn sm pri" data-a="close" data-v="'+r.id+'">'+T('Close','Закрыть')+'</button>':'✓')+'</td></tr>').join('')||'<tr><td colspan="6" class="muted">—</td></tr>'}
+function fillTpl(){const t=ATPL[ui.atpl];$('#aTpl').innerHTML=Object.keys(ATPL).map(k=>'<button class="chip '+(ui.atpl===k?'on':'')+'" data-a="atpl" data-v="'+k+'">'+ATPL[k].ic+' '+ATPL[k][PT.lang][0]+'</button>').join('');$('#aTitle').value=t[PT.lang][0];$('#aBody').value=t[PT.lang][1];$('#aSev').value=t.sev}
+function initCons(){$('#aSev').innerHTML=Object.keys(SEV).map(k=>'<option value="'+k+'">'+L(SEV[k])+'</option>').join('');$('#aArea').innerHTML=Object.keys(AREA).map(k=>'<option value="'+k+'">'+L(AREA[k])+'</option>').join('');$('#aSend').textContent='🚨 '+T('Broadcast to all users','Разослать всем жителям');fillTpl()}
+$('#aSend').onclick=async()=>{const title=$('#aTitle').value.trim(),body=$('#aBody').value.trim(),sev=$('#aSev').value;if(!title||!body)return toast(T('Fill in title and message','Заполните заголовок и текст'),'bad');
+ const btn=$('#aSend');btn.disabled=true;const total=412381+Math.floor(Math.random()*900);log('ALERT','bad','Emergency broadcast «'+title+'» · '+AREA[$('#aArea').value].en,'Экстренная рассылка «'+title+'» · '+AREA[$('#aArea').value].ru);
+ for(let i=1;i<=10;i++){await sleep(160);$('#aBar').style.width=i*10+'%';$('#aStat').textContent=T('Delivered ','Доставлено ')+Math.round(total*i/10).toLocaleString()+' / '+total.toLocaleString()+' · FCM + APNs + SMS fallback'}
+ const a={id:Date.now(),ic:ATPL[ui.atpl].ic,title,body,sev,t:Date.now()};S.alerts.unshift(a);S.alerts=S.alerts.slice(0,5);save();
+ push(a.ic,[title,body],[title,body],{crit:sev==='crit',go:{tab:'home'}});if(ui.tab==='home'&&!ui.sub)renderPhone();btn.disabled=false;toast('🚨 '+T('Alert delivered to ','Оповещение доставлено: ')+total.toLocaleString(),'gold')};
+$('#reset').onclick=()=>{S=fresh();save();Object.assign(ui,{tab:'home',sub:null,sel:null,photo:false,cat:null,pin:null,zone:null});sheet('');renderAll();toast(T('Demo data reset','Данные демо сброшены'))};
+/* features */
+const FEATS=[['home','🏠',{en:'Home & alerts',ru:'Главная и оповещения'},{en:'Weather, emergency alerts, my requests, active ticket and parking.',ru:'Погода, экстренные оповещения, мои обращения, билет и парковка.'}],['tr','🚌',{en:'Live transport',ru:'Транспорт онлайн'},{en:'Moving buses on the map, ticking arrivals, QR ticket.',ru:'Автобусы на карте, обратный отсчёт прибытия, билет с QR.'}],['park','🅿️',{en:'Parking',ru:'Парковка'},{en:'Pick a zone, pay, see the timer, extend in one tap.',ru:'Выбор зоны, оплата, таймер, продление в одно касание.'}],['rep','📸',{en:'Report a problem',ru:'Сообщить о проблеме'},{en:'Photo, category, pin → status pushes as the city works.',ru:'Фото, категория, точка → push по мере работы города.'}],['ev','🎭',{en:'Events',ru:'Афиша'},{en:'Filter and save events to your calendar (.ics).',ru:'Фильтр и добавление в календарь (.ics).'}],['pay','💳',{en:'Payments',ru:'Платежи'},{en:'Utilities and fines with 50% early discount, Face ID.',ru:'ЖКУ и штрафы со скидкой 50%, Face ID.'}]];
+function renderFeats(){$('#feats').innerHTML=FEATS.map(f=>'<div class="feat '+(ui.tab===f[0]?'on':'')+'" data-a="tab" data-v="'+f[0]+'"><span class="fi">'+f[1]+'</span><div><b>'+L(f[2])+'</b><span>'+L(f[3])+'</span></div></div>').join('')}
+/* tick */
+function tick(){const now=Date.now(),ns=now/1000;$('#clock').textContent=hhmm(now);
+ $$('[data-arr]').forEach(el=>{const [o,i]=el.dataset.arr.split(',').map(Number);const s=((o-Math.floor(ns))%i+i)%i;el.textContent=s<30?T('arriving','прибывает'):mmss(s);el.classList.toggle('now',s<30)});
+ $$('[data-until]').forEach(el=>{el.textContent=mmss((+el.dataset.until-now)/1000)});
+ const pr=$('#pring');if(pr&&S.park){const p=S.park;pr.style.strokeDashoffset=402*(1-Math.max(0,(p.end-now)/(p.end-p.start)))}
+ if(S.park&&!S.park.warned&&S.park.end-now<600000){S.park.warned=true;push('⏱',['Parking ends in 10 min','Zone '+S.park.zone+' · tap to extend'],['Парковка закончится через 10 мин','Зона '+S.park.zone+' · нажмите, чтобы продлить'],{go:{tab:'park'}})}
+ if(S.park&&S.park.end<=now){log('PARK','wa','Session ended · '+S.park.plate,'Сессия завершена · '+S.park.plate);S.park=null;save();if(ui.tab==='park')renderPhone()}
+ S.reports.forEach(r=>{if(!r.mine||r.st>=4)return;const age=now-r.t;if(r.st===0&&age>5000)setSt(r.id,1,1);else if(r.st===1&&age>16000)setSt(r.id,2,1);else if(r.st===2&&age>30000)setSt(r.id,3,1)});
+ if(Math.random()<.25){$('#kOn').textContent=(18400+Math.floor(Math.random()*600)).toLocaleString()}}
+setInterval(tick,1000);
+function anim(){const m=$('#trmap');if(m){const t=performance.now()/1000;$$('.bus',m).forEach(g=>{const r=ROUTES[+g.dataset.r],p=$('#rp'+g.dataset.r,m);if(!p)return;const len=p.getTotalLength(),pt=p.getPointAtLength(((t/r.per+(+g.dataset.ph))%1)*len);g.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')')})}requestAnimationFrame(anim)}
+requestAnimationFrame(anim);
+/* pull to refresh */
+async function doRefresh(){const p=$('#ptr');p.style.height='42px';p.classList.add('spin');$('#ptrT').textContent=T('Updating…','Обновляем…');hap();await sleep(900);
+ S.wx.t=Math.max(-8,Math.min(4,S.wx.t+(Math.random()<.5?-1:1)));save();log('SYNC','ok','GET /v2/home → 200 (weather, alerts, requests) 142 ms','GET /v2/home → 200 (погода, оповещения, обращения) 142 мс');
+ p.classList.remove('spin');p.style.height='0';renderPhone();toast('↻ '+T('Updated','Обновлено'))}
+(function(){const pb=$('#pbody'),p=$('#ptr');let y0=null,dy=0;
+ const start=y=>{if(pb.scrollTop<=0){y0=y;dy=0}},move=(y,e)=>{if(y0===null)return;dy=y-y0;if(dy>0){if(e.cancelable)e.preventDefault();p.style.transition='none';p.style.height=Math.min(70,dy*.5)+'px';$('#ptrT').textContent=dy>110?T('Release to refresh','Отпустите — обновить'):T('Pull to refresh','Потяните — обновить')}},
+ end=()=>{if(y0===null)return;p.style.transition='';const go=dy>110;y0=null;if(go)doRefresh();else p.style.height='0'};
+ pb.addEventListener('touchstart',e=>start(e.touches[0].clientY),{passive:true});pb.addEventListener('touchmove',e=>move(e.touches[0].clientY,e),{passive:false});pb.addEventListener('touchend',end);
+ pb.addEventListener('mousedown',e=>{if(e.target.closest('button,input,textarea,select,svg'))return;start(e.clientY)});window.addEventListener('mousemove',e=>{if(y0!==null)move(e.clientY,e)});window.addEventListener('mouseup',end)})();
+function renderAll(){renderPhone();initCons();renderCons();renderLog()}
+PT.onLang(()=>{renderAll();if($('.sheet'))sheet('')});
+document.addEventListener('DOMContentLoaded',()=>{renderAll();if(!S.logs.length)log('BOOT','ok','App 4.2.0 (318) · SSO session restored · push token registered','Приложение 4.2.0 (318) · сессия SSO восстановлена · push-токен зарегистрирован')});
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

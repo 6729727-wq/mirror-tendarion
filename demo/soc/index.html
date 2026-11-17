@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sentinel Grid — SOC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+body{overflow-x:hidden}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--bg2),var(--bg))}
+.logo2{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.04em}
+.shield{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff}
+.defcon{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--line2)}
+.defcon.lvl1{color:var(--mal3)}.defcon.lvl2{color:var(--amber);border-color:var(--amber)}.defcon.lvl3{color:#fff;background:var(--red);border-color:var(--red);animation:flash 1s infinite}
+@keyframes flash{50%{opacity:.6}}
+.tabs{display:flex;gap:4px;overflow-x:auto;padding:8px 16px;border-bottom:1px solid var(--line);scrollbar-width:none}
+.tab{border:1px solid transparent;background:none;padding:7px 14px;border-radius:999px;cursor:pointer;color:var(--muted);font-weight:600;font-size:13px;white-space:nowrap}
+.tab.on{background:var(--panel2);border-color:var(--line2);color:var(--text)}
+.tab .cnt{font-size:10px;background:var(--red);color:#fff;border-radius:999px;padding:1px 6px;margin-left:4px}
+.sim{margin-left:auto}
+.btn.danger{background:linear-gradient(135deg,#ff6b6b,#c62828);border-color:transparent;color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding:12px 16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;min-width:0}
+.kpi .v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.kpi .d{font-size:11px;font-family:var(--mono)}
+.page{display:none;padding:0 16px 20px}.page.on{display:block}
+.ov{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
+.ph{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:700;font-size:13px;flex-wrap:wrap}
+.ph .sp{flex:1}
+.live{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:flash 1.2s infinite}
+#map{display:block;width:100%;height:380px;background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--mal) 8%,transparent),transparent 70%)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:0}
+.aq{max-height:440px;overflow:auto}
+.al{display:grid;grid-template-columns:4px 1fr auto;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;transition:.15s;align-items:center}
+.al:hover{background:var(--panel2)}
+.al .sv{width:4px;align-self:stretch;border-radius:3px}
+.al b{font-size:13px;display:block}.al small{color:var(--muted);font-size:11px;font-family:var(--mono)}
+.al.new{animation:slidein .5s}
+@keyframes slidein{from{transform:translateX(30px);opacity:0;background:color-mix(in srgb,var(--red) 20%,transparent)}}
+.stream{height:300px;overflow:auto;font-family:var(--mono);font-size:12px;padding:6px 0;background:var(--bg2)}
+.ln{padding:1px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ln .t{color:var(--dim)}.ln .s{font-weight:700;display:inline-block;width:44px}.ln .src{color:var(--blue);display:inline-block;width:40px}
+.sv-crit{color:var(--red)}.sv-high{color:#ff8a4c}.sv-med{color:var(--amber)}.sv-low{color:var(--mal3)}.sv-info{color:var(--muted)}
+.bg-crit{background:var(--red)}.bg-high{background:#ff8a4c}.bg-med{background:var(--amber)}.bg-low{background:var(--mal3)}.bg-info{background:var(--dim)}
+.fchip{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:3px 10px;font-size:11px;cursor:pointer;font-weight:700;color:var(--muted)}
+.fchip.on{color:var(--text);border-color:var(--mal);background:color-mix(in srgb,var(--mal) 15%,transparent)}
+select.input{width:auto;padding:5px 8px;font-size:12px}
+.eps{font-family:var(--mono);font-size:12px;color:var(--mal3)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:9px 10px;border-bottom:1px solid var(--line);font-weight:600}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tw{overflow-x:auto}
+tr.clk{cursor:pointer}tr.clk:hover td{background:var(--panel2)}
+.risk{height:6px;border-radius:6px;background:var(--line);width:90px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:6px}
+.risk i{display:block;height:100%;border-radius:6px}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,100vw);background:var(--panel);border-left:1px solid var(--line2);z-index:1500;transform:translateX(105%);transition:.3s;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.dh{padding:16px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.db{flex:1;overflow:auto;padding:16px;display:grid;gap:14px;align-content:start}
+.df{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:13px}.kv span{color:var(--muted)}
+.tl{border-left:2px solid var(--line2);margin-left:6px;padding-left:14px;display:grid;gap:10px;font-size:13px}
+.tl div{position:relative}.tl div::before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--mal);border:2px solid var(--panel)}
+.tl small{color:var(--muted);font-family:var(--mono);font-size:11px;display:block}
+pre.raw{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:11px;overflow:auto;margin:0;max-height:200px}
+.mitre{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg2)}
+.mitre .id{font-family:var(--mono);font-weight:800;color:var(--gold2);font-size:15px}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1400;display:none}.scrim.on{display:block}
+.pbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.pb{cursor:pointer;transition:.15s}.pb:hover,.pb.sel{border-color:var(--mal)}.pb.sel{box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 20%,transparent)}
+.pb .ic{font-size:26px}
+.stp{display:flex;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);font-size:13px}
+.stp .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;background:var(--panel2);border:1px solid var(--line2);flex:none}
+.stp.run .n{background:var(--gold);color:#1a1306;border-color:var(--gold);animation:flash .8s infinite}
+.stp.ok .n{background:var(--mal);color:#fff;border-color:var(--mal)}
+.stp em{margin-left:auto;font-style:normal;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.prog{height:8px;border-radius:8px;background:var(--line);overflow:hidden;margin:10px 12px}.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal),var(--gold));transition:width .4s}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.req{display:flex;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.req .who{flex:1;min-width:180px;font-size:13px}.req .who small{display:block;color:var(--muted);font-size:11px}
+.sess{padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}.sess:hover{background:var(--panel2)}.sess.sel{background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.tline{position:relative;height:34px;margin:10px 12px;border-radius:8px;background:var(--bg2);border:1px solid var(--line)}
+.tline i{position:absolute;top:6px;width:4px;height:20px;border-radius:2px;cursor:pointer}
+.tline .head{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.term{background:#050a08;color:#9fe8c9;font-family:var(--mono);font-size:12px;height:220px;overflow:auto;padding:10px 12px;border-radius:0 0 14px 14px}
+.term .bad{color:#ff7b7b}
+.toast{position:fixed;right:16px;top:60px;z-index:2000;background:var(--panel);border:1px solid var(--mal);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);font-size:13px;transform:translateX(130%);transition:.3s;max-width:340px}
+.toast.on{transform:none}.toast.bad{border-color:var(--red)}
+@media (max-width:1050px){.ov{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px}.page{padding:0 10px 16px}#map{height:240px}.pbs,.g2{grid-template-columns:1fr}.hm{display:none}.kv{grid-template-columns:100px 1fr}.sim{margin-left:0}.top{padding:10px}}
+</style>
+</head>
+<body data-demo-en="Sentinel Grid — national SOC / SIEM" data-demo-ru="Sentinel Grid — национальный SOC и SIEM">
+<div class="top">
+  <div class="logo2"><div class="shield"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg></div><div>SENTINEL GRID<div class="muted" style="font-size:11px;font-weight:500;letter-spacing:0" data-en="National Cyber Defence Centre · Nordania" data-ru="Национальный центр киберзащиты · Нордания"></div></div></div>
+  <span class="defcon lvl1" id="defcon"></span>
+  <span class="eps hm" id="clock"></span>
+  <div class="sim row" style="display:flex;gap:8px">
+    <button class="btn" id="resetBtn" data-en="Reset" data-ru="Сброс"></button>
+    <button class="btn danger" id="simBtn" data-en="⚡ Simulate attack" data-ru="⚡ Симулировать атаку"></button>
+  </div>
+</div>
+<div class="kpis" id="kpis"></div>
+<div class="tabs" id="tabs">
+  <button class="tab on" data-p="ov" data-en="Overview" data-ru="Обзор"></button>
+  <button class="tab" data-p="al"><span data-en="Alerts" data-ru="Алерты"></span><span class="cnt" id="alCnt">0</span></button>
+  <button class="tab" data-p="pb" data-en="Playbooks" data-ru="Плейбуки"></button>
+  <button class="tab" data-p="as" data-en="Assets" data-ru="Активы"></button>
+  <button class="tab" data-p="zt"><span data-en="Zero Trust / IAM" data-ru="Zero Trust / IAM"></span><span class="cnt" id="ztCnt" style="display:none">0</span></button>
+</div>
+
+<div class="page on" id="p-ov">
+  <div class="ov">
+    <div class="panel">
+      <div class="ph"><span class="live"></span><span data-en="Live threat map" data-ru="Карта угроз в реальном времени"></span><span class="sp"></span><span class="mono muted" style="font-size:11px" id="mapInfo"></span></div>
+      <canvas id="map"></canvas>
+      <div class="legend"><span><i class="dot bg-crit"></i><span data-en="Critical" data-ru="Критично"></span></span><span><i class="dot bg-high"></i><span data-en="High" data-ru="Высокий"></span></span><span><i class="dot bg-med"></i><span data-en="Medium" data-ru="Средний"></span></span><span><i class="dot" style="background:var(--mal3)"></i><span data-en="Protected node" data-ru="Защищённый узел"></span></span><span><i class="dot" style="background:var(--dim)"></i><span data-en="Isolated" data-ru="Изолирован"></span></span></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span data-en="Alert queue" data-ru="Очередь алертов"></span><span class="sp"></span><span class="pill bad" id="openPill"></span></div>
+      <div class="aq" id="aq"></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:12px">
+    <div class="ph"><span class="live"></span><span data-en="Event stream" data-ru="Поток событий"></span><span class="eps" id="eps"></span><span class="sp"></span>
+      <span id="sevF"></span>
+      <select class="input" id="srcF"></select>
+      <button class="btn" id="pauseBtn" style="padding:5px 12px;font-size:12px"></button>
+    </div>
+    <div class="stream" id="stream"></div>
+  </div>
+</div>
+
+<div class="page" id="p-al">
+  <div class="panel">
+    <div class="ph"><span data-en="All alerts" data-ru="Все алерты"></span><span class="sp"></span><span id="stF"></span></div>
+    <div class="tw"><table><thead><tr><th data-en="Severity" data-ru="Уровень"></th><th>ID</th><th data-en="Alert" data-ru="Алерт"></th><th class="hm">MITRE</th><th class="hm" data-en="Asset" data-ru="Актив"></th><th data-en="Status" data-ru="Статус"></th></tr></thead><tbody id="alT"></tbody></table></div>
+  </div>
+</div>
+
+<div class="page" id="p-pb">
+  <div class="pbs" id="pbs"></div>
+  <div class="g2">
+    <div class="panel"><div class="ph"><span id="pbTitle"></span><span class="sp"></span><button class="btn pri" id="pbRun" style="padding:6px 14px;font-size:13px" data-en="▶ Run playbook" data-ru="▶ Запустить"></button></div><div class="prog"><i id="pbProg"></i></div><div id="pbSteps"></div></div>
+    <div class="panel"><div class="ph" data-en="Execution log" data-ru="Журнал выполнения"></div><div class="term" id="pbLog" style="height:360px;border-radius:0"></div></div>
+  </div>
+</div>
+
+<div class="page" id="p-as">
+  <div class="panel">
+    <div class="ph"><span data-en="Critical infrastructure inventory" data-ru="Реестр объектов КИИ"></span><span class="sp"></span><input class="input" id="asQ" style="width:200px;padding:6px 10px;font-size:13px" data-en-ph="Filter…" data-ru-ph="Фильтр…"></div>
+    <div class="tw"><table><thead><tr><th data-en="Object" data-ru="Объект"></th><th class="hm" data-en="Sector" data-ru="Отрасль"></th><th data-en="Risk" data-ru="Риск"></th><th class="hm" data-en="Patch level" data-ru="Патчи"></th><th data-en="Status" data-ru="Статус"></th><th></th></tr></thead><tbody id="asT"></tbody></table></div>
+  </div>
+</div>
+
+<div class="page" id="p-zt">
+  <div class="g2">
+    <div class="panel"><div class="ph"><span data-en="Access requests (just-in-time)" data-ru="Запросы доступа (just-in-time)"></span><span class="sp"></span><span class="pill" id="ztPol"></span></div><div id="reqs"></div></div>
+    <div class="panel"><div class="ph" data-en="Privileged sessions (recorded)" data-ru="Привилегированные сессии (запись)"></div><div id="sess"></div>
+      <div class="tline" id="tline"></div>
+      <div class="ph" style="border-top:1px solid var(--line)"><button class="btn" id="playS" style="padding:5px 12px;font-size:12px" data-en="▶ Replay" data-ru="▶ Воспроизвести"></button><span class="sp"></span><button class="btn danger" id="killS" style="padding:5px 12px;font-size:12px" data-en="Terminate session" data-ru="Завершить сессию"></button></div>
+      <div class="term" id="term"></div>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer"></aside>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const S={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const T=(e,r)=>PT.t(e,r), esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rnd=a=>a[Math.floor(Math.random()*a.length)], ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function toast(m,bad){const t=$('#toast');t.innerHTML=m;t.className='toast on'+(bad?' bad':'');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),3200)}
+const SEV={crit:['CRIT','Critical','Критично'],high:['HIGH','High','Высокий'],med:['MED','Medium','Средний'],low:['LOW','Low','Низкий'],info:['INFO','Info','Инфо']};
+const SEVC={crit:'--red',high:'#ff8a4c',med:'--amber',low:'--mal3',info:'--dim'};
+const col=k=>{const c=SEVC[k];return c.startsWith('--')?css(c):c};
+const now=()=>new Date().toTimeString().slice(0,8);
+
+/* ---------- assets ---------- */
+const ASSETS0=[
+['pwr-01','North Grid Control Centre','Центр управления сетью «Север»','Energy','Энергетика',.535,.155,92],
+['pwr-02','Hydro Plant Kaldvik','ГЭС Кальдвик','Energy','Энергетика',.525,.19,88],
+['wtr-01','Water Utility SCADA','SCADA водоканала','Water','Водоснабжение',.548,.175,95],
+['tel-01','National Backbone IX','Магистральная точка обмена','Telecom','Связь',.552,.205,81],
+['bnk-01','Central Bank Payments','Платёжная система ЦБ','Finance','Финансы',.518,.172,97],
+['gov-01','e-Gov Portal Cluster','Кластер портала госуслуг','Government','Госуправление',.56,.16,74],
+['gov-02','Tax Service Database','БД налоговой службы','Government','Госуправление',.542,.145,70],
+['hsp-01','Capital Hospital EHR','МИС столичной больницы','Health','Здравоохранение',.53,.21,83],
+['rail-01','Rail Signalling Network','Сигнализация ЖД','Transport','Транспорт',.565,.188,79],
+['air-01','Airport ATC Systems','Системы УВД аэропорта','Transport','Транспорт',.512,.2,90],
+['ad-01','Gov Active Directory','Active Directory правительства','Identity','Идентификация',.546,.192,86],
+['dns-01','National DNS Resolvers','Национальные DNS-резолверы','Telecom','Связь',.522,.158,77]];
+let st=S.get('sg-state',null);
+function freshState(){return{assets:ASSETS0.map(a=>({id:a[0],risk:ri(18,52),patch:ri(82,99),status:'ok'})),alerts:[],seq:1040,zt:null,closed:0,mttd:[],mttr:[]}}
+if(!st||!st.assets||st.assets.length!==ASSETS0.length)st=freshState();
+const A=id=>ASSETS0.findIndex(a=>a[0]===id);
+const aName=(id)=>{const a=ASSETS0[A(id)];return a?a[PT.lang==='ru'?2:1]:id};
+function save(){S.set('sg-state',{...st,alerts:st.alerts.slice(0,60)})}
+
+/* ---------- alerts ---------- */
+const TPL=[
+['T1110','Brute Force','Credential Access','Password spraying against VPN gateway','Подбор паролей к VPN-шлюзу','high','ad-01'],
+['T1190','Exploit Public-Facing Application','Initial Access','SQL injection attempt on e-Gov portal','Попытка SQL-инъекции на портал госуслуг','high','gov-01'],
+['T1498','Network Denial of Service','Impact','Volumetric UDP flood on DNS resolvers','Объёмный UDP-флуд на DNS-резолверы','med','dns-01'],
+['T1059.001','PowerShell','Execution','Encoded PowerShell on hospital workstation','Закодированный PowerShell на станции больницы','high','hsp-01'],
+['T1071.004','DNS Application Layer Protocol','Command and Control','DNS tunnelling beacon detected','Обнаружен DNS-туннель (маяк)','med','tel-01'],
+['T1046','Network Service Discovery','Discovery','Port scan from external host on rail OT','Сканирование портов ЖД-сети извне','low','rail-01'],
+['T1078','Valid Accounts','Defense Evasion','Login from impossible travel location','Вход из невозможной геолокации','med','ad-01'],
+['T0855','Unauthorized Command Message','Impair Process Control (ICS)','Unexpected Modbus write to pump controller','Неожиданная запись Modbus в контроллер насоса','crit','wtr-01']];
+const SRCIP=['203.0.113.','198.51.100.','192.0.2.'];
+function mkAlert(t,o){o=o||{};const id='SG-'+(++st.seq);const ip=o.ip||rnd(SRCIP)+ri(2,250);const ts=Date.now();
+  const al={id,tech:t[0],tname:t[1],tactic:t[2],title:[t[3],t[4]],sev:t[5],asset:t[6],ip,ts,status:'new',owner:'',chain:o.chain||0,
+    tl:[{ts:ts-ri(40,200)*1000,en:'First suspicious event correlated',ru:'Скоррелировано первое подозрительное событие'},{ts:ts-ri(5,30)*1000,en:'Threshold rule fired · '+t[0],ru:'Сработало правило корреляции · '+t[0]},{ts,en:'Alert created, risk score '+ri(61,98),ru:'Создан алерт, оценка риска '+ri(61,98)}],
+    raw:{timestamp:new Date(ts).toISOString(),sensor:rnd(['edr-n17','fw-core-2','ids-ix-1','siem-corr']),src_ip:ip,dst_asset:t[6],technique:t[0],action:'alert',bytes:ri(400,90000),proc:t[0].startsWith('T1059')?'powershell.exe -enc SQBFAFgA...':undefined,user:o.user||rnd(['svc_backup','j.halvorsen','m.lind','admin.ops'])}};
+  st.alerts.unshift(al);const a=st.assets[A(t[6])];if(a)a.risk=Math.min(99,a.risk+(t[5]==='crit'?22:t[5]==='high'?12:5));
+  st.mttd.push(o.mttd||ri(2,9));save();renderAlerts(true);renderKPIs();renderAssets();
+  if(t[5]==='crit'||t[5]==='high')burst(t[6],t[5],ip,4);return al}
+
+/* ---------- KPIs ---------- */
+const openAl=()=>st.alerts.filter(a=>!['closed','fp'].includes(a.status));
+let eps=48200;
+function compliance(){const p=st.assets.reduce((s,a)=>s+a.patch,0)/st.assets.length;const r=st.assets.reduce((s,a)=>s+a.risk,0)/st.assets.length;return Math.max(40,Math.min(99,Math.round(p*.75+(100-r)*.25-openAl().filter(a=>a.sev==='crit').length*3)))}
+function gauge(v){const r=18,c=Math.PI*r;const color=v>85?css('--mal3'):v>70?css('--amber'):css('--red');return `<svg width="54" height="34" viewBox="0 0 54 34"><path d="M9 30a18 18 0 0 1 36 0" fill="none" stroke="${css('--line2')}" stroke-width="6" stroke-linecap="round"/><path d="M9 30a18 18 0 0 1 36 0" fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c*v/100} ${c}"/></svg>`}
+function renderKPIs(){const o=openAl();const avg=a=>a.length?(a.slice(-20).reduce((s,x)=>s+x,0)/Math.min(20,a.length)):0;
+  const mttd=avg(st.mttd)||4.2,mttr=avg(st.mttr)||38;const comp=compliance();const crit=o.filter(a=>a.sev==='crit').length;
+  $('#kpis').innerHTML=[
+    [mttd.toFixed(1)+T(' min',' мин'),'MTTD',T('detect','обнаружение'),mttd<6?'--mal3':'--amber'],
+    [Math.round(mttr)+T(' min',' мин'),'MTTR',T('respond','реагирование'),mttr<45?'--mal3':'--amber'],
+    [o.length,T('Open incidents','Открытые инциденты'),crit?crit+' '+T('critical','критич.'):T('none critical','нет критичных'),crit?'--red':'--mal3'],
+    [(eps/1000).toFixed(1)+'k',T('Events / sec','Событий / сек'),T('12 sources','12 источников'),'--blue']].map(k=>`<div class="kpi"><div style="min-width:0"><div class="l">${k[1]}</div><div class="v">${k[0]}</div><div class="d" style="color:${css(k[3])}">${k[2]}</div></div></div>`).join('')+
+    `<div class="kpi">${gauge(comp)}<div><div class="l">${T('Compliance','Соответствие')}</div><div class="v">${comp}%</div><div class="d muted">NIS2 · ISO 27001</div></div></div>`;
+  const lvl=crit?3:o.filter(a=>a.sev==='high').length>1?2:1;const dc=$('#defcon');dc.className='defcon lvl'+lvl;dc.textContent=[T('THREAT LEVEL: GUARDED','УРОВЕНЬ УГРОЗЫ: ПОВЫШЕННАЯ ГОТОВНОСТЬ'),T('THREAT LEVEL: ELEVATED','УРОВЕНЬ УГРОЗЫ: ВЫСОКИЙ'),T('THREAT LEVEL: SEVERE','УРОВЕНЬ УГРОЗЫ: КРИТИЧЕСКИЙ')][lvl-1];
+  $('#alCnt').textContent=o.length;$('#openPill').textContent=o.length+' '+T('open','открыто')}
+
+/* ---------- alert views ---------- */
+const STAT={new:['New','Новый',''],assigned:['Assigned','Назначен','gold'],escalated:['Escalated','Эскалирован','bad'],closed:['Resolved','Закрыт','ok'],fp:['False positive','Ложное','']};
+const stPill=s=>`<span class="pill ${STAT[s][2]}">${T(STAT[s][0],STAT[s][1])}</span>`;
+const ago=ts=>{const s=Math.round((Date.now()-ts)/1000);return s<60?s+T('s ago',' с назад'):Math.round(s/60)+T('m ago',' мин назад')};
+let stFilter='open';
+function renderAlerts(fresh){const li=PT.lang==='ru'?1:0;const o=openAl();
+  $('#aq').innerHTML=o.length?o.slice(0,30).map((a,i)=>`<div class="al ${fresh&&i===0?'new':''}" data-id="${a.id}"><i class="sv bg-${a.sev}"></i><div style="min-width:0"><b>${esc(a.title[li])}</b><small>${a.id} · ${a.tech} · ${esc(aName(a.asset))} · ${ago(a.ts)}</small></div>${stPill(a.status)}</div>`).join(''):`<div class="muted" style="padding:30px;text-align:center;font-size:13px">✅ ${T('Queue is clear','Очередь пуста')}</div>`;
+  const list=st.alerts.filter(a=>stFilter==='all'||(stFilter==='open'?!['closed','fp'].includes(a.status):['closed','fp'].includes(a.status)));
+  $('#alT').innerHTML=list.map(a=>`<tr class="clk" data-id="${a.id}"><td><span class="pill" style="color:${col(a.sev)};border-color:${col(a.sev)}">${T(SEV[a.sev][1],SEV[a.sev][2])}</span></td><td class="mono">${a.id}</td><td>${esc(a.title[li])}<div class="muted mono" style="font-size:11px">${ago(a.ts)}${a.owner?' · '+a.owner:''}</div></td><td class="hm mono" style="color:var(--gold2)">${a.tech}</td><td class="hm">${esc(aName(a.asset))}</td><td>${stPill(a.status)}</td></tr>`).join('')||`<tr><td colspan="6" class="muted" style="text-align:center;padding:24px">—</td></tr>`;
+  $('#stF').innerHTML=[['open',T('Open','Открытые')],['done',T('Closed','Закрытые')],['all',T('All','Все')]].map(f=>`<button class="fchip ${stFilter===f[0]?'on':''}" data-f="${f[0]}">${f[1]}</button>`).join(' ');
+  $$('#stF .fchip').forEach(b=>b.onclick=()=>{stFilter=b.dataset.f;renderAlerts()});
+  $$('[data-id]').forEach(e=>e.onclick=()=>openAlert(e.dataset.id))}
+let curAl=null;
+function openAlert(id){const a=st.alerts.find(x=>x.id===id);if(!a)return;curAl=id;const li=PT.lang==='ru'?1:0;const as=st.assets[A(a.asset)];const done=['closed','fp'].includes(a.status);
+  $('#drawer').innerHTML=`<div class="dh"><i class="sv bg-${a.sev}" style="width:5px;align-self:stretch;border-radius:3px"></i><div style="flex:1;min-width:0"><div class="mono muted" style="font-size:12px">${a.id} · ${T(SEV[a.sev][1],SEV[a.sev][2])}</div><h3 style="margin:2px 0 6px;font-size:17px">${esc(a.title[li])}</h3>${stPill(a.status)} ${a.owner?`<span class="pill">👤 ${a.owner}</span>`:''}</div><button class="btn" id="dClose" style="padding:6px 10px">✕</button></div>
+  <div class="db">
+    <div class="mitre"><div><div class="muted" style="font-size:11px">MITRE ATT&amp;CK</div><div class="id">${a.tech}</div></div><div style="font-size:13px"><b>${a.tname}</b><div class="muted">${T('Tactic','Тактика')}: ${a.tactic}</div></div></div>
+    <div class="kv"><span>${T('Affected asset','Затронутый актив')}</span><b>${esc(aName(a.asset))} <span class="pill ${as.status==='isolated'?'':'ok'}" style="margin-left:4px">${as.status==='isolated'?T('isolated','изолирован'):T('online','в сети')}</span></b><span>${T('Source IP','IP источника')}</span><b class="mono">${a.ip}</b><span>${T('User','Учётка')}</span><b class="mono">${a.raw.user}</b><span>${T('Risk of asset','Риск актива')}</span><b>${as.risk}/100</b><span>${T('Detected','Обнаружен')}</span><b>${new Date(a.ts).toLocaleTimeString()}</b></div>
+    <div><div class="muted" style="font-size:12px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">${T('Timeline','Хронология')}</div><div class="tl">${a.tl.map(t=>`<div><small>${new Date(t.ts).toLocaleTimeString()}</small>${esc(t[PT.lang]||t.en)}</div>`).join('')}</div></div>
+    <div><div class="muted" style="font-size:12px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">${T('Raw event','Исходное событие')}</div><pre class="raw mono">${esc(JSON.stringify(a.raw,null,2))}</pre></div>
+  </div>
+  <div class="df">${done?`<button class="btn" data-x="reopen">${T('Reopen','Переоткрыть')}</button>`:`
+    <button class="btn" data-x="assign">👤 ${T('Assign to me','Взять себе')}</button>
+    <button class="btn gold" data-x="escalate">⬆ ${T('Escalate','Эскалировать')}</button>
+    <button class="btn danger" data-x="isolate" ${as.status==='isolated'?'disabled style="opacity:.5"':''}>⛔ ${T('Isolate host','Изолировать хост')}</button>
+    <button class="btn pri" data-x="resolve">✓ ${T('Resolve','Закрыть')}</button>
+    <button class="btn" data-x="fp">${T('False positive','Ложное срабатывание')}</button>`}</div>`;
+  $('#drawer').classList.add('on');$('#scrim').classList.add('on');$('#dClose').onclick=closeDrawer;
+  $$('#drawer [data-x]').forEach(b=>b.onclick=()=>act(a,b.dataset.x))}
+function closeDrawer(){$('#drawer').classList.remove('on');$('#scrim').classList.remove('on');curAl=null}
+$('#scrim').onclick=closeDrawer;
+function log(a,en,ru){a.tl.push({ts:Date.now(),en,ru})}
+function act(a,x){const as=st.assets[A(a.asset)];
+  if(x==='assign'){a.status='assigned';a.owner=T('you','вы');log(a,'Assigned to analyst (you)','Назначен аналитику (вам)');toast(T('Assigned to you','Назначено вам'))}
+  if(x==='escalate'){a.status='escalated';log(a,'Escalated to Tier-3 / CERT-NR','Эскалирован на 3-ю линию / CERT-NR');toast(T('Escalated to CERT-NR on-call','Эскалировано дежурному CERT-NR'))}
+  if(x==='isolate'){isolate(a.asset);log(a,'Host isolated via EDR network containment','Хост изолирован через EDR (сетевой карантин)')}
+  if(x==='resolve'||x==='fp'){a.status=x==='fp'?'fp':'closed';st.closed++;st.mttr.push(Math.max(4,Math.round((Date.now()-a.ts)/60000)+ri(8,30)));log(a,x==='fp'?'Closed as false positive, rule tuned':'Resolved, root cause documented',x==='fp'?'Закрыт как ложное срабатывание, правило уточнено':'Закрыт, причина задокументирована');if(as&&x==='fp')as.risk=Math.max(10,as.risk-8);if(as&&x==='resolve')as.risk=Math.max(10,as.risk-15);toast(x==='fp'?T('Closed as false positive','Закрыт как ложное'):T('Incident resolved','Инцидент закрыт'))}
+  if(x==='reopen'){a.status='new';log(a,'Reopened','Переоткрыт')}
+  save();renderAlerts();renderKPIs();renderAssets();openAlert(a.id)}
+function isolate(id,silent){const as=st.assets[A(id)];if(!as||as.status==='isolated')return;as.status='isolated';as.risk=Math.max(15,as.risk-25);save();renderAssets();renderKPIs();if(!silent)toast('⛔ '+aName(id)+T(' isolated from network',' изолирован от сети'))}
+
+/* ---------- map ---------- */
+const BLOBS=[[.2,.3,.09,.12],[.14,.2,.08,.07],[.26,.42,.05,.06],[.3,.66,.05,.12],[.33,.57,.06,.06],[.5,.27,.05,.06],[.54,.55,.07,.13],[.5,.45,.08,.05],[.68,.28,.14,.1],[.76,.4,.08,.07],[.63,.42,.04,.05],[.85,.7,.06,.05],[.54,.18,.03,.035],[.4,.12,.04,.03]];
+const hash=(x,y)=>{const s=Math.sin(x*127.1+y*311.7)*43758.5;return s-Math.floor(s)};
+const DOTS=[];(function(){const cols=128,rows=60;for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const x=(i+.5)/cols,y=(j+.5)/rows;let v=0;BLOBS.forEach(b=>v+=Math.exp(-(((x-b[0])/b[2])**2+((y-b[1])/b[3])**2)));v+=(hash(i,j)-.5)*.35;if(v>.55)DOTS.push([x,y,Math.abs(x-.54)<.045&&Math.abs(y-.18)<.05])}})();
+const SOURCES=[[.18,.28],[.22,.38],[.31,.62],[.66,.3],[.74,.36],[.8,.25],[.55,.55],[.86,.7],[.48,.44],[.12,.2]];
+let arcs=[],rings=[],paused=false,mapCv=$('#map'),mx;
+function burst(target,sev,ip,n){const s=rnd(SOURCES);for(let k=0;k<n;k++)setTimeout(()=>arcs.push({s:[s[0]+(Math.random()-.5)*.02,s[1]+(Math.random()-.5)*.02],t:target,sev,p:0,sp:.006+Math.random()*.006}),k*180)}
+function sizeMap(){const d=devicePixelRatio||1;mapCv.width=mapCv.offsetWidth*d;mapCv.height=mapCv.offsetHeight*d;mx=mapCv.getContext('2d');mx.setTransform(d,0,0,d,0,0)}
+function proj(x,y){const W=mapCv.offsetWidth,H=mapCv.offsetHeight;const sc=Math.min(W,H*2.1);const ox=(W-sc)/2,oy=(H-sc/2.1)/2;return[ox+x*sc,oy+y*sc/2.1*1.15-sc*.03]}
+let colors={};function readColors(){colors={dot:css('--line2'),home:css('--mal'),node:css('--mal3'),gold:css('--gold'),dim:css('--dim'),text:css('--muted')}}
+function drawMap(ts){if(!mx)return;const W=mapCv.offsetWidth,H=mapCv.offsetHeight;mx.clearRect(0,0,W,H);
+  DOTS.forEach(d=>{const [x,y]=proj(d[0],d[1]);mx.fillStyle=d[2]?colors.home:colors.dot;mx.globalAlpha=d[2]?.55:.7;mx.fillRect(x-1,y-1,2,2)});mx.globalAlpha=1;
+  ASSETS0.forEach((a,i)=>{const [x,y]=proj(a[5],a[6]);const s=st.assets[i];const iso=s.status==='isolated';const r=3+s.risk/40;
+    if(!iso){mx.beginPath();mx.arc(x,y,r+4+2*Math.sin(ts/400+i),0,7);mx.strokeStyle=s.risk>75?col('crit'):colors.node;mx.globalAlpha=.35;mx.stroke();mx.globalAlpha=1}
+    mx.beginPath();mx.arc(x,y,r,0,7);mx.fillStyle=iso?colors.dim:(s.risk>75?col('crit'):colors.node);mx.fill()});
+  arcs.forEach(a=>{const ti=A(a.t);const [x1,y1]=proj(a.s[0],a.s[1]);const [x2,y2]=proj(ASSETS0[ti][5],ASSETS0[ti][6]);const cx=(x1+x2)/2,cy=Math.min(y1,y2)-Math.abs(x2-x1)*.35-20;
+    a.p+=a.sp*(paused?0:1);const P=Math.min(1,a.p);const c=col(a.sev);const N=24;mx.beginPath();for(let k=0;k<=N;k++){const t=Math.max(0,P-.35)+(P-Math.max(0,P-.35))*k/N;const x=(1-t)**2*x1+2*(1-t)*t*cx+t*t*x2,y=(1-t)**2*y1+2*(1-t)*t*cy+t*t*y2;k?mx.lineTo(x,y):mx.moveTo(x,y)}
+    mx.strokeStyle=c;mx.lineWidth=1.6;mx.globalAlpha=.85;mx.stroke();mx.globalAlpha=1;const hx=(1-P)**2*x1+2*(1-P)*P*cx+P*P*x2,hy=(1-P)**2*y1+2*(1-P)*P*cy+P*P*y2;mx.beginPath();mx.arc(hx,hy,2.4,0,7);mx.fillStyle=c;mx.fill();
+    if(a.p>=1&&!a.hit){a.hit=1;rings.push({x:x2,y:y2,r:2,c,blocked:st.assets[ti].status==='isolated'||Math.random()<.85})}});
+  arcs=arcs.filter(a=>a.p<1.15);
+  rings.forEach(r=>{r.r+=paused?0:.6;mx.beginPath();mx.arc(r.x,r.y,r.r,0,7);mx.strokeStyle=r.blocked?colors.node:r.c;mx.globalAlpha=Math.max(0,1-r.r/26);mx.lineWidth=1.5;mx.stroke();mx.globalAlpha=1});rings=rings.filter(r=>r.r<26);
+  SOURCES.forEach(s=>{const [x,y]=proj(s[0],s[1]);mx.fillStyle=colors.gold;mx.globalAlpha=.6;mx.fillRect(x-1.5,y-1.5,3,3);mx.globalAlpha=1});
+  const [lx,ly]=proj(.585,.13);mx.fillStyle=colors.text;mx.font='600 11px '+css('--mono');mx.fillText('NORDANIA',lx,ly)}
+function loop(ts){if(!document.hidden)drawMap(ts||0);requestAnimationFrame(loop)}
+
+/* ---------- event stream ---------- */
+const SRCS=['FW','EDR','IDS','AD','WAF','DNS','VPN','OT'];
+const MSG={FW:['DENY tcp {ip}:{p} -> 10.20.{a}.{b}:445','ALLOW udp 10.4.{a}.{b}:53 -> 8.8.{a}.{b}:53','DROP geo-block {ip} rule=GB-17'],EDR:['proc=powershell.exe parent=winword.exe host=WS-{n}','quarantine file=invoice_{n}.js host=WS-{n}','driver load signed=true host=SRV-{n}'],IDS:['ET SCAN Nmap -sS from {ip}','ET EXPLOIT CVE-2025-{n} attempt from {ip}','SURICATA TLS invalid cert {ip}'],AD:['4625 logon failure user=j.halv{n} src={ip}','4624 logon success user=svc_backup host=DC-0{b}','4728 member added to Domain Admins'],WAF:['BLOCK sqli /api/v2/tax?id=1%27 from {ip}','BLOCK xss /search from {ip}','rate-limit 429 /login from {ip}'],DNS:['NXDOMAIN storm {n}.xz-cdn.example','query long-subdomain len=212 host=WS-{n}','resolve ok gov.nr'],VPN:['session start user=m.lind geo=NR','session start user=admin.ops geo=??','mfa push denied user=k.berg'],OT:['modbus read unit=3 reg=40001','modbus WRITE unit=7 reg=40112 val={p}','plc heartbeat ok PLC-{b}']};
+let sevF=S.get('sg-sevF',{crit:1,high:1,med:1,low:1,info:1}),srcF='',streamPaused=false,buf=[];
+function mkEvent(force){const s=force&&force.src||rnd(SRCS);const r=Math.random();const sev=force&&force.sev||(r<.02?'crit':r<.08?'high':r<.2?'med':r<.45?'low':'info');
+  const m=(force&&force.msg||rnd(MSG[s])).replace('{ip}',rnd(SRCIP)+ri(2,250)).replace(/\{p\}/g,ri(1024,65000)).replace(/\{a\}/g,ri(0,255)).replace(/\{b\}/g,ri(1,9)).replace(/\{n\}/g,ri(100,999));
+  return{t:now(),sev,s,m}}
+function pushEvent(e){buf.push(e);if(buf.length>400)buf.shift();if(streamPaused)return;if(!sevF[e.sev]||(srcF&&e.s!==srcF))return;const el=$('#stream');const near=el.scrollTop+el.clientHeight>=el.scrollHeight-30;
+  const d=document.createElement('div');d.className='ln';d.innerHTML=`<span class="t">${e.t}</span> <span class="s sv-${e.sev}">${SEV[e.sev][0]}</span> <span class="src">${e.s}</span> ${esc(e.m)}`;el.appendChild(d);while(el.children.length>220)el.firstChild.remove();if(near)el.scrollTop=el.scrollHeight}
+function redrawStream(){const el=$('#stream');el.innerHTML='';const save=streamPaused;streamPaused=false;const b=buf.slice(-220);buf=buf.slice(0,-220);b.forEach(pushEvent);streamPaused=save}
+function renderStreamCtl(){$('#sevF').innerHTML=Object.keys(SEV).map(k=>`<button class="fchip ${sevF[k]?'on':''}" data-s="${k}"><i class="dot bg-${k}"></i>${SEV[k][0]}</button>`).join(' ');
+  $$('#sevF .fchip').forEach(b=>b.onclick=()=>{sevF[b.dataset.s]=sevF[b.dataset.s]?0:1;S.set('sg-sevF',sevF);renderStreamCtl();redrawStream()});
+  $('#srcF').innerHTML=`<option value="">${T('All sources','Все источники')}</option>`+SRCS.map(s=>`<option ${srcF===s?'selected':''}>${s}</option>`).join('');
+  $('#pauseBtn').textContent=streamPaused?T('▶ Resume','▶ Продолжить'):T('❚❚ Pause','❚❚ Пауза')}
+$('#srcF').onchange=e=>{srcF=e.target.value;redrawStream()};
+$('#pauseBtn').onclick=()=>{streamPaused=!streamPaused;renderStreamCtl();if(!streamPaused)redrawStream()};
+let tick=0;
+setInterval(()=>{if(document.hidden)return;tick++;const n=ri(1,3)+(attackOn?3:0);for(let i=0;i<n;i++)pushEvent(mkEvent());
+  eps=Math.round((attackOn?118000:48200)+(Math.random()-.5)*6000);$('#eps').textContent=eps.toLocaleString()+' eps';
+  if(tick%3===0&&Math.random()<.5){const ai=ri(0,ASSETS0.length-1);if(st.assets[ai].status!=='isolated')arcs.push({s:rnd(SOURCES),t:ASSETS0[ai][0],sev:rnd(['med','low','high','med']),p:0,sp:.006+Math.random()*.008})}
+  if(tick%10===0){renderKPIs();$('#mapInfo').textContent=T('blocked today: ','заблокировано сегодня: ')+(184211+tick*7).toLocaleString();$('#clock').textContent='UTC '+new Date().toISOString().slice(11,19)}
+  if(tick%140===0&&openAl().length<9&&!attackOn)mkAlert(rnd(TPL.slice(0,7)));
+},250);
+
+/* ---------- assets ---------- */
+function renderAssets(){const li=PT.lang==='ru'?1:0;const q=($('#asQ').value||'').toLowerCase();
+  $('#asT').innerHTML=ASSETS0.map((a,i)=>({a,s:st.assets[i]})).filter(x=>!q||(x.a[1]+x.a[2]+x.a[3]+x.a[4]).toLowerCase().includes(q)).map(({a,s})=>{const rc=s.risk>75?col('crit'):s.risk>50?css('--amber'):css('--mal3');
+    return `<tr><td><b>${esc(a[1+li])}</b><div class="mono muted" style="font-size:11px">${a[0]} · ${T('criticality','критичность')} ${a[7]}</div></td><td class="hm">${a[3+li]}</td><td><span class="risk"><i style="width:${s.risk}%;background:${rc}"></i></span><span class="mono">${s.risk}</span></td><td class="hm"><span class="pill ${s.patch>94?'ok':s.patch>87?'warn':'bad'}">${s.patch}%</span></td><td>${s.status==='isolated'?`<span class="pill">⛔ ${T('Isolated','Изолирован')}</span>`:`<span class="pill ok">● ${T('Online','В сети')}</span>`}</td><td style="white-space:nowrap">${s.status==='isolated'?`<button class="btn" style="padding:4px 10px;font-size:12px" data-ra="${a[0]}">${T('Restore','Вернуть')}</button>`:`<button class="btn" style="padding:4px 10px;font-size:12px" data-pa="${a[0]}">${T('Patch','Обновить')}</button> <button class="btn" style="padding:4px 10px;font-size:12px" data-ia="${a[0]}">⛔</button>`}</td></tr>`}).join('');
+  $$('[data-ra]').forEach(b=>b.onclick=()=>{st.assets[A(b.dataset.ra)].status='ok';save();renderAssets();renderKPIs();toast(T('Host restored to network','Хост возвращён в сеть'))});
+  $$('[data-ia]').forEach(b=>b.onclick=()=>isolate(b.dataset.ia));
+  $$('[data-pa]').forEach(b=>b.onclick=()=>{const s=st.assets[A(b.dataset.pa)];b.disabled=true;b.textContent='…';setTimeout(()=>{s.patch=Math.min(100,s.patch+ri(4,12));s.risk=Math.max(8,s.risk-ri(5,12));save();renderAssets();renderKPIs();toast(T('Patches deployed','Обновления установлены'))},900)})}
+$('#asQ').addEventListener('input',renderAssets);
+
+/* ---------- playbooks ---------- */
+const PB={ransomware:{ic:'🔒',n:['Ransomware containment','Сдерживание шифровальщика'],asset:'wtr-01',steps:[['Snapshot memory of affected host','Снимок памяти заражённого хоста'],['Isolate host via EDR','Изоляция хоста через EDR'],['Disable compromised account in AD','Блокировка скомпрометированной учётки в AD'],['Block C2 indicators on firewall & DNS','Блокировка индикаторов C2 на МЭ и DNS'],['Verify immutable backups','Проверка неизменяемых резервных копий'],['Notify CERT-NR and regulator','Уведомление CERT-NR и регулятора']]},
+phishing:{ic:'🎣',n:['Phishing response','Реагирование на фишинг'],asset:'gov-01',steps:[['Extract URLs & attachments','Извлечение ссылок и вложений'],['Detonate in sandbox','Запуск в песочнице'],['Search & purge similar emails (412 mailboxes)','Поиск и удаление похожих писем (412 ящиков)'],['Reset credentials of clicked users','Сброс паролей кликнувших'],['Add sender domain to blocklist','Домен отправителя в блок-лист']]},
+ddos:{ic:'🌊',n:['DDoS mitigation','Отражение DDoS'],asset:'dns-01',steps:[['Confirm volumetric anomaly (>40 Gbps)','Подтверждение аномалии (>40 Гбит/с)'],['Divert traffic to scrubbing centre','Перенаправление в центр очистки'],['Enable anycast & rate limits','Включение anycast и ограничений'],['Geo-filter top attacking ASNs','Гео-фильтр атакующих ASN'],['Return traffic to normal path','Возврат трафика в обычный маршрут']]}};
+let pbSel='ransomware',pbRunning=false;
+function renderPB(){const li=PT.lang==='ru'?1:0;$('#pbs').innerHTML=Object.entries(PB).map(([k,p])=>`<div class="card pb ${pbSel===k?'sel':''}" data-pb="${k}"><div class="ic">${p.ic}</div><b>${p.n[li]}</b><div class="muted" style="font-size:12px">${p.steps.length} ${T('automated steps','автошагов')} · SOAR</div></div>`).join('');
+  $$('[data-pb]').forEach(e=>e.onclick=()=>{if(pbRunning)return;pbSel=e.dataset.pb;renderPB()});
+  const p=PB[pbSel];$('#pbTitle').textContent=p.ic+' '+p.n[li];
+  if(!pbRunning){$('#pbSteps').innerHTML=p.steps.map((s,i)=>`<div class="stp" id="ps${i}"><span class="n">${i+1}</span>${s[li]}<em></em></div>`).join('');$('#pbProg').style.width='0'}}
+function plog(t,bad){const el=$('#pbLog');el.insertAdjacentHTML('beforeend',`<div class="${bad?'bad':''}">[${now()}] ${esc(t)}</div>`);el.scrollTop=el.scrollHeight}
+async function runPB(k){if(pbRunning)return;pbSel=k||pbSel;pbRunning=false;renderPB();pbRunning=true;const p=PB[pbSel];const li=PT.lang==='ru'?1:0;$('#pbRun').disabled=true;
+  plog('$ soar run '+pbSel+' --target '+p.asset+' --operator analyst');
+  for(let i=0;i<p.steps.length;i++){const e=$('#ps'+i);e.classList.add('run');plog('→ '+p.steps[i][li]+' …');await new Promise(r=>setTimeout(r,700+Math.random()*700));
+    if(pbSel==='ransomware'&&i===1)isolate(p.asset,true);
+    e.classList.remove('run');e.classList.add('ok');const ms=ri(180,2400);e.querySelector('em').textContent=ms+' ms';plog('  ✓ OK ('+ms+' ms)');$('#pbProg').style.width=((i+1)/p.steps.length*100)+'%'}
+  plog(T('Playbook completed. Incident contained.','Плейбук выполнен. Инцидент локализован.'));
+  st.alerts.filter(a=>!['closed','fp'].includes(a.status)&&(a.asset===p.asset||(pbSel==='ransomware'&&a.chain))).forEach(a=>{a.status='closed';log(a,'Closed by playbook '+pbSel,'Закрыт плейбуком '+pbSel);st.mttr.push(ri(9,18))});
+  const as=st.assets[A(p.asset)];as.risk=Math.max(12,as.risk-30);save();renderAlerts();renderKPIs();renderAssets();
+  pbRunning=false;$('#pbRun').disabled=false;toast('✅ '+p.n[li]+T(' — done',' — выполнено'))}
+$('#pbRun').onclick=()=>runPB();
+
+/* ---------- Zero Trust ---------- */
+const REQ0=[{id:'r1',u:'a.solberg',role:['DBA','Администратор БД'],res:'gov-02',why:['Monthly index rebuild','Ежемесячная перестройка индексов'],risk:12,dur:'2h'},{id:'r2',u:'contractor.vel',role:['Vendor engineer','Инженер подрядчика'],res:'pwr-02',why:['Firmware update on turbine PLC','Обновление прошивки ПЛК турбины'],risk:46,dur:'4h'},{id:'r3',u:'e.nygaard',role:['Network admin','Сетевой админ'],res:'tel-01',why:['BGP filter change ticket CHG-2291','Изменение BGP-фильтра, заявка CHG-2291'],risk:22,dur:'1h'}];
+const SESS0=[{id:'s1',u:'admin.ops',res:'ad-01',cmds:['whoami /groups','Get-ADUser -Filter * | measure','Set-ADAccountPassword svc_print','net group "Domain Admins"','exit'],bad:[]},{id:'s2',u:'d.strand',res:'bnk-01',cmds:['ssh pay-gw-03','systemctl status settlement','tail -n 50 /var/log/settle.log','sudo cat /etc/shadow','exit'],bad:[3]}];
+if(!st.zt)st.zt={reqs:REQ0.map(r=>({...r,st:'pending'})),sess:SESS0.map(s=>({...s,live:true}))};
+let selS=st.zt.sess[0].id,playIdx=-1,playT=null;
+function renderZT(){const li=PT.lang==='ru'?1:0;const pend=st.zt.reqs.filter(r=>r.st==='pending').length;$('#ztCnt').style.display=pend?'':'none';$('#ztCnt').textContent=pend;
+  $('#ztPol').textContent=T('Policy: deny by default','Политика: запрет по умолчанию');
+  $('#reqs').innerHTML=st.zt.reqs.map(r=>`<div class="req"><div class="who"><b class="mono">${r.u}</b> · ${r.role[li]}<small>→ ${esc(aName(r.res))} · ${r.dur} · ${esc(r.why[li])}</small><small>${T('Device posture','Состояние устройства')}: ${r.risk>60?'❌ '+T('unmanaged, new location','неуправляемое, новая геолокация'):r.risk>40?'⚠️ '+T('managed, patch overdue','управляемое, патчи просрочены'):'✅ '+T('compliant, MFA','соответствует, MFA')} · ${T('risk','риск')} <b style="color:${r.risk>60?col('crit'):r.risk>40?css('--amber'):css('--mal3')}">${r.risk}</b></small></div>${r.st==='pending'?`<button class="btn pri" style="padding:5px 12px;font-size:12px" data-ok="${r.id}">${T('Approve','Одобрить')}</button><button class="btn" style="padding:5px 12px;font-size:12px" data-no="${r.id}">${T('Deny','Отклонить')}</button>`:`<span class="pill ${r.st==='approved'?'ok':'bad'}">${r.st==='approved'?T('Approved · expires in ','Одобрено · истекает через ')+r.dur:T('Denied','Отклонено')}</span>`}</div>`).join('');
+  $$('[data-ok]').forEach(b=>b.onclick=()=>decide(b.dataset.ok,'approved'));$$('[data-no]').forEach(b=>b.onclick=()=>decide(b.dataset.no,'denied'));
+  $('#sess').innerHTML=st.zt.sess.map(s=>`<div class="sess ${selS===s.id?'sel':''}" data-ss="${s.id}"><b class="mono">${s.u}</b> → ${esc(aName(s.res))} <span class="pill ${s.live?(s.bad.length?'bad':'ok'):''}" style="margin-left:6px">${s.live?(s.bad.length?T('● live · flagged','● идёт · подозрит.'):T('● live','● идёт')):T('terminated','завершена')}</span><div class="muted mono" style="font-size:11px">${s.cmds.length} ${T('commands recorded','команд записано')}</div></div>`).join('');
+  $$('[data-ss]').forEach(e=>e.onclick=()=>{selS=e.dataset.ss;playIdx=-1;renderZT()});
+  const s=st.zt.sess.find(x=>x.id===selS)||st.zt.sess[0];
+  $('#tline').innerHTML=s.cmds.map((c,i)=>`<i style="left:${4+i/(s.cmds.length-1||1)*92}%;background:${s.bad.includes(i)?col('crit'):css('--mal')}" title="${esc(c)}" data-ci="${i}"></i>`).join('')+(playIdx>=0?`<div class="head" style="left:${4+playIdx/(s.cmds.length-1||1)*92}%"></div>`:'');
+  $$('#tline i').forEach(e=>e.onclick=()=>{playIdx=+e.dataset.ci;renderZT()});
+  const upto=playIdx<0?s.cmds.length-1:playIdx;$('#term').innerHTML=`<div style="color:var(--dim)"># ${T('recorded session','запись сессии')} ${s.id} · ${s.u}@${s.res}</div>`+s.cmds.slice(0,upto+1).map((c,i)=>`<div class="${s.bad.includes(i)?'bad':''}">${s.u}$ ${esc(c)}${s.bad.includes(i)?'  ⚠ '+T('policy violation','нарушение политики'):''}</div>`).join('')+(s.live?'':`<div class="bad">— ${T('session terminated by SOC','сессия завершена SOC')} —</div>`);
+  $('#killS').disabled=!s.live;$('#killS').style.opacity=s.live?1:.5}
+function decide(id,v){const r=st.zt.reqs.find(x=>x.id===id);r.st=v;save();renderZT();toast(v==='approved'?T('Access granted just-in-time','Доступ выдан на ограниченное время'):T('Access denied, user notified','В доступе отказано, пользователь уведомлён'));
+  if(r.mal&&v==='denied'){toast(T('Good call: request came from compromised account','Верно: запрос был от скомпрометированной учётки'))}
+  if(r.mal&&v==='approved'){mkAlert(['T1078.002','Domain Accounts','Privilege Escalation','Privileged access granted to compromised account','Привилегированный доступ выдан скомпрометированной учётке','crit','ad-01'],{chain:1,user:r.u})}}
+$('#playS').onclick=()=>{const s=st.zt.sess.find(x=>x.id===selS);clearInterval(playT);playIdx=0;renderZT();playT=setInterval(()=>{playIdx++;if(playIdx>=s.cmds.length){clearInterval(playT);playIdx=s.cmds.length-1}renderZT()},700)};
+$('#killS').onclick=()=>{const s=st.zt.sess.find(x=>x.id===selS);if(!s.live)return;s.live=false;save();renderZT();toast(T('Session terminated, credentials rotated','Сессия завершена, пароль сменён'))};
+
+/* ---------- attack simulation ---------- */
+let attackOn=false;
+async function simulate(){if(attackOn)return;attackOn=true;$('#simBtn').disabled=true;$('#simBtn').style.opacity=.6;const sl=ms=>new Promise(r=>setTimeout(r,ms));const ip='198.51.100.66';const user='k.berg';
+  toast('⚡ '+T('Attack simulation started: APT "Grey Fjord"','Запущена симуляция атаки: APT «Серый фьорд»'),true);go('ov');
+  pushEvent(mkEvent({src:'WAF',sev:'med',msg:'mail-gw: inbound from hr-portal-update.example attachment=Salary_2026.xlsm'}));
+  burst('gov-01','med',ip,3);await sl(1600);
+  mkAlert(['T1566.001','Spearphishing Attachment','Initial Access','Macro-enabled phishing attachment opened','Открыто фишинговое вложение с макросом','high','gov-01'],{ip,user,chain:1,mttd:1});
+  pushEvent(mkEvent({src:'EDR',sev:'high',msg:'proc=excel.exe -> cmd.exe -> powershell.exe -enc host=WS-412 user='+user}));await sl(2400);
+  mkAlert(['T1003.001','LSASS Memory','Credential Access','Credential dumping from LSASS on WS-412','Дамп учётных данных из LSASS на WS-412','high','ad-01'],{ip,user,chain:1,mttd:1});
+  for(let i=0;i<5;i++)pushEvent(mkEvent({src:'AD',sev:'high',msg:'4624 logon type=3 user='+user+' host=SRV-'+ri(10,40)+' (lateral)'}));
+  st.zt.reqs.unshift({id:'r'+Date.now(),u:user,role:['HR specialist','Специалист HR'],res:'wtr-01',why:['Urgent: need SCADA access for audit','Срочно: нужен доступ к SCADA для аудита'],risk:88,dur:'8h',st:'pending',mal:1});
+  st.zt.sess.unshift({id:'s'+Date.now(),u:user,res:'ad-01',cmds:['whoami /priv','nltest /domain_trusts','net user svc_scada /domain','psexec \\\\SCADA-HMI-1 cmd','vssadmin delete shadows /all /quiet'],bad:[2,3,4],live:true});selS=st.zt.sess[0].id;save();renderZT();
+  toast('🔐 '+T('Suspicious JIT access request in Zero Trust','Подозрительный запрос доступа в Zero Trust'),true);await sl(2600);
+  mkAlert(['T1021.002','SMB/Windows Admin Shares','Lateral Movement','Lateral movement to SCADA HMI via admin shares','Горизонтальное перемещение к SCADA через админ-шары','crit','wtr-01'],{ip,user,chain:1,mttd:2});
+  burst('wtr-01','crit',ip,6);await sl(2600);
+  mkAlert(['T1486','Data Encrypted for Impact','Impact','Mass file encryption started on SCADA historian','Массовое шифрование файлов на историане SCADA','crit','wtr-01'],{ip,user,chain:1,mttd:1});
+  for(let i=0;i<6;i++)pushEvent(mkEvent({src:'EDR',sev:'crit',msg:'ransom behaviour: rename *.dat -> *.fjord host=SCADA-HIST-1 rate='+ri(300,900)+'/s'}));
+  burst('wtr-01','crit',ip,8);
+  $('#toast').innerHTML=`<b>${T('Ransomware on Water Utility SCADA','Шифровальщик на SCADA водоканала')}</b><div style="margin:6px 0">${T('Recommended: run the Ransomware containment playbook.','Рекомендация: запустить плейбук «Сдерживание шифровальщика».')}</div><button class="btn danger" id="goPB" style="padding:5px 12px;font-size:12px">${T('Run playbook now','Запустить плейбук')}</button>`;$('#toast').className='toast on bad';clearTimeout(toast.h);toast.h=setTimeout(()=>$('#toast').classList.remove('on'),12000);
+  $('#goPB').onclick=()=>{$('#toast').classList.remove('on');go('pb');runPB('ransomware')};
+  await sl(8000);attackOn=false;$('#simBtn').disabled=false;$('#simBtn').style.opacity=1}
+$('#simBtn').onclick=simulate;
+$('#resetBtn').onclick=()=>{st=freshState();st.zt=null;st.zt={reqs:REQ0.map(r=>({...r,st:'pending'})),sess:SESS0.map(s=>({...s,live:true}))};selS='s1';save();seed();renderAll();toast(T('Console reset','Консоль сброшена'))};
+
+/* ---------- nav & init ---------- */
+function go(p){$$('.tab').forEach(t=>t.classList.toggle('on',t.dataset.p===p));$$('.page').forEach(x=>x.classList.toggle('on',x.id==='p-'+p));S.set('sg-tab',p);if(p==='ov')setTimeout(()=>{sizeMap()},0)}
+$$('.tab').forEach(t=>t.onclick=()=>go(t.dataset.p));
+function seed(){if(st.alerts.length)return;[0,1,2,5].forEach((k,i)=>{const a=mkAlert(TPL[k]);a.ts-=(i+1)*240000});st.alerts[3].status='assigned';st.alerts[3].owner='o.dahl';save()}
+function renderAll(){readColors();renderKPIs();renderAlerts();renderAssets();renderPB();renderZT();renderStreamCtl();if(curAl)openAlert(curAl)}
+PT.onLang(()=>{renderAll();sizeMap()});
+document.addEventListener('DOMContentLoaded',()=>{seed();go(S.get('sg-tab','ov'));sizeMap();renderAll();for(let i=0;i<40;i++)pushEvent(mkEvent());requestAnimationFrame(loop)});
+window.addEventListener('resize',sizeMap);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+setInterval(()=>{if(!document.hidden&&!curAl)renderAlerts()},15000);
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

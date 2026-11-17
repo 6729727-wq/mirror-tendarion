@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paynusa QR Payments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1320px;margin:0 auto;padding:18px 20px 60px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.top h1{margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
+.top h1 b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px}
+.top .sp{flex:1}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px;gap:2px}
+.seg button{border:0;background:none;padding:7px 14px;border-radius:999px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted)}
+.seg button.on{background:var(--panel2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line2)}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+.mtabs{display:none;margin-bottom:12px}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h3 .sp{flex:1}
+.term{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.disp{background:var(--bg2);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;text-align:right}
+.disp .l{font-size:12px;color:var(--muted);text-align:left}
+.disp .amt{font-size:38px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.disp .amt small{font-size:16px;color:var(--muted);font-weight:600}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.key{border:1px solid var(--line2);background:var(--panel2);border-radius:12px;padding:12px 0;font-size:19px;font-weight:700;cursor:pointer;transition:.1s}
+.key:hover{border-color:var(--mal)} .key:active{transform:scale(.96)}
+.qrbox{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.qrwrap{position:relative;background:#fff;border-radius:16px;padding:10px;cursor:pointer;box-shadow:0 0 0 1px var(--line2);transition:.2s}
+.qrwrap:hover{box-shadow:0 0 0 3px var(--gold)}
+.qrwrap canvas{display:block;width:220px;height:220px;image-rendering:pixelated}
+.qrwrap.idle canvas{filter:blur(5px);opacity:.35}
+.qrwrap .ov{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;color:#0d1f19;font-size:14px;padding:20px}
+.qrwrap.paid:after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;font-size:90px;color:#fff;background:color-mix(in srgb,var(--mal) 88%,transparent);border-radius:16px;animation:pop .35s}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.payload{font-family:var(--mono);font-size:11px;word-break:break-all;background:var(--bg2);border:1px dashed var(--line2);border-radius:10px;padding:8px 10px;color:var(--muted);text-align:left;width:100%}
+.payload b{color:var(--gold2);font-weight:600}
+.status{font-size:13px;display:flex;align-items:center;gap:8px}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--gold);animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.hist{font-size:13px}
+.hist .r{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.hist .r:last-child{border-bottom:0}
+.hist .ic{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);flex:none;font-size:14px}
+.hist .r .sp{flex:1;min-width:0}
+.hist .r .sp div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist .a{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pos{color:var(--mal3)} .neg{color:var(--text)} .red{color:var(--red)}
+.fresh{animation:fl 1.6s}
+@keyframes fl{0%{background:color-mix(in srgb,var(--gold) 30%,transparent)}100%{background:transparent}}
+/* phone */
+.phone{border-radius:44px;padding:12px;background:linear-gradient(160deg,#2a3b35,#0b1512);box-shadow:var(--shadow),inset 0 0 0 2px #3a4f47;position:sticky;top:64px}
+.scr{border-radius:34px;overflow:hidden;background:var(--bg);height:700px;display:flex;flex-direction:column;position:relative}
+.notch{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:12px;font-weight:700;flex:none}
+.notch i{width:90px;height:22px;background:#000;border-radius:14px;display:block}
+.ws{flex:1;overflow:auto;padding:6px 16px 16px;display:flex;flex-direction:column}
+.bal{border-radius:20px;padding:18px;color:#fff;background:radial-gradient(120% 120% at 0 0,#1fc795 0,#0d6e52 55%,#0a3e30 100%);position:relative;overflow:hidden}
+.bal:after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(243,215,154,.55),transparent 70%)}
+.bal .l{font-size:12px;opacity:.85}
+.bal .v{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.bal .c{font-family:var(--mono);font-size:12px;opacity:.85;margin-top:10px}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.act{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--muted)}
+.act span{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);font-size:20px;color:var(--text);transition:.15s}
+.act:hover span{border-color:var(--gold)}
+.act.big span{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;border:0}
+.back{border:0;background:none;color:var(--muted);cursor:pointer;font-weight:600;padding:4px 0;text-align:left;font-size:13px}
+.wtitle{font-size:20px;font-weight:800;margin:6px 0 14px}
+.vf{aspect-ratio:1;border-radius:22px;background:#000;position:relative;overflow:hidden;display:grid;place-items:center;margin-bottom:14px}
+.vf:before{content:"";position:absolute;inset:18%;border:3px solid var(--gold);border-radius:18px;box-shadow:0 0 0 999px rgba(0,0,0,.45)}
+.vf .ln{position:absolute;left:18%;right:18%;height:2px;background:var(--mal3);box-shadow:0 0 12px var(--mal3);animation:scan 1.8s ease-in-out infinite}
+@keyframes scan{0%,100%{top:20%}50%{top:78%}}
+.vf .tx{position:relative;color:#fff;font-size:12.5px;text-align:center;padding:0 30%;opacity:.85}
+.pins{display:flex;gap:14px;justify-content:center;margin:16px 0}
+.pins i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);transition:.15s}
+.pins i.f{background:var(--gold);border-color:var(--gold)}
+.pins.shake{animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto}
+.pad button{border:0;background:var(--panel2);border-radius:14px;padding:13px 0;font-size:20px;font-weight:700;cursor:pointer}
+.pad button:active{background:var(--line2)}
+.sum{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;font-size:13.5px}
+.sum .row{display:flex;justify-content:space-between;padding:6px 0;gap:10px}
+.sum .row span:first-child{color:var(--muted)}
+.okmark{width:96px;height:96px;margin:30px auto 10px;border-radius:50%;background:var(--mal);display:grid;place-items:center;animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+.okmark svg{width:50px;stroke:#fff;stroke-width:4;fill:none;stroke-dasharray:60;stroke-dashoffset:60;animation:dr .5s .25s forwards}
+.okmark.bad{background:var(--red)}
+@keyframes dr{to{stroke-dashoffset:0}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:13px}
+.chip.on,.chip:hover{border-color:var(--gold);color:var(--gold2)}
+.f{margin-bottom:10px}.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.wbtn{width:100%;justify-content:center;margin-top:8px}
+/* console */
+.ckpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}.kpi .v{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;font-family:var(--mono)}
+.cgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.tw{overflow:auto;max-height:430px;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{position:sticky;top:0;background:var(--panel2);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);padding:8px 10px;white-space:nowrap;z-index:1}
+td{padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr{cursor:pointer} tbody tr:hover td{background:color-mix(in srgb,var(--mal) 6%,transparent)}
+tbody tr.sel td{background:color-mix(in srgb,var(--gold) 12%,transparent)}
+tbody tr.mine td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+.risk{display:inline-block;min-width:34px;text-align:center;border-radius:6px;padding:1px 6px;font-family:var(--mono);font-weight:700;font-size:11.5px}
+.mtab{display:flex;gap:6px;margin-bottom:10px}
+pre.xml{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:360px;margin:0;line-height:1.55}
+.xt{color:var(--mal3)} .xv{color:var(--gold2)}
+.de td:first-child{font-family:var(--mono);color:var(--gold2)} .de td:last-child{font-family:var(--mono);white-space:normal;word-break:break-all}
+.rule{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;flex-wrap:wrap}
+.rule:last-child{border-bottom:0}
+.rule .sp{flex:1;min-width:150px}
+.rule .input{width:100px;padding:6px 8px;font-family:var(--mono)}
+.sw{position:relative;width:40px;height:22px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line2);transition:.2s;cursor:pointer}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+i{background:var(--mal)} .sw input:checked+i:after{transform:translateX(18px)}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+@media (max-width:1100px){.ckpis{grid-template-columns:repeat(3,minmax(0,1fr))}.cgrid{grid-template-columns:minmax(0,1fr)}.term{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .flow{grid-template-columns:minmax(0,1fr)}
+  .mtabs{display:flex}
+  .flow>.pane{display:none}.flow>.pane.on{display:block}
+  .phone{position:static;padding:0;background:none;box-shadow:none;border-radius:0}
+  .scr{border-radius:20px;border:1px solid var(--line);height:auto;min-height:620px}
+  .notch{display:none}
+  .wrap{padding:14px 16px 50px}
+}
+@media (max-width:520px){.ckpis{grid-template-columns:repeat(2,minmax(0,1fr))}.disp .amt{font-size:30px}.qrwrap canvas{width:200px;height:200px}}
+</style>
+</head>
+<body data-demo-en="Paynusa — national QR payments & e-wallet" data-demo-ru="Paynusa — национальные QR-платежи и кошелёк">
+<div class="wrap">
+  <div class="top">
+    <h1><b>P</b>Paynusa</h1>
+    <span class="pill gold" data-en="National Payment Switch of Nordania" data-ru="Национальный платёжный коммутатор Нордании"></span>
+    <span class="sp"></span>
+    <div class="seg" id="seg"><button data-v="flow" class="on" data-en="Payments" data-ru="Платежи"></button><button data-v="ops" data-en="Operator console" data-ru="Консоль оператора"></button></div>
+  </div>
+
+  <section class="view on" id="v-flow">
+    <div class="seg mtabs" id="mtabs"><button data-p="merch" class="on" data-en="Merchant terminal" data-ru="Терминал продавца"></button><button data-p="wallet" data-en="Customer wallet" data-ru="Кошелёк покупателя"></button></div>
+    <div class="flow">
+      <div class="pane on" id="p-merch">
+        <div class="card">
+          <h3><span>🏪</span><span data-en="Merchant terminal · Café Lumen, Velmar" data-ru="Терминал · Кафе «Люмен», Вельмар"></span><span class="sp"></span><span class="pill ok mono">TID 70014521</span></h3>
+          <div class="term">
+            <div>
+              <div class="disp"><div class="l" data-en="Amount to charge" data-ru="Сумма к оплате"></div><div class="amt"><span id="mAmt">0.00</span> <small>NDK</small></div></div>
+              <div class="keys" id="mKeys"></div>
+              <input class="input" id="mDesc" style="margin-top:10px" data-en-ph="Order note (optional)" data-ru-ph="Комментарий к заказу (необяз.)">
+              <div style="display:flex;gap:8px;margin-top:10px"><button class="btn pri" id="mGen" style="flex:1;justify-content:center" data-en="Generate dynamic QR" data-ru="Создать динамический QR"></button><button class="btn" id="mCancel" data-en="Cancel" data-ru="Отмена"></button></div>
+            </div>
+            <div class="qrbox">
+              <div class="qrwrap idle" id="qrw" title="Click to scan with the wallet"><canvas id="qr" width="264" height="264"></canvas><div class="ov" id="qrov" data-en="Enter an amount and generate a QR" data-ru="Введите сумму и создайте QR"></div></div>
+              <div class="status" id="mStatus"></div>
+              <div class="payload" id="payload">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px"><h3><span data-en="Today's sales" data-ru="Продажи за сегодня"></span><span class="sp"></span><b class="mono" id="mTotal"></b></h3><div class="hist" id="mHist"></div></div>
+      </div>
+      <div class="pane" id="p-wallet">
+        <div class="phone"><div class="scr"><div class="notch"><span id="clock">9:41</span><i></i><span>5G ▮▮▮</span></div><div class="ws" id="ws"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="v-ops">
+    <div class="ckpis" id="ckpis"></div>
+    <div class="cgrid">
+      <div class="card"><h3><span data-en="Live transaction stream" data-ru="Поток транзакций"></span><span class="sp"></span><button class="btn sm" id="pause"></button><button class="btn sm" id="attack" style="border-color:var(--red);color:var(--red)" data-en="⚡ Simulate attack" data-ru="⚡ Смоделировать атаку"></button></h3>
+        <div class="tw"><table><thead><tr><th data-en="Time" data-ru="Время"></th><th>ID</th><th data-en="Type" data-ru="Тип"></th><th data-en="Payer bank" data-ru="Банк плательщика"></th><th data-en="Payee bank" data-ru="Банк получателя"></th><th class="num" data-en="Amount" data-ru="Сумма"></th><th data-en="Risk" data-ru="Риск"></th><th data-en="Status" data-ru="Статус"></th></tr></thead><tbody id="stream"></tbody></table></div></div>
+      <div class="card"><h3><span data-en="Message viewer" data-ru="Просмотр сообщения"></span><span class="sp"></span><span class="mono muted" id="mvId" style="font-size:12px"></span></h3>
+        <div class="mtab"><button class="chip on" data-f="8583">ISO 8583</button><button class="chip" data-f="20022">ISO 20022</button><button class="chip" data-f="risk" data-en="Risk factors" data-ru="Факторы риска"></button></div>
+        <div id="msgv"></div></div>
+    </div>
+    <div class="cgrid" style="margin-top:14px">
+      <div class="card"><h3><span data-en="Antifraud rules" data-ru="Правила антифрода"></span><span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500" data-en="Apply to all new transactions, incl. your wallet" data-ru="Действуют на все новые транзакции, включая ваш кошелёк"></span></h3><div id="rules"></div></div>
+      <div class="card"><h3><span data-en="Settlement by bank (net, NDK)" data-ru="Клиринг по банкам (нетто, NDK)"></span><span class="sp"></span><span class="pill" id="cycle"></span></h3><div id="settle"></div></div>
+    </div>
+  </section>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+let view='flow';
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const m2=v=>Number(v).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+const KEY='paynusa-v1';
+const BANKS=['Nordbank','Velmar Savings','Fjord Credit','Polar Bank','Union Coop','PostBank'];
+function fresh(){return{bal:2450,hist:[{id:'TX-seed1',ic:'⬆',en:'Top-up from Nordbank card',ru:'Пополнение с карты Nordbank',amt:2000,ts:Date.now()-864e5*2},{id:'TX-seed2',ic:'☕',en:'Café Lumen',ru:'Кафе «Люмен»',amt:-12.5,ts:Date.now()-864e5}],merch:[],rules:{amt:{on:true,v:5000},vel:{on:true,v:3},dev:{on:true,v:1000},night:{on:false,v:0},mcc:{on:true,v:0},score:{on:true,v:85}}}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.rules)S=fresh();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* ---------- EMVCo payload + CRC ---------- */
+function crc16(s){let c=0xFFFF;for(let i=0;i<s.length;i++){c^=s.charCodeAt(i)<<8;for(let j=0;j<8;j++)c=c&0x8000?(c<<1)^0x1021:c<<1;c&=0xFFFF}return c.toString(16).toUpperCase().padStart(4,'0')}
+const tlv=(id,v)=>id+String(v.length).padStart(2,'0')+v;
+function emv(amount,ref){const mai=tlv('00','ND.PAYNUSA')+tlv('01','70014521')+tlv('02','FJCRNDVX');
+  let p=tlv('00','01')+tlv('01','12')+tlv('26',mai)+tlv('52','5814')+tlv('53','963')+tlv('54',amount.toFixed(2))+tlv('58','ND')+tlv('59','CAFE LUMEN')+tlv('60','VELMAR')+tlv('62',tlv('05',ref)+tlv('07','T70014521'))+'6304';return p+crc16(p)}
+function prettyPayload(p){return esc(p).replace(/(5403|5404|5405|5406|5407|5408)([\d.]+)/,(m,a,b)=>a+'<b>'+b+'</b>').replace(/(6304)([0-9A-F]{4})$/,'$1<b>$2</b>')}
+
+/* ---------- QR drawing (deterministic, QR-like v4 matrix) ---------- */
+function drawQR(payload,blank){
+  const cv=$('#qr'),x=cv.getContext('2d'),N=33,q=2,sz=cv.width/(N+q*2);x.fillStyle='#fff';x.fillRect(0,0,cv.width,cv.height);
+  const r=rng(hash(payload||'paynusa')),M=[...Array(N)].map(()=>Array(N).fill(0)),R=[...Array(N)].map(()=>Array(N).fill(0));
+  const finder=(ox,oy)=>{for(let i=-1;i<8;i++)for(let j=-1;j<8;j++){const a=ox+i,b=oy+j;if(a<0||b<0||a>=N||b>=N)continue;R[b][a]=1;const d=Math.max(Math.abs(i-3),Math.abs(j-3));M[b][a]=(d===3||d<=1)&&i>=0&&j>=0&&i<7&&j<7?1:0}};
+  finder(0,0);finder(N-7,0);finder(0,N-7);
+  for(let i=8;i<N-8;i++){M[6][i]=M[i][6]=i%2?0:1;R[6][i]=R[i][6]=1}
+  for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const d=Math.max(Math.abs(i),Math.abs(j));M[26+j][26+i]=d===1?0:1;R[26+j][26+i]=1}
+  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++)if(!R[y][xx])M[y][xx]=r()<.5?1:0;
+  const c0=13,c1=19;for(let y=c0;y<c1;y++)for(let xx=c0;xx<c1;xx++)M[y][xx]=2;
+  x.fillStyle=blank?'#9aa':'#0b1512';
+  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++)if(M[y][xx]===1)x.fillRect(Math.round((xx+q)*sz),Math.round((y+q)*sz),Math.ceil(sz),Math.ceil(sz));
+  const cx=(c0+q)*sz,cw=(c1-c0)*sz;x.fillStyle='#fff';x.fillRect(cx,cx,cw,cw);const g=x.createLinearGradient(cx,cx,cx+cw,cx+cw);g.addColorStop(0,'#f3d79a');g.addColorStop(1,'#c69a3e');
+  x.fillStyle=g;x.beginPath();x.roundRect?x.roundRect(cx+3,cx+3,cw-6,cw-6,8):x.rect(cx+3,cx+3,cw-6,cw-6);x.fill();x.fillStyle='#1a1306';x.font='bold '+Math.round(cw*.55)+'px Inter,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('P',cx+cw/2,cx+cw/2+1);
+}
+
+/* ---------- Merchant ---------- */
+let amtStr='',inv=null,qrTimer=0;
+const keys=['1','2','3','4','5','6','7','8','9','.','0','⌫'];
+$('#mKeys').innerHTML=keys.map(k=>`<button class="key" data-k="${k}">${k}</button>`).join('');
+$$('#mKeys .key').forEach(b=>b.onclick=()=>mKey(b.dataset.k));
+function mKey(k){if(inv&&inv.state==='wait')return toast(T('Cancel the active QR first','Сначала отмените активный QR'),'gold');
+  if(k==='⌫')amtStr=amtStr.slice(0,-1);else if(k==='.'){if(!amtStr.includes('.'))amtStr=(amtStr||'0')+'.'}else{if(/\.\d\d$/.test(amtStr)||amtStr.replace('.','').length>=7)return;amtStr=amtStr==='0'?k:amtStr+k}
+  $('#mAmt').textContent=m2(+amtStr||0)}
+$('#mGen').onclick=()=>{const a=+amtStr;if(!(a>0))return toast(T('Enter an amount first','Сначала введите сумму'),'bad');
+  const ref='INV'+Date.now().toString(36).toUpperCase().slice(-6);inv={amount:a,ref,payload:emv(a,ref),note:$('#mDesc').value.trim(),state:'wait',exp:Date.now()+120000};
+  drawQR(inv.payload);$('#qrw').classList.remove('idle','paid');$('#qrov').style.display='none';$('#payload').innerHTML=prettyPayload(inv.payload);mStatus();
+  clearInterval(qrTimer);qrTimer=setInterval(mStatus,1000);toast(T('Dynamic QR generated — scan it with the wallet','Динамический QR создан — отсканируйте его в кошельке'),'gold');
+  if(innerWidth<=860)toast(T('Switch to the “Customer wallet” tab to pay','Перейдите на вкладку «Кошелёк покупателя» для оплаты'))};
+function mStatus(){const el=$('#mStatus');if(!inv){el.innerHTML='';return}
+  if(inv.state==='wait'){const s=Math.max(0,Math.round((inv.exp-Date.now())/1000));if(!s){inv.state='exp';clearInterval(qrTimer);$('#qrw').classList.add('idle');$('#qrov').style.display='';$('#qrov').textContent=T('QR expired','QR истёк');}
+    el.innerHTML=inv.state==='wait'?`<span class="spin"></span>${T('Waiting for payment','Ожидание оплаты')} · <span class="mono">${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</span>`:`<span class="pill bad">${T('Expired','Истёк')}</span>`}
+  else if(inv.state==='paid')el.innerHTML=`<span class="pill ok">✓ ${T('Paid','Оплачено')} · ${m2(inv.amount)} NDK</span>`;
+  else if(inv.state==='blocked')el.innerHTML=`<span class="pill bad">⛔ ${T('Declined by antifraud','Отклонено антифродом')}</span>`;}
+$('#mCancel').onclick=()=>{inv=null;amtStr='';$('#mAmt').textContent=m2(0);clearInterval(qrTimer);drawQR('idle',1);$('#qrw').classList.add('idle');$('#qrw').classList.remove('paid');$('#qrov').style.display='';$('#qrov').textContent=T('Enter an amount and generate a QR','Введите сумму и создайте QR');$('#payload').textContent='—';mStatus();if(ws==='confirm'||ws==='pin')wgo('home')};
+$('#qrw').onclick=()=>{if(inv&&inv.state==='wait'){showPane('wallet');scanned()}};
+function renderMerch(){const el=$('#mHist');const tot=S.merch.reduce((a,t)=>a+t.amt,0);$('#mTotal').textContent=m2(tot)+' NDK · '+S.merch.length+T(' sales',' продаж');
+  el.innerHTML=S.merch.slice(0,8).map(t=>`<div class="r ${t.fresh?'fresh':''}"><div class="ic">✓</div><div class="sp"><div><b>${esc(t.ref)}</b> ${t.note?'· '+esc(t.note):''}</div><div class="muted" style="font-size:12px">${new Date(t.ts).toLocaleTimeString(PT.lang)} · ${T('Wallet','Кошелёк')} •••4417</div></div><div class="a pos">+${m2(t.amt)}</div></div>`).join('')||`<div class="muted">${T('No sales yet — generate a QR to start','Продаж пока нет — создайте QR')}</div>`;
+  S.merch.forEach(t=>delete t.fresh)}
+
+/* ---------- Wallet ---------- */
+let ws='home',pend=null,pin='',wctx={};
+const back=`<button class="back" data-go="home">‹ ${'{B}'}</button>`;
+function bk(){return back.replace('{B}',T('Back','Назад'))}
+function wgo(s,c){ws=s;if(c)wctx=c;renderWallet()}
+function renderWallet(){
+  const el=$('#ws');let h='';
+  if(ws==='home'){h=`<div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px"><div><div class="muted" style="font-size:12px">${T('Good afternoon','Добрый день')}</div><b>Lina Berg</b></div><div class="pill gold">PAYNUSA</div></div>
+    <div class="bal"><div class="l">${T('Wallet balance','Баланс кошелька')}</div><div class="v">${m2(S.bal)} <span style="font-size:15px;opacity:.8">NDK</span></div><div class="c">•••• 4417 · Nordbank</div></div>
+    <div class="acts"><button class="act big" data-go="scan"><span>⌗</span>${T('Scan QR','Скан QR')}</button><button class="act" data-go="bill"><span>🏛</span>${T('Taxes & fines','Налоги, штрафы')}</button><button class="act" data-go="p2p"><span>⇄</span>${T('Transfer','Перевод')}</button><button class="act" data-go="topup"><span>＋</span>${T('Top up','Пополнить')}</button></div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><b>${T('History','История')}</b><span class="muted" style="font-size:12px">${S.hist.length}</span></div>
+    <div class="hist">${S.hist.slice(0,12).map(t=>`<div class="r ${t.fresh?'fresh':''}"><div class="ic">${t.ic}</div><div class="sp"><div>${esc(PT.lang==='ru'?t.ru:t.en)}</div><div class="muted" style="font-size:11.5px">${new Date(t.ts).toLocaleString(PT.lang,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}${t.st?` · <span class="red">${t.st}</span>`:''}</div></div><div class="a ${t.amt>0?'pos':t.st?'red':'neg'}">${t.amt>0?'+':''}${m2(t.amt)}</div></div>`).join('')}</div>`;
+    S.hist.forEach(t=>delete t.fresh);}
+  else if(ws==='scan'){const has=inv&&inv.state==='wait';h=bk()+`<div class="wtitle">${T('Scan to pay','Сканируйте для оплаты')}</div><div class="vf"><div class="ln"></div><div class="tx">${has?T('Merchant QR detected','Обнаружен QR продавца'):T('Point the camera at a Paynusa QR','Наведите камеру на QR Paynusa')}</div></div>
+    <button class="btn ${has?'gold':''} wbtn" id="doScan" ${has?'':'disabled'}>${has?T('Scan merchant QR','Считать QR продавца'):T('No active QR — create one on the terminal','Нет активного QR — создайте его на терминале')}</button>`}
+  else if(ws==='confirm'){const p=pend;h=bk()+`<div class="wtitle">${T('Confirm payment','Подтвердите платёж')}</div><div style="text-align:center;margin:6px 0 16px"><div class="muted" style="font-size:13px">${esc(p.payee)}</div><div style="font-size:36px;font-weight:800">${m2(p.amount)} <span style="font-size:16px" class="muted">NDK</span></div></div>
+    <div class="sum">${p.rows.map(r=>`<div class="row"><span>${r[0]}</span><span class="${r[2]||''}" style="text-align:right">${r[1]}</span></div>`).join('')}<div class="row"><span>${T('Fee','Комиссия')}</span><span>0.00</span></div><div class="row"><span>${T('Balance after','Баланс после')}</span><b class="${S.bal-p.amount<0?'red':''}">${m2(S.bal-p.amount)}</b></div></div>
+    <button class="btn gold wbtn" id="toPin" ${S.bal<p.amount?'disabled':''}>${S.bal<p.amount?T('Insufficient balance','Недостаточно средств'):T('Pay with PIN','Оплатить с PIN')}</button>`}
+  else if(ws==='pin'){h=`<button class="back" id="pinBack">‹ ${T('Back','Назад')}</button><div class="wtitle" style="text-align:center">${T('Enter PIN','Введите PIN')}</div><div class="muted" style="text-align:center;font-size:13px">${esc(pend.payee)} · <b>${m2(pend.amount)} NDK</b></div>
+    <div class="pins" id="pins">${[0,1,2,3].map(i=>`<i class="${i<pin.length?'f':''}"></i>`).join('')}</div><div class="muted" style="text-align:center;font-size:12px">${T('Demo PIN: any 4 digits except 0000','Демо-PIN: любые 4 цифры, кроме 0000')}</div>
+    <div class="pad">${['1','2','3','4','5','6','7','8','9','','0','⌫'].map(k=>k?`<button data-p="${k}">${k}</button>`:'<span></span>').join('')}</div>`}
+  else if(ws==='proc'){h=`<div style="margin:auto;text-align:center"><div class="spin" style="width:54px;height:54px;border-width:4px;margin:0 auto 18px"></div><b>${T('Processing…','Обработка…')}</b><div class="muted mono" style="font-size:12px;margin-top:8px" id="procStep"></div></div>`}
+  else if(ws==='done'){const ok=wctx.ok;h=`<div style="text-align:center;margin:auto 0"><div class="okmark ${ok?'':'bad'}"><svg viewBox="0 0 52 52">${ok?'<path d="M14 27l8 8 16-18"/>':'<path d="M16 16l20 20M36 16 16 36"/>'}</svg></div>
+    <div style="font-size:22px;font-weight:800">${ok?T('Payment successful','Платёж выполнен'):T('Payment declined','Платёж отклонён')}</div><div style="font-size:30px;font-weight:800;margin:6px 0">${m2(wctx.amount)} NDK</div><div class="muted" style="font-size:13px">${esc(wctx.payee)}</div>
+    ${ok?`<div class="mono muted" style="font-size:11.5px;margin-top:10px">RRN ${wctx.rrn}</div>`:`<div class="red" style="font-size:13px;margin-top:10px">${esc(wctx.reason)}</div>`}</div><button class="btn pri wbtn" data-go="home">${T('Done','Готово')}</button>`}
+  else if(ws==='bill'){h=bk()+`<div class="wtitle">${T('Taxes & fines','Налоги и штрафы')}</div><div class="f"><label>${T('Bill / UIN number','Номер счёта / УИН')}</label><input class="input mono" id="billNo" inputmode="numeric" placeholder="18810 2604 1155" value="${esc(wctx.no||'')}"></div>
+    <div class="chips">${['188102604115','182104200077','321009988001'].map(n=>`<button class="chip" data-bn="${n}">${n}</button>`).join('')}</div><button class="btn pri wbtn" id="billFind">${T('Find bill','Найти счёт')}</button><div id="billRes" style="margin-top:14px"></div>`}
+  else if(ws==='p2p'){h=bk()+`<div class="wtitle">${T('Transfer by phone','Перевод по телефону')}</div><div class="f"><label>${T('Recipient phone','Телефон получателя')}</label><input class="input mono" id="pPh" inputmode="tel" value="+47 9" placeholder="+47 9xx xx xxx"></div><div id="pWho" class="muted" style="font-size:13px;min-height:20px;margin:-4px 0 8px"></div>
+    <div class="f"><label>${T('Amount, NDK','Сумма, NDK')}</label><input class="input mono" id="pAm" type="number" min="1" step="0.01" value="50"></div><div class="f"><label>${T('Bank','Банк')}</label><select class="input" id="pBk">${BANKS.map(b=>`<option>${b}</option>`).join('')}</select></div><button class="btn pri wbtn" id="pGo">${T('Continue','Продолжить')}</button>`}
+  else if(ws==='topup'){h=bk()+`<div class="wtitle">${T('Top up wallet','Пополнить кошелёк')}</div><div class="chips">${[100,250,500,1000].map(v=>`<button class="chip ${wctx.tu==v?'on':''}" data-tu="${v}">${v}</button>`).join('')}</div>
+    <div class="f"><label>${T('Amount, NDK','Сумма, NDK')}</label><input class="input mono" id="tuA" type="number" min="1" value="${wctx.tu||250}"></div><div class="f"><label>${T('Source','Источник')}</label><select class="input" id="tuS"><option>Nordbank •••• 4417</option><option>Polar Bank •••• 0932</option></select></div><button class="btn pri wbtn" id="tuGo">${T('Top up','Пополнить')}</button>`}
+  el.innerHTML=h;el.scrollTop=0;
+  $$('[data-go]',el).forEach(b=>b.onclick=()=>wgo(b.dataset.go,{}));
+  const ds=$('#doScan');if(ds)ds.onclick=scanned;
+  const tp=$('#toPin');if(tp)tp.onclick=()=>{pin='';wgo('pin')};
+  const pb=$('#pinBack');if(pb)pb.onclick=()=>wgo(pend.from||'confirm');
+  $$('.pad button',el).forEach(b=>b.onclick=()=>pinKey(b.dataset.p));
+  if(ws==='bill'){$$('[data-bn]').forEach(b=>b.onclick=()=>{$('#billNo').value=b.dataset.bn;findBill()});$('#billFind').onclick=findBill;$('#billNo').onkeydown=e=>{if(e.key==='Enter')findBill()}}
+  if(ws==='p2p'){const ph=$('#pPh');ph.oninput=()=>{const d=ph.value.replace(/\D/g,'');const w=$('#pWho');if(d.length>=10){const r=rng(hash(d));const f=['Erik','Maja','Oskar','Freya','Nils','Tove'][Math.floor(r()*6)],l='BDHSVN'[Math.floor(r()*6)];w.innerHTML='✓ '+f+' '+l+'. · '+BANKS[Math.floor(r()*6)];w.className='pos';$('#pBk').value=BANKS[Math.floor(rng(hash(d))()*0+r()*0)]||BANKS[0]}else{w.textContent=T('Enter 10+ digits','Введите 10+ цифр');w.className='muted'}};ph.oninput();
+    $('#pGo').onclick=()=>{const d=$('#pPh').value.replace(/\D/g,''),a=+$('#pAm').value;if(d.length<10)return toast(T('Enter a valid phone','Введите корректный телефон'),'bad');if(!(a>0))return toast(T('Enter amount','Введите сумму'),'bad');
+      const who=$('#pWho').textContent.replace('✓ ','').split(' · ')[0];pend={kind:'p2p',amount:a,payee:who,bank:$('#pBk').value,mcc:'4829',ic:'⇄',en:'Transfer to '+who,ru:'Перевод: '+who,rows:[[T('Recipient','Получатель'),esc(who)],[T('Phone','Телефон'),esc($('#pPh').value)],[T('Bank','Банк'),esc($('#pBk').value)]]};wgo('confirm')}}
+  if(ws==='topup'){$$('[data-tu]').forEach(b=>b.onclick=()=>wgo('topup',{tu:+b.dataset.tu}));$('#tuGo').onclick=async()=>{const a=+$('#tuA').value;if(!(a>0))return toast(T('Enter amount','Введите сумму'),'bad');wgo('proc');await sleep(900);S.bal+=a;S.hist.unshift({id:'TX-'+Date.now(),ic:'⬆',en:'Top-up from '+$('#tuS')?.value,ru:'Пополнение с карты',amt:a,ts:Date.now(),fresh:1});save();wgo('done',{ok:true,amount:a,payee:T('Top-up','Пополнение'),rrn:rrn()});pushOwn({kind:'topup',amount:a,bank:'Nordbank',mcc:'6012'},{action:'ok',score:4,hits:[]})}}
+}
+function scanned(){if(!(inv&&inv.state==='wait'))return;pend={kind:'qr',amount:inv.amount,payee:'Café Lumen, Velmar',bank:'Fjord Credit',mcc:'5814',ic:'☕',en:'Café Lumen',ru:'Кафе «Люмен»',ref:inv.ref,rows:[[T('Merchant','Продавец'),'CAFE LUMEN · VELMAR'],[T('Invoice','Счёт'),'<span class="mono">'+inv.ref+'</span>'],['MCC','5814'],[T('Payload CRC','CRC данных'),'<span class="mono pos">'+inv.payload.slice(-4)+' ✓</span>']].concat(inv.note?[[T('Note','Комментарий'),esc(inv.note)]]:[])};showPane('wallet');wgo('confirm')}
+function findBill(){const no=$('#billNo').value.replace(/\D/g,'');const r=$('#billRes');wctx.no=$('#billNo').value;if(no.length<6){r.innerHTML=`<div class="red" style="font-size:13px">${T('Enter at least 6 digits','Введите минимум 6 цифр')}</div>`;return}
+  r.innerHTML=`<div class="status"><span class="spin"></span>${T('Querying State Billing Registry…','Запрос в реестр начислений…')}</div>`;
+  setTimeout(()=>{const g=rng(hash(no)),kinds=[['Speeding fine, 21 km/h over','Штраф за превышение скорости на 21 км/ч','Traffic Police of Nordania','Дорожная полиция Нордании','🚓'],['Property tax 2025','Налог на имущество 2025','Nordania Tax Service','Налоговая служба Нордании','🏠'],['Vehicle tax 2025','Транспортный налог 2025','Nordania Tax Service','Налоговая служба Нордании','🚗'],['Passport issuance fee','Госпошлина за паспорт','Civil Registry','Гражданский реестр','🛂'],['Parking fine, Velmar centre','Штраф за парковку, центр Вельмара','City of Velmar','Город Вельмар','🅿']],k=kinds[Math.floor(g()*kinds.length)];
+    const amt=Math.round((20+g()*480)*100)/100,disc=k[0].includes('fine')&&g()<.6,due=new Date(Date.now()+864e5*(3+Math.floor(g()*25)));const fin=disc?Math.round(amt*50)/100:amt;
+    pend={kind:'bill',amount:fin,payee:T(k[2],k[3]),bank:'Treasury',mcc:'9311',ic:k[4],en:k[0],ru:k[1],from:'bill',rows:[[T('Bill','Счёт'),'<span class="mono">'+no+'</span>'],[T('Purpose','Назначение'),PT.lang==='ru'?k[1]:k[0]],[T('Payee','Получатель'),T(k[2],k[3])],[T('Due date','Срок'),due.toLocaleDateString(PT.lang)]].concat(disc?[[T('Early payment discount','Скидка за раннюю оплату'),'−50% ('+m2(amt)+')','pos']]:[])};
+    r.innerHTML=`<div class="sum"><div style="display:flex;gap:10px;align-items:center;margin-bottom:6px"><span style="font-size:24px">${k[4]}</span><b>${PT.lang==='ru'?k[1]:k[0]}</b></div>${pend.rows.slice(2).map(x=>`<div class="row"><span>${x[0]}</span><span class="${x[2]||''}">${x[1]}</span></div>`).join('')}<div class="row"><span>${T('To pay','К оплате')}</span><b style="font-size:18px">${m2(fin)} NDK</b></div></div><button class="btn gold wbtn" id="billPay">${T('Pay bill','Оплатить')}</button>`;
+    $('#billPay').onclick=()=>wgo('confirm')},700)}
+function pinKey(k){if(k==='⌫')pin=pin.slice(0,-1);else if(pin.length<4)pin+=k;
+  $$('#pins i').forEach((i,n)=>i.classList.toggle('f',n<pin.length));
+  if(pin.length===4){if(pin==='0000'){const p=$('#pins');p.classList.add('shake');toast(T('Wrong PIN','Неверный PIN'),'bad');setTimeout(()=>{pin='';p.classList.remove('shake');$$('#pins i').forEach(i=>i.classList.remove('f'))},400);return}setTimeout(execute,180)}}
+const rrn=()=>String(Date.now()).slice(-12);
+async function execute(){
+  const p=pend;wgo('proc');const st=$('#procStep');const steps=['pain.001 → Paynusa Switch','AML / antifraud scoring','pacs.008 → '+p.bank,'pacs.002 ACSC'];
+  const verdict=fraud({amount:p.amount,payer:'LINA',mcc:p.mcc,newDev:false,hour:new Date().getHours()});
+  for(let i=0;i<steps.length;i++){if(st)st.textContent=steps[i];await sleep(380);if(i===1&&verdict.action==='block')break}
+  const tx=pushOwn(p,verdict);
+  if(verdict.action==='block'){S.hist.unshift({id:tx.id,ic:'⛔',en:p.en,ru:p.ru,amt:-p.amount,ts:Date.now(),st:T('blocked','блок'),fresh:1});save();
+    if(p.kind==='qr'&&inv){inv.state='blocked';mStatus()}wgo('done',{ok:false,amount:p.amount,payee:p.payee,reason:T('Blocked by antifraud: ','Заблокировано антифродом: ')+verdict.hits.map(h=>h.name).join(', ')});return}
+  S.bal=Math.round((S.bal-p.amount)*100)/100;S.hist.unshift({id:tx.id,ic:p.ic,en:p.en,ru:p.ru,amt:-p.amount,ts:Date.now(),fresh:1});
+  if(p.kind==='qr'&&inv){inv.state='paid';clearInterval(qrTimer);$('#qrw').classList.add('paid');mStatus();S.merch.unshift({ref:inv.ref,note:inv.note,amt:inv.amount,ts:Date.now(),fresh:1});renderMerch();toast('🏪 '+T('Terminal: payment received ','Терминал: оплата получена ')+m2(inv.amount)+' NDK');
+    setTimeout(()=>{if(inv&&inv.state==='paid'){amtStr='';$('#mAmt').textContent=m2(0)}},1500)}
+  save();wgo('done',{ok:true,amount:p.amount,payee:p.payee,rrn:tx.rrn});if(verdict.action==='flag')toast(T('Payment passed but flagged for review','Платёж прошёл, но помечен для проверки'),'gold')}
+function showPane(p){$$('#mtabs button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));$$('.flow>.pane').forEach(x=>x.classList.toggle('on',x.id==='p-'+p))}
+$$('#mtabs button').forEach(b=>b.onclick=()=>showPane(b.dataset.p));
+
+/* ---------- Antifraud ---------- */
+const RULES=[['amt','Amount above threshold','Сумма выше порога','flag','NDK'],['vel','Velocity: payer tx per 60 s above','Частота: операций плательщика за 60 с больше','block','tx'],['dev','New device and amount above','Новое устройство и сумма выше','flag','NDK'],['night','Night hours 00:00–05:00','Ночное время 00:00–05:00','flag',''],['mcc','Gambling merchants (MCC 7995)','Азартные игры (MCC 7995)','block',''],['score','Risk score above','Риск-скор выше','block','pts']];
+const vel={};
+function fraud(t){const now=Date.now(),R=S.rules;vel[t.payer]=(vel[t.payer]||[]).filter(x=>now-x<60000);vel[t.payer].push(now);const n=vel[t.payer].length;
+  let score=4+Math.min(30,Math.log10(1+t.amount)*7)+(t.newDev?18:0)+(t.hour<5?12:0)+(n>2?(n-2)*9:0)+(t.mcc==='7995'?30:0)+(t.noise||0);score=Math.min(99,Math.round(score));
+  const hits=[];const add=(id,c)=>{const r=RULES.find(x=>x[0]===id);if(R[id].on&&c)hits.push({id,act:r[3],name:T(r[1],r[2])})};
+  add('amt',t.amount>R.amt.v);add('vel',n>R.vel.v);add('dev',t.newDev&&t.amount>R.dev.v);add('night',t.hour<5);add('mcc',t.mcc==='7995');add('score',score>R.score.v);
+  return{score,hits,n,action:hits.some(h=>h.act==='block')?'block':hits.length?'flag':'ok'}}
+function renderRules(){$('#rules').innerHTML=RULES.map(r=>{const R=S.rules[r[0]];return`<div class="rule"><label class="sw"><input type="checkbox" data-r="${r[0]}" ${R.on?'checked':''}><i></i></label><div class="sp">${T(r[1],r[2])} <span class="pill ${r[3]==='block'?'bad':'warn'}" style="margin-left:4px">${r[3]==='block'?T('block','блок'):T('flag','флаг')}</span></div>${r[4]?`<input class="input" type="number" data-v="${r[0]}" value="${R.v}"><span class="muted mono" style="font-size:12px;width:30px">${r[4]}</span>`:''}<span class="mono muted" style="font-size:12px;width:56px;text-align:right" title="hits">${hitCount[r[0]]||0} ⚑</span></div>`}).join('');
+  $$('#rules [data-r]').forEach(c=>c.onchange=()=>{S.rules[c.dataset.r].on=c.checked;save();toast(T('Rule ','Правило ')+(c.checked?T('enabled','включено'):T('disabled','выключено')),'gold')});
+  $$('#rules [data-v]').forEach(c=>c.onchange=()=>{S.rules[c.dataset.v].v=+c.value||0;save();toast(T('Threshold updated','Порог обновлён'),'gold')})}
+const hitCount={};
+
+/* ---------- Stream ---------- */
+let txs=[],sel=null,paused=false,tick=0,attackLeft=0,stats={n:0,vol:0,flag:0,block:0},settle={};BANKS.concat('Treasury').forEach(b=>settle[b]=0);
+const sr=rng(99);
+function genTx(force){
+  const kinds=[['P2M','qr',.55],['P2P','p2p',.25],['BILL','bill',.12],['TOPUP','topup',.08]];let x=sr(),k=kinds[0];for(const kk of kinds){if(x<kk[2]){k=kk;break}x-=kk[2]}
+  const a=force?Math.round((1500+sr()*9000)*100)/100:Math.round(Math.exp(1.5+sr()*5.2)*100)/100;
+  const pb=BANKS[Math.floor(sr()*BANKS.length)],qb=k[1]==='bill'?'Treasury':BANKS[Math.floor(sr()*BANKS.length)];
+  const payer=force?'ATTACKER-77':'P'+Math.floor(sr()*4000);const mcc=k[1]==='qr'?(sr()<.03?'7995':['5814','5411','5541','5912','4121'][Math.floor(sr()*5)]):k[1]==='bill'?'9311':k[1]==='p2p'?'4829':'6012';
+  return{type:k[0],kind:k[1],amount:a,bank:qb,payerBank:pb,payer,mcc,newDev:force||sr()<.06,hour:force?3:new Date().getHours(),noise:sr()*8}}
+function addTx(t,verdict,own){
+  const v=verdict||fraud(t);const id='PNS'+Date.now().toString(36).toUpperCase()+Math.floor(Math.random()*90+10);const tx={...t,id,rrn:rrn(),stan:String(Math.floor(Math.random()*1e6)).padStart(6,'0'),ts:new Date(),score:v.score,hits:v.hits,action:v.action,own};
+  txs.unshift(tx);if(txs.length>80)txs.pop();stats.n++;if(v.action!=='block'){stats.vol+=t.amount;settle[t.payerBank]-=t.amount;settle[t.bank]+=t.amount}
+  if(v.action==='flag')stats.flag++;if(v.action==='block')stats.block++;v.hits.forEach(h=>hitCount[h.id]=(hitCount[h.id]||0)+1);
+  if(view==='ops')appendRow(tx);return tx}
+function pushOwn(p,verdict){const tx=addTx({type:{qr:'P2M',p2p:'P2P',bill:'BILL',topup:'TOPUP'}[p.kind],kind:p.kind,amount:p.amount,bank:p.bank||'Fjord Credit',payerBank:'Nordbank',payer:'LINA',mcc:p.mcc},verdict,true);if(!sel||sel.own)sel=tx;return tx}
+const riskBg=s=>s>=80?'var(--red)':s>=50?'var(--amber)':'var(--mal)';
+function rowHtml(t){return`<tr data-id="${t.id}" class="${t.own?'mine':''} ${sel&&sel.id===t.id?'sel':''}"><td class="mono">${t.ts.toTimeString().slice(0,8)}</td><td class="mono">${t.id.slice(-8)}</td><td>${t.type}${t.own?' <span class="pill gold" style="padding:0 6px">'+T('you','вы')+'</span>':''}</td><td>${t.payerBank}</td><td>${t.bank}</td><td class="num mono">${m2(t.amount)}</td><td><span class="risk" style="background:color-mix(in srgb,${riskBg(t.score)} 22%,transparent);color:${riskBg(t.score)}">${t.score}</span></td><td><span class="pill ${t.action==='ok'?'ok':t.action==='flag'?'warn':'bad'}">${t.action==='ok'?T('approved','одобрено'):t.action==='flag'?T('flagged','флаг'):T('blocked','блок')}</span></td></tr>`}
+function appendRow(t){const tb=$('#stream');tb.insertAdjacentHTML('afterbegin',rowHtml(t));const r=tb.firstElementChild;r.classList.add('fresh');r.onclick=()=>selTx(t.id);while(tb.children.length>80)tb.lastElementChild.remove()}
+function renderStream(){const tb=$('#stream');tb.innerHTML=txs.map(rowHtml).join('');$$('tr',tb).forEach(r=>r.onclick=()=>selTx(r.dataset.id))}
+function selTx(id){sel=txs.find(t=>t.id===id);$$('#stream tr').forEach(r=>r.classList.toggle('sel',r.dataset.id===id));renderMsg()}
+let fmt='8583';
+$$('.mtab .chip').forEach(b=>b.onclick=()=>{fmt=b.dataset.f;$$('.mtab .chip').forEach(x=>x.classList.toggle('on',x===b));renderMsg()});
+function renderMsg(){const el=$('#msgv'),t=sel||txs[0];if(!t){el.innerHTML=`<div class="muted">${T('Select a transaction','Выберите транзакцию')}</div>`;return}
+  $('#mvId').textContent=t.id;const d=t.ts,p2=n=>String(n).padStart(2,'0'),amt12=String(Math.round(t.amount*100)).padStart(12,'0');
+  if(fmt==='8583'){const F=[['MTI',T('Message type','Тип сообщения'),'0200'],['DE2',T('PAN','Номер карты/кошелька'),'9643 17•• •••• 4417'],['DE3',T('Processing code','Код обработки'),t.kind==='p2p'?'400000':t.kind==='bill'?'500000':t.kind==='topup'?'210000':'000000'],['DE4',T('Amount, minor units','Сумма в мин. ед.'),amt12],['DE7',T('Transmission date/time','Дата/время передачи'),p2(d.getMonth()+1)+p2(d.getDate())+p2(d.getHours())+p2(d.getMinutes())+p2(d.getSeconds())],['DE11','STAN',t.stan],['DE18','MCC',t.mcc],['DE32',T('Acquirer ID','ID эквайрера'),String(hash(t.bank)%1e6).padStart(6,'0')],['DE37','RRN',t.rrn],['DE39',T('Response code','Код ответа'),t.action==='block'?'59 — '+T('suspected fraud','подозрение на мошенничество'):'00 — '+T('approved','одобрено')],['DE41','Terminal ID',t.kind==='qr'?'70014521':'WALLET01'],['DE42','Merchant ID',t.kind==='qr'?'FJCRNDVX0014521':'—'],['DE43',T('Acceptor name/location','Наименование/место'),t.own&&t.kind==='qr'?'CAFE LUMEN        VELMAR       ND':t.bank.toUpperCase().padEnd(18)+'ND'],['DE49',T('Currency','Валюта'),'963'],['DE123','Risk score',String(t.score)]];
+    el.innerHTML=`<div class="tw" style="max-height:380px"><table class="de"><thead><tr><th>${T('Field','Поле')}</th><th>${T('Name','Название')}</th><th>${T('Value','Значение')}</th></tr></thead><tbody>${F.map(f=>`<tr style="cursor:default"><td>${f[0]}</td><td>${f[1]}</td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div>`}
+  else if(fmt==='20022'){const iso=d.toISOString().slice(0,19);const x=`<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10">
+  <FIToFICstmrCdtTrf>
+    <GrpHdr>
+      <MsgId>${t.id}</MsgId>
+      <CreDtTm>${iso}</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <SttlmInf><SttlmMtd>CLRG</SttlmMtd></SttlmInf>
+    </GrpHdr>
+    <CdtTrfTxInf>
+      <PmtId><EndToEndId>E2E${t.rrn}</EndToEndId><UETR>${(hash(t.id)>>>0).toString(16).padStart(8,'0')}-4c1e-9a7d-${t.stan}</UETR></PmtId>
+      <IntrBkSttlmAmt Ccy="NDK">${t.amount.toFixed(2)}</IntrBkSttlmAmt>
+      <DbtrAgt><FinInstnId><Nm>${t.payerBank}</Nm></FinInstnId></DbtrAgt>
+      <CdtrAgt><FinInstnId><Nm>${t.bank}</Nm></FinInstnId></CdtrAgt>
+      <Purp><Cd>${t.kind==='bill'?'TAXS':t.kind==='p2p'?'CASH':'GDSV'}</Cd></Purp>
+      <RmtInf><Ustrd>${t.type} MCC ${t.mcc} RISK ${t.score}</Ustrd></RmtInf>
+    </CdtTrfTxInf>
+  </FIToFICstmrCdtTrf>
+</Document>`;el.innerHTML=`<pre class="xml">${esc(x).replace(/(&lt;\/?)([\w:]+)/g,'$1<span class="xt">$2</span>').replace(/&gt;([^&<\n]+)&lt;/g,'&gt;<span class="xv">$1</span>&lt;')}</pre>`}
+  else{el.innerHTML=`<div style="display:flex;align-items:center;gap:16px;margin-bottom:12px"><div style="font-size:44px;font-weight:800;color:${riskBg(t.score)}" class="mono">${t.score}</div><div><b>${t.action==='ok'?T('Approved','Одобрено'):t.action==='flag'?T('Flagged for review','На ручную проверку'):T('Blocked','Заблокировано')}</b><div class="muted" style="font-size:12.5px">${T('Model: GBM v4.2 + rules engine','Модель: GBM v4.2 + движок правил')}</div></div></div>
+    <div style="height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin-bottom:14px"><i style="display:block;height:100%;width:${t.score}%;background:${riskBg(t.score)}"></i></div>
+    ${[[T('Amount','Сумма'),m2(t.amount)],[T('New device','Новое устройство'),t.newDev?T('yes','да'):T('no','нет')],['MCC',t.mcc],[T('Payer','Плательщик'),t.payer]].map(r=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--line)"><span class="muted">${r[0]}</span><b class="mono">${esc(r[1])}</b></div>`).join('')}
+    <div style="margin-top:12px;font-size:13px"><b>${T('Rules triggered','Сработавшие правила')}</b>${t.hits.length?t.hits.map(h=>`<div style="margin-top:6px"><span class="pill ${h.act==='block'?'bad':'warn'}">${h.act}</span> ${esc(h.name)}</div>`).join(''):`<div class="muted" style="margin-top:6px">${T('none','нет')}</div>`}</div>`}}
+function renderKpis(){const tps=Math.round(980+Math.sin(tick/7)*180+Math.random()*120);$('#ckpis').innerHTML=[[T('TPS (switch)','TPS (коммутатор)'),tps.toLocaleString(PT.lang),'up'],[T('Processed (session)','Обработано (сессия)'),stats.n.toLocaleString(PT.lang),''],[T('Volume, NDK','Объём, NDK'),Math.round(stats.vol).toLocaleString(PT.lang),''],[T('Flagged','Помечено'),stats.flag,'warn'],[T('Blocked','Заблокировано'),stats.block,'bad']].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v" style="color:${k[2]==='warn'?'var(--amber)':k[2]==='bad'?'var(--red)':k[2]==='up'?'var(--mal3)':'var(--text)'}">${k[1]}</div></div>`).join('')}
+function drawSettle(){const el=$('#settle');const keys=Object.keys(settle),mx=Math.max(1,...keys.map(k=>Math.abs(settle[k])));const w=Math.max(300,el.clientWidth||420),rh=30,h=keys.length*rh+20,lw=110,mid=lw+(w-lw)/2;
+  const c={mal:cssv('--mal'),red:cssv('--red'),line:cssv('--line2'),text:cssv('--text'),dim:cssv('--dim')};
+  let s=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;display:block"><line x1="${mid}" x2="${mid}" y1="0" y2="${h-14}" stroke="${c.line}"/>`;
+  keys.forEach((k,i)=>{const v=settle[k],bw=(w-lw-10)/2*Math.abs(v)/mx,y=i*rh+4;s+=`<text x="0" y="${y+15}" font-size="12" fill="${c.text}">${k}</text><rect x="${v>=0?mid:mid-bw}" y="${y+3}" width="${Math.max(1,bw)}" height="18" rx="4" fill="${v>=0?c.mal:c.red}" opacity=".9"/><text x="${v>=0?mid-6:mid+6}" y="${y+16}" font-size="10.5" text-anchor="${v>=0?'end':'start'}" fill="${c.dim}" font-family="monospace">${v>=0?'+':''}${Math.round(v).toLocaleString(PT.lang)}</text>`});
+  s+=`<text x="${mid-8}" y="${h-2}" text-anchor="end" font-size="10" fill="${c.dim}">${T('net payer','нетто-плательщик')}</text><text x="${mid+8}" y="${h-2}" font-size="10" fill="${c.dim}">${T('net receiver','нетто-получатель')}</text></svg>`;el.innerHTML=s;
+  $('#cycle').textContent=T('Cycle ','Цикл ')+(3+Math.floor(tick/600))+' · '+T('next ','след. ')+(600-tick%600>60?Math.ceil((600-tick%600)/60)+T(' min',' мин'):(600-tick%600)+T(' s',' с'))}
+function loop(){tick++;if(!paused){const n=attackLeft>0?2:(Math.random()<.85?1:2);for(let i=0;i<n;i++){if(attackLeft>0){attackLeft--;addTx({...genTx(true),payerBank:'Polar Bank',mcc:attackLeft%3?'5411':'7995'})}else addTx(genTx())}}
+  if(view==='ops'){renderKpis();if(tick%2===0)drawSettle();if(!sel&&txs[0]){sel=txs[0];renderMsg()}if(tick%10===0)renderRules()}}
+for(let i=0;i<25;i++)addTx(genTx());
+setInterval(loop,500);
+$('#pause').onclick=()=>{paused=!paused;setPause()};function setPause(){$('#pause').textContent=paused?T('▶ Resume','▶ Продолжить'):T('❚❚ Pause','❚❚ Пауза')}
+$('#attack').onclick=()=>{attackLeft=12;toast(T('Simulating card-testing burst from one payer…','Моделируем серию атак с одного плательщика…'),'bad')};
+
+/* ---------- Views ---------- */
+
+$$('#seg button').forEach(b=>b.onclick=()=>{view=b.dataset.v;$$('#seg button').forEach(x=>x.classList.toggle('on',x===b));$$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+view));if(view==='ops'){renderStream();renderKpis();renderMsg();renderRules();drawSettle()}});
+function renderAll(){renderWallet();renderMerch();mStatus();setPause();if(!inv)drawQR('idle',1);if(view==='ops'){renderStream();renderKpis();renderMsg();renderRules();drawSettle()}}
+setInterval(()=>{const d=new Date();$('#clock').textContent=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')},10000);
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(view==='ops')drawSettle()},150)});
+PT.onLang(renderAll);
+renderAll();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stratus Command</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px;line-height:1.2}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center;margin-top:8px}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+.who span{color:var(--muted)}
+.sidebtns{display:flex;gap:6px;margin-top:8px}
+.sidebtns .btn{flex:1;justify-content:center}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.intro.hide{display:none}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.card{min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h3 .x{font-size:12px;color:var(--muted);font-weight:500}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fgrid .full{grid-column:1/-1}
+.f{min-width:0}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px;display:none}
+.f.bad .input{border-color:var(--red)} .f.bad .err{display:block}
+select.input{appearance:auto}
+textarea.input{resize:vertical}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row .sp{flex:1}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 9px;font-size:12px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)} .blue-t{color:var(--blue)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.prog.gold i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.prog.red i{background:var(--red)} .prog.amber i{background:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;overflow-wrap:anywhere}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack>*+*{margin-top:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.risk{display:inline-block;min-width:38px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:8px;padding:2px 6px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;min-width:0}
+.li:last-child{border-bottom:0}
+.li>.grow{min-width:0}
+.li small{display:block;color:var(--muted);font-size:12px}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:100px;max-height:240px;overflow:auto;overflow-wrap:anywhere}
+.log div{padding:2px 0} .log .t{color:var(--dim)}
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 10%,transparent);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.alert.warn{border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.alert.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.alert b{display:block}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow:auto;padding:20px;animation:fade .2s}
+.modal .box h3{margin:0 0 14px;font-size:17px;display:flex;gap:8px;align-items:center}
+.modal .box h3 .sp{flex:1}
+.mclose{border:0;background:none;font-size:20px;cursor:pointer;color:var(--muted);padding:0 4px}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.lg-hero{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 60%),radial-gradient(90% 80% at 100% 100%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 60%),var(--bg2);border-right:1px solid var(--line);padding:48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.lg-hero .bigb{display:flex;align-items:center;gap:14px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+.lg-hero .bigb b{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:26px}
+.lg-hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em;max-width:560px}
+.lg-hero p{color:var(--muted);margin:0;max-width:520px}
+.lg-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px}
+.lg-feats div{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 70%,transparent);border-radius:12px;padding:10px 12px;font-size:13px}
+.lg-feats div b{display:block;font-size:13.5px}
+.lg-form{display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-form .card{width:100%;max-width:420px;padding:26px}
+.lg-form h3{font-size:20px;margin:0 0 4px}
+.lg-form .f{margin-top:12px}
+.lg-demo{border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-top:14px;color:var(--muted)}
+.lg-demo b{color:var(--gold2)}
+.lg-sec{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--dim);margin-top:14px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.split,.intro,.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .lg-hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .lg-hero h2{font-size:24px}
+  .lg-form{padding:20px 14px 40px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.fgrid.c3,.opts,.lg-feats{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.step span{font-size:10px}.lg-form .card{padding:18px}.modal .box{padding:16px}}
+.btn.xs{padding:3px 10px;font-size:11.5px;min-height:28px}
+#headx{min-width:0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;border:1px solid var(--line2);color:var(--muted)}
+.mt{margin-top:14px}
+
+.catg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.cat{display:flex;flex-direction:column}.cat>.row:last-child{margin-top:auto}
+.cic{font-size:24px;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--bg2);border:1px solid var(--line);flex:none}
+.big{font-size:26px;font-weight:800}
+@media (max-width:560px){.catg{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body data-demo-en="Stratus Command — multi-cloud provisioning &amp; governance" data-demo-ru="Stratus Command — мультиоблако: заказ, контроль и бюджет">
+<div class="login" id="login" hidden></div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side"></aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <div id="headx" class="row"></div>
+      <button class="btn sm" id="showIntro" hidden title="How to try it">?</button>
+    </div>
+    <div class="intro" id="intro"></div>
+    <section class="view on" id="view"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div class="modal" id="modal"></div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const TT=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtDS=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+const fmtN=(n,dg=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:dg,maximumFractionDigits:dg});
+const pct=(n,dg=0)=>fmtN(n,dg)+'%';
+const uid=(p)=>(p||'')+Math.random().toString(36).slice(2,8).toUpperCase();
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body,mount){const m=$('#modal');m.innerHTML=`<div class="box" role="dialog"><h3><span>${title}</span><span class="sp"></span><button class="mclose" aria-label="Close">×</button></h3>${body}</div>`;m.classList.add('on');$('.mclose',m).onclick=closeModal;m.onclick=e=>{if(e.target===m)closeModal()};if(mount)mount($('.box',m))}
+function closeModal(){const m=$('#modal');m.classList.remove('on');m.innerHTML=''}
+/* form validation: fields = [[id, test(v)->bool, [en,ru] message]] ; returns true if ok */
+function validate(fields,root){let ok=true;fields.forEach(([id,test,msg])=>{const el=$('#'+id,root||document);if(!el)return;const f=el.closest('.f');const good=test(el.type==='checkbox'?el.checked:el.value.trim());if(f){f.classList.toggle('bad',!good);let e=$('.err',f);if(!e){e=document.createElement('div');e.className='err';f.append(e)}e.textContent=TT(msg)}if(!good)ok=false});if(!ok)toast(T('Please fix the highlighted fields','Исправьте выделенные поля'),'bad');return ok}
+const fld=(id,label,inner,cls)=>`<div class="f ${cls||''}"><label for="${id}">${label}</label>${inner}</div>`;
+const inp=(id,label,val,cls,type,attrs)=>fld(id,label,`<input class="input" id="${id}" type="${type||'text'}" value="${esc(val==null?'':val)}" ${attrs||''}>`,cls);
+const sel=(id,label,opts,val,cls)=>fld(id,label,`<select class="input" id="${id}">${opts.map(o=>`<option value="${esc(o[0])}" ${String(o[0])===String(val)?'selected':''}>${esc(o.length>2?T(o[1],o[2]):o[1])}</option>`).join('')}</select>`,cls);
+const pill=(txt,cls)=>`<span class="pill ${cls||''}">${txt}</span>`;
+const kpi=(l,v,d,cls)=>`<div class="card kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}</div>${d!=null?`<div class="d">${d}</div>`:''}</div>`;
+const chipsH=(items,cur,attr)=>items.map(x=>`<button class="chip ${String(cur)===String(x[0])?'on':''}" data-${attr}="${esc(x[0])}">${x.length>2?T(x[1],x[2]):x[1]}</button>`).join('');
+const bind=(root,attr,fn)=>$$('[data-'+attr+']',root).forEach(b=>b.onclick=e=>{e.stopPropagation();fn(b.dataset[attr.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())],b,e)});
+const tbl=(heads,rows,empty)=>`<div class="tw"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${heads.length}" class="muted">${empty||T('Nothing here yet','Пока пусто')}</td></tr>`}</tbody></table></div>`;
+function dl(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type||'text/plain'}));a.download=name;document.body.append(a);a.click();a.remove()}catch(e){}}
+/* ---- inline SVG charts (theme-aware via CSS vars in style attrs) ---- */
+const C=['var(--mal)','var(--gold)','var(--blue)','var(--violet)','var(--amber)','var(--red)','var(--mal3)'];
+function lineChart(o){/* o:{series:[{name,data:[...],color,dash,area}], labels:[...], w,h, yfmt, min,max, band:[y0,y1,color]} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=12,pt=14,pb=28;const all=o.series.flatMap(s=>s.data).filter(v=>v!=null);
+  let mn=o.min!=null?o.min:Math.min(...all),mx=o.max!=null?o.max:Math.max(...all);if(mx===mn)mx=mn+1;const pad=(mx-mn)*.08;if(o.min==null)mn-=pad;if(o.max==null)mx+=pad;
+  const n=Math.max(...o.series.map(s=>s.data.length));const X=i=>pl+(n<2?0:i*(W-pl-pr)/(n-1)),Y=v=>pt+(1-(v-mn)/(mx-mn))*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  if(o.band){s+=`<rect x="${pl}" y="${Y(o.band[1])}" width="${W-pl-pr}" height="${Math.max(0,Y(o.band[0])-Y(o.band[1]))}" style="fill:${o.band[2]||'var(--mal)'};opacity:.1"/>`}
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/8);(o.labels||[]).forEach((l,i)=>{if(i%step===0||i===n-1)s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  o.series.forEach((se,k)=>{const col=se.color||C[k%C.length];const pts=se.data.map((v,i)=>v==null?null:[X(i),Y(v)]).filter(Boolean);if(!pts.length)return;const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+    if(se.area)s+=`<path d="${d}L${pts[pts.length-1][0]} ${H-pb}L${pts[0][0]} ${H-pb}Z" style="fill:${col};opacity:.14"/>`;
+    s+=`<path d="${d}" fill="none" style="stroke:${col}" stroke-width="${se.width||2.2}" stroke-linejoin="round" stroke-linecap="round" ${se.dash?'stroke-dasharray="6 5"':''}/>`;
+    if(se.dots!==false&&pts.length<=40)pts.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${se.dots===true?3.2:2.4}" style="fill:${col}"><title>${esc((o.labels||[])[i]||'')} · ${yf(se.data[i])}</title></circle>`})});
+  return s+'</svg>'}
+function barChart(o){/* o:{labels,series:[{name,data,color}],stacked,w,h,yfmt,hl:index} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=10,pt=16,pb=30;const n=o.labels.length;const sums=o.labels.map((_,i)=>o.stacked?o.series.reduce((a,s)=>a+(s.data[i]||0),0):Math.max(...o.series.map(s=>s.data[i]||0)));
+  const mx=(o.max||Math.max(...sums,1))*1.08;const bw=(W-pl-pr)/n;const Y=v=>pt+(1-v/mx)*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let i=0;i<=4;i++){const v=mx*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/12);
+  o.labels.forEach((l,i)=>{const x0=pl+i*bw;let acc=0;const ns=o.series.length;
+    o.series.forEach((se,k)=>{const v=se.data[i]||0;const col=se.color||C[k%C.length];
+      if(o.stacked){const y=Y(acc+v),h=Y(acc)-y;s+=`<rect x="${x0+bw*.18}" y="${y}" width="${bw*.64}" height="${Math.max(0,h)}" rx="3" style="fill:${col}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`;acc+=v}
+      else{const w=bw*.7/ns;const y=Y(v);s+=`<rect x="${x0+bw*.15+k*w}" y="${y}" width="${Math.max(1,w-2)}" height="${Math.max(0,H-pb-y)}" rx="3" style="fill:${col};opacity:${o.hl!=null&&o.hl!==i?.45:1}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`}});
+    if(i%step===0)s+=`<text x="${x0+bw/2}" y="${H-10}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  return s+'</svg>'}
+function hbars(items,o){/* items:[[label,value,color?]] */o=o||{};const mx=o.max||Math.max(...items.map(x=>x[1]),1);const f=o.fmt||(v=>fmtN(v));
+  return items.map(x=>`<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:7px"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x[0]}</span><div class="prog" style="width:${o.w||110}px;flex:none"><i style="width:${x[1]/mx*100}%;${x[2]?'background:'+x[2]:''}"></i></div><span class="mono" style="width:${o.vw||48}px;text-align:right;flex:none">${f(x[1])}</span></div>`).join('')}
+function donut(parts,o){/* parts:[[label,value,color]] */o=o||{};const sz=o.size||140,r=sz/2-12,c=2*Math.PI*r;const tot=parts.reduce((a,p)=>a+p[1],0)||1;let off=0;
+  let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" style="flex:none"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="16"/>`;
+  parts.forEach((p,i)=>{const L=c*p[1]/tot;s+=`<circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:${p[2]||C[i%C.length]}" stroke-width="16" stroke-dasharray="${L} ${c-L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${sz/2} ${sz/2})"><title>${esc(p[0])}: ${fmtN(p[1])}</title></circle>`;off+=L});
+  s+=`<text x="${sz/2}" y="${sz/2+2}" text-anchor="middle" font-size="${o.fs||20}" font-weight="800" style="fill:var(--text)">${o.center!=null?o.center:fmtN(tot)}</text>${o.sub?`<text x="${sz/2}" y="${sz/2+18}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(o.sub)}</text>`:''}</svg>`;
+  const leg=`<div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;min-width:0">${parts.map((p,i)=>`<div style="display:flex;gap:8px;align-items:center"><i style="width:10px;height:10px;border-radius:3px;background:${p[2]||C[i%C.length]};flex:none"></i><span style="flex:1;min-width:0">${p[0]}</span><b class="mono">${o.fmt?o.fmt(p[1]):fmtN(p[1])}</b></div>`).join('')}</div>`;
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${s}${leg}</div>`}
+function gauge(p,o){o=o||{};const r=50,c=Math.PI*r;const col=o.color||(p>=90?'var(--red)':p>=75?'var(--amber)':'var(--mal)');
+  return `<svg viewBox="0 0 120 70" style="width:${o.w||150}px;max-width:100%"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:var(--line)" stroke-width="11" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${c*clamp(p,0,100)/100} ${c}"/><text x="60" y="58" text-anchor="middle" font-size="19" font-weight="800" style="fill:var(--text)">${o.label!=null?o.label:Math.round(p)+'%'}</text></svg>`}
+function spark(data,col){const W=110,H=30,mn=Math.min(...data),mx=Math.max(...data)||1;const d=data.map((v,i)=>(i?'L':'M')+(i*W/(data.length-1)).toFixed(1)+' '+(H-3-(v-mn)/((mx-mn)||1)*(H-6)).toFixed(1)).join('');return `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;flex:none"><path d="${d}" fill="none" style="stroke:${col||'var(--mal)'}" stroke-width="2"/></svg>`}
+
+//@demo Stratus Command|multi-cloud provisioning & governance|мультиоблако: заказ, контроль и бюджет
+const PROV={aws:{n:'AWS',c:'var(--amber)',il:6,reg:['us-gov-west-1','us-gov-east-1']},az:{n:'Azure',c:'var(--blue)',il:6,reg:['usgov-virginia','usgov-arizona']},gcp:{n:'Google Cloud',c:'var(--mal)',il:5,reg:['us-east4 (Assured)','us-central1 (Assured)']},oci:{n:'Oracle',c:'var(--red)',il:5,reg:['us-gov-ashburn-1','us-gov-phoenix-1']}};
+const ILS=[[2,'IL2 · Public','IL2 · Открытые'],[4,'IL4 · CUI','IL4 · ДСП'],[5,'IL5 · CUI / NSS','IL5 · ДСП / нац. безоп.'],[6,'IL6 · Secret','IL6 · Секретно']];
+const ILF={2:1,4:1.12,5:1.28,6:1.65};
+const CAT=[
+['vm','🖥','compute','Virtual machine fleet','Пул виртуальных машин','Hardened STIG images, autoscaling group','Образы по STIG, автомасштабирование',['aws','az','gcp','oci'],1800],
+['k8s','☸','compute','Managed Kubernetes','Управляемый Kubernetes','Private control plane, Iron Bank images','Закрытый контур, образы Iron Bank',['aws','az','gcp','oci'],4200],
+['db','🗄','data','PostgreSQL cluster','Кластер PostgreSQL','Multi-AZ, encrypted with customer keys','Мульти-AZ, шифрование своими ключами',['aws','az','gcp','oci'],2600],
+['obj','🪣','data','Object storage','Объектное хранилище','Versioned, WORM-capable buckets','Версионирование, режим WORM',['aws','az','gcp','oci'],420],
+['dw','📊','data','Analytics warehouse','Аналитическое хранилище','Columnar warehouse, row-level security','Колоночное хранилище, доступ по строкам',['aws','az','gcp'],6800],
+['ai','🧠','ai','GPU training pool','GPU-пул для обучения','8×H100 nodes, isolated network','Узлы 8×H100, изолированная сеть',['aws','az','gcp'],21500],
+['vdi','💻','workspace','Virtual desktops','Виртуальные рабочие места','CAC-enabled desktops for analysts','Рабочие столы со входом по смарт-карте',['aws','az','oci'],950],
+['net','🛰','network','Transit gateway & CNAP','Транзитный шлюз и CNAP','Boundary cloud access point, IDS','Точка доступа к облаку, IDS',['aws','az','gcp','oci'],3100],
+['siem','🛡','security','Log analytics (SIEM)','Журналы и SIEM','Central logging, 1-year hot retention','Центральные журналы, год в горячем хранении',['aws','az','gcp','oci'],2300],
+['edge','📦','edge','Tactical edge node','Тактический edge-узел','Ruggedised disconnected appliance','Защищённое автономное устройство',['aws','az','oci'],5400]];
+const CATS=[['all','All','Все'],['compute','Compute','Вычисления'],['data','Data','Данные'],['ai','AI / ML','ИИ'],['network','Network','Сеть'],['security','Security','Безопасность'],['workspace','Workspace','Рабочие места'],['edge','Edge','Edge']];
+const SIZES=[['s','Small','Малый',1],['m','Medium','Средний',2.2],['l','Large','Большой',4.6],['xl','X-Large','Очень большой',9]];
+const ORGS=[['army','Land Forces','Сухопутные войска'],['navy','Naval Command','ВМФ'],['air','Air Command','ВВС'],['cyber','Cyber Command','Киберкомандование'],['log','Logistics Agency','Агентство логистики']];
+const STAGES=[['sub','Submitted','Подана'],['sec','Security review','Проверка ИБ'],['bud','Budget approval','Бюджет'],['prov','Provisioning','Развёртывание'],['act','Active','Активна']];
+const MONTHS=[['Oct','Окт'],['Nov','Ноя'],['Dec','Дек'],['Jan','Янв'],['Feb','Фев'],['Mar','Мар'],['Apr','Апр'],['May','Май'],['Jun','Июн'],['Jul','Июл'],['Aug','Авг'],['Sep','Сен']];
+const CUR=6; /* current fiscal month index (Apr) */
+const RULES=[
+['enc','Encryption at rest with customer-managed keys','Шифрование данных своими ключами','high'],
+['pub','No public endpoints above IL2','Нет публичных адресов выше IL2','crit'],
+['tag','Mandatory tags: owner, mission, cost centre','Обязательные метки: владелец, миссия, МВЗ','low'],
+['ilp','Provider authorised for the classification level','Провайдер допущен к уровню секретности','crit'],
+['mfa','Phishing-resistant MFA for console access','Защищённый MFA для консоли','high'],
+['log','Audit logs shipped to central SIEM','Журналы аудита уходят в SIEM','med'],
+['idle','Idle resources stopped after 14 days','Простаивающие ресурсы останавливаются через 14 дней','low']];
+const SEV={crit:['Critical','Критично','bad'],high:['High','Высокая','bad'],med:['Medium','Средняя','warn'],low:['Low','Низкая','']};
+const money=(v,k)=>'$'+(k||v>=1e6?fmtN(v/1e6,v>=1e7?1:2)+'M':v>=1e4?fmtN(v/1e3,0)+'K':fmtN(v,0));
+const catOf=id=>CAT.find(c=>c[0]===id);
+const cost=(c,size,il)=>Math.round(catOf(c)[8]*SIZES.find(s=>s[0]===size)[3]*ILF[il]);
+const ilName=il=>{const x=ILS.find(i=>i[0]==il);return T(x[1],x[2])};
+const ilPill=il=>pill('IL'+il,il>=6?'bad':il>=5?'warn':il>=4?'gold':'ok');
+const orgName=o=>{const x=ORGS.find(i=>i[0]===o);return x?T(x[1],x[2]):o};
+const stName=s=>{const x=STAGES.find(i=>i[0]===s);return x?T(x[1],x[2]):s};
+let CF={cat:'all',prov:'all',q:''},RF='open',PF='open',AF='';
+const APP={slug:'jwcc',ver:2,icon:'☁',name:'Stratus Command',sub:['Joint cloud portfolio · Nordania','Объединённое облако · Нордания'],
+login:{user:'m.keller@cloud.mil.nd',pass:'demo-cac-2025',name:'Maj. Mira Keller',role:['Cloud portfolio lead','Руководитель облачного портфеля'],
+roles:[['lead','Portfolio lead (approver)','Руководитель портфеля (согласует)'],['eng','Mission engineer (requester)','Инженер миссии (заказчик)']],
+tag:['Smart-card sign-in · IL5 enclave','Вход по смарт-карте · контур IL5'],
+hero:['One catalog for four clouds — with guardrails built in','Один каталог на четыре облака — с встроенными правилами'],
+heroP:['Order hardened cloud resources from AWS, Azure, Google Cloud and Oracle, route them through security and budget approval, and watch spend and policy drift in one place.','Заказывайте защищённые облачные ресурсы AWS, Azure, Google Cloud и Oracle, проводите их через согласование ИБ и бюджета, следите за расходами и нарушениями правил в одном месте.'],
+feats:[['🧾','Self-service catalog','Каталог самообслуживания','10 blueprints, 4 providers','10 шаблонов, 4 провайдера'],['🔐','Classification levels','Уровни секретности','IL2 → IL6 with provider checks','IL2 → IL6 с проверкой провайдера'],['💸','Budget burn','Освоение бюджета','Plan vs actual vs forecast','План, факт и прогноз'],['📜','Policy as code','Правила как код','Violations, waivers, audit','Нарушения, исключения, аудит']]},
+how:[['Open the <b>Catalog</b>, pick a blueprint and request it — choose provider, size and classification level. The cost estimate updates live.','Откройте <b>Каталог</b>, выберите шаблон и закажите: провайдер, размер и уровень секретности. Стоимость считается на лету.'],
+['In <b>Approvals</b> move the request through security and budget review, then provision it — watch the Terraform log.','В <b>Согласованиях</b> проведите заявку через ИБ и бюджет и разверните — смотрите журнал Terraform.'],
+['Check <b>Costs</b> for budget burn, fix or waive <b>Policy violations</b>, and find every action in the <b>Audit log</b>.','Проверьте <b>Расходы</b> и освоение бюджета, исправьте или примите <b>Нарушения</b>, найдите все действия в <b>Журнале аудита</b>.']],
+facts:[['Tender','Тендер','Multi-cloud provisioning & governance (JWCC class)','Мультиоблако: заказ, контроль и бюджет (класс JWCC)'],['Year · budget','Год · бюджет','2025 · $9B'],['Client','Заказчик','Defense Cloud Office, Republic of Nordania (fictional)','Офис оборонного облака, Республика Нордания (вымышл.)'],['Stack','Стек','Terraform · K8s · IL5 · FinOps']],
+groups:[['op','Operate','Работа'],['gov','Govern','Контроль']],
+views:[['cat','🧾','Catalog','Каталог','op'],['req','✅','Approvals','Согласования','op'],['inv','🗂','Resources','Ресурсы','op'],['cost','💸','Costs & budget','Расходы и бюджет','gov'],['pol','⚠️','Policy violations','Нарушения правил','gov'],['aud','📜','Audit log','Журнал аудита','gov']],
+badge(id){if(id==='req'){const n=S.reqs.filter(r=>['sub','sec','bud'].includes(r.st)).length;return[n,0]}if(id==='pol'){const n=S.viol.filter(v=>v.st==='open').length;return[n,1]}return null},
+head(){const b=burn();return `${pill(T('FY26 burn ','Освоение FY26 ')+pct(b.pct,0),b.pct>90?'bad':b.pct>75?'warn':'ok')}<select class="input" id="roleSw" style="width:auto;min-height:32px;padding:4px 10px;font-size:12.5px">${APP.login.roles.map(r=>`<option value="${r[0]}" ${S.user.rk===r[0]?'selected':''}>${T(r[1],r[2]).split(' (')[0]}</option>`).join('')}</select>`},
+bindHead(h){$('#roleSw',h).onchange=e=>{const r=APP.login.roles.find(x=>x[0]===e.target.value);S.user.rk=r[0];S.user.role=[r[1],r[2]];audit('Role switched to '+r[1],'Роль: '+r[2],'auth');save();rerender()}},
+seed(){const R=rng(42);const reqs=[],res=[],viol=[];let n=1040;
+const names=['jadc2-fusion','logi-forecast','pers-records','sat-imagery','cyber-range','maint-predict','med-readiness','supply-ledger','training-sim','c2-portal','intel-lake','fleet-telemetry'];
+names.forEach((nm,i)=>{const c=CAT[i%CAT.length];const pv=c[7][Math.floor(R()*c[7].length)];const il=[2,4,5,5,4,6][i%6];const il2=il>PROV[pv].il?PROV[pv].il:il;const sz=SIZES[Math.floor(R()*3)][0];
+res.push({id:'RS-'+(n+i),name:nm,cat:c[0],prov:pv,reg:PROV[pv].reg[i%2],il:il2,size:sz,org:ORGS[i%5][0],mo:cost(c[0],sz,il2),st:i===7?'stopped':'running',created:addDays(today(),-40-i*9),tags:i%4!==3})});
+const rq=[['geo-int-lake','dw','aws',6,'l','air','sec'],['coalition-chat','vm','gcp',4,'m','navy','sub'],['drone-ml-train','ai','az',5,'l','cyber','bud'],['port-logistics','db','oci',4,'m','log','sub'],['red-team-range','k8s','aws',5,'m','cyber','sec'],['archive-worm','obj','az',4,'s','army','act']];
+rq.forEach((q,i)=>reqs.push({id:'RQ-'+(2210+i),name:q[0],cat:q[1],prov:q[2],il:q[3],size:q[4],org:q[5],reg:PROV[q[2]].reg[0],mo:cost(q[1],q[4],q[3]),st:q[6],by:['Lt. A. Varga','Capt. J. Moreno','S. Lindqvist','CW2 P. Osei','Lt. R. Haddad','Sgt. E. Novak'][i],just:['Fused imagery for air ops planning','Coalition messaging enclave','Model training for ISR drones','Port throughput ledger','Exercise range for red team','Records retention vault'][i],t:Date.now()-(i+1)*36e5*7,hist:[]}));
+const vv=[['RS-1041','pub','Public load balancer on IL5 Kubernetes ingress','Публичный балансировщик у Kubernetes IL5'],['RS-1043','tag','Missing cost-centre tag','Нет метки МВЗ'],['RS-1046','enc','Disk encrypted with provider key, not CMK','Диск зашифрован ключом провайдера, а не своим'],['RS-1047','idle','Stopped 21 days, still billed for storage','Остановлен 21 день, хранение оплачивается'],['RS-1049','log','Flow logs not forwarded to SIEM','Сетевые журналы не уходят в SIEM'],['RS-1050','mfa','Break-glass account without hardware MFA','Аварийная учётка без аппаратного MFA'],['RS-1051','tag','Missing owner tag','Нет метки владельца']];
+vv.forEach((v,i)=>viol.push({id:'PV-'+(510+i),res:v[0],rule:v[1],en:v[2],ru:v[3],st:'open',t:Date.now()-(i+2)*864e5}));
+const months=[2.31,2.58,2.74,2.66,2.92,3.15,3.38].map(x=>x*1e6);
+const audit=[];const ev=[['Policy pack v3.2 published','Опубликован набор правил v3.2','policy'],['RQ-2215 provisioned on Azure','RQ-2215 развёрнута в Azure','prov'],['Budget threshold 75% reached','Достигнут порог бюджета 75%','cost'],['RQ-2212 approved by security','RQ-2212 одобрена ИБ','appr']];
+ev.forEach((e,i)=>audit.push({t:Date.now()-(i+1)*5e6,en:e[0],ru:e[1],k:e[2],u:i%2?'Maj. Mira Keller':'policy-bot'}));
+return {reqs,res,viol,months,budget:36e6,thr:[75,90,100],rules:Object.fromEntries(RULES.map(r=>[r[0],true])),waived:[],audit,seq:n+names.length,rseq:2216}},
+R:{}
+};
+function burn(){const spent=S.months.reduce((a,b)=>a+b,0);const run=S.res.filter(r=>r.st==='running').reduce((a,r)=>a+r.mo,0);const last=S.months[S.months.length-1];const fc=spent+Array.from({length:12-S.months.length},(_,i)=>last*(1+.02*(i+1))+run*.15).reduce((a,b)=>a+b,0);return{spent,pct:spent/S.budget*100,fc,run}}
+function provPill(p){return `<span class="tag" style="border-color:${PROV[p].c};color:${PROV[p].c}">${PROV[p].n}</span>`}
+function checkPolicy(r){const out=[];if(S.rules.ilp&&r.il>PROV[r.prov].il)out.push('ilp');if(S.rules.pub&&r.pub&&r.il>2)out.push('pub');if(S.rules.tag&&!r.tags)out.push('tag');if(S.rules.enc&&r.il>=4&&!r.cmk)out.push('enc');return out}
+
+
+APP.R.cat=el=>{
+const list=CAT.filter(c=>(CF.cat==='all'||c[2]===CF.cat)&&(CF.prov==='all'||c[7].includes(CF.prov))&&(!CF.q||(c[3]+' '+c[4]).toLowerCase().includes(CF.q.toLowerCase())));
+el.innerHTML=`<div class="card"><div class="row" style="margin-bottom:12px"><input class="input" id="cq" style="max-width:280px" placeholder="${T('Search blueprints…','Поиск шаблонов…')}" value="${esc(CF.q)}"><div class="sp"></div><div class="chips">${chipsH([['all','All providers','Все провайдеры'],...Object.keys(PROV).map(k=>[k,PROV[k].n])],CF.prov,'cp')}</div></div>
+<div class="chips">${chipsH(CATS,CF.cat,'cc')}</div></div>
+<div class="catg mt">${list.map(c=>`<div class="card cat"><div class="row"><span class="cic">${c[1]}</span><div class="grow" style="min-width:0"><b>${T(c[3],c[4])}</b><div class="muted" style="font-size:12.5px">${T(c[5],c[6])}</div></div></div>
+<div class="row" style="margin:10px 0">${c[7].map(provPill).join('')}</div>
+<div class="row"><span class="muted" style="font-size:12px">${T('from','от')} <b class="mono" style="color:var(--text)">${money(c[8])}</b>${T('/mo','/мес')}</span><div class="sp"></div><button class="btn sm pri" data-order="${c[0]}">${T('Request','Заказать')}</button></div></div>`).join('')||`<div class="card empty">${T('No blueprints match the filters','Нет шаблонов под фильтры')}</div>`}</div>
+<div class="card mt"><h3>${T('Provider authorisation matrix','Допуски провайдеров')}</h3>${tbl([T('Provider','Провайдер'),...ILS.map(i=>'IL'+i[0]),T('Regions','Регионы')],Object.keys(PROV).map(k=>`<tr><td>${provPill(k)}</td>${ILS.map(i=>`<td>${i[0]<=PROV[k].il?'<span class="ok-t">✔</span>':'<span class="bad-t">—</span>'}</td>`).join('')}<td class="mono" style="font-size:12px">${PROV[k].reg.join(', ')}</td></tr>`))}</div>`;
+$('#cq').oninput=e=>{CF.q=e.target.value;const p=e.target.selectionStart;APP.R.cat(el);const i=$('#cq');i.focus();i.setSelectionRange(p,p)};
+bind(el,'cp',v=>{CF.prov=v;APP.R.cat(el)});bind(el,'cc',v=>{CF.cat=v;APP.R.cat(el)});bind(el,'order',orderModal);
+};
+function orderModal(cid){const c=catOf(cid);const pv=CF.prov!=='all'&&c[7].includes(CF.prov)?CF.prov:c[7][0];
+modal(c[1]+' '+T(c[3],c[4]),`<div class="fgrid">
+${inp('oName',T('Workload name','Имя нагрузки'),'','','text','placeholder="e.g. mission-analytics"')}
+${sel('oOrg',T('Mission owner','Владелец миссии'),ORGS,ORGS[0][0])}
+${sel('oProv',T('Provider','Провайдер'),c[7].map(k=>[k,PROV[k].n]),pv)}
+${sel('oReg',T('Region','Регион'),PROV[pv].reg.map(r=>[r,r]),PROV[pv].reg[0])}
+${sel('oIl',T('Classification level','Уровень секретности'),ILS,4)}
+${sel('oSize',T('Size','Размер'),SIZES,'m')}
+${fld('oJust',T('Mission justification','Обоснование'),'<textarea class="input" id="oJust" rows="2"></textarea>','full')}
+<div class="f full"><button class="sw" id="oPub"><span>${T('Public endpoint','Публичный адрес')}</span><i></i></button><button class="sw on" id="oCmk" style="margin-top:8px"><span>${T('Customer-managed keys (CMK)','Свои ключи шифрования (CMK)')}</span><i></i></button><button class="sw on" id="oTag" style="margin-top:8px"><span>${T('Apply mandatory tags','Проставить обязательные метки')}</span><i></i></button></div>
+</div><div class="card mt" style="background:var(--bg2)"><div class="row"><div><div class="muted" style="font-size:12px">${T('Estimated monthly cost','Оценка в месяц')}</div><div class="big mono" id="oCost"></div></div><div class="sp"></div><div id="oChk" style="text-align:right;font-size:12.5px"></div></div></div>
+<div class="row mt"><div class="sp"></div><button class="btn" id="oCancel">${T('Cancel','Отмена')}</button><button class="btn pri" id="oSend">${T('Submit request','Отправить заявку')}</button></div>`,box=>{
+const sw=id=>$('#'+id,box).classList.contains('on');
+$$('.sw',box).forEach(b=>b.onclick=()=>{b.classList.toggle('on');upd()});
+const draft=()=>({cat:cid,prov:$('#oProv',box).value,il:+$('#oIl',box).value,size:$('#oSize',box).value,pub:sw('oPub'),cmk:sw('oCmk'),tags:sw('oTag')});
+function upd(){const d=draft();$('#oCost',box).textContent=money(cost(cid,d.size,d.il));const v=checkPolicy(d);
+$('#oChk',box).innerHTML=v.length?v.map(k=>{const r=RULES.find(x=>x[0]===k);return `<div class="${SEV[r[3]][2]}-t">⚠ ${T(r[1],r[2])}</div>`}).join(''):`<span class="ok-t">✔ ${T('Passes all guardrails','Проходит все правила')}</span>`}
+$('#oProv',box).onchange=e=>{$('#oReg',box).innerHTML=PROV[e.target.value].reg.map(r=>`<option>${r}</option>`).join('');upd()};
+['oIl','oSize'].forEach(i=>$('#'+i,box).onchange=upd);upd();
+$('#oCancel',box).onclick=closeModal;
+$('#oSend',box).onclick=()=>{if(!validate([['oName',v=>/^[a-z][a-z0-9-]{2,30}$/.test(v),['Lowercase letters, digits and dashes, 3–31 chars','Строчные буквы, цифры и дефис, 3–31 символ']],['oJust',v=>v.length>=10,['Explain the mission need (10+ chars)','Опишите потребность миссии (от 10 символов)']]],box))return;
+const d=draft();const v=checkPolicy(d);if(v.includes('ilp')){toast(T('Blocked: ','Заблокировано: ')+PROV[d.prov].n+T(' is not authorised for IL',' не допущен к IL')+d.il,'bad');return}
+const r={id:'RQ-'+(++S.rseq),name:$('#oName',box).value.trim(),...d,org:$('#oOrg',box).value,reg:$('#oReg',box).value,mo:cost(cid,d.size,d.il),st:'sub',by:S.user.name,just:$('#oJust',box).value.trim(),t:Date.now(),flags:v,hist:[]};
+S.reqs.unshift(r);audit(`${r.id} submitted: ${r.name} on ${PROV[r.prov].n} IL${r.il}`,`${r.id} подана: ${r.name}, ${PROV[r.prov].n} IL${r.il}`,'req');save();closeModal();
+toast(`${r.id} ${T('submitted for approval','отправлена на согласование')}`+(v.length?T(' · '+v.length+' policy warnings',' · предупреждений: '+v.length):''),v.length?'warn':'ok');go('req')};
+})}
+
+
+APP.R.req=el=>{
+const lead=S.user.rk!=='eng';
+const rows=S.reqs.filter(r=>RF==='all'||(RF==='open'?['sub','sec','bud','prov'].includes(r.st):r.st===RF));
+el.innerHTML=`${!lead?`<div class="alert warn" style="margin-bottom:14px"><span>ℹ</span><div>${T('You are signed in as a mission engineer: you can submit and withdraw requests. Switch role to <b>Portfolio lead</b> in the header to approve.','Вы вошли как инженер миссии: можно подавать и отзывать заявки. Чтобы согласовывать, переключите роль на <b>Руководителя портфеля</b> в шапке.')}</div></div>`:''}
+<div class="kpis">${kpi(T('Awaiting security','Ждут ИБ'),S.reqs.filter(r=>r.st==='sub'||r.st==='sec').length)}${kpi(T('Awaiting budget','Ждут бюджета'),S.reqs.filter(r=>r.st==='bud').length)}${kpi(T('Provisioned this FY','Развёрнуто за FY'),S.reqs.filter(r=>r.st==='act').length)}${kpi(T('Pipeline $/mo','Заявки, $/мес'),money(S.reqs.filter(r=>!['act','rej','wd'].includes(r.st)).reduce((a,r)=>a+r.mo,0)))}</div>
+<div class="card"><div class="row" style="margin-bottom:12px"><div class="chips">${chipsH([['open','Open','Открытые'],['act','Active','Активные'],['rej','Rejected','Отклонённые'],['all','All','Все']],RF,'rf')}</div></div>
+<div class="stack">${rows.map(r=>{const si=STAGES.findIndex(s=>s[0]===r.st);const c=catOf(r.cat);
+return `<div class="card rq" style="background:var(--bg2)"><div class="row"><b class="mono">${r.id}</b><b>${esc(r.name)}</b>${provPill(r.prov)}${ilPill(r.il)}${(r.flags||[]).length?pill('⚠ '+r.flags.length,'warn'):''}<div class="sp"></div>${r.st==='rej'?pill(T('Rejected','Отклонена'),'bad'):r.st==='wd'?pill(T('Withdrawn','Отозвана')):pill(stName(r.st),r.st==='act'?'ok':'gold')}</div>
+<div class="muted" style="font-size:12.5px;margin:6px 0 10px">${c[1]} ${T(c[3],c[4])} · ${T(SIZES.find(s=>s[0]===r.size)[1],SIZES.find(s=>s[0]===r.size)[2])} · ${orgName(r.org)} · ${esc(r.by)} · <span class="mono">${money(r.mo)}${T('/mo','/мес')}</span><br>${esc(r.just)}</div>
+${r.st!=='rej'&&r.st!=='wd'?`<div class="steps">${STAGES.map((s,i)=>`<div class="step ${i<si||r.st==='act'?'ok':i===si?'cur':''}"><div class="dot">${i<si||r.st==='act'?'✓':i+1}</div><span>${T(s[1],s[2])}</span></div>`).join('')}</div>`:''}
+${r.st==='prov'?`<div class="log" id="tf-${r.id}"></div>`:''}
+<div class="row">${lead&&['sub','sec','bud'].includes(r.st)?`<button class="btn sm pri" data-ap="${r.id}">✓ ${r.st==='bud'?T('Approve budget','Одобрить бюджет'):T('Approve security','Одобрить ИБ')}</button><button class="btn sm danger" data-rj="${r.id}">${T('Reject','Отклонить')}</button>`:''}
+${!lead&&['sub','sec'].includes(r.st)?`<button class="btn sm" data-wd="${r.id}">${T('Withdraw','Отозвать')}</button>`:''}
+${r.note?`<span class="muted" style="font-size:12px">“${esc(r.note)}”</span>`:''}</div></div>`}).join('')||`<div class="empty">${T('No requests in this filter','Нет заявок в этом фильтре')}</div>`}</div></div>`;
+bind(el,'rf',v=>{RF=v;APP.R.req(el)});
+bind(el,'ap',id=>{const r=S.reqs.find(x=>x.id===id);
+if(r.st==='sub'||r.st==='sec'){if((r.flags||[]).includes('pub')&&S.rules.pub){toast(T('Security cannot approve: public endpoint above IL2. Reject or ask the requester to resubmit.','ИБ не может одобрить: публичный адрес выше IL2. Отклоните или попросите переподать.'),'bad');return}
+r.st='bud';audit(`${id} approved by security`,`${id} одобрена ИБ`,'appr');toast(T('Security approved — now budget','ИБ одобрено — дальше бюджет'),'ok')}
+else if(r.st==='bud'){const b=burn();if((b.spent+r.mo*(12-CUR))/S.budget*100>100){toast(T('Warning: this pushes the FY forecast above budget','Внимание: прогноз FY превысит бюджет'),'warn')}r.st='prov';audit(`${id} budget approved (${money(r.mo)}/mo)`,`${id}: бюджет одобрен (${money(r.mo)}/мес)`,'appr');save();APP.R.req(el);provision(r,el);return}
+save();rerender()});
+bind(el,'rj',id=>{modal(T('Reject ','Отклонить ')+id,`${fld('rjWhy',T('Reason (shown to requester)','Причина (увидит заказчик)'),'<textarea class="input" id="rjWhy" rows="3"></textarea>')}<div class="row mt"><div class="sp"></div><button class="btn danger" id="rjGo">${T('Reject request','Отклонить заявку')}</button></div>`,box=>{
+$('#rjGo',box).onclick=()=>{if(!validate([['rjWhy',v=>v.length>=5,['Give a reason','Укажите причину']]],box))return;const r=S.reqs.find(x=>x.id===id);r.st='rej';r.note=$('#rjWhy',box).value.trim();audit(`${id} rejected: ${r.note}`,`${id} отклонена: ${r.note}`,'appr');save();closeModal();rerender();toast(id+T(' rejected',' отклонена'),'warn')}})});
+bind(el,'wd',id=>{const r=S.reqs.find(x=>x.id===id);r.st='wd';audit(`${id} withdrawn`,`${id} отозвана`,'req');save();rerender()});
+S.reqs.filter(r=>r.st==='prov').forEach(r=>{if(!provRunning[r.id])provision(r,el)});
+};
+const provRunning={};
+async function provision(r,el){provRunning[r.id]=1;const lines=[`$ terraform init -backend-config=${r.prov}-il${r.il}`,`Initializing provider plugins… ${PROV[r.prov].n} gov ✓`,`$ terraform plan -var-file=${r.name}.tfvars`,`Plan: ${4+r.il} to add, 0 to change, 0 to destroy.`,`policy-check: ${Object.values(S.rules).filter(Boolean).length} guardrails evaluated ✓`,`$ terraform apply -auto-approve`,`module.${r.cat}.${r.name}: Creating…`,`module.${r.cat}.${r.name}: Creation complete after 41s`,`tags: owner, mission=${r.org}, cost_centre=CC-${r.org.toUpperCase()}`,`Apply complete! Resources: ${4+r.il} added.`];
+for(const l of lines){await wait(380);const box=document.getElementById('tf-'+r.id);if(box){const d=document.createElement('div');d.innerHTML=`<span class="t">${fmtT(Date.now())}</span> ${esc(l)}`;box.append(d);box.scrollTop=1e4}}
+await wait(300);const cur=S.reqs.find(x=>x.id===r.id);if(!cur||cur.st!=='prov'){delete provRunning[r.id];return}
+cur.st='act';const res={id:'RS-'+(++S.seq),name:r.name,cat:r.cat,prov:r.prov,reg:r.reg,il:r.il,size:r.size,org:r.org,mo:r.mo,st:'running',created:today(),tags:r.tags!==false};S.res.unshift(res);
+(r.flags||[]).filter(f=>f!=='ilp').forEach(f=>S.viol.unshift({id:'PV-'+(600+S.viol.length),res:res.id,rule:f,en:'Detected at provisioning',ru:'Выявлено при развёртывании',st:'open',t:Date.now()}));
+audit(`${r.id} provisioned as ${res.id} on ${PROV[r.prov].n}`,`${r.id} развёрнута как ${res.id} в ${PROV[r.prov].n}`,'prov');save();delete provRunning[r.id];
+toast(`✔ ${res.id} ${T('is live on','запущен в')} ${PROV[r.prov].n}`,'ok');if(S.view==='req'||S.view==='inv')rerender();else renderShell()}
+
+
+let IF='all';
+APP.R.inv=el=>{const rows=S.res.filter(r=>IF==='all'||r.prov===IF);const run=rows.filter(r=>r.st==='running');
+el.innerHTML=`<div class="kpis">${kpi(T('Resources','Ресурсы'),rows.length)}${kpi(T('Running','Работают'),run.length)}${kpi(T('Run-rate / month','Расход в месяц'),money(run.reduce((a,r)=>a+r.mo,0)))}${kpi(T('Untagged','Без меток'),rows.filter(r=>!r.tags).length,null,rows.some(r=>!r.tags)?'warn-t':'')}</div>
+<div class="card"><div class="row" style="margin-bottom:12px"><div class="chips">${chipsH([['all','All','Все'],...Object.keys(PROV).map(k=>[k,PROV[k].n])],IF,'if')}</div></div>
+${tbl([T('ID','ID'),T('Name','Имя'),T('Provider · region','Провайдер · регион'),T('Level','Уровень'),T('Owner','Владелец'),T('$/month','$/мес'),T('Status','Статус'),''],rows.map(r=>`<tr><td class="mono">${r.id}</td><td><b>${esc(r.name)}</b><div class="muted" style="font-size:11.5px">${catOf(r.cat)[1]} ${T(catOf(r.cat)[3],catOf(r.cat)[4])}</div></td><td>${provPill(r.prov)} <span class="mono" style="font-size:11.5px">${r.reg}</span></td><td>${ilPill(r.il)}</td><td>${orgName(r.org)}${r.tags?'':' '+pill(T('no tags','без меток'),'warn')}</td><td class="mono">${money(r.mo)}</td><td>${r.st==='running'?pill('● '+T('Running','Работает'),'ok'):pill('■ '+T('Stopped','Остановлен'))}</td>
+<td><div class="row" style="flex-wrap:nowrap">${r.st==='running'?`<button class="btn xs" data-stop="${r.id}">${T('Stop','Стоп')}</button>`:`<button class="btn xs" data-start="${r.id}">${T('Start','Запуск')}</button>`}${r.tags?'':`<button class="btn xs" data-tagr="${r.id}">${T('Tag','Метки')}</button>`}<button class="btn xs danger" data-dec="${r.id}">${T('Decommission','Удалить')}</button></div></td></tr>`))}</div>`;
+bind(el,'if',v=>{IF=v;APP.R.inv(el)});
+const R=id=>S.res.find(x=>x.id===id);
+bind(el,'stop',id=>{R(id).st='stopped';audit(`${id} stopped`,`${id} остановлен`,'ops');save();rerender();toast(id+T(' stopped — compute billing paused',' остановлен — оплата вычислений на паузе'))});
+bind(el,'start',id=>{R(id).st='running';audit(`${id} started`,`${id} запущен`,'ops');save();rerender()});
+bind(el,'tagr',id=>{R(id).tags=true;S.viol.filter(v=>v.res===id&&v.rule==='tag'&&v.st==='open').forEach(v=>{v.st='fixed';v.fx=Date.now()});audit(`${id} tagged (owner, mission, cost centre)`,`${id}: метки проставлены`,'policy');save();rerender();toast(T('Tags applied, violation closed','Метки проставлены, нарушение закрыто'),'ok')});
+bind(el,'dec',id=>{modal(T('Decommission ','Удалить ')+id,`<p>${T('This destroys the resource with <span class="mono">terraform destroy</span>. Snapshots are kept 30 days.','Ресурс будет уничтожен через <span class="mono">terraform destroy</span>. Снимки хранятся 30 дней.')}</p>${inp('decC',T('Type the resource name to confirm','Введите имя ресурса для подтверждения'),'')}<div class="row mt"><div class="sp"></div><button class="btn danger" id="decGo">${T('Decommission','Удалить')}</button></div>`,box=>{
+$('#decGo',box).onclick=()=>{const r=R(id);if(!validate([['decC',v=>v===r.name,['Name does not match: ','Имя не совпадает: '].map(x=>x+r.name)]],box))return;S.res=S.res.filter(x=>x.id!==id);S.viol.filter(v=>v.res===id&&v.st==='open').forEach(v=>{v.st='fixed';v.fx=Date.now()});audit(`${id} decommissioned`,`${id} удалён`,'ops');save();closeModal();rerender();toast(id+T(' decommissioned',' удалён'),'warn')}})});
+};
+
+
+APP.R.cost=el=>{const b=burn();const L=MONTHS.map(m=>T(m[0],m[1]));const cum=[];S.months.reduce((a,v)=>{cum.push(a+v);return a+v},0);
+const fc=cum.slice();let acc=cum[cum.length-1];const last=S.months[S.months.length-1];for(let i=S.months.length;i<12;i++){acc+=last*(1+.02*(i-S.months.length+1))+b.run*.15;fc.push(acc)}
+const fcLine=fc.map((v,i)=>i<S.months.length-1?null:v);const plan=MONTHS.map((_,i)=>S.budget*(i+1)/12);
+const byProv=Object.keys(PROV).map(k=>[PROV[k].n,S.res.filter(r=>r.prov===k&&r.st==='running').reduce((a,r)=>a+r.mo,0),PROV[k].c]);
+const byOrg=ORGS.map(o=>[T(o[1],o[2]),S.res.filter(r=>r.org===o[0]&&r.st==='running').reduce((a,r)=>a+r.mo,0)]).sort((a,c)=>c[1]-a[1]);
+const fpct=b.fc/S.budget*100;const hit=S.thr.filter(t=>b.pct>=t);
+el.innerHTML=`<div class="kpis">${kpi(T('FY26 budget','Бюджет FY26'),money(S.budget,1))}${kpi(T('Spent to date','Освоено'),money(b.spent,1),pct(b.pct,1)+T(' of budget',' бюджета'))}${kpi(T('Year-end forecast','Прогноз на конец года'),money(b.fc,1),pct(fpct,0)+T(' of budget',' бюджета'),fpct>100?'bad-t':fpct>95?'warn-t':'ok-t')}${kpi(T('Run-rate (resources)','Расход ресурсов'),money(b.run)+T('/mo','/мес'))}</div>
+${fpct>100?`<div class="alert" style="margin-bottom:14px"><span>⛔</span><div><b>${T('Forecast exceeds budget by ','Прогноз превышает бюджет на ')+money(b.fc-S.budget,1)}</b>${T('Stop idle resources or decommission low-priority workloads in Resources.','Остановите простаивающие ресурсы или удалите неприоритетные нагрузки в разделе «Ресурсы».')}</div></div>`:hit.length?`<div class="alert warn" style="margin-bottom:14px"><span>⚠</span><div><b>${T('Threshold reached: ','Порог достигнут: ')+hit[hit.length-1]}%</b>${T('Budget owners have been notified.','Владельцы бюджета уведомлены.')}</div></div>`:''}
+<div class="grid2"><div class="card"><h3>${T('Budget burn — cumulative','Освоение бюджета — нарастающим итогом')}</h3><div class="chart">${lineChart({labels:L,yfmt:v=>money(v,1),min:0,series:[{name:'plan',data:plan,color:'var(--dim)',dash:1,dots:false},{name:'fc',data:fcLine,color:'var(--gold)',dash:1},{name:'act',data:cum.concat(Array(12-cum.length).fill(null)),color:'var(--mal)',area:1,dots:true}],hlines:[{v:S.budget,label:T('Budget','Бюджет'),color:'var(--red)'}],max:Math.max(S.budget,b.fc)*1.05})}</div>
+<div class="legend"><span><i style="background:var(--mal)"></i>${T('Actual','Факт')}</span><span><i style="background:var(--gold)"></i>${T('Forecast','Прогноз')}</span><span><i style="background:var(--dim)"></i>${T('Linear plan','Линейный план')}</span><span><i style="background:var(--red)"></i>${T('Budget ceiling','Потолок бюджета')}</span></div></div>
+<div class="card"><h3>${T('Burn gauge','Индикатор освоения')}</h3><div style="text-align:center">${gauge(b.pct,{w:200})}<div class="muted" style="font-size:12.5px">${T('Month','Месяц')} ${CUR+1}/12 · ${T('plan','план')} ${pct((CUR+1)/12*100,0)}</div></div>
+<h3 class="mt">${T('Alert thresholds','Пороги оповещений')}</h3><div class="row">${S.thr.map((t,i)=>`<input class="input mono thr" data-i="${i}" type="number" min="10" max="150" value="${t}" style="width:76px">`).join('')}<button class="btn sm" id="thrSave">${T('Save','Сохранить')}</button></div>
+<div class="f mt"><label for="bud">${T('Annual budget, $M','Годовой бюджет, $M')}</label><div class="row"><input class="input mono" id="bud" type="number" step="0.5" value="${S.budget/1e6}" style="width:110px"><button class="btn sm" id="budSave">${T('Update','Изменить')}</button></div><div class="err"></div></div></div></div>
+<div class="grid2e mt"><div class="card"><h3>${T('Monthly spend by month','Расход по месяцам')}</h3><div class="chart">${barChart({labels:L.slice(0,S.months.length),series:[{name:'spend',data:S.months,color:'var(--mal)'}],yfmt:v=>money(v,1),hl:S.months.length-1})}</div></div>
+<div class="card"><h3>${T('Run-rate by provider','Расход по провайдерам')}</h3>${donut(byProv,{fmt:v=>money(v),center:money(b.run),sub:T('per month','в месяц'),fs:15})}<h3 class="mt">${T('By mission owner','По владельцам')}</h3>${hbars(byOrg,{fmt:v=>money(v),vw:60})}</div></div>`;
+$('#thrSave').onclick=()=>{const v=$$('.thr',el).map(i=>+i.value);if(v.some(x=>!(x>=10&&x<=150))||v[0]>=v[1]||v[1]>=v[2]){toast(T('Thresholds must be ascending, 10–150%','Пороги по возрастанию, 10–150%'),'bad');return}S.thr=v;audit('Budget thresholds set to '+v.join('/')+'%','Пороги бюджета: '+v.join('/')+'%','cost');save();rerender();toast(T('Thresholds saved','Пороги сохранены'),'ok')};
+$('#budSave').onclick=()=>{if(!validate([['bud',v=>+v>=5&&+v<=500,['Between 5 and 500','От 5 до 500']]],el))return;S.budget=+$('#bud').value*1e6;audit('Annual budget set to '+money(S.budget,1),'Годовой бюджет: '+money(S.budget,1),'cost');save();rerender();toast(T('Budget updated','Бюджет обновлён'),'ok')};
+};
+
+
+APP.R.pol=el=>{const rows=S.viol.filter(v=>PF==='all'||v.st===PF);const open=S.viol.filter(v=>v.st==='open');
+const sevC=k=>open.filter(v=>RULES.find(r=>r[0]===v.rule)[3]===k).length;
+el.innerHTML=`<div class="kpis">${kpi(T('Open violations','Открытые нарушения'),open.length,null,open.length?'bad-t':'ok-t')}${kpi(T('Critical','Критичные'),sevC('crit'),null,sevC('crit')?'bad-t':'')}${kpi(T('Fixed','Исправлено'),S.viol.filter(v=>v.st==='fixed').length)}${kpi(T('Compliance score','Соответствие'),pct(100-open.length/Math.max(1,S.res.length)*100/1.6,0))}</div>
+<div class="grid2"><div class="card"><div class="row" style="margin-bottom:12px"><div class="chips">${chipsH([['open','Open','Открытые'],['fixed','Fixed','Исправленные'],['waived','Waived','Исключения'],['all','All','Все']],PF,'pf')}</div><div class="sp"></div><button class="btn sm" id="scan">↻ ${T('Run scan','Сканировать')}</button></div>
+<div class="stack">${rows.map(v=>{const r=RULES.find(x=>x[0]===v.rule);const s=SEV[r[3]];const res=S.res.find(x=>x.id===v.res);
+return `<div class="li" style="align-items:flex-start"><span class="risk" style="background:color-mix(in srgb,var(--${s[2]==='bad'?'red':s[2]==='warn'?'amber':'line2'}) 22%,transparent)">${T(s[0],s[1]).slice(0,4)}</span><div class="grow"><b>${T(r[1],r[2])}</b><small>${v.id} · <span class="mono">${v.res}</span>${res?' · '+esc(res.name)+' · '+PROV[res.prov].n:''} · ${fmtD(v.t)}</small><small>${esc(T(v.en,v.ru))}${v.why?' · '+T('waiver: ','исключение: ')+esc(v.why):''}</small></div>
+${v.st==='open'?`<div class="row" style="flex:none"><button class="btn xs pri" data-fix="${v.id}">${T('Remediate','Исправить')}</button><button class="btn xs" data-wv="${v.id}">${T('Waive','Исключение')}</button></div>`:pill(v.st==='fixed'?T('Fixed','Исправлено'):T('Waived','Исключение'),v.st==='fixed'?'ok':'gold')}</div>`}).join('')||`<div class="empty">✔ ${T('No violations in this filter','Нарушений нет')}</div>`}</div></div>
+<div class="card"><h3>${T('Guardrails (policy as code)','Правила (policy as code)')}</h3>${RULES.map(r=>`<button class="sw ${S.rules[r[0]]?'on':''}" data-rule="${r[0]}" style="margin-bottom:10px"><span style="font-size:13px">${T(r[1],r[2])} ${pill(T(SEV[r[3]][0],SEV[r[3]][1]),SEV[r[3]][2])}</span><i></i></button>`).join('')}
+<div class="muted" style="font-size:12px">${T('Disabled guardrails are skipped on new requests and scans. Changes are audited.','Выключенные правила не проверяются в новых заявках и сканах. Изменения пишутся в аудит.')}</div></div></div>`;
+bind(el,'pf',v=>{PF=v;APP.R.pol(el)});
+bind(el,'rule',k=>{S.rules[k]=!S.rules[k];const r=RULES.find(x=>x[0]===k);audit(`Guardrail ${S.rules[k]?'enabled':'disabled'}: ${r[1]}`,`Правило ${S.rules[k]?'включено':'выключено'}: ${r[2]}`,'policy');save();APP.R.pol(el)});
+bind(el,'fix',id=>{const v=S.viol.find(x=>x.id===id);v.st='fixed';v.fx=Date.now();const res=S.res.find(x=>x.id===v.res);if(res&&v.rule==='tag')res.tags=true;if(res&&v.rule==='idle')res.st='stopped';audit(`${id} remediated automatically (${v.rule})`,`${id} исправлено автоматически (${v.rule})`,'policy');save();rerender();toast(T('Remediation applied via pipeline','Исправление применено через конвейер'),'ok')});
+bind(el,'wv',id=>{modal(T('Risk waiver ','Исключение ')+id,`${fld('wvWhy',T('Justification','Обоснование'),'<textarea class="input" id="wvWhy" rows="3"></textarea>')}${sel('wvDays',T('Expires in','Срок действия'),[[30,'30 days','30 дней'],[90,'90 days','90 дней'],[180,'180 days','180 дней']],90)}<div class="row mt"><div class="sp"></div><button class="btn gold" id="wvGo">${T('Grant waiver','Оформить исключение')}</button></div>`,box=>{
+$('#wvGo',box).onclick=()=>{if(!validate([['wvWhy',v=>v.length>=12,['At least 12 characters','Не менее 12 символов']]],box))return;const v=S.viol.find(x=>x.id===id);v.st='waived';v.why=$('#wvWhy',box).value.trim()+' ('+$('#wvDays',box).value+'d)';audit(`${id} waived: ${v.why}`,`${id}: исключение — ${v.why}`,'policy');save();closeModal();rerender();toast(T('Waiver recorded','Исключение оформлено'),'ok')}})});
+$('#scan').onclick=async e=>{e.target.disabled=true;e.target.textContent=T('Scanning…','Сканирование…');await wait(900);let found=0;
+S.res.forEach(r=>{const has=k=>S.viol.some(v=>v.res===r.id&&v.rule===k&&v.st==='open');if(S.rules.tag&&!r.tags&&!has('tag')){S.viol.unshift({id:'PV-'+(700+S.viol.length),res:r.id,rule:'tag',en:'Found by scheduled scan',ru:'Найдено плановым сканом',st:'open',t:Date.now()});found++}
+if(S.rules.idle&&r.st==='stopped'&&!has('idle')){S.viol.unshift({id:'PV-'+(700+S.viol.length),res:r.id,rule:'idle',en:'Stopped resource still billing storage',ru:'Остановленный ресурс оплачивает хранение',st:'open',t:Date.now()});found++}});
+audit(`Policy scan: ${S.res.length} resources, ${found} new findings`,`Скан правил: ${S.res.length} ресурсов, новых нарушений: ${found}`,'policy');save();rerender();toast(found?T(found+' new findings',' новых нарушений: '+found):T('Scan clean — no new findings','Скан чистый — новых нарушений нет'),found?'warn':'ok')};
+};
+
+
+const KINDS=[['','All','Все'],['req','Requests','Заявки'],['appr','Approvals','Согласования'],['prov','Provisioning','Развёртывание'],['policy','Policy','Правила'],['cost','Cost','Расходы'],['ops','Operations','Операции'],['auth','Sign-in','Входы']];
+APP.R.aud=el=>{const rows=S.audit.filter(a=>!AF||a.k===AF);
+el.innerHTML=`<div class="card"><div class="row" style="margin-bottom:12px"><div class="chips">${chipsH(KINDS,AF,'af')}</div><div class="sp"></div><button class="btn sm" id="csv">⇩ CSV</button></div>
+${tbl([T('Time','Время'),T('Actor','Кто'),T('Type','Тип'),T('Event','Событие')],rows.map(a=>`<tr><td class="mono" style="font-size:12px">${fmtDS(a.t)} ${fmtT(a.t)}</td><td>${esc(a.u)}</td><td>${pill(T(...(KINDS.find(k=>k[0]===a.k)||['','—','—']).slice(1)))}</td><td class="wrap">${esc(auditTxt(a))}</td></tr>`))}
+<div class="muted" style="font-size:12px;margin-top:10px">${T('Append-only log, hash-chained and shipped to the central SIEM. ','Журнал только на добавление, записи сцеплены хешем и уходят в SIEM. ')+rows.length+T(' events',' событий')}</div></div>`;
+bind(el,'af',v=>{AF=v;APP.R.aud(el)});
+$('#csv').onclick=()=>{dl('stratus-audit.csv','time,actor,type,event\n'+rows.map(a=>[new Date(a.t).toISOString(),a.u,a.k,'"'+auditTxt(a).replace(/"/g,'""')+'"'].join(',')).join('\n'),'text/csv');toast(T('CSV exported','CSV выгружен'),'ok')};
+};
+APP.onLogin=rk=>{};
+
+/* ---- boot: state, login, shell, router ---- */
+const KEY='pt_'+APP.slug+'_state';
+let S=null;
+function fresh(){const s=APP.seed();s.v=APP.ver||1;s.view=APP.views[0][0];s.user=null;s.intro=true;s.audit=s.audit||[];return s}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||S.v!==(APP.ver||1))S=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function audit(en,ru,kind){S.audit=S.audit||[];S.audit.unshift({t:Date.now(),en,ru,k:kind||'',u:S.user?S.user.name:'system'});if(S.audit.length>300)S.audit.length=300;save()}
+const auditTxt=a=>PT.lang==='ru'?a.ru:a.en;
+let lgVals=null;
+function rerender(){if(!S.user){renderLogin();return}renderShell();renderView()}
+function go(id){S.view=id;save();closeSide();renderShell();renderView();window.scrollTo(0,0)}
+function closeSide(){const s=$('#side');if(s)s.classList.remove('open')}
+function renderLogin(){
+  $('#app').hidden=true;const L=$('#login');L.hidden=false;const lg=APP.login;
+  const v=lgVals||{u:lg.user,p:lg.pass,r:(lg.roles||[[0]])[0][0]};
+  L.innerHTML=`<div class="lg-hero">
+    <div class="bigb"><b>${APP.icon}</b><div>${esc(APP.name)}<div style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0">${TT(APP.sub)}</div></div></div>
+    <h2>${TT(lg.hero)}</h2><p>${TT(lg.heroP)}</p>
+    <div class="lg-feats">${lg.feats.map(f=>`<div><b>${f[0]} ${T(f[1],f[2])}</b>${T(f[3],f[4])}</div>`).join('')}</div>
+  </div>
+  <div class="lg-form"><div class="card">
+    <h3>${T('Sign in to','Вход в')} ${esc(APP.name)}</h3><div class="muted" style="font-size:13px">${TT(lg.tag)}</div>
+    ${inp('lgU',T('User ID','Логин'),v.u,'','text','autocomplete="username"')}
+    ${inp('lgP',T('Password','Пароль'),v.p,'','password','autocomplete="current-password"')}
+    ${lg.roles?sel('lgR',T('Sign in as','Войти как'),lg.roles.map(r=>[r[0],r[1],r[2]]),v.r):''}
+    <button class="btn pri" id="lgGo" style="width:100%;justify-content:center;margin-top:16px;padding:12px">${T('Sign in','Войти')} →</button>
+    <div class="lg-demo">${T('<b>Demo access.</b> Credentials are prefilled — press <b>Sign in</b>. All data is synthetic and stays in this browser.','<b>Демо-доступ.</b> Логин и пароль уже введены — нажмите <b>Войти</b>. Все данные вымышленные и хранятся только в этом браузере.')}</div>
+    <div class="lg-sec">🔒 <span>${TT(lg.secure||['Demo environment · MFA simulated · session in local storage','Демо-среда · MFA имитируется · сессия в локальном хранилище'])}</span></div>
+  </div></div>`;
+  const keep=()=>{lgVals={u:$('#lgU').value,p:$('#lgP').value,r:$('#lgR')?$('#lgR').value:v.r}};
+  $$('input,select',L).forEach(i=>i.oninput=keep);
+  const go2=()=>{keep();if(!validate([['lgU',x=>x.length>=3,['Enter your user ID','Введите логин']],['lgP',x=>x.length>=4,['Enter the password','Введите пароль']]],L))return;
+    const role=lg.roles?lg.roles.find(r=>String(r[0])===String(lgVals.r)):null;
+    S.user={id:lgVals.u,name:lg.name,role:role?[role[1],role[2]]:lg.role,rk:role?role[0]:null};
+    if(APP.onLogin)APP.onLogin(role?role[0]:null);
+    audit('Signed in as '+lgVals.u,'Вход: '+lgVals.u,'auth');save();
+    toast(T('Welcome, ','Добро пожаловать, ')+esc(lg.name.split(' ')[0]),'ok');lgVals=null;rerender()};
+  $('#lgGo').onclick=go2;$$('input',L).forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')go2()});
+}
+function renderShell(){
+  $('#login').hidden=true;$('#app').hidden=false;const u=S.user;
+  const groups=APP.groups||[[null]];
+  $('#side').innerHTML=`<div class="brand"><b>${APP.icon}</b><div>${esc(APP.name)}<small>${TT(APP.sub)}</small></div></div>
+    ${groups.map(g=>`${g[0]!=null&&g[1]?`<div class="sec">${T(g[1],g[2])}</div>`:''}${APP.views.filter(v=>(v[4]||null)===g[0]&&(!APP.visible||APP.visible(v[0]))).map(v=>{const b=APP.badge?APP.badge(v[0]):null;return `<button class="nav ${S.view===v[0]?'on':''}" data-go="${v[0]}"><span class="ic">${v[1]}</span><span>${T(v[2],v[3])}</span>${b&&b[0]?`<span class="cnt ${b[1]?'r':''}">${b[0]}</span>`:''}</button>`}).join('')}`).join('')}
+    <div class="grow"></div>
+    ${APP.sideExtra?APP.sideExtra():''}
+    <div class="who"><div class="av">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</div><div style="min-width:0"><b>${esc(u.name)}</b><span>${TT(u.role)}</span></div></div>
+    <div class="sidebtns"><button class="btn sm" id="sOut">${T('Sign out','Выйти')}</button><button class="btn sm" id="sReset">${T('Reset demo','Сбросить демо')}</button></div>`;
+  bind($('#side'),'go',id=>go(id));
+  if(APP.bindSide)APP.bindSide($('#side'));
+  $('#sOut').onclick=()=>{audit('Signed out','Выход','auth');S.user=null;save();closeModal();rerender()};
+  $('#sReset').onclick=()=>{if(!confirmReset())return;try{Object.keys(localStorage).filter(k=>k.indexOf('pt_'+APP.slug+'_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}const u=S.user;S=fresh();S.user=u;if(APP.onLogin)APP.onLogin(u.rk);save();closeModal();rerender();toast(T('Demo data reset','Демо-данные сброшены'),'ok')};
+  const cur=APP.views.find(v=>v[0]===S.view)||APP.views[0];
+  const g=groups.find(x=>x[0]===(cur[4]||null));
+  $('#crumb').innerHTML=esc(APP.name)+(g&&g[1]?' · '+T(g[1],g[2]):'');
+  $('#title').innerHTML=T(cur[2],cur[3]);
+  $('#headx').innerHTML=APP.head?APP.head():'';
+  if(APP.bindHead)APP.bindHead($('#headx'));
+  const I=$('#intro');
+  if(S.intro){I.className='intro';I.innerHTML=`<div class="card"><h3><span>${T('How to try it','Как попробовать')}</span><span class="sp"></span><button class="btn xs" id="introX">${T('Hide','Скрыть')}</button></h3><div class="how">${APP.how.map((h,i)=>`<div><b>${i+1}</b><span>${TT(h)}</span></div>`).join('')}</div></div>
+    <div class="card"><dl class="facts">${APP.facts.map(f=>`<dt>${T(f[0],f[1])}</dt><dd>${f.length>3?T(f[2],f[3]):f[2]}</dd>`).join('')}</dl></div>`;
+    $('#introX').onclick=()=>{S.intro=false;save();renderShell()}}
+  else{I.className='intro hide';I.innerHTML=''}
+  $('#showIntro').hidden=S.intro;
+}
+let confirmReset=()=>true;
+function renderView(){
+  if(!APP.views.find(v=>v[0]===S.view))S.view=APP.views[0][0];
+  const el=$('#view');el.className='view on';el.dataset.v=S.view;
+  if(APP.leave)APP.leave();
+  try{APP.R[S.view](el)}catch(e){console.error(e);el.innerHTML='<div class="card">'+esc(e.message)+'</div>'}
+}
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+$('#showIntro').onclick=()=>{S.intro=true;save();renderShell()};
+document.addEventListener('click',e=>{const s=$('#side');if(s&&s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+let booted=false;
+PT.onLang(()=>{booted=true;rerender()});
+if(document.readyState!=='loading')setTimeout(()=>{if(!booted)rerender()},0);
+
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

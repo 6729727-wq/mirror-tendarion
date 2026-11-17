@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concord</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px;line-height:1.2}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center;margin-top:8px}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+.who span{color:var(--muted)}
+.sidebtns{display:flex;gap:6px;margin-top:8px}
+.sidebtns .btn{flex:1;justify-content:center}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.intro.hide{display:none}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.card{min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h3 .x{font-size:12px;color:var(--muted);font-weight:500}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fgrid .full{grid-column:1/-1}
+.f{min-width:0}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px;display:none}
+.f.bad .input{border-color:var(--red)} .f.bad .err{display:block}
+select.input{appearance:auto}
+textarea.input{resize:vertical}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row .sp{flex:1}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 9px;font-size:12px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)} .blue-t{color:var(--blue)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.prog.gold i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.prog.red i{background:var(--red)} .prog.amber i{background:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;overflow-wrap:anywhere}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack>*+*{margin-top:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.risk{display:inline-block;min-width:38px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:8px;padding:2px 6px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;min-width:0}
+.li:last-child{border-bottom:0}
+.li>.grow{min-width:0}
+.li small{display:block;color:var(--muted);font-size:12px}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:100px;max-height:240px;overflow:auto;overflow-wrap:anywhere}
+.log div{padding:2px 0} .log .t{color:var(--dim)}
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 10%,transparent);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.alert.warn{border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.alert.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.alert b{display:block}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow:auto;padding:20px;animation:fade .2s}
+.modal .box h3{margin:0 0 14px;font-size:17px;display:flex;gap:8px;align-items:center}
+.modal .box h3 .sp{flex:1}
+.mclose{border:0;background:none;font-size:20px;cursor:pointer;color:var(--muted);padding:0 4px}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.lg-hero{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 60%),radial-gradient(90% 80% at 100% 100%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 60%),var(--bg2);border-right:1px solid var(--line);padding:48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.lg-hero .bigb{display:flex;align-items:center;gap:14px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+.lg-hero .bigb b{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:26px}
+.lg-hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em;max-width:560px}
+.lg-hero p{color:var(--muted);margin:0;max-width:520px}
+.lg-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px}
+.lg-feats div{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 70%,transparent);border-radius:12px;padding:10px 12px;font-size:13px}
+.lg-feats div b{display:block;font-size:13.5px}
+.lg-form{display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-form .card{width:100%;max-width:420px;padding:26px}
+.lg-form h3{font-size:20px;margin:0 0 4px}
+.lg-form .f{margin-top:12px}
+.lg-demo{border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-top:14px;color:var(--muted)}
+.lg-demo b{color:var(--gold2)}
+.lg-sec{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--dim);margin-top:14px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.split,.intro,.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .lg-hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .lg-hero h2{font-size:24px}
+  .lg-form{padding:20px 14px 40px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.fgrid.c3,.opts,.lg-feats{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.step span{font-size:10px}.lg-form .card{padding:18px}.modal .box{padding:16px}}
+.btn.xs{padding:3px 10px;font-size:11.5px;min-height:28px}
+#headx{min-width:0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;border:1px solid var(--line2);color:var(--muted)}
+.mt{margin-top:14px}
+
+.wd{margin:12px 0}.bedg{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:5px;margin-top:6px}
+.bed{height:32px;border-radius:7px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);font:600 11px var(--mono);cursor:pointer}
+.bed.occ{background:var(--mal);color:#fff;border-color:transparent}.bed.due{background:var(--amber);color:#1a1200;border-color:transparent}.bed.red{background:var(--red);color:#fff;border-color:transparent}.bed:hover{outline:2px solid var(--gold)}
+.tokn{font-family:var(--mono);font-size:12px;padding:1px 6px;border-radius:6px;background:color-mix(in srgb,var(--violet) 16%,transparent);color:var(--violet)}
+.bar{height:6px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;border-radius:4px}
+.scb{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;font-weight:800;font-size:13px;background:conic-gradient(var(--gold) var(--p),var(--line) 0);position:relative}
+.scb::before{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--panel)}.scb{isolation:isolate}.scb::before{z-index:-1}
+.thg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}.ths{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg2)}
+.bchk{display:flex;gap:4px}.bx{width:22px;height:22px;border-radius:6px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;font-size:12px;color:#fff;padding:0}.bx.on{background:var(--mal);border-color:var(--mal)}
+.dl2{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 12px}.dl2 dt{color:var(--muted)}.dl2 dd{margin:0}
+h3 .sp{flex:1}h3:has(.sp){display:flex;align-items:center;gap:8px}
+tr.sel td{background:color-mix(in srgb,var(--mal) 10%,transparent)}
+
+</style>
+</head>
+<body data-demo-en="Concord — federated hospital operations platform" data-demo-ru="Concord — федеративная платформа операций больниц">
+<div class="login" id="login" hidden></div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side"></aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <div id="headx" class="row"></div>
+      <button class="btn sm" id="showIntro" hidden title="How to try it">?</button>
+    </div>
+    <div class="intro" id="intro"></div>
+    <section class="view on" id="view"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div class="modal" id="modal"></div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const TT=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtDS=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+const fmtN=(n,dg=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:dg,maximumFractionDigits:dg});
+const pct=(n,dg=0)=>fmtN(n,dg)+'%';
+const uid=(p)=>(p||'')+Math.random().toString(36).slice(2,8).toUpperCase();
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body,mount){const m=$('#modal');m.innerHTML=`<div class="box" role="dialog"><h3><span>${title}</span><span class="sp"></span><button class="mclose" aria-label="Close">×</button></h3>${body}</div>`;m.classList.add('on');$('.mclose',m).onclick=closeModal;m.onclick=e=>{if(e.target===m)closeModal()};if(mount)mount($('.box',m))}
+function closeModal(){const m=$('#modal');m.classList.remove('on');m.innerHTML=''}
+/* form validation: fields = [[id, test(v)->bool, [en,ru] message]] ; returns true if ok */
+function validate(fields,root){let ok=true;fields.forEach(([id,test,msg])=>{const el=$('#'+id,root||document);if(!el)return;const f=el.closest('.f');const good=test(el.type==='checkbox'?el.checked:el.value.trim());if(f){f.classList.toggle('bad',!good);let e=$('.err',f);if(!e){e=document.createElement('div');e.className='err';f.append(e)}e.textContent=TT(msg)}if(!good)ok=false});if(!ok)toast(T('Please fix the highlighted fields','Исправьте выделенные поля'),'bad');return ok}
+const fld=(id,label,inner,cls)=>`<div class="f ${cls||''}"><label for="${id}">${label}</label>${inner}</div>`;
+const inp=(id,label,val,cls,type,attrs)=>fld(id,label,`<input class="input" id="${id}" type="${type||'text'}" value="${esc(val==null?'':val)}" ${attrs||''}>`,cls);
+const sel=(id,label,opts,val,cls)=>fld(id,label,`<select class="input" id="${id}">${opts.map(o=>`<option value="${esc(o[0])}" ${String(o[0])===String(val)?'selected':''}>${esc(o.length>2?T(o[1],o[2]):o[1])}</option>`).join('')}</select>`,cls);
+const pill=(txt,cls)=>`<span class="pill ${cls||''}">${txt}</span>`;
+const kpi=(l,v,d,cls)=>`<div class="card kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}</div>${d!=null?`<div class="d">${d}</div>`:''}</div>`;
+const chipsH=(items,cur,attr)=>items.map(x=>`<button class="chip ${String(cur)===String(x[0])?'on':''}" data-${attr}="${esc(x[0])}">${x.length>2?T(x[1],x[2]):x[1]}</button>`).join('');
+const bind=(root,attr,fn)=>$$('[data-'+attr+']',root).forEach(b=>b.onclick=e=>{e.stopPropagation();fn(b.dataset[attr.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())],b,e)});
+const tbl=(heads,rows,empty)=>`<div class="tw"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${heads.length}" class="muted">${empty||T('Nothing here yet','Пока пусто')}</td></tr>`}</tbody></table></div>`;
+function dl(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type||'text/plain'}));a.download=name;document.body.append(a);a.click();a.remove()}catch(e){}}
+/* ---- inline SVG charts (theme-aware via CSS vars in style attrs) ---- */
+const C=['var(--mal)','var(--gold)','var(--blue)','var(--violet)','var(--amber)','var(--red)','var(--mal3)'];
+function lineChart(o){/* o:{series:[{name,data:[...],color,dash,area}], labels:[...], w,h, yfmt, min,max, band:[y0,y1,color]} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=12,pt=14,pb=28;const all=o.series.flatMap(s=>s.data).filter(v=>v!=null);
+  let mn=o.min!=null?o.min:Math.min(...all),mx=o.max!=null?o.max:Math.max(...all);if(mx===mn)mx=mn+1;const pad=(mx-mn)*.08;if(o.min==null)mn-=pad;if(o.max==null)mx+=pad;
+  const n=Math.max(...o.series.map(s=>s.data.length));const X=i=>pl+(n<2?0:i*(W-pl-pr)/(n-1)),Y=v=>pt+(1-(v-mn)/(mx-mn))*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  if(o.band){s+=`<rect x="${pl}" y="${Y(o.band[1])}" width="${W-pl-pr}" height="${Math.max(0,Y(o.band[0])-Y(o.band[1]))}" style="fill:${o.band[2]||'var(--mal)'};opacity:.1"/>`}
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/8);(o.labels||[]).forEach((l,i)=>{if(i%step===0||i===n-1)s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  o.series.forEach((se,k)=>{const col=se.color||C[k%C.length];const pts=se.data.map((v,i)=>v==null?null:[X(i),Y(v)]).filter(Boolean);if(!pts.length)return;const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+    if(se.area)s+=`<path d="${d}L${pts[pts.length-1][0]} ${H-pb}L${pts[0][0]} ${H-pb}Z" style="fill:${col};opacity:.14"/>`;
+    s+=`<path d="${d}" fill="none" style="stroke:${col}" stroke-width="${se.width||2.2}" stroke-linejoin="round" stroke-linecap="round" ${se.dash?'stroke-dasharray="6 5"':''}/>`;
+    if(se.dots!==false&&pts.length<=40)pts.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${se.dots===true?3.2:2.4}" style="fill:${col}"><title>${esc((o.labels||[])[i]||'')} · ${yf(se.data[i])}</title></circle>`})});
+  return s+'</svg>'}
+function barChart(o){/* o:{labels,series:[{name,data,color}],stacked,w,h,yfmt,hl:index} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=10,pt=16,pb=30;const n=o.labels.length;const sums=o.labels.map((_,i)=>o.stacked?o.series.reduce((a,s)=>a+(s.data[i]||0),0):Math.max(...o.series.map(s=>s.data[i]||0)));
+  const mx=(o.max||Math.max(...sums,1))*1.08;const bw=(W-pl-pr)/n;const Y=v=>pt+(1-v/mx)*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let i=0;i<=4;i++){const v=mx*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/12);
+  o.labels.forEach((l,i)=>{const x0=pl+i*bw;let acc=0;const ns=o.series.length;
+    o.series.forEach((se,k)=>{const v=se.data[i]||0;const col=se.color||C[k%C.length];
+      if(o.stacked){const y=Y(acc+v),h=Y(acc)-y;s+=`<rect x="${x0+bw*.18}" y="${y}" width="${bw*.64}" height="${Math.max(0,h)}" rx="3" style="fill:${col}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`;acc+=v}
+      else{const w=bw*.7/ns;const y=Y(v);s+=`<rect x="${x0+bw*.15+k*w}" y="${y}" width="${Math.max(1,w-2)}" height="${Math.max(0,H-pb-y)}" rx="3" style="fill:${col};opacity:${o.hl!=null&&o.hl!==i?.45:1}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`}});
+    if(i%step===0)s+=`<text x="${x0+bw/2}" y="${H-10}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  return s+'</svg>'}
+function hbars(items,o){/* items:[[label,value,color?]] */o=o||{};const mx=o.max||Math.max(...items.map(x=>x[1]),1);const f=o.fmt||(v=>fmtN(v));
+  return items.map(x=>`<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:7px"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x[0]}</span><div class="prog" style="width:${o.w||110}px;flex:none"><i style="width:${x[1]/mx*100}%;${x[2]?'background:'+x[2]:''}"></i></div><span class="mono" style="width:${o.vw||48}px;text-align:right;flex:none">${f(x[1])}</span></div>`).join('')}
+function donut(parts,o){/* parts:[[label,value,color]] */o=o||{};const sz=o.size||140,r=sz/2-12,c=2*Math.PI*r;const tot=parts.reduce((a,p)=>a+p[1],0)||1;let off=0;
+  let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" style="flex:none"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="16"/>`;
+  parts.forEach((p,i)=>{const L=c*p[1]/tot;s+=`<circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:${p[2]||C[i%C.length]}" stroke-width="16" stroke-dasharray="${L} ${c-L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${sz/2} ${sz/2})"><title>${esc(p[0])}: ${fmtN(p[1])}</title></circle>`;off+=L});
+  s+=`<text x="${sz/2}" y="${sz/2+2}" text-anchor="middle" font-size="${o.fs||20}" font-weight="800" style="fill:var(--text)">${o.center!=null?o.center:fmtN(tot)}</text>${o.sub?`<text x="${sz/2}" y="${sz/2+18}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(o.sub)}</text>`:''}</svg>`;
+  const leg=`<div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;min-width:0">${parts.map((p,i)=>`<div style="display:flex;gap:8px;align-items:center"><i style="width:10px;height:10px;border-radius:3px;background:${p[2]||C[i%C.length]};flex:none"></i><span style="flex:1;min-width:0">${p[0]}</span><b class="mono">${o.fmt?o.fmt(p[1]):fmtN(p[1])}</b></div>`).join('')}</div>`;
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${s}${leg}</div>`}
+function gauge(p,o){o=o||{};const r=50,c=Math.PI*r;const col=o.color||(p>=90?'var(--red)':p>=75?'var(--amber)':'var(--mal)');
+  return `<svg viewBox="0 0 120 70" style="width:${o.w||150}px;max-width:100%"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:var(--line)" stroke-width="11" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${c*clamp(p,0,100)/100} ${c}"/><text x="60" y="58" text-anchor="middle" font-size="19" font-weight="800" style="fill:var(--text)">${o.label!=null?o.label:Math.round(p)+'%'}</text></svg>`}
+function spark(data,col){const W=110,H=30,mn=Math.min(...data),mx=Math.max(...data)||1;const d=data.map((v,i)=>(i?'L':'M')+(i*W/(data.length-1)).toFixed(1)+' '+(H-3-(v-mn)/((mx-mn)||1)*(H-6)).toFixed(1)).join('');return `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;flex:none"><path d="${d}" fill="none" style="stroke:${col||'var(--mal)'}" stroke-width="2"/></svg>`}
+
+//@demo Concord|federated hospital operations platform|федеративная платформа операций больниц
+const FN=['Oliver','Amelia','George','Isla','Harry','Ava','Noah','Mia','Jack','Ivy','Leo','Grace','Arthur','Freya','Oscar','Lily','Muhammad','Emily','Thomas','Sophie','Alfie','Poppy','Henry','Ella','Charlie','Evie','Jacob','Rosie','Theo','Florence'];
+const LN=['Smith','Jones','Taylor','Brown','Williams','Wilson','Davies','Evans','Patel','Khan','Walker','Wright','Robinson','Thompson','White','Hughes','Edwards','Green','Hall','Wood','Clarke','Hussain','Murphy','Price'];
+const WARDS=[['amu','Acute Medical Unit','Отделение неотложной терапии',24,'med'],['card','Cardiology','Кардиология',16,'med'],['resp','Respiratory','Пульмонология',18,'med'],['surg','General Surgery','Общая хирургия',20,'surg'],['orth','Trauma & Orthopaedics','Травматология и ортопедия',20,'surg'],['eld','Care of the Elderly','Гериатрия',22,'med']];
+const PROC=[['Hip replacement','Эндопротезирование ТБС','orth',120],['Knee replacement','Эндопротезирование колена','orth',110],['Cataract surgery','Удаление катаракты','oph',35],['Hernia repair','Пластика грыжи','gen',75],['Cholecystectomy','Холецистэктомия','gen',90],['Spinal decompression','Декомпрессия позвоночника','orth',150],['Tonsillectomy','Тонзиллэктомия','ent',50],['Hysterectomy','Гистерэктомия','gyn',140],['TURP','ТУРП','uro',80],['Carpal tunnel release','Декомпрессия запястного канала','orth',30],['Colectomy','Колэктомия','gen',200],['Septoplasty','Септопластика','ent',60]];
+const SPEC={orth:['Orthopaedics','Ортопедия'],oph:['Ophthalmology','Офтальмология'],gen:['General surgery','Общая хирургия'],ent:['ENT','ЛОР'],gyn:['Gynaecology','Гинекология'],uro:['Urology','Урология']};
+const PRI={P1:['P1 · within 72 h','P1 · до 72 ч',3],P2:['P2 · within 1 month','P2 · до 1 мес.',4.3],P3:['P3 · within 3 months','P3 · до 3 мес.',13],P4:['P4 · over 3 months','P4 · более 3 мес.',26]};
+const BAR=[['tto','Medications to take home','Лекарства на выписку'],['trans','Transport booked','Транспорт заказан'],['care','Care package agreed','Уход на дому согласован'],['ot','OT / physio sign-off','Заключение реабилитолога'],['sum','Discharge summary','Выписной эпикриз'],['fam','Family informed','Родные уведомлены']];
+const ROLES=[['clin','Ward clinician — direct care','Врач отделения — лечение','Full identifiers for patients under direct care','Полные данные пациентов, которых лечит'],['ops','Operations manager','Руководитель операций','Names visible, NHS numbers masked','Имена видны, номера NHS скрыты'],['ana','Analyst — secondary use','Аналитик — вторичное использование','Pseudonymised: names and NHS numbers replaced with tokens, ages banded','Псевдонимизация: имена и номера заменены токенами, возраст — группами']];
+let WF='all',WQ='',WS='score',TD=0,BW='all';
+const APP={slug:'fdp',ver:2,icon:'🏥',name:'Concord',sub:['Federated Data Platform · Nordania NHS','Федеративная платформа данных · Нордания'],
+login:{user:'ops.lead@nrt.nhs.nd',pass:'concord-demo',name:'Priya Raman',role:['Operations lead, Northgate Trust','Руководитель операций, траст Northgate'],
+roles:ROLES.map(r=>[r[0],r[1],r[2]]),tag:['Role-based, purpose-limited access','Доступ по роли и цели'],
+hero:['One live picture of the hospital — without exposing patients','Живая картина больницы — без раскрытия пациентов'],
+heroP:['Bed board, elective waiting list prioritisation, theatre scheduling and discharge planning on federated trust data. Switch role to see privacy-enhancing technology pseudonymise every screen.','Табло коек, приоритизация плановой очереди, расписание операционных и план выписки на федеративных данных трастов. Смените роль — и все экраны псевдонимизируются.'],
+feats:[['🛏','Bed board','Табло коек','Occupancy by ward, live','Занятость по отделениям'],['📋','Waiting list','Плановая очередь','Clinical priority + breach risk','Приоритет и риск нарушения сроков'],['🔪','Theatres','Операционные','Sessions & utilisation','Сессии и загрузка'],['🔒','Privacy','Приватность','Pseudonymised analyst view','Псевдонимы для аналитиков']]},
+how:[['Use the <b>role</b> selector in the header: as <b>Analyst</b> every name and NHS number turns into a token across all screens.','Переключите <b>роль</b> в шапке: у <b>аналитика</b> имена и номера NHS превращаются в токены на всех экранах.'],
+['In <b>Waiting list</b> sort by priority score and press <b>Schedule</b> — the case goes into the first theatre session with enough free minutes.','В <b>Очереди</b> отсортируйте по баллу и нажмите <b>Запланировать</b> — случай попадёт в первую сессию с достаточным временем.'],
+['In <b>Discharges</b> tick off barriers and discharge a patient — the bed frees up on the <b>Bed board</b>.','В <b>Выписке</b> закройте препятствия и выпишите пациента — койка освободится на <b>Табло</b>.']],
+facts:[['Tender','Тендер','Federated data platform for hospitals (NHS FDP class)','Федеративная платформа данных больниц (класс NHS FDP)'],['Year · budget','Год · бюджет','2024 · £330M'],['Client','Заказчик','National Health Service of the Republic of Nordania (fictional)','Национальная служба здравоохранения Республики Нордания (вымышл.)'],['Stack','Стек','Spark · FHIR · Privacy-enhancing tech']],
+groups:[['ops','Operations','Операции'],['gov','Governance','Управление']],
+views:[['beds','🛏','Bed board','Табло коек','ops'],['wl','📋','Waiting list','Плановая очередь','ops'],['th','🔪','Theatres','Операционные','ops'],['dis','🏠','Discharges','Выписка','ops'],['dash','📈','Performance','Показатели','gov'],['priv','🔒','Privacy & access','Приватность и доступ','gov']],
+badge(id){if(id==='wl')return[S.wl.filter(w=>!w.bk&&breach(w)).length,1];if(id==='dis')return[S.inp.filter(p=>p.edd<=today()).length,0];return null},
+head(){return `<select class="input" id="roleSel" style="width:auto;max-width:230px;padding:6px 10px">${ROLES.map(r=>`<option value="${r[0]}" ${S.role===r[0]?'selected':''}>${r[0]==='ana'?'🔒 ':r[0]==='ops'?'🟡 ':'🩺 '}${T(r[1],r[2])}</option>`).join('')}</select>`},
+bindHead(){$('#roleSel').onchange=e=>{const old=S.role;S.role=e.target.value;S.acc.unshift({t:Date.now(),role:S.role,what:T('Role switched','Смена роли'),ok:1});audit(`Role switched ${old} → ${S.role}`,`Роль: ${old} → ${S.role}`,'priv');save();rerender();toast(S.role==='ana'?T('Pseudonymised view — identifiers hidden','Псевдонимизированный вид — идентификаторы скрыты'):T('Role: ','Роль: ')+T(...ROLES.find(r=>r[0]===S.role).slice(1,3)),S.role==='ana'?'warn':'ok')}},
+onLogin(rk){S.role=rk||'ops';S.acc.unshift({t:Date.now(),role:S.role,what:T('Sign-in','Вход'),ok:1})},
+seed(){const R=rng(31);const nm=()=>FN[R()*FN.length|0]+' '+LN[R()*LN.length|0];const nhs=()=>{let d;do{d=[];for(let i=0;i<9;i++)d.push(R()*10|0);const s=d.reduce((a,x,i)=>a+x*(10-i),0);const c=11-s%11;d.push(c===11?0:c)}while(d[9]===10);return d.join('')};
+const inp=[];WARDS.forEach(w=>{const occ=Math.round(w[3]*(.82+R()*.17));for(let b=1;b<=occ;b++){const los=1+(R()*14|0);inp.push({id:uid(),name:nm(),nhs:nhs(),age:w[0]==='eld'?72+(R()*22|0):25+(R()*60|0),ward:w[0],bed:b,adm:addDays(today(),-los),edd:addDays(today(),(R()*6|0)-2),news:R()<.1?5+(R()*3|0):R()*4|0,bar:BAR.map(x=>R()<.55?x[0]:null).filter(Boolean),mfd:R()<.18})}});
+const wl=[];for(let i=0;i<46;i++){const p=PROC[R()*PROC.length|0];const pr=R()<.06?'P1':R()<.3?'P2':R()<.65?'P3':'P4';const wk=pr==='P1'?R()*1.2:Math.round(R()*(PRI[pr][2]*1.6)*10)/10;wl.push({id:'WL'+(5100+i),name:nm(),nhs:nhs(),age:18+(R()*70|0),proc:PROC.indexOf(p),pr,wk,fr:R()<.2,can:R()<.12?1:0,bk:null})}
+const th={};for(let d=0;d<5;d++)['T1','T2','T3','T4'].forEach(t=>['AM','PM'].forEach(s=>{th[d+'|'+t+'|'+s]={sp:Object.keys(SPEC)[(d+t.charCodeAt(1)+s.length)%6],cases:[]}}));
+const hist=[];let o=88;for(let i=29;i>=0;i--){o=clamp(o+(R()-.47)*3,82,99);hist.push({d:addDays(today(),-i),occ:+o.toFixed(1),ed:Math.round(130+R()*60),dis:Math.round(95+R()*40),rtt:+(58+i*.05+R()*2).toFixed(1)})}
+return {inp,wl,th,hist,role:'ops',acc:[],tokSalt:'nd-'+(R()*1e6|0)}},
+R:{}
+};
+
+function tok(s){let h=2166136261;for(const c of S.tokSalt+s)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0).toString(36).toUpperCase().padStart(7,'0').slice(0,7)}
+const PS=()=>S.role==='ana';
+const nm=p=>PS()?`<span class="tokn">PX-${tok(p.nhs)}</span>`:esc(p.name);
+const nh=p=>PS()?'••••••••••':S.role==='ops'?'••• ••• '+p.nhs.slice(6):p.nhs.replace(/(\d{3})(\d{3})(\d{4})/,'$1 $2 $3');
+const ag=p=>PS()?(Math.floor(p.age/10)*10)+'–'+(Math.floor(p.age/10)*10+9):p.age;
+function logAccess(what){S.acc.unshift({t:Date.now(),role:S.role,what,ok:1});if(S.acc.length>80)S.acc.length=80}
+const WN=id=>WARDS.find(w=>w[0]===id);
+const breach=w=>w.wk>=PRI[w.pr][2];
+function score(w){const p=PRI[w.pr];let s={P1:60,P2:40,P3:22,P4:10}[w.pr]+Math.min(30,w.wk/p[2]*20)+(w.fr?6:0)+(w.can?8:0);return Math.round(s)}
+const proc=w=>PROC[w.proc];
+const DAYN=d=>new Date(addDays(today(),d)).toLocaleDateString(loc(),{weekday:'short',day:'numeric'});
+
+
+APP.R.beds=el=>{const tot=WARDS.reduce((a,w)=>a+w[3],0);const occ=S.inp.length;const exp=S.inp.filter(p=>p.edd<=today()).length;const mfd=S.inp.filter(p=>p.mfd).length;
+const ws=BW==='all'?WARDS:WARDS.filter(w=>w[0]===BW);
+el.innerHTML=`<div class="kpis">${kpi(T('Bed occupancy','Занятость коек'),pct(occ/tot*100),occ+' / '+tot,occ/tot>.92?'bad-t':'')}${kpi(T('Free beds','Свободно'),tot-occ,T('across ','в ')+WARDS.length+T(' wards',' отделениях'))}${kpi(T('Expected discharges','Ожидаемые выписки'),exp,T('today or overdue','сегодня или просрочено'))}${kpi(T('Medically fit, still in bed','Готовы к выписке, но в койке'),mfd,T('delayed transfers','задержки'),'warn-t')}</div>
+<div class="grid2"><div class="card"><h3>${T('Occupancy by ward','Занятость по отделениям')}</h3>${hbars(WARDS.map(w=>{const n=S.inp.filter(p=>p.ward===w[0]).length;return[T(w[1],w[2]),Math.round(n/w[3]*100),n/w[3]>.95?'var(--red)':n/w[3]>.88?'var(--amber)':'var(--mal)']}),{fmt:v=>v+'%',max:100})}</div>
+<div class="card"><h3>${T('Occupancy, last 30 days','Занятость за 30 дней')}</h3><div class="chart">${lineChart({labels:S.hist.map(h=>fmtDS(h.d)),series:[{name:'%',data:S.hist.map(h=>h.occ),color:'var(--blue)',area:1}],min:76,max:100,hlines:[{v:92,label:T('92% safe limit','92% предел'),color:'var(--red)'}],yfmt:v=>Math.round(v)+'%'})}</div></div></div>
+<div class="card mt"><div class="row" style="margin-bottom:10px"><h3 style="margin:0">${T('Bed board','Табло коек')}</h3><div class="sp"></div><div class="chips">${chipsH([['all','All wards','Все'],...WARDS.map(w=>[w[0],w[1],w[2]])],BW,'bw')}</div></div>
+<div class="legend"><span><i style="background:var(--mal)"></i>${T('Occupied','Занята')}</span><span><i style="background:var(--amber)"></i>${T('Discharge due','К выписке')}</span><span><i style="background:var(--red)"></i>NEWS ≥5</span><span><i style="background:var(--line2)"></i>${T('Free','Свободна')}</span></div>
+${ws.map(w=>`<div class="wd"><b>${T(w[1],w[2])}</b> <span class="muted">${S.inp.filter(p=>p.ward===w[0]).length}/${w[3]}</span><div class="bedg">${Array.from({length:w[3]},(_,i)=>{const p=S.inp.find(x=>x.ward===w[0]&&x.bed===i+1);const c=!p?'free':p.news>=5?'red':p.edd<=today()?'due':'occ';return `<button class="bed ${c}" data-bd="${w[0]}|${i+1}" title="${p?esc(PS()?'PX-'+tok(p.nhs):p.name):T('Free','Свободна')}">${i+1}</button>`}).join('')}</div></div>`).join('')}</div>`;
+bind(el,'bw',v=>{BW=v;APP.R.beds(el)});
+bind(el,'bd',k=>{const[wd,b]=k.split('|');const p=S.inp.find(x=>x.ward===wd&&x.bed===+b);const w=WN(wd);
+if(!p)return modal(T('Admit to ','Госпитализация: ')+T(w[1],w[2])+' · '+T('bed ','койка ')+b,`<div class="fgrid">${inp('adN',T('Patient name','ФИО пациента'),'')}${inp('adA',T('Age','Возраст'),'','','number')}${inp('adE',T('Expected discharge','Ожидаемая выписка'),addDays(today(),3),'','date')}${sel('adS',T('Source','Откуда'),[['ed','Emergency department','Приёмное'],['el','Elective list','Плановая очередь'],['tr','Transfer','Перевод']],'ed')}</div><div class="row mt"><div class="sp"></div><button class="btn pri" id="adGo">${T('Admit','Госпитализировать')}</button></div>`,box=>{
+$('#adGo',box).onclick=()=>{if(!validate([['adN',v=>/\S+\s+\S+/.test(v),['First and last name','Имя и фамилия']],['adA',v=>+v>=0&&+v<=110,['0–110','0–110']],['adE',v=>v>=today(),['Today or later','Сегодня или позже']]],box))return;
+S.inp.push({id:uid(),name:$('#adN',box).value.trim(),nhs:String(4e9+Math.random()*5e9|0),age:+$('#adA',box).value,ward:wd,bed:+b,adm:today(),edd:$('#adE',box).value,news:1,bar:[],mfd:false});audit(`Admitted to ${w[1]} bed ${b}`,`Госпитализирован: ${w[2]}, койка ${b}`,'beds');save();closeModal();rerender();toast(T('Patient admitted','Пациент госпитализирован'),'ok')}});
+logAccess(T('Viewed bed record ','Просмотр записи койки ')+wd+'-'+b);save();
+modal(T(w[1],w[2])+' · '+T('bed ','койка ')+b,`<dl class="dl2"><dt>${T('Patient','Пациент')}</dt><dd>${nm(p)}</dd><dt>NHS</dt><dd class="mono">${nh(p)}</dd><dt>${T('Age','Возраст')}</dt><dd>${ag(p)}</dd><dt>${T('Admitted','Поступил')}</dt><dd>${fmtD(p.adm)}</dd><dt>${T('Expected discharge','Выписка')}</dt><dd>${fmtD(p.edd)}</dd><dt>NEWS2</dt><dd>${pill(p.news,p.news>=5?'bad':p.news>=3?'warn':'ok')}</dd></dl>
+${fld('mvW',T('Transfer to ward','Перевести в отделение'),`<select class="input" id="mvW">${WARDS.filter(x=>x[0]!==wd).map(x=>{const fr=x[3]-S.inp.filter(q=>q.ward===x[0]).length;return `<option value="${x[0]}" ${fr?'':'disabled'}>${T(x[1],x[2])} · ${fr} ${T('free','своб.')}</option>`}).join('')}</select>`)}
+<div class="row mt"><button class="btn" id="mvGo">⇄ ${T('Transfer','Перевести')}</button><div class="sp"></div><button class="btn pri" id="dcGo" ${PS()?'disabled':''}>${T('Discharge','Выписать')}</button></div>`,box=>{
+$('#mvGo',box).onclick=()=>{const to=$('#mvW',box).value;const taken=S.inp.filter(q=>q.ward===to).map(q=>q.bed);const W2=WN(to);let nb=1;while(taken.includes(nb))nb++;if(nb>W2[3]){toast(T('No free beds','Нет свободных коек'),'bad');return}p.ward=to;p.bed=nb;audit(`Transfer ${wd}-${b} → ${to}-${nb}`,`Перевод ${wd}-${b} → ${to}-${nb}`,'beds');save();closeModal();rerender();toast(T('Transferred to bed ','Переведён на койку ')+nb,'ok')};
+$('#dcGo',box).onclick=()=>{discharge(p);closeModal()}})});
+};
+function discharge(p){S.inp.splice(S.inp.indexOf(p),1);S.hist[S.hist.length-1].dis++;audit(`Discharged from ${p.ward}-${p.bed}`,`Выписан: ${p.ward}-${p.bed}`,'dis');save();rerender();toast(T('Discharged — bed ','Выписан — койка ')+p.ward.toUpperCase()+'-'+p.bed+T(' is free',' свободна'),'ok')}
+
+
+APP.R.wl=el=>{let L=S.wl.filter(w=>!w.bk&&(WF==='all'||(WF==='br'?breach(w):WF===w.pr))&&(!WQ||(T(...proc(w).slice(0,2))+' '+(PS()?'':w.name)+' '+w.id).toLowerCase().includes(WQ.toLowerCase())));
+L.sort(WS==='score'?(a,b)=>score(b)-score(a):WS==='wait'?(a,b)=>b.wk-a.wk:(a,b)=>a.pr.localeCompare(b.pr)||score(b)-score(a));
+const open=S.wl.filter(w=>!w.bk);const bySp=Object.keys(SPEC).map(k=>({l:T(...SPEC[k]),v:open.filter(w=>proc(w)[2]===k).length}));
+el.innerHTML=`<div class="kpis">${kpi(T('On waiting list','В очереди'),open.length)}${kpi(T('Breaching target','Сверх срока'),open.filter(breach).length,T('past clinical priority window','превышен срок приоритета'),'bad-t')}${kpi(T('Median wait','Медиана ожидания'),fmtN([...open].sort((a,b)=>a.wk-b.wk)[open.length>>1]?.wk||0,1)+T(' wk',' нед.'))}${kpi(T('Booked this demo','Запланировано'),S.wl.filter(w=>w.bk).length,T('into theatre sessions','в сессии'),'ok-t')}</div>
+<div class="grid2"><div class="card"><h3>${T('Waits vs priority target','Ожидание и норматив')}</h3><div class="chart">${barChart({labels:Object.keys(PRI),series:[{name:T('Within','В срок'),data:Object.keys(PRI).map(k=>open.filter(w=>w.pr===k&&!breach(w)).length),color:'var(--mal)'},{name:T('Breach','Сверх'),data:Object.keys(PRI).map(k=>open.filter(w=>w.pr===k&&breach(w)).length),color:'var(--red)'}],stacked:1})}</div><div class="legend"><span><i style="background:var(--mal)"></i>${T('Within target','В срок')}</span><span><i style="background:var(--red)"></i>${T('Breaching','Сверх срока')}</span></div></div>
+<div class="card"><h3>${T('By specialty','По специальностям')}</h3>${donut(bySp.map((b,i)=>[b.l,b.v,['var(--mal)','var(--blue)','var(--gold)','var(--violet)','var(--amber)','var(--red)'][i]]),{center:open.length,sub:T('cases','случаев')})}</div></div>
+<div class="card mt"><div class="row" style="margin-bottom:10px"><input class="input" id="wq" style="max-width:240px" placeholder="${T('Procedure or ID…','Операция или ID…')}" value="${esc(WQ)}"><div class="chips">${chipsH([['all','All','Все'],['br','Breaching','Сверх срока'],['P1','P1'],['P2','P2'],['P3','P3'],['P4','P4']],WF,'wf')}</div><div class="sp"></div>${sel('ws','',[['score','Sort: priority score','Сортировка: балл'],['wait','Sort: longest wait','Сортировка: ожидание'],['pr','Sort: clinical priority','Сортировка: приоритет']],WS)}</div>
+${tbl([T('Score','Балл'),T('Patient','Пациент'),T('Procedure','Операция'),T('Priority','Приоритет'),T('Waited','Ждёт'),T('Flags','Флаги'),''],L.map(w=>{const p=proc(w);const r=w.wk/PRI[w.pr][2];return `<tr><td><span class="scb" style="--p:${Math.min(100,score(w))}%">${score(w)}</span></td><td>${nm(w)}<div class="muted mono" style="font-size:11px">${w.id} · ${ag(w)}</div></td><td>${T(p[0],p[1])}<div class="muted" style="font-size:11.5px">${T(...SPEC[p[2]])} · ${p[3]} ${T('min','мин')}</div></td><td>${pill(w.pr,w.pr==='P1'?'bad':w.pr==='P2'?'warn':'')}</td><td style="min-width:110px">${fmtN(w.wk,1)} / ${PRI[w.pr][2]} ${T('wk','нед.')}<div class="bar"><i style="width:${Math.min(100,r*100)}%;background:${r>=1?'var(--red)':r>.8?'var(--amber)':'var(--mal)'}"></i></div></td><td>${w.fr?pill(T('Frail','Хрупкий'),'warn'):''}${w.can?pill(T('Cancelled before','Отменяли'),'bad'):''}</td><td><button class="btn xs pri" data-bk="${w.id}">${T('Schedule','Запланировать')}</button> <button class="btn xs" data-rp="${w.id}">${T('Re-prioritise','Приоритет')}</button></td></tr>`}),T('No cases match','Нет случаев'))}
+<div class="muted" style="font-size:12px;margin-top:8px">${T('Score = clinical priority weight + share of target wait used (max 30) + frailty 6 + previous cancellation 8.','Балл = вес приоритета + доля использованного срока (до 30) + хрупкость 6 + прошлая отмена 8.')}</div></div>`;
+$('#wq').oninput=e=>{WQ=e.target.value;const c=e.target.selectionStart;APP.R.wl(el);const i=$('#wq');i.focus();i.setSelectionRange(c,c)};
+bind(el,'wf',v=>{WF=v;APP.R.wl(el)});$('#ws').onchange=e=>{WS=e.target.value;APP.R.wl(el)};
+bind(el,'bk',id=>{const w=S.wl.find(x=>x.id===id);const r=book(w);if(r){toast(T('Booked: ','Запланировано: ')+DAYN(r.d)+' · '+r.t+' '+r.s,'ok')}else toast(T('No session with ','Нет сессии с ')+proc(w)[3]+T(' free minutes this week',' свободными минутами на неделе'),'bad')});
+bind(el,'rp',id=>{const w=S.wl.find(x=>x.id===id);modal(T('Clinical re-prioritisation','Пересмотр приоритета'),`<div class="fgrid">${sel('rpP',T('Priority','Приоритет'),Object.keys(PRI).map(k=>[k,PRI[k][0],PRI[k][1]]),w.pr)}${sel('rpF',T('Frailty','Хрупкость'),[['0','No','Нет'],['1','Yes','Да']],w.fr?'1':'0')}${inp('rpR',T('Clinical reason','Клиническая причина'),'','full')}</div><div class="row mt"><div class="sp"></div><button class="btn pri" id="rpGo">${T('Save','Сохранить')}</button></div>`,box=>{
+$('#rpGo',box).onclick=()=>{if(!validate([['rpR',v=>v.length>=5,['Reason required (audited)','Причина обязательна (в журнал)']]],box))return;const o=w.pr;w.pr=$('#rpP',box).value;w.fr=$('#rpF',box).value==='1';audit(`${w.id} priority ${o} → ${w.pr}: ${$('#rpR',box).value}`,`${w.id} приоритет ${o} → ${w.pr}: ${$('#rpR',box).value}`,'wl');save();closeModal();rerender()}})});
+};
+function book(w,only){const need=proc(w)[3]+15;for(let d=0;d<5;d++)for(const t of ['T1','T2','T3','T4'])for(const s of ['AM','PM']){const k=d+'|'+t+'|'+s;if(only&&k!==only)continue;const x=S.th[k];const used=x.cases.reduce((a,id)=>a+proc(S.wl.find(q=>q.id===id))[3]+15,0);if(used+need<=240&&(only||x.sp===proc(w)[2]||!x.cases.length)){if(!x.cases.length)x.sp=proc(w)[2];x.cases.push(w.id);w.bk=k;audit(`${w.id} scheduled ${k}`,`${w.id} запланирован ${k}`,'th');save();rerender();return{d,t,s}}}return null}
+
+
+APP.R.th=el=>{const used=k=>S.th[k].cases.reduce((a,id)=>a+proc(S.wl.find(q=>q.id===id))[3]+15,0);const keys=Object.keys(S.th);
+const util=d=>{const ks=keys.filter(k=>k.startsWith(d+'|'));return ks.reduce((a,k)=>a+used(k),0)/(ks.length*240)};const wk=keys.reduce((a,k)=>a+used(k),0)/(keys.length*240);
+el.innerHTML=`<div class="grid3"><div class="card" style="text-align:center"><h3>${T('Week utilisation','Загрузка недели')}</h3>${gauge(wk*100)+`<div class="muted" style="font-size:12px">${T('of 9,600 session minutes','из 9 600 минут сессий')}</div>`}</div>
+<div class="card" style="grid-column:span 2"><h3>${T('Utilisation by day','Загрузка по дням')}</h3><div class="chart">${barChart({labels:[0,1,2,3,4].map(DAYN),series:[{name:'%',data:[0,1,2,3,4].map(d=>Math.round(util(d)*100)),color:'var(--blue)'}],max:100,hl:TD,hlines:[{v:85,label:T('85% target','цель 85%'),color:'var(--mal)'}],yfmt:v=>v+'%'})}</div></div></div>
+<div class="card mt"><div class="row" style="margin-bottom:10px"><div class="chips">${[0,1,2,3,4].map(d=>`<button class="chip ${d===TD?'on':''}" data-td="${d}">${DAYN(d)}</button>`).join('')}</div><div class="sp"></div><button class="btn sm pri" id="autoFill">⚡ ${T('Auto-fill from waiting list','Заполнить из очереди')}</button></div>
+<div class="thg">${['T1','T2','T3','T4'].map(t=>['AM','PM'].map(s=>{const k=TD+'|'+t+'|'+s;const x=S.th[k];const u=used(k);return `<div class="ths"><div class="row"><b>${t} · ${s==='AM'?'08:00–12:00':'13:00–17:00'}</b><div class="sp"></div>${pill(T(...SPEC[x.sp]),'')}</div><div class="bar" style="margin:8px 0"><i style="width:${u/240*100}%;background:${u>240*.85?'var(--mal)':'var(--amber)'}"></i></div><small class="muted">${u} / 240 ${T('min','мин')}</small>
+${x.cases.map((id,i)=>{const w=S.wl.find(q=>q.id===id);return `<div class="li"><span class="mono" style="font-size:11px">${i+1}</span><div class="grow"><b style="font-size:13px">${T(...proc(w).slice(0,2))}</b><small>${nm(w)} · ${proc(w)[3]}+15 ${T('min','мин')}</small></div><button class="btn xs" data-unb="${id}" title="${T('Return to list','Вернуть в очередь')}">↩</button></div>`}).join('')||`<div class="muted" style="font-size:12.5px;padding:8px 0">${T('Empty session','Пустая сессия')}</div>`}
+<button class="btn xs" data-add="${k}">+ ${T('Add case','Добавить')}</button></div>`}).join('')).join('')}</div></div>`;
+bind(el,'td',d=>{TD=+d;APP.R.th(el)});
+bind(el,'unb',id=>{const w=S.wl.find(q=>q.id===id);const x=S.th[w.bk];x.cases.splice(x.cases.indexOf(id),1);w.bk=null;w.can=1;audit(`${id} returned to waiting list`,`${id} возвращён в очередь`,'th');save();rerender();toast(T('Returned to list (flagged as cancelled)','Возвращён в очередь (отмечен как отмена)'),'warn')});
+bind(el,'add',k=>{const free=240-used(k);const c=S.wl.filter(w=>!w.bk&&proc(w)[3]+15<=free).sort((a,b)=>score(b)-score(a)).slice(0,8);
+modal(T('Add case to ','Добавить в ')+k.split('|').slice(1).join(' ')+' · '+free+T(' min free',' мин свободно'),c.length?c.map(w=>`<div class="li"><span>${pill(score(w),'gold')}</span><div class="grow"><b>${T(...proc(w).slice(0,2))}</b><small>${nm(w)} · ${w.pr} · ${proc(w)[3]} ${T('min','мин')}</small></div><button class="btn xs pri" data-pick="${w.id}">${T('Add','Добавить')}</button></div>`).join(''):`<div class="empty">${T('No waiting case fits','Ни один случай не помещается')}</div>`,box=>bind(box,'pick',id=>{closeModal();book(S.wl.find(q=>q.id===id),k);toast(T('Case added','Случай добавлен'),'ok')}))});
+$('#autoFill').onclick=()=>{let n=0;S.wl.filter(w=>!w.bk).sort((a,b)=>score(b)-score(a)).forEach(w=>{for(const t of ['T1','T2','T3','T4'])for(const s of ['AM','PM']){if(w.bk)return;const k=TD+'|'+t+'|'+s;if(used(k)+proc(w)[3]+15<=240&&(S.th[k].sp===proc(w)[2]||!S.th[k].cases.length)){if(!S.th[k].cases.length)S.th[k].sp=proc(w)[2];S.th[k].cases.push(w.id);w.bk=k;n++}}});
+audit(`Auto-fill ${DAYN(TD)}: ${n} cases`,`Автозаполнение ${DAYN(TD)}: ${n}`,'th');save();rerender();toast(n?T(n+' cases scheduled by priority score',n+' случаев запланировано по баллу'):T('Sessions already full','Сессии заполнены'),n?'ok':'warn')};
+};
+
+
+APP.R.dis=el=>{const L=S.inp.filter(p=>p.edd<=addDays(today(),1)).sort((a,b)=>a.edd.localeCompare(b.edd));
+el.innerHTML=`<div class="kpis">${kpi(T('Due today / overdue','Сегодня / просрочено'),S.inp.filter(p=>p.edd<=today()).length)}${kpi(T('Due tomorrow','Завтра'),S.inp.filter(p=>p.edd===addDays(today(),1)).length)}${kpi(T('Ready to go','Готовы'),L.filter(p=>p.bar.length===BAR.length).length,T('all barriers cleared','препятствия сняты'),'ok-t')}${kpi(T('Discharged today','Выписано сегодня'),S.hist[S.hist.length-1].dis)}</div>
+<div class="card"><h3>${T('Discharge planner — today and tomorrow','План выписки — сегодня и завтра')}</h3>${tbl([T('Patient','Пациент'),T('Ward · bed','Отделение · койка'),T('EDD','Выписка'),T('Barriers cleared','Препятствия'),''],L.map(p=>{const w=WN(p.ward);const n=p.bar.length;return `<tr><td>${nm(p)}<div class="muted mono" style="font-size:11px">${nh(p)}</div></td><td>${T(w[1],w[2])} · ${p.bed}</td><td>${p.edd<today()?pill(fmtDS(p.edd),'bad'):fmtDS(p.edd)}${p.mfd?' '+pill('MFFD','warn'):''}</td>
+<td><div class="bchk">${BAR.map(b=>`<button class="bx ${p.bar.includes(b[0])?'on':''}" data-bar="${p.id}|${b[0]}" title="${T(b[1],b[2])}">${p.bar.includes(b[0])?'✓':''}</button>`).join('')}</div><small class="muted">${n}/${BAR.length}</small></td>
+<td><button class="btn xs ${n===BAR.length?'pri':''}" data-dc="${p.id}" ${PS()?'disabled':''}>${T('Discharge','Выписать')}</button></td></tr>`}),T('Nobody due','Выписок нет'))}
+<div class="legend mt">${BAR.map((b,i)=>`<span>${i+1}. ${T(b[1],b[2])}</span>`).join('')}</div>${PS()?`<div class="alert warn mt"><span>🔒</span><div>${T('Analyst role is read-only and cannot discharge patients.','Роль аналитика — только чтение, выписка недоступна.')}</div></div>`:''}</div>`;
+bind(el,'bar',k=>{const[id,b]=k.split('|');const p=S.inp.find(x=>x.id===id);if(PS()){toast(T('Read-only role','Роль только для чтения'),'warn');return}const i=p.bar.indexOf(b);i<0?p.bar.push(b):p.bar.splice(i,1);save();APP.R.dis(el)});
+bind(el,'dc',id=>{const p=S.inp.find(x=>x.id===id);const miss=BAR.filter(b=>!p.bar.includes(b[0]));if(!miss.length)return discharge(p);
+modal(T('Barriers still open','Остались препятствия'),`<div class="alert warn"><span>⚠</span><div>${miss.map(b=>T(b[1],b[2])).join('<br>')}</div></div>${inp('dcR',T('Reason to discharge anyway','Причина выписки несмотря на это'),'')}<div class="row mt"><div class="sp"></div><button class="btn danger" id="dcGo">${T('Discharge anyway','Выписать всё равно')}</button></div>`,box=>{$('#dcGo',box).onclick=()=>{if(!validate([['dcR',v=>v.length>=5,['Reason required','Нужна причина']]],box))return;closeModal();discharge(p)}})});
+};
+
+
+APP.R.dash=el=>{const h=S.hist;const L=h.map(x=>fmtDS(x.d));
+el.innerHTML=`<div class="kpis">${kpi(T('18-week RTT','RTT 18 недель'),h[h.length-1].rtt+'%',T('target 92%','цель 92%'),'warn-t')}${kpi(T('ED attendances / day','Обращений в приёмное / день'),Math.round(h.reduce((a,x)=>a+x.ed,0)/h.length))}${kpi(T('Discharges / day','Выписок / день'),Math.round(h.reduce((a,x)=>a+x.dis,0)/h.length))}${kpi(T('Trusts federated','Трастов в федерации'),'4',T('data stays in each trust','данные остаются в трастах'))}</div>
+<div class="grid2"><div class="card"><h3>${T('Flow: ED arrivals vs discharges','Поток: поступления и выписки')}</h3><div class="chart">${lineChart({labels:L,series:[{name:'ED',data:h.map(x=>x.ed),color:'var(--red)'},{name:'DC',data:h.map(x=>x.dis),color:'var(--mal)',area:1}]})}</div><div class="legend"><span><i style="background:var(--red)"></i>${T('ED arrivals','Поступления')}</span><span><i style="background:var(--mal)"></i>${T('Discharges','Выписки')}</span></div></div>
+<div class="card"><h3>${T('Length of stay, inpatients now','Длительность пребывания сейчас')}</h3><div class="chart">${(()=>{const b=[0,0,0,0,0];S.inp.forEach(p=>{const d=Math.round((new Date(today())-new Date(p.adm))/864e5);b[d<2?0:d<4?1:d<7?2:d<14?3:4]++});return barChart({labels:['0–1','2–3','4–6','7–13','14+'],series:[{name:T('patients','пациенты'),data:b,color:'var(--violet)'}]})})()}</div><div class="muted" style="font-size:12px">${T('Days since admission','Дней с поступления')}</div></div></div>
+<div class="card mt"><h3>${T('Trust comparison (federated query, aggregates only)','Сравнение трастов (федеративный запрос, только агрегаты)')}<span class="sp"></span><button class="btn xs" id="csv">⬇ CSV</button></h3>${tbl([T('Trust','Траст'),T('Occupancy','Занятость'),'RTT 18w',T('Waiting list','Очередь'),T('Small-number suppression','Подавление малых чисел')],[['Northgate (this)',pct(S.inp.length/WARDS.reduce((a,w)=>a+w[3],0)*100),h[h.length-1].rtt+'%',S.wl.filter(w=>!w.bk).length],['Eastmere','93%','61.2%','4 812'],['Kestrel Valley','89%','66.8%','2 140'],['St Aldric','97%','55.0%','<10']].map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td class="mono">${r[3]}</td><td>${r[3]==='<10'?pill(T('suppressed','скрыто'),'warn'):pill('k ≥ 10','ok')}</td></tr>`))}</div>`;
+$('#csv').onclick=()=>{dl('concord-flow.csv','date,occupancy,ed,discharges,rtt\n'+h.map(x=>[x.d,x.occ,x.ed,x.dis,x.rtt].join(',')).join('\n'),'text/csv');logAccess('Export flow CSV (aggregate)');audit('Aggregate CSV exported','Выгружен агрегированный CSV','priv');save()};
+};
+
+
+APP.R.priv=el=>{const r=ROLES.find(x=>x[0]===S.role);const s=S.inp[0];
+el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Your current access','Ваш текущий доступ')}</h3><div class="alert ${PS()?'warn':'ok'}"><span>${PS()?'🔒':'🔓'}</span><div><b>${T(r[1],r[2])}</b><br>${T(r[3],r[4])}</div></div>
+<h3 class="mt">${T('Same record, three roles','Одна запись — три роли')}</h3>${tbl([T('Role','Роль'),T('Name','Имя'),'NHS',T('Age','Возраст')],ROLES.map(x=>{const o=S.role;S.role=x[0];const row=`<tr class="${x[0]===o?'sel':''}"><td>${T(x[1],x[2])}</td><td>${nm(s)}</td><td class="mono">${nh(s)}</td><td>${ag(s)}</td></tr>`;S.role=o;return row}))}
+<div class="row mt"><button class="btn sm" id="rot">↻ ${T('Rotate pseudonym key','Сменить ключ псевдонимов')}</button><span class="muted" style="font-size:12px">${T('Tokens are keyed HMAC-style per project; rotating breaks linkage to old exports.','Токены считаются с ключом проекта; смена ключа разрывает связь со старыми выгрузками.')}</span></div></div>
+<div class="card"><h3>${T('Privacy controls','Механизмы защиты')}</h3>${[['Pseudonymisation at source','Псевдонимизация у источника','Identifiers tokenised before data leaves the trust','Идентификаторы заменяются до выхода из траста'],['Purpose-based access','Доступ по цели','Every role is tied to a lawful purpose (direct care / planning)','Каждая роль привязана к законной цели'],['Small-number suppression','Подавление малых чисел','Counts below 10 hidden in aggregates','Значения меньше 10 скрываются'],['National opt-out honoured','Учёт отказа от обработки','Opted-out patients excluded from secondary use','Отказавшиеся исключены из вторичного использования'],['Immutable access log','Неизменяемый журнал доступа','Every view and export recorded','Каждый просмотр и выгрузка записываются']].map(c=>`<div class="li"><span>✔</span><div class="grow"><b>${T(c[0],c[1])}</b><small>${T(c[2],c[3])}</small></div></div>`).join('')}</div></div>
+<div class="card mt"><h3>${T('Access log','Журнал доступа')}<span class="sp"></span><span class="muted" style="font-size:12px">${S.acc.length} ${T('events','событий')}</span></h3><div class="log">${S.acc.slice(0,40).map(a=>`<div><span class="t">${fmtDS(a.t)} ${fmtT(a.t)}</span> [${a.role}] ${esc(a.what)}</div>`).join('')||T('No access events','Событий нет')}</div></div>`;
+$('#rot').onclick=()=>{S.tokSalt='nd-'+(Math.random()*1e6|0);logAccess('Pseudonym key rotated');audit('Pseudonymisation key rotated','Сменён ключ псевдонимизации','priv');save();rerender();toast(T('Key rotated — all tokens changed','Ключ сменён — все токены новые'),'ok')};
+};
+
+/* ---- boot: state, login, shell, router ---- */
+const KEY='pt_'+APP.slug+'_state';
+let S=null;
+function fresh(){const s=APP.seed();s.v=APP.ver||1;s.view=APP.views[0][0];s.user=null;s.intro=true;s.audit=s.audit||[];return s}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||S.v!==(APP.ver||1))S=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function audit(en,ru,kind){S.audit=S.audit||[];S.audit.unshift({t:Date.now(),en,ru,k:kind||'',u:S.user?S.user.name:'system'});if(S.audit.length>300)S.audit.length=300;save()}
+const auditTxt=a=>PT.lang==='ru'?a.ru:a.en;
+let lgVals=null;
+function rerender(){if(!S.user){renderLogin();return}renderShell();renderView()}
+function go(id){S.view=id;save();closeSide();renderShell();renderView();window.scrollTo(0,0)}
+function closeSide(){const s=$('#side');if(s)s.classList.remove('open')}
+function renderLogin(){
+  $('#app').hidden=true;const L=$('#login');L.hidden=false;const lg=APP.login;
+  const v=lgVals||{u:lg.user,p:lg.pass,r:(lg.roles||[[0]])[0][0]};
+  L.innerHTML=`<div class="lg-hero">
+    <div class="bigb"><b>${APP.icon}</b><div>${esc(APP.name)}<div style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0">${TT(APP.sub)}</div></div></div>
+    <h2>${TT(lg.hero)}</h2><p>${TT(lg.heroP)}</p>
+    <div class="lg-feats">${lg.feats.map(f=>`<div><b>${f[0]} ${T(f[1],f[2])}</b>${T(f[3],f[4])}</div>`).join('')}</div>
+  </div>
+  <div class="lg-form"><div class="card">
+    <h3>${T('Sign in to','Вход в')} ${esc(APP.name)}</h3><div class="muted" style="font-size:13px">${TT(lg.tag)}</div>
+    ${inp('lgU',T('User ID','Логин'),v.u,'','text','autocomplete="username"')}
+    ${inp('lgP',T('Password','Пароль'),v.p,'','password','autocomplete="current-password"')}
+    ${lg.roles?sel('lgR',T('Sign in as','Войти как'),lg.roles.map(r=>[r[0],r[1],r[2]]),v.r):''}
+    <button class="btn pri" id="lgGo" style="width:100%;justify-content:center;margin-top:16px;padding:12px">${T('Sign in','Войти')} →</button>
+    <div class="lg-demo">${T('<b>Demo access.</b> Credentials are prefilled — press <b>Sign in</b>. All data is synthetic and stays in this browser.','<b>Демо-доступ.</b> Логин и пароль уже введены — нажмите <b>Войти</b>. Все данные вымышленные и хранятся только в этом браузере.')}</div>
+    <div class="lg-sec">🔒 <span>${TT(lg.secure||['Demo environment · MFA simulated · session in local storage','Демо-среда · MFA имитируется · сессия в локальном хранилище'])}</span></div>
+  </div></div>`;
+  const keep=()=>{lgVals={u:$('#lgU').value,p:$('#lgP').value,r:$('#lgR')?$('#lgR').value:v.r}};
+  $$('input,select',L).forEach(i=>i.oninput=keep);
+  const go2=()=>{keep();if(!validate([['lgU',x=>x.length>=3,['Enter your user ID','Введите логин']],['lgP',x=>x.length>=4,['Enter the password','Введите пароль']]],L))return;
+    const role=lg.roles?lg.roles.find(r=>String(r[0])===String(lgVals.r)):null;
+    S.user={id:lgVals.u,name:lg.name,role:role?[role[1],role[2]]:lg.role,rk:role?role[0]:null};
+    if(APP.onLogin)APP.onLogin(role?role[0]:null);
+    audit('Signed in as '+lgVals.u,'Вход: '+lgVals.u,'auth');save();
+    toast(T('Welcome, ','Добро пожаловать, ')+esc(lg.name.split(' ')[0]),'ok');lgVals=null;rerender()};
+  $('#lgGo').onclick=go2;$$('input',L).forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')go2()});
+}
+function renderShell(){
+  $('#login').hidden=true;$('#app').hidden=false;const u=S.user;
+  const groups=APP.groups||[[null]];
+  $('#side').innerHTML=`<div class="brand"><b>${APP.icon}</b><div>${esc(APP.name)}<small>${TT(APP.sub)}</small></div></div>
+    ${groups.map(g=>`${g[0]!=null&&g[1]?`<div class="sec">${T(g[1],g[2])}</div>`:''}${APP.views.filter(v=>(v[4]||null)===g[0]&&(!APP.visible||APP.visible(v[0]))).map(v=>{const b=APP.badge?APP.badge(v[0]):null;return `<button class="nav ${S.view===v[0]?'on':''}" data-go="${v[0]}"><span class="ic">${v[1]}</span><span>${T(v[2],v[3])}</span>${b&&b[0]?`<span class="cnt ${b[1]?'r':''}">${b[0]}</span>`:''}</button>`}).join('')}`).join('')}
+    <div class="grow"></div>
+    ${APP.sideExtra?APP.sideExtra():''}
+    <div class="who"><div class="av">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</div><div style="min-width:0"><b>${esc(u.name)}</b><span>${TT(u.role)}</span></div></div>
+    <div class="sidebtns"><button class="btn sm" id="sOut">${T('Sign out','Выйти')}</button><button class="btn sm" id="sReset">${T('Reset demo','Сбросить демо')}</button></div>`;
+  bind($('#side'),'go',id=>go(id));
+  if(APP.bindSide)APP.bindSide($('#side'));
+  $('#sOut').onclick=()=>{audit('Signed out','Выход','auth');S.user=null;save();closeModal();rerender()};
+  $('#sReset').onclick=()=>{if(!confirmReset())return;try{Object.keys(localStorage).filter(k=>k.indexOf('pt_'+APP.slug+'_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}const u=S.user;S=fresh();S.user=u;if(APP.onLogin)APP.onLogin(u.rk);save();closeModal();rerender();toast(T('Demo data reset','Демо-данные сброшены'),'ok')};
+  const cur=APP.views.find(v=>v[0]===S.view)||APP.views[0];
+  const g=groups.find(x=>x[0]===(cur[4]||null));
+  $('#crumb').innerHTML=esc(APP.name)+(g&&g[1]?' · '+T(g[1],g[2]):'');
+  $('#title').innerHTML=T(cur[2],cur[3]);
+  $('#headx').innerHTML=APP.head?APP.head():'';
+  if(APP.bindHead)APP.bindHead($('#headx'));
+  const I=$('#intro');
+  if(S.intro){I.className='intro';I.innerHTML=`<div class="card"><h3><span>${T('How to try it','Как попробовать')}</span><span class="sp"></span><button class="btn xs" id="introX">${T('Hide','Скрыть')}</button></h3><div class="how">${APP.how.map((h,i)=>`<div><b>${i+1}</b><span>${TT(h)}</span></div>`).join('')}</div></div>
+    <div class="card"><dl class="facts">${APP.facts.map(f=>`<dt>${T(f[0],f[1])}</dt><dd>${f.length>3?T(f[2],f[3]):f[2]}</dd>`).join('')}</dl></div>`;
+    $('#introX').onclick=()=>{S.intro=false;save();renderShell()}}
+  else{I.className='intro hide';I.innerHTML=''}
+  $('#showIntro').hidden=S.intro;
+}
+let confirmReset=()=>true;
+function renderView(){
+  if(!APP.views.find(v=>v[0]===S.view))S.view=APP.views[0][0];
+  const el=$('#view');el.className='view on';el.dataset.v=S.view;
+  if(APP.leave)APP.leave();
+  try{APP.R[S.view](el)}catch(e){console.error(e);el.innerHTML='<div class="card">'+esc(e.message)+'</div>'}
+}
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+$('#showIntro').onclick=()=>{S.intro=true;save();renderShell()};
+document.addEventListener('click',e=>{const s=$('#side');if(s&&s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+let booted=false;
+PT.onLang(()=>{booted=true;rerender()});
+if(document.readyState!=='loading')setTimeout(()=>{if(!booted)rerender()},0);
+
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

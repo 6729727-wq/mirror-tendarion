@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Borderline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px;line-height:1.2}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center;margin-top:8px}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+.who span{color:var(--muted)}
+.sidebtns{display:flex;gap:6px;margin-top:8px}
+.sidebtns .btn{flex:1;justify-content:center}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.intro.hide{display:none}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.card{min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h3 .x{font-size:12px;color:var(--muted);font-weight:500}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fgrid .full{grid-column:1/-1}
+.f{min-width:0}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px;display:none}
+.f.bad .input{border-color:var(--red)} .f.bad .err{display:block}
+select.input{appearance:auto}
+textarea.input{resize:vertical}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row .sp{flex:1}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 9px;font-size:12px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)} .blue-t{color:var(--blue)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.prog.gold i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.prog.red i{background:var(--red)} .prog.amber i{background:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;overflow-wrap:anywhere}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack>*+*{margin-top:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.risk{display:inline-block;min-width:38px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:8px;padding:2px 6px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;min-width:0}
+.li:last-child{border-bottom:0}
+.li>.grow{min-width:0}
+.li small{display:block;color:var(--muted);font-size:12px}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:100px;max-height:240px;overflow:auto;overflow-wrap:anywhere}
+.log div{padding:2px 0} .log .t{color:var(--dim)}
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 10%,transparent);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.alert.warn{border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.alert.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.alert b{display:block}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow:auto;padding:20px;animation:fade .2s}
+.modal .box h3{margin:0 0 14px;font-size:17px;display:flex;gap:8px;align-items:center}
+.modal .box h3 .sp{flex:1}
+.mclose{border:0;background:none;font-size:20px;cursor:pointer;color:var(--muted);padding:0 4px}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.lg-hero{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 60%),radial-gradient(90% 80% at 100% 100%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 60%),var(--bg2);border-right:1px solid var(--line);padding:48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.lg-hero .bigb{display:flex;align-items:center;gap:14px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+.lg-hero .bigb b{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:26px}
+.lg-hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em;max-width:560px}
+.lg-hero p{color:var(--muted);margin:0;max-width:520px}
+.lg-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px}
+.lg-feats div{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 70%,transparent);border-radius:12px;padding:10px 12px;font-size:13px}
+.lg-feats div b{display:block;font-size:13.5px}
+.lg-form{display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-form .card{width:100%;max-width:420px;padding:26px}
+.lg-form h3{font-size:20px;margin:0 0 4px}
+.lg-form .f{margin-top:12px}
+.lg-demo{border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-top:14px;color:var(--muted)}
+.lg-demo b{color:var(--gold2)}
+.lg-sec{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--dim);margin-top:14px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.split,.intro,.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .lg-hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .lg-hero h2{font-size:24px}
+  .lg-form{padding:20px 14px 40px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.fgrid.c3,.opts,.lg-feats{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.step span{font-size:10px}.lg-form .card{padding:18px}.modal .box{padding:16px}}
+.btn.xs{padding:3px 10px;font-size:11.5px;min-height:28px}
+#headx{min-width:0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;border:1px solid var(--line2);color:var(--muted)}
+.mt{margin-top:14px}
+
+.steps{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}.st{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--bg2);color:var(--muted);font-size:12.5px}
+.st b{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--line);font-size:11px;color:var(--text)}.st.on{background:color-mix(in srgb,var(--mal) 14%,transparent);color:var(--text)}.st.on b{background:var(--mal);color:#fff}.st.ok b{background:var(--mal3,var(--mal));color:#fff}
+.pp{position:relative;border-radius:14px;padding:14px;background:linear-gradient(135deg,#1d3557,#274c77);color:#e8eef7;overflow:hidden;display:grid;grid-template-columns:70px 1fr;gap:10px;max-width:440px}
+.ppph{width:70px;height:86px;border-radius:8px;background:#c9d6e8;display:grid;place-items:center;font-size:36px}.ppinfo{display:flex;flex-direction:column;gap:4px;font-size:13px}.ppinfo b{letter-spacing:.08em;font-size:11px;opacity:.8}
+.mrz{grid-column:1/-1;font:600 11px/1.5 var(--mono);background:#f4f1e6;color:#222;border-radius:6px;padding:6px 8px;word-break:break-all;min-height:40px}
+.scanl{position:absolute;left:0;right:0;height:3px;background:#5df2a0;box-shadow:0 0 14px #5df2a0;top:-10px;opacity:0}.scanl.go{opacity:1;animation:scn 1.1s linear infinite}@keyframes scn{0%{top:0}100%{top:100%}}
+.cam{width:100%;max-width:360px;border-radius:14px;display:block;background:#222;transition:filter .2s}
+.q{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}.yn{display:flex;gap:6px}
+.dec{text-align:center;padding:24px 8px}.dec .big{font-size:52px}.dec h2{margin:8px 0}
+.qg{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start}@media(max-width:900px){.qg{grid-template-columns:1fr}}
+.rk{display:inline-grid;place-items:center;min-width:34px;height:26px;border-radius:8px;font-weight:800;font-size:12.5px;color:#fff;background:var(--c)}
+.av3{width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.why{display:grid;grid-template-columns:1fr 90px 36px;gap:8px;align-items:center;font-size:12.5px;padding:4px 0}.why .bar{margin:0}.why .bar i{background:var(--red)}
+.bar{height:6px;border-radius:4px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;border-radius:4px}
+.dl2{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 12px}.dl2 dt{color:var(--muted)}.dl2 dd{margin:0;min-width:0;overflow-wrap:anywhere}
+tr.sel td{background:color-mix(in srgb,var(--mal) 10%,transparent)}
+
+</style>
+</head>
+<body data-demo-en="Borderline — electronic travel authorisation" data-demo-ru="Borderline — электронное разрешение на въезд">
+<div class="login" id="login" hidden></div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side"></aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <div id="headx" class="row"></div>
+      <button class="btn sm" id="showIntro" hidden title="How to try it">?</button>
+    </div>
+    <div class="intro" id="intro"></div>
+    <section class="view on" id="view"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div class="modal" id="modal"></div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const TT=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtDS=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+const fmtN=(n,dg=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:dg,maximumFractionDigits:dg});
+const pct=(n,dg=0)=>fmtN(n,dg)+'%';
+const uid=(p)=>(p||'')+Math.random().toString(36).slice(2,8).toUpperCase();
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body,mount){const m=$('#modal');m.innerHTML=`<div class="box" role="dialog"><h3><span>${title}</span><span class="sp"></span><button class="mclose" aria-label="Close">×</button></h3>${body}</div>`;m.classList.add('on');$('.mclose',m).onclick=closeModal;m.onclick=e=>{if(e.target===m)closeModal()};if(mount)mount($('.box',m))}
+function closeModal(){const m=$('#modal');m.classList.remove('on');m.innerHTML=''}
+/* form validation: fields = [[id, test(v)->bool, [en,ru] message]] ; returns true if ok */
+function validate(fields,root){let ok=true;fields.forEach(([id,test,msg])=>{const el=$('#'+id,root||document);if(!el)return;const f=el.closest('.f');const good=test(el.type==='checkbox'?el.checked:el.value.trim());if(f){f.classList.toggle('bad',!good);let e=$('.err',f);if(!e){e=document.createElement('div');e.className='err';f.append(e)}e.textContent=TT(msg)}if(!good)ok=false});if(!ok)toast(T('Please fix the highlighted fields','Исправьте выделенные поля'),'bad');return ok}
+const fld=(id,label,inner,cls)=>`<div class="f ${cls||''}"><label for="${id}">${label}</label>${inner}</div>`;
+const inp=(id,label,val,cls,type,attrs)=>fld(id,label,`<input class="input" id="${id}" type="${type||'text'}" value="${esc(val==null?'':val)}" ${attrs||''}>`,cls);
+const sel=(id,label,opts,val,cls)=>fld(id,label,`<select class="input" id="${id}">${opts.map(o=>`<option value="${esc(o[0])}" ${String(o[0])===String(val)?'selected':''}>${esc(o.length>2?T(o[1],o[2]):o[1])}</option>`).join('')}</select>`,cls);
+const pill=(txt,cls)=>`<span class="pill ${cls||''}">${txt}</span>`;
+const kpi=(l,v,d,cls)=>`<div class="card kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}</div>${d!=null?`<div class="d">${d}</div>`:''}</div>`;
+const chipsH=(items,cur,attr)=>items.map(x=>`<button class="chip ${String(cur)===String(x[0])?'on':''}" data-${attr}="${esc(x[0])}">${x.length>2?T(x[1],x[2]):x[1]}</button>`).join('');
+const bind=(root,attr,fn)=>$$('[data-'+attr+']',root).forEach(b=>b.onclick=e=>{e.stopPropagation();fn(b.dataset[attr.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())],b,e)});
+const tbl=(heads,rows,empty)=>`<div class="tw"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${heads.length}" class="muted">${empty||T('Nothing here yet','Пока пусто')}</td></tr>`}</tbody></table></div>`;
+function dl(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type||'text/plain'}));a.download=name;document.body.append(a);a.click();a.remove()}catch(e){}}
+/* ---- inline SVG charts (theme-aware via CSS vars in style attrs) ---- */
+const C=['var(--mal)','var(--gold)','var(--blue)','var(--violet)','var(--amber)','var(--red)','var(--mal3)'];
+function lineChart(o){/* o:{series:[{name,data:[...],color,dash,area}], labels:[...], w,h, yfmt, min,max, band:[y0,y1,color]} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=12,pt=14,pb=28;const all=o.series.flatMap(s=>s.data).filter(v=>v!=null);
+  let mn=o.min!=null?o.min:Math.min(...all),mx=o.max!=null?o.max:Math.max(...all);if(mx===mn)mx=mn+1;const pad=(mx-mn)*.08;if(o.min==null)mn-=pad;if(o.max==null)mx+=pad;
+  const n=Math.max(...o.series.map(s=>s.data.length));const X=i=>pl+(n<2?0:i*(W-pl-pr)/(n-1)),Y=v=>pt+(1-(v-mn)/(mx-mn))*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  if(o.band){s+=`<rect x="${pl}" y="${Y(o.band[1])}" width="${W-pl-pr}" height="${Math.max(0,Y(o.band[0])-Y(o.band[1]))}" style="fill:${o.band[2]||'var(--mal)'};opacity:.1"/>`}
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/8);(o.labels||[]).forEach((l,i)=>{if(i%step===0||i===n-1)s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  o.series.forEach((se,k)=>{const col=se.color||C[k%C.length];const pts=se.data.map((v,i)=>v==null?null:[X(i),Y(v)]).filter(Boolean);if(!pts.length)return;const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+    if(se.area)s+=`<path d="${d}L${pts[pts.length-1][0]} ${H-pb}L${pts[0][0]} ${H-pb}Z" style="fill:${col};opacity:.14"/>`;
+    s+=`<path d="${d}" fill="none" style="stroke:${col}" stroke-width="${se.width||2.2}" stroke-linejoin="round" stroke-linecap="round" ${se.dash?'stroke-dasharray="6 5"':''}/>`;
+    if(se.dots!==false&&pts.length<=40)pts.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${se.dots===true?3.2:2.4}" style="fill:${col}"><title>${esc((o.labels||[])[i]||'')} · ${yf(se.data[i])}</title></circle>`})});
+  return s+'</svg>'}
+function barChart(o){/* o:{labels,series:[{name,data,color}],stacked,w,h,yfmt,hl:index} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=10,pt=16,pb=30;const n=o.labels.length;const sums=o.labels.map((_,i)=>o.stacked?o.series.reduce((a,s)=>a+(s.data[i]||0),0):Math.max(...o.series.map(s=>s.data[i]||0)));
+  const mx=(o.max||Math.max(...sums,1))*1.08;const bw=(W-pl-pr)/n;const Y=v=>pt+(1-v/mx)*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let i=0;i<=4;i++){const v=mx*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/12);
+  o.labels.forEach((l,i)=>{const x0=pl+i*bw;let acc=0;const ns=o.series.length;
+    o.series.forEach((se,k)=>{const v=se.data[i]||0;const col=se.color||C[k%C.length];
+      if(o.stacked){const y=Y(acc+v),h=Y(acc)-y;s+=`<rect x="${x0+bw*.18}" y="${y}" width="${bw*.64}" height="${Math.max(0,h)}" rx="3" style="fill:${col}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`;acc+=v}
+      else{const w=bw*.7/ns;const y=Y(v);s+=`<rect x="${x0+bw*.15+k*w}" y="${y}" width="${Math.max(1,w-2)}" height="${Math.max(0,H-pb-y)}" rx="3" style="fill:${col};opacity:${o.hl!=null&&o.hl!==i?.45:1}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`}});
+    if(i%step===0)s+=`<text x="${x0+bw/2}" y="${H-10}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  return s+'</svg>'}
+function hbars(items,o){/* items:[[label,value,color?]] */o=o||{};const mx=o.max||Math.max(...items.map(x=>x[1]),1);const f=o.fmt||(v=>fmtN(v));
+  return items.map(x=>`<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:7px"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x[0]}</span><div class="prog" style="width:${o.w||110}px;flex:none"><i style="width:${x[1]/mx*100}%;${x[2]?'background:'+x[2]:''}"></i></div><span class="mono" style="width:${o.vw||48}px;text-align:right;flex:none">${f(x[1])}</span></div>`).join('')}
+function donut(parts,o){/* parts:[[label,value,color]] */o=o||{};const sz=o.size||140,r=sz/2-12,c=2*Math.PI*r;const tot=parts.reduce((a,p)=>a+p[1],0)||1;let off=0;
+  let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" style="flex:none"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="16"/>`;
+  parts.forEach((p,i)=>{const L=c*p[1]/tot;s+=`<circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:${p[2]||C[i%C.length]}" stroke-width="16" stroke-dasharray="${L} ${c-L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${sz/2} ${sz/2})"><title>${esc(p[0])}: ${fmtN(p[1])}</title></circle>`;off+=L});
+  s+=`<text x="${sz/2}" y="${sz/2+2}" text-anchor="middle" font-size="${o.fs||20}" font-weight="800" style="fill:var(--text)">${o.center!=null?o.center:fmtN(tot)}</text>${o.sub?`<text x="${sz/2}" y="${sz/2+18}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(o.sub)}</text>`:''}</svg>`;
+  const leg=`<div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;min-width:0">${parts.map((p,i)=>`<div style="display:flex;gap:8px;align-items:center"><i style="width:10px;height:10px;border-radius:3px;background:${p[2]||C[i%C.length]};flex:none"></i><span style="flex:1;min-width:0">${p[0]}</span><b class="mono">${o.fmt?o.fmt(p[1]):fmtN(p[1])}</b></div>`).join('')}</div>`;
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${s}${leg}</div>`}
+function gauge(p,o){o=o||{};const r=50,c=Math.PI*r;const col=o.color||(p>=90?'var(--red)':p>=75?'var(--amber)':'var(--mal)');
+  return `<svg viewBox="0 0 120 70" style="width:${o.w||150}px;max-width:100%"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:var(--line)" stroke-width="11" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${c*clamp(p,0,100)/100} ${c}"/><text x="60" y="58" text-anchor="middle" font-size="19" font-weight="800" style="fill:var(--text)">${o.label!=null?o.label:Math.round(p)+'%'}</text></svg>`}
+function spark(data,col){const W=110,H=30,mn=Math.min(...data),mx=Math.max(...data)||1;const d=data.map((v,i)=>(i?'L':'M')+(i*W/(data.length-1)).toFixed(1)+' '+(H-3-(v-mn)/((mx-mn)||1)*(H-6)).toFixed(1)).join('');return `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;flex:none"><path d="${d}" fill="none" style="stroke:${col||'var(--mal)'}" stroke-width="2"/></svg>`}
+
+//@demo Borderline|electronic travel authorisation|электронное разрешение на въезд
+const NAT=[['USA','United States','США',8],['CAN','Canada','Канада',6],['AUS','Australia','Австралия',5],['JPN','Japan','Япония',4],['BRA','Brazil','Бразилия',22],['MEX','Mexico','Мексика',24],['ARG','Argentina','Аргентина',18],['KOR','South Korea','Южная Корея',6],['SGP','Singapore','Сингапур',5],['ISR','Israel','Израиль',14],['ARE','UAE','ОАЭ',16],['MYS','Malaysia','Малайзия',15]];
+const PURP=[['tour','Tourism','Туризм'],['biz','Business','Бизнес'],['fam','Visiting family','Визит к родным'],['tr','Transit','Транзит'],['stu','Short study','Краткая учёба']];
+const QS=[['crim','Have you ever been convicted of a criminal offence in any country?','Были ли вы осуждены за преступление в какой-либо стране?',30],['ref','Have you ever been refused a visa or entry to Nordania?','Вам когда-либо отказывали во въезде или визе Нордании?',25],['ovs','Have you ever stayed longer than permitted in Nordania?','Вы когда-либо превышали разрешённый срок пребывания?',35],['war','Have you been involved in war crimes or terrorism?','Причастны ли вы к военным преступлениям или терроризму?',90]];
+const FIRST=['JAMES','MARIA','KENJI','SOFIA','LIAM','ANA','DAVID','YUNA','LUCAS','ISABELLA','NOAH','CHLOE','ETHAN','MIA','DANIEL','HANA'];
+const LAST=['CARTER','SILVA','TANAKA','ROSSI','MILLER','GARCIA','COHEN','KIM','MARTIN','LOPEZ','NGUYEN','WALSH','HARRIS','ITO','BROOKS','REYES'];
+const FEE=16,STEPS=['pass','face','trip','qs','pay','done'];
+let QF='open',SEL=null,camT=null;
+const APP={slug:'eta',ver:1,icon:'🛂',name:'Borderline',sub:['Electronic Travel Authorisation · Nordania','Электронное разрешение на въезд · Нордания'],
+login:{user:'caseworker.4471',pass:'eta-demo-2025',name:'Daniel Okafor',role:['ETA caseworker, Border Directorate','Сотрудник ETA, пограничное управление'],
+roles:[['tr','Traveller (public app)','Путешественник (публичное приложение)'],['cw','Caseworker (back office)','Сотрудник (бэк-офис)']],tag:['Apply in minutes, decided in seconds','Заявка за минуты, решение за секунды'],
+hero:['Permission to travel, decided before boarding','Разрешение на поездку — до посадки'],
+heroP:['Travellers scan their passport chip, take a selfie and pay; 90% are auto-granted by risk rules. Caseworkers handle the rest from a prioritised queue with watchlist hits and match scores.','Путешественник сканирует паспорт, делает селфи и платит; 90% одобряются автоматически по правилам риска. Остальное — сотрудникам из очереди с совпадениями и оценками.'],
+feats:[['📘','MRZ scan','Скан MRZ','Check digits validated','Проверка контрольных цифр'],['🤳','Selfie match','Сверка селфи','Face score vs chip photo','Оценка лица по фото чипа'],['💳','Payment','Оплата','Luhn-checked card','Карта с проверкой Луна'],['⚖️','Risk queue','Очередь риска','Approve / refer / refuse','Одобрить / передать / отказать']]},
+how:[['As <b>Traveller</b>: press <b>Scan passport</b>, then <b>Capture</b> a selfie, fill the trip, answer questions and pay with <span class="mono">4111 1111 1111 1111</span>.','Как <b>путешественник</b>: <b>Сканировать паспорт</b>, затем <b>Снимок</b>, поездка, вопросы и оплата картой <span class="mono">4111 1111 1111 1111</span>.'],
+['Answer “Yes” to a question — the risk score rises and the application goes to the <b>Caseworker queue</b> instead of auto-grant.','Ответьте «Да» на вопрос — риск вырастет, и заявка уйдёт в <b>очередь сотрудника</b>.'],
+['Switch role in the header to <b>Caseworker</b> and decide the referred cases.','Переключите роль в шапке на <b>сотрудника</b> и примите решения.']],
+facts:[['Tender','Тендер','Electronic travel authorisation (UK ETA class)','Электронное разрешение на въезд (класс UK ETA)'],['Year · budget','Год · бюджет','2023 · £1.1B'],['Client','Заказчик','Border Directorate, Republic of Nordania (fictional)','Пограничное управление, Республика Нордания (вымышл.)'],['Stack','Стек','Mobile NFC · Face biometrics · Risk engine']],
+groups:[['tr','Traveller','Путешественник'],['cw','Caseworker','Сотрудник']],
+views:[['apply','📝','Apply for ETA','Подать заявку','tr'],['mine','📄','My applications','Мои заявки','tr'],['queue','📥','Case queue','Очередь','cw'],['rules','⚙️','Risk rules','Правила риска','cw'],['stats','📊','Statistics','Статистика','cw']],
+badge(id){if(id==='apply')syncRole();if(id==='queue')return[S.apps.filter(a=>a.st==='ref').length,1];if(id==='mine')return S.my.length?[S.my.length,0]:null;return null},
+head(){return `<select class="input" id="roleSel" style="width:auto;padding:6px 10px">${this.login.roles.map(r=>`<option value="${r[0]}" ${S.role===r[0]?'selected':''}>${r[0]==='tr'?'🧳 ':'🛂 '}${T(r[1],r[2]).split(' (')[0]}</option>`).join('')}</select>`},
+bindHead(){$('#roleSel').onchange=e=>{S.role=e.target.value;{const r=APP.login.roles.find(x=>x[0]===S.role);S.user.role=[r[1],r[2]];S.user.rk=S.role;S.user.name=S.role==='tr'?'Emily Carter':APP.login.name}audit('Role → '+S.role,'Роль → '+S.role,'auth');go(S.role==='tr'?'apply':'queue')}},
+onLogin(rk){S.role=rk||'cw';if(S.user&&S.role==='tr')S.user.name='Emily Carter';S.view=S.role==='tr'?'apply':'queue'},
+leave(){if(camT){cancelAnimationFrame(camT);camT=null}},
+seed(){const R=rng(77);const apps=[];for(let i=0;i<64;i++){const n=NAT[R()*NAT.length|0];const q=QS.map(x=>R()<(x[0]==='war'?.01:.06));const fm=R()<.08?40+R()*35:86+R()*13;const wl=R()<.05;const a={id:'ETA-'+(482100+i*37),fn:FIRST[R()*16|0],ln:LAST[R()*16|0],nat:n[0],dob:(1950+(R()*55|0))+'-0'+(1+(R()*9|0))+'-1'+(R()*9|0),pp:n[0].slice(0,1)+(1e7+R()*9e7|0),purp:PURP[R()*5|0][0],q,fm:Math.round(fm),wl,t:Date.now()-(R()*6*864e5|0)};a.risk=risk(a);a.st=a.risk>=60?'ref':a.risk>=85?'ref':(R()<.85?'grant':'ref');if(a.st==='grant'&&R()<.03)a.st='refuse';apps.push(a)}
+const days=[];for(let i=13;i>=0;i--){const t=Math.round(2800+R()*900+(i<5?400:0));days.push({d:addDays(today(),-i),n:t,auto:Math.round(t*(.86+R()*.06)),ref:Math.round(t*(.008+R()*.006))})}
+return{apps,days,my:[],role:'cw',draft:{},rules:{nat:1,q:1,face:1,wl:1,thr:60}}},
+R:{}
+};
+
+function syncRole(){if(!S.user)return;const want=['apply','mine'].includes(S.view)?'tr':'cw';if(S.role===want)return;S.role=want;const r=APP.login.roles.find(x=>x[0]===want);S.user.role=[r[1],r[2]];S.user.rk=want;S.user.name=want==='tr'?'Emily Carter':APP.login.name}
+function risk(a,ru){ru=ru||(typeof S!=='undefined'&&S&&S.rules)||{nat:1,q:1,face:1,wl:1};let r=0;const why=[];
+if(ru.nat){const n=NAT.find(x=>x[0]===a.nat);r+=n[3];why.push(['Nationality baseline','База по гражданству',n[3]])}
+if(ru.q)QS.forEach((q,i)=>{if(a.q[i]){r+=q[3];why.push(['Declared: '+q[1].slice(0,40)+'…','Ответ: '+q[2].slice(0,40)+'…',q[3]])}});
+if(ru.face&&a.fm<80){const v=Math.round((80-a.fm)*1.2);r+=v;why.push(['Low selfie match '+a.fm+'%','Низкое совпадение селфи '+a.fm+'%',v])}
+if(ru.wl&&a.wl){r+=55;why.push(['Watchlist name hit','Совпадение со списком',55])}
+a.why=why;return Math.min(99,r)}
+const nat=c=>{const n=NAT.find(x=>x[0]===c);return n?T(n[1],n[2]):c};
+const STL={grant:['Granted','Одобрено','ok'],ref:['Referred','На проверке','warn'],refuse:['Refused','Отказ','bad'],rfi:['Info requested','Запрошены данные','gold']};
+const stp=s=>pill(T(STL[s][0],STL[s][1]),STL[s][2]);
+
+function cd(s){const w=[7,3,1];let t=0;for(let i=0;i<s.length;i++){const c=s[i];const v=c==='<'?0:/\d/.test(c)?+c:c.charCodeAt(0)-55;t+=v*w[i%3]}return t%10}
+function mrz(d){const pad=(s,n)=>(s+'<'.repeat(n)).slice(0,n);const l1=pad('P<'+d.nat+d.ln+'<<'+d.fn.replace(/ /g,'<'),44);const pn=pad(d.pp,9),db=d.dob.replace(/-/g,'').slice(2),ex=d.exp.replace(/-/g,'').slice(2);
+const l2a=pn+cd(pn)+d.nat+db+cd(db)+d.sex+ex+cd(ex);const opt='<'.repeat(14);const pc=cd(opt);const comp=pn+cd(pn)+db+cd(db)+ex+cd(ex)+opt+pc;return[l1,l2a+opt+pc+cd(comp)]}
+function luhn(n){n=n.replace(/\D/g,'');if(n.length<13)return false;let s=0;for(let i=0;i<n.length;i++){let d=+n[n.length-1-i];if(i%2){d*=2;if(d>9)d-=9}s+=d}return s%10===0}
+
+
+APP.R.apply=el=>{const D=S.draft;const st=D.step||'pass';const si=STEPS.indexOf(st);
+const bar=`<div class="steps">${[['Passport','Паспорт'],['Selfie','Селфи'],['Trip','Поездка'],['Questions','Вопросы'],['Pay','Оплата']].map((x,i)=>`<div class="st ${i<si?'ok':i===si?'on':''}"><b>${i<si?'✓':i+1}</b><span>${T(x[0],x[1])}</span></div>`).join('')}</div>`;
+let body='';
+if(st==='pass')body=`<div class="grid2"><div><h3>${T('Scan your passport','Сканируйте паспорт')}</h3><p class="muted">${T('Hold the photo page in the frame. We read the machine-readable zone (MRZ) and verify the ICAO check digits, then read the chip.','Держите страницу с фото в рамке. Мы читаем машиночитаемую зону (MRZ), проверяем контрольные цифры ICAO и читаем чип.')}</p>
+<div class="pp" id="pp"><div class="ppph">👤</div><div class="ppinfo"><b>PASSPORT · ${D.nat||'USA'}</b><span>${esc(D.ln||'CARTER')}, ${esc(D.fn||'JAMES')}</span></div><div class="mrz" id="mrzT">${D.mrz?D.mrz.map(esc).join('<br>'):'P&lt;USA…<br>…'}</div><div class="scanl" id="scanl"></div></div>
+<div class="row mt"><button class="btn pri" id="scan">📷 ${T('Scan passport','Сканировать паспорт')}</button><button class="btn" id="manual">${T('Enter manually','Ввести вручную')}</button></div></div>
+<div><h3>${T('Read result','Результат чтения')}</h3><div id="scanR">${D.mrz?scanRes(D):`<div class="empty">${T('Not scanned yet','Ещё не сканировано')}</div>`}</div>${D.mrz?`<div class="row mt"><div class="sp"></div><button class="btn pri" data-nx="face">${T('Continue','Далее')} →</button></div>`:''}</div></div>`;
+if(st==='face')body=`<div class="grid2"><div><h3>${T('Take a selfie','Сделайте селфи')}</h3><p class="muted">${T('Look straight at the camera, no glasses. The live image is compared with the photo stored on the passport chip.','Смотрите в камеру, без очков. Снимок сравнивается с фото из чипа паспорта.')}</p><canvas id="cam" width="320" height="240" class="cam"></canvas>
+<div class="row mt"><button class="btn pri" id="cap">📸 ${T('Capture','Снимок')}</button>${sel('light','',[['good','Good lighting','Хороший свет'],['dim','Dim lighting','Тусклый свет'],['glasses','Wearing glasses','В очках']],D.light||'good')}</div></div>
+<div><h3>${T('Match against chip photo','Сверка с фото чипа')}</h3><div id="faceR">${D.fm!=null?faceRes(D):`<div class="empty">${T('No capture yet','Снимка ещё нет')}</div>`}</div><div class="row mt"><button class="btn" data-nx="pass">← ${T('Back','Назад')}</button><div class="sp"></div>${D.fm>=70?`<button class="btn pri" data-nx="trip">${T('Continue','Далее')} →</button>`:''}</div></div></div>`;
+if(st==='trip')body=`<h3>${T('Your trip','Ваша поездка')}</h3><div class="fgrid">${sel('tP',T('Purpose','Цель'),PURP,D.purp||'tour')}${inp('tA',T('Arrival date','Дата прибытия'),D.arr||addDays(today(),21),'','date')}${inp('tD',T('Length of stay, days','Срок пребывания, дней'),D.days||14,'','number')}${inp('tAd',T('Address in Nordania','Адрес в Нордании'),D.addr||'14 Harbour Row, Kestrel','full')}${inp('tE',T('Email for decision','Email для решения'),D.email||'traveller@example.com','','email')}${inp('tPh',T('Phone','Телефон'),D.ph||'+1 415 555 0182')}</div>
+<div class="alert mt"><span>ℹ</span><div>${T('An ETA allows stays of up to 6 months per visit for 2 years or until the passport expires.','ETA разрешает пребывание до 6 месяцев за визит в течение 2 лет или до окончания паспорта.')}</div></div><div class="row mt"><button class="btn" data-nx="face">← ${T('Back','Назад')}</button><div class="sp"></div><button class="btn pri" id="tGo">${T('Continue','Далее')} →</button></div>`;
+if(st==='qs')body=`<h3>${T('Suitability questions','Вопросы о благонадёжности')}</h3><p class="muted">${T('Answer honestly. A “Yes” does not mean refusal — a caseworker will review.','Отвечайте честно. «Да» не означает отказ — заявку посмотрит сотрудник.')}</p>${QS.map((q,i)=>`<div class="q"><div class="grow">${T(q[1],q[2])}</div><div class="yn"><button class="chip ${D.q&&D.q[i]===false?'on':''}" data-qa="${i}|0">${T('No','Нет')}</button><button class="chip ${D.q&&D.q[i]===true?'on':''}" data-qa="${i}|1">${T('Yes','Да')}</button></div></div>`).join('')}
+<div class="row mt"><button class="btn" data-nx="trip">← ${T('Back','Назад')}</button><div class="sp"></div><button class="btn pri" id="qGo">${T('Continue','Далее')} →</button></div>`;
+if(st==='pay')body=`<div class="grid2"><div><h3>${T('Pay the fee','Оплата сбора')}</h3><div class="fgrid">${inp('cN',T('Card number','Номер карты'),D.card||'4111 1111 1111 1111','full','text','inputmode="numeric" autocomplete="off"')}${inp('cE',T('Expiry MM/YY','Срок ММ/ГГ'),'12/28')}${inp('cC','CVC','123','','text','inputmode="numeric" maxlength="4"')}${inp('cH',T('Name on card','Имя на карте'),(D.fn||'')+' '+(D.ln||''),'full')}</div><div id="cardT" class="muted mt" style="font-size:12.5px"></div>
+<div class="row mt"><button class="btn" data-nx="qs">← ${T('Back','Назад')}</button><div class="sp"></div><button class="btn pri" id="pay">${T('Pay','Оплатить')} £${FEE}.00</button></div></div>
+<div class="card" style="background:var(--bg2)"><h3>${T('Summary','Сводка')}</h3><dl class="dl2"><dt>${T('Applicant','Заявитель')}</dt><dd>${esc(D.fn+' '+D.ln)}</dd><dt>${T('Nationality','Гражданство')}</dt><dd>${nat(D.nat)}</dd><dt>${T('Passport','Паспорт')}</dt><dd class="mono">${esc(D.pp)}</dd><dt>${T('Selfie match','Совпадение')}</dt><dd>${D.fm}%</dd><dt>${T('Purpose','Цель')}</dt><dd>${TT(PURP.find(p=>p[0]===D.purp).slice(1))}</dd><dt>${T('Arrival','Прибытие')}</dt><dd>${fmtD(D.arr)}</dd><dt>${T('Fee','Сбор')}</dt><dd><b>£${FEE}.00</b></dd></dl></div></div>`;
+if(st==='done'){const a=S.my[0];body=`<div class="dec ${a.st}"><div class="big">${a.st==='grant'?'✅':a.st==='refuse'?'⛔':'⏳'}</div><h2>${a.st==='grant'?T('Travel authorised','Поездка разрешена'):a.st==='refuse'?T('Application refused','Заявка отклонена'):T('Your application needs a manual check','Заявке нужна ручная проверка')}</h2><p class="muted">${a.st==='grant'?T('Your ETA is linked to passport ','ETA привязано к паспорту ')+esc(a.pp)+T('. Valid until ','. Действует до ')+fmtD(addDays(today(),730)):T('Most referrals are decided within 3 working days. We emailed ','Большинство проверок — до 3 рабочих дней. Мы написали на ')+esc(a.email)}</p><div class="mono" style="font-size:18px;margin:8px 0">${a.id}</div><div class="row" style="justify-content:center"><button class="btn" id="again">${T('New application','Новая заявка')}</button><button class="btn pri" data-gv="mine">${T('My applications','Мои заявки')}</button></div></div>`}
+el.innerHTML=`<div class="card">${st!=='done'?bar:''}${body}</div>`;
+bind(el,'nx',s=>{D.step=s;save();APP.R.apply(el)});bind(el,'gv',v=>go(v));
+if(st==='pass'){$('#scan').onclick=()=>doScan(el);$('#manual').onclick=()=>manualPass(el)}
+if(st==='face'){camLoop();$('#light').onchange=e=>{D.light=e.target.value;save()};$('#cap').onclick=()=>{const b=D.light==='dim'?62:D.light==='glasses'?74:91;D.fm=Math.round(b+Math.random()*8);D.liv=D.light!=='dim'||Math.random()<.5;audit('Selfie captured, match '+D.fm+'%','Селфи, совпадение '+D.fm+'%','eta');save();flash();setTimeout(()=>APP.R.apply(el),260)}}
+if(st==='trip')$('#tGo').onclick=()=>{if(!validate([['tA',v=>v>=today(),['Must be in the future','Дата в будущем']],['tD',v=>+v>=1&&+v<=180,['1–180 days','1–180 дней']],['tAd',v=>v.length>=6,['Enter an address','Введите адрес']],['tE',v=>/^\S+@\S+\.\S+$/.test(v),['Valid email','Корректный email']]],el))return;Object.assign(D,{purp:$('#tP').value,arr:$('#tA').value,days:+$('#tD').value,addr:$('#tAd').value,email:$('#tE').value,ph:$('#tPh').value,step:'qs'});save();APP.R.apply(el)};
+if(st==='qs'){D.q=D.q||QS.map(()=>null);bind(el,'qa',k=>{const[i,v]=k.split('|');D.q[i]=v==='1';save();APP.R.apply(el)});$('#qGo').onclick=()=>{if(D.q.some(x=>x==null)){toast(T('Answer all questions','Ответьте на все вопросы'),'bad');return}D.step='pay';save();APP.R.apply(el)}}
+if(st==='pay'){const ci=$('#cN');const upd=()=>{const v=ci.value.replace(/\D/g,'');ci.value=v.replace(/(.{4})/g,'$1 ').trim();const br=/^4/.test(v)?'Visa':/^5[1-5]/.test(v)?'Mastercard':/^3[47]/.test(v)?'Amex':'—';$('#cardT').innerHTML=`${br} · ${v.length>=13?(luhn(v)?'<span class="ok-t">✓ '+T('Luhn check passed','Проверка Луна пройдена')+'</span>':'<span class="bad-t">✗ '+T('Invalid card number','Неверный номер карты')+'</span>'):T('Enter card number','Введите номер')}`};ci.oninput=upd;upd();
+$('#pay').onclick=async()=>{if(!validate([['cN',v=>luhn(v),['Card number fails Luhn check','Номер не прошёл проверку Луна']],['cE',v=>{const m=v.match(/^(\d\d)\/(\d\d)$/);return m&&+m[1]>=1&&+m[1]<=12&&new Date(2000+ +m[2],+m[1])>new Date()},['Valid future MM/YY','Действующий ММ/ГГ']],['cC',v=>/^\d{3,4}$/.test(v),['3–4 digits','3–4 цифры']]],el))return;
+const b=$('#pay');b.disabled=true;b.textContent=T('Authorising…','Авторизация…');await wait(700);b.textContent=T('Running risk checks…','Проверка рисков…');await wait(700);submit();APP.R.apply(el)}}
+if(st==='done')$('#again').onclick=()=>{S.draft={};save();APP.R.apply(el)};
+};
+function scanRes(D){const ok=D.mrz&&D.cdOk;return `<dl class="dl2"><dt>${T('Surname','Фамилия')}</dt><dd>${esc(D.ln)}</dd><dt>${T('Given names','Имя')}</dt><dd>${esc(D.fn)}</dd><dt>${T('Nationality','Гражданство')}</dt><dd>${nat(D.nat)}</dd><dt>${T('Passport no.','Номер')}</dt><dd class="mono">${esc(D.pp)}</dd><dt>${T('Date of birth','Дата рождения')}</dt><dd>${fmtD(D.dob)}</dd><dt>${T('Expires','Действует до')}</dt><dd>${fmtD(D.exp)}</dd></dl>
+<div class="li"><span>${ok?'✅':'❌'}</span><div class="grow"><b>${T('ICAO check digits','Контрольные цифры ICAO')}</b><small>${ok?T('Document, DOB, expiry and composite digits valid','Номер, дата рождения, срок и итоговая цифра верны'):T('Mismatch — rescan','Не совпадают — сканируйте заново')}</small></div></div>
+<div class="li"><span>✅</span><div class="grow"><b>${T('Chip read (NFC)','Чтение чипа (NFC)')}</b><small>${T('Passive authentication: signature valid','Пассивная аутентификация: подпись верна')}</small></div></div>`}
+function faceRes(D){const c=D.fm>=80?'var(--mal)':D.fm>=70?'var(--amber)':'var(--red)';return `<div style="text-align:center">${gauge(D.fm,{color:c})}</div><div class="li"><span>${D.fm>=80?'✅':D.fm>=70?'⚠️':'❌'}</span><div class="grow"><b>${D.fm>=80?T('Strong match','Уверенное совпадение'):D.fm>=70?T('Acceptable — may be reviewed','Допустимо — возможна проверка'):T('Too low — retake in better light','Слишком низко — переснимите при хорошем свете')}</b><small>${T('Threshold 70%, auto-grant needs 80%+','Порог 70%, автоодобрение от 80%')}</small></div></div><div class="li"><span>${D.liv?'✅':'⚠️'}</span><div class="grow"><b>${T('Liveness','Проверка живого лица')}</b><small>${D.liv?T('Passed — blink and head turn detected','Пройдена — моргание и поворот'):T('Uncertain','Не уверена')}</small></div></div>`}
+async function doScan(el){const D=S.draft;const b=$('#scan');b.disabled=true;const L=$('#scanl');L.classList.add('go');const R=Math.random;const n=NAT[R()*4|0];
+Object.assign(D,{fn:FIRST[R()*16|0],ln:LAST[R()*16|0],nat:n[0],pp:n[0][0]+String(1e7+R()*9e7|0),dob:'198'+(R()*9|0)+'-0'+(1+(R()*8|0))+'-1'+(R()*9|0),exp:addDays(today(),400+(R()*2500|0)),sex:R()<.5?'M':'F'});
+const m=mrz(D);const t=$('#mrzT');for(let i=0;i<=88;i+=4){t.innerHTML=esc(m[0].slice(0,Math.min(44,i)))+'<br>'+esc(m[1].slice(0,Math.max(0,i-44)));await wait(30)}
+L.classList.remove('go');D.mrz=m;D.cdOk=+m[1][9]===cd(m[1].slice(0,9))&&+m[1][19]===cd(m[1].slice(13,19))&&+m[1][27]===cd(m[1].slice(21,27));audit('Passport scanned '+D.pp,'Паспорт отсканирован '+D.pp,'eta');save();APP.R.apply(el);toast(T('Passport read · chip verified','Паспорт прочитан · чип проверен'),'ok')}
+function manualPass(el){const D=S.draft;modal(T('Enter passport details','Данные паспорта'),`<div class="fgrid">${inp('mF',T('Given names','Имя'),D.fn||'')}${inp('mL',T('Surname','Фамилия'),D.ln||'')}${sel('mN',T('Nationality','Гражданство'),NAT.map(n=>[n[0],n[1],n[2]]),D.nat||'USA')}${inp('mP',T('Passport number','Номер паспорта'),D.pp||'')}${inp('mD',T('Date of birth','Дата рождения'),D.dob||'1990-05-14','','date')}${inp('mE',T('Expiry','Действует до'),D.exp||addDays(today(),900),'','date')}</div><div class="row mt"><div class="sp"></div><button class="btn pri" id="mGo">${T('Save','Сохранить')}</button></div>`,box=>{
+$('#mGo',box).onclick=()=>{if(!validate([['mF',v=>/^[A-Za-z][A-Za-z -]+$/.test(v),['Latin letters','Латиница']],['mL',v=>/^[A-Za-z][A-Za-z -]+$/.test(v),['Latin letters','Латиница']],['mP',v=>/^[A-Z0-9]{6,9}$/i.test(v),['6–9 letters/digits','6–9 букв/цифр']],['mE',v=>v>addDays(today(),180),['Must be valid 6+ months','Срок 6+ месяцев']]],box))return;
+Object.assign(D,{fn:$('#mF',box).value.toUpperCase(),ln:$('#mL',box).value.toUpperCase(),nat:$('#mN',box).value,pp:$('#mP',box).value.toUpperCase(),dob:$('#mD',box).value,exp:$('#mE',box).value,sex:'X'});D.mrz=mrz(D);D.cdOk=true;save();closeModal();APP.R.apply(el)}})}
+function camLoop(){const c=$('#cam');if(!c)return;const x=c.getContext('2d');const cs=getComputedStyle(document.body);const mal=cs.getPropertyValue('--mal').trim()||'#1f8a5b';let t0=performance.now();
+const f=t=>{if(!document.body.contains(c)){camT=null;return}const k=(t-t0)/1000;const dim=S.draft.light==='dim';x.fillStyle=dim?'#1a1c22':'#2b3340';x.fillRect(0,0,320,240);
+const g=x.createRadialGradient(160,110,10,160,110,140);g.addColorStop(0,dim?'#444':'#8a97a8');g.addColorStop(1,'transparent');x.fillStyle=g;x.fillRect(0,0,320,240);
+const dx=Math.sin(k*1.3)*5,dy=Math.cos(k)*3;x.fillStyle=dim?'#6d5a4d':'#c9a58a';x.beginPath();x.ellipse(160+dx,112+dy,48,62,0,0,7);x.fill();x.fillRect(138+dx,165+dy,44,30);x.beginPath();x.ellipse(160+dx,235,95,45,0,0,7);x.fill();
+x.fillStyle='#2a1d16';x.beginPath();x.ellipse(160+dx,66+dy,52,26,0,Math.PI,0);x.fill();const bl=(k%3.2)<.12;x.fillStyle='#222';[-18,18].forEach(o=>{x.beginPath();x.ellipse(160+dx+o,105+dy,7,bl?1:4,0,0,7);x.fill()});
+if(S.draft.light==='glasses'){x.strokeStyle='#111';x.lineWidth=3;[-18,18].forEach(o=>{x.strokeRect(160+dx+o-13,96+dy,26,18)})}
+x.strokeStyle='#8a5a48';x.lineWidth=2;x.beginPath();x.arc(160+dx,135+dy,12,.2,Math.PI-.2);x.stroke();
+x.strokeStyle=mal;x.lineWidth=3;x.setLineDash([10,8]);x.lineDashOffset=-k*30;x.beginPath();x.ellipse(160,115,70,90,0,0,7);x.stroke();x.setLineDash([]);
+x.fillStyle=mal;[[160+dx-18,105+dy],[160+dx+18,105+dy],[160+dx,128+dy],[160+dx,147+dy]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],2.5,0,7);x.fill()});
+camT=requestAnimationFrame(f)};camT=requestAnimationFrame(f)}
+function flash(){const c=$('#cam');if(c){c.style.filter='brightness(3)';setTimeout(()=>c.style.filter='',180)}}
+function submit(){const D=S.draft;const a={id:'ETA-'+(490000+(Math.random()*9e4|0)),fn:D.fn,ln:D.ln,nat:D.nat,dob:D.dob,pp:D.pp,purp:D.purp,q:D.q.slice(),fm:D.fm,wl:false,t:Date.now(),email:D.email,arr:D.arr,mine:1};
+a.risk=risk(a);a.st=a.risk>=S.rules.thr||a.fm<80?'ref':'grant';S.apps.unshift(a);S.my.unshift(a);S.days[S.days.length-1].n++;if(a.st==='grant')S.days[S.days.length-1].auto++;
+audit(`${a.id} submitted, risk ${a.risk} → ${a.st}`,`${a.id} подана, риск ${a.risk} → ${a.st}`,'eta');D.step='done';save()}
+
+
+APP.R.mine=el=>{el.innerHTML=`<div class="card"><h3>${T('My applications','Мои заявки')}</h3>${S.my.length?S.my.map(m=>{const a=S.apps.find(x=>x.id===m.id)||m;return `<div class="li"><span style="font-size:22px">${a.st==='grant'?'✅':a.st==='refuse'?'⛔':'⏳'}</span><div class="grow"><b>${esc(a.fn+' '+a.ln)}</b> <span class="mono muted">${a.id}</span><small>${nat(a.nat)} · ${T('passport','паспорт')} ${esc(a.pp)} · ${T('submitted','подана')} ${fmtDS(a.t)} ${fmtT(a.t)}</small>${a.st==='rfi'?`<small class="warn-t">${T('Caseworker asks: ','Сотрудник просит: ')}${esc(a.rfi||'')}</small>`:''}</div>${stp(a.st)}${a.st==='rfi'?`<button class="btn xs pri" data-ans="${a.id}">${T('Reply','Ответить')}</button>`:''}</div>`}).join(''):`<div class="empty">${T('No applications yet','Заявок пока нет')}<div class="mt"><button class="btn pri" data-gv="apply">${T('Apply now','Подать заявку')}</button></div></div>`}</div>`;
+bind(el,'gv',v=>go(v));bind(el,'ans',id=>{const a=S.apps.find(x=>x.id===id);modal(T('Reply to caseworker','Ответ сотруднику'),`${inp('rA',T('Your answer','Ваш ответ'),'','full')}<div class="row mt"><div class="sp"></div><button class="btn pri" id="rGo">${T('Send','Отправить')}</button></div>`,box=>{$('#rGo',box).onclick=()=>{if(!validate([['rA',v=>v.length>=3,['Write an answer','Напишите ответ']]],box))return;a.reply=$('#rA',box).value;a.st='ref';audit(a.id+' traveller replied',a.id+' ответ заявителя','eta');save();closeModal();rerender();toast(T('Sent — back in the queue','Отправлено — заявка снова в очереди'),'ok')}})})};
+
+
+APP.R.queue=el=>{const L=S.apps.filter(a=>QF==='all'||a.st===QF||(QF==='open'&&a.st==='ref')).sort((a,b)=>b.risk-a.risk);if(SEL&&!S.apps.find(a=>a.id===SEL))SEL=null;const a=S.apps.find(x=>x.id===SEL)||L[0];
+el.innerHTML=`<div class="kpis">${kpi(T('Awaiting decision','Ждут решения'),S.apps.filter(a=>a.st==='ref').length,'','warn-t')}${kpi(T('High risk ≥ 60','Высокий риск ≥ 60'),S.apps.filter(a=>a.st==='ref'&&a.risk>=60).length,'','bad-t')}${kpi(T('Watchlist hits','Совпадения со списком'),S.apps.filter(a=>a.wl&&a.st==='ref').length)}${kpi(T('Decided today','Решено сегодня'),S.apps.filter(a=>a.dec&&a.dec>Date.now()-864e5).length,'','ok-t')}</div>
+<div class="qg"><div class="card"><div class="chips" style="margin-bottom:10px">${chipsH([['open','To decide','К решению'],['rfi','Info requested','Запрошено'],['grant','Granted','Одобрено'],['refuse','Refused','Отказ'],['all','All','Все']],QF,'qf')}</div>
+${tbl([T('Risk','Риск'),T('Applicant','Заявитель'),T('Nationality','Гражд.'),T('Status','Статус')],L.slice(0,40).map(x=>`<tr class="${a&&x.id===a.id?'sel':''}" data-pick="${x.id}" style="cursor:pointer"><td><span class="rk" style="--c:${x.risk>=60?'var(--red)':x.risk>=30?'var(--amber)':'var(--mal)'}">${x.risk}</span></td><td><b>${esc(x.fn+' '+x.ln)}</b>${x.mine?' '+pill(T('new','новая'),'gold'):''}<div class="mono muted" style="font-size:11px">${x.id}</div></td><td>${x.nat}</td><td>${stp(x.st)}</td></tr>`),T('Queue is empty','Очередь пуста'))}</div>
+<div class="card">${a?caseCard(a):`<div class="empty">${T('Select a case','Выберите заявку')}</div>`}</div></div>`;
+bind(el,'qf',v=>{QF=v;SEL=null;APP.R.queue(el)});$$('[data-pick]',el).forEach(r=>r.onclick=()=>{SEL=r.dataset.pick;APP.R.queue(el)});
+if(a)bind(el,'dec',d=>decide(a,d));
+};
+function caseCard(a){return `<div class="row"><div class="av3">${a.fn[0]}${a.ln[0]}</div><div class="grow"><h3 style="margin:0">${esc(a.fn+' '+a.ln)}</h3><div class="mono muted" style="font-size:12px">${a.id} · ${esc(a.pp)}</div></div>${stp(a.st)}</div>
+<div class="grid2 mt"><div style="text-align:center">${gauge(a.risk,{label:a.risk,color:a.risk>=60?'var(--red)':a.risk>=30?'var(--amber)':'var(--mal)'})}<div class="muted" style="font-size:12px">${T('Risk score','Оценка риска')}</div></div><div style="text-align:center">${gauge(a.fm,{color:a.fm>=80?'var(--mal)':'var(--amber)'})}<div class="muted" style="font-size:12px">${T('Face match','Совпадение лица')}</div></div></div>
+<dl class="dl2 mt"><dt>${T('Nationality','Гражданство')}</dt><dd>${nat(a.nat)}</dd><dt>${T('Date of birth','Дата рождения')}</dt><dd>${fmtD(a.dob)}</dd><dt>${T('Purpose','Цель')}</dt><dd>${TT(PURP.find(p=>p[0]===a.purp).slice(1))}</dd><dt>${T('Submitted','Подана')}</dt><dd>${fmtDS(a.t)} ${fmtT(a.t)}</dd></dl>
+<h3>${T('Why this score','Из чего риск')}</h3>${(a.why||[]).map(w=>`<div class="why"><span class="grow">${esc(w.length>2?T(w[0],w[1]):w[0])}</span><div class="bar"><i style="width:${Math.min(100,w[w.length-1])}%"></i></div><b>+${w[w.length-1]}</b></div>`).join('')||`<div class="muted">${T('No risk factors','Факторов риска нет')}</div>`}
+${a.wl?`<div class="alert mt" style="border-color:var(--red)"><span>🚨</span><div><b>${T('Watchlist: possible name match','Список наблюдения: возможное совпадение')}</b><br>${T('Partial match on surname + year of birth. Verify identity before granting.','Частичное совпадение фамилии и года рождения. Проверьте личность перед одобрением.')}</div></div>`:''}
+${a.reply?`<div class="alert ok mt"><span>💬</span><div>${T('Traveller replied: ','Ответ заявителя: ')}${esc(a.reply)}</div></div>`:''}
+${a.note?`<div class="muted mt" style="font-size:12.5px">📝 ${esc(a.note)}</div>`:''}
+${a.st==='ref'||a.st==='rfi'?`<div class="row mt"><button class="btn pri" data-dec="grant">✓ ${T('Approve','Одобрить')}</button><button class="btn" data-dec="rfi">? ${T('Request info','Запросить данные')}</button><button class="btn danger" data-dec="refuse">✕ ${T('Refuse','Отказать')}</button></div>`:`<div class="row mt"><button class="btn sm" data-dec="ref">↺ ${T('Reopen','Вернуть на проверку')}</button></div>`}`}
+function decide(a,d){if(d==='grant'&&a.wl&&!a.idok){modal(T('Watchlist hit — confirm identity','Совпадение со списком — подтвердите личность'),`<div class="alert warn"><span>⚠</span><div>${T('Granting with an open watchlist hit requires a documented disambiguation.','Одобрение при совпадении требует письменного обоснования.')}</div></div>${inp('wN',T('Disambiguation note','Обоснование'),'','full')}<div class="row mt"><div class="sp"></div><button class="btn pri" id="wGo">${T('Confirm & approve','Подтвердить и одобрить')}</button></div>`,box=>{$('#wGo',box).onclick=()=>{if(!validate([['wN',v=>v.length>=10,['At least 10 characters','Не менее 10 символов']]],box))return;a.idok=1;a.note=$('#wN',box).value;closeModal();decide(a,'grant')}});return}
+if(d==='refuse'||d==='rfi'){modal(d==='rfi'?T('Request information','Запрос данных'):T('Refusal reason','Причина отказа'),`${d==='refuse'?sel('rR',T('Ground','Основание'),[['crim','Criminality','Судимость'],['imm','Immigration history','Нарушения режима'],['dec','Deception','Обман'],['sec','Security','Безопасность']],'imm'):''}${inp('rN',d==='rfi'?T('Question to traveller','Вопрос заявителю'):T('Caseworker note','Заметка'),'','full')}<div class="row mt"><div class="sp"></div><button class="btn ${d==='refuse'?'danger':'pri'}" id="rGo">${T('Confirm','Подтвердить')}</button></div>`,box=>{$('#rGo',box).onclick=()=>{if(!validate([['rN',v=>v.length>=5,['At least 5 characters','Не менее 5 символов']]],box))return;if(d==='rfi')a.rfi=$('#rN',box).value;else a.note=TT([$('#rR',box).selectedOptions[0].text,$('#rR',box).selectedOptions[0].text])+': '+$('#rN',box).value;closeModal();fin(a,d)}});return}
+fin(a,d)}
+function fin(a,d){a.st=d;a.dec=Date.now();if(d==='grant')S.days[S.days.length-1].ref++;audit(`${a.id} → ${d}`,`${a.id} → ${T(STL[d][0],STL[d][1])}`,'case');save();rerender();toast(`${a.id}: ${T(STL[d][0],STL[d][1])}`,STL[d][2]==='bad'?'bad':STL[d][2]==='ok'?'ok':'warn')}
+
+
+APP.R.rules=el=>{const ru=S.rules;const sim=S.apps.map(a=>{const c={...a};return risk(c,ru)});const ref=sim.filter(r=>r>=ru.thr).length;
+el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Risk rules','Правила риска')}</h3>${[['nat','Nationality baseline','База по гражданству'],['q','Declared history','Ответы на вопросы'],['face','Selfie match below 80%','Совпадение селфи ниже 80%'],['wl','Watchlist screening','Проверка по спискам']].map(r=>`<label class="li" style="cursor:pointer"><input type="checkbox" data-rl="${r[0]}" ${ru[r[0]]?'checked':''}><div class="grow"><b>${T(r[1],r[2])}</b></div></label>`).join('')}
+${fld('thr',T('Refer threshold: ','Порог передачи: ')+`<b id="thrV">${ru.thr}</b>`,`<input type="range" id="thr" min="20" max="90" step="5" value="${ru.thr}" style="width:100%">`)}<button class="btn sm mt" id="rApply">${T('Re-score open cases','Пересчитать открытые')}</button></div>
+<div class="card"><h3>${T('Impact simulation on ','Симуляция на ')+S.apps.length+T(' applications',' заявках')}</h3><div class="kpis" style="grid-template-columns:1fr 1fr">${kpi(T('Would auto-grant','Автоодобрение'),pct((1-ref/S.apps.length)*100),'','ok-t')}${kpi(T('Would refer','На проверку'),ref,'','warn-t')}</div>
+<div class="chart">${barChart({labels:['0–9','10–19','20–29','30–39','40–49','50–59','60–69','70–79','80+'],series:[{name:T('applications','заявки'),data:Array.from({length:9},(_,i)=>sim.filter(r=>Math.min(8,r/10|0)===i).length),color:'var(--blue)'}],hl:Math.min(8,ru.thr/10|0)})}</div><div class="muted" style="font-size:12px">${T('Risk score distribution; highlighted bar contains the threshold.','Распределение риска; выделен столбец с порогом.')}</div></div></div>`;
+$$('[data-rl]',el).forEach(c=>c.onchange=()=>{ru[c.dataset.rl]=c.checked?1:0;save();APP.R.rules(el)});
+$('#thr').oninput=e=>{$('#thrV').textContent=e.target.value};$('#thr').onchange=e=>{ru.thr=+e.target.value;save();APP.R.rules(el)};
+$('#rApply').onclick=()=>{let n=0;S.apps.forEach(a=>{if(a.st==='ref'||a.st==='grant'&&!a.dec){const o=a.st;a.risk=risk(a);a.st=a.risk>=ru.thr?'ref':'grant';if(o!==a.st)n++}});audit(`Rules applied, threshold ${ru.thr}: ${n} changed`,`Правила применены, порог ${ru.thr}: изменено ${n}`,'rules');save();rerender();toast(T(n+' cases changed status','Статус изменён у '+n),'ok')};
+};
+
+
+APP.R.stats=el=>{const d=S.days;const tot=d.reduce((a,x)=>a+x.n,0),au=d.reduce((a,x)=>a+x.auto,0);const byN=NAT.map(n=>[T(n[1],n[2]),S.apps.filter(a=>a.nat===n[0]).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,6);
+el.innerHTML=`<div class="kpis">${kpi(T('Applications, 14 days','Заявок за 14 дней'),fmtN(tot))}${kpi(T('Auto-granted','Автоодобрено'),pct(au/tot*100),T('in under 10 min','менее чем за 10 мин'),'ok-t')}${kpi(T('Fees collected','Собрано сборов'),'£'+fmtN(tot*FEE))}${kpi(T('Refusal rate','Доля отказов'),pct(S.apps.filter(a=>a.st==='refuse').length/S.apps.length*100,1))}</div>
+<div class="grid2"><div class="card"><h3>${T('Daily volume','Объём по дням')}</h3><div class="chart">${barChart({labels:d.map(x=>fmtDS(x.d)),series:[{name:T('Auto','Авто'),data:d.map(x=>x.auto),color:'var(--mal)'},{name:T('Manual','Вручную'),data:d.map(x=>x.n-x.auto),color:'var(--amber)'}],stacked:1})}</div><div class="legend"><span><i style="background:var(--mal)"></i>${T('Auto-granted','Автоодобрено')}</span><span><i style="background:var(--amber)"></i>${T('Manual review','Ручная проверка')}</span></div></div>
+<div class="card"><h3>${T('Queue sample by nationality','Выборка очереди по гражданству')}</h3>${hbars(byN)}</div></div>
+<div class="card mt"><h3>${T('Decision outcomes (queue sample)','Итоги решений (выборка)')}</h3><div class="row" style="gap:18px;flex-wrap:wrap">${donut(['grant','ref','rfi','refuse'].map((s,i)=>[T(STL[s][0],STL[s][1]),S.apps.filter(a=>a.st===s).length,['var(--mal)','var(--amber)','var(--gold)','var(--red)'][i]]),{sub:T('applications','заявки')})}<div class="legend" style="flex-direction:column;align-items:flex-start">${['grant','ref','rfi','refuse'].map((s,i)=>`<span><i style="background:${['var(--mal)','var(--amber)','var(--gold)','var(--red)'][i]}"></i>${T(STL[s][0],STL[s][1])}: ${S.apps.filter(a=>a.st===s).length}</span>`).join('')}</div></div></div>`;
+};
+
+/* ---- boot: state, login, shell, router ---- */
+const KEY='pt_'+APP.slug+'_state';
+let S=null;
+function fresh(){const s=APP.seed();s.v=APP.ver||1;s.view=APP.views[0][0];s.user=null;s.intro=true;s.audit=s.audit||[];return s}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||S.v!==(APP.ver||1))S=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function audit(en,ru,kind){S.audit=S.audit||[];S.audit.unshift({t:Date.now(),en,ru,k:kind||'',u:S.user?S.user.name:'system'});if(S.audit.length>300)S.audit.length=300;save()}
+const auditTxt=a=>PT.lang==='ru'?a.ru:a.en;
+let lgVals=null;
+function rerender(){if(!S.user){renderLogin();return}renderShell();renderView()}
+function go(id){S.view=id;save();closeSide();renderShell();renderView();window.scrollTo(0,0)}
+function closeSide(){const s=$('#side');if(s)s.classList.remove('open')}
+function renderLogin(){
+  $('#app').hidden=true;const L=$('#login');L.hidden=false;const lg=APP.login;
+  const v=lgVals||{u:lg.user,p:lg.pass,r:(lg.roles||[[0]])[0][0]};
+  L.innerHTML=`<div class="lg-hero">
+    <div class="bigb"><b>${APP.icon}</b><div>${esc(APP.name)}<div style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0">${TT(APP.sub)}</div></div></div>
+    <h2>${TT(lg.hero)}</h2><p>${TT(lg.heroP)}</p>
+    <div class="lg-feats">${lg.feats.map(f=>`<div><b>${f[0]} ${T(f[1],f[2])}</b>${T(f[3],f[4])}</div>`).join('')}</div>
+  </div>
+  <div class="lg-form"><div class="card">
+    <h3>${T('Sign in to','Вход в')} ${esc(APP.name)}</h3><div class="muted" style="font-size:13px">${TT(lg.tag)}</div>
+    ${inp('lgU',T('User ID','Логин'),v.u,'','text','autocomplete="username"')}
+    ${inp('lgP',T('Password','Пароль'),v.p,'','password','autocomplete="current-password"')}
+    ${lg.roles?sel('lgR',T('Sign in as','Войти как'),lg.roles.map(r=>[r[0],r[1],r[2]]),v.r):''}
+    <button class="btn pri" id="lgGo" style="width:100%;justify-content:center;margin-top:16px;padding:12px">${T('Sign in','Войти')} →</button>
+    <div class="lg-demo">${T('<b>Demo access.</b> Credentials are prefilled — press <b>Sign in</b>. All data is synthetic and stays in this browser.','<b>Демо-доступ.</b> Логин и пароль уже введены — нажмите <b>Войти</b>. Все данные вымышленные и хранятся только в этом браузере.')}</div>
+    <div class="lg-sec">🔒 <span>${TT(lg.secure||['Demo environment · MFA simulated · session in local storage','Демо-среда · MFA имитируется · сессия в локальном хранилище'])}</span></div>
+  </div></div>`;
+  const keep=()=>{lgVals={u:$('#lgU').value,p:$('#lgP').value,r:$('#lgR')?$('#lgR').value:v.r}};
+  $$('input,select',L).forEach(i=>i.oninput=keep);
+  const go2=()=>{keep();if(!validate([['lgU',x=>x.length>=3,['Enter your user ID','Введите логин']],['lgP',x=>x.length>=4,['Enter the password','Введите пароль']]],L))return;
+    const role=lg.roles?lg.roles.find(r=>String(r[0])===String(lgVals.r)):null;
+    S.user={id:lgVals.u,name:lg.name,role:role?[role[1],role[2]]:lg.role,rk:role?role[0]:null};
+    if(APP.onLogin)APP.onLogin(role?role[0]:null);
+    audit('Signed in as '+lgVals.u,'Вход: '+lgVals.u,'auth');save();
+    toast(T('Welcome, ','Добро пожаловать, ')+esc(lg.name.split(' ')[0]),'ok');lgVals=null;rerender()};
+  $('#lgGo').onclick=go2;$$('input',L).forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')go2()});
+}
+function renderShell(){
+  $('#login').hidden=true;$('#app').hidden=false;const u=S.user;
+  const groups=APP.groups||[[null]];
+  $('#side').innerHTML=`<div class="brand"><b>${APP.icon}</b><div>${esc(APP.name)}<small>${TT(APP.sub)}</small></div></div>
+    ${groups.map(g=>`${g[0]!=null&&g[1]?`<div class="sec">${T(g[1],g[2])}</div>`:''}${APP.views.filter(v=>(v[4]||null)===g[0]&&(!APP.visible||APP.visible(v[0]))).map(v=>{const b=APP.badge?APP.badge(v[0]):null;return `<button class="nav ${S.view===v[0]?'on':''}" data-go="${v[0]}"><span class="ic">${v[1]}</span><span>${T(v[2],v[3])}</span>${b&&b[0]?`<span class="cnt ${b[1]?'r':''}">${b[0]}</span>`:''}</button>`}).join('')}`).join('')}
+    <div class="grow"></div>
+    ${APP.sideExtra?APP.sideExtra():''}
+    <div class="who"><div class="av">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</div><div style="min-width:0"><b>${esc(u.name)}</b><span>${TT(u.role)}</span></div></div>
+    <div class="sidebtns"><button class="btn sm" id="sOut">${T('Sign out','Выйти')}</button><button class="btn sm" id="sReset">${T('Reset demo','Сбросить демо')}</button></div>`;
+  bind($('#side'),'go',id=>go(id));
+  if(APP.bindSide)APP.bindSide($('#side'));
+  $('#sOut').onclick=()=>{audit('Signed out','Выход','auth');S.user=null;save();closeModal();rerender()};
+  $('#sReset').onclick=()=>{if(!confirmReset())return;try{Object.keys(localStorage).filter(k=>k.indexOf('pt_'+APP.slug+'_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}const u=S.user;S=fresh();S.user=u;if(APP.onLogin)APP.onLogin(u.rk);save();closeModal();rerender();toast(T('Demo data reset','Демо-данные сброшены'),'ok')};
+  const cur=APP.views.find(v=>v[0]===S.view)||APP.views[0];
+  const g=groups.find(x=>x[0]===(cur[4]||null));
+  $('#crumb').innerHTML=esc(APP.name)+(g&&g[1]?' · '+T(g[1],g[2]):'');
+  $('#title').innerHTML=T(cur[2],cur[3]);
+  $('#headx').innerHTML=APP.head?APP.head():'';
+  if(APP.bindHead)APP.bindHead($('#headx'));
+  const I=$('#intro');
+  if(S.intro){I.className='intro';I.innerHTML=`<div class="card"><h3><span>${T('How to try it','Как попробовать')}</span><span class="sp"></span><button class="btn xs" id="introX">${T('Hide','Скрыть')}</button></h3><div class="how">${APP.how.map((h,i)=>`<div><b>${i+1}</b><span>${TT(h)}</span></div>`).join('')}</div></div>
+    <div class="card"><dl class="facts">${APP.facts.map(f=>`<dt>${T(f[0],f[1])}</dt><dd>${f.length>3?T(f[2],f[3]):f[2]}</dd>`).join('')}</dl></div>`;
+    $('#introX').onclick=()=>{S.intro=false;save();renderShell()}}
+  else{I.className='intro hide';I.innerHTML=''}
+  $('#showIntro').hidden=S.intro;
+}
+let confirmReset=()=>true;
+function renderView(){
+  if(!APP.views.find(v=>v[0]===S.view))S.view=APP.views[0][0];
+  const el=$('#view');el.className='view on';el.dataset.v=S.view;
+  if(APP.leave)APP.leave();
+  try{APP.R[S.view](el)}catch(e){console.error(e);el.innerHTML='<div class="card">'+esc(e.message)+'</div>'}
+}
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+$('#showIntro').onclick=()=>{S.intro=true;save();renderShell()};
+document.addEventListener('click',e=>{const s=$('#side');if(s&&s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+let booted=false;
+PT.onLang(()=>{booted=true;rerender()});
+if(document.readyState!=='loading')setTimeout(()=>{if(!booted)rerender()},0);
+
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

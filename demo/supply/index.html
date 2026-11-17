@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MedSupply</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+[hidden]{display:none!important}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px}
+.who b{display:block;font-size:13.5px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f{margin-bottom:10px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.fgrid .full{grid-column:1/-1}
+.err{color:var(--red);font-size:12px;min-height:16px}
+.input.bad{border-color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:200px}
+tr:last-child td{border-bottom:none}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.loginw{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(ellipse at 20% 0%,color-mix(in srgb,var(--mal) 16%,transparent),transparent 60%),radial-gradient(ellipse at 100% 100%,color-mix(in srgb,var(--gold) 10%,transparent),transparent 55%)}
+.loginc{width:100%;max-width:430px;padding:26px;box-shadow:var(--shadow)}
+.loginc h2{margin:6px 0 4px;font-size:21px}
+.demo{font-size:12px;border:1px dashed var(--line2);border-radius:10px;padding:8px 10px;margin:12px 0;color:var(--muted)}
+/* catalogue */
+.cat{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.prod{display:flex;flex-direction:column;gap:6px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px}
+.prod .ph{height:64px;border-radius:10px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,color-mix(in srgb,var(--mal) 16%,transparent),color-mix(in srgb,var(--gold) 10%,transparent))}
+.prod b{font-size:13.5px;line-height:1.3}
+.prod .gt{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.prod .pr{font-weight:800;font-size:16px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:999px;overflow:hidden}
+.qty button{border:0;background:var(--panel2);width:32px;height:32px;cursor:pointer;font-weight:800}
+.qty input{width:52px;border:0;background:transparent;text-align:center;height:32px;outline:none}
+.bline{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.bline span{flex:1;min-width:0}
+.sticky{position:sticky;top:60px}
+.steps{display:flex;margin:8px 0 4px}
+.steps div{flex:1;position:relative;text-align:center;font-size:11px;color:var(--dim);min-width:0}
+.steps div:before{content:"";position:absolute;top:6px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.steps div:first-child:before{display:none}
+.steps i{display:block;width:14px;height:14px;border-radius:50%;margin:0 auto 4px;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1}
+.steps .ok i{background:var(--mal);border-color:var(--mal)} .steps .ok:before,.steps .cur:before{background:var(--mal)}
+.steps .cur i{border-color:var(--gold);background:var(--gold)} .steps .ok,.steps .cur{color:var(--text)}
+.steps span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.dl{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2);cursor:pointer}
+.dl.on{border-color:var(--mal)}
+.dl .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dl .top b{flex:1;min-width:140px}
+.bar{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3))}
+.sup{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.sc{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer}
+.sc.on{border-color:var(--mal);box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 15%,transparent)}
+.grade{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:20px;flex:none}
+.met{display:grid;grid-template-columns:90px minmax(0,1fr) 44px;gap:8px;align-items:center;font-size:12px;margin-top:6px}
+.iss{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.iss span{flex:1;min-width:0}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.intro{grid-template-columns:minmax(0,1fr)}.sticky{position:static}}
+@media (max-width:860px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+ .side.open{transform:none}
+ .menu-btn{display:inline-flex}
+ main{padding:14px 14px 50px}
+ .head h1{font-size:20px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.cat{grid-template-columns:1fr}.steps span{font-size:9.5px}.card{padding:14px}}
+</style>
+</head>
+<body data-demo-en="MedSupply — health supply chain &amp; procurement" data-demo-ru="MedSupply — цепочка поставок и закупки здравоохранения">
+<div class="loginw" id="loginw">
+ <div class="card loginc">
+  <div class="brand" style="padding:0 0 6px"><b>✚</b><div>MedSupply<small data-en="Health Supply Chain · Kingdom of Albion (fictional)" data-ru="Снабжение здравоохранения · Королевство Альбион (вымышл.)"></small></div></div>
+  <h2 data-en="Sign in to the ordering portal" data-ru="Вход в портал заказов"></h2>
+  <div class="muted" style="font-size:13.5px" data-en="Hospital buyers order from the national catalogue, track deliveries and see shortage risk." data-ru="Закупщики больниц заказывают из национального каталога, отслеживают поставки и видят риск дефицита."></div>
+  <div class="demo" data-en="Demo account is prefilled — just press <b>Sign in</b>." data-ru="Демо-учётная запись уже заполнена — нажмите <b>Войти</b>."></div>
+  <div class="f"><label data-en="Work email" data-ru="Рабочая почта"></label><input class="input" id="lu" value="buyer@st-aldhelm.health.demo" autocomplete="off"></div>
+  <div class="f"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lp" type="password" value="demo-2026"></div>
+  <div class="f"><label data-en="Trust / hospital" data-ru="Трест / больница"></label><select class="input" id="lh"><option value="0">St Aldhelm's University Hospital</option><option value="1">Kingsmere General Hospital</option><option value="2">Harrowgate Children's Hospital</option></select></div>
+  <div class="err" id="lerr"></div>
+  <button class="btn pri" id="login" style="width:100%;justify-content:center;padding:12px" data-en="Sign in" data-ru="Войти"></button>
+  <div class="muted" style="font-size:11.5px;margin-top:10px;text-align:center" data-en="Single sign-on · role: hospital buyer &amp; budget holder" data-ru="Единый вход · роль: закупщик и распорядитель бюджета"></div>
+ </div>
+</div>
+<div class="app" id="app" hidden>
+ <aside class="side" id="side">
+  <div class="brand"><b>✚</b><div>MedSupply<small data-en="Health Supply Chain" data-ru="Снабжение здравоохранения"></small></div></div>
+  <div class="sec" data-en="Hospital" data-ru="Больница"></div>
+  <div id="navH"></div>
+  <div class="sec" data-en="Supply chain" data-ru="Цепочка поставок"></div>
+  <div id="navS"></div>
+  <div class="grow"></div>
+  <div class="who" id="who"></div>
+  <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  <button class="btn sm" id="logout" style="margin-top:6px;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+ </aside>
+ <main>
+  <div class="head">
+   <button class="btn sm menu-btn" id="menuBtn">☰</button>
+   <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+   <div class="sp"></div>
+   <span class="pill gold" id="dayPill"></span>
+   <button class="btn sm" id="advance"></button>
+  </div>
+  <div class="intro">
+   <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+    <div class="how">
+     <div><b>1</b><span data-en="Add items to the basket in <b>Catalogue</b> and submit an order; orders over £5,000 need budget approval." data-ru="Добавьте товары в корзину в <b>Каталоге</b> и оформите заказ; заказы дороже £5 000 требуют согласования."></span></div>
+     <div><b>2</b><span data-en="Check <b>Stock &amp; risk</b>, reorder risky lines, open <b>Forecast</b> and try surge scenarios." data-ru="Проверьте <b>Запасы и риски</b>, дозакажите рискованные позиции, откройте <b>Прогноз</b> и сценарии всплеска."></span></div>
+     <div><b>3</b><span data-en="Press <b>Advance 1 day</b>, scan the SSCC label in <b>Deliveries</b>, review <b>Supplier scorecards</b>." data-ru="Нажмите <b>Следующий день</b>, отсканируйте SSCC в <b>Поставках</b>, оцените <b>Карточки поставщиков</b>."></span></div>
+    </div></div>
+   <div class="card"><dl class="facts">
+    <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Health supply chain &amp; procurement" data-ru="Цепочка поставок и закупки здравоохранения"></dd>
+    <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · £650M</dd>
+    <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Health Supply Chain, Kingdom of Albion (fictional)" data-ru="Снабжение здравоохранения, Королевство Альбион (вымышл.)"></dd>
+    <dt data-en="Stack" data-ru="Стек"></dt><dd>GS1 · forecasting</dd>
+   </dl></div>
+  </div>
+  <section class="view" id="v-cat"></section>
+  <section class="view" id="v-orders"></section>
+  <section class="view" id="v-stock"></section>
+  <section class="view" id="v-fc"></section>
+  <section class="view" id="v-del"></section>
+  <section class="view" id="v-sup"></section>
+ </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt_supply_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const num=n=>Math.round(n).toLocaleString(loc());
+const gbp=n=>'£'+(+n).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
+const gbp0=n=>'£'+Math.round(n).toLocaleString(loc());
+const DAY=864e5;
+const fmtD=t=>new Date(t).toLocaleDateString(loc(),{day:'numeric',month:'short'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+const HOSP=["St Aldhelm's University Hospital","Kingsmere General Hospital","Harrowgate Children's Hospital"];
+const CATS={ppe:['PPE','СИЗ','🧤'],iv:['Infusion','Инфузия','💧'],wound:['Wound care','Перевязка','🩹'],med:['Medicines','Лекарства','💊'],lab:['Laboratory','Лаборатория','🧪'],surg:['Surgical','Хирургия','🔪']};
+// sku, gtin, en, ru, cat, unit[en,ru], price, supplier, onhand, daily, lead, cold
+const CAT=[
+['MS-1001','05012345000013','Nitrile examination gloves, size M (box 100)','Перчатки нитриловые смотровые, M (уп. 100)','ppe',['box','уп.'],4.20,'S1',9400,610,6],
+['MS-1002','05012345000020','FFP3 respirator, valved (box 20)','Респиратор FFP3 с клапаном (уп. 20)','ppe',['box','уп.'],38.50,'S6',820,96,21],
+['MS-1003','05012345000037','Fluid-resistant surgical mask IIR (box 50)','Хирургическая маска IIR (уп. 50)','ppe',['box','уп.'],6.90,'S6',3150,240,18],
+['MS-1004','05012345000044','Disposable apron, white (roll 200)','Фартук одноразовый, белый (рулон 200)','ppe',['roll','рулон'],11.40,'S1',1260,52,6],
+['MS-1101','05012345000105','Sodium chloride 0.9% infusion 1000 ml','Натрия хлорид 0,9% 1000 мл','iv',['bag','пакет'],1.18,'S3',14200,1520,9],
+['MS-1102','05012345000112','IV giving set, 20 drops/ml','Система для инфузий, 20 кап/мл','iv',['each','шт.'],0.86,'S2',8800,690,12],
+['MS-1103','05012345000129','Peripheral IV cannula 20G','Периферический катетер 20G','iv',['each','шт.'],0.74,'S2',3900,510,12],
+['MS-1201','05012345000204','Foam dressing 10×10 cm (box 10)','Пенная повязка 10×10 см (уп. 10)','wound',['box','уп.'],17.20,'S5',640,38,10],
+['MS-1202','05012345000211','Sterile gauze swabs 10×10 (pack 100)','Марлевые салфетки стерильные (уп. 100)','wound',['pack','уп.'],3.10,'S1',2900,140,6],
+['MS-1301','05012345000303','Amoxicillin 500 mg capsules (21)','Амоксициллин 500 мг капс. (21)','med',['pack','уп.'],1.65,'S3',5200,330,14],
+['MS-1302','05012345000310','Insulin aspart 100 U/ml pen (5)','Инсулин аспарт 100 ЕД/мл, шприц-ручка (5)','med',['pack','уп.'],28.90,'S3',410,44,14,1],
+['MS-1303','05012345000327','Paracetamol 1 g/100 ml infusion','Парацетамол 1 г/100 мл, раствор','med',['vial','фл.'],1.42,'S3',6100,410,9],
+['MS-1304','05012345000334','Influenza vaccine, quadrivalent (10)','Вакцина против гриппа, 4-валентная (10)','med',['pack','уп.'],79.00,'S4',180,26,16,1],
+['MS-1401','05012345000402','Blood culture bottle, aerobic','Флакон для гемокультуры, аэробный','lab',['each','шт.'],3.80,'S4',2250,120,15],
+['MS-1402','05012345000419','Vacuum blood tube EDTA 4 ml (100)','Вакуумная пробирка ЭДТА 4 мл (100)','lab',['box','уп.'],14.60,'S4',560,31,15],
+['MS-1501','05012345000501','Single-use scalpel no. 22 (box 10)','Скальпель одноразовый № 22 (уп. 10)','surg',['box','уп.'],5.40,'S5',720,30,10],
+['MS-1502','05012345000518','Absorbable suture 3-0, 75 cm (12)','Рассасывающийся шовный 3-0, 75 см (12)','surg',['box','уп.'],46.00,'S5',150,14,20],
+['MS-1503','05012345000525','Surgical gown, sterile, L','Халат хирургический стерильный, L','surg',['each','шт.'],3.95,'S2',4100,180,12]];
+const SKU={};CAT.forEach(c=>SKU[c[0]]={sku:c[0],gtin:c[1],en:c[2],ru:c[3],cat:c[4],unit:c[5],price:c[6],sup:c[7],on0:c[8],daily:c[9],lead:c[10],cold:!!c[11]});
+const nm=k=>T(SKU[k].en,SKU[k].ru);
+const SUPS={S1:['Northwell Medical Ltd','Albion'],S2:['Meditex GmbH','Germany · Германия'],S3:['Carelon Pharma','Albion'],S4:['Asterion Diagnostics BV','Netherlands · Нидерланды'],S5:['Vitalis Surgical','Ireland · Ирландия'],S6:['Polymed Asia Sdn Bhd','Malaysia · Малайзия']};
+const CARR=['Albion Freight','MedLog Express','ColdLine 2–8°C','Northway Haulage'];
+const DST=[['Booked','Заказано'],['Picked','Собрано'],['In transit','В пути'],['Out for delivery','Доставка'],['Received','Принято']];
+
+function sscc(r){let s='3501234'+String(Math.floor(r()*1e10)).padStart(10,'0');let sum=0;for(let i=0;i<17;i++)sum+=(+s[16-i])*(i%2?1:3);return s+((10-sum%10)%10)}
+function seed(){
+ const r=rng(42),now=Date.now();const stock={};
+ CAT.forEach(c=>stock[c[0]]={on:c[8],inc:0});
+ const del=[];let n=4410;
+ const mk=(sup,lines,st,etaD,po)=>{const d={id:'DLV-'+(n++),po,sup,lines,st,eta:now+etaD*DAY,booked:now-(4-etaD)*DAY,carrier:lines.some(l=>SKU[l.sku].cold)?CARR[2]:CARR[Math.floor(r()*2)*3],sscc:sscc(r),temp:lines.some(l=>SKU[l.sku].cold)?Array.from({length:24},()=>+(4.2+r()*2.6).toFixed(1)):null};if(st<4)lines.forEach(l=>stock[l.sku].inc+=l.qty);del.push(d);return d};
+ mk('S1',[{sku:'MS-1001',qty:2400},{sku:'MS-1202',qty:300}],2,1,'PO-77120');
+ mk('S3',[{sku:'MS-1302',qty:120},{sku:'MS-1101',qty:4000}],3,0,'PO-77121');
+ mk('S6',[{sku:'MS-1002',qty:400}],1,9,'PO-77098');
+ mk('S4',[{sku:'MS-1304',qty:60},{sku:'MS-1401',qty:400}],0,5,'PO-77131');
+ mk('S2',[{sku:'MS-1103',qty:2000}],4,-2,'PO-77050');
+ const orders=[
+  {id:'PO-77050',date:now-9*DAY,lines:[{sku:'MS-1103',qty:2000}],total:1480,ward:'Theatres',cc:'CC-4120',st:'appr'},
+  {id:'PO-77098',date:now-6*DAY,lines:[{sku:'MS-1002',qty:400}],total:15400,ward:'Critical care',cc:'CC-2210',st:'appr'},
+  {id:'PO-77120',date:now-3*DAY,lines:[{sku:'MS-1001',qty:2400},{sku:'MS-1202',qty:300}],total:11010,ward:'Central stores',cc:'CC-1001',st:'appr'},
+  {id:'PO-77121',date:now-2*DAY,lines:[{sku:'MS-1302',qty:120},{sku:'MS-1101',qty:4000}],total:8188,ward:'Pharmacy',cc:'CC-3300',st:'appr'},
+  {id:'PO-77131',date:now-1*DAY,lines:[{sku:'MS-1304',qty:60},{sku:'MS-1401',qty:400}],total:6260,ward:'Pathology',cc:'CC-5100',st:'appr'}];
+ const sup={};Object.keys(SUPS).forEach((k,i)=>{const b=[93,88,96,91,94,79][i];sup[k]={otif:b,fill:[97,92,98,95,96,84][i],qual:[99,97,99,98,98,93][i],resp:[90,84,92,88,95,72][i],esg:[78,86,74,88,81,62][i],price:[98,104,101,99,107,91][i],trend:Array.from({length:8},(_,j)=>Math.min(100,Math.round(b-4+j*0.6+r()*5)))}});
+ const issues=[{id:1,sup:'S6',type:'late',en:'FFP3 batch 2 weeks late, no ASN sent',ru:'Партия FFP3 опоздала на 2 недели, без уведомления ASN',date:now-12*DAY,open:true},{id:2,sup:'S2',type:'qual',en:'Cannula packs with damaged sterile barrier (lot 22A)',ru:'Упаковки катетеров с повреждённым стерильным барьером (партия 22A)',date:now-20*DAY,open:false}];
+ return{auth:false,hosp:0,view:'cat',day:0,cart:{},orders,del,stock,sup,issues,nextPO:77140,nextDel:n,catF:'all',q:'',riskF:'all',fcSku:'MS-1001',fcSc:'base',selDel:null,selSup:'S6'};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+
+function risk(k){const s=S.stock[k],c=SKU[k];const cover=s.on/c.daily,eff=(s.on+s.inc)/c.daily;const lvl=eff<c.lead?'high':(cover<c.lead||eff<c.lead+10)?'med':'ok';return{cover,eff,lvl}}
+const RL={high:['High','Высокий','bad'],med:['Medium','Средний','warn'],ok:['Low','Низкий','ok']};
+const rpill=l=>`<span class="pill ${RL[l][2]}">${T(RL[l][0],RL[l][1])}</span>`;
+
+const VIEWS=[['cat','🛒','Catalogue','Каталог','H'],['orders','📄','Orders','Заказы','H'],['del','🚚','Deliveries','Поставки','H'],['stock','📦','Stock & risk','Запасы и риски','S'],['fc','📈','Demand forecast','Прогноз спроса','S'],['sup','🏭','Supplier scorecards','Карточки поставщиков','S']];
+function nav(){
+ const cnt=v=>{if(v==='cat'){const n=Object.values(S.cart).reduce((a,b)=>a+b,0);return n?`<span class="cnt">${Object.keys(S.cart).length}</span>`:''}
+  if(v==='stock'){const n=CAT.filter(c=>risk(c[0]).lvl==='high').length;return n?`<span class="cnt r">${n}</span>`:''}
+  if(v==='orders'){const n=S.orders.filter(o=>o.st==='wait').length;return n?`<span class="cnt">${n}</span>`:''}
+  if(v==='del'){const n=S.del.filter(d=>d.st===3).length;return n?`<span class="cnt">${n}</span>`:''}return''};
+ const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>`<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${cnt(v[0])}</button>`).join('');
+ $('#navH').innerHTML=mk('H');$('#navS').innerHTML=mk('S');
+ $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+ $('#loginw').hidden=!!S.auth;$('#app').hidden=!S.auth;
+ if(!S.auth)return;
+ nav();const v=VIEWS.find(x=>x[0]===S.view);
+ $('#title').textContent=T(v[2],v[3]);
+ $('#crumb').textContent=v[4]==='H'?HOSP[S.hosp]+' · '+T('Buyer','Закупщик'):T('National supply chain · Category management','Национальная цепочка · Управление категориями');
+ $('#dayPill').textContent=T('Today','Сегодня')+' · '+fmtD(Date.now()+S.day*DAY)+(S.day?` (+${S.day})`:'');
+ $('#advance').textContent=T('Advance 1 day ▶','Следующий день ▶');
+ $('#who').innerHTML=`<b>R. Okafor</b>${T('Senior buyer','Старший закупщик')} · ${esc(HOSP[S.hosp])}<div class="muted" style="margin-top:4px">${T('Budget left this month','Остаток бюджета месяца')}: <b style="display:inline">${gbp0(Math.max(0,180000-spent()))}</b></div>`;
+ $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+S.view));
+ ({cat:rCat,orders:rOrders,stock:rStock,fc:rFc,del:rDel,sup:rSup})[S.view]();
+}
+const spent=()=>S.orders.filter(o=>o.st!=='rej').reduce((a,o)=>a+o.total,0);
+const now=()=>Date.now()+S.day*DAY;
+
+/* ---------- CATALOGUE ---------- */
+function rCat(){
+ const el=$('#v-cat');const q=(S.q||'').toLowerCase();
+ const list=CAT.map(c=>SKU[c[0]]).filter(p=>(S.catF==='all'||p.cat===S.catF)&&(!q||(p.en+' '+p.ru+' '+p.gtin+' '+p.sku).toLowerCase().includes(q)));
+ const lines=Object.entries(S.cart);const tot=lines.reduce((a,[k,q])=>a+SKU[k].price*q,0);
+ const minD=new Date(now()+DAY).toISOString().slice(0,10);
+ el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('National catalogue','Национальный каталог')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${list.length} ${T('items','позиций')} · GS1 GTIN</span></h3>
+  <input class="input" id="q" placeholder="${T('Search by name, GTIN or code…','Поиск по названию, GTIN или коду…')}" value="${esc(S.q||'')}" style="margin-bottom:10px">
+  <div class="chips" style="margin-bottom:12px"><button class="chip ${S.catF==='all'?'on':''}" data-cf="all">${T('All','Все')}</button>${Object.entries(CATS).map(([k,v])=>`<button class="chip ${S.catF===k?'on':''}" data-cf="${k}">${v[2]} ${T(v[0],v[1])}</button>`).join('')}</div>
+  <div class="cat">${list.map(p=>{const rk=risk(p.sku);return`<div class="prod"><div class="ph">${CATS[p.cat][2]}</div><b>${esc(T(p.en,p.ru))}</b><div class="gt">${p.sku} · GTIN ${p.gtin}</div>
+   <div class="row" style="justify-content:space-between"><span class="pr">${gbp(p.price)}<span class="muted" style="font-size:12px;font-weight:500"> / ${T(p.unit[0],p.unit[1])}</span></span>${rk.lvl==='ok'?`<span class="pill ok">${T('In stock','В наличии')}</span>`:rk.lvl==='med'?`<span class="pill warn">${T('Limited','Ограничено')}</span>`:`<span class="pill bad">${T('Shortage risk','Риск дефицита')}</span>`}</div>
+   <div class="muted" style="font-size:12px">${esc(SUPS[p.sup][0])}${p.cold?' · ❄ 2–8°C':''} · ${T('lead','срок')} ${p.lead} ${T('d','дн.')}</div>
+   <div class="row"><span class="qty"><button data-dq="${p.sku}" data-d="-1">−</button><input data-qi="${p.sku}" value="${S.cart[p.sku]||10}" inputmode="numeric"><button data-dq="${p.sku}" data-d="1">+</button></span><button class="btn sm pri" data-add="${p.sku}">${S.cart[p.sku]?T('Update','Обновить'):T('Add','В корзину')}</button></div></div>`}).join('')||`<div class="muted">${T('Nothing found','Ничего не найдено')}</div>`}</div></div>
+  <div class="card sticky"><h3>🧺 ${T('Basket','Корзина')}<span class="sp"></span>${lines.length?`<button class="btn sm" id="clr">${T('Clear','Очистить')}</button>`:''}</h3>
+   ${lines.length?lines.map(([k,q])=>`<div class="bline"><span><b>${esc(nm(k))}</b><br><span class="muted">${num(q)} × ${gbp(SKU[k].price)}</span></span><b>${gbp(SKU[k].price*q)}</b><button class="btn sm" data-rm="${k}" aria-label="remove">✕</button></div>`).join(''):`<div class="muted" style="padding:16px 0;text-align:center">${T('Basket is empty — add items from the catalogue.','Корзина пуста — добавьте товары из каталога.')}</div>`}
+   <div class="row" style="justify-content:space-between;margin:12px 0;font-size:16px"><span>${T('Total (ex VAT)','Итого (без НДС)')}</span><b>${gbp(tot)}</b></div>
+   ${tot>5000?`<div class="pill warn" style="margin-bottom:10px">${T('Over £5,000 — budget holder approval required','Больше £5 000 — нужно согласование распорядителя')}</div>`:''}
+   <div class="fgrid"><div class="f"><label>${T('Deliver to ward','Отделение доставки')}</label><select class="input" id="ward">${['Central stores','Theatres','Critical care','Pharmacy','Pathology','Emergency dept'].map((w,i)=>`<option value="${w}">${T(w,['Центральный склад','Операционные','Реанимация','Аптека','Лаборатория','Приёмное отделение'][i])}</option>`).join('')}</select></div>
+   <div class="f"><label>${T('Cost centre','Центр затрат')}</label><input class="input" id="cc" placeholder="CC-1234" value="CC-1001"></div>
+   <div class="f full"><label>${T('Required by','Нужно к дате')}</label><input class="input" type="date" id="rq" min="${minD}" value="${new Date(now()+7*DAY).toISOString().slice(0,10)}"></div></div>
+   <div class="err" id="oerr"></div>
+   <button class="btn pri" id="submit" style="width:100%;justify-content:center" ${lines.length?'':'disabled'}>${T('Submit order','Оформить заказ')}</button></div></div>`;
+ const qi=$('#q',el);qi.oninput=()=>{S.q=qi.value;save();const p=qi.selectionStart;rCat();const n=$('#q');n.focus();n.setSelectionRange(p,p)};
+ $$('[data-cf]',el).forEach(b=>b.onclick=()=>{S.catF=b.dataset.cf;save();rCat()});
+ $$('[data-dq]',el).forEach(b=>b.onclick=()=>{const i=$(`[data-qi="${b.dataset.dq}"]`,el);i.value=Math.max(1,(parseInt(i.value)||0)+(+b.dataset.d)*(SKU[b.dataset.dq].price<5?50:5))});
+ $$('[data-add]',el).forEach(b=>b.onclick=()=>{const k=b.dataset.add,v=parseInt($(`[data-qi="${k}"]`,el).value);if(!(v>0)||v>99999){toast(T('Enter a quantity between 1 and 99,999','Укажите количество от 1 до 99 999'),'bad');return}S.cart[k]=v;save();toast(T('Added to basket: ','В корзине: ')+esc(nm(k))+' × '+v);render()});
+ $$('[data-rm]',el).forEach(b=>b.onclick=()=>{delete S.cart[b.dataset.rm];save();render()});
+ const c=$('#clr',el);if(c)c.onclick=()=>{S.cart={};save();render()};
+ $('#submit',el).onclick=submitOrder;
+}
+function submitOrder(){
+ const cc=$('#cc'),rq=$('#rq');let e='';cc.classList.remove('bad');rq.classList.remove('bad');
+ if(!/^CC-\d{4}$/.test(cc.value.trim())){e=T('Cost centre must look like CC-1234','Центр затрат в формате CC-1234');cc.classList.add('bad')}
+ else if(!rq.value||new Date(rq.value).getTime()<now()){e=T('Required-by date must be in the future','Дата должна быть в будущем');rq.classList.add('bad')}
+ $('#oerr').textContent=e;if(e)return;
+ const lines=Object.entries(S.cart).map(([sku,qty])=>({sku,qty}));const total=lines.reduce((a,l)=>a+SKU[l.sku].price*l.qty,0);
+ const o={id:'PO-'+(S.nextPO++),date:now(),lines,total:Math.round(total*100)/100,ward:$('#ward').value,cc:cc.value.trim(),req:rq.value,st:total>5000?'wait':'appr'};
+ S.orders.unshift(o);if(o.st==='appr')dispatch(o);S.cart={};save();
+ toast(o.st==='wait'?T(`${o.id} sent for budget approval`,`${o.id} отправлен на согласование`):T(`${o.id} submitted — suppliers notified`,`${o.id} оформлен — поставщики уведомлены`),o.st==='wait'?'gold':'');
+ go('orders');
+}
+function dispatch(o){const by={};o.lines.forEach(l=>{(by[SKU[l.sku].sup]=by[SKU[l.sku].sup]||[]).push(l)});const r=rng(o.id.length+S.nextDel*7);
+ Object.entries(by).forEach(([sup,lines])=>{const lead=Math.max(...lines.map(l=>SKU[l.sku].lead));const cold=lines.some(l=>SKU[l.sku].cold);
+  S.del.unshift({id:'DLV-'+(S.nextDel++),po:o.id,sup,lines,st:0,eta:now()+Math.ceil(lead/3)*DAY,booked:now(),carrier:cold?CARR[2]:CARR[1],sscc:sscc(r),temp:cold?[]:null});lines.forEach(l=>S.stock[l.sku].inc+=l.qty)})}
+
+/* ---------- ORDERS ---------- */
+function oStatus(o){if(o.st==='wait')return['Awaiting approval','На согласовании','warn'];if(o.st==='rej')return['Rejected','Отклонён','bad'];
+ const ds=S.del.filter(d=>d.po===o.id);if(ds.length&&ds.every(d=>d.st===4))return['Delivered','Доставлен','ok'];if(ds.some(d=>d.st>=2))return['In transit','В пути','gold'];return['Approved','Согласован','ok']}
+function rOrders(){
+ const el=$('#v-orders');const wait=S.orders.filter(o=>o.st==='wait');
+ el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Orders this month','Заказов за месяц')}</div><div class="v">${S.orders.length}</div><div class="d">${T('all wards','все отделения')}</div></div>
+ <div class="card kpi"><div class="l">${T('Spend committed','Обязательства')}</div><div class="v">${gbp0(spent())}</div><div class="d">${T('of £180,000 budget','из бюджета £180 000')}</div></div>
+ <div class="card kpi"><div class="l">${T('Awaiting approval','На согласовании')}</div><div class="v ${wait.length?'warn-t':''}">${wait.length}</div><div class="d">${T('over £5,000','больше £5 000')}</div></div>
+ <div class="card kpi"><div class="l">${T('Contract compliance','Соблюдение контрактов')}</div><div class="v ok-t">98.4%</div><div class="d">${T('on-catalogue spend','закупки по каталогу')}</div></div></div>
+ <div class="tw"><table><thead><tr><th>${T('Order','Заказ')}</th><th>${T('Date','Дата')}</th><th>${T('Ward','Отделение')}</th><th>${T('Items','Позиции')}</th><th>${T('Total','Сумма')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+ ${S.orders.map(o=>{const s=oStatus(o);return`<tr><td class="mono"><b>${o.id}</b><br><span class="muted" style="font-size:11px">${esc(o.cc)}</span></td><td>${fmtD(o.date)}</td><td>${esc(o.ward)}</td><td class="wrap">${o.lines.map(l=>esc(nm(l.sku))+' × '+num(l.qty)).join('<br>')}</td><td><b>${gbp(o.total)}</b></td><td><span class="pill ${s[2]}">${T(s[0],s[1])}</span></td>
+ <td>${o.st==='wait'?`<div class="row" style="flex-wrap:nowrap"><button class="btn sm pri" data-ap="${o.id}">${T('Approve','Согласовать')}</button><button class="btn sm danger" data-rj="${o.id}">${T('Reject','Отклонить')}</button></div>`:`<button class="btn sm" data-ro="${o.id}">${T('Reorder','Повторить')}</button>`}</td></tr>`}).join('')}</tbody></table></div>`;
+ $$('[data-ap]',el).forEach(b=>b.onclick=()=>{const o=S.orders.find(x=>x.id===b.dataset.ap);o.st='appr';dispatch(o);save();toast(T(`${o.id} approved and dispatched to suppliers`,`${o.id} согласован и передан поставщикам`));render()});
+ $$('[data-rj]',el).forEach(b=>b.onclick=()=>{const o=S.orders.find(x=>x.id===b.dataset.rj);o.st='rej';save();toast(T(`${o.id} rejected`,`${o.id} отклонён`),'bad');render()});
+ $$('[data-ro]',el).forEach(b=>b.onclick=()=>{const o=S.orders.find(x=>x.id===b.dataset.ro);o.lines.forEach(l=>S.cart[l.sku]=l.qty);save();toast(T('Lines copied to basket','Позиции скопированы в корзину'));go('cat')});
+}
+
+/* ---------- STOCK ---------- */
+function reorder(k,qty){const c=SKU[k];const r=rng(S.nextDel*13);const o={id:'PO-'+(S.nextPO++),date:now(),lines:[{sku:k,qty}],total:Math.round(c.price*qty*100)/100,ward:'Central stores',cc:'CC-1001',st:'appr',auto:true};S.orders.unshift(o);
+ S.del.unshift({id:'DLV-'+(S.nextDel++),po:o.id,sup:c.sup,lines:[{sku:k,qty}],st:0,eta:now()+Math.ceil(c.lead/3)*DAY,booked:now(),carrier:c.cold?CARR[2]:CARR[3],sscc:sscc(r),temp:c.cold?[]:null});S.stock[k].inc+=qty;return o}
+const sugg=k=>{const c=SKU[k],s=S.stock[k];return Math.max(0,Math.ceil((c.daily*(c.lead+21)-s.on-s.inc)/10)*10)};
+function rStock(){
+ const el=$('#v-stock');const rows=CAT.map(c=>({k:c[0],...risk(c[0])}));
+ const hi=rows.filter(r=>r.lvl==='high').length,me=rows.filter(r=>r.lvl==='med').length;
+ const val=CAT.reduce((a,c)=>a+S.stock[c[0]].on*c[6],0);const avg=rows.reduce((a,r)=>a+Math.min(r.cover,60),0)/rows.length;
+ const shown=rows.filter(r=>S.riskF==='all'||r.lvl===S.riskF).sort((a,b)=>a.eff/SKU[a.k].lead-b.eff/SKU[b.k].lead);
+ // cover bar chart
+ const W=640,bh=20,H=rows.length*bh+30;const mx=60;
+ const bars=rows.slice().sort((a,b)=>a.cover-b.cover).map((r,i)=>{const c=SKU[r.k];const w=Math.min(r.cover,mx)/mx*(W-210),wi=Math.min(r.eff,mx)/mx*(W-210),lx=Math.min(c.lead,mx)/mx*(W-210);const col=r.lvl==='high'?'var(--red)':r.lvl==='med'?'var(--amber)':'var(--mal)';
+  return`<text x="0" y="${i*bh+14}" style="fill:var(--muted);font-size:10.5px">${esc(nm(r.k).slice(0,30))}</text><rect x="200" y="${i*bh+4}" width="${wi}" height="12" rx="3" style="fill:${col};opacity:.25"/><rect x="200" y="${i*bh+4}" width="${w}" height="12" rx="3" style="fill:${col}"/><line x1="${200+lx}" x2="${200+lx}" y1="${i*bh+1}" y2="${i*bh+19}" style="stroke:var(--text);stroke-width:2"/><title>${esc(nm(r.k))}: ${r.cover.toFixed(1)} d</title>`}).join('');
+ const ticks=[0,15,30,45,60].map(t=>`<text x="${200+t/mx*(W-210)}" y="${H-6}" text-anchor="middle" style="fill:var(--dim);font-size:10px">${t}${t===60?'+':''}</text>`).join('');
+ el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('High shortage risk','Высокий риск дефицита')}</div><div class="v ${hi?'bad-t':'ok-t'}">${hi}</div><div class="d">${T('cover incl. inbound < lead time','запас с поставками < срока поставки')}</div></div>
+ <div class="card kpi"><div class="l">${T('Medium risk','Средний риск')}</div><div class="v warn-t">${me}</div><div class="d">${T('watch list','на контроле')}</div></div>
+ <div class="card kpi"><div class="l">${T('Avg days of cover','Средний запас, дней')}</div><div class="v">${avg.toFixed(1)}</div><div class="d">${T('on hand / daily demand','остаток / дневной спрос')}</div></div>
+ <div class="card kpi"><div class="l">${T('Stock value','Стоимость запаса')}</div><div class="v">${gbp0(val)}</div><div class="d">${T('national DC network','сеть нац. складов')}</div></div></div>
+ <div class="grid2"><div><div class="chips" style="margin-bottom:10px">${['all','high','med','ok'].map(f=>`<button class="chip ${S.riskF===f?'on':''}" data-rf="${f}">${f==='all'?T('All lines','Все'):T(RL[f][0],RL[f][1])}</button>`).join('')}<button class="chip" id="autoRe">⚡ ${T('Reorder all high-risk','Дозаказать все с высоким риском')}</button></div>
+ <div class="tw"><table><thead><tr><th>${T('Item','Позиция')}</th><th>${T('On hand','Остаток')}</th><th>${T('Inbound','В пути')}</th><th>${T('Daily use','Расход/день')}</th><th>${T('Cover','Запас')}</th><th>${T('Lead','Срок')}</th><th>${T('Risk','Риск')}</th><th></th></tr></thead><tbody>
+ ${shown.map(r=>{const c=SKU[r.k],s=S.stock[r.k];const sg=sugg(r.k);return`<tr><td class="wrap"><b>${esc(nm(r.k))}</b><br><span class="mono muted" style="font-size:11px">${c.gtin}</span></td><td>${num(s.on)}</td><td>${s.inc?num(s.inc):'—'}</td><td>${num(c.daily)}</td><td><b class="${r.lvl==='high'?'bad-t':r.lvl==='med'?'warn-t':''}">${r.cover.toFixed(1)} ${T('d','дн.')}</b></td><td>${c.lead} ${T('d','дн.')}</td><td>${rpill(r.lvl)}</td><td>${sg?`<button class="btn sm ${r.lvl==='high'?'pri':''}" data-re="${r.k}">${T('Reorder','Заказать')} ${num(sg)}</button>`:`<span class="muted" style="font-size:12px">${T('covered','покрыто')}</span>`}</td></tr>`}).join('')}</tbody></table></div></div>
+ <div class="card chart"><h3>${T('Days of cover vs lead time','Дни запаса и срок поставки')}</h3><div class="legend" style="margin-bottom:8px"><span><i style="background:var(--mal)"></i>${T('on hand','на складе')}</span><span><i style="background:var(--mal);opacity:.3"></i>${T('incl. inbound','с поставками')}</span><span><i style="background:var(--text);width:3px"></i>${T('lead time','срок поставки')}</span></div>
+ <svg viewBox="0 0 ${W} ${H}" role="img">${bars}${ticks}</svg><div class="muted" style="font-size:12px">${T('Risk = projected cover including inbound deliveries compared with supplier lead time.','Риск = прогноз запаса с учётом поставок в пути против срока поставки.')}</div></div></div>`;
+ $$('[data-rf]',el).forEach(b=>b.onclick=()=>{S.riskF=b.dataset.rf;save();rStock()});
+ $$('[data-re]',el).forEach(b=>b.onclick=()=>{const k=b.dataset.re;const o=reorder(k,sugg(k));save();toast(T(`${o.id}: reorder placed with `,`${o.id}: дозаказ у `)+esc(SUPS[SKU[k].sup][0]));render()});
+ $('#autoRe',el).onclick=()=>{const ks=CAT.map(c=>c[0]).filter(k=>risk(k).lvl==='high'&&sugg(k));if(!ks.length){toast(T('No high-risk lines to reorder','Нет позиций с высоким риском'),'gold');return}ks.forEach(k=>reorder(k,sugg(k)));save();toast(T(`${ks.length} reorders placed`,`Создано дозаказов: ${ks.length}`));render()};
+}
+
+/* ---------- FORECAST ---------- */
+const MON=[['Jan','янв'],['Feb','фев'],['Mar','мар'],['Apr','апр'],['May','май'],['Jun','июн'],['Jul','июл'],['Aug','авг'],['Sep','сен'],['Oct','окт'],['Nov','ноя'],['Dec','дек']];
+const SCN={base:['Baseline','Базовый'],winter:['Winter surge','Зимний всплеск'],wave:['Respiratory wave','Респираторная волна'],elect:['Elective recovery','Плановые операции']};
+function series(k){const c=SKU[k];const r=rng(k.split('').reduce((a,ch)=>a+ch.charCodeAt(0),0));const base=c.daily*30;const amp=(c.cat==='ppe'||c.cat==='iv'||k==='MS-1304')?(k==='MS-1304'?.6:.22):.07;
+ const m0=new Date(now()).getMonth();const hist=[];for(let i=-24;i<0;i++){const m=((m0+i)%12+12)%12;hist.push({m,v:base*(1+0.006*(i+24)-0.07)*(1+amp*Math.cos(m/12*2*Math.PI))*(0.92+r()*0.16)})}
+ const fc=[];for(let h=0;h<6;h++){const m=(m0+h)%12;let mult=1;if(S.fcSc==='winter'&&[10,11,0,1].includes(m))mult=1.2;if(S.fcSc==='wave')mult=h<3?(c.cat==='ppe'?1.55:1.15):1.05;if(S.fcSc==='elect')mult=(c.cat==='surg'||c.cat==='wound')?1.14:1.03;
+  fc.push({m,v:base*(1+0.006*(h+24)-0.07)*(1+amp*Math.cos(m/12*2*Math.PI))*mult,e:0.06+0.025*h})}
+ return{hist,fc,base}}
+function rFc(){
+ const el=$('#v-fc');const k=S.fcSku,c=SKU[k];const{hist,fc}=series(k);
+ const W=680,H=280,pl=50,pr=12,pt=14,pb=30;const all=hist.map(x=>x.v).concat(fc.map(x=>x.v*(1+x.e)));const mx=Math.max(...all)*1.08;
+ const n=hist.length+fc.length;const X=i=>pl+i*(W-pl-pr)/(n-1),Y=v=>pt+(1-v/mx)*(H-pt-pb);
+ const hp=hist.map((p,i)=>`${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+ const fx=fc.map((p,i)=>[X(hist.length+i),p]);const fp=`${X(hist.length-1)},${Y(hist[hist.length-1].v)} `+fx.map(([x,p])=>`${x.toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+ const band=fx.map(([x,p])=>`${x.toFixed(1)},${Y(p.v*(1+p.e)).toFixed(1)}`).join(' ')+' '+fx.slice().reverse().map(([x,p])=>`${x.toFixed(1)},${Y(p.v*(1-p.e)).toFixed(1)}`).join(' ');
+ const grid=[0,.25,.5,.75,1].map(f=>{const v=mx*f;return`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line)"/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end" style="fill:var(--dim);font-size:10px">${v>=1000?Math.round(v/1000)+'k':Math.round(v)}</text>`}).join('');
+ const xl=hist.concat(fc).map((p,i)=>i%3===0?`<text x="${X(i)}" y="${H-10}" text-anchor="middle" style="fill:var(--dim);font-size:10px">${T(MON[p.m][0],MON[p.m][1])}</text>`:'').join('');
+ const dots=fx.map(([x,p])=>`<circle cx="${x}" cy="${Y(p.v)}" r="4" style="fill:var(--gold)"><title>${T(MON[p.m][0],MON[p.m][1])}: ${num(p.v)}</title></circle>`).join('');
+ const err=hist.slice(-12).map((p,i,a)=>{const prev=hist[hist.length-24+i];return Math.abs(p.v-prev.v*1.07)/p.v});const mape=err.reduce((a,b)=>a+b,0)/err.length*100;
+ const n3=fc.slice(0,3).reduce((a,p)=>a+p.v,0);const sigma=c.daily*30*0.08;const ss=Math.round(1.65*sigma*Math.sqrt(c.lead/30));
+ const need=Math.max(0,Math.ceil((fc[0].v*(c.lead+30)/30+ss-S.stock[k].on-S.stock[k].inc)/10)*10);
+ el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row"><select class="input" id="fsku" style="max-width:420px">${CAT.map(x=>`<option value="${x[0]}" ${x[0]===k?'selected':''}>${esc(T(x[2],x[3]))}</option>`).join('')}</select>
+ <div class="chips">${Object.entries(SCN).map(([s,v])=>`<button class="chip ${S.fcSc===s?'on':''}" data-sc="${s}">${T(v[0],v[1])}</button>`).join('')}</div></div></div>
+ <div class="grid2"><div class="card chart"><h3>${T('Monthly demand · 24 months history + 6 months forecast','Спрос по месяцам · 24 мес. истории + прогноз на 6 мес.')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('actual','факт')}</span><span><i style="background:var(--gold)"></i>${T('forecast','прогноз')}</span><span><i style="background:var(--gold);opacity:.25"></i>${T('80% interval','интервал 80%')}</span></span></h3>
+ <svg viewBox="0 0 ${W} ${H}" role="img">${grid}<polygon points="${band}" style="fill:var(--gold);opacity:.18"/><line x1="${X(hist.length-1)}" x2="${X(hist.length-1)}" y1="${pt}" y2="${H-pb}" style="stroke:var(--dim);stroke-dasharray:3 3"/><text x="${X(hist.length-1)+4}" y="${pt+10}" style="fill:var(--dim);font-size:10px">${T('today','сегодня')}</text>
+ <polyline points="${hp}" style="fill:none;stroke:var(--mal);stroke-width:2.2"/><polyline points="${fp}" style="fill:none;stroke:var(--gold);stroke-width:2.4;stroke-dasharray:6 4"/>${dots}${xl}</svg>
+ <div class="muted" style="font-size:12px">${T('Model: seasonal trend (Holt-Winters class) on GS1 consumption feeds from 214 trusts; scenario multipliers set by category managers.','Модель: сезонный тренд (класс Holt-Winters) по данным потребления GS1 из 214 трестов; множители сценариев задают менеджеры категорий.')}</div></div>
+ <div class="card"><h3>${esc(nm(k))}</h3>
+ <dl class="facts" style="font-size:13.5px;gap:8px 14px"><dt>${T('Next 3 months demand','Спрос на 3 месяца')}</dt><dd>${num(n3)} ${T(c.unit[0],c.unit[1])}</dd>
+ <dt>${T('Forecast accuracy (MAPE)','Точность (MAPE)')}</dt><dd class="${mape<10?'ok-t':'warn-t'}">${mape.toFixed(1)}%</dd>
+ <dt>${T('Safety stock (95%)','Страховой запас (95%)')}</dt><dd>${num(ss)}</dd>
+ <dt>${T('On hand + inbound','Остаток + в пути')}</dt><dd>${num(S.stock[k].on)} + ${num(S.stock[k].inc)}</dd>
+ <dt>${T('Supplier lead time','Срок поставки')}</dt><dd>${c.lead} ${T('days','дн.')}</dd>
+ <dt>${T('Suggested order','Рекомендуемый заказ')}</dt><dd class="${need?'gold':''}" style="font-size:18px">${num(need)}</dd></dl>
+ <div style="margin-top:14px" class="row"><button class="btn pri" id="fcPo" ${need?'':'disabled'}>${T('Create PO from forecast','Создать заказ по прогнозу')}</button></div>
+ <div class="muted" style="font-size:12px;margin-top:10px">${T('Order quantity = forecast demand over lead time + 30 days + safety stock − on hand − inbound.','Объём = прогноз на срок поставки + 30 дней + страховой запас − остаток − в пути.')}</div></div></div>`;
+ $('#fsku',el).onchange=e=>{S.fcSku=e.target.value;save();rFc()};
+ $$('[data-sc]',el).forEach(b=>b.onclick=()=>{S.fcSc=b.dataset.sc;save();rFc()});
+ $('#fcPo',el).onclick=()=>{const o=reorder(k,need);save();toast(T(`${o.id} created: ${num(need)} units`,`${o.id} создан: ${num(need)} ед.`));render()};
+}
+
+/* ---------- DELIVERIES ---------- */
+function routeSvg(d){const pts=[[40,90],[230,40],[420,110],[600,60]];const lab=[[SUPS[d.sup][0].split(' ')[0]+' DC',T('Склад ','Склад ')+SUPS[d.sup][0].split(' ')[0]],['NHS hub Midlands','Хаб Мидлендс'],['Cross-dock','Кросс-док'],[HOSP[S.hosp].split(' ')[0]+' '+HOSP[S.hosp].split(' ')[1],HOSP[S.hosp].split(' ')[0]+' '+HOSP[S.hosp].split(' ')[1]]];
+ const p=Math.min(d.st,3);const path='M'+pts.map(q=>q.join(',')).join(' L');
+ const done='M'+pts.slice(0,p+1).map(q=>q.join(',')).join(' L');
+ return`<svg viewBox="0 0 640 150" role="img"><path d="${path}" style="fill:none;stroke:var(--line2);stroke-width:4;stroke-dasharray:2 8;stroke-linecap:round"/>${p?`<path d="${done}" style="fill:none;stroke:var(--mal);stroke-width:4;stroke-linecap:round"/>`:''}
+ ${pts.map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="9" style="fill:${i<=p?'var(--mal)':'var(--panel2)'};stroke:var(--mal);stroke-width:2"/><text x="${q[0]}" y="${q[1]+(i%2?-16:26)}" text-anchor="middle" style="fill:var(--muted);font-size:11px">${esc(T(lab[i][0],lab[i][1]))}</text>`).join('')}
+ <text x="${pts[p][0]}" y="${pts[p][1]+6}" text-anchor="middle" style="font-size:20px">${d.st===4?'✅':'🚚'}</text></svg>`}
+function rDel(){
+ const el=$('#v-del');if(!S.selDel||!S.del.find(d=>d.id===S.selDel))S.selDel=(S.del.find(d=>d.st===3)||S.del[0]||{}).id;const d=S.del.find(x=>x.id===S.selDel);
+ const open=S.del.filter(x=>x.st<4);const late=open.filter(x=>x.eta<now()-DAY/2).length;
+ el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Open deliveries','Открытые поставки')}</div><div class="v">${open.length}</div></div><div class="card kpi"><div class="l">${T('Arriving today','Прибывают сегодня')}</div><div class="v gold">${S.del.filter(x=>x.st===3).length}</div></div><div class="card kpi"><div class="l">${T('Late','Опаздывают')}</div><div class="v ${late?'bad-t':'ok-t'}">${late}</div></div><div class="card kpi"><div class="l">${T('Cold-chain loads','Холодовая цепь')}</div><div class="v">${open.filter(x=>x.temp).length}</div><div class="d">2–8°C</div></div></div>
+ <div class="grid2"><div>${S.del.map(x=>{const lt=x.st<4&&x.eta<now()-DAY/2;return`<div class="dl ${x.id===S.selDel?'on':''}" data-sd="${x.id}"><div class="top"><b>${x.id} · ${esc(SUPS[x.sup][0])}</b>${x.temp?'<span class="pill">❄ 2–8°C</span>':''}<span class="pill ${x.st===4?'ok':lt?'bad':x.st===3?'gold':''}">${lt?T('Late','Опаздывает'):T(DST[x.st][0],DST[x.st][1])}</span></div>
+  <div class="muted" style="font-size:12.5px;margin-top:4px">${x.po} · ${x.lines.map(l=>esc(nm(l.sku))+' × '+num(l.qty)).join('; ')}</div>
+  <div class="steps">${DST.map((s,i)=>`<div class="${i<x.st||x.st===4?'ok':i===x.st?'cur':''}"><i></i><span>${T(s[0],s[1])}</span></div>`).join('')}</div>
+  <div class="muted" style="font-size:12px">${x.st===4?T('Received','Принято')+' '+fmtD(x.recv||x.eta):'ETA '+fmtD(x.eta)} · ${esc(x.carrier)}</div></div>`}).join('')}</div>
+ ${d?`<div class="card sticky chart"><h3>${d.id}<span class="sp"></span><span class="mono muted" style="font-size:11px">SSCC ${d.sscc}</span></h3>${routeSvg(d)}
+  ${d.temp?`<div style="margin:6px 0 12px"><div class="muted" style="font-size:12px;margin-bottom:4px">${T('Temperature logger (°C)','Логгер температуры (°C)')}</div>${tempSvg(d.temp)}</div>`:''}
+  ${d.st===3?`<div class="f"><label>${T('Goods-in: scan SSCC label (GS1-128)','Приёмка: отсканируйте этикетку SSCC (GS1-128)')}</label><div class="row" style="flex-wrap:nowrap"><input class="input mono" id="scan" placeholder="(00)…"><button class="btn sm" id="scanSim">📷 ${T('Scan','Скан')}</button></div><div class="err" id="serr"></div></div><button class="btn pri" id="recv" style="width:100%;justify-content:center">${T('Confirm receipt','Подтвердить приёмку')}</button>`:
+   d.st===4?`<div class="pill ok">✓ ${T('Received into stock, invoice matched (3-way match)','Принято на склад, счёт сверен (3-way match)')}</div>`:`<div class="muted" style="font-size:13px">${T('Use “Advance 1 day” to move this shipment along the route; carrier scans update status automatically.','Нажмите «Следующий день», чтобы груз двигался; сканы перевозчика обновляют статус.')}</div>`}</div>`:''}</div>`;
+ $$('[data-sd]',el).forEach(b=>b.onclick=()=>{S.selDel=b.dataset.sd;save();rDel()});
+ const sim=$('#scanSim',el);if(sim)sim.onclick=()=>{$('#scan').value='(00)'+d.sscc};
+ const rv=$('#recv',el);if(rv)rv.onclick=()=>{const v=$('#scan').value.replace(/\D/g,'').replace(/^00(?=\d{18}$)/,'');if(v!==d.sscc){$('#serr').textContent=T('SSCC does not match this delivery','SSCC не совпадает с поставкой');$('#scan').classList.add('bad');return}
+  d.st=4;d.recv=now();d.lines.forEach(l=>{S.stock[l.sku].on+=l.qty;S.stock[l.sku].inc=Math.max(0,S.stock[l.sku].inc-l.qty)});const sp=S.sup[d.sup];const onT=now()<=d.eta+DAY/2;sp.otif=Math.max(50,Math.min(100,+(sp.otif+(onT?0.4:-1.5)).toFixed(1)));sp.trend.push(Math.round(sp.otif));sp.trend=sp.trend.slice(-8);save();
+  toast(T(`${d.id} received — stock updated, ${onT?'on time':'late'}`,`${d.id} принята — запасы обновлены, ${onT?'вовремя':'с опозданием'}`));render()};
+}
+function tempSvg(a){if(!a.length)a=[5.1];const W=600,H=70;const X=i=>10+i*(W-20)/Math.max(1,a.length-1),Y=v=>H-8-(v-0)/10*(H-16);
+ return`<svg viewBox="0 0 ${W} ${H}"><rect x="10" y="${Y(8)}" width="${W-20}" height="${Y(2)-Y(8)}" style="fill:var(--mal);opacity:.1"/><polyline points="${a.map((v,i)=>X(i)+','+Y(v)).join(' ')}" style="fill:none;stroke:var(--blue);stroke-width:2"/><text x="${W-12}" y="${Y(8)-3}" text-anchor="end" style="fill:var(--dim);font-size:10px">8°C</text><text x="${W-12}" y="${Y(2)+11}" text-anchor="end" style="fill:var(--dim);font-size:10px">2°C</text></svg>`}
+
+/* ---------- SUPPLIERS ---------- */
+const score=s=>s.otif*.35+s.fill*.25+s.qual*.2+s.resp*.1+s.esg*.1;
+const grade=v=>v>=92?['A','var(--mal)']:v>=85?['B','var(--gold)']:['C','var(--red)'];
+function radar(s){const ax=[['OTIF','OTIF','otif'],['Fill rate','Выполнение','fill'],['Quality','Качество','qual'],['Response','Реакция','resp'],['ESG','ESG','esg']];const cx=150,cy=125,R=90;
+ const avg={};ax.forEach(a=>avg[a[2]]=Object.values(S.sup).reduce((t,x)=>t+x[a[2]],0)/6);
+ const pt=(o,i)=>{const ang=-Math.PI/2+i*2*Math.PI/5;const r=Math.max(0,(o[ax[i][2]]-50)/50)*R;return(cx+r*Math.cos(ang)).toFixed(1)+','+(cy+r*Math.sin(ang)).toFixed(1)};
+ const ring=f=>ax.map((_,i)=>{const ang=-Math.PI/2+i*2*Math.PI/5;return(cx+f*R*Math.cos(ang)).toFixed(1)+','+(cy+f*R*Math.sin(ang)).toFixed(1)}).join(' ');
+ return`<svg viewBox="0 0 300 250">${[.25,.5,.75,1].map(f=>`<polygon points="${ring(f)}" style="fill:none;stroke:var(--line)"/>`).join('')}
+ <polygon points="${ax.map((_,i)=>pt(avg,i)).join(' ')}" style="fill:var(--gold);opacity:.15;stroke:var(--gold);stroke-dasharray:4 3"/><polygon points="${ax.map((_,i)=>pt(s,i)).join(' ')}" style="fill:var(--mal);fill-opacity:.25;stroke:var(--mal);stroke-width:2"/>
+ ${ax.map((a,i)=>{const ang=-Math.PI/2+i*2*Math.PI/5;return`<text x="${cx+(R+18)*Math.cos(ang)}" y="${cy+(R+18)*Math.sin(ang)+4}" text-anchor="middle" style="fill:var(--muted);font-size:11px">${T(a[0],a[1])}</text>`}).join('')}</svg>`}
+function spark(a){const W=120,H=30,mn=Math.min(...a)-1,mx=Math.max(...a)+1;return`<svg viewBox="0 0 ${W} ${H}" style="width:120px;height:30px"><polyline points="${a.map((v,i)=>(i*W/(a.length-1)).toFixed(1)+','+(H-2-(v-mn)/(mx-mn)*(H-4)).toFixed(1)).join(' ')}" style="fill:none;stroke:var(--mal3);stroke-width:2"/></svg>`}
+function rSup(){
+ const el=$('#v-sup');const ks=Object.keys(SUPS).sort((a,b)=>score(S.sup[b])-score(S.sup[a]));const sel=S.selSup,s=S.sup[sel];const g=grade(score(s));
+ const IT={late:['Late delivery','Опоздание'],qual:['Quality defect','Дефект качества'],short:['Short shipment','Недопоставка'],doc:['Wrong GS1 data','Ошибка данных GS1']};
+ el.innerHTML=`<div class="sup" style="margin-bottom:14px">${ks.map(k=>{const x=S.sup[k],sc=score(x),gg=grade(sc);const oi=S.issues.filter(i=>i.sup===k&&i.open).length;return`<div class="sc ${k===sel?'on':''}" data-ss="${k}"><div class="row" style="flex-wrap:nowrap"><div class="grade" style="background:color-mix(in srgb,${gg[1]} 20%,transparent);color:${gg[1]}">${gg[0]}</div><div style="min-width:0;flex:1"><b style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(SUPS[k][0])}</b><span class="muted" style="font-size:12px">${esc(SUPS[k][1])}</span></div><b style="font-size:18px">${sc.toFixed(1)}</b></div>
+  ${[['OTIF','OTIF','otif'],['Fill rate','Выполнение','fill'],['Quality','Качество','qual']].map(m=>`<div class="met"><span class="muted">${T(m[0],m[1])}</span><div class="bar"><i style="width:${x[m[2]]}%"></i></div><b>${x[m[2]]}%</b></div>`).join('')}
+  <div class="row" style="justify-content:space-between;margin-top:8px">${spark(x.trend)}${oi?`<span class="pill bad">${oi} ${T('open issues','открытых')}</span>`:`<span class="pill ok">${T('no issues','без замечаний')}</span>`}</div></div>`}).join('')}</div>
+ <div class="grid2"><div class="card chart"><h3>${esc(SUPS[sel][0])}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('supplier','поставщик')}</span><span><i style="background:var(--gold)"></i>${T('framework average','среднее по рамке')}</span></span></h3>
+  <div class="row" style="align-items:flex-start"><div style="flex:1;min-width:220px;max-width:340px">${radar(s)}</div>
+  <dl class="facts" style="flex:1;min-width:200px;font-size:13px;gap:8px 12px"><dt>${T('Overall score','Итоговый балл')}</dt><dd style="color:${g[1]}">${score(s).toFixed(1)} · ${T('grade','класс')} ${g[0]}</dd><dt>OTIF</dt><dd>${s.otif}%</dd><dt>${T('Fill rate','Выполнение')}</dt><dd>${s.fill}%</dd><dt>${T('Quality acceptance','Приёмка по качеству')}</dt><dd>${s.qual}%</dd><dt>${T('Query response','Ответ на запросы')}</dt><dd>${s.resp}%</dd><dt>${T('Carbon reduction plan','План снижения CO₂')}</dt><dd>${s.esg}/100</dd><dt>${T('Price index vs framework','Индекс цены к рамке')}</dt><dd class="${s.price>100?'warn-t':'ok-t'}">${s.price}</dd>
+  <dt>${T('Catalogue lines','Позиций в каталоге')}</dt><dd>${CAT.filter(c=>c[7]===sel).length}</dd></dl></div>
+  <div class="muted" style="font-size:12px">${T('Score = 35% OTIF + 25% fill rate + 20% quality + 10% response + 10% ESG. OTIF updates live when you receive deliveries.','Балл = 35% OTIF + 25% выполнение + 20% качество + 10% реакция + 10% ESG. OTIF меняется при приёмке поставок.')}</div></div>
+ <div class="card"><h3>${T('Performance issues','Замечания к поставщику')}</h3>
+  ${S.issues.filter(i=>i.sup===sel).map(i=>`<div class="iss"><span>${i.open?'🔴':'🟢'}</span><span><b>${T(IT[i.type][0],IT[i.type][1])}</b> · <span class="muted">${fmtD(i.date)}</span><br>${esc(i.text||T(i.en,i.ru))}</span>${i.open?`<button class="btn sm" data-res="${i.id}">${T('Resolve','Закрыть')}</button>`:''}</div>`).join('')||`<div class="muted" style="padding:8px 0">${T('No issues logged.','Замечаний нет.')}</div>`}
+  <div style="margin-top:12px"><div class="f"><label>${T('Issue type','Тип замечания')}</label><select class="input" id="itype">${Object.entries(IT).map(([k,v])=>`<option value="${k}">${T(v[0],v[1])}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Description','Описание')}</label><textarea class="input" id="itext" rows="3" placeholder="${T('What happened, PO / lot number…','Что произошло, номер заказа / партии…')}"></textarea></div><div class="err" id="ierr"></div>
+  <button class="btn pri" id="iadd">${T('Log issue','Зарегистрировать')}</button></div></div></div>`;
+ $$('[data-ss]',el).forEach(b=>b.onclick=()=>{S.selSup=b.dataset.ss;save();rSup()});
+ $$('[data-res]',el).forEach(b=>b.onclick=()=>{const i=S.issues.find(x=>x.id==b.dataset.res);i.open=false;S.sup[sel].resp=Math.min(100,S.sup[sel].resp+1);save();toast(T('Issue resolved','Замечание закрыто'));render()});
+ $('#iadd',el).onclick=()=>{const t=$('#itext').value.trim();if(t.length<10){$('#ierr').textContent=T('Describe the issue (at least 10 characters)','Опишите замечание (не меньше 10 символов)');$('#itext').classList.add('bad');return}
+  const ty=$('#itype').value;S.issues.unshift({id:Date.now(),sup:sel,type:ty,text:t,date:now(),open:true});if(ty==='qual')S.sup[sel].qual=Math.max(50,S.sup[sel].qual-1);if(ty==='late')S.sup[sel].otif=Math.max(50,+(S.sup[sel].otif-1).toFixed(1));save();toast(T('Issue logged and sent to supplier','Замечание отправлено поставщику'),'gold');render()};
+}
+
+/* ---------- day simulation ---------- */
+function advance(){
+ S.day++;const r=rng(S.day*31+7);
+ CAT.forEach(c=>{const s=S.stock[c[0]];s.on=Math.max(0,Math.round(s.on-c[9]*(0.8+r()*0.4)))});
+ let arr=0;S.del.forEach(d=>{if(d.st<3){const days=Math.max(1,Math.round((d.eta-d.booked)/DAY));if(now()>=d.eta-DAY||r()<1.6/days*1.5){d.st++;if(d.st===3)arr++}}if(d.temp&&d.st<4)for(let i=0;i<6;i++)d.temp.push(+(4.2+r()*2.6).toFixed(1));if(d.temp&&d.temp.length>48)d.temp=d.temp.slice(-48)});
+ save();const hi=CAT.filter(c=>risk(c[0]).lvl==='high').length;
+ toast(T(`Day +${S.day}: stock consumed, ${arr} deliveries arriving · ${hi} high-risk lines`,`День +${S.day}: расход списан, прибывает поставок: ${arr} · высокий риск: ${hi}`),hi?'gold':'');render();
+}
+
+$('#login').onclick=()=>{const u=$('#lu').value.trim(),p=$('#lp').value;if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(u)){$('#lerr').textContent=T('Enter a valid work email','Введите корректную рабочую почту');return}if(p.length<4){$('#lerr').textContent=T('Password is too short','Пароль слишком короткий');return}
+ $('#lerr').textContent='';S.auth=true;S.hosp=+$('#lh').value;save();render();toast(T('Signed in as R. Okafor','Вход выполнен: R. Okafor'))};
+$('#lp').onkeydown=e=>{if(e.key==='Enter')$('#login').click()};
+$('#logout').onclick=()=>{S.auth=false;save();render()};
+$('#advance').onclick=advance;
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();S=seed();S.auth=true;save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

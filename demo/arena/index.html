@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arena Pass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app.hide,.loginwrap.hide{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;gap:10px;align-items:center}
+.who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff;font-weight:800;flex:none;font-size:13px}
+.who small{display:block;color:var(--muted);font-size:11.5px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);min-height:0;margin-top:3px}
+.input.bad{border-color:var(--red)}
+select.input{appearance:auto}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--text)}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+th{text-align:left;font-size:11.5px;color:var(--muted);font-weight:700;padding:9px 10px;border-bottom:1px solid var(--line);background:var(--bg2);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+/* login */
+.loginwrap{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(900px 500px at 80% -10%,color-mix(in srgb,var(--gold) 14%,transparent),transparent),radial-gradient(800px 500px at 0% 110%,color-mix(in srgb,var(--mal) 16%,transparent),transparent)}
+.lcard{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:26px;box-shadow:var(--shadow)}
+.lcard h2{margin:14px 0 4px;font-size:22px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:4px;margin:16px 0}
+.seg button{border:0;background:none;border-radius:9px;padding:8px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--panel2);color:var(--text);box-shadow:0 1px 0 var(--line2)}
+.hint{font-size:12px;color:var(--muted);background:var(--bg2);border:1px dashed var(--line2);border-radius:10px;padding:8px 10px;margin-top:12px}
+/* matches */
+.mlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.match{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel);display:flex;flex-direction:column;gap:10px}
+.match .tm{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;text-align:center}
+.match .tm div{font-weight:700;font-size:14px;min-width:0;overflow-wrap:anywhere}
+.match .tm .fl{font-size:28px;display:block;line-height:1.2}
+.match .vs{font-size:12px;color:var(--dim);font-weight:700}
+.match .meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.avail{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.avail i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3))}
+/* stadium */
+.stad svg{width:100%;height:auto;display:block;max-height:520px}
+.stad path.s{cursor:pointer;transition:opacity .15s;stroke:var(--bg);stroke-width:2}
+.stad path.s:hover{opacity:.8}
+.stad path.s.sold{cursor:not-allowed}
+.stad path.s.sel{stroke:var(--text);stroke-width:3}
+.stad text{pointer-events:none;font-weight:700}
+.seats{display:grid;grid-template-columns:22px repeat(14,minmax(0,1fr));gap:3px;max-width:480px;margin:6px auto 0}
+.seats .rl{font-size:11px;color:var(--dim);display:grid;place-items:center;font-weight:700}
+.seat{aspect-ratio:1;border-radius:5px 5px 3px 3px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;padding:0;min-width:0}
+.seat.tk{background:var(--line);border-color:var(--line);cursor:not-allowed;opacity:.55}
+.seat.on{background:var(--gold);border-color:var(--gold2)}
+.seat:not(.tk):hover{border-color:var(--mal)}
+.stage-lbl{text-align:center;font-size:11px;color:var(--dim);letter-spacing:.2em;margin-top:6px}
+.cartl{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.tot{display:flex;justify-content:space-between;font-weight:800;font-size:18px;margin:10px 0}
+/* ticket */
+.phone{max-width:340px;margin:0 auto;border-radius:34px;border:8px solid #1b1f1d;background:#1b1f1d;box-shadow:var(--shadow)}
+.tix{border-radius:26px;overflow:hidden;background:var(--panel)}
+.tix .top{padding:18px 18px 14px;background:linear-gradient(135deg,var(--mal2),#0b4c3a);color:#fff}
+.tix .top small{opacity:.8;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.tix .top h4{margin:4px 0 0;font-size:18px}
+.tix .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:14px 16px;border-bottom:2px dashed var(--line2)}
+.tix .grid span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.tix .grid b{font-size:16px}
+.qrbox{padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.qrbox .q{background:#fff;padding:8px;border-radius:12px;position:relative}
+.qrbox .q svg{display:block}
+.qrbox .q .sh{position:absolute;inset:0;border-radius:12px;background:linear-gradient(120deg,transparent 30%,rgba(23,181,138,.25) 50%,transparent 70%);background-size:200% 100%;animation:sh 2.4s linear infinite}
+@keyframes sh{from{background-position:120% 0}to{background-position:-120% 0}}
+.cd{width:100%;height:5px;border-radius:5px;background:var(--line);overflow:hidden}
+.cd i{display:block;height:100%;background:var(--gold);transition:width 1s linear}
+.tk-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;background:var(--bg2);display:flex;gap:10px;align-items:center}
+.tk-item.on{border-color:var(--gold)}
+.tk-item b{display:block;font-size:13.5px}
+.tk-item small{color:var(--muted);font-size:12px}
+.tk-item .g{flex:1;min-width:0}
+/* accreditation */
+.acard{max-width:340px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid var(--line2);background:var(--panel);box-shadow:var(--shadow)}
+.acard .band{padding:10px 14px;color:#fff;font-weight:800;letter-spacing:.08em;font-size:12px;display:flex;justify-content:space-between}
+.acard .bd{display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;padding:14px}
+.acard .ph{width:86px;height:104px;border-radius:10px;background:var(--bg2);display:grid;place-items:center;overflow:hidden}
+.zones{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;padding:0 14px 14px}
+.zones span{aspect-ratio:1;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:15px;background:var(--bg2);color:var(--dim);border:1px solid var(--line)}
+.zones span.on{background:var(--mal);color:#fff;border-color:var(--mal)}
+.zsel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.zsel label{display:flex;gap:8px;align-items:center;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:7px 9px;cursor:pointer;background:var(--bg2)}
+.zsel label b{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;background:var(--panel2);font-size:12px;flex:none}
+.zsel input:checked+b{background:var(--mal);color:#fff}
+.camera{border:2px dashed var(--line2);border-radius:12px;height:120px;display:grid;place-items:center;background:var(--bg2);cursor:pointer;font-size:13px;color:var(--muted);text-align:center;padding:8px}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:120px;max-height:230px;overflow:auto}
+.log div{padding:3px 0;border-bottom:1px dashed var(--line);overflow-wrap:anywhere}
+.scanres{border-radius:14px;padding:14px;text-align:center;font-weight:800;font-size:17px;margin-top:10px;border:1px solid var(--line2)}
+.scanres.ok{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.scanres.bad{background:color-mix(in srgb,var(--red) 15%,transparent);border-color:var(--red);color:var(--red)}
+.scanres.warn{background:color-mix(in srgb,var(--amber) 15%,transparent);border-color:var(--amber);color:var(--amber)}
+.livedot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:6px;animation:pl 1s infinite}
+@keyframes pl{50%{opacity:.25}}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.intro{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .mlist{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.zsel{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.lcard{padding:20px}.seats{grid-template-columns:16px repeat(14,minmax(0,1fr));gap:2px}.tix .grid b{font-size:14px}}
+</style>
+</head>
+<body data-demo-en="Arena Pass — mega-event ticketing & accreditation" data-demo-ru="Arena Pass — билеты и аккредитация мега-событий">
+<div class="loginwrap hide" id="login"></div>
+<div class="app hide" id="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>⚽</b><div>Arena Pass<small data-en="Continental Cup 2026" data-ru="Континентальный кубок 2026"></small></div></div>
+    <div class="sec" data-en="Fans" data-ru="Болельщики"></div>
+    <div id="navF"></div>
+    <div class="sec" data-en="Operations" data-ru="Операции"></div>
+    <div id="navO"></div>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="signout" style="flex:1;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    </div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill gold" id="rolePill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Pick a match in <b>Schedule</b>, click a stand on the stadium map, choose up to 4 seats and pay with the demo card." data-ru="Выберите матч в <b>Расписании</b>, нажмите трибуну на схеме стадиона, выберите до 4 мест и оплатите демо-картой."></span></div>
+          <div><b>2</b><span data-en="Open <b>My tickets</b>: the QR code rotates every 10 s, so screenshots don’t work. Transfer a ticket to a friend." data-ru="Откройте <b>Мои билеты</b>: QR-код меняется каждые 10 с, скриншот не сработает. Передайте билет другу."></span></div>
+          <div><b>3</b><span data-en="In <b>Accreditation</b> apply for zones and approve in the queue; in <b>Gate scans</b> scan your ticket and turn on live mode." data-ru="В <b>Аккредитации</b> подайте заявку на зоны и одобрите её в очереди; в <b>Сканах на входе</b> отсканируйте билет и включите живой режим."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Mega-event ticketing & accreditation" data-ru="Билеты и аккредитация мега-событий"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2026 · $420M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Organising Committee, Continental Cup 2026 (fictional)" data-ru="Оргкомитет Континентального кубка 2026 (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>ticketing · mobile ID · access control</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-matches"></section>
+    <section class="view" id="v-seats"></section>
+    <section class="view" id="v-tickets"></section>
+    <section class="view" id="v-accr"></section>
+    <section class="view" id="v-gates"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=o=>o?(PT.lang==='ru'?o[1]??o.ru:o[0]??o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+const KEY='pt_arena_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const num=n=>Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+const usd=n=>'$'+num(n);
+const fmtD=d=>new Date(d).toLocaleDateString(loc(),{weekday:'short',day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+let timers=[];const clearT=()=>{timers.forEach(clearInterval);timers=[]};
+
+/* ---------- reference data ---------- */
+const TEAMS={mex:['🇲🇽','Mexico','Мексика'],kor:['🇰🇷','Korea Rep.','Респ. Корея'],can:['🇨🇦','Canada','Канада'],sen:['🇸🇳','Senegal','Сенегал'],bra:['🇧🇷','Brazil','Бразилия'],jpn:['🇯🇵','Japan','Япония'],fra:['🇫🇷','France','Франция'],mar:['🇲🇦','Morocco','Марокко'],arg:['🇦🇷','Argentina','Аргентина'],ned:['🇳🇱','Netherlands','Нидерланды'],esp:['🇪🇸','Spain','Испания'],usa:['🇺🇸','USA','США'],ger:['🇩🇪','Germany','Германия'],cro:['🇭🇷','Croatia','Хорватия'],por:['🇵🇹','Portugal','Португалия'],eng:['🏴','England','Англия']};
+const tn=k=>TEAMS[k][PT.lang==='ru'?2:1];
+const VEN={vel:{n:['Velmar National Stadium','Национальный стадион Вельмара'],c:['Velmar','Вельмар'],cap:68400},hal:{n:['Port Haldby Arena','Арена Порт-Хальдбю'],c:['Haldby','Хальдбю'],cap:52100},ska:{n:['Skarvik Bowl','Скарвик Боул'],c:['Skarvik','Скарвик'],cap:45300},ost:{n:['Ostmark Park','Остмарк Парк'],c:['Ostmark','Остмарк'],cap:60800}};
+const STAGES={A:['Group A','Группа A'],B:['Group B','Группа B'],C:['Group C','Группа C'],D:['Group D','Группа D'],R16:['Round of 16','1/8 финала'],QF:['Quarter-final','1/4 финала'],SF:['Semi-final','Полуфинал'],F:['Final','Финал']};
+const MULT={A:1,B:1,C:1,D:1,R16:1.45,QF:1.9,SF:2.8,F:5.2};
+const OCC={A:.5,B:.58,C:.55,D:.6,R16:.7,QF:.8,SF:.88,F:.95};
+const MATCHES=[['M01','2026-06-11T18:00','A','mex','kor','vel'],['M02','2026-06-12T15:00','A','can','sen','hal'],['M03','2026-06-12T21:00','B','bra','jpn','ska'],['M04','2026-06-13T18:00','B','fra','mar','ost'],['M05','2026-06-14T15:00','C','arg','ned','vel'],['M06','2026-06-14T21:00','C','esp','usa','hal'],['M07','2026-06-15T18:00','D','ger','cro','ska'],['M08','2026-06-16T21:00','D','por','eng','ost'],['M09','2026-06-27T18:00','R16','mex','jpn','vel'],['M10','2026-06-28T21:00','R16','bra','sen','hal'],['M11','2026-06-29T18:00','R16','arg','cro','ska'],['M12','2026-06-30T21:00','R16','fra','usa','ost'],['M13','2026-07-04T21:00','QF','bra','mex','vel'],['M14','2026-07-05T21:00','QF','arg','eng','hal'],['M15','2026-07-09T21:00','SF','bra','fra','vel'],['M16','2026-07-10T21:00','SF','arg','por','ost'],['M17','2026-07-15T20:00','F','bra','arg','vel']].map(a=>({id:a[0],dt:a[1],st:a[2],h:a[3],a:a[4],v:a[5]}));
+const MM=id=>MATCHES.find(m=>m.id===id);
+const CATS={hos:{n:['Hospitality','Хоспиталити'],p:650,c:'--violet'},c1:{n:['Category 1','Категория 1'],p:220,c:'--gold'},c2:{n:['Category 2','Категория 2'],p:160,c:'--mal'},c3:{n:['Category 3','Категория 3'],p:95,c:'--blue'},acc:{n:['Accessible','Доступные места'],p:95,c:'--amber'}};
+const price=(cat,st)=>Math.round(CATS[cat].p*MULT[st]/5)*5;
+const GATES='ABCDEFGH'.split('');
+const ROWS='ABCDEFGH'.split('');
+/* 32 stadium sections, lower 101-116, upper 201-216 */
+const SECS=[];
+for(let t=0;t<2;t++)for(let i=0;i<16;i++){const a=i*22.5-90;const rad=a*Math.PI/180;const side=Math.abs(Math.sin(rad))>.85,end=Math.abs(Math.cos(rad))>.85;
+  let cat=t===0?(side?'c1':end?'c3':'c2'):(side?'c2':'c3');
+  if(t===0&&i===8)cat='hos'; if(t===0&&(i===2||i===14))cat='acc';
+  SECS.push({id:String((t+1)*100+i+1),t,i,a,cat,gate:GATES[Math.floor(((i+1)%16)/2)]})}
+const SEC=id=>SECS.find(s=>s.id===id);
+const ROLES={media:{n:['Media','СМИ'],z:[3,4,7],c:'#4ea4ff'},vol:{n:['Volunteer','Волонтёр'],z:[7,8],c:'#17b58a'},team:{n:['Team official','Представитель команды'],z:[1,2,4],c:'#ef5a5a'},tv:{n:['Broadcaster','Телевещатель'],z:[3,5,7],c:'#a78bfa'},sec:{n:['Security','Охрана'],z:[1,7,8],c:'#f0a83a'},hosp:{n:['Hospitality staff','Персонал хоспиталити'],z:[6,7],c:'#d8b46a'}};
+const ZONES=[['Field of play','Игровое поле'],['Team & dressing area','Команды и раздевалки'],['Media tribune','Пресс-трибуна'],['Mixed zone','Микст-зона'],['Broadcast compound','Телекомплекс'],['VIP & hospitality','VIP и хоспиталити'],['Spectator areas','Зрительские зоны'],['Venue operations','Операционный центр']];
+const REJ=[['Duplicate scan','Повторный проход'],['Wrong gate','Не тот вход'],['Counterfeit / not found','Подделка / не найден'],['Expired QR (screenshot)','Устаревший QR (скриншот)']];
+const USERS={fan:{name:'Maria Lindqvist',mail:'maria.lindqvist@mail.demo',role:'fan'},ops:{name:'Kofi Mensah',mail:'k.mensah@arenapass.demo',role:'ops'}};
+
+/* ---------- state ---------- */
+function seed(){
+  const r=rng(2026);
+  const names=[['Ana Souza','Ана Соуза'],['Lukas Brandt','Лукас Брандт'],['Yuki Tanaka','Юки Танака'],['Omar Haddad','Омар Хаддад'],['Chloé Martin','Хлоя Мартен'],['Diego Ramírez','Диего Рамирес'],['Emma Novak','Эмма Новак'],['Samuel Okafor','Самуэль Окафор']];
+  const orgs=['Global Sports Wire','Volunteer Programme','Brazil FA','Nordic Broadcast Union','Venue Security Ltd','Prime Hospitality','Le Journal du Sport','Velmar City Volunteers'];
+  const rk=Object.keys(ROLES);
+  const accr=names.map((n,i)=>{const role=rk[i%rk.length];return{id:'AC-'+(40211+i*7),name:n,org:orgs[i],role,zones:ROLES[role].z.slice(),pass:'P'+(7000000+Math.floor(r()*999999)),st:i<3?'approved':i===7?'rejected':'pending',date:'2026-05-'+String(10+i).padStart(2,'0')}});
+  const gates={};Object.keys(VEN).forEach(v=>{gates[v]={};GATES.forEach(g=>{gates[v][g]={ok:Math.round(4200+r()*3400),rej:Math.round(15+r()*70)}})});
+  const flow=[];for(let i=0;i<24;i++){const x=(i-15)/5;flow.push(Math.round(5200*Math.exp(-x*x/2)+300+r()*500))}
+  return{user:null,view:'matches',filt:{st:'all',v:'all',q:''},sel:{m:'M03',sec:null,seats:[]},taken:{},
+    tickets:[{id:'AP-26-118402',m:'M05',sec:'105',row:'D',seat:7,holder:'Maria Lindqvist',gate:SEC('105').gate,cat:'c1',price:price('c1','C'),st:'valid',scanned:false}],
+    tk:'AP-26-118402',accr,accTab:'apply',myAcc:null,draft:null,gv:'vel',gate:'C',gates,flow,rej:[46,31,9,22],live:false,scanlog:[],nextT:118520}
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+
+/* seat map per match/section (deterministic + purchased) */
+function seatMap(m,sec){const r=rng(hash(m+'|'+sec));const st=MM(m).st;const occ=Math.min(.99,OCC[st]+(r()-.5)*.35);const out={};
+  ROWS.forEach(rw=>{for(let s=1;s<=14;s++)out[rw+s]=r()<occ});(S.taken[m+'|'+sec]||[]).forEach(k=>out[k]=true);return out}
+const freeIn=(m,sec)=>Object.values(seatMap(m,sec)).filter(x=>!x).length;
+function matchFree(m){return SECS.reduce((a,s)=>a+freeIn(m,s.id),0)}
+
+/* ---------- nav ---------- */
+const VIEWS=[['matches','📅','Schedule','Расписание','F'],['seats','🏟','Seat selection','Выбор мест','F'],['tickets','🎟','My tickets','Мои билеты','F'],['accr','🪪','Accreditation','Аккредитация','O'],['gates','🚪','Gate scans','Сканы на входе','O']];
+function nav(){
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';
+    if(v[0]==='tickets'){const n=S.tickets.filter(t=>t.st==='valid').length;if(n)x=`<span class="cnt">${n}</span>`}
+    if(v[0]==='accr'){const n=S.accr.filter(a=>a.st==='pending').length;if(n)x=`<span class="cnt">${n}</span>`}
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navF').innerHTML=mk('F');$('#navO').innerHTML=mk('O');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  clearT();
+  if(!S.user){$('#app').classList.add('hide');$('#login').classList.remove('hide');rLogin();return}
+  $('#login').classList.add('hide');$('#app').classList.remove('hide');
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=v[4]==='F'?T('Fan portal · Continental Cup 2026','Портал болельщика · Континентальный кубок 2026'):T('Operations · Organising committee','Операции · Оргкомитет');
+  $('#rolePill').textContent=S.user.role==='ops'?T('Operations staff','Сотрудник операций'):T('Fan account','Аккаунт болельщика');
+  const ini=S.user.name.split(' ').map(x=>x[0]).join('');
+  $('#who').innerHTML=`<div class="av">${ini}</div><div style="min-width:0"><b>${esc(S.user.name)}</b><small style="overflow:hidden;text-overflow:ellipsis">${esc(S.user.mail)}</small></div>`;
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({matches:rMatches,seats:rSeats,tickets:rTickets,accr:rAccr,gates:rGates})[v[0]]();
+}
+
+/* ---------- login ---------- */
+let lrole='fan';
+function rLogin(){
+  const u=USERS[lrole];
+  $('#login').innerHTML=`<div class="lcard">
+   <div class="brand" style="padding:0"><b>⚽</b><div>Arena Pass<small>${T('Continental Cup 2026 · official ticketing','Континентальный кубок 2026 · официальные билеты')}</small></div></div>
+   <h2>${T('Sign in','Вход')}</h2><div class="muted" style="font-size:13.5px">${T('One account for tickets, mobile entry and accreditation.','Один аккаунт для билетов, мобильного входа и аккредитации.')}</div>
+   <div class="seg"><button data-r="fan" class="${lrole==='fan'?'on':''}">${T('Fan','Болельщик')}</button><button data-r="ops" class="${lrole==='ops'?'on':''}">${T('Operations staff','Сотрудник')}</button></div>
+   <div class="f"><label>${T('Email','Почта')}</label><input class="input" id="lMail" value="${u.mail}" autocomplete="username"></div>
+   <div class="f" style="margin-top:10px"><label>${T('Password','Пароль')}</label><input class="input" id="lPw" type="password" value="arena-demo-26" autocomplete="current-password"></div>
+   <button class="btn pri" id="lGo" style="width:100%;justify-content:center;margin-top:16px">${T('Sign in with demo account','Войти в демо-аккаунт')}</button>
+   <div class="hint">🔑 ${T('Demo credentials are prefilled — just click the button.','Демо-данные уже заполнены — просто нажмите кнопку.')}</div></div>`;
+  $$('#login .seg button').forEach(b=>b.onclick=()=>{lrole=b.dataset.r;rLogin()});
+  $('#lGo').onclick=()=>{const m=$('#lMail').value.trim(),p=$('#lPw').value;
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)||p.length<4){toast(T('Enter a valid email and password','Введите корректную почту и пароль'),'bad');return}
+    const b=$('#lGo');b.disabled=true;b.textContent=T('Signing in…','Входим…');
+    setTimeout(()=>{S.user=Object.assign({},USERS[lrole],{mail:m});S.view=lrole==='ops'?'gates':'matches';save();render();toast(T('Welcome, ','Добро пожаловать, ')+esc(S.user.name.split(' ')[0]),'gold')},500)};
+}
+
+/* ---------- schedule ---------- */
+function rMatches(){
+  const el=$('#v-matches');const f=S.filt;
+  const list=MATCHES.filter(m=>(f.st==='all'||(f.st==='grp'?m.st.length===1:m.st===f.st)||(f.st==='ko'&&m.st.length>1))&&(f.v==='all'||m.v===f.v)&&(!f.q||(tn(m.h)+' '+tn(m.a)+' '+TEAMS[m.h][1]+' '+TEAMS[m.a][1]).toLowerCase().includes(f.q.toLowerCase())));
+  const sold=S.tickets.length;
+  el.innerHTML=`<div class="kpis">
+   <div class="card kpi"><div class="l">${T('Matches','Матчей')}</div><div class="v">${MATCHES.length}</div><div class="d">${T('4 host cities','4 города')}</div></div>
+   <div class="card kpi"><div class="l">${T('Seats on sale','Мест в продаже')}</div><div class="v">${num(MATCHES.reduce((a,m)=>a+matchFree(m.id),0)*190)}</div><div class="d">${T('live inventory','онлайн-остаток')}</div></div>
+   <div class="card kpi"><div class="l">${T('Your tickets','Ваши билеты')}</div><div class="v">${sold}</div><div class="d">${T('max 4 per match','не более 4 на матч')}</div></div>
+   <div class="card kpi"><div class="l">${T('Kick-off in','До старта')}</div><div class="v">${Math.max(0,Math.ceil((new Date('2026-06-11')-new Date())/864e5))} ${T('d','дн.')}</div><div class="d">${T('opening match M01','матч открытия M01')}</div></div></div>
+   <div class="card" style="margin-bottom:14px"><div class="row" style="justify-content:space-between">
+    <div class="chips">${[['all','All','Все'],['grp','Group stage','Группы'],['ko','Knockout','Плей-офф'],['F','Final','Финал']].map(c=>`<button class="chip ${f.st===c[0]?'on':''}" data-st="${c[0]}">${T(c[1],c[2])}</button>`).join('')}</div>
+    <div class="row" style="flex:1;justify-content:flex-end;min-width:220px"><select class="input" id="fV" style="max-width:200px"><option value="all">${T('All venues','Все стадионы')}</option>${Object.entries(VEN).map(([k,v])=>`<option value="${k}" ${f.v===k?'selected':''}>${L(v.c)}</option>`).join('')}</select>
+    <input class="input" id="fQ" style="max-width:200px" value="${esc(f.q)}" placeholder="${T('Search team','Поиск команды')}"></div></div></div>
+   <div class="mlist">${list.map(m=>{const fr=matchFree(m.id),tot=SECS.length*112,pct=Math.round(fr/tot*100);const minP=price('c3',m.st);
+    return `<div class="match"><div class="meta"><span class="pill ${m.st==='F'?'gold':m.st.length>1?'warn':''}">${m.id} · ${L(STAGES[m.st])}</span><span>${fmtD(m.dt)} · ${fmtT(m.dt)}</span></div>
+     <div class="tm"><div><span class="fl">${TEAMS[m.h][0]}</span>${tn(m.h)}</div><span class="vs">VS</span><div><span class="fl">${TEAMS[m.a][0]}</span>${tn(m.a)}</div></div>
+     <div class="meta"><span>🏟 ${L(VEN[m.v].n)}</span><span>${T('from','от')} <b style="color:var(--text)">${usd(minP)}</b></span></div>
+     <div><div class="avail"><i style="width:${pct}%"></i></div><div class="meta" style="margin-top:4px"><span>${pct<8?`<b class="warn-t" style="color:var(--red)">${T('Almost sold out','Почти распродано')}</b>`:T(pct+'% seats available',pct+'% мест свободно')}</span><span>${num(fr*190)} ${T('left','осталось')}</span></div></div>
+     <button class="btn pri sm" data-m="${m.id}" style="justify-content:center">${T('Select seats','Выбрать места')} →</button></div>`}).join('')||`<div class="card muted">${T('No matches found','Матчи не найдены')}</div>`}</div>`;
+  $$('[data-st]',el).forEach(b=>b.onclick=()=>{S.filt.st=b.dataset.st;save();rMatches()});
+  $('#fV').onchange=e=>{S.filt.v=e.target.value;save();rMatches()};
+  $('#fQ').oninput=e=>{S.filt.q=e.target.value;save();const p=e.target.selectionStart;rMatches();const q=$('#fQ');q.focus();q.setSelectionRange(p,p)};
+  $$('[data-m]',el).forEach(b=>b.onclick=()=>{S.sel={m:b.dataset.m,sec:null,seats:[]};go('seats')});
+}
+
+/* ---------- stadium & seats ---------- */
+function P(a,r){const rad=a*Math.PI/180;return[(320+r*1.45*Math.cos(rad)).toFixed(1),(220+r*Math.sin(rad)).toFixed(1)]}
+function arc(r1,r2,a1,a2){const A=P(a1,r2),B=P(a2,r2),C=P(a2,r1),D=P(a1,r1);return `M${A}A${(r2*1.45).toFixed(1)} ${r2} 0 0 1 ${B}L${C}A${(r1*1.45).toFixed(1)} ${r1} 0 0 0 ${D}Z`}
+function stadium(m){
+  let s=`<svg viewBox="0 0 640 440" role="img" aria-label="stadium"><ellipse cx="320" cy="220" rx="305" ry="212" fill="${cssv('--bg2')}" stroke="${cssv('--line')}"/>`;
+  SECS.forEach(x=>{const r1=x.t?157:104,r2=x.t?201:151;const fr=freeIn(m,x.id);const sold=fr===0;const col=sold?cssv('--line2'):cssv(CATS[x.cat].c);
+    const op=sold?1:(.35+.65*Math.min(1,fr/60)).toFixed(2);
+    s+=`<path class="s ${sold?'sold':''} ${S.sel.sec===x.id?'sel':''}" data-sec="${x.id}" d="${arc(r1,r2,x.a-10.6,x.a+10.6)}" fill="${col}" fill-opacity="${op}"><title>${x.id} · ${L(CATS[x.cat].n)} · ${fr}</title></path>`;
+    const c=P(x.a,(r1+r2)/2);s+=`<text x="${c[0]}" y="${+c[1]+4}" text-anchor="middle" font-size="12" fill="${sold?cssv('--dim'):'#fff'}">${x.id}</text>`});
+  s+=`<rect x="196" y="146" width="248" height="148" rx="6" fill="#1f7a4d" stroke="#fff" stroke-opacity=".7"/><line x1="320" y1="146" x2="320" y2="294" stroke="#fff" stroke-opacity=".7"/><circle cx="320" cy="220" r="26" fill="none" stroke="#fff" stroke-opacity=".7"/><rect x="196" y="186" width="30" height="68" fill="none" stroke="#fff" stroke-opacity=".7"/><rect x="414" y="186" width="30" height="68" fill="none" stroke="#fff" stroke-opacity=".7"/>`;
+  s+=`<text x="320" y="20" text-anchor="middle" font-size="11" fill="${cssv('--muted')}">${T('NORTH STAND','СЕВЕРНАЯ ТРИБУНА')}</text><text x="320" y="434" text-anchor="middle" font-size="11" fill="${cssv('--muted')}">${T('MAIN STAND · HOSPITALITY','ГЛАВНАЯ ТРИБУНА · ХОСПИТАЛИТИ')}</text></svg>`;
+  return s}
+function rSeats(){
+  const el=$('#v-seats');const m=MM(S.sel.m)||MATCHES[0];const sel=S.sel;
+  const sec=sel.sec?SEC(sel.sec):null;const map=sec?seatMap(m.id,sec.id):null;
+  const lim=4-S.tickets.filter(t=>t.m===m.id&&t.st!=='transferred').length;
+  const cart=sel.seats.map(k=>({k,p:price(sec.cat,m.st)}));const total=cart.reduce((a,c)=>a+c.p,0);
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row" style="justify-content:space-between">
+     <div class="row"><select class="input" id="sM" style="max-width:340px">${MATCHES.map(x=>`<option value="${x.id}" ${x.id===m.id?'selected':''}>${x.id} · ${tn(x.h)} – ${tn(x.a)} · ${fmtD(x.dt)}</option>`).join('')}</select></div>
+     <div class="legend">${Object.entries(CATS).map(([k,c])=>`<span><i style="background:var(${c.c})"></i>${L(c.n)} ${usd(price(k,m.st))}</span>`).join('')}<span><i style="background:var(--line2)"></i>${T('Sold out','Распродано')}</span></div></div></div>
+   <div class="grid2"><div class="card stad"><h3>🏟 ${L(VEN[m.v].n)} <span class="sp"></span><span class="pill">${L(STAGES[m.st])} · ${fmtT(m.dt)}</span></h3>${stadium(m.id)}
+     <div class="muted" style="font-size:12.5px;text-align:center;margin-top:6px">${T('Tap a section to see seats. Brighter = more seats left.','Нажмите на сектор, чтобы увидеть места. Ярче — больше свободных.')}</div></div>
+   <div class="stack"><div class="card"><h3>${sec?`${T('Section','Сектор')} ${sec.id} <span class="pill">${L(CATS[sec.cat].n)}</span><span class="sp"></span><span class="pill ok">${T('Gate','Вход')} ${sec.gate}</span>`:T('Choose a section','Выберите сектор')}</h3>
+     ${sec?`<div class="seats">${ROWS.map(rw=>`<span class="rl">${rw}</span>`+Array.from({length:14},(_,i)=>{const k=rw+(i+1);const tk=map[k];return `<button class="seat ${tk?'tk':''} ${sel.seats.includes(k)?'on':''}" data-k="${k}" title="${T('Row','Ряд')} ${rw}, ${T('seat','место')} ${i+1}" ${tk?'disabled':''}></button>`}).join('')).join('')}</div><div class="stage-lbl">▼ ${T('PITCH','ПОЛЕ')} ▼</div>
+       <div class="legend" style="justify-content:center;margin-top:8px"><span><i style="background:var(--panel2);border:1px solid var(--line2)"></i>${T('Free','Свободно')}</span><span><i style="background:var(--gold)"></i>${T('Selected','Выбрано')}</span><span><i style="background:var(--line)"></i>${T('Taken','Занято')}</span></div>`
+     :`<div class="muted" style="font-size:13.5px">${T('Click any coloured section on the stadium map. You can buy up to 4 tickets per match.','Нажмите на любой цветной сектор на схеме. На один матч — до 4 билетов.')}</div><div class="chips" style="margin-top:10px">${SECS.filter(x=>freeIn(m.id,x.id)>0).sort((a,b)=>freeIn(m.id,b.id)-freeIn(m.id,a.id)).slice(0,6).map(x=>`<button class="chip" data-qs="${x.id}">${x.id} · ${freeIn(m.id,x.id)}</button>`).join('')}</div>`}</div>
+   <div class="card"><h3>🛒 ${T('Your basket','Корзина')}<span class="sp"></span><span class="pill">${sel.seats.length}/${Math.max(0,lim)}</span></h3>
+     ${cart.length?cart.map((c,i)=>`<div class="cartl"><span>${T('Sec','Сек.')} ${sec.id} · ${T('Row','Ряд')} ${c.k[0]} · ${T('Seat','Место')} ${c.k.slice(1)}</span><b>${usd(c.p)}</b></div>
+       <div class="f" style="margin:6px 0 4px"><input class="input" data-h="${i}" value="${esc((sel.holders||[])[i]||(i===0?S.user.name:''))}" placeholder="${T('Ticket holder full name','ФИО владельца билета')}"></div>`).join('')+
+       `<div class="cartl"><span class="muted">${T('Service fee','Сервисный сбор')}</span><span>${usd(cart.length*4)}</span></div><div class="tot"><span>${T('Total','Итого')}</span><span>${usd(total+cart.length*4)}</span></div>
+       <div class="f"><label>${T('Card (demo)','Карта (демо)')}</label><input class="input mono" id="cNum" value="4242 4242 4242 4242"></div>
+       <button class="btn gold" id="pay" style="width:100%;justify-content:center;margin-top:10px">${T('Pay','Оплатить')} ${usd(total+cart.length*4)}</button>
+       <div class="muted" style="font-size:11.5px;margin-top:6px">${T('Tickets are personal: the holder’s name is checked with ID at the gate.','Билеты именные: имя сверяется с документом на входе.')}</div>`
+     :`<div class="muted" style="font-size:13.5px">${T('No seats selected yet.','Места пока не выбраны.')}</div>`}</div></div></div>`;
+  $('#sM').onchange=e=>{S.sel={m:e.target.value,sec:null,seats:[]};save();rSeats()};
+  $$('path.s',el).forEach(p=>p.onclick=()=>{const id=p.dataset.sec;if(freeIn(m.id,id)===0){toast(T('Section '+id+' is sold out','Сектор '+id+' распродан'),'bad');return}S.sel.sec=id;S.sel.seats=[];save();rSeats()});
+  $$('[data-qs]',el).forEach(b=>b.onclick=()=>{S.sel.sec=b.dataset.qs;S.sel.seats=[];save();rSeats()});
+  $$('.seat',el).forEach(b=>b.onclick=()=>{if(b.disabled)return;const k=b.dataset.k;const i=sel.seats.indexOf(k);
+    if(i>=0)sel.seats.splice(i,1);else{if(sel.seats.length>=lim){toast(T('Limit: 4 tickets per match','Лимит: 4 билета на матч'),'bad');return}sel.seats.push(k)}save();rSeats()});
+  $$('[data-h]',el).forEach(i=>i.oninput=()=>{S.sel.holders=S.sel.holders||[];S.sel.holders[+i.dataset.h]=i.value;save()});
+  if($('#pay'))$('#pay').onclick=()=>{
+    const hs=$$('[data-h]',el).map(i=>i.value.trim());let ok=true;$$('[data-h]',el).forEach(i=>{const b=i.value.trim().split(/\s+/).length<2;i.classList.toggle('bad',b);if(b)ok=false});
+    if(!ok){toast(T('Enter first and last name for every holder','Укажите имя и фамилию каждого владельца'),'bad');return}
+    if($('#cNum').value.replace(/\s/g,'').length<16){toast(T('Card number is incomplete','Номер карты неполный'),'bad');return}
+    const b=$('#pay');b.disabled=true;b.textContent=T('Authorising 3-D Secure…','Подтверждение 3-D Secure…');
+    setTimeout(()=>{const key=m.id+'|'+sec.id;S.taken[key]=(S.taken[key]||[]).concat(sel.seats);
+      const ids=sel.seats.map((k,i)=>{const id='AP-26-'+(S.nextT++);S.tickets.push({id,m:m.id,sec:sec.id,row:k[0],seat:+k.slice(1),holder:hs[i],gate:sec.gate,cat:sec.cat,price:price(sec.cat,m.st),st:'valid',scanned:false});return id});
+      S.tk=ids[0];S.sel={m:m.id,sec:null,seats:[]};save();toast(T(ids.length+' ticket(s) issued to your mobile wallet',ids.length+' бил. выпущено в мобильный кошелёк'),'gold');go('tickets')},1100)};
+}
+
+/* ---------- tickets & rotating QR ---------- */
+function qrSvg(seed,px){const n=25,r=rng(hash(seed));let d='';const inF=(x,y)=>(x<8&&y<8)||(x>=n-8&&y<8)||(x<8&&y>=n-8);
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){if(inF(x,y))continue;if((x===6||y===6)?((x+y)%2===0):r()<.5)d+=`M${x} ${y}h1v1h-1z`}
+  const fin=(x,y)=>`M${x} ${y}h7v7h-7zM${x+1} ${y+1}v5h5v-5zM${x+2} ${y+2}h3v3h-3z`;
+  return `<svg width="${px}" height="${px}" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges"><path fill-rule="evenodd" fill="#0b1512" d="${fin(0,0)}${fin(n-7,0)}${fin(0,n-7)}${d}"/></svg>`}
+const PERIOD=10;
+const tok=(id,slot)=>(hash(id+':'+slot).toString(16).toUpperCase().padStart(8,'0')).replace(/(.{4})/,'$1-');
+function rTickets(){
+  const el=$('#v-tickets');const list=S.tickets;let t=list.find(x=>x.id===S.tk)||list[0];
+  if(!t){el.innerHTML=`<div class="card" style="text-align:center;padding:40px 20px"><div style="font-size:44px">🎟</div><h2>${T('No tickets yet','Билетов пока нет')}</h2><p class="muted">${T('Pick a match and buy seats — tickets appear here instantly.','Выберите матч и купите места — билеты появятся здесь сразу.')}</p><button class="btn pri" id="toM">${T('Open schedule','Открыть расписание')}</button></div>`;$('#toM').onclick=()=>go('matches');return}
+  const m=MM(t.m);
+  el.innerHTML=`<div class="grid2e"><div class="card"><h3>${T('Wallet','Кошелёк')} <span class="sp"></span><span class="pill">${list.length}</span></h3>
+    ${list.map(x=>{const mm=MM(x.m);return `<div class="tk-item ${x.id===t.id?'on':''}" data-t="${x.id}"><span style="font-size:22px">${TEAMS[mm.h][0]}</span><div class="g"><b>${tn(mm.h)} – ${tn(mm.a)}</b><small>${fmtD(mm.dt)} · ${T('Sec','Сек.')} ${x.sec} · ${x.row}${x.seat} · ${esc(x.holder)}</small></div><span class="pill ${x.st==='valid'?(x.scanned?'gold':'ok'):'bad'}">${x.st==='valid'?(x.scanned?T('Used','Использован'):T('Valid','Действует')):T('Transferred','Передан')}</span></div>`}).join('')}
+    <div class="card" style="background:var(--bg2);margin-top:12px"><h3>↗ ${T('Transfer this ticket','Передать этот билет')}</h3>
+     ${t.st!=='valid'||t.scanned?`<div class="muted" style="font-size:13px">${t.st==='transferred'?T('Transferred to ','Передан: ')+esc(t.to):T('Ticket already used at the gate','Билет уже использован на входе')}</div>`:
+     `<div class="fgrid"><div class="f"><label>${T('Friend’s name','Имя друга')}</label><input class="input" id="trN" placeholder="${T('First and last name','Имя и фамилия')}"></div><div class="f"><label>${T('Friend’s email','Почта друга')}</label><input class="input" id="trM" placeholder="name@mail.com"></div></div>
+     <button class="btn sm" id="trGo" style="margin-top:10px">${T('Send ticket','Отправить билет')}</button>`}</div></div>
+   <div><div class="phone"><div class="tix"><div class="top"><small>${L(STAGES[m.st])} · ${m.id}</small><h4>${TEAMS[m.h][0]} ${tn(m.h)} – ${tn(m.a)} ${TEAMS[m.a][0]}</h4><div style="font-size:12.5px;opacity:.85;margin-top:4px">${fmtD(m.dt)} · ${fmtT(m.dt)} · ${L(VEN[m.v].n)}</div></div>
+    <div class="grid"><div><span>${T('Gate','Вход')}</span><b>${t.gate}</b></div><div><span>${T('Sec','Сек.')}</span><b>${t.sec}</b></div><div><span>${T('Row','Ряд')}</span><b>${t.row}</b></div><div><span>${T('Seat','Место')}</span><b>${t.seat}</b></div></div>
+    <div class="qrbox">${t.st==='valid'?`<div class="q" id="qr"></div><div class="mono" id="qtok" style="font-size:13px;letter-spacing:.08em"></div><div class="cd"><i id="qcd"></i></div><div class="muted" style="font-size:11.5px;text-align:center">${T('Code refreshes every 10 s · screenshots are rejected','Код обновляется каждые 10 с · скриншоты не принимаются')}</div>`
+      :`<div class="scanres bad" style="width:100%">${T('Ticket transferred','Билет передан')}</div>`}
+     <div style="font-size:12.5px"><b>${esc(t.holder)}</b> · <span class="muted">${L(CATS[t.cat].n)} · ${usd(t.price)}</span></div><div class="mono muted" style="font-size:11px">${t.id}</div></div></div></div>
+    <div class="row" style="justify-content:center;margin-top:12px"><button class="btn sm" id="wal"> ${T('Add to Wallet','Добавить в Wallet')}</button><button class="btn sm" id="cpy">${T('Copy ticket ID','Скопировать номер')}</button></div></div></div>`;
+  $$('[data-t]',el).forEach(b=>b.onclick=()=>{S.tk=b.dataset.t;save();rTickets()});
+  $('#wal').onclick=()=>toast(T('Pass added to Apple / Google Wallet (demo)','Билет добавлен в Apple / Google Wallet (демо)'));
+  $('#cpy').onclick=()=>{try{navigator.clipboard.writeText(t.id).catch(()=>{})}catch(e){}toast(T('Copied ','Скопировано ')+t.id+T(' — paste it in Gate scans',' — вставьте в «Сканы на входе»'))};
+  if($('#trGo'))$('#trGo').onclick=()=>{const n=$('#trN').value.trim(),mm=$('#trM').value.trim();
+    const bn=n.split(/\s+/).length<2,bm=!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mm);$('#trN').classList.toggle('bad',bn);$('#trM').classList.toggle('bad',bm);
+    if(bn||bm){toast(T('Enter the friend’s full name and a valid email','Укажите полное имя друга и корректную почту'),'bad');return}
+    t.st='transferred';t.to=n+' <'+mm+'>';save();toast(T('Ticket sent to ','Билет отправлен: ')+esc(n)+T('. Old QR is now void.','. Старый QR больше не действует.'),'gold');render()};
+  if(t.st==='valid'){let last=-1;const tick=()=>{const q=$('#qr');if(!q)return;const now=Date.now()/1000;const slot=Math.floor(now/PERIOD);
+      if(slot!==last){last=slot;q.innerHTML=qrSvg(t.id+':'+slot,190)+'<div class="sh"></div>';$('#qtok').textContent=tok(t.id,slot)}
+      $('#qcd').style.width=((1-(now%PERIOD)/PERIOD)*100)+'%'};tick();timers.push(setInterval(tick,1000))}
+}
+
+/* ---------- accreditation ---------- */
+function photoSvg(name,c){const ini=name.split(' ').map(x=>x[0]).join('').slice(0,2);return `<svg viewBox="0 0 86 104" width="86" height="104"><rect width="86" height="104" fill="${c}" fill-opacity=".18"/><circle cx="43" cy="40" r="20" fill="${c}" fill-opacity=".55"/><path d="M8 104c4-26 18-36 35-36s31 10 35 36z" fill="${c}" fill-opacity=".55"/><text x="43" y="46" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">${esc(ini)}</text></svg>`}
+function accCard(a){const R=ROLES[a.role];return `<div class="acard"><div class="band" style="background:${R.c}"><span>${L(R.n).toUpperCase()}</span><span>CC·2026</span></div>
+  <div class="bd"><div class="ph">${photoSvg(L(a.name),R.c)}</div><div style="min-width:0"><b style="font-size:16px">${esc(L(a.name))}</b><div class="muted" style="font-size:12.5px">${esc(a.org)}</div><div class="mono" style="font-size:11.5px;margin-top:6px">${a.id}</div>
+  <div style="margin-top:8px"><span class="pill ${a.st==='approved'?'ok':a.st==='rejected'?'bad':'warn'}">${stName(a.st)}</span></div></div></div>
+  <div class="zones">${[1,2,3,4,5,6,7,8].map(z=>`<span class="${a.st==='approved'&&a.zones.includes(z)?'on':''}" title="${L(ZONES[z-1])}">${z}</span>`).join('')}</div>
+  ${a.st==='approved'?`<div style="display:flex;gap:12px;align-items:center;padding:0 14px 14px"><div style="background:#fff;padding:5px;border-radius:8px">${qrSvg('acc'+a.id,84)}</div><div class="muted" style="font-size:11.5px">${T('Valid at all 4 venues · 1 Jun – 20 Jul 2026. Zones lit in green are open to the holder.','Действует на всех 4 стадионах · 1 июн – 20 июл 2026. Зелёные зоны открыты владельцу.')}</div></div>`:''}</div>`}
+function stName(s){return({approved:T('Approved','Одобрено'),pending:T('Pending review','На рассмотрении'),screening:T('Background check','Проверка безопасности'),rejected:T('Rejected','Отклонено')})[s]}
+function rAccr(){
+  const el=$('#v-accr');const tab=S.accTab;const mine=S.accr.find(a=>a.id===S.myAcc);
+  const d=S.draft||(S.draft={name:S.user.name,org:'',role:'media',pass:'',mail:S.user.mail,zones:ROLES.media.z.slice(),photo:false,decl:false});
+  let body='';
+  if(tab==='apply'){
+    body=mine?`<div class="grid2e"><div class="card"><h3>${T('Your application','Ваша заявка')}<span class="sp"></span><span class="pill ${mine.st==='approved'?'ok':mine.st==='rejected'?'bad':'warn'}">${stName(mine.st)}</span></h3>
+      <p class="muted" style="font-size:13.5px">${mine.st==='approved'?T('Your accreditation is active. Show the card at any accreditation checkpoint.','Аккредитация активна. Покажите карту на любом пункте контроля.'):mine.st==='rejected'?T('Your application was rejected. You may apply again with corrected data.','Заявка отклонена. Можно подать снова с исправленными данными.'):T('Security screening passed. An accreditation officer will review your zones — switch to <b>Review queue</b> to approve it yourself.','Проверка безопасности пройдена. Офицер аккредитации рассмотрит зоны — откройте <b>Очередь</b>, чтобы одобрить самостоятельно.')}</p>
+      <div class="row">${mine.st!=='approved'?`<button class="btn sm" data-tab="queue">${T('Open review queue','Открыть очередь')}</button>`:''}<button class="btn sm" id="newApp">${T('New application','Новая заявка')}</button></div></div><div>${accCard(mine)}</div></div>`
+    :`<div class="grid2"><div class="card"><h3>📝 ${T('Accreditation application','Заявка на аккредитацию')}</h3><div class="fgrid">
+      <div class="f"><label>${T('Full name (as in passport)','ФИО (как в паспорте)')}</label><input class="input" id="aN" value="${esc(d.name)}"><div class="err" id="eN"></div></div>
+      <div class="f"><label>${T('Organisation','Организация')}</label><input class="input" id="aO" value="${esc(d.org)}" placeholder="${T('e.g. Global Sports Wire','напр. Global Sports Wire')}"><div class="err" id="eO"></div></div>
+      <div class="f"><label>${T('Function','Функция')}</label><select class="input" id="aR">${Object.entries(ROLES).map(([k,r])=>`<option value="${k}" ${d.role===k?'selected':''}>${L(r.n)}</option>`).join('')}</select></div>
+      <div class="f"><label>${T('Passport number','Номер паспорта')}</label><input class="input mono" id="aP" value="${esc(d.pass)}" placeholder="P1234567"><div class="err" id="eP"></div></div>
+      <div class="f full"><label>${T('Requested zones (suggested by function)','Запрашиваемые зоны (подобраны по функции)')}</label><div class="zsel">${ZONES.map((z,i)=>`<label><input type="checkbox" hidden data-z="${i+1}" ${d.zones.includes(i+1)?'checked':''}><b>${i+1}</b>${L(z)}</label>`).join('')}</div></div>
+      <div class="f"><label>${T('Portrait photo','Фото на документ')}</label><div class="camera" id="cam">${d.photo?`<div style="display:flex;gap:10px;align-items:center">${photoSvg(d.name||'?',ROLES[d.role].c)}<span class="ok-t" style="color:var(--mal3)">✓ ${T('Face detected · ICAO quality OK','Лицо найдено · качество ICAO ОК')}</span></div>`:'📷 '+T('Tap to take a photo','Нажмите, чтобы сделать фото')}</div></div>
+      <div class="f"><label>${T('Declaration','Декларация')}</label><label style="display:flex;gap:8px;font-size:13px;align-items:flex-start;cursor:pointer"><input type="checkbox" id="aD" ${d.decl?'checked':''} style="margin-top:3px"><span>${T('I confirm the data is correct and agree to a security background check.','Подтверждаю верность данных и согласен на проверку безопасности.')}</span></label></div>
+     </div><button class="btn pri" id="aGo" style="margin-top:14px">${T('Submit application','Подать заявку')}</button></div>
+     <div class="card"><h3>${T('Zone legend','Обозначения зон')}</h3>${ZONES.map((z,i)=>`<div class="cartl"><span><b class="mono">${i+1}</b> · ${L(z)}</span><span class="muted" style="font-size:12px">${Object.values(ROLES).filter(r=>r.z.includes(i+1)).length} ${T('roles','ролей')}</span></div>`).join('')}</div></div>`;
+  }else if(tab==='queue'){
+    const q=S.accr;
+    body=`<div class="kpis"><div class="card kpi"><div class="l">${T('Applications','Заявок')}</div><div class="v">${q.length}</div><div class="d">${T('this venue cluster','кластер стадионов')}</div></div><div class="card kpi"><div class="l">${T('Pending','Ожидают')}</div><div class="v" style="color:var(--amber)">${q.filter(a=>a.st==='pending').length}</div><div class="d">${T('SLA 48 h','SLA 48 ч')}</div></div><div class="card kpi"><div class="l">${T('Approved','Одобрено')}</div><div class="v" style="color:var(--mal3)">${q.filter(a=>a.st==='approved').length}</div><div class="d">${T('cards printed / mobile','карты / мобильные')}</div></div><div class="card kpi"><div class="l">${T('Rejected','Отклонено')}</div><div class="v" style="color:var(--red)">${q.filter(a=>a.st==='rejected').length}</div><div class="d">${T('screening hits','совпадения проверки')}</div></div></div>
+     <div class="card"><h3>${T('Review queue','Очередь рассмотрения')}</h3><div class="tw"><table><thead><tr><th>ID</th><th>${T('Name','Имя')}</th><th>${T('Function','Функция')}</th><th>${T('Zones (click to toggle)','Зоны (нажмите, чтобы изменить)')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+     ${q.map(a=>`<tr><td class="mono" style="font-size:12px">${a.id}</td><td><b>${esc(L(a.name))}</b><div class="muted" style="font-size:12px">${esc(a.org)}</div></td><td>${L(ROLES[a.role].n)}</td>
+       <td><div class="row" style="gap:3px">${[1,2,3,4,5,6,7,8].map(z=>`<button class="chip ${a.zones.includes(z)?'on':''}" style="padding:2px 7px" data-tz="${a.id}|${z}" ${a.st!=='pending'?'disabled':''}>${z}</button>`).join('')}</div></td>
+       <td><span class="pill ${a.st==='approved'?'ok':a.st==='rejected'?'bad':'warn'}">${stName(a.st)}</span></td>
+       <td style="white-space:nowrap">${a.st==='pending'?`<button class="btn sm pri" data-ap="${a.id}">✓</button> <button class="btn sm danger" data-rj="${a.id}">✕</button>`:`<button class="btn sm" data-vw="${a.id}">${T('Card','Карта')}</button>`}</td></tr>`).join('')}</tbody></table></div></div>
+     <div id="cardPrev" style="margin-top:14px"></div>`;
+  }
+  el.innerHTML=`<div class="chips" style="margin-bottom:14px"><button class="chip ${tab==='apply'?'on':''}" data-tab="apply">${T('Apply / my card','Заявка / моя карта')}</button><button class="chip ${tab==='queue'?'on':''}" data-tab="queue">${T('Review queue','Очередь рассмотрения')} (${S.accr.filter(a=>a.st==='pending').length})</button></div>`+body;
+  $$('[data-tab]',el).forEach(b=>b.onclick=()=>{S.accTab=b.dataset.tab;save();rAccr()});
+  if($('#newApp'))$('#newApp').onclick=()=>{S.myAcc=null;S.draft=null;save();rAccr()};
+  if($('#aGo')){
+    const sync=()=>{d.name=$('#aN').value;d.org=$('#aO').value;d.pass=$('#aP').value;d.decl=$('#aD').checked;d.zones=$$('[data-z]',el).filter(c=>c.checked).map(c=>+c.dataset.z);save()};
+    ['#aN','#aO','#aP'].forEach(s=>$(s).oninput=sync);$('#aD').onchange=sync;$$('[data-z]',el).forEach(c=>c.onchange=sync);
+    $('#aR').onchange=e=>{sync();d.role=e.target.value;d.zones=ROLES[d.role].z.slice();save();rAccr()};
+    $('#cam').onclick=()=>{sync();$('#cam').innerHTML='<span class="muted">'+T('Detecting face…','Поиск лица…')+'</span>';setTimeout(()=>{d.photo=true;save();rAccr()},700)};
+    $('#aGo').onclick=()=>{sync();let ok=true;const set=(i,e,m)=>{$(i).classList.toggle('bad',!!m);$(e).textContent=m||'';if(m)ok=false};
+      set('#aN','#eN',d.name.trim().split(/\s+/).length<2?T('First and last name','Имя и фамилия'):'');
+      set('#aO','#eO',d.org.trim().length<2?T('Required','Обязательно'):'');
+      set('#aP','#eP',!/^[A-Z0-9]{7,9}$/i.test(d.pass.trim())?T('7–9 letters/digits','7–9 букв/цифр'):'');
+      if(!d.zones.length){toast(T('Select at least one zone','Выберите хотя бы одну зону'),'bad');ok=false}
+      if(!d.photo){toast(T('Take a portrait photo','Сделайте фото'),'bad');ok=false}
+      if(ok&&!d.decl){toast(T('Confirm the declaration','Подтвердите декларацию'),'bad');ok=false}
+      if(!ok)return;
+      const id='AC-'+(40300+S.accr.length*3);S.accr.unshift({id,name:[d.name.trim(),d.name.trim()],org:d.org.trim(),role:d.role,zones:d.zones.slice(),pass:d.pass.toUpperCase(),st:'screening',date:new Date().toISOString().slice(0,10)});
+      S.myAcc=id;S.draft=null;save();rAccr();toast(T('Application '+id+' submitted · background check running','Заявка '+id+' подана · идёт проверка'),'gold');
+      setTimeout(()=>{const a=S.accr.find(x=>x.id===id);if(a&&a.st==='screening'){a.st='pending';save();if(S.view==='accr')render();toast(T('Background check passed · sent for review','Проверка пройдена · отправлено на рассмотрение'))}},1800)};
+  }
+  $$('[data-tz]',el).forEach(b=>b.onclick=()=>{const[id,z]=b.dataset.tz.split('|');const a=S.accr.find(x=>x.id===id);const n=+z;a.zones=a.zones.includes(n)?a.zones.filter(x=>x!==n):a.zones.concat(n).sort();save();rAccr()});
+  $$('[data-ap]',el).forEach(b=>b.onclick=()=>{const a=S.accr.find(x=>x.id===b.dataset.ap);if(!a.zones.length){toast(T('Grant at least one zone','Выдайте хотя бы одну зону'),'bad');return}a.st='approved';save();render();toast(a.id+' '+T('approved · mobile card issued','одобрена · мобильная карта выпущена'),'gold');showCard(a.id)});
+  $$('[data-rj]',el).forEach(b=>b.onclick=()=>{const a=S.accr.find(x=>x.id===b.dataset.rj);a.st='rejected';save();render();toast(a.id+' '+T('rejected','отклонена'),'bad')});
+  $$('[data-vw]',el).forEach(b=>b.onclick=()=>showCard(b.dataset.vw));
+}
+function showCard(id){const c=$('#cardPrev');if(!c)return;const a=S.accr.find(x=>x.id===id);c.innerHTML=`<div class="card"><h3>${T('Accreditation card','Карта аккредитации')} · ${a.id}</h3>${accCard(a)}</div>`;c.scrollIntoView({behavior:'smooth',block:'nearest'})}
+
+/* ---------- gate scans ---------- */
+function barChart(v){const G=S.gates[v];const W=600,H=220,p=34;const mx=Math.max(...GATES.map(g=>G[g].ok+G[g].rej))*1.1;const bw=(W-p-10)/GATES.length;
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;for(let i=0;i<=4;i++){const y=H-24-(H-40)*i/4;s+=`<line x1="${p}" x2="${W}" y1="${y}" y2="${y}" stroke="${cssv('--line')}"/><text x="${p-6}" y="${y+4}" text-anchor="end" font-size="10" fill="${cssv('--dim')}">${Math.round(mx*i/4/1000)}k</text>`}
+  GATES.forEach((g,i)=>{const x=p+i*bw+bw*.2,w=bw*.6;const h1=(H-40)*G[g].ok/mx,h2=Math.max(2,(H-40)*G[g].rej/mx*6);const y1=H-24-h1;
+    s+=`<rect x="${x}" y="${y1}" width="${w}" height="${h1}" rx="4" fill="${g===S.gate?cssv('--gold'):cssv('--mal')}"><title>${g}: ${G[g].ok}</title></rect><rect x="${x}" y="${y1-h2-2}" width="${w}" height="${h2}" rx="2" fill="${cssv('--red')}"/><text x="${x+w/2}" y="${H-8}" text-anchor="middle" font-size="12" font-weight="700" fill="${cssv('--text')}">${g}</text>`});
+  return s+'</svg>'}
+function flowChart(){const v=S.flow,W=600,H=200,p=34;const mx=Math.max(...v)*1.1;const x=i=>p+i*(W-p-10)/(v.length-1),y=n=>H-24-(H-40)*n/mx;
+  let s=`<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="fg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${cssv('--mal')}" stop-opacity=".45"/><stop offset="1" stop-color="${cssv('--mal')}" stop-opacity="0"/></linearGradient></defs>`;
+  for(let i=0;i<=3;i++){const yy=H-24-(H-40)*i/3;s+=`<line x1="${p}" x2="${W}" y1="${yy}" y2="${yy}" stroke="${cssv('--line')}"/><text x="${p-6}" y="${yy+4}" text-anchor="end" font-size="10" fill="${cssv('--dim')}">${Math.round(mx*i/3/100)/10}k</text>`}
+  const pts=v.map((n,i)=>x(i).toFixed(1)+','+y(n).toFixed(1)).join(' ');
+  s+=`<polygon points="${x(0)},${H-24} ${pts} ${x(v.length-1)},${H-24}" fill="url(#fg)"/><polyline points="${pts}" fill="none" stroke="${cssv('--mal3')}" stroke-width="2.5"/>`;
+  v.forEach((n,i)=>{if(i%4===0||i===v.length-1)s+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="${cssv('--dim')}">${i===v.length-1?T('KO','Старт'):'−'+(120-i*5)+T('m','м')}</text>`});
+  return s+`<circle cx="${x(v.length-1)}" cy="${y(v[v.length-1])}" r="5" fill="${cssv('--gold')}"/></svg>`}
+function donut(vals,cols){const tot=vals.reduce((a,b)=>a+b,0)||1;const r=46,c=2*Math.PI*r;let off=0;let s=`<svg viewBox="0 0 120 120" width="120" height="120" style="flex:none">`;
+  vals.forEach((v,i)=>{const l=c*v/tot;s+=`<circle cx="60" cy="60" r="${r}" fill="none" stroke="${cols[i]}" stroke-width="16" stroke-dasharray="${l} ${c-l}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"/>`;off+=l});
+  return s+`<text x="60" y="58" text-anchor="middle" font-size="20" font-weight="800" fill="${cssv('--text')}">${tot}</text><text x="60" y="74" text-anchor="middle" font-size="9" fill="${cssv('--muted')}">${T('rejects','отказов')}</text></svg>`}
+function rGates(){
+  const el=$('#v-gates');const v=S.gv;const G=S.gates[v];const ok=GATES.reduce((a,g)=>a+G[g].ok,0),rj=GATES.reduce((a,g)=>a+G[g].rej,0);const cap=VEN[v].cap;
+  const cols=[cssv('--red'),cssv('--amber'),cssv('--violet'),cssv('--blue')];
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row" style="justify-content:space-between"><div class="row"><select class="input" id="gV" style="max-width:280px">${Object.entries(VEN).map(([k,x])=>`<option value="${k}" ${k===v?'selected':''}>${L(x.n)}</option>`).join('')}</select></div>
+    <button class="btn ${S.live?'gold':''}" id="live">${S.live?'<span class="livedot"></span>'+T('Live · pause','В эфире · пауза'):'▶ '+T('Start live feed','Включить живой режим')}</button></div></div>
+   <div class="kpis"><div class="card kpi"><div class="l">${T('Spectators inside','Зрителей внутри')}</div><div class="v" id="kIn">${num(ok)}</div><div class="d">${Math.round(ok/cap*100)}% ${T('of','от')} ${num(cap)}</div></div>
+    <div class="card kpi"><div class="l">${T('Valid scan rate','Доля успешных сканов')}</div><div class="v" style="color:var(--mal3)">${(ok/(ok+rj)*100).toFixed(2)}%</div><div class="d">${num(rj)} ${T('rejected','отказов')}</div></div>
+    <div class="card kpi"><div class="l">${T('Throughput / lane','Пропускная / линия')}</div><div class="v">${(9.6+(ok%17)/10).toFixed(1)}</div><div class="d">${T('people per minute','человек в минуту')}</div></div>
+    <div class="card kpi"><div class="l">${T('Avg queue time','Среднее ожидание')}</div><div class="v">${3+Math.round(ok/cap*6)} ${T('min','мин')}</div><div class="d">${T('target ≤ 10 min','цель ≤ 10 мин')}</div></div></div>
+   <div class="grid2"><div class="stack"><div class="card chart"><h3>${T('Entries by gate','Проходы по входам')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('Valid','Успешно')}</span><span><i style="background:var(--red)"></i>${T('Rejected ×6','Отказы ×6')}</span></span></h3>${barChart(v)}</div>
+     <div class="card chart"><h3>${T('Arrival curve, 5-min intervals','Кривая прихода, интервалы 5 мин')}</h3>${flowChart()}</div></div>
+    <div class="stack"><div class="card"><h3>📱 ${T('Gate scanner','Сканер на входе')}<span class="sp"></span><select class="input" id="gG" style="width:auto;padding:5px 8px">${GATES.map(g=>`<option ${g===S.gate?'selected':''}>${g}</option>`).join('')}</select></h3>
+      <div class="row"><input class="input mono" id="scIn" style="flex:1;min-width:0" placeholder="AP-26-000000"><button class="btn pri" id="scGo">${T('Scan','Скан')}</button></div>
+      <div class="chips" style="margin-top:8px">${S.tickets.slice(-3).map(t=>`<button class="chip" data-sc="${t.id}">🎟 ${t.id.slice(-6)} · ${T('gate','вход')} ${t.gate}</button>`).join('')}<button class="chip" data-sc="AP-26-999999">⚠ ${T('fake','подделка')}</button><button class="chip" data-sc="SCREENSHOT">📸 ${T('screenshot','скриншот')}</button></div>
+      <div id="scRes"></div><div class="log" id="scLog" style="margin-top:10px">${S.scanlog.map(l=>`<div><span class="muted">${l.t}</span> ${l.m}</div>`).join('')||`<div class="muted">${T('Scan log is empty','Журнал сканов пуст')}</div>`}</div></div>
+     <div class="card"><h3>${T('Reject reasons','Причины отказов')}</h3><div class="row" style="gap:16px;flex-wrap:nowrap">${donut(S.rej,cols)}<div style="font-size:12.5px;flex:1;min-width:0">${REJ.map((r,i)=>`<div class="cartl"><span><i style="display:inline-block;width:9px;height:9px;border-radius:3px;background:${cols[i]};margin-right:6px"></i>${L(r)}</span><b>${S.rej[i]}</b></div>`).join('')}</div></div></div></div></div>`;
+  $('#gV').onchange=e=>{S.gv=e.target.value;save();rGates()};
+  $('#gG').onchange=e=>{S.gate=e.target.value;save();rGates()};
+  $('#live').onclick=()=>{S.live=!S.live;save();rGates();toast(S.live?T('Live feed from 64 turnstiles','Живые данные с 64 турникетов'):T('Live feed paused','Живой режим на паузе'))};
+  const doScan=code=>{code=code.trim().toUpperCase();if(!code){toast(T('Enter or scan a ticket code','Введите или отсканируйте код'),'bad');return}
+    const t=S.tickets.find(x=>x.id===code);let cls='bad',msg,ri=-1;
+    if(code==='SCREENSHOT'){msg=T('✕ QR expired — screenshot detected','✕ QR устарел — обнаружен скриншот');ri=3}
+    else if(!t){msg=T('✕ Not found — possible counterfeit','✕ Не найден — возможна подделка');ri=2}
+    else if(t.st==='transferred'){msg=T('✕ Ticket was transferred — old holder','✕ Билет передан — прежний владелец');ri=2}
+    else if(t.scanned){msg=T('✕ Already scanned — duplicate entry','✕ Уже отсканирован — повторный проход');ri=0}
+    else if(t.gate!==S.gate){cls='warn';msg=T('↪ Wrong gate — send to Gate ','↪ Не тот вход — направить к входу ')+t.gate;ri=1}
+    else{cls='ok';t.scanned=true;S.gates[S.gv][S.gate].ok++;S.flow[S.flow.length-1]++;msg=T('✓ Welcome · ','✓ Проходите · ')+esc(t.holder)+' · '+T('Sec','Сек.')+' '+t.sec+' '+t.row+t.seat}
+    if(ri>=0){S.rej[ri]++;S.gates[S.gv][S.gate].rej++}
+    S.scanlog.unshift({t:new Date().toLocaleTimeString(loc()),m:`[${S.gate}] ${esc(code)} — ${msg}`});S.scanlog=S.scanlog.slice(0,30);save();rGates();
+    $('#scRes').innerHTML=`<div class="scanres ${cls}">${msg}</div>`};
+  $('#scGo').onclick=()=>doScan($('#scIn').value);$('#scIn').onkeydown=e=>{if(e.key==='Enter')doScan(e.target.value)};
+  $$('[data-sc]',el).forEach(b=>b.onclick=()=>doScan(b.dataset.sc));
+  if(S.live)timers.push(setInterval(()=>{if(S.view!=='gates')return;const r=Math.random;GATES.forEach(g=>{S.gates[S.gv][g].ok+=Math.round(r()*14);if(r()<.15){S.gates[S.gv][g].rej++;S.rej[Math.floor(r()*4)]++}});
+    S.flow.push(Math.round(S.flow[S.flow.length-1]*(.9+r()*.25)));S.flow.shift();save();const keep=$('#scRes')?$('#scRes').innerHTML:'';const sv=$('#scIn')?$('#scIn').value:'';rGates();$('#scRes').innerHTML=keep;$('#scIn').value=sv},1500));
+}
+
+/* ---------- wiring ---------- */
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+document.addEventListener('click',e=>{const s=$('#side');if(s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+$('#reset').onclick=()=>{store.clear();const u=S.user;S=seed();S.user=u;S.view=u&&u.role==='ops'?'gates':'matches';save();render();toast(T('Demo reset','Демо сброшено'))};
+$('#signout').onclick=()=>{S.user=null;save();render();toast(T('Signed out','Вы вышли'))};
+PT.onLang(()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kazna-Pro Treasury</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none;opacity:.85}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.side .grow{flex:1}
+.rolebox{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12px}
+.rolebox label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:700}
+main{padding:22px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.head h1{font-size:23px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.hint{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.hint div{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px dashed color-mix(in srgb,var(--gold) 55%,transparent);border-radius:12px;background:color-mix(in srgb,var(--gold) 6%,transparent);font-size:13.5px}
+.hint>div>b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#1a1306;font-size:12px}
+.facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;padding:0;overflow:hidden;margin-bottom:14px}
+.facts div{padding:12px 14px;border-right:1px solid var(--line)}
+.facts div:last-child{border-right:0}
+.facts small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);font-weight:700}
+.facts span{font-weight:700;font-size:13.5px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr.clk{cursor:pointer} tr.clk:hover td{background:color-mix(in srgb,var(--mal) 6%,transparent)}
+tr.sel td{background:color-mix(in srgb,var(--gold) 9%,transparent)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;min-width:70px;position:relative}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--mal2);border-radius:9px}
+.bar i.p{background:var(--mal3)}
+.bar i.hot{background:var(--red)}
+.lv0 td:first-child{font-weight:800}
+.lv1 td:first-child{padding-left:28px;font-weight:600}
+.lv2 td:first-child{padding-left:50px;color:var(--muted)}
+.caret{display:inline-block;width:14px;color:var(--dim);transition:.15s}
+.open>td .caret{transform:rotate(90deg)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.tools .input{width:auto;min-width:150px;flex:1;max-width:300px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.checks{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:13px;background:var(--bg2)}
+.chk .ic{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--line);color:var(--muted)}
+.chk.ok .ic{background:var(--mal);color:#fff}.chk.bad .ic{background:var(--red);color:#fff}
+.chk.run .ic{animation:spin .8s linear infinite;border:2px solid var(--gold);border-top-color:transparent;background:none}
+.chk.bad{border-color:color-mix(in srgb,var(--red) 50%,transparent)}
+.chk small{display:block;color:var(--muted)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stl{display:flex;gap:0;margin:10px 0 4px;overflow-x:auto}
+.stl span{flex:1;min-width:62px;text-align:center;font-size:10.5px;color:var(--dim);padding-top:22px;position:relative}
+.stl span:before{content:"";position:absolute;top:6px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--line2)}
+.stl span:after{content:"";position:absolute;top:11px;left:calc(50% + 8px);right:calc(-50% + 8px);height:2px;background:var(--line2)}
+.stl span:last-child:after{display:none}
+.stl span.ok{color:var(--text)}.stl span.ok:before{background:var(--mal)}.stl span.ok:after{background:var(--mal)}
+.stl span.cur:before{background:var(--gold);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 25%,transparent)}
+.stl span.bad:before{background:var(--red)}
+.block{border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 8%,transparent);border-radius:12px;padding:12px 14px;font-size:13.5px;margin-top:12px}
+.okbox{border:1px solid color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 8%,transparent);border-radius:12px;padding:12px 14px;font-size:13.5px;margin-top:12px}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.chart svg{width:100%;height:auto;display:block}
+.tl{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;min-width:180px}
+.tl i{height:10px;border-radius:2px;background:var(--line)}
+.tl i.pub{background:var(--blue)}.tl i.auc{background:var(--gold)}.tl i.con{background:var(--mal)}
+.auc{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start}
+.big{font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.timer{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--gold2)}
+.timer.low{color:var(--red);animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.5}}
+.bids{max-height:300px;overflow:auto;font-size:13px}
+.bids div{display:flex;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);align-items:center}
+.bids div.me{color:var(--gold2);font-weight:700}
+.bids .t{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}
+#printArea .doc{background:#fff;color:#111;border-radius:10px;padding:22px;font-size:12.5px}
+#printArea .doc table td,#printArea .doc table th{color:#111;background:#fff;border-color:#ccc}
+#printArea .doc h2{margin:0 0 4px;font-size:17px}
+@media print{body>*:not(.app){display:none!important}.side,.head,.view:not(#v-rep),#v-rep>*:not(#printArea){display:none!important}.app{display:block}main{padding:0}#printArea .doc{padding:0}}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.auc{grid-template-columns:minmax(0,1fr)}.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.facts div{border-bottom:1px solid var(--line)}.facts div:last-child{grid-column:1/-1}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:16px 16px 50px}
+  .head h1{font-size:19px}
+  .hint{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:520px){.kpi .v{font-size:19px}.fgrid{grid-template-columns:minmax(0,1fr)}.tools .input{max-width:none}.big{font-size:26px}}
+</style>
+</head>
+<body data-demo-en="Kazna-Pro — budget execution & procurement" data-demo-ru="Казна-Про — исполнение бюджета и закупки">
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>₽</b><div>Kazna-Pro<small data-en="Treasury · Northern Province" data-ru="Казначейство · Северная губерния"></small></div></div>
+    <div id="navs"></div>
+    <div class="grow"></div>
+    <div class="rolebox">
+      <label data-en="Working as" data-ru="Работаю как"></label>
+      <select class="input" id="role" style="margin-top:6px"></select>
+      <div class="muted" style="margin-top:6px" id="roleHint"></div>
+    </div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo data" data-ru="Сбросить данные"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill gold mono" data-en="FY 2026 · ₽" data-ru="ФГ 2026 · ₽"></span>
+      <span class="pill ok"><span class="dot" style="background:var(--mal3)"></span><span data-en="Bus online" data-ru="Шина в сети"></span></span>
+    </div>
+
+    <section class="view" id="v-home">
+      <div class="hint">
+        <div><b>1</b><span data-en="Open <b>Obligations</b> and register a contract — try more than the remaining limit to see the block." data-ru="Откройте <b>Обязательства</b> и зарегистрируйте договор — попробуйте сумму больше остатка лимита и увидите блокировку."></span></div>
+        <div><b>2</b><span data-en="In <b>Payment orders</b> press «Fill demo», run treasury control, approve as controller and send to the bank." data-ru="В <b>Платёжных поручениях</b> нажмите «Заполнить пример», запустите казначейский контроль, утвердите как контролёр и отправьте в банк."></span></div>
+        <div><b>3</b><span data-en="Run a live <b>E-auction</b>: bots bid down, you can bid as a supplier — see the winner and savings." data-ru="Проведите <b>Электронный аукцион</b>: боты снижают цену, вы можете торговаться как поставщик — победитель и экономия."></span></div>
+      </div>
+      <div class="card facts">
+        <div><small data-en="Tender" data-ru="Тендер"></small><span data-en="Treasury system" data-ru="Казначейская система"></span></div>
+        <div><small data-en="Year" data-ru="Год"></small><span>2024</span></div>
+        <div><small data-en="Budget" data-ru="Бюджет"></small><span data-en="₽ 1.2 bn" data-ru="₽ 1,2 млрд"></span></div>
+        <div><small data-en="Client" data-ru="Заказчик"></small><span data-en="Regional treasury, Northern Province" data-ru="Казначейство Северной губернии"></span></div>
+        <div><small data-en="Stack" data-ru="Стек"></small><span data-en="1C-class platform · inter-agency bus · Postgres" data-ru="Платформа класса 1С · МЭДО-шина · Postgres"></span></div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <div class="card"><h3><span data-en="Cash plan, ₽ M" data-ru="Кассовый план, млн ₽"></span><span class="sp"></span><span class="legend" id="cashLeg"></span></h3><div class="chart" id="cashMini"></div></div>
+        <div class="card"><h3><span data-en="Latest payment orders" data-ru="Последние платёжные поручения"></span><span class="sp"></span><button class="btn sm" data-go="pay" data-en="Open" data-ru="Открыть"></button></h3><div id="lastPay"></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="v-kbk">
+      <div class="tools"><input class="input" id="kq" data-en-ph="Search code or name…" data-ru-ph="Поиск кода или названия…"><button class="btn sm" id="kOpen" data-en="Expand all" data-ru="Развернуть"></button><button class="btn sm" id="kClose" data-en="Collapse" data-ru="Свернуть"></button><span class="legend"><span><i style="background:var(--mal2)"></i><span data-en="Obligations" data-ru="Обязательства"></span></span><span><i style="background:var(--mal3)"></i><span data-en="Paid" data-ru="Оплачено"></span></span></span></div>
+      <div class="tw"><table id="tKbk"></table></div>
+      <p class="muted" style="font-size:12px" data-en="Code = admin (3) · section (4) · target article (10) · expense type (3). Codes are fictional. LBO — limits of budget obligations. Click a line item to register an obligation against it." data-ru="Код = ГРБС (3) · раздел (4) · целевая статья (10) · вид расходов (3). Коды вымышленные. ЛБО — лимиты бюджетных обязательств. Нажмите строку, чтобы поставить обязательство."></p>
+    </section>
+
+    <section class="view" id="v-obl">
+      <div class="grid2">
+        <div class="card"><h3 data-en="Register a contract obligation" data-ru="Постановка обязательства по договору"></h3>
+          <div class="fgrid">
+            <div class="f full"><label data-en="Budget classification code (line item)" data-ru="Код бюджетной классификации (строка)"></label><select class="input" id="oKbk"></select></div>
+            <div class="f"><label data-en="Counterparty" data-ru="Контрагент"></label><select class="input" id="oSup"></select></div>
+            <div class="f"><label data-en="Contract No." data-ru="№ договора"></label><input class="input mono" id="oNo"></div>
+            <div class="f"><label data-en="Amount, ₽" data-ru="Сумма, ₽"></label><input class="input mono" id="oAmt" inputmode="decimal"></div>
+            <div class="f"><label data-en="Remaining limit" data-ru="Остаток лимита"></label><div class="input mono" id="oRem" style="background:var(--panel2)"></div></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn pri" id="oReg" data-en="Check limit & register" data-ru="Проверить лимит и поставить"></button><button class="btn sm" id="oOver" data-en="Try exceeding the limit" data-ru="Попробовать превысить"></button></div>
+          <div id="oRes"></div>
+        </div>
+        <div class="card"><h3 data-en="Registered obligations" data-ru="Поставленные обязательства"></h3><div class="tw"><table id="tObl"></table></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="v-pay">
+      <div class="grid2">
+        <div class="card"><h3><span data-en="Payment order" data-ru="Платёжное поручение"></span><span class="mono pill" id="pNoPill"></span><span class="sp"></span><button class="btn sm" id="pDemo" data-en="Fill demo" data-ru="Заполнить пример"></button><button class="btn sm" id="pBad" data-en="Fill with errors" data-ru="С ошибками"></button></h3>
+          <div class="fgrid">
+            <div class="f full"><label data-en="Obligation (contract)" data-ru="Обязательство (договор)"></label><select class="input" id="pObl"></select></div>
+            <div class="f"><label data-en="Recipient" data-ru="Получатель"></label><select class="input" id="pSup"></select></div>
+            <div class="f"><label data-en="Recipient Tax ID" data-ru="ИНН получателя"></label><input class="input mono" id="pInn"></div>
+            <div class="f"><label data-en="Account (20 digits)" data-ru="Счёт (20 цифр)"></label><input class="input mono" id="pAcc" maxlength="20"></div>
+            <div class="f"><label data-en="Bank BIC" data-ru="БИК банка"></label><input class="input mono" id="pBic" maxlength="9"></div>
+            <div class="f"><label data-en="Budget code" data-ru="КБК"></label><select class="input mono" id="pKbk"></select></div>
+            <div class="f"><label data-en="Amount, ₽" data-ru="Сумма, ₽"></label><input class="input mono" id="pAmt" inputmode="decimal"></div>
+            <div class="f full"><label data-en="Payment purpose" data-ru="Назначение платежа"></label><input class="input" id="pPur"></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn pri" id="pCtl" data-en="Run treasury control" data-ru="Казначейский контроль"></button><button class="btn" id="pNew" data-en="New order" data-ru="Новое поручение"></button></div>
+        </div>
+        <div class="card"><h3><span data-en="Treasury control" data-ru="Казначейский контроль"></span><span class="sp"></span><span id="ctlSum"></span></h3>
+          <div id="stl"></div><div class="checks" id="checks"><div class="muted" style="font-size:13px" data-en="Fill the order and run control — 10 automatic checks run against limits, obligations, cash plan and registers." data-ru="Заполните поручение и запустите контроль — 10 автоматических проверок по лимитам, обязательствам, кассовому плану и реестрам."></div></div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap" id="pActs"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px"><h3><span data-en="Payment register" data-ru="Реестр платёжных поручений"></span><span class="sp"></span><button class="btn sm" id="pCsv">⇩ CSV</button></h3><div class="tw"><table id="tPay"></table></div></div>
+    </section>
+
+    <section class="view" id="v-cash">
+      <div class="card"><h3><span data-en="Cash plan by month: planned vs executed vs forecast, ₽ M" data-ru="Кассовый план по месяцам: план, исполнение, прогноз, млн ₽"></span><span class="sp"></span>
+        <select class="input" id="fcM" style="width:auto"><option value="lin" data-en="Forecast: run-rate" data-ru="Прогноз: по темпу"></option><option value="sea" data-en="Forecast: seasonal (Dec peak)" data-ru="Прогноз: сезонный (пик в декабре)"></option></select></h3>
+        <div class="legend" id="cashLeg2" style="margin-bottom:8px"></div><div class="chart" id="cashBig"></div></div>
+      <div class="tw" style="margin-top:14px"><table id="tCash"></table></div>
+    </section>
+
+    <section class="view" id="v-proc">
+      <div class="kpis" id="procK"></div>
+      <div class="tools"><select class="input" id="prF" style="max-width:220px"></select><span style="flex:1"></span><button class="btn pri sm" id="lotAdd">＋ <span data-en="Add lot" data-ru="Добавить лот"></span></button><button class="btn sm" id="lotCsv">⇩ CSV</button></div>
+      <div class="card" id="lotForm" style="display:none;margin-bottom:12px"><div class="fgrid">
+        <div class="f full"><label data-en="Subject of procurement" data-ru="Предмет закупки"></label><input class="input" id="lS"></div>
+        <div class="f"><label data-en="Initial max price (NMCK), ₽" data-ru="НМЦК, ₽"></label><input class="input mono" id="lP" inputmode="decimal"></div>
+        <div class="f"><label data-en="Method" data-ru="Способ"></label><select class="input" id="lM"></select></div>
+        <div class="f"><label data-en="Budget code" data-ru="КБК"></label><select class="input mono" id="lK"></select></div>
+        <div class="f"><label data-en="Publication month" data-ru="Месяц размещения"></label><select class="input" id="lMo"></select></div>
+      </div><div id="lErr"></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn pri sm" id="lSave" data-en="Add to schedule" data-ru="В план-график"></button><button class="btn sm" id="lCancel" data-en="Cancel" data-ru="Отмена"></button></div></div>
+      <div class="tw"><table id="tLots"></table></div>
+      <div class="legend" style="margin-top:8px"><span><i style="background:var(--blue)"></i><span data-en="Notice" data-ru="Извещение"></span></span><span><i style="background:var(--gold)"></i><span data-en="Bidding" data-ru="Торги"></span></span><span><i style="background:var(--mal)"></i><span data-en="Contract" data-ru="Контракт"></span></span></div>
+    </section>
+
+    <section class="view" id="v-auc">
+      <div class="tools"><select class="input" id="aLot" style="max-width:420px"></select><button class="btn pri" id="aStart" data-en="▶ Start auction" data-ru="▶ Начать аукцион"></button></div>
+      <div class="auc">
+        <div class="card">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end">
+            <div><div class="muted" style="font-size:12px" data-en="Current best bid" data-ru="Лучшее предложение"></div><div class="big" id="aBest">—</div><div style="font-size:12.5px" id="aDrop"></div></div>
+            <div style="flex:1"></div>
+            <div style="text-align:right"><div class="muted" style="font-size:12px" data-en="Time to close" data-ru="До окончания"></div><div class="timer" id="aTimer">--:--</div></div>
+          </div>
+          <div class="chart" id="aChart" style="margin-top:10px"></div>
+          <div class="okbox" id="aYou" style="margin-top:10px">
+            <div style="font-weight:700;margin-bottom:8px" data-en="Your bid as supplier «Arctic Systems LLC»" data-ru="Ваша ставка как поставщик «ООО Арктик Системс»"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><input class="input mono" id="aIn" style="max-width:200px" inputmode="decimal"><button class="btn gold" id="aBid" data-en="Place bid" data-ru="Подать"></button><button class="btn sm" data-step="0.5">−0.5%</button><button class="btn sm" data-step="2">−2%</button><button class="btn sm" data-step="5">−5%</button></div>
+            <div class="muted" style="font-size:12px;margin-top:6px" data-en="Step: 0.5–5% of NMCK below the current best. Each bid extends the auction by 20 s (compressed time)." data-ru="Шаг: 0,5–5% НМЦК ниже текущей. Каждая ставка продлевает торги на 20 с (сжатое время)."></div>
+          </div>
+          <div id="aRes"></div>
+        </div>
+        <div class="card"><h3 data-en="Bid log" data-ru="Ход торгов"></h3><div class="bids" id="aLog"><div class="muted" data-en="Pick a lot and start." data-ru="Выберите лот и начните."></div></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="v-rep">
+      <div class="tools"><select class="input" id="rT" style="max-width:320px"></select><button class="btn pri sm" id="rPrint">🖨 <span data-en="Print / PDF" data-ru="Печать / PDF"></span></button><button class="btn sm" id="rCsv">⇩ CSV</button></div>
+      <div id="printArea"></div>
+    </section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const T=(e,r)=>PT.t(e,r),L=o=>o?(PT.lang==='ru'?o.ru:o.en):'';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const rub=v=>'₽ '+Math.round(v).toLocaleString(loc());
+const mln=v=>(v/1e6).toLocaleString(loc(),{maximumFractionDigits:1});
+const bn=v=>v>=1e9?(v/1e9).toLocaleString(loc(),{maximumFractionDigits:2})+T(' bn',' млрд'):mln(v)+T(' M',' млн');
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt-treasury-v1';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+function toast(m,k){const d=document.createElement('div');d.className='toast '+(k||'');d.innerHTML=m;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),3800)}
+const MON={en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],ru:['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек']};
+const CUR=new Date().getMonth();
+const today=()=>new Date().toLocaleDateString(loc());
+const now=()=>new Date().toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+/* ---------- reference data ---------- */
+const GRBS=[
+ {c:'801',n:{en:'Department of Health',ru:'Департамент здравоохранения'},s:[
+  {c:'0901',n:{en:'Inpatient care',ru:'Стационарная помощь'},l:[['0110100590','244',{en:'Medical supplies',ru:'Закупка медизделий'},820e6],['0110200590','611',{en:'Subsidy to Regional Hospital No.1',ru:'Субсидия областной больнице №1'},1940e6]]},
+  {c:'0909',n:{en:'Other healthcare',ru:'Другие вопросы здравоохранения'},l:[['0130170030','244',{en:'Ambulance fleet renewal',ru:'Обновление парка скорой помощи'},410e6]]}]},
+ {c:'802',n:{en:'Department of Education',ru:'Департамент образования'},s:[
+  {c:'0702',n:{en:'General education',ru:'Общее образование'},l:[['0210100590','244',{en:'School equipment',ru:'Оборудование для школ'},640e6],['0210374090','612',{en:'Digital classroom subsidy',ru:'Субсидия «Цифровой класс»'},380e6]]},
+  {c:'0709',n:{en:'Other education',ru:'Другие вопросы образования'},l:[['0230100190','242',{en:'Department IT services',ru:'ИТ-услуги департамента'},120e6]]}]},
+ {c:'803',n:{en:'Roads & Transport Committee',ru:'Комитет дорог и транспорта'},s:[
+  {c:'0409',n:{en:'Road fund',ru:'Дорожный фонд'},l:[['0310120010','243',{en:'Regional road repair',ru:'Ремонт региональных дорог'},2600e6],['0310220020','414',{en:'Bridge over the Severka river',ru:'Мост через р. Северку'},1750e6]]}]},
+ {c:'804',n:{en:'Ministry of Digital Development',ru:'Министерство цифрового развития'},s:[
+  {c:'0410',n:{en:'Communications & IT',ru:'Связь и информатика'},l:[['0410100190','242',{en:'Data centre services',ru:'Услуги ЦОД'},290e6],['0410220030','244',{en:'Software licences',ru:'Лицензии ПО'},160e6],['0420100590','242',{en:'Treasury system modernisation',ru:'Модернизация казначейской системы'},1200e6]]}]},
+ {c:'805',n:{en:'Ministry of Social Policy',ru:'Министерство социальной политики'},s:[
+  {c:'1003',n:{en:'Social support',ru:'Социальное обеспечение'},l:[['0510150840','313',{en:'Family allowances',ru:'Пособия семьям'},3100e6],['0510270010','321',{en:'Heating compensation',ru:'Компенсация за отопление'},900e6]]}]}
+];
+const LEAVES=[];GRBS.forEach(g=>g.s.forEach(s=>s.l.forEach(l=>LEAVES.push({code:g.c+'.'+s.c+'.'+l[0]+'.'+l[1],g:g.c,s:s.c,n:l[2],limit:l[3]}))));
+function acctFor(base,bic){let a=base.split('');a[8]='0';const d=(bic.slice(-3)+a.join('')).split('').map(Number),w=[7,1,3];let s=0;d.forEach((x,i)=>s+=(x*w[i%3])%10);for(let c=0;c<10;c++)if((s+(c*3)%10)%10===0){a[8]=String(c);break}return a.join('')}
+function acctOk(acc,bic){if(!/^\d{20}$/.test(acc)||!/^\d{9}$/.test(bic))return false;const d=(bic.slice(-3)+acc).split('').map(Number),w=[7,1,3];let s=0;d.forEach((x,i)=>s+=(x*w[i%3])%10);return s%10===0}
+const SUP=[
+ ['Polar MedTech LLC','ООО «Полярмедтех»','2901123457','40702810000000012345','041117601'],
+ ['Northern Roads JSC','АО «Северные дороги»','2901456783','40702810400000067890','041117602'],
+ ['Arctic Systems LLC','ООО «Арктик Системс»','2901789016','40702810800000011122','041117603'],
+ ['White Sea Builders','ООО «Беломорстрой»','2901234561','40702810200000033344','041117601'],
+ ['EduTech North LLC','ООО «ЭдуТех Север»','2901567894','40702810600000055566','041117604'],
+ ['Taiga Software JSC','АО «Тайга Софт»','2901890127','40702810900000077788','041117602'],
+ ['NordCloud DC LLC','ООО «НордКлауд ЦОД»','2901345670','40702810100000099900','041117603'],
+ ['Fortuna Trade LLC','ООО «Фортуна Трейд»','2901999990','40702810500000013579','041117604',1]
+].map((s,i)=>({id:i,n:{en:s[0],ru:s[1]},inn:s[2],bic:s[4],acc:acctFor(s[3],s[4]),bad:!!s[5]}));
+const BOTS=[{n:{en:'Polar MedTech',ru:'Полярмедтех'},c:'#4ea4ff'},{n:{en:'Taiga Software',ru:'Тайга Софт'},c:'#a78bfa'},{n:{en:'NordCloud DC',ru:'НордКлауд ЦОД'},c:'#f0a83a'},{n:{en:'White Sea Builders',ru:'Беломорстрой'},c:'#ef5a5a'}];
+const METH={auction:{en:'E-auction',ru:'Эл. аукцион'},tender:{en:'Open tender',ru:'Открытый конкурс'},quot:{en:'Quotation request',ru:'Запрос котировок'}};
+const LST={plan:{en:'Planned',ru:'Запланирован',k:''},pub:{en:'Published',ru:'Размещён',k:'gold'},award:{en:'Contract signed',ru:'Контракт заключён',k:'ok'}};
+const PST={draft:{en:'Draft',ru:'Черновик',k:''},ctl:{en:'Control passed',ru:'Контроль пройден',k:'gold'},rej:{en:'Rejected',ru:'Отказ',k:'bad'},appr:{en:'Approved',ru:'Утверждено',k:'gold'},sent:{en:'Sent to bank',ru:'Отправлено в банк',k:'warn'},acc:{en:'Accepted by bank',ru:'Принято банком',k:'warn'},done:{en:'Executed',ru:'Исполнено',k:'ok'}};
+const FLOW=['draft','ctl','appr','sent','acc','done'];
+const ROLES=[{id:'op',n:{en:'Operator (agency accountant)',ru:'Оператор (бухгалтер ПБС)'},h:{en:'Can register obligations and draft payment orders.',ru:'Ставит обязательства и готовит поручения.'}},{id:'ctl',n:{en:'Treasury controller',ru:'Контролёр казначейства'},h:{en:'Can approve payment orders after control.',ru:'Утверждает поручения после контроля.'}}];
+
+/* ---------- state ---------- */
+let S;
+function seed(){
+  const r=rng(2026);
+  const kbk={};LEAVES.forEach(l=>{const o=l.code.endsWith('0410220030.244')?l.limit-4.2e6:Math.round(l.limit*(.45+r()*.4)/1e5)*1e5;kbk[l.code]={oblig:o,paid:Math.round(o*(.55+r()*.3)/1e5)*1e5}});
+  const obl=[];let n=1;
+  const pairs=[[0,'801.0901.0110100590.244',0],[1,'803.0409.0310120010.243',1],[2,'804.0410.0420100590.242',2],[4,'802.0702.0210100590.244',4],[5,'804.0410.0410220030.244',5],[6,'804.0410.0410100190.242',6],[3,'803.0409.0310220020.414',3]];
+  pairs.forEach(([_,k,s])=>{const amt=Math.round((8+r()*60)*1e6/1e3)*1e3;obl.push({id:'BO-26-'+String(n).padStart(4,'0'),kbk:k,sup:s,no:'GK-'+(140+n*7)+'/26',amt,paid:Math.round(amt*r()*.5/1e3)*1e3,date:'2026-0'+(1+n%9)+'-1'+n});n++});
+  const plan=[],exec=[];const tot=LEAVES.reduce((a,l)=>a+l.limit,0);const sea=[.05,.07,.08,.08,.08,.09,.08,.07,.08,.09,.09,.14];
+  sea.forEach((s,i)=>{plan.push(Math.round(tot*s));exec.push(i<CUR?Math.round(tot*s*(.82+r()*.22)):i===CUR?Math.round(tot*s*.38):0)});
+  const L=(en,ru,k,p,m,mo,st,fin,win)=>({id:'LOT-'+(1000+lots.length+1),s:{en,ru},kbk:k,nmck:p,m,mo,st,fin:fin||0,win:win||''});
+  const lots=[];
+  lots.push(L('Ultrasound scanners, 6 units','Аппараты УЗИ, 6 шт.','801.0901.0110100590.244',86.4e6,'auction',2,'award',74.9e6,'Polar MedTech'));
+  lots.push(L('Asphalt repair, route R-21 km 40–58','Ремонт асфальта, трасса Р-21 км 40–58','803.0409.0310120010.243',412e6,'auction',3,'award',371.6e6,'Northern Roads'));
+  lots.push(L('Interactive panels for 40 schools','Интерактивные панели для 40 школ','802.0702.0210100590.244',58.2e6,'auction',Math.min(11,CUR),'pub'));
+  lots.push(L('Treasury system: integration bus','Казначейская система: интеграционная шина','804.0410.0420100590.242',184e6,'tender',Math.min(11,CUR),'pub'));
+  lots.push(L('Antivirus licences, 3 000 seats','Лицензии антивируса, 3 000 мест','804.0410.0410220030.244',2.7e6,'quot',Math.min(11,CUR+1),'plan'));
+  lots.push(L('Ambulance vehicles, 12 units','Автомобили скорой помощи, 12 шт.','801.0909.0130170030.244',96e6,'auction',Math.min(11,CUR),'pub'));
+  lots.push(L('Bridge design supervision','Авторский надзор за строительством моста','803.0409.0310220020.414',24.5e6,'tender',Math.min(11,CUR+1),'plan'));
+  lots.push(L('Data centre rack lease, 24 months','Аренда стоек ЦОД, 24 мес.','804.0410.0410100190.242',31.8e6,'auction',1,'award',27.1e6,'NordCloud DC'));
+  const pay=[];const r2=rng(7);
+  for(let i=0;i<7;i++){const o=obl[i%obl.length];const st=['done','done','done','acc','sent','rej','done'][i];const amt=Math.round(o.amt*(.05+r2()*.1)/1e3)*1e3;pay.push({id:'PP-'+(5100+i),date:'2026-'+String(Math.max(1,CUR+1-(i>3?1:0))).padStart(2,'0')+'-0'+(1+i),sup:o.sup,inn:SUP[o.sup].inn,acc:SUP[o.sup].acc,bic:SUP[o.sup].bic,kbk:o.kbk,obl:o.id,amt,pur:'Payment under contract '+o.no,st,hist:[]})}
+  return {kbk,obl,plan,exec,lots,pay,role:'op',seq:5108,oseq:n,lseq:1009,fc:'lin'};
+}
+S=store.load();if(!S||!S.kbk)S=seed();
+const leaf=c=>LEAVES.find(l=>l.code===c);
+const rem=c=>leaf(c).limit-S.kbk[c].oblig;
+const cashRem=c=>S.kbk[c].oblig-S.kbk[c].paid;
+
+/* ---------- nav ---------- */
+const VIEWS=[['home','◈',{en:'Overview',ru:'Обзор'}],['kbk','⌗',{en:'Budget codes & limits',ru:'КБК и лимиты'}],['obl','✎',{en:'Obligations',ru:'Обязательства'}],['pay','⇄',{en:'Payment orders',ru:'Платёжные поручения'}],['cash','▥',{en:'Cash plan',ru:'Кассовый план'}],['proc','☰',{en:'Procurement schedule',ru:'План-график закупок'}],['auc','⚑',{en:'E-auction',ru:'Электронный аукцион'}],['rep','⎙',{en:'Reports',ru:'Отчёты'}]];
+let cur='home';
+function nav(){$('#navs').innerHTML=VIEWS.map(v=>{const c=v[0]==='pay'?S.pay.filter(p=>p.st==='ctl').length:v[0]==='auc'?S.lots.filter(l=>l.st==='pub'&&l.m==='auction').length:0;return `<button class="nav ${cur===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${L(v[2])}${c?`<span class="cnt">${c}</span>`:''}</button>`}).join('')}
+function go(v){cur=v;$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));const V=VIEWS.find(x=>x[0]===v);$('#title').textContent=L(V[2]);$('#crumb').textContent=T('Regional treasury','Казначейство губернии')+' / '+L(V[2]);nav();$('#side').classList.remove('open');render();window.scrollTo(0,0)}
+document.addEventListener('click',e=>{const n=e.target.closest('[data-v]');if(n)go(n.dataset.v);const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();S=seed();stopAuc();resetPay();toast(T('Demo data reset','Данные сброшены'));go('home')};
+function roles(){$('#role').innerHTML=ROLES.map(r=>`<option value="${r.id}" ${S.role===r.id?'selected':''}>${L(r.n)}</option>`).join('');$('#roleHint').textContent=L(ROLES.find(r=>r.id===S.role).h)}
+$('#role').onchange=e=>{S.role=e.target.value;store.save();roles();renderPayActs()};
+
+/* ---------- overview ---------- */
+function totals(){let lim=0,ob=0,pd=0;LEAVES.forEach(l=>{lim+=l.limit;ob+=S.kbk[l.code].oblig;pd+=S.kbk[l.code].paid});return{lim,ob,pd}}
+function renderHome(){
+  const t=totals();const sav=S.lots.filter(l=>l.st==='award').reduce((a,l)=>a+l.nmck-l.fin,0);
+  $('#kpis').innerHTML=[
+   [T('Limits (LBO)','Лимиты (ЛБО)'),'₽ '+bn(t.lim),T(LEAVES.length+' line items','строк: '+LEAVES.length)],
+   [T('Obligations','Обязательства'),'₽ '+bn(t.ob),(t.ob/t.lim*100).toFixed(1)+T('% of limits','% лимитов')],
+   [T('Cash executed','Кассовое исполнение'),'₽ '+bn(t.pd),(t.pd/t.lim*100).toFixed(1)+T('% of limits','% лимитов')],
+   [T('Procurement savings','Экономия по закупкам'),'₽ '+bn(sav),S.lots.filter(l=>l.st==='award').length+T(' contracts',' контрактов')]
+  ].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('');
+  cashChart('#cashMini',220);legend('#cashLeg');
+  $('#lastPay').innerHTML=S.pay.slice(-5).reverse().map(p=>`<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px"><span class="mono" style="color:var(--dim)">${p.id}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${L(SUP[p.sup].n)}</span><b class="mono">${mln(p.amt)}</b><span class="pill ${PST[p.st].k}">${L(PST[p.st])}</span></div>`).join('');
+}
+function legend(sel){$(sel).innerHTML=`<span><i style="background:var(--line2)"></i>${T('Plan','План')}</span><span><i style="background:var(--mal)"></i>${T('Executed','Исполнено')}</span><span><i style="background:var(--gold)"></i>${T('Forecast','Прогноз')}</span>`}
+function forecast(){const done=S.exec.slice(0,CUR+1).reduce((a,b)=>a+b,0),pl=S.plan.slice(0,CUR+1).reduce((a,b)=>a+b,0);const rate=done/pl;return S.plan.map((p,i)=>i<CUR?null:i===CUR?Math.max(S.exec[i],p*rate*.98):(S.fc==='sea'?p*rate*(i===11?1.12:.97):done/(CUR+.6)))}
+function cashChart(sel,h){
+  const W=760,H=h,P={l:44,r:10,t:10,b:24};const fc=forecast();const mx=Math.max(...S.plan,...fc.map(x=>x||0),...S.exec)*1.12;
+  const bw=(W-P.l-P.r)/12;const y=v=>H-P.b-(v/mx)*(H-P.t-P.b);let g='';
+  for(let i=0;i<=4;i++){const v=mx/4*i;g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${y(v)}" y2="${y(v)}" stroke="${css('--line')}"/><text x="${P.l-6}" y="${y(v)+4}" text-anchor="end" font-size="10" fill="${css('--dim')}">${Math.round(v/1e6)}</text>`}
+  S.plan.forEach((p,i)=>{const x=P.l+i*bw;g+=`<rect x="${x+bw*.12}" y="${y(p)}" width="${bw*.36}" height="${H-P.b-y(p)}" rx="3" fill="${css('--line2')}"><title>${L({en:MON.en[i],ru:MON.ru[i]})} plan ${mln(p)}</title></rect>`;
+    const e=S.exec[i];if(i<=CUR&&e)g+=`<rect x="${x+bw*.5}" y="${y(e)}" width="${bw*.36}" height="${H-P.b-y(e)}" rx="3" fill="${css('--mal')}"><title>${mln(e)}</title></rect>`;
+    const f=fc[i];if(f&&(i>CUR||f>e))g+=`<rect x="${x+bw*.5}" y="${y(f)}" width="${bw*.36}" height="${H-P.b-y(i===CUR?f:f)-(i===CUR?H-P.b-y(e):0)}" rx="3" fill="none" stroke="${css('--gold')}" stroke-dasharray="3 2"/>`;
+    g+=`<text x="${x+bw/2}" y="${H-7}" text-anchor="middle" font-size="10" fill="${i===CUR?css('--gold'):css('--dim')}" font-weight="${i===CUR?700:400}">${MON[PT.lang][i]}</text>`});
+  $(sel).innerHTML=`<svg viewBox="0 0 ${W} ${H}" font-family="Inter,sans-serif">${g}</svg>`;
+}
+
+/* ---------- KBK tree ---------- */
+let openK=new Set(['801','804']);
+function renderKbk(){
+  const q=($('#kq').value||'').toLowerCase();let h=`<thead><tr><th>${T('Code / name','Код / наименование')}</th><th class="num">${T('Limit','Лимит')}</th><th class="num">${T('Obligations','Обязательства')}</th><th class="num">${T('Paid','Оплачено')}</th><th class="num">${T('Remaining limit','Остаток ЛБО')}</th><th>${T('Usage','Использование')}</th></tr></thead><tbody>`;
+  const sum=f=>{let a={l:0,o:0,p:0};LEAVES.filter(f).forEach(x=>{a.l+=x.limit;a.o+=S.kbk[x.code].oblig;a.p+=S.kbk[x.code].paid});return a};
+  const row=(cls,lab,a,attr)=>{const u=a.o/a.l*100;return `<tr class="${cls}" ${attr||''}><td>${lab}</td><td class="num mono">${mln(a.l)}</td><td class="num mono">${mln(a.o)}</td><td class="num mono">${mln(a.p)}</td><td class="num mono" style="color:${a.l-a.o<a.l*.03?'var(--red)':'inherit'}">${mln(a.l-a.o)}</td><td><div class="bar"><i class="${u>97?'hot':''}" style="width:${Math.min(100,u)}%"></i><i class="p" style="width:${a.p/a.l*100}%"></i></div></td></tr>`};
+  GRBS.forEach(g=>{const m=x=>x.g===g.c&&(!q||x.code.includes(q)||L(x.n).toLowerCase().includes(q));if(!LEAVES.some(m))return;const op=q||openK.has(g.c);
+    h+=row('lv0 clk '+(op?'open':''),`<span class="caret">▸</span><span class="mono">${g.c}</span> ${L(g.n)}`,sum(x=>x.g===g.c),`data-k="${g.c}"`);
+    if(op)g.s.forEach(s=>{const ms=x=>m(x)&&x.s===s.c;if(!LEAVES.some(ms))return;h+=row('lv1',`<span class="mono">${s.c}</span> ${L(s.n)}`,sum(x=>x.g===g.c&&x.s===s.c));
+      LEAVES.filter(ms).forEach(x=>{h+=row('lv2 clk',`<span class="mono">${x.code.split('.').slice(2).join('.')}</span> ${L(x.n)}`,{l:x.limit,o:S.kbk[x.code].oblig,p:S.kbk[x.code].paid},`data-leaf="${x.code}"`)})})});
+  $('#tKbk').innerHTML=h+'</tbody>';
+}
+$('#tKbk').onclick=e=>{const k=e.target.closest('[data-k]');if(k){openK.has(k.dataset.k)?openK.delete(k.dataset.k):openK.add(k.dataset.k);renderKbk()}const lf=e.target.closest('[data-leaf]');if(lf){go('obl');$('#oKbk').value=lf.dataset.leaf;oRem();$('#oAmt').focus()}};
+$('#kq').oninput=renderKbk;$('#kOpen').onclick=()=>{GRBS.forEach(g=>openK.add(g.c));renderKbk()};$('#kClose').onclick=()=>{openK.clear();renderKbk()};
+
+/* ---------- obligations ---------- */
+const kbkOpts=()=>LEAVES.map(l=>`<option value="${l.code}">${l.code} — ${esc(L(l.n))}</option>`).join('');
+const supOpts=()=>SUP.map(s=>`<option value="${s.id}">${esc(L(s.n))}</option>`).join('');
+function fillObl(){const k=$('#oKbk').value,sp=$('#oSup').value;$('#oKbk').innerHTML=kbkOpts();$('#oSup').innerHTML=supOpts();if(k)$('#oKbk').value=k;else $('#oKbk').value='804.0410.0410220030.244';if(sp)$('#oSup').value=sp;else $('#oSup').value='5';if(!$('#oNo').value)$('#oNo').value='GK-'+(300+S.oseq)+'/26';if(!$('#oAmt').value)$('#oAmt').value='3 600 000';oRem()}
+function oRem(){const c=$('#oKbk').value;if(c)$('#oRem').textContent=rub(rem(c))}
+$('#oKbk').onchange=oRem;
+const num=v=>parseFloat(String(v).replace(/[\s ]/g,'').replace(',','.'))||0;
+function renderObl(){fillObl();$('#tObl').innerHTML=`<thead><tr><th>№</th><th>${T('Contract','Договор')}</th><th>${T('Counterparty','Контрагент')}</th><th class="num">${T('Amount','Сумма')}</th><th class="num">${T('Paid','Оплачено')}</th><th>${T('Code','КБК')}</th></tr></thead><tbody>`+S.obl.slice().reverse().map(o=>`<tr><td class="mono">${o.id}</td><td class="mono">${esc(o.no)}</td><td>${esc(L(SUP[o.sup].n))}</td><td class="num mono">${rub(o.amt)}</td><td class="num mono">${rub(o.paid)}</td><td class="mono" style="font-size:11.5px">${o.kbk}</td></tr>`).join('')+'</tbody>'}
+$('#oOver').onclick=()=>{const c=$('#oKbk').value;$('#oAmt').value=Math.round(rem(c)+1.75e6).toLocaleString('ru-RU');$('#oReg').click()};
+$('#oReg').onclick=()=>{
+  const c=$('#oKbk').value,amt=num($('#oAmt').value),no=$('#oNo').value.trim(),sup=+$('#oSup').value;const r=rem(c);
+  if(!no||amt<=0){$('#oRes').innerHTML=`<div class="block">${T('Fill contract number and a positive amount.','Укажите номер договора и сумму больше нуля.')}</div>`;return}
+  if(S.obl.some(o=>o.no===no)){$('#oRes').innerHTML=`<div class="block">${T('Contract','Договор')} <b class="mono">${esc(no)}</b> ${T('is already registered — duplicate obligations are not allowed.','уже поставлен на учёт — повторная постановка запрещена.')}</div>`;return}
+  if(amt>r){$('#oRes').innerHTML=`<div class="block"><b>⛔ ${T('Blocked: limit of budget obligations exceeded','Отказ: превышен лимит бюджетных обязательств')}</b><table style="margin-top:8px;font-size:13px"><tr><td>${T('Requested','Запрошено')}</td><td class="num mono">${rub(amt)}</td></tr><tr><td>${T('Remaining limit on','Остаток ЛБО по')} <span class="mono">${c.split('.').pop()}</span></td><td class="num mono">${rub(r)}</td></tr><tr><td><b>${T('Shortfall','Не хватает')}</b></td><td class="num mono" style="color:var(--red)"><b>${rub(amt-r)}</b></td></tr></table><div class="muted" style="margin-top:8px;font-size:12.5px">${T('Rule TC-12 (fictional treasury order): an obligation cannot exceed the unused limit of the line item. Options: reduce the contract amount, split it across fiscal years, or request a limit transfer from the chief budget administrator.','Правило КК-12 (вымышленный приказ казначейства): обязательство не может превышать неиспользованный лимит по строке. Варианты: уменьшить сумму, разбить по годам или запросить передвижку лимитов у ГРБС.')}</div></div>`;toast(T('Obligation blocked','Обязательство отклонено'),'bad');return}
+  const id='BO-26-'+String(S.oseq++).padStart(4,'0');S.obl.push({id,kbk:c,sup,no,amt,paid:0,date:new Date().toISOString().slice(0,10)});S.kbk[c].oblig+=amt;store.save();
+  $('#oRes').innerHTML=`<div class="okbox">✅ ${T('Obligation registered','Обязательство поставлено на учёт')} <b class="mono">${id}</b>. ${T('Remaining limit','Остаток лимита')}: <b class="mono">${rub(rem(c))}</b>. <button class="btn sm" id="toPay" style="margin-left:6px">${T('Create payment order →','Создать платёжку →')}</button></div>`;
+  $('#toPay').onclick=()=>{go('pay');$('#pObl').value=id;oblToPay(.3)};
+  $('#oNo').value='';$('#oAmt').value='';renderObl();nav();toast(T('Obligation ','Обязательство ')+id+T(' registered',' поставлено'));
+};
+
+/* ---------- payment orders ---------- */
+let P=null; // current order being edited/controlled
+function resetPay(){P={id:'PP-'+(S.seq+1),st:'draft',checks:null,hist:[]}}
+resetPay();
+function fillPaySel(){const o=$('#pObl').value,s=$('#pSup').value,k=$('#pKbk').value;$('#pObl').innerHTML=`<option value="">—</option>`+S.obl.map(x=>`<option value="${x.id}">${x.id} · ${esc(x.no)} · ${esc(L(SUP[x.sup].n))}</option>`).join('');$('#pSup').innerHTML=supOpts();$('#pKbk').innerHTML=LEAVES.map(l=>`<option value="${l.code}">${l.code}</option>`).join('');if(o)$('#pObl').value=o;if(s)$('#pSup').value=s;if(k)$('#pKbk').value=k}
+function oblToPay(frac){const o=S.obl.find(x=>x.id===$('#pObl').value);if(!o)return;const s=SUP[o.sup];$('#pSup').value=o.sup;$('#pInn').value=s.inn;$('#pAcc').value=s.acc;$('#pBic').value=s.bic;$('#pKbk').value=o.kbk;$('#pAmt').value=Math.round(Math.max(1000,(o.amt-o.paid)*(frac||.25))/100)*100;$('#pPur').value=T('Payment under contract ','Оплата по договору ')+o.no+T(', invoice No. ',', счёт № ')+(400+Math.floor(Math.random()*500))+T(', VAT included',', в т.ч. НДС')}
+$('#pObl').onchange=()=>oblToPay();
+$('#pSup').onchange=()=>{const s=SUP[$('#pSup').value];$('#pInn').value=s.inn;$('#pAcc').value=s.acc;$('#pBic').value=s.bic};
+$('#pDemo').onclick=()=>{resetPay();const o=S.obl.find(x=>!SUP[x.sup].bad&&x.amt-x.paid>1e5&&cashRem(x.kbk)>1e5)||S.obl[0];$('#pObl').value=o.id;oblToPay(.2);renderPay()};
+$('#pBad').onclick=()=>{resetPay();const o=S.obl[1];$('#pObl').value=o.id;oblToPay(.2);const a=$('#pAcc').value;$('#pAcc').value=a.slice(0,19)+((+a[19]+3)%10);$('#pSup').value=7;$('#pInn').value=SUP[7].inn;$('#pAmt').value=Math.round(o.amt-o.paid+5e6);$('#pPur').value=T('Prepayment','Предоплата');renderPay()};
+$('#pNew').onclick=()=>{resetPay();['#pInn','#pAcc','#pBic','#pAmt','#pPur'].forEach(s=>$(s).value='');$('#pObl').value='';renderPay()};
+function controls(f){
+  const o=S.obl.find(x=>x.id===f.obl),sup=SUP[f.sup],l=leaf(f.kbk);const c=[];
+  const ok=(b,en,ru,ben,bru)=>c.push({ok:!!b,n:{en,ru},w:b?null:{en:ben,ru:bru}});
+  ok(f.obl&&f.acc&&f.bic&&f.amt>0&&f.pur.length>5,'Required fields completed','Обязательные реквизиты заполнены','Obligation, account, BIC, amount and purpose are mandatory.','Обязательство, счёт, БИК, сумма и назначение обязательны.');
+  ok(/^\d{10}$/.test(f.inn)&&f.inn===sup.inn,'Recipient Tax ID matches registry','ИНН получателя совпадает с реестром',`Tax ID ${f.inn||'—'} ≠ registry ${sup.inn}.`,`ИНН ${f.inn||'—'} ≠ реестр ${sup.inn}.`);
+  ok(acctOk(f.acc,f.bic),'Account control key valid (BIC + account)','Контрольный ключ счёта верен (БИК + счёт)','Control key check failed — likely a typo in the account number.','Контрольный ключ не сошёлся — вероятно, опечатка в номере счёта.');
+  ok(!!l,'Budget code exists and is active','КБК существует и действует','Unknown code.','Код не найден.');
+  ok(o&&o.kbk===f.kbk,'Code matches the obligation','КБК совпадает с обязательством',`Obligation is registered on ${o?o.kbk:'—'}.`,`Обязательство учтено по ${o?o.kbk:'—'}.`);
+  ok(o&&o.sup===f.sup,'Recipient = obligation counterparty','Получатель = контрагент по обязательству',`Contract counterparty is ${o?SUP[o.sup].n.en:'—'}.`,`Контрагент по договору — ${o?SUP[o.sup].n.ru:'—'}.`);
+  ok(o&&f.amt<=o.amt-o.paid,'Amount ≤ unpaid balance of obligation','Сумма ≤ неоплаченного остатка обязательства',o?`Unpaid balance ${rub(o.amt-o.paid)}, requested ${rub(f.amt)}.`:'',o?`Неоплаченный остаток ${rub(o.amt-o.paid)}, запрошено ${rub(f.amt)}.`:'');
+  const left=S.plan[CUR]-S.exec[CUR];ok(f.amt<=left,'Within cash plan for '+MON.en[CUR],'В пределах кассового плана на '+MON.ru[CUR].toLowerCase(),`Only ${rub(left)} left in this month's cash plan.`,`В кассовом плане месяца осталось ${rub(left)}.`);
+  ok(o&&f.pur.includes(o.no),'Purpose references the contract','В назначении указан договор',`Purpose must mention contract ${o?o.no:''}.`,`В назначении должен быть договор ${o?o.no:''}.`);
+  ok(!sup.bad,'Not in the unreliable suppliers register','Нет в реестре недобросовестных поставщиков','Recipient is listed in the register (entry RNP-26-0417, fictional).','Получатель в реестре (запись РНП-26-0417, вымышленная).');
+  return c;
+}
+function readForm(){return{obl:$('#pObl').value,sup:+$('#pSup').value,inn:$('#pInn').value.trim(),acc:$('#pAcc').value.trim(),bic:$('#pBic').value.trim(),kbk:$('#pKbk').value,amt:num($('#pAmt').value),pur:$('#pPur').value.trim()}}
+let ctlRunning=false;
+$('#pCtl').onclick=()=>{if(ctlRunning)return;if(P.st!=='draft'&&P.st!=='rej')resetPay();const f=readForm();const c=controls(f);Object.assign(P,f);P.checks=c.map(x=>({...x,pending:true}));ctlRunning=true;renderPay();
+  c.forEach((x,i)=>setTimeout(()=>{P.checks[i].pending=false;renderChecks();if(i===c.length-1){ctlRunning=false;const bad=c.filter(z=>!z.ok).length;P.st=bad?'rej':'ctl';P.hist.push([now(),P.st]);if(!S.pay.find(p=>p.id===P.id)){S.seq++;S.pay.push(P)}store.save();renderPay();nav();toast(bad?T(bad+' check(s) failed — order rejected',bad+' проверок не пройдено — отказ'):T('All 10 checks passed','Все 10 проверок пройдены'),bad?'bad':'')}},180*(i+1)))};
+function renderChecks(){if(!P.checks)return;$('#checks').innerHTML=P.checks.map(x=>`<div class="chk ${x.pending?'run':x.ok?'ok':'bad'}"><span class="ic">${x.pending?'':x.ok?'✓':'✕'}</span><div>${L(x.n)}${!x.pending&&!x.ok?`<small>${esc(L(x.w))}</small>`:''}</div></div>`).join('');const done=P.checks.filter(x=>!x.pending);$('#ctlSum').innerHTML=done.length===P.checks.length?`<span class="pill ${done.every(x=>x.ok)?'ok':'bad'}">${done.filter(x=>x.ok).length}/${P.checks.length}</span>`:''}
+function renderStl(){const bad=P.st==='rej';const idx=FLOW.indexOf(P.st);$('#stl').innerHTML=`<div class="stl">${FLOW.map((s,i)=>`<span class="${bad&&i===1?'bad':i<idx||(P.st==='done'&&i===idx)?'ok':i===idx?'cur':''}">${bad&&i===1?L(PST.rej):L(PST[s])}</span>`).join('')}</div>`}
+function renderPayActs(){const a=$('#pActs');if(!a)return;let h='';
+  if(P.st==='ctl')h=S.role==='ctl'?`<button class="btn gold" id="pAppr">✍ ${T('Approve (e-signature)','Утвердить (ЭП)')}</button>`:`<button class="btn" id="pAsCtl">${T('Switch to controller to approve','Перейти в роль контролёра')}</button>`;
+  if(P.st==='appr')h=`<button class="btn pri" id="pSend">⇪ ${T('Send to bank','Отправить в банк')}</button>`;
+  if(P.st==='rej')h=`<span class="muted" style="font-size:13px">${T('Fix the fields marked red and run control again.','Исправьте поля с ошибками и запустите контроль снова.')}</span>`;
+  if(P.st==='done')h=`<div class="okbox" style="margin:0;flex:1">✅ ${T('Executed. Bank confirmation','Исполнено. Подтверждение банка')} <b class="mono">${P.bank||''}</b>. ${T('Limits, obligation and cash plan updated.','Лимиты, обязательство и кассовый план обновлены.')}</div>`;
+  if(P.hist.length)h+=`<div style="width:100%;font-size:12px" class="muted">${P.hist.map(x=>`<span class="mono">${x[0]}</span> ${L(PST[x[1]])}`).join(' · ')}</div>`;
+  a.innerHTML=h;
+  const ap=$('#pAppr');if(ap)ap.onclick=()=>{P.st='appr';P.hist.push([now(),'appr']);store.save();renderPay();toast(T('Signed with controller e-signature','Подписано ЭП контролёра'),'gold')};
+  const sw=$('#pAsCtl');if(sw)sw.onclick=()=>{S.role='ctl';roles();renderPayActs()};
+  const sd=$('#pSend');if(sd)sd.onclick=()=>sendBank(P);
+}
+function sendBank(p){p.st='sent';p.hist.push([now(),'sent']);store.save();renderPay();toast(T('Sent via inter-agency bus','Отправлено через МЭДО-шину'));
+  setTimeout(()=>{p.st='acc';p.hist.push([now(),'acc']);store.save();if(cur==='pay')renderPay()},1600);
+  setTimeout(()=>{p.st='done';p.bank='BNK'+Math.floor(1e8+Math.random()*9e8);p.hist.push([now(),'done']);const o=S.obl.find(x=>x.id===p.obl);if(o)o.paid+=p.amt;S.kbk[p.kbk].paid+=p.amt;S.exec[CUR]+=p.amt;store.save();if(cur==='pay')renderPay();nav();toast('✅ '+p.id+T(' executed',' исполнено'))},3600)}
+function renderPay(){fillPaySel();$('#pNoPill').textContent=P.id;renderStl();if(P.checks)renderChecks();renderPayActs();
+  $('#tPay').innerHTML=`<thead><tr><th>№</th><th>${T('Date','Дата')}</th><th>${T('Recipient','Получатель')}</th><th>${T('Code','КБК')}</th><th class="num">${T('Amount','Сумма')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>`+S.pay.slice().reverse().map(p=>`<tr class="clk ${p.id===P.id?'sel':''}" data-pid="${p.id}"><td class="mono">${p.id}</td><td class="mono">${p.date||today()}</td><td>${esc(L(SUP[p.sup].n))}</td><td class="mono" style="font-size:11.5px">${p.kbk}</td><td class="num mono">${rub(p.amt)}</td><td><span class="pill ${PST[p.st].k}">${L(PST[p.st])}</span></td></tr>`).join('')+'</tbody>'}
+$('#tPay').onclick=e=>{const r=e.target.closest('[data-pid]');if(!r)return;const p=S.pay.find(x=>x.id===r.dataset.pid);P=p;if(!P.checks&&p.st!=='draft'){P.checks=controls(p).map(x=>p.st==='rej'?x:{...x,ok:true})}$('#pObl').value=p.obl;$('#pSup').value=p.sup;$('#pInn').value=p.inn;$('#pAcc').value=p.acc;$('#pBic').value=p.bic;$('#pKbk').value=p.kbk;$('#pAmt').value=p.amt;$('#pPur').value=p.pur;renderPay();window.scrollTo({top:0,behavior:'smooth'})};
+function csv(name,rows){const s='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/csv'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast(T('Exported ','Выгружено ')+name)}
+$('#pCsv').onclick=()=>csv('payment-orders.csv',[['id','date','recipient','tax_id','account','bic','kbk','amount','status']].concat(S.pay.map(p=>[p.id,p.date||'',L(SUP[p.sup].n),p.inn,p.acc,p.bic,p.kbk,p.amt,L(PST[p.st])])));
+
+/* ---------- cash plan ---------- */
+$('#fcM').onchange=e=>{S.fc=e.target.value;store.save();renderCash()};
+function renderCash(){$('#fcM').value=S.fc;legend('#cashLeg2');cashChart('#cashBig',300);const fc=forecast();let cp=0,ce=0;
+  $('#tCash').innerHTML=`<thead><tr><th>${T('Month','Месяц')}</th><th class="num">${T('Plan','План')}</th><th class="num">${T('Executed','Исполнено')}</th><th class="num">${T('Forecast','Прогноз')}</th><th class="num">${T('Deviation','Отклонение')}</th><th class="num">${T('Cumulative %','Накопл. %')}</th></tr></thead><tbody>`+S.plan.map((p,i)=>{const e=i<=CUR?S.exec[i]:0,f=fc[i];cp+=p;ce+=i<CUR?e:(f||e);const d=(i<CUR?e:f||e)-p;return `<tr ${i===CUR?'class="sel"':''}><td>${MON[PT.lang][i]}${i===CUR?' ◂':''}</td><td class="num mono">${mln(p)}</td><td class="num mono">${i<=CUR?mln(e):'—'}</td><td class="num mono">${f?mln(f):'—'}</td><td class="num mono" style="color:${d<0?'var(--amber)':'var(--mal3)'}">${d>0?'+':''}${mln(d)}</td><td class="num mono">${(ce/cp*100).toFixed(1)}%</td></tr>`}).join('')+'</tbody>'}
+
+/* ---------- procurement ---------- */
+$('#lotAdd').onclick=()=>{$('#lotForm').style.display='block';$('#lS').focus()};$('#lCancel').onclick=()=>{$('#lotForm').style.display='none'};
+function fillLotForm(){$('#lM').innerHTML=Object.keys(METH).map(k=>`<option value="${k}">${L(METH[k])}</option>`).join('');$('#lK').innerHTML=LEAVES.map(l=>`<option value="${l.code}">${l.code}</option>`).join('');$('#lMo').innerHTML=MON[PT.lang].map((m,i)=>`<option value="${i}" ${i===CUR?'selected':''}>${m}</option>`).join('');
+  const f=$('#prF').value;$('#prF').innerHTML=`<option value="">${T('All methods','Все способы')}</option>`+Object.keys(METH).map(k=>`<option value="${k}">${L(METH[k])}</option>`).join('');$('#prF').value=f}
+$('#prF').onchange=()=>renderProc();
+$('#lSave').onclick=()=>{const s=$('#lS').value.trim(),p=num($('#lP').value),m=$('#lM').value,k=$('#lK').value,mo=+$('#lMo').value;let err='';
+  if(!s||p<=0)err=T('Enter subject and price.','Укажите предмет и цену.');else if(m==='quot'&&p>3e6)err=T('Quotation request is allowed only up to ₽ 3 000 000 — choose auction or tender.','Запрос котировок допустим только до ₽ 3 000 000 — выберите аукцион или конкурс.');else if(p>rem(k))err=T('NMCK exceeds the remaining limit on this code','НМЦК больше остатка лимита по КБК')+' ('+rub(rem(k))+').';
+  if(err){$('#lErr').innerHTML=`<div class="block">${err}</div>`;return}$('#lErr').innerHTML='';
+  S.lots.push({id:'LOT-'+(S.lseq++),s:{en:s,ru:s},kbk:k,nmck:p,m,mo,st:'pub',fin:0,win:''});store.save();$('#lotForm').style.display='none';$('#lS').value='';$('#lP').value='';renderProc();nav();toast(T('Lot added and published','Лот добавлен и размещён'))};
+function renderProc(){fillLotForm();const aw=S.lots.filter(l=>l.st==='award');const sav=aw.reduce((a,l)=>a+l.nmck-l.fin,0),nm=aw.reduce((a,l)=>a+l.nmck,0);
+  $('#procK').innerHTML=[[T('Lots in schedule','Лотов в плане-графике'),S.lots.length],[T('Total NMCK','Сумма НМЦК'),'₽ '+bn(S.lots.reduce((a,l)=>a+l.nmck,0))],[T('Contracts signed','Контрактов'),aw.length],[T('Savings','Экономия'),'₽ '+bn(sav)+` <small style="font-size:13px;color:var(--mal3)">${nm?(sav/nm*100).toFixed(1):0}%</small>`]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
+  const f=$('#prF').value;
+  $('#tLots').innerHTML=`<thead><tr><th>${T('Lot','Лот')}</th><th>${T('Subject','Предмет')}</th><th>${T('Method','Способ')}</th><th class="num">${T('NMCK','НМЦК')}</th><th class="num">${T('Final price','Цена контракта')}</th><th class="num">${T('Savings','Экономия')}</th><th>${T('Schedule','График')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>`+S.lots.filter(l=>!f||l.m===f).map(l=>{const sv=l.st==='award'?l.nmck-l.fin:0;const tl=MON.en.map((_,i)=>`<i class="${i===l.mo?'pub':i===l.mo+1&&l.st!=='plan'?'auc':i===l.mo+2&&l.st==='award'?'con':''}" title="${MON[PT.lang][i]}"></i>`).join('');
+    return `<tr><td class="mono">${l.id}</td><td style="white-space:normal;min-width:200px">${esc(L(l.s))}<div class="mono muted" style="font-size:11px">${l.kbk}</div></td><td>${L(METH[l.m])}</td><td class="num mono">${rub(l.nmck)}</td><td class="num mono">${l.fin?rub(l.fin):'—'}</td><td class="num mono" style="color:var(--mal3)">${sv?rub(sv)+' · '+(sv/l.nmck*100).toFixed(1)+'%':'—'}</td><td><div class="tl">${tl}</div></td><td><span class="pill ${LST[l.st].k}">${L(LST[l.st])}</span>${l.win?`<div class="muted" style="font-size:11px">${esc(l.win)}</div>`:''}</td><td>${l.st==='pub'&&l.m==='auction'?`<button class="btn sm gold" data-auc="${l.id}">${T('Run auction','К торгам')}</button>`:l.st==='plan'?`<button class="btn sm" data-pub="${l.id}">${T('Publish','Разместить')}</button>`:l.st==='pub'?`<button class="btn sm" data-eval="${l.id}">${T('Evaluate bids','Оценить заявки')}</button>`:''}</td></tr>`}).join('')+'</tbody>'}
+$('#tLots').onclick=e=>{const a=e.target.closest('[data-auc]'),p=e.target.closest('[data-pub]'),v=e.target.closest('[data-eval]');
+  if(a){go('auc');$('#aLot').value=a.dataset.auc;aucIdle()}
+  if(p){const l=S.lots.find(x=>x.id===p.dataset.pub);l.st='pub';l.mo=Math.max(l.mo,CUR);store.save();renderProc();nav();toast(T('Notice published','Извещение размещено'))}
+  if(v){const l=S.lots.find(x=>x.id===v.dataset.eval);const k=l.m==='quot'?.88+Math.random()*.07:.9+Math.random()*.06;l.fin=Math.round(l.nmck*k/1e3)*1e3;l.win=L(BOTS[Math.floor(Math.random()*4)].n);l.st='award';store.save();renderProc();toast(T('Bids evaluated: contract with ','Заявки оценены: контракт с ')+l.win,'gold')}};
+$('#lotCsv').onclick=()=>csv('procurement-schedule.csv',[['lot','subject','method','kbk','nmck','final','savings','status']].concat(S.lots.map(l=>[l.id,L(l.s),L(METH[l.m]),l.kbk,l.nmck,l.fin,l.fin?l.nmck-l.fin:0,L(LST[l.st])])));
+
+/* ---------- e-auction ---------- */
+let A=null,aT=null;
+function aucLots(){return S.lots.filter(l=>l.m==='auction'&&l.st==='pub')}
+function fillAuc(){const v=$('#aLot').value;const ls=aucLots();$('#aLot').innerHTML=ls.length?ls.map(l=>`<option value="${l.id}">${l.id} · ${esc(L(l.s))} · ${rub(l.nmck)}</option>`).join(''):`<option value="">${T('No published auction lots — add one in the schedule','Нет размещённых аукционов — добавьте лот в план-график')}</option>`;if(v&&ls.find(l=>l.id===v))$('#aLot').value=v;$('#aStart').disabled=!ls.length||(A&&A.live)}
+function aucIdle(){if(A&&A.live)return;const l=S.lots.find(x=>x.id===$('#aLot').value);A=l?{lot:l,best:l.nmck,bids:[],live:false,t:0,left:0,who:null}:null;drawAuc()}
+$('#aLot').onchange=aucIdle;
+function stopAuc(){clearInterval(aT);aT=null;if(A)A.live=false}
+$('#aStart').onclick=()=>{aucIdle();if(!A)return;const r=rng(Date.now()%1e6);A.live=true;A.left=30;A.t=0;A.bots=BOTS.map((b,i)=>({...b,floor:A.lot.nmck*(.74+r()*.18),agg:.25+r()*.4}));A.log=[];$('#aRes').innerHTML='';
+  aLog(T('Auction opened. NMCK ','Торги открыты. НМЦК ')+rub(A.lot.nmck),null);fillAuc();
+  aT=setInterval(()=>{A.t+=.5;A.left-=.5;const step=A.lot.nmck*.005;
+    const cand=A.bots.filter(b=>b.n!==A.who&&A.best-step>b.floor&&Math.random()<b.agg*.45);
+    if(cand.length){const b=cand[Math.floor(Math.random()*cand.length)];const k=1+Math.floor(Math.random()*Math.random()*6);bid(Math.max(b.floor,A.best-step*k),b)}
+    if(A.left<=0)finish();drawAuc()},500);
+};
+function bid(v,b){v=Math.round(v/100)*100;A.best=v;A.who=b?b.n:'me';A.bids.push({t:A.t,v,b});A.left=Math.max(A.left,20);aLog(rub(v)+' · −'+((A.lot.nmck-v)/A.lot.nmck*100).toFixed(2)+'%',b)}
+function aLog(m,b){A.log.unshift(`<div class="${b===undefined?'me':''}"><span class="t">${now()}</span><span class="dot" style="background:${b?b.c:b===null?'var(--dim)':'var(--gold)'}"></span><span style="flex:1">${b?esc(L(b.n)):b===null?'':T('You (Arctic Systems)','Вы (Арктик Системс)')}</span><b class="mono">${m}</b></div>`);$('#aLog').innerHTML=A.log.join('')}
+$('#aBid').onclick=()=>{if(!A||!A.live){toast(T('Start the auction first','Сначала начните аукцион'),'bad');return}const v=num($('#aIn').value),mn=A.lot.nmck*.005,mx=A.lot.nmck*.05;
+  if(A.who==='me'){toast(T('Your bid is already the best','Ваша ставка уже лучшая'),'gold');return}
+  if(!(v<=A.best-mn+1)){toast(T('Bid must be at least 0.5% of NMCK below current best','Ставка должна быть ниже лучшей минимум на 0,5% НМЦК'),'bad');return}
+  if(v<A.best-mx-1){toast(T('Step cannot exceed 5% of NMCK','Шаг не может превышать 5% НМЦК'),'bad');return}
+  bid(v,undefined);drawAuc()};
+$$('[data-step]').forEach(b=>b.onclick=()=>{if(!A)return;$('#aIn').value=Math.round((A.best-A.lot.nmck*b.dataset.step/100)/100)*100;if(A.live)$('#aBid').click()});
+function finish(){stopAuc();const l=A.lot;const win=A.who==='me'?T('Arctic Systems LLC (you)','ООО «Арктик Системс» (вы)'):A.who?L(A.who):null;
+  if(!win){$('#aRes').innerHTML=`<div class="block">${T('No bids — auction declared failed; contract with single participant at NMCK.','Ставок нет — аукцион признан несостоявшимся.')}</div>`;fillAuc();return}
+  l.fin=A.best;l.win=win;l.st='award';store.save();nav();const sv=l.nmck-l.fin;
+  $('#aRes').innerHTML=`<div class="okbox"><div style="font-size:16px;font-weight:800;margin-bottom:4px">🏆 ${T('Winner','Победитель')}: ${esc(win)}</div>${T('Contract price','Цена контракта')} <b class="mono">${rub(l.fin)}</b> · ${T('savings','экономия')} <b class="mono" style="color:var(--mal3)">${rub(sv)} (${(sv/l.nmck*100).toFixed(2)}%)</b> · ${A.bids.length} ${T('bids','ставок')}<div style="margin-top:8px"><button class="btn sm pri" id="aObl">${T('Register contract obligation →','Поставить обязательство по контракту →')}</button></div></div>`;
+  $('#aObl').onclick=()=>{go('obl');$('#oKbk').value=l.kbk;const si=A.who==='me'?2:SUP.findIndex(s=>s.n.en.startsWith(A.who.en.split(' ')[0]));$('#oSup').value=si<0?2:si;$('#oNo').value='GK-'+l.id.slice(4)+'/26';$('#oAmt').value=Math.round(l.fin).toLocaleString('ru-RU');oRem()};
+  toast('🏆 '+win,'gold');fillAuc()}
+function drawAuc(){fillAuc();if(!A){$('#aBest').textContent='—';$('#aChart').innerHTML='';return}
+  $('#aBest').textContent=rub(A.best);const d=(A.lot.nmck-A.best)/A.lot.nmck*100;$('#aDrop').innerHTML=`<span class="muted">${T('NMCK','НМЦК')} ${rub(A.lot.nmck)}</span> · <b style="color:var(--mal3)">−${d.toFixed(2)}%</b>${A.who?` · ${A.who==='me'?`<b style="color:var(--gold2)">${T('you lead','вы лидируете')}</b>`:esc(L(A.who))}`:''}`;
+  const tm=$('#aTimer');const s=Math.max(0,Math.ceil(A.left));tm.textContent=A.live?'00:'+String(s).padStart(2,'0'):A.lot.st==='award'?T('closed','завершён'):'--:--';tm.classList.toggle('low',A.live&&s<=8);
+  if(!$('#aIn').value||!A.live)$('#aIn').value=Math.round((A.best-A.lot.nmck*.01)/100)*100;
+  const W=600,H=200,P={l:8,r:8,t:12,b:18};const tmax=Math.max(30,A.t+2),lo=Math.min(A.best,A.lot.nmck*.85);const x=t=>P.l+(t/tmax)*(W-P.l-P.r),y=v=>P.t+(A.lot.nmck-v)/(A.lot.nmck-lo)*(H-P.t-P.b);
+  let pts=`M${x(0)},${y(A.lot.nmck)}`,dots='',pv=A.lot.nmck;A.bids.forEach(b=>{pts+=` L${x(b.t)},${y(pv)} L${x(b.t)},${y(b.v)}`;pv=b.v;dots+=`<circle cx="${x(b.t)}" cy="${y(b.v)}" r="4" fill="${b.b?b.b.c:css('--gold')}"/>`});pts+=` L${x(A.t)},${y(pv)}`;
+  $('#aChart').innerHTML=`<svg viewBox="0 0 ${W} ${H}"><line x1="${P.l}" x2="${W-P.r}" y1="${y(A.lot.nmck)}" y2="${y(A.lot.nmck)}" stroke="${css('--line2')}" stroke-dasharray="4 3"/><text x="${W-P.r}" y="${y(A.lot.nmck)-4}" text-anchor="end" font-size="10" fill="${css('--dim')}">NMCK</text><path d="${pts}" fill="none" stroke="${css('--mal3')}" stroke-width="2"/>${dots}</svg>`}
+
+/* ---------- reports ---------- */
+const REPS=[['exec',{en:'Budget execution by code (form 0503117-like)',ru:'Исполнение бюджета по КБК (аналог ф. 0503117)'}],['pay',{en:'Register of payment orders',ru:'Реестр платёжных поручений'}],['proc',{en:'Procurement savings report',ru:'Отчёт об экономии по закупкам'}]];
+function repData(){const t=$('#rT').value||'exec';
+  if(t==='exec')return{h:[T('Code','КБК'),T('Name','Наименование'),T('Limit','Лимит'),T('Obligations','Обязательства'),T('Paid','Оплачено'),T('% exec.','% исп.')],r:LEAVES.map(l=>{const k=S.kbk[l.code];return[l.code,L(l.n),mln(l.limit),mln(k.oblig),mln(k.paid),(k.paid/l.limit*100).toFixed(1)]}),raw:LEAVES.map(l=>[l.code,L(l.n),l.limit,S.kbk[l.code].oblig,S.kbk[l.code].paid])};
+  if(t==='pay')return{h:['№',T('Recipient','Получатель'),T('Code','КБК'),T('Amount','Сумма'),T('Status','Статус')],r:S.pay.map(p=>[p.id,L(SUP[p.sup].n),p.kbk,rub(p.amt),L(PST[p.st])]),raw:S.pay.map(p=>[p.id,L(SUP[p.sup].n),p.kbk,p.amt,L(PST[p.st])])};
+  return{h:[T('Lot','Лот'),T('Subject','Предмет'),T('Method','Способ'),'NMCK',T('Final','Итог'),T('Savings','Экономия')],r:S.lots.map(l=>[l.id,L(l.s),L(METH[l.m]),rub(l.nmck),l.fin?rub(l.fin):'—',l.fin?rub(l.nmck-l.fin):'—']),raw:S.lots.map(l=>[l.id,L(l.s),L(METH[l.m]),l.nmck,l.fin,l.fin?l.nmck-l.fin:0])}}
+function renderRep(){const v=$('#rT').value;$('#rT').innerHTML=REPS.map(r=>`<option value="${r[0]}">${L(r[1])}</option>`).join('');if(v)$('#rT').value=v;const d=repData();const nm=L(REPS.find(r=>r[0]===($('#rT').value||'exec'))[1]);
+  $('#printArea').innerHTML=`<div class="doc"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:12px"><div><h2>${esc(nm)}</h2><div>${T('Regional treasury of the Northern Province (fictional)','Казначейство Северной губернии (вымышленное)')}</div></div><div style="text-align:right">${T('Date','Дата')}: ${today()}<br>${T('Units: ₽ M where shown','Ед.: млн ₽ где указано')}</div></div><div style="overflow-x:auto"><table><thead><tr>${d.h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${d.r.map(r=>`<tr>${r.map((c,i)=>`<td class="${i>1?'num':''}" style="white-space:normal">${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><div style="margin-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px"><span>${T('Head of treasury','Руководитель казначейства')} ________ / A. Verkhovtsev /</span><span>${T('Generated by Kazna-Pro','Сформировано в Казна-Про')}</span></div></div>`}
+$('#rT').onchange=renderRep;$('#rPrint').onclick=()=>window.print();
+$('#rCsv').onclick=()=>{const d=repData();csv('report-'+($('#rT').value||'exec')+'.csv',[d.h].concat(d.raw))};
+
+/* ---------- render ---------- */
+function render(){roles();if(cur==='home')renderHome();if(cur==='kbk')renderKbk();if(cur==='obl')renderObl();if(cur==='pay')renderPay();if(cur==='cash')renderCash();if(cur==='proc')renderProc();if(cur==='auc'){fillAuc();if(!A||!A.live)aucIdle();else drawAuc()}if(cur==='rep')renderRep()}
+PT.onLang(()=>{const V=VIEWS.find(x=>x[0]===cur);$('#title').textContent=L(V[2]);$('#crumb').textContent=T('Regional treasury','Казначейство губернии')+' / '+L(V[2]);nav();render();if(A&&A.log)$('#aLog').innerHTML=A.log.join('')});
+document.addEventListener('DOMContentLoaded',()=>{go(location.hash.slice(1)&&VIEWS.find(v=>v[0]===location.hash.slice(1))?location.hash.slice(1):'home')});
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

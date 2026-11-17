@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EpiWatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--red);color:#fff;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.g{background:var(--gold);color:#1a1306}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center}
+.who i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold2);font-style:normal;font-weight:800;flex:none}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{color:var(--red);font-size:11.5px;margin-top:3px}
+.input.bad{border-color:var(--red)}
+select.input.sm{padding:6px 10px;width:auto;font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.up{color:var(--red)}.dn{color:var(--mal3)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:12.5px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.chart svg,.map svg{width:100%;height:auto;display:block}
+.map .hex{cursor:pointer;transition:opacity .15s}
+.map .hex:hover{opacity:.85}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;align-items:center}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.scale{display:flex;height:10px;border-radius:6px;overflow:hidden;width:160px}
+.scale span{flex:1}
+.stream{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow:auto}
+.msg{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:9px 12px;background:var(--bg2);font-size:13px}
+.msg.new{animation:flash 1.2s}
+@keyframes flash{from{background:color-mix(in srgb,var(--gold) 22%,transparent)}}
+.msg .tag{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 7px;border-radius:7px}
+.msg .tag.pos{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}
+.msg .tag.neg{background:color-mix(in srgb,var(--mal) 15%,transparent);color:var(--mal3)}
+.msg .b{min-width:0}.msg .b b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg .b span{font-size:11.5px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 1.2s infinite}
+.live.off{background:var(--dim);animation:none}
+@keyframes pulse{50%{opacity:.25}}
+.al{border-radius:12px;padding:11px 13px;border:1px solid;margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
+.al.hi{border-color:var(--red);background:color-mix(in srgb,var(--red) 9%,transparent)}
+.al.mo{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,transparent)}
+.al.ack{border-color:var(--line2);opacity:.6}
+.al .t{flex:1;min-width:180px}
+.al .t b{display:block}
+.sw{position:relative;width:38px;height:22px;border-radius:12px;background:var(--line2);border:0;cursor:pointer;flex:none;padding:0}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+.sw.on{background:var(--mal)}.sw.on::after{left:19px}
+.steps{display:flex;gap:4px;margin:6px 0 12px}
+.steps span{flex:1;height:6px;border-radius:4px;background:var(--line)}
+.steps span.on{background:var(--mal)}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.gate{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(900px 500px at 80% 0%,color-mix(in srgb,var(--gold) 12%,transparent),transparent),var(--bg)}
+.gate .box{width:100%;max-width:420px}
+.gate .logo{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+.gate .logo b{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:22px}
+.gate h2{margin:0;font-size:22px}
+.empty{padding:26px;text-align:center;color:var(--muted);font-size:13.5px}
+.mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;font-size:12.5px}
+.mini div{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg2)}
+.mini b{display:block;font-size:17px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.msg{grid-template-columns:auto minmax(0,1fr)}.msg>.btn,.msg>.pill{grid-column:1/-1;justify-self:start}}
+</style>
+</head>
+<body data-demo-en="EpiWatch — public health surveillance & data modernisation" data-demo-ru="EpiWatch — эпиднадзор и модернизация данных">
+<div class="gate" id="gate">
+  <div class="box card">
+    <div class="logo"><b>◉</b><div><h2>EpiWatch</h2><div class="muted" style="font-size:13px" data-en="National notifiable disease surveillance" data-ru="Национальный надзор за инфекциями"></div></div></div>
+    <div class="f" style="margin-bottom:10px"><label data-en="Agency email" data-ru="Служебная почта"></label><input class="input" id="lgU" value="epi.analyst@dca.demo"></div>
+    <div class="f" style="margin-bottom:10px"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lgP" type="password" value="demo-2025"></div>
+    <div class="f" style="margin-bottom:14px"><label data-en="Role" data-ru="Роль"></label><div class="input" style="font-size:13.5px" data-en="Epidemiologist · national level" data-ru="Эпидемиолог · федеральный уровень"></div></div>
+    <button class="btn pri" id="login" style="width:100%;justify-content:center" data-en="Sign in to demo" data-ru="Войти в демо"></button>
+    <div class="muted" style="font-size:12px;margin-top:10px;text-align:center" data-en="Demo credentials prefilled · PIV card step skipped" data-ru="Демо-данные введены · шаг со смарт-картой пропущен"></div>
+  </div>
+</div>
+<div class="app" id="app" style="display:none">
+  <aside class="side" id="side">
+    <div class="brand"><b>◉</b><div>EpiWatch<small data-en="Disease Control Agency" data-ru="Агентство контроля заболеваний"></small></div></div>
+    <div class="sec" data-en="Surveillance" data-ru="Надзор"></div>
+    <div id="navA"></div>
+    <div class="sec" data-en="Response" data-ru="Реагирование"></div>
+    <div id="navB"></div>
+    <div class="grow"></div>
+    <div class="who"><i>JR</i><div><b>Dr. Jordan Reyes</b><div class="muted" data-en="Epidemiologist · NCEZ" data-ru="Эпидемиолог · НЦЭЗ"></div></div></div>
+    <button class="btn sm" id="logout" style="margin-top:8px;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+    <button class="btn sm" id="reset" style="margin-top:6px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill" id="feedPill"></span>
+    </div>
+    <section class="view" id="v-trend"></section>
+    <section class="view" id="v-map"></section>
+    <section class="view" id="v-elr"></section>
+    <section class="view" id="v-cases"></section>
+    <section class="view" id="v-alerts"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt_epi_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const N=90,TODAY=N-1;
+const dayDate=i=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-(TODAY-i));return d};
+const fD=i=>dayDate(i).toLocaleDateString(loc(),{month:'short',day:'numeric'});
+const fT=t=>new Date(t).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const iso=d=>d.toISOString().slice(0,10);
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+
+/* diseases: key, en, ru, base/day/100k*1e3, loinc, test en, ru */
+const DIS={flu:['Influenza A/B','Грипп A/B',9,'92142-9','Influenza A+B RNA PCR','ПЦР грипп A+B'],cov:['COVID-19','COVID-19',7,'94500-6','SARS-CoV-2 RNA PCR','ПЦР SARS-CoV-2'],sal:['Salmonellosis','Сальмонеллёз',.9,'17563-8','Salmonella stool culture','Посев кала на сальмонеллы'],per:['Pertussis','Коклюш',.35,'43913-3','B. pertussis DNA PCR','ПЦР B. pertussis'],mea:['Measles','Корь',.04,'48019-4','Measles IgM','Корь IgM'],leg:['Legionellosis','Легионеллёз',.12,'32781-7','Legionella urinary antigen','Антиген легионеллы в моче'],hep:['Hepatitis A','Гепатит A',.15,'13950-1','HAV IgM','ВГА IgM'],lym:['Lyme disease','Болезнь Лайма',.5,'20449-5','B. burgdorferi Ab','Антитела B. burgdorferi']};
+/* jurisdictions: id, en, ru, pop (M), hex col,row */
+const REG=[['NG','Northgate','Нортгейт',3.1,1,0],['HL','Highland','Хайленд',1.4,2,0],['SM','Summit','Саммит',2.2,3,0],['LK','Lakeshore','Лейкшор',6.8,0,1],['PC','Pinecrest','Пайнкрест',2.6,1,1],['RB','Riverbend','Ривербенд',4.9,2,1],['BV','Bayview','Бэйвью',5.4,3,1],['CP','Coastal Plains','Прибрежные равнины',3.7,0,2],['PR','Prairie','Прерия',1.9,1,2],['RR','Redrock','Редрок',2.3,2,2],['DL','Delta','Дельта',4.2,3,2],['FR','Frontier','Фронтир',.9,4,2]];
+const LABS=['Northgate Public Health Lab','Quest Regional Diagnostics','Bayview University Hospital','Riverbend Clinical Lab','Pinecrest Reference Lab','Delta State Lab'];
+
+let DATA=null;
+function gen(){
+  const r=rng(2025);const d={};
+  Object.keys(DIS).forEach((k,ki)=>{d[k]={};REG.forEach((g,gi)=>{const a=[];for(let i=0;i<N;i++){
+    let lam=DIS[k][2]*g[3]*1e-3*100*(.8+.4*Math.sin((i+gi*7)/14));
+    if(k==='flu')lam*=1+2.2*Math.exp(-Math.pow((i-70)/14,2));
+    if(k==='cov')lam*=1+.8*Math.exp(-Math.pow((i-40)/10,2))+.0*i;
+    if(k==='mea'&&g[0]==='PC'&&i>=TODAY-16)lam+=.6+(i-(TODAY-16))*.35;
+    if(k==='sal'&&g[0]==='RB'&&i>=TODAY-10)lam*=4.5;
+    if(k==='leg'&&g[0]==='BV'&&i>=TODAY-8)lam+=1.6;
+    if(k==='per'&&g[0]==='LK')lam*=1+i/60;
+    const w=new Date(dayDate(i)).getDay();if(w===0||w===6)lam*=.6;
+    let n=0,L=Math.exp(-Math.min(lam,60)),p=1;if(lam>40)n=Math.round(lam+Math.sqrt(lam)*(r()*2-1));else{do{n++;p*=r()}while(p>L);n--}
+    a.push(Math.max(0,n))}d[k][g[0]]=a})});
+  return d;
+}
+function series(dis,reg){const out=new Array(N).fill(0);const ks=dis==='all'?Object.keys(DIS):[dis];const rs=reg==='all'?REG.map(g=>g[0]):[reg];
+  ks.forEach(k=>rs.forEach(g=>{const a=DATA[k][g];for(let i=0;i<N;i++)out[i]+=a[i]}));
+  Object.entries(S.add).forEach(([key,v])=>{const [k,g]=key.split('|');if(ks.includes(k)&&rs.includes(g))out[TODAY]+=v});return out}
+const sum=(a,f,t)=>a.slice(f,t).reduce((x,y)=>x+y,0);
+const wk=a=>sum(a,N-7,N),pwk=a=>sum(a,N-14,N-7);
+const rise=a=>{const p=pwk(a);return p?Math.round((wk(a)-p)/p*100):(wk(a)?100:0)};
+const per100k=(n,g)=>n/(REG.find(x=>x[0]===g)[3]*10);
+
+function seed(){
+  return{auth:false,view:'trend',tDis:'all',tReg:'all',tRange:60,mDis:'mea',mSel:'PC',add:{},
+    elr:[],elrN:48211,paused:false,elrF:'all',
+    cases:[
+      {id:'EW-25-10412',ini:'AK',age:4,sex:'M',dis:'mea',reg:'PC',onset:iso(dayDate(TODAY-6)),hosp:true,vax:'none',exp:'school',contacts:23,status:'int',notes:['Unvaccinated, sibling of index case. Rash day 4.','Не привит, брат индексного случая. Сыпь на 4-й день.']},
+      {id:'EW-25-10408',ini:'MT',age:7,sex:'F',dis:'mea',reg:'PC',onset:iso(dayDate(TODAY-11)),hosp:false,vax:'none',exp:'school',contacts:31,status:'int',notes:['Index case. Travel abroad 3 weeks ago.','Индексный случай. Поездка за рубеж 3 недели назад.']},
+      {id:'EW-25-10399',ini:'LD',age:58,sex:'M',dis:'leg',reg:'BV',onset:iso(dayDate(TODAY-5)),hosp:true,vax:'na',exp:'hotel',contacts:0,status:'asg',notes:['Stayed at harbour hotel; cooling tower suspected.','Жил в отеле у порта; подозрение на градирню.']},
+      {id:'EW-25-10377',ini:'SP',age:33,sex:'F',dis:'sal',reg:'RB',onset:iso(dayDate(TODAY-8)),hosp:false,vax:'na',exp:'food',contacts:4,status:'new',notes:['Ate at street-food festival.','Ела на фестивале уличной еды.']},
+      {id:'EW-25-10290',ini:'GH',age:71,sex:'M',dis:'hep',reg:'DL',onset:iso(dayDate(TODAY-30)),hosp:true,vax:'none',exp:'food',contacts:2,status:'cls',notes:['Recovered. Source: imported frozen berries.','Выздоровел. Источник: импортные замороженные ягоды.']}],
+    nextC:10420,cSel:null,cF:'all',
+    th:[{id:1,dis:'mea',reg:'all',m:'week',v:3,on:true},{id:2,dis:'sal',reg:'all',m:'rise',v:50,on:true},{id:3,dis:'leg',reg:'BV',m:'week',v:5,on:true},{id:4,dis:'flu',reg:'all',m:'rise',v:40,on:true},{id:5,dis:'per',reg:'LK',m:'week',v:12,on:false}],
+    nextTh:6,ack:{}};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+DATA=gen();
+
+const VIEWS=[['trend','📈','Case trends','Динамика случаев','A'],['map','🗺','Outbreak map','Карта вспышек','A'],['elr','🧪','Lab report stream','Поток лаб. отчётов','A'],['cases','📋','Case investigations','Расследования случаев','B'],['alerts','🚨','Alert thresholds','Пороги оповещений','B']];
+function alerts(){
+  return S.th.filter(t=>t.on).map(t=>{const a=series(t.dis,t.reg);const val=t.m==='week'?wk(a):rise(a);return{t,val,hit:val>=t.v}}).filter(x=>x.hit);
+}
+function nav(){
+  const al=alerts().filter(x=>!S.ack[x.t.id]).length;const nc=S.cases.filter(c=>c.status==='new').length;
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';
+    if(v[0]==='alerts'&&al)x=`<span class="cnt">${al}</span>`;
+    if(v[0]==='cases'&&nc)x=`<span class="cnt g">${nc}</span>`;
+    if(v[0]==='elr')x=`<span class="live ${S.paused?'off':''}" style="margin-left:auto"></span>`;
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navA').innerHTML=mk('A');$('#navB').innerHTML=mk('B');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0})}
+function render(){
+  $('#gate').style.display=S.auth?'none':'grid';$('#app').style.display=S.auth?'grid':'none';
+  if(!S.auth){stopStream();return}
+  nav();const v=VIEWS.find(x=>x[0]===S.view);
+  $('#title').textContent=T(v[2],v[3]);
+  $('#crumb').textContent=T('Disease Control Agency · ','Агентство контроля заболеваний · ')+(v[4]==='A'?T('Surveillance','Надзор'):T('Response','Реагирование'));
+  $('#feedPill').innerHTML=`<span class="live ${S.paused?'off':''}"></span> ELR · FHIR R4 · ${T('12 jurisdictions','12 юрисдикций')}`;
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+S.view));
+  ({trend:rTrend,map:rMap,elr:rElr,cases:rCases,alerts:rAlerts})[S.view]();
+  syncStream();
+}
+const disOpts=(sel,all)=>(all?`<option value="all" ${sel==='all'?'selected':''}>${T('All diseases','Все болезни')}</option>`:'')+Object.entries(DIS).map(([k,v])=>`<option value="${k}" ${sel===k?'selected':''}>${T(v[0],v[1])}</option>`).join('');
+const regOpts=(sel,all)=>(all?`<option value="all" ${sel==='all'?'selected':''}>${T('All jurisdictions','Все юрисдикции')}</option>`:'')+REG.map(g=>`<option value="${g[0]}" ${sel===g[0]?'selected':''}>${T(g[1],g[2])}</option>`).join('');
+const dn=k=>T(DIS[k][0],DIS[k][1]), rn=g=>{const x=REG.find(r=>r[0]===g);return x?T(x[1],x[2]):T('All jurisdictions','Все юрисдикции')};
+
+/* ---------- TRENDS ---------- */
+function rTrend(){
+  const el=$('#v-trend');const a=series(S.tDis,S.tReg);const R=S.tRange;const from=N-R;
+  const m=cssv('--mal'),g=cssv('--gold'),ln=cssv('--line'),mu=cssv('--dim'),rd=cssv('--red'),bl=cssv('--blue');
+  const ma=a.map((_,i)=>i<6?null:sum(a,i-6,i+1)/7);
+  const vis=a.slice(from),mx=Math.max(4,...vis)*1.12;const W=720,H=260,PL=38,PB=26,PT_=12;
+  const bw=(W-PL-8)/R,x=i=>PL+(i-from)*bw,y=v=>H-PB-(v/mx)*(H-PB-PT_);
+  let bars='';for(let i=from;i<N;i++){const h=H-PB-y(a[i]);bars+=`<rect x="${(x(i)+bw*.12).toFixed(1)}" y="${y(a[i]).toFixed(1)}" width="${(bw*.76).toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" rx="1.5" fill="${i===TODAY?g:m}" opacity="${i===TODAY?1:.38}"><title>${fD(i)}: ${a[i]}</title></rect>`}
+  const lp=ma.map((v,i)=>i>=from&&v!=null?`${x(i)+bw/2},${y(v)}`:null).filter(Boolean);
+  const ticks=[0,.25,.5,.75,1].map(f=>{const v=Math.round(mx*f);return `<line x1="${PL}" x2="${W-8}" y1="${y(v)}" y2="${y(v)}" stroke="${ln}"/><text x="${PL-6}" y="${y(v)+4}" font-size="10" text-anchor="end" fill="${mu}">${v}</text>`}).join('');
+  const step=R>60?15:R>30?10:5;let xl='';for(let i=TODAY;i>=from;i-=step)xl+=`<text x="${x(i)+bw/2}" y="${H-8}" font-size="10" text-anchor="middle" fill="${mu}">${fD(i)}</text>`;
+  const w=wk(a),pw=pwk(a),ch=rise(a);
+  const byD=Object.keys(DIS).map(k=>{const s=series(k,S.tReg);return{k,w:wk(s),r:rise(s),sp:s.slice(N-28)}}).sort((p,q)=>q.w-p.w);
+  const spark=(s,c)=>{const M=Math.max(1,...s);return `<svg viewBox="0 0 84 22" width="84" height="22"><polyline fill="none" stroke="${c}" stroke-width="1.6" points="${s.map((v,i)=>`${(i*84/(s.length-1)).toFixed(1)},${(20-v/M*18).toFixed(1)}`).join(' ')}"/></svg>`};
+  const elrToday=S.elr.filter(e=>e.res==='POS').length;
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Cases · last 7 days','Случаи · 7 дней')}</div><div class="v">${w.toLocaleString(loc())}</div><div class="d"><span class="${ch>0?'up':'dn'}">${ch>0?'▲':'▼'} ${Math.abs(ch)}%</span> ${T('vs prior week','к прошлой неделе')}</div></div>
+   <div class="card kpi"><div class="l">${T('Reported today','Сегодня')}</div><div class="v" style="color:${g}">${a[TODAY]}</div><div class="d">${T('incl. live ELR positives','вкл. положительные ELR')}: ${elrToday}</div></div>
+   <div class="card kpi"><div class="l">${T('Open investigations','Открытые расследования')}</div><div class="v">${S.cases.filter(c=>c.status!=='cls').length}</div><div class="d">${S.cases.filter(c=>c.status==='new').length} ${T('unassigned','не назначено')}</div></div>
+   <div class="card kpi"><div class="l">${T('Active alerts','Активные оповещения')}</div><div class="v" style="color:${rd}">${alerts().filter(x=>!S.ack[x.t.id]).length}</div><div class="d">${S.th.filter(t=>t.on).length} ${T('thresholds on','порогов вкл.')}</div></div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('Daily case counts','Случаи по дням')}<span class="sp"></span>
+    <select class="input sm" id="tDis">${disOpts(S.tDis,1)}</select><select class="input sm" id="tReg">${regOpts(S.tReg,1)}</select></h3>
+   <div class="row" style="margin-bottom:8px"><div class="chips">${[30,60,90].map(r=>`<button class="chip ${R===r?'on':''}" data-rg="${r}">${r} ${T('days','дн.')}</button>`).join('')}</div><span class="sp" style="flex:1"></span><span class="legend"><span><i style="background:${m};opacity:.5"></i>${T('Daily','За день')}</span><span><i style="background:${bl}"></i>${T('7-day average','Среднее 7 дн.')}</span><span><i style="background:${g}"></i>${T('Today (provisional)','Сегодня (предв.)')}</span></span></div>
+   <svg viewBox="0 0 ${W} ${H}">${ticks}${bars}<polyline fill="none" stroke="${bl}" stroke-width="2.4" points="${lp.join(' ')}"/>${xl}</svg>
+   <div class="row" style="margin-top:8px"><button class="btn sm" id="csv">⬇ ${T('Export CSV','Экспорт CSV')}</button><span class="muted" style="font-size:12px">${T('Source: ELR + eCR feeds, deduplicated by patient key','Источник: ELR + eCR, дедупликация по ключу пациента')}</span></div></div>
+  <div class="card"><h3>${T('By disease · 7 days','По болезням · 7 дней')}<span class="sp"></span><span class="pill">${rn(S.tReg)}</span></h3>
+   <div class="tw"><table><thead><tr><th>${T('Disease','Болезнь')}</th><th>${T('Cases','Случаи')}</th><th>Δ</th><th>${T('28 days','28 дней')}</th></tr></thead><tbody>
+   ${byD.map(d=>`<tr class="clk ${S.tDis===d.k?'sel':''}" data-td="${d.k}"><td><b>${dn(d.k)}</b></td><td class="mono">${d.w}</td><td class="mono ${d.r>0?'up':'dn'}">${d.r>0?'+':''}${d.r}%</td><td>${spark(d.sp,d.r>=40?rd:m)}</td></tr>`).join('')}</tbody></table></div></div></div>`;
+  $('#tDis',el).onchange=e=>{S.tDis=e.target.value;save();rTrend()};$('#tReg',el).onchange=e=>{S.tReg=e.target.value;save();rTrend()};
+  $$('[data-rg]',el).forEach(b=>b.onclick=()=>{S.tRange=+b.dataset.rg;save();rTrend()});
+  $$('[data-td]',el).forEach(r=>r.onclick=()=>{S.tDis=S.tDis===r.dataset.td?'all':r.dataset.td;save();rTrend()});
+  $('#csv',el).onclick=()=>{const rows=['date,cases,avg7'];for(let i=from;i<N;i++)rows.push(iso(dayDate(i))+','+a[i]+','+(ma[i]==null?'':ma[i].toFixed(1)));
+    try{const u=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));const l=document.createElement('a');l.href=u;l.download='epiwatch_'+S.tDis+'_'+S.tReg+'.csv';document.body.append(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),500)}catch(e){}
+    toast(T('CSV exported · ','CSV выгружен · ')+(rows.length-1)+T(' rows',' строк'))};
+}
+
+/* ---------- MAP ---------- */
+function rMap(){
+  const el=$('#v-map');const k=S.mDis;const mu=cssv('--muted'),pn=cssv('--panel2'),tx=cssv('--text'),rd=cssv('--red'),ln=cssv('--line2');
+  const vals=REG.map(g=>{const s=series(k,g[0]);return{g,w:wk(s),inc:per100k(wk(s),g[0]),r:rise(s),s}});
+  const mx=Math.max(.01,...vals.map(v=>v.inc));
+  const pal=['#fdf0c4','#f9c97a','#f39a4c','#e3612e','#b8321f'];
+  const colr=v=>v.w===0?pn:pal[Math.min(4,Math.floor(v.inc/mx*4.999))];
+  const R=56,hw=R*Math.sqrt(3)/2;
+  const hex=(cx,cy)=>[0,1,2,3,4,5].map(i=>{const a=Math.PI/180*(60*i-30);return `${(cx+R*.96*Math.cos(a)).toFixed(1)},${(cy+R*.96*Math.sin(a)).toFixed(1)}`}).join(' ');
+  const cl=vals.filter(v=>v.r>=50&&v.w>=3);
+  const shapes=vals.map(v=>{const g=v.g;const cx=60+g[4]*2*hw+(g[5]%2?hw:0),cy=60+g[5]*R*1.5;const dark=pal.indexOf(colr(v))>=3;
+    return `<g class="hex" data-r="${g[0]}"><polygon points="${hex(cx,cy)}" fill="${colr(v)}" stroke="${S.mSel===g[0]?tx:ln}" stroke-width="${S.mSel===g[0]?3:1.2}"/><text x="${cx}" y="${cy-8}" text-anchor="middle" font-size="12" font-weight="800" fill="${dark?'#fff':'#3a2a10'}">${g[0]}</text><text x="${cx}" y="${cy+9}" text-anchor="middle" font-size="11" fill="${dark?'#fff':'#3a2a10'}">${v.w}</text><text x="${cx}" y="${cy+23}" text-anchor="middle" font-size="9" fill="${dark?'#ffe':'#6a5a40'}">${v.inc.toFixed(1)}/100k</text>${cl.includes(v)?`<circle cx="${cx+30}" cy="${cy-26}" r="8" fill="${rd}"><animate attributeName="r" values="7;11;7" dur="1.6s" repeatCount="indefinite"/></circle><text x="${cx+30}" y="${cy-22}" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">!</text>`:''}</g>`}).join('');
+  const W=Math.ceil(60+4*2*hw+hw+50),H=60+2*R*1.5+70;
+  const sel=vals.find(v=>v.g[0]===S.mSel)||vals[0];const sr=sel.s.slice(N-28);const sm=Math.max(1,...sr);
+  const linked=S.cases.filter(c=>c.dis===k&&c.reg===sel.g[0]);
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="chips">${Object.entries(DIS).map(([kk,v])=>`<button class="chip ${k===kk?'on':''}" data-md="${kk}">${T(v[0],v[1])}</button>`).join('')}</div></div>
+  <div class="grid2"><div class="card map"><h3>${dn(k)} · ${T('7-day incidence by jurisdiction','заболеваемость за 7 дней')}<span class="sp"></span><span class="legend">${T('low','низк.')}<span class="scale">${pal.map(c=>`<span style="background:${c}"></span>`).join('')}</span>${T('high','выс.')}<span><i style="background:${rd};border-radius:50%"></i>${T('cluster signal','сигнал кластера')}</span></span></h3>
+   <svg viewBox="0 0 ${W} ${H}">${shapes}</svg>
+   <div class="muted" style="font-size:12px">${T('Hex tiles = jurisdictions (equal area). Number = cases in 7 days. Red marker = ≥50% rise with ≥3 cases.','Шестиугольник = юрисдикция. Число — случаи за 7 дней. Красная метка — рост ≥50% при ≥3 случаях.')}</div></div>
+  <div class="stack"><div class="card"><h3>${T(sel.g[1],sel.g[2])}<span class="sp"></span>${cl.includes(sel)?`<span class="pill bad">${T('Cluster','Кластер')}</span>`:`<span class="pill ok">${T('Expected','В норме')}</span>`}</h3>
+   <div class="mini"><div>${T('Cases 7d','Случаи 7 дн.')}<b>${sel.w}</b></div><div>${T('Per 100k','На 100 тыс.')}<b>${sel.inc.toFixed(2)}</b></div><div>${T('Change','Изменение')}<b class="${sel.r>0?'up':'dn'}">${sel.r>0?'+':''}${sel.r}%</b></div><div>${T('Population','Население')}<b>${sel.g[3]}M</b></div></div>
+   <div style="margin-top:12px;font-size:12px" class="muted">${T('Last 28 days','Последние 28 дней')}</div>
+   <svg viewBox="0 0 280 60" style="width:100%;height:auto">${sr.map((v,i)=>`<rect x="${i*10+1}" y="${58-v/sm*54}" width="8" height="${v/sm*54}" rx="1.5" fill="${i>=21?rd:cssv('--mal')}" opacity="${i>=21?.85:.45}"><title>${fD(N-28+i)}: ${v}</title></rect>`).join('')}</svg>
+   <div class="row" style="margin-top:10px"><button class="btn sm" id="mTrend">📈 ${T('Open trend','Открыть динамику')}</button><button class="btn sm gold" id="mCase">+ ${T('Open investigation','Начать расследование')}</button></div></div>
+   <div class="card"><h3>${T('Linked investigations','Связанные расследования')}</h3>${linked.map(c=>`<div class="row" style="padding:6px 0;border-bottom:1px dashed var(--line);font-size:13px"><span class="mono" style="flex:1">${c.id}</span><span>${c.ini} · ${c.age}</span>${stPill(c.status)}</div>`).join('')||`<div class="muted" style="font-size:13px">${T('None yet','Пока нет')}</div>`}</div></div></div>`;
+  $$('[data-md]',el).forEach(b=>b.onclick=()=>{S.mDis=b.dataset.md;save();rMap()});
+  $$('.hex',el).forEach(h=>h.onclick=()=>{S.mSel=h.dataset.r;save();rMap()});
+  $('#mTrend',el).onclick=()=>{S.tDis=k;S.tReg=sel.g[0];go('trend')};
+  $('#mCase',el).onclick=()=>{S.cSel=null;S.draft={dis:k,reg:sel.g[0]};go('cases')};
+}
+
+/* ---------- ELR STREAM ---------- */
+let sTimer=null;
+function stopStream(){if(sTimer){clearInterval(sTimer);sTimer=null}}
+function syncStream(){const want=S.auth&&!S.paused;if(want&&!sTimer)sTimer=setInterval(tickStream,2600);if(!want)stopStream()}
+function mkElr(force){
+  const ks=Object.keys(DIS);const w=[30,24,8,5,2,3,2,4];let x=Math.random()*80,i=0;while(x>w[i]&&i<ks.length-1){x-=w[i];i++}
+  let k=ks[i],g=REG[Math.floor(Math.random()*REG.length)][0];
+  if(k==='mea'&&Math.random()<.7)g='PC';if(k==='sal'&&Math.random()<.5)g='RB';if(k==='leg'&&Math.random()<.6)g='BV';
+  const pos=force||Math.random()<(k==='flu'||k==='cov'?.32:.55);
+  return{id:'ELR-'+(S.elrN++),t:Date.now(),k,g,res:pos?'POS':'NEG',lab:Math.floor(Math.random()*LABS.length),spec:['NP swab','Stool','Serum','Urine'][k==='sal'?1:k==='leg'?3:k==='mea'||k==='hep'||k==='lym'?2:0],age:Math.floor(Math.random()*85)+1,linked:null,isNew:1};
+}
+function ingest(m){S.elr.unshift(m);S.elr=S.elr.slice(0,60);if(m.res==='POS'){const key=m.k+'|'+m.g;S.add[key]=(S.add[key]||0)+1}}
+function tickStream(){
+  const before=new Set(alerts().map(x=>x.t.id));
+  ingest(mkElr());save();
+  const nowA=alerts().filter(x=>!before.has(x.t.id));nowA.forEach(x=>{delete S.ack[x.t.id];toast('🚨 '+T('Threshold crossed: ','Порог превышен: ')+dn(x.t.dis)+' · '+rn(x.t.reg),'bad')});
+  if(nowA.length)save();
+  if(S.view==='elr')rElr();else{nav();if(S.view==='trend')rTrend()}
+}
+function rElr(){
+  const el=$('#v-elr');const f=S.elrF;const list=S.elr.filter(e=>f==='all'||(f==='pos'?e.res==='POS':e.res==='NEG')||(f==='unl'&&e.res==='POS'&&!e.linked));
+  const pos=S.elr.filter(e=>e.res==='POS').length;
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Messages this session','Сообщений за сессию')}</div><div class="v">${S.elr.length}</div><div class="d">HL7 v2.5.1 ORU^R01 → FHIR</div></div><div class="card kpi"><div class="l">${T('Positive','Положительные')}</div><div class="v" style="color:var(--red)">${pos}</div><div class="d">${S.elr.length?Math.round(pos/S.elr.length*100):0}% ${T('positivity','позитивность')}</div></div><div class="card kpi"><div class="l">${T('Unlinked positives','Без расследования')}</div><div class="v" style="color:var(--gold)">${S.elr.filter(e=>e.res==='POS'&&!e.linked).length}</div><div class="d">${T('need triage','требуют разбора')}</div></div><div class="card kpi"><div class="l">${T('Median latency','Медианная задержка')}</div><div class="v">38 ${T('s','с')}</div><div class="d">${T('lab → EpiWatch','лаборатория → EpiWatch')}</div></div></div>
+  <div class="card"><h3><span class="live ${S.paused?'off':''}"></span> ${T('Electronic lab reports','Электронные лаб. отчёты')}<span class="sp"></span>
+   <button class="btn sm" id="ePause">${S.paused?'▶ '+T('Resume','Продолжить'):'⏸ '+T('Pause','Пауза')}</button><button class="btn sm" id="eBurst">⚡ ${T('Simulate burst','Всплеск')}</button></h3>
+   <div class="chips" style="margin-bottom:10px">${[['all','All','Все'],['pos','Positive','Положительные'],['neg','Negative','Отрицательные'],['unl','Unlinked positive','Без расследования']].map(x=>`<button class="chip ${f===x[0]?'on':''}" data-ef="${x[0]}">${T(x[1],x[2])}</button>`).join('')}</div>
+   <div class="stream">${list.map(e=>`<div class="msg ${e.isNew?'new':''}"><span class="tag ${e.res==='POS'?'pos':'neg'}">${e.res==='POS'?T('POS','ПОЛ'):T('NEG','ОТР')}</span><div class="b"><b>${T(DIS[e.k][4],DIS[e.k][5])} · ${dn(e.k)}</b><span class="mono">${e.id} · LOINC ${DIS[e.k][3]} · ${fT(e.t)}</span><span>${LABS[e.lab]} · ${rn(e.g)} · ${T(e.spec,{'NP swab':'Мазок НГ','Stool':'Кал','Serum':'Сыворотка','Urine':'Моча'}[e.spec])} · ${T('age','возр.')} ${e.age}</span></div>${e.res==='POS'?(e.linked?`<span class="pill ok">→ ${e.linked}</span>`:`<button class="btn sm" data-mk="${e.id}">+ ${T('Case','Случай')}</button>`):'<span class="pill">'+T('Filed','В архиве')+'</span>'}</div>`).join('')||`<div class="empty">${S.elr.length?T('No messages match the filter','Нет сообщений по фильтру'):T('Waiting for the first lab message…','Ожидание первого сообщения…')}</div>`}</div></div>`;
+  S.elr.forEach(e=>e.isNew=0);
+  $('#ePause',el).onclick=()=>{S.paused=!S.paused;save();render();toast(S.paused?T('Stream paused','Поток на паузе'):T('Stream resumed','Поток возобновлён'))};
+  $('#eBurst',el).onclick=()=>{const before=new Set(alerts().map(x=>x.t.id));for(let i=0;i<5;i++){const m=mkElr(true);m.k='mea';m.g='PC';m.lab=0;m.spec='Serum';ingest(m)}save();
+    alerts().filter(x=>!before.has(x.t.id)).forEach(x=>{delete S.ack[x.t.id];toast('🚨 '+T('Threshold crossed: ','Порог превышен: ')+dn(x.t.dis),'bad')});render();toast(T('5 measles IgM positives received from Northgate PHL','Получено 5 положительных на корь IgM из лаборатории Нортгейт'),'gold')};
+  $$('[data-ef]',el).forEach(b=>b.onclick=()=>{S.elrF=b.dataset.ef;save();rElr()});
+  $$('[data-mk]',el).forEach(b=>b.onclick=()=>{const e=S.elr.find(x=>x.id===b.dataset.mk);S.cSel=null;S.draft={dis:e.k,reg:e.g,age:e.age,elr:e.id};go('cases')});
+}
+
+/* ---------- CASES ---------- */
+const CST={new:['New','Новый','gold'],asg:['Assigned','Назначен',''],int:['Interviewing','Опрос','warn'],cls:['Closed','Закрыт','ok']};
+const FLOW=['new','asg','int','cls'];
+const stPill=s=>`<span class="pill ${CST[s][2]}">${T(CST[s][0],CST[s][1])}</span>`;
+const EXP=[['school','School / childcare','Школа / сад'],['food','Food','Питание'],['travel','Travel','Поездка'],['hotel','Hotel / building water','Отель / водоснабжение здания'],['hh','Household','Семья'],['hc','Healthcare','Медучреждение'],['unk','Unknown','Неизвестно']];
+const VAX=[['full','Fully vaccinated','Привит полностью'],['part','Partially','Частично'],['none','Unvaccinated','Не привит'],['unk','Unknown','Неизвестно'],['na','Not applicable','Неприменимо']];
+function rCases(){
+  const el=$('#v-cases');const c=S.cSel?S.cases.find(x=>x.id===S.cSel):null;const d=S.draft||{};
+  const v=c||{ini:'',age:d.age||'',sex:'',dis:d.dis||'',reg:d.reg||'',onset:'',hosp:false,vax:'unk',exp:'unk',contacts:0,status:'new',notes:['','']};
+  const f=S.cF;const list=S.cases.filter(x=>f==='all'||x.status===f||(f==='open'&&x.status!=='cls'));
+  const today=iso(dayDate(TODAY));
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${c?T('Investigation','Расследование')+' <span class="mono">'+c.id+'</span>':T('New case investigation','Новое расследование')}<span class="sp"></span>${c?stPill(c.status):d.elr?`<span class="pill gold">${T('from','из')} ${d.elr}</span>`:''}</h3>
+   ${c?`<div class="steps">${FLOW.map((s,i)=>`<span class="${FLOW.indexOf(c.status)>=i?'on':''}"></span>`).join('')}</div>`:''}
+   <div class="fgrid">
+    <div class="f"><label>${T('Patient initials','Инициалы пациента')}</label><input class="input" id="cIni" maxlength="3" value="${esc(v.ini)}" placeholder="AB"><div class="err" id="eIni"></div></div>
+    <div class="f"><label>${T('Age · sex','Возраст · пол')}</label><div class="row" style="flex-wrap:nowrap"><input class="input" id="cAge" type="number" min="0" max="120" value="${v.age}"><select class="input" id="cSex" style="max-width:90px"><option value="">—</option><option ${v.sex==='F'?'selected':''} value="F">${T('F','Ж')}</option><option ${v.sex==='M'?'selected':''} value="M">${T('M','М')}</option></select></div><div class="err" id="eAge"></div></div>
+    <div class="f"><label>${T('Condition','Заболевание')}</label><select class="input" id="cDis"><option value="">${T('— select —','— выберите —')}</option>${disOpts(v.dis)}</select><div class="err" id="eDis"></div></div>
+    <div class="f"><label>${T('Jurisdiction','Юрисдикция')}</label><select class="input" id="cReg"><option value="">${T('— select —','— выберите —')}</option>${regOpts(v.reg)}</select><div class="err" id="eReg"></div></div>
+    <div class="f"><label>${T('Symptom onset','Начало симптомов')}</label><input class="input" id="cOn" type="date" max="${today}" value="${v.onset}"><div class="err" id="eOn"></div></div>
+    <div class="f"><label>${T('Vaccination status','Вакцинация')}</label><select class="input" id="cVax">${VAX.map(x=>`<option value="${x[0]}" ${v.vax===x[0]?'selected':''}>${T(x[1],x[2])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Likely exposure','Вероятный источник')}</label><select class="input" id="cExp">${EXP.map(x=>`<option value="${x[0]}" ${v.exp===x[0]?'selected':''}>${T(x[1],x[2])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Close contacts','Контакты')}</label><input class="input" id="cCon" type="number" min="0" max="999" value="${v.contacts}"><div class="err" id="eCon"></div></div>
+    <div class="f full"><label class="row" style="cursor:pointer;color:var(--text)"><input type="checkbox" id="cHosp" ${v.hosp?'checked':''}> ${T('Hospitalised','Госпитализирован')}</label></div>
+    <div class="f full"><label>${T('Investigation notes','Заметки расследования')}</label><textarea class="input" id="cNotes" rows="3">${esc(T(v.notes[0],v.notes[1]||v.notes[0]))}</textarea></div></div>
+   <div class="row" style="margin-top:12px"><button class="btn pri" id="cSave">${c?T('Save changes','Сохранить'):T('Create investigation','Создать расследование')}</button>
+    ${c&&c.status!=='cls'?`<button class="btn gold" id="cAdv">${T('Move to','Перевести в')}: ${T(CST[FLOW[FLOW.indexOf(c.status)+1]][0],CST[FLOW[FLOW.indexOf(c.status)+1]][1])} →</button>`:''}
+    ${c&&c.status==='cls'?`<button class="btn" id="cReo">↺ ${T('Reopen','Переоткрыть')}</button>`:''}
+    ${c?`<button class="btn sm" id="cNew">+ ${T('New','Новый')}</button>`:''}</div></div>
+  <div class="card"><h3>${T('Investigations','Расследования')}<span class="sp"></span><span class="pill">${S.cases.length}</span></h3>
+   <div class="chips" style="margin-bottom:10px">${[['all','All','Все'],['open','Open','Открытые'],['new','New','Новые'],['int','Interviewing','Опрос'],['cls','Closed','Закрытые']].map(x=>`<button class="chip ${f===x[0]?'on':''}" data-cf="${x[0]}">${T(x[1],x[2])}</button>`).join('')}</div>
+   <div class="tw"><table><thead><tr><th>ID</th><th>${T('Condition','Болезнь')}</th><th>${T('Juris.','Юрисд.')}</th><th>${T('Onset','Начало')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+   ${list.map(x=>`<tr class="clk ${S.cSel===x.id?'sel':''}" data-cs="${x.id}"><td class="mono">${x.id}${x.hosp?' 🏥':''}</td><td>${dn(x.dis)}</td><td>${x.reg}</td><td class="mono">${new Date(x.onset+'T12:00').toLocaleDateString(loc(),{month:'short',day:'numeric'})}</td><td>${stPill(x.status)}</td></tr>`).join('')||`<tr><td colspan="5" class="muted">${T('No cases','Нет случаев')}</td></tr>`}</tbody></table></div></div></div>`;
+  $$('[data-cf]',el).forEach(b=>b.onclick=()=>{S.cF=b.dataset.cf;save();rCases()});
+  $$('[data-cs]',el).forEach(r=>r.onclick=()=>{S.cSel=r.dataset.cs;S.draft=null;save();rCases()});
+  const nb=$('#cNew',el);if(nb)nb.onclick=()=>{S.cSel=null;S.draft=null;save();rCases()};
+  const adv=$('#cAdv',el);if(adv)adv.onclick=()=>{c.status=FLOW[FLOW.indexOf(c.status)+1];save();render();toast(c.id+' → '+T(CST[c.status][0],CST[c.status][1]))};
+  const reo=$('#cReo',el);if(reo)reo.onclick=()=>{c.status='int';save();render();toast(c.id+' '+T('reopened','переоткрыт'),'gold')};
+  $('#cSave',el).onclick=()=>{
+    $$('.err',el).forEach(e=>e.textContent='');$$('.input',el).forEach(i=>i.classList.remove('bad'));let ok=true;
+    const bad=(id,eid,m)=>{$(id,el).classList.add('bad');$(eid,el).textContent=m;ok=false};
+    const ini=$('#cIni',el).value.trim().toUpperCase(),age=$('#cAge',el).value,dis=$('#cDis',el).value,reg=$('#cReg',el).value,on=$('#cOn',el).value,con=$('#cCon',el).value;
+    if(!/^[A-ZА-ЯЁ]{2,3}$/.test(ini))bad('#cIni','#eIni',T('2–3 letters','2–3 буквы'));
+    if(age===''||+age<0||+age>120)bad('#cAge','#eAge',T('Age 0–120','Возраст 0–120'));
+    if(!dis)bad('#cDis','#eDis',T('Required','Обязательно'));
+    if(!reg)bad('#cReg','#eReg',T('Required','Обязательно'));
+    if(!on)bad('#cOn','#eOn',T('Required','Обязательно'));else if(on>today)bad('#cOn','#eOn',T('Cannot be in the future','Не может быть в будущем'));else if(on<iso(dayDate(TODAY-365)))bad('#cOn','#eOn',T('More than a year ago','Больше года назад'));
+    if(con===''||+con<0||+con>999)bad('#cCon','#eCon','0–999');
+    if(!ok){toast(T('Please fix the highlighted fields','Исправьте отмеченные поля'),'bad');return}
+    const n=$('#cNotes',el).value;
+    const o={ini,age:+age,sex:$('#cSex',el).value,dis,reg,onset:on,hosp:$('#cHosp',el).checked,vax:$('#cVax',el).value,exp:$('#cExp',el).value,contacts:+con,notes:[n,n]};
+    if(c){Object.assign(c,o);save();render();toast(T('Saved ','Сохранено ')+c.id)}
+    else{const id='EW-25-'+(S.nextC++);S.cases.unshift(Object.assign({id,status:'new'},o));
+      if(d.elr){const e=S.elr.find(x=>x.id===d.elr);if(e)e.linked=id}
+      S.cSel=id;S.draft=null;S.cF='all';save();render();toast(T('Investigation ','Расследование ')+id+T(' created',' создано'))}
+  };
+}
+
+/* ---------- ALERTS ---------- */
+function rAlerts(){
+  const el=$('#v-alerts');const now=alerts();
+  el.innerHTML=`<div class="grid2"><div class="stack"><div class="card"><h3>🚨 ${T('Triggered alerts','Сработавшие оповещения')}<span class="sp"></span><span class="pill ${now.filter(x=>!S.ack[x.t.id]).length?'bad':'ok'}">${now.filter(x=>!S.ack[x.t.id]).length} ${T('active','активных')}</span></h3>
+   ${now.map(x=>{const a=S.ack[x.t.id];return `<div class="al ${a?'ack':x.t.m==='week'?'hi':'mo'}"><div class="t"><b>${dn(x.t.dis)} · ${rn(x.t.reg)}</b>${x.t.m==='week'?T(`${x.val} cases in 7 days (threshold ${x.t.v})`,`${x.val} случаев за 7 дней (порог ${x.t.v})`):T(`+${x.val}% week-on-week (threshold ${x.t.v}%)`,`+${x.val}% к прошлой неделе (порог ${x.t.v}%)`)}${a?`<div class="muted" style="font-size:12px">${T('Acknowledged by J. Reyes','Принято: Дж. Рейес')} · ${fT(a)}</div>`:''}</div>
+    ${a?'':`<button class="btn sm" data-ack="${x.t.id}">✓ ${T('Acknowledge','Принять')}</button>`}<button class="btn sm" data-see="${x.t.id}">${T('View','Смотреть')}</button></div>`}).join('')||`<div class="empty">✓ ${T('No thresholds crossed','Пороги не превышены')}</div>`}</div>
+   <div class="card"><h3>${T('Add threshold','Новый порог')}</h3><div class="fgrid">
+    <div class="f"><label>${T('Condition','Болезнь')}</label><select class="input" id="nDis">${disOpts('mea')}</select></div>
+    <div class="f"><label>${T('Jurisdiction','Юрисдикция')}</label><select class="input" id="nReg">${regOpts('all',1)}</select></div>
+    <div class="f"><label>${T('Rule','Правило')}</label><select class="input" id="nM"><option value="week">${T('Cases in 7 days ≥','Случаев за 7 дней ≥')}</option><option value="rise">${T('Week-on-week rise % ≥','Рост за неделю % ≥')}</option></select></div>
+    <div class="f"><label>${T('Value','Значение')}</label><input class="input" id="nV" type="number" min="1" value="10"><div class="err" id="eV"></div></div></div>
+    <div class="row" style="margin-top:12px"><button class="btn pri" id="nAdd">+ ${T('Add threshold','Добавить порог')}</button></div></div></div>
+  <div class="card"><h3>${T('Alert thresholds','Пороги оповещений')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('Evaluated on every lab message','Проверяются на каждом сообщении')}</span></h3>
+   <div class="tw"><table><thead><tr><th>${T('On','Вкл')}</th><th>${T('Condition','Болезнь')}</th><th>${T('Rule','Правило')}</th><th>${T('Now','Сейчас')}</th><th></th></tr></thead><tbody>
+   ${S.th.map(t=>{const a=series(t.dis,t.reg);const val=t.m==='week'?wk(a):rise(a);const hit=t.on&&val>=t.v;return `<tr><td><button class="sw ${t.on?'on':''}" data-sw="${t.id}" aria-label="toggle"></button></td><td><b>${dn(t.dis)}</b><div class="muted" style="font-size:11.5px">${rn(t.reg)}</div></td><td><div class="row" style="flex-wrap:nowrap;gap:6px"><span class="muted" style="font-size:12px">${t.m==='week'?T('7d ≥','7д ≥'):T('rise ≥','рост ≥')}</span><input class="input" data-tv="${t.id}" type="number" min="1" value="${t.v}" style="width:72px;padding:5px 8px">${t.m==='rise'?'%':''}</div></td><td class="mono ${hit?'up':''}">${val}${t.m==='rise'?'%':''} ${hit?'●':''}</td><td><button class="btn sm danger" data-del="${t.id}" aria-label="delete">✕</button></td></tr>`}).join('')}</tbody></table></div>
+   <div class="muted" style="font-size:12px;margin-top:10px">${T('Changing a value re-evaluates instantly against the last 14 days of data.','Изменение значения сразу пересчитывается по данным за 14 дней.')}</div></div></div>`;
+  $$('[data-ack]',el).forEach(b=>b.onclick=()=>{S.ack[b.dataset.ack]=Date.now();save();render();toast(T('Alert acknowledged','Оповещение принято'))});
+  $$('[data-see]',el).forEach(b=>b.onclick=()=>{const t=S.th.find(x=>x.id==b.dataset.see);S.mDis=t.dis;if(t.reg!=='all')S.mSel=t.reg;else{const best=REG.map(g=>[g[0],wk(series(t.dis,g[0]))]).sort((p,q)=>q[1]-p[1])[0];S.mSel=best[0]}go('map')});
+  $$('[data-sw]',el).forEach(b=>b.onclick=()=>{const t=S.th.find(x=>x.id==b.dataset.sw);t.on=!t.on;save();render()});
+  $$('[data-tv]',el).forEach(i=>i.onchange=()=>{const t=S.th.find(x=>x.id==i.dataset.tv);const v=+i.value;if(!(v>=1)){i.classList.add('bad');toast(T('Value must be ≥ 1','Значение должно быть ≥ 1'),'bad');return}t.v=v;delete S.ack[t.id];save();render();toast(T('Threshold updated','Порог обновлён'))});
+  $$('[data-del]',el).forEach(b=>b.onclick=()=>{S.th=S.th.filter(x=>x.id!=b.dataset.del);delete S.ack[b.dataset.del];save();render();toast(T('Threshold removed','Порог удалён'),'bad')});
+  $('#nAdd',el).onclick=()=>{const v=+$('#nV',el).value;if(!(v>=1)){$('#nV',el).classList.add('bad');$('#eV',el).textContent=T('Must be ≥ 1','Должно быть ≥ 1');return}
+    const t={id:S.nextTh++,dis:$('#nDis',el).value,reg:$('#nReg',el).value,m:$('#nM',el).value,v,on:true};S.th.push(t);save();render();
+    const a=series(t.dis,t.reg);const val=t.m==='week'?wk(a):rise(a);toast(val>=t.v?'🚨 '+T('New threshold is already crossed','Новый порог уже превышен'):T('Threshold added','Порог добавлен'),val>=t.v?'bad':'')};
+}
+
+$('#login').onclick=()=>{if(!$('#lgU').value.trim()||!$('#lgP').value){toast(T('Enter email and password','Введите почту и пароль'),'bad');return}S.auth=true;save();render();toast(T('Signed in · live ELR feed connected','Вход выполнен · поток ELR подключён'))};
+$('#logout').onclick=()=>{S.auth=false;save();render()};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{stopStream();store.clear();S=seed();S.auth=true;save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

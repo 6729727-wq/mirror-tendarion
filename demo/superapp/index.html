@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Warga+ Super-app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1400px;margin:0 auto;padding:18px 20px 60px}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.top h1{margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
+.top h1 b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:13px;letter-spacing:-.02em}
+.top .sp{flex:1}
+.stk{font-family:var(--mono);font-size:11.5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 392px minmax(0,1.12fr);grid-template-areas:"feat phone cons";gap:20px;align-items:start}
+.a-feat{grid-area:feat;display:flex;flex-direction:column;gap:14px;min-width:0}
+.a-phone{grid-area:phone;min-width:0}
+.a-cons{grid-area:cons;display:flex;flex-direction:column;gap:14px;min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h3 .sp{flex:1}
+.card h4{margin:16px 0 8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+/* features */
+.feat{display:flex;gap:12px;padding:11px 10px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:.15s}
+.feat:hover{border-color:var(--line2);background:var(--panel2)}
+.feat.on{border-color:color-mix(in srgb,var(--mal) 55%,transparent);background:color-mix(in srgb,var(--mal) 8%,transparent)}
+.feat .fi{width:36px;height:36px;border-radius:11px;flex:none;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);font-size:17px}
+.feat b{display:block;font-size:13.5px}
+.feat span{font-size:12.5px;color:var(--muted);line-height:1.45;display:block}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 14px;font-size:13px}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.tgt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.tgt div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.tgt b{display:block;font-family:var(--mono);font-size:18px;color:var(--gold2)}
+.tgt span{font-size:11.5px;color:var(--muted)}
+/* phone frame */
+.phone{border-radius:50px;padding:12px;background:linear-gradient(160deg,#2a3b35,#0b1512);box-shadow:var(--shadow),inset 0 0 0 2px #3a4f47;position:sticky;top:60px}
+.scr{border-radius:38px;overflow:hidden;background:var(--bg);height:760px;display:flex;flex-direction:column;position:relative;isolation:isolate}
+.sbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:12.5px;font-weight:700;flex:none}
+.sbar .isl{width:96px;height:24px;background:#000;border-radius:14px}
+.sbar .sig{display:flex;gap:5px;align-items:center;font-size:11px}
+.sbar .sig .off{color:var(--amber)}
+.ahd{display:flex;align-items:center;gap:8px;padding:4px 14px 8px;flex:none}
+.ahd .lg{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-weight:800;font-size:11.5px;flex:none}
+.ahd .tt{flex:1;font-weight:800;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ibtn{position:relative;width:36px;height:36px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);display:grid;place-items:center;cursor:pointer;color:var(--text);flex:none;padding:0}
+.ibtn:hover{border-color:var(--mal)}
+.ibtn.offl{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 55%,transparent);background:color-mix(in srgb,var(--amber) 12%,transparent)}
+.ibtn .bd{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 4px;border:2px solid var(--bg)}
+.ban{margin:0 14px 6px;border-radius:12px;padding:8px 11px;font-size:12px;font-weight:600;display:flex;gap:8px;align-items:center;flex:none;line-height:1.35}
+.ban.off{background:color-mix(in srgb,var(--amber) 14%,transparent);color:var(--amber);border:1px solid color-mix(in srgb,var(--amber) 40%,transparent)}
+.ban.sync{background:color-mix(in srgb,var(--mal) 14%,transparent);color:var(--mal3);border:1px solid color-mix(in srgb,var(--mal) 40%,transparent)}
+.pbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 14px 18px;scrollbar-width:thin}
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);padding:6px 4px 14px;flex:none}
+.tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--dim);cursor:pointer;padding:4px 0;min-width:0}
+.tabbar button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.tabbar button.on{color:var(--mal3)}
+.tabbar button.on svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--mal) 60%,transparent))}
+/* phone content */
+.xs{font-size:11.5px}.sm{font-size:12.5px}.b{font-weight:700}
+.row{display:flex;align-items:center;gap:10px}.row .sp{flex:1;min-width:0}
+.hello{display:flex;align-items:center;gap:10px;margin:4px 0 12px}
+.ava{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;flex:none}
+.hello .sp{flex:1}
+.hello .nm{font-weight:800;font-size:16px}
+.idc{perspective:1200px;margin-bottom:6px}
+.idin{position:relative;aspect-ratio:1.586;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,.9,.3,1);cursor:pointer}
+.idin.fl{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;padding:12px 14px;display:flex;flex-direction:column}
+.face.fr{color:#fff;background:radial-gradient(130% 120% at 0 0,#21c99a 0,#0e7458 48%,#093a2e 100%);box-shadow:0 10px 30px rgba(6,40,30,.35)}
+.face.fr:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 2px,transparent 2px 9px);pointer-events:none}
+.face.fr:after{content:"";position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(243,215,154,.5),transparent 68%);pointer-events:none}
+.face.bk{transform:rotateY(180deg);background:#f6f2e6;color:#14251f;flex-direction:row;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(6,40,30,.3)}
+.idtop{display:flex;align-items:center;gap:9px;position:relative;z-index:1}
+.emb{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#f3d79a,#c69a3e);color:#1a1306;font-weight:800;font-size:11px;flex:none}
+.idtop .t1{font-size:10px;font-weight:800;letter-spacing:.14em}
+.idtop .t2{font-size:10.5px;opacity:.75}
+.chipz{margin-left:auto;width:32px;height:24px;border-radius:5px;background:linear-gradient(135deg,#f3d79a,#b8893a);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.idmid{display:flex;gap:11px;margin-top:9px;flex:1;position:relative;z-index:1;min-height:0}
+.photo{width:23%;aspect-ratio:.83;border-radius:9px;overflow:hidden;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.35);align-self:flex-start}
+.photo svg{display:block;width:100%;height:100%}
+.fields{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.fields i{display:block;font-style:normal;font-size:9px;opacity:.7;text-transform:uppercase;letter-spacing:.08em}
+.fields b{display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fields .two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.idbot{font-size:10px;opacity:.82;position:relative;z-index:1;display:flex;justify-content:space-between;gap:8px;align-items:flex-end}
+.idbot .vf{font-family:var(--mono);font-size:9.5px;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.16);white-space:nowrap}
+.face.bk canvas{width:44%;aspect-ratio:1;display:block;border-radius:8px;flex:none}
+.qrside{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.ring{position:relative;width:46px;height:46px}
+.ring svg{width:46px;height:46px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:3.2}
+.ring .rb{stroke:#dcd5c0}.ring .rf{stroke:#0e9a72;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:13px}
+.qrside .code{font-size:17px;font-weight:600;letter-spacing:.06em}
+.qrside .op{opacity:.65;font-size:10.5px;line-height:1.35}
+.hint{text-align:center;font-size:11.5px;color:var(--dim);margin:2px 0 12px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.tile{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);padding:0;min-width:0}
+.tile i{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);color:var(--mal3);transition:.15s;font-style:normal}
+.tile:hover i{border-color:var(--gold);color:var(--gold2)}
+.tile span{text-align:center;line-height:1.2}
+.sect{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px}
+.sect button{border:0;background:none;color:var(--mal3);font-weight:700;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;padding:0}
+.li{display:flex;align-items:center;gap:11px;padding:11px 12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;cursor:pointer;transition:.15s;width:100%;text-align:left}
+.li:hover{border-color:var(--line2)}
+.li .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--panel2);flex:none;font-size:17px}
+.li .sp{flex:1;min-width:0}
+.li .sp b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .sp div{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .r{font-size:12.5px;font-weight:700;text-align:right;white-space:nowrap;flex:none}
+.li .chev{color:var(--dim);flex:none}
+.li.dis{opacity:.45;cursor:not-allowed}
+.load{height:4px;border-radius:2px;background:var(--line);margin-top:5px;overflow:hidden;width:110px;max-width:100%}
+.load i{display:block;height:100%;border-radius:2px}
+.back{border:0;background:none;color:var(--muted);cursor:pointer;font-weight:600;padding:2px 0 8px;font-size:13px;display:flex;align-items:center;gap:2px}
+.back:hover{color:var(--text)}
+.h2{font-size:19px;font-weight:800;margin:2px 0 4px;line-height:1.25}
+.sub{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.steps{display:flex;gap:4px;margin:0 0 12px}
+.steps i{flex:1;height:3px;border-radius:2px;background:var(--line2)}
+.steps i.on{background:var(--mal)}
+.pbtn{width:100%;justify-content:center;margin-top:8px}
+.ticket{border-radius:18px;background:var(--panel);border:1px solid var(--line2);margin-bottom:10px;overflow:hidden}
+.ticket .tk{display:flex;align-items:stretch}
+.ticket .num{width:104px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 6px;background:linear-gradient(160deg,color-mix(in srgb,var(--mal) 24%,transparent),color-mix(in srgb,var(--mal) 6%,transparent));border-right:2px dashed var(--line2)}
+.ticket .num b{font-family:var(--mono);font-size:26px;letter-spacing:-.02em;color:var(--mal3)}
+.ticket .num span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.ticket .inf{flex:1;padding:12px;min-width:0;font-size:12.5px}
+.ticket .inf b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ticket .inf .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ticket .ft{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--line);align-items:center;flex-wrap:wrap}
+.ticket .ft .sp{flex:1;min-width:60px}
+.ticket.called{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 25%,transparent)}
+.ticket.called .num{background:linear-gradient(160deg,color-mix(in srgb,var(--gold) 35%,transparent),color-mix(in srgb,var(--gold) 8%,transparent))}
+.ticket.called .num b{color:var(--gold2)}
+.ticket.pend .num b{color:var(--amber)}
+.ahead{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:6px}
+.prog{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--mal),var(--mal3));border-radius:3px;transition:width .6s}
+.live{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--mal3);text-transform:uppercase;letter-spacing:.06em}
+.live:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mal3);animation:pl 1.4s infinite}
+.live.off{color:var(--amber)}.live.off:before{background:var(--amber);animation:none}
+@keyframes pl{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--mal3) 60%,transparent)}100%{box-shadow:0 0 0 8px transparent}}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:4px 10px;font-size:12px}
+.btn.dng{color:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+.slot{border:1px solid var(--line2);background:var(--panel2);border-radius:10px;padding:8px 0;cursor:pointer;font-weight:700;font-size:12.5px;font-family:var(--mono);text-align:center}
+.slot:hover:not(:disabled){border-color:var(--gold)}
+.slot.on{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;border-color:transparent}
+.slot:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.slot.now{grid-column:1/-1;font-family:var(--font);display:flex;justify-content:center;gap:8px;align-items:center}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:4px 0 6px;scrollbar-width:none}
+.day{flex:none;border:1px solid var(--line2);background:var(--panel2);border-radius:12px;padding:6px 0;width:54px;text-align:center;cursor:pointer;font-size:11px;color:var(--muted);font-weight:600}
+.day b{display:block;font-size:17px;color:var(--text)}
+.day.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 16%,transparent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:12.5px}
+.chip.on,.chip:hover{border-color:var(--gold);color:var(--gold2)}
+.sum{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px 12px;font-size:13px}
+.sum .r{display:flex;justify-content:space-between;padding:7px 0;gap:12px;border-bottom:1px solid var(--line)}
+.sum .r:last-child{border-bottom:0}
+.sum .r span:first-child{color:var(--muted);flex:none}
+.sum .r span:last-child{text-align:right;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.appt{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:9px}
+.appt .dt{display:flex;gap:11px;align-items:center}
+.appt .cal{width:46px;flex:none;border-radius:12px;overflow:hidden;text-align:center;border:1px solid var(--line2)}
+.appt .cal span{display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;background:var(--red);color:#fff;padding:2px 0}
+.appt .cal b{display:block;font-size:19px;padding:2px 0}
+.appt .ft{display:flex;gap:6px;margin-top:10px;align-items:center;flex-wrap:wrap}
+.appt .ft .sp{flex:1}
+.doc{display:flex;align-items:center;gap:11px}
+.doc .dp{width:42px;height:42px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
+.tcard{border-radius:18px;padding:14px 16px;color:#fff;background:linear-gradient(135deg,#1c3f8a,#0f2350 60%,#0a1733);position:relative;overflow:hidden;margin-bottom:10px}
+.tcard:after{content:"";position:absolute;right:-30px;bottom:-60px;width:160px;height:160px;border-radius:50%;border:22px solid rgba(78,164,255,.18)}
+.tcard .l{font-size:11.5px;opacity:.8}
+.tcard .v{font-size:26px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tcard .n{font-family:var(--mono);font-size:11.5px;opacity:.75;margin-top:6px}
+.srch{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.srch .stp{display:flex;flex-direction:column;gap:6px;min-width:0}
+.srch select{width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:8px 10px;font-size:13px;outline:none}
+.srch select:focus{border-color:var(--mal)}
+.rt{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 12px;margin-bottom:8px}
+.rt.best{border-color:color-mix(in srgb,var(--mal) 55%,transparent)}
+.rt .top2{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ln{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:22px;padding:0 7px;border-radius:7px;font-weight:800;font-size:11.5px;color:#0b1512}
+.rt .dur{margin-left:auto;font-weight:800;font-size:16px;font-variant-numeric:tabular-nums}
+.rt .meta{font-size:11.5px;color:var(--muted);margin-top:5px}
+.rt .ft{display:flex;align-items:center;gap:8px;margin-top:8px}
+.rt .ft .sp{flex:1}
+.arr{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.arr:last-child{border-bottom:0}
+.arr .sp{flex:1;min-width:0}
+.arr .sp b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arr .eta{font-family:var(--mono);font-weight:700;font-size:15px;text-align:right;min-width:62px;font-variant-numeric:tabular-nums}
+.arr .eta.now{color:var(--gold2);animation:blink 1s infinite}
+.arr .eta.cached{color:var(--muted)}
+@keyframes blink{50%{opacity:.4}}
+.crowd{display:inline-flex;gap:2px;vertical-align:middle;margin-left:4px}
+.crowd i{width:4px;height:9px;border-radius:1px;background:var(--line2)}
+.crowd i.f{background:var(--mal3)}
+.board{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:4px 12px}
+.wbal{border-radius:20px;padding:16px;color:#fff;background:radial-gradient(120% 120% at 0 0,#1fc795 0,#0d6e52 55%,#0a3e30 100%);position:relative;overflow:hidden}
+.wbal:after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(243,215,154,.55),transparent 70%)}
+.wbal .l{font-size:12px;opacity:.85}
+.wbal .v{font-size:28px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.wbal .acts{display:flex;gap:8px;margin-top:12px;position:relative;z-index:1}
+.wbal .acts button{flex:1;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:8px 0;font-weight:700;font-size:12.5px;cursor:pointer}
+.wbal .acts button:hover{background:rgba(255,255,255,.22)}
+.due{font-size:11px;font-weight:700}
+.pos{color:var(--mal3)}.red{color:var(--red)}.amb{color:var(--amber)}
+.pendtag{display:inline-block;font-size:10px;font-weight:700;color:var(--amber);border:1px solid color-mix(in srgb,var(--amber) 50%,transparent);border-radius:6px;padding:0 5px;margin-left:5px;vertical-align:1px}
+.nt{display:flex;gap:11px;padding:11px 12px;border-radius:14px;margin-bottom:7px;cursor:pointer;border:1px solid var(--line);background:var(--panel);position:relative}
+.nt.un{border-color:color-mix(in srgb,var(--mal) 45%,transparent)}
+.nt.un:after{content:"";position:absolute;right:10px;top:12px;width:8px;height:8px;border-radius:50%;background:var(--mal3)}
+.nt.crit{border-color:color-mix(in srgb,var(--red) 55%,transparent);background:color-mix(in srgb,var(--red) 7%,var(--panel))}
+.nt .ic{width:36px;height:36px;border-radius:11px;flex:none;display:grid;place-items:center;background:var(--panel2);font-size:16px}
+.nt .sp{flex:1;min-width:0;padding-right:10px}
+.nt b{display:block;font-size:13.5px}
+.nt p{margin:2px 0 3px;font-size:12.5px;color:var(--muted);line-height:1.4}
+.nt .t{font-size:11px;color:var(--dim)}
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:22px 10px;border:1px dashed var(--line2);border-radius:14px}
+/* push banner + sheet */
+.push{position:absolute;left:10px;right:10px;top:8px;z-index:30;border-radius:18px;padding:11px 12px;display:flex;gap:10px;cursor:pointer;background:color-mix(in srgb,var(--panel2) 88%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line2);box-shadow:0 14px 34px rgba(0,0,0,.35);animation:pdrop .45s cubic-bezier(.2,1.3,.4,1)}
+.push.crit{border-color:var(--red);box-shadow:0 0 0 2px color-mix(in srgb,var(--red) 35%,transparent),0 14px 34px rgba(0,0,0,.35)}
+.push.out{animation:pup .3s forwards}
+.push .ic{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:15px}
+.push .sp{flex:1;min-width:0}
+.push .hd{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.push b{display:block;font-size:13px}
+.push p{margin:1px 0 0;font-size:12px;color:var(--muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@keyframes pdrop{from{transform:translateY(-130%);opacity:0}}
+@keyframes pup{to{transform:translateY(-130%);opacity:0}}
+.shbg{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.45);animation:fade .2s}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:21;background:var(--panel);border-radius:24px 24px 0 0;border-top:1px solid var(--line2);padding:10px 16px 22px;max-height:86%;overflow:auto;animation:sup .3s cubic-bezier(.2,1,.4,1)}
+.sheet:before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--line2);margin:0 auto 12px}
+.sheet h4{margin:0 0 4px;font-size:17px}
+@keyframes sup{from{transform:translateY(100%)}}
+@keyframes fade{from{opacity:0}}
+.okm{width:76px;height:76px;margin:14px auto 8px;border-radius:50%;background:var(--mal);display:grid;place-items:center;animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+.okm svg{width:40px;stroke:#fff;stroke-width:4;fill:none;stroke-dasharray:60;stroke-dashoffset:60;animation:dr .5s .2s forwards}
+.okm.wait{background:var(--amber)}
+@keyframes dr{to{stroke-dashoffset:0}}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.bio{width:64px;height:64px;margin:18px auto 8px;border-radius:50%;border:3px solid var(--line2);border-top-color:var(--mal3);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ctr{text-align:center}
+.screen-in{animation:sin .22s ease-out}
+@keyframes sin{from{opacity:0;transform:translateX(10px)}}
+/* console */
+.kp4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.kp4 div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:0}
+.kp4 span{display:block;font-size:11px;line-height:1.25;min-height:2.5em;color:var(--muted);font-weight:600}
+.kp4 b{font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.f{margin-bottom:10px}.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+textarea.input{resize:vertical;min-height:64px;line-height:1.45}
+select.input{appearance:auto}
+.cnt{font-size:11px;color:var(--dim);text-align:right;margin-top:3px;font-family:var(--mono)}
+.reach{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--muted);background:var(--bg2);border:1px dashed var(--line2);border-radius:10px;padding:8px 10px;flex-wrap:wrap}
+.reach b{color:var(--text)}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:290px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{position:sticky;top:0;background:var(--panel2);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);padding:7px 9px;white-space:nowrap;z-index:1}
+td{padding:7px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12px}
+td.tt{max-width:180px;overflow:hidden;text-overflow:ellipsis}
+tbody tr:last-child td{border-bottom:0}
+.bar{display:inline-block;width:46px;height:5px;border-radius:3px;background:var(--line);vertical-align:middle;margin-right:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--mal3)}
+.bar.g i{background:var(--gold)}
+.log{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;height:210px;overflow:auto;line-height:1.6}
+.log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log .t{color:var(--dim)}
+.log .k{display:inline-block;min-width:44px;font-weight:600}
+.k.ok{color:var(--mal3)}.k.wa{color:var(--amber)}.k.in{color:var(--blue)}.k.go{color:var(--gold2)}.k.er{color:var(--red)}
+.fresh{animation:fl 1.6s}
+@keyframes fl{0%{background:color-mix(in srgb,var(--gold) 28%,transparent)}100%{background:transparent}}
+.kv{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.kv b{color:var(--text);font-family:var(--mono);font-weight:600}
+.sw{position:relative;width:40px;height:22px;flex:none;display:inline-block}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line2);transition:.2s;cursor:pointer}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+i{background:var(--mal)} .sw input:checked+i:after{transform:translateX(18px)}
+.swl{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}.toast.warn{border-left-color:var(--amber)}
+@media (max-width:1180px){
+  .layout{grid-template-columns:392px minmax(0,1fr);grid-template-areas:"phone cons" "feat feat"}
+  .a-feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+}
+@media (max-width:860px){
+  .wrap{padding:14px 16px 50px}
+  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"phone" "cons" "feat"}
+  .a-feat{display:flex}
+  .phone{position:static;padding:0;background:none;box-shadow:none;border-radius:0}
+  .scr{border-radius:24px;border:1px solid var(--line);height:calc(100svh - 110px);min-height:600px;max-height:860px}
+  .sbar .isl{display:none}.sbar{height:28px;padding:0 16px}
+  .toasts{left:16px;right:16px;top:auto;bottom:16px}.toast{max-width:none}
+}
+@media (max-width:520px){
+  .kp4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .f2{grid-template-columns:minmax(0,1fr)}
+  .top h1{font-size:19px}
+  .pbody{padding:4px 12px 16px}
+  .tgt{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media (max-width:380px){
+  .tile i{width:46px;height:46px}
+  .ticket .num{width:88px}.ticket .num b{font-size:22px}
+  .slots{grid-template-columns:repeat(3,1fr)}
+  .fields b{font-size:11.5px}
+}
+</style>
+</head>
+<body data-demo-en="Warga+ — citizen super-app" data-demo-ru="Warga+ — суперприложение гражданина">
+<div class="wrap">
+  <div class="top">
+    <h1><b>W+</b>Warga+</h1>
+    <span class="pill gold" data-en="Tender · National digital government agency · $3.0M" data-ru="Тендер · Национальное агентство цифрового правительства · $3.0M"></span>
+    <span class="sp"></span>
+    <span class="pill ok stk">Flutter</span><span class="pill ok stk">OIDC</span><span class="pill ok stk">offline-first</span>
+  </div>
+
+  <div class="layout">
+    <!-- features -->
+    <aside class="a-feat">
+      <div class="card">
+        <h3><span data-en="What the app does" data-ru="Что умеет приложение"></span><span class="sp"></span><span class="pill" data-en="tap to open" data-ru="нажмите — откроется"></span></h3>
+        <div id="feats"></div>
+      </div>
+      <div class="card">
+        <h3><span data-en="Project" data-ru="Проект"></span></h3>
+        <dl class="facts">
+          <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="National digital government agency, Indonesia" data-ru="Национальное агентство цифрового правительства, Индонезия"></dd>
+          <dt data-en="Contract" data-ru="Контракт"></dt><dd>$3.0M</dd>
+          <dt data-en="Variant" data-ru="Вариант"></dt><dd data-en="«Moy Gorod» — city app for a Russian municipality" data-ru="«Мой город» — городское приложение администрации"></dd>
+          <dt data-en="Platforms" data-ru="Платформы"></dt><dd data-en="iOS · Android · Huawei (one Flutter codebase)" data-ru="iOS · Android · Huawei (один код на Flutter)"></dd>
+          <dt data-en="Login" data-ru="Вход"></dt><dd data-en="National ID via OIDC + PKCE, biometrics" data-ru="Госвход через OIDC + PKCE, биометрия"></dd>
+          <dt data-en="Data" data-ru="Данные"></dt><dd data-en="Encrypted local DB, outbox sync, idempotency keys" data-ru="Шифрованная локальная БД, outbox-синхронизация, ключи идемпотентности"></dd>
+        </dl>
+        <div class="tgt">
+          <div><b>12.4M</b><span data-en="citizens in scope" data-ru="жителей в охвате"></span></div>
+          <div><b>3 200</b><span data-en="service offices on e-queue" data-ru="офисов в электронной очереди"></span></div>
+          <div><b>14 d</b><span data-en="data available offline" data-ru="данные доступны офлайн"></span></div>
+          <div><b>99.95%</b><span data-en="availability target" data-ru="целевая доступность"></span></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- phone -->
+    <div class="a-phone">
+      <div class="phone">
+        <div class="scr" id="scr">
+          <div class="sbar"><span id="clock">9:41</span><span class="isl"></span><span class="sig" id="sig"></span></div>
+          <div class="ahd">
+            <span class="lg">W+</span>
+            <span class="tt" id="ptitle">Warga+</span>
+            <button class="ibtn" id="netBtn" data-a="net" title="Offline mode"></button>
+            <button class="ibtn" id="bellBtn" data-a="tab" data-v="notes" title="Notifications"></button>
+          </div>
+          <div id="banner"></div>
+          <div class="pbody" id="pbody"></div>
+          <nav class="tabbar" id="tabbar"></nav>
+          <div id="sheetHost"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- admin console -->
+    <section class="a-cons">
+      <div class="card">
+        <h3><span>📣</span><span data-en="Push campaign console" data-ru="Консоль push-рассылок"></span><span class="sp"></span><span class="pill gold" data-en="Admin" data-ru="Админ"></span></h3>
+        <div class="kp4">
+          <div><span data-en="Devices online" data-ru="Устройств онлайн"></span><b id="kDev">—</b></div>
+          <div><span data-en="Campaigns today" data-ru="Рассылок сегодня"></span><b id="kCamp">—</b></div>
+          <div><span data-en="Avg. open rate" data-ru="Средняя открываемость"></span><b id="kOpen">—</b></div>
+          <div><span data-en="Offline syncs / h" data-ru="Офлайн-синхр. / ч"></span><b id="kSync">—</b></div>
+        </div>
+        <div class="f"><label data-en="Template" data-ru="Шаблон"></label><div class="chips" id="tpl" style="margin:0"></div></div>
+        <div class="f2">
+          <div class="f"><label data-en="Audience" data-ru="Аудитория"></label><select class="input" id="cSeg"></select></div>
+          <div class="f"><label data-en="Opens screen" data-ru="Открывает экран"></label><select class="input" id="cLink"></select></div>
+        </div>
+        <div class="f"><label data-en="Title" data-ru="Заголовок"></label><input class="input" id="cTitle" maxlength="60" data-en-ph="Short headline" data-ru-ph="Короткий заголовок"></div>
+        <div class="f"><label data-en="Message" data-ru="Текст"></label><textarea class="input" id="cBody" rows="3" maxlength="180" data-en-ph="What should citizens know or do?" data-ru-ph="Что жителям нужно знать или сделать?"></textarea><div class="cnt" id="cCnt">0/180</div></div>
+        <div class="f2">
+          <div class="f"><label data-en="Priority" data-ru="Приоритет"></label><select class="input" id="cPri"></select></div>
+          <div class="f"><label data-en="Delivery" data-ru="Отправка"></label><select class="input" id="cWhen"></select></div>
+        </div>
+        <div class="reach" id="cReach"></div>
+        <button class="btn pri pbtn" id="cSend" style="margin-top:12px"></button>
+        <h4 data-en="Campaign history" data-ru="История рассылок"></h4>
+        <div class="tw"><table><thead><tr><th>ID</th><th data-en="Title" data-ru="Заголовок"></th><th data-en="Audience" data-ru="Аудитория"></th><th data-en="Delivered" data-ru="Доставлено"></th><th data-en="Opened" data-ru="Открыто"></th></tr></thead><tbody id="cHist"></tbody></table></div>
+      </div>
+      <div class="card">
+        <h3><span>📡</span><span data-en="Test device · session &amp; sync" data-ru="Тестовое устройство · сессия и синхронизация"></span><span class="sp"></span><label class="swl"><span id="netLbl"></span><span class="sw"><input type="checkbox" id="netSw" checked><i></i></span></label></h3>
+        <div class="kv"><span>OIDC <b id="tokT">5:00</b></span><span><span data-en="Outbox" data-ru="Очередь"></span> <b id="obN">0</b></span><span><span data-en="Cache" data-ru="Кэш"></span> <b id="cacheT">—</b></span><span>App <b>3.8.2 (412)</b></span></div>
+        <div class="log" id="log"></div>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn sm" id="tokBtn" data-en="Revoke &amp; re-login" data-ru="Отозвать токен и войти заново"></button>
+          <button class="btn sm" id="resetBtn" data-en="Reset demo data" data-ru="Сбросить данные демо"></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=()=>PT.lang==='ru'?'ru':'en';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const pad=n=>String(n).padStart(2,'0');
+const DAY=864e5;
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash(s){s=String(s);let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+/* money: base unit = Rp 1,000 (EN) / 10 ₽ (RU) */
+const money=v=>{const n=Math.abs(v);return PT.lang==='ru'?Math.round(n*10).toLocaleString('ru-RU')+' ₽':'Rp '+Math.round(n*1000).toLocaleString('id-ID')};
+const smoney=v=>(v<0?'−':'+')+money(v);
+const hhmm=ts=>{const d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes())};
+const dShort=ts=>new Date(ts).toLocaleDateString(loc(),{weekday:'short',day:'numeric',month:'short'});
+const dayStart=ts=>{const d=new Date(ts);d.setHours(0,0,0,0);return d.getTime()};
+function ago(ts){const s=(Date.now()-ts)/1000;if(s<60)return T('just now','только что');if(s<3600)return Math.floor(s/60)+T(' min ago',' мин назад');if(s<86400)return Math.floor(s/3600)+T(' h ago',' ч назад');return dShort(ts)}
+function compact(n){const f=(v,d)=>v.toLocaleString(PT.lang==='ru'?'ru-RU':'en-US',{maximumFractionDigits:d});return n>=1e6?f(n/1e6,2)+T('M',' млн'):n>=1e3?f(n/1e3,n>=1e5?0:1)+T('K',' тыс'):f(n,0)}
+const uid=p=>p+Date.now().toString(36).slice(-5)+Math.floor(Math.random()*1e3).toString(36);
+
+/* ---------- icons ---------- */
+const ICP={
+ home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ queue:'<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4z"/><path d="M14 5v2M14 11v2M14 17v2"/>',
+ doctor:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/><path d="M3.5 12h5l2-3 3 6 2-3h5"/>',
+ transport:'<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v3M16 18v3"/><circle cx="8" cy="14.5" r=".9"/><circle cx="16" cy="14.5" r=".9"/>',
+ wallet:'<path d="M20 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/><path d="M3 7h17a1 1 0 0 1 1 1v4h-5a2 2 0 0 0 0 4h5"/>',
+ bell:'<path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
+ cloud:'<path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z"/>',
+ cloudoff:'<path d="M17.5 19H9a7 7 0 0 1-5.2-11.7M9.5 5.2A7 7 0 0 1 15.7 10h1.8a4.5 4.5 0 0 1 3 7.9"/><path d="M3 3l18 18"/>',
+ swap:'<path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/>',
+ back:'<path d="M15 18l-6-6 6-6"/>',
+ chev:'<path d="M9 18l6-6-6-6"/>',
+ shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+ id:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.5 16.5c.6-1.6 2-2.4 3.5-2.4s2.9.8 3.5 2.4M14.5 10h4M14.5 13.5h3"/>'
+};
+const ic=(n,s=22)=>'<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+ICP[n]+'</svg>';
+const CHECK='<svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-17"/></svg>';
+
+/* ---------- reference data ---------- */
+const USER={en:{name:'Ayu',full:'Ayu Lestari',ini:'AL',nik:'3174 0512 8803 0001',dob:'12 May 1988',addr:'Jl. Wijaya I No. 27, Kebayoran Baru, Jakarta Selatan'},
+            ru:{name:'Анна',full:'Лебедева Анна',ini:'АЛ',nik:'7701 5512 8803 0001',dob:'12.05.1988',addr:'ул. Остоженка, 12, кв. 41, Москва'}};
+const U=()=>USER[L()];
+const OFF=[
+ {id:'dk',ic:'🪪',en:'Dukcapil · Kebayoran Baru',ru:'МФЦ «Хамовники»',aen:'Jl. Melawai Raya 12',aru:'Комсомольский пр-т, 4',km:1.2,load:.62,svc:['ktp','kk','akta']},
+ {id:'sm',ic:'🚗',en:'Samsat · Jakarta Selatan',ru:'Госавтоинспекция · Тверская',aen:'Jl. Gatot Subroto 45',aru:'ул. Садовая-Самотёчная, 1',km:3.4,load:.88,svc:['stnk','sim','pkb']},
+ {id:'im',ic:'🛂',en:'Immigration office · Kuningan',ru:'Паспортный стол · Арбат',aen:'Jl. H.R. Rasuna Said C-5',aru:'ул. Арбат, 34',km:4.1,load:.45,svc:['pas','pasr']},
+ {id:'tx',ic:'🧾',en:'Tax office · Setiabudi',ru:'Налоговая инспекция № 4',aen:'Jl. Setiabudi Raya 8',aru:'ул. Большая Полянка, 2',km:2.6,load:.3,svc:['npwp','spt']}
+];
+const SVC={
+ ktp:{p:'A',m:12,en:'ID card replacement',ru:'Замена ID-карты'},
+ kk:{p:'B',m:15,en:'Family card update',ru:'Изменение состава семьи'},
+ akta:{p:'C',m:10,en:'Birth certificate',ru:'Свидетельство о рождении'},
+ stnk:{p:'A',m:18,en:'Vehicle registration',ru:'Регистрация автомобиля'},
+ sim:{p:'B',m:14,en:'Driving licence renewal',ru:'Замена водительских прав'},
+ pkb:{p:'C',m:8,en:'Vehicle tax payment',ru:'Транспортный налог'},
+ pas:{p:'P',m:20,en:'New passport',ru:'Загранпаспорт'},
+ pasr:{p:'R',m:16,en:'Passport renewal',ru:'Замена загранпаспорта'},
+ npwp:{p:'N',m:9,en:'Tax ID registration',ru:'Получение ИНН'},
+ spt:{p:'S',m:22,en:'Annual tax return help',ru:'Помощь с декларацией'}
+};
+const CLIN=[
+ {en:'Puskesmas Kebayoran Baru',ru:'Городская поликлиника № 2',aen:'Jl. Kyai Maja 1',aru:'Фрунзенская наб., 46',km:.8},
+ {en:'RSUD Tarakan',ru:'ГКБ № 1 им. Пирогова',aen:'Jl. Kyai Caringin 7',aru:'Ленинский пр-т, 8',km:5.3},
+ {en:'Klinik Pratama Menteng',ru:'Консультативно-диагностический центр',aen:'Jl. Cikini Raya 60',aru:'ул. Пречистенка, 26',km:3.1}
+];
+const SPEC=[{ic:'🩺',en:'General practitioner',ru:'Терапевт'},{ic:'🦷',en:'Dentist',ru:'Стоматолог'},{ic:'🧒',en:'Paediatrician',ru:'Педиатр'},{ic:'❤️',en:'Cardiologist',ru:'Кардиолог'},{ic:'👁',en:'Ophthalmologist',ru:'Офтальмолог'}];
+const DOCN={en:['dr. Rina Kusuma','dr. Budi Santoso','dr. Sari Wulandari','dr. Andi Pratama','dr. Dewi Anggraini','dr. Hendra Wijaya','dr. Maya Putri','dr. Agus Setiawan'],
+            ru:['Иванова Елена Сергеевна','Петров Андрей Викторович','Смирнова Ольга Николаевна','Кузнецов Дмитрий Игоревич','Орлова Марина Алексеевна','Соколов Илья Павлович','Волкова Наталья Юрьевна','Морозов Сергей Олегович']};
+const DOCC=['#0f7a5c','#1c3f8a','#8a5a1c','#6b3fa0','#a0413f','#2f6f8a','#7a6a1c','#3f6a3f'];
+function docsFor(c,s){const h=hash('doc'+c+'-'+s);const a=h%8;let b=(h>>4)%8;if(b===a)b=(a+3)%8;
+  return [a,b].map((d,i)=>({d,rt:(4.5+((h>>(8+i*3))%5)/10).toFixed(1),exp:6+((h>>(12+i*2))%18),room:100+((h>>(16+i*3))%300)}))}
+const STOP={en:['Blok M','Senayan','Bundaran HI','Dukuh Atas','Kuningan','Pancoran','Tanah Abang','Harmoni','Monas','Kota'],
+            ru:['Парк Культуры','Лужники','Тверская','Театральная','Арбатская','Таганская','Белорусская','Курский вокзал','Чистые пруды','Киевская']};
+const LINE=[{en:'1',ru:'М1',c:'#f3d79a'},{en:'6B',ru:'т17',c:'#36e0ae'},{en:'9C',ru:'15',c:'#7cc0ff'},{en:'13',ru:'Б',c:'#c4b0ff'},{en:'JAK-31',ru:'м27',c:'#f6be6b'},{en:'MRT',ru:'МЦК',c:'#ff8f8f'}];
+const lnTag=i=>'<span class="ln" style="background:'+LINE[i].c+'">'+LINE[i][L()]+'</span>';
+const stop=i=>STOP[L()][i];
+const NEAR=1, FARE=3.5;
+const TABS=[['home','Home','Главная'],['queue','E-queue','Очередь'],['doctor','Doctor','Врач'],['transport','Transport','Транспорт'],['wallet','Wallet','Кошелёк']];
+const TITLE={home:()=>'Warga+',queue:()=>T('E-queue','Электронная очередь'),doctor:()=>T('Doctor booking','Запись к врачу'),transport:()=>T('Transport','Транспорт'),wallet:()=>T('Wallet','Кошелёк'),notes:()=>T('Notifications','Уведомления')};
+
+/* ---------- state ---------- */
+const KEY='wargaplus-v1';
+function fresh(){const n=Date.now(),d0=dayStart(n);return{
+  v:1,tab:'home',online:true,cachedAt:n,wallet:1250,card:{bal:42,no:'6032 9850 1123 4471'},
+  bills:[
+   {id:'b1',ic:'⚡',en:'Electricity · October',ru:'Электроэнергия · октябрь',amt:387.5,due:d0+6*DAY,ref:'5310 2291 0417',paid:0},
+   {id:'b2',ic:'💧',en:'Water supply · October',ru:'Водоснабжение · октябрь',amt:142,due:d0+10*DAY,ref:'PDAM 118 442 07',paid:0},
+   {id:'b3',ic:'📷',en:'Traffic camera fine · speeding',ru:'Штраф с камеры · превышение скорости',amt:250,due:d0+3*DAY,ref:'ETLE-2026-55812',paid:0},
+   {id:'b4',ic:'🏠',en:'Property tax 2026',ru:'Налог на имущество 2026',amt:910,due:d0+38*DAY,ref:'PBB 31.74.050.006',paid:0}],
+  hist:[
+   {id:'h1',ic:'🚌',en:'Bus fare · route 6B',ru:'Проезд · маршрут т17',amt:-FARE,ts:n-5*3600e3,card:1},
+   {id:'h2',ic:'🎫',en:'Transit card top-up',ru:'Пополнение транспортной карты',amt:-50,ts:n-DAY-4e6},
+   {id:'h3',ic:'⬆',en:'Top-up · virtual account',ru:'Пополнение · с банковской карты',amt:1000,ts:n-3*DAY}],
+  tickets:[],
+  appts:[{id:'a1',c:0,s:0,d:hash('doc0-0')%8,day:d0+2*DAY,time:'09:30',room:214,st:'ok'}],
+  notes:[
+   {id:'n1',ic:'🪪',ten:'Your digital ID is active',tru:'Цифровое удостоверение активно',ben:'Verified through the national login (OIDC). The card and its QR work even without connection.',bru:'Подтверждено через госвход (OIDC). Карта и QR работают даже без связи.',ts:n-2*DAY,read:1,link:'home'},
+   {id:'n2',ic:'🩺',ten:'Appointment reminder',tru:'Напоминание о приёме',ben:'General practitioner in 2 days at 09:30. Tap to manage.',bru:'Терапевт через 2 дня в 09:30. Нажмите, чтобы изменить.',ts:n-3*3600e3,read:0,link:'doctor'},
+   {id:'n3',ic:'📷',ten:'New traffic fine',tru:'Новый штраф',ben:'Camera fine ETLE-2026-55812 is due in 3 days. Pay in the Wallet.',bru:'Штраф с камеры ETLE-2026-55812 — оплатить в течение 3 дней. Оплата в Кошельке.',ts:n-26*3600e3,read:0,link:'wallet'}],
+  outbox:[],
+  camps:[
+   {id:'C-1041',ic:'💉',t:'Free flu vaccination this week',tr:'Бесплатная вакцинация от гриппа',seg:'all',n:12.4e6,dr:.968,or:.312,p:1,ts:n-2*DAY},
+   {id:'C-1042',ic:'🚌',t:'Route 6B diverted',tr:'Маршрут т17 изменён',seg:'transit',n:3.2e6,dr:.974,or:.405,p:1,ts:n-20*3600e3}],
+  seq:1043,syncs:0
+}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||S.v!==1)S=fresh();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const ui={flip:false,qrT:30,token:'',code:'',tok:300,q:null,d:null,tr:{from:NEAR,to:3,res:null},sheet:null,syncing:false,pushQ:[],log:[],dev:3.81e6,
+  arr:[{l:1,dest:3,eta:95,cr:1},{l:0,dest:9,eta:262,cr:2},{l:3,dest:0,eta:431,cr:0},{l:4,dest:6,eta:655,cr:1}],tpl:null};
+
+/* ---------- log ---------- */
+function log(k,cls,en,ru){ui.log.unshift({ts:Date.now(),k,cls,en,ru});ui.log.length=Math.min(ui.log.length,60);renderLog(true)}
+function renderLog(fresh){const el=$('#log');if(!el)return;el.innerHTML=ui.log.map((l,i)=>'<div class="'+(fresh&&i===0?'fresh':'')+'"><span class="t">'+hhmm(l.ts)+':'+pad(new Date(l.ts).getSeconds())+'</span> <span class="k '+l.cls+'">'+l.k+'</span> '+esc(T(l.en,l.ru))+'</div>').join('')}
+
+/* ---------- QR ---------- */
+function newToken(){const r=Math.floor(Math.random()*1e6);ui.code=String(r).padStart(6,'0');ui.token='WRG1|'+U().nik.replace(/\s/g,'')+'|'+Date.now()+'|'+ui.code;ui.qrT=30}
+function drawQR(cv,payload){
+  const x=cv.getContext('2d'),N=29,q=2,sz=cv.width/(N+q*2);x.fillStyle='#fff';x.fillRect(0,0,cv.width,cv.height);
+  const r=rng(hash(payload)),M=[...Array(N)].map(()=>Array(N).fill(0)),R=[...Array(N)].map(()=>Array(N).fill(0));
+  const finder=(ox,oy)=>{for(let i=-1;i<8;i++)for(let j=-1;j<8;j++){const a=ox+i,b=oy+j;if(a<0||b<0||a>=N||b>=N)continue;R[b][a]=1;const d=Math.max(Math.abs(i-3),Math.abs(j-3));M[b][a]=(d===3||d<=1)&&i>=0&&j>=0&&i<7&&j<7?1:0}};
+  finder(0,0);finder(N-7,0);finder(0,N-7);
+  for(let i=8;i<N-8;i++){M[6][i]=M[i][6]=i%2?0:1;R[6][i]=R[i][6]=1}
+  const al=N-7;for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const d=Math.max(Math.abs(i),Math.abs(j));M[al+j][al+i]=d===1?0:1;R[al+j][al+i]=1}
+  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++)if(!R[y][xx])M[y][xx]=r()<.5?1:0;
+  const c0=11,c1=18;
+  x.fillStyle='#0b1512';
+  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++)if(M[y][xx]===1&&!(y>=c0&&y<c1&&xx>=c0&&xx<c1))x.fillRect(Math.round((xx+q)*sz),Math.round((y+q)*sz),Math.ceil(sz),Math.ceil(sz));
+  const cx=(c0+q)*sz,cw=(c1-c0)*sz;x.fillStyle='#fff';x.fillRect(cx,cx,cw,cw);
+  const g=x.createLinearGradient(cx,cx,cx+cw,cx+cw);g.addColorStop(0,'#36e0ae');g.addColorStop(1,'#0f7a5c');x.fillStyle=g;x.beginPath();
+  if(x.roundRect)x.roundRect(cx+3,cx+3,cw-6,cw-6,7);else x.rect(cx+3,cx+3,cw-6,cw-6);x.fill();
+  x.fillStyle='#fff';x.font='800 '+Math.round(cw*.4)+'px Inter,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('W+',cx+cw/2,cx+cw/2+1);
+}
+const fmtCode=c=>c.slice(0,3)+' '+c.slice(3);
+
+/* ---------- actions & offline outbox ---------- */
+function commit(o){ // o: {kind, api, en, ru, ref}
+  if(S.online){log('POST','ok',o.api+' → 201 Created',o.api+' → 201 Created');return true}
+  S.outbox.push({id:uid('ob'),ts:Date.now(),...o});save();
+  log('QUEUE','wa',o.en+' — saved to outbox',o.ru+' — сохранено в очередь отправки');return false}
+function notify(o,banner=true){const n={id:uid('n'),ts:Date.now(),read:0,...o};S.notes.unshift(n);S.notes.length=Math.min(S.notes.length,40);save();if(banner)showPush(n);paintChrome();if(S.tab==='notes')renderPhone();return n}
+function findRef(r){if(!r)return null;const arr=S[r.t];return arr?arr.find(x=>x.id===r.id):null}
+async function sync(){
+  if(ui.syncing||!S.online)return;
+  const total=S.outbox.length;
+  if(total){ui.syncing=true;paintChrome();log('SYNC','in','Pushing '+total+' queued action(s) with idempotency keys','Отправка '+total+' действий из очереди с ключами идемпотентности')}
+  let done=0;
+  while(S.outbox.length&&S.online){
+    await sleep(850);if(!S.online)break;
+    const o=S.outbox.shift();const it=findRef(o.ref);
+    if(it){
+      if(o.kind==='ticket'){assignTicket(it)}
+      else if(o.kind==='appt'){it.st='ok'}
+      else{it.pend=0}
+      if(o.kind==='bill'){const b=S.bills.find(x=>x.id===o.bill);if(b)b.pend=0}
+    }
+    done++;S.syncs++;save();log('200','ok',o.en+' — confirmed by server',o.ru+' — подтверждено сервером');renderPhone();
+  }
+  ui.syncing=false;S.cachedAt=Date.now();save();paintChrome();
+  if(done)toast('✓ '+T(done+' offline action(s) synced',done+' офлайн-действий синхронизировано'));
+  while(ui.pushQ.length&&S.online){const c=ui.pushQ.shift();await sleep(500);deliverPush(c)}
+}
+function setOnline(v){
+  if(S.online===v)return;S.online=v;
+  if(!v){S.cachedAt=Date.now();log('NET','wa','Connection lost — app switched to offline mode (cache from '+hhmm(S.cachedAt)+')','Связь потеряна — приложение в офлайн-режиме (кэш на '+hhmm(S.cachedAt)+')');toast(T('Offline mode — cached data, actions will sync later','Офлайн-режим — данные из кэша, действия отправятся позже'),'warn')}
+  else{log('NET','ok','Back online','Связь восстановлена');if(ui.tok<=0){ui.tok=300;log('OIDC','in','Refresh token exchanged → new access token (300 s)','Refresh-токен обменян → новый access-токен (300 с)')}}
+  save();renderPhone();renderConsole();if(v)sync();
+}
+
+/* ---------- queue logic ---------- */
+function svcWaiting(o,s){return 3+hash(o+s+new Date().getHours())%9}
+function assignTicket(t){const h=hash(t.id);const sv=SVC[t.svc];t.num=sv.p+'-'+String(20+h%70).padStart(3,'0');if(t.slot==='now'){t.st='live';t.ahead=t.ahead0=3+h%5}else{t.st='booked';t.ahead=t.ahead0=0}}
+function qSlots(o){const now=new Date();const d=new Date(now);d.setSeconds(0,0);d.setMinutes(d.getMinutes()<30?30:60);const out=[];
+  for(let i=0;i<8;i++){const ts=d.getTime()+i*1800e3;const t=hhmm(ts);out.push({t,ts,taken:hash(o+t)%4===0})}return out}
+const activeTickets=()=>S.tickets.filter(t=>t.st!=='done');
+
+/* ---------- doctor logic ---------- */
+function dDays(){const d0=dayStart(Date.now());return [0,1,2,3,4,5].map(i=>d0+i*DAY)}
+function dSlots(doc,day){const out=[];const now=Date.now();for(let h=8;h<16;h++)for(const m of [0,30]){const t=pad(h)+':'+pad(m);const ts=day+h*3600e3+m*60e3;
+  const mine=S.appts.some(a=>a.d===doc&&a.day===day&&a.time===t);out.push({t,dis:ts<now+30*60e3||hash(doc+'|'+day+'|'+t)%3===0||mine})}return out}
+const upcomingAppts=()=>S.appts.filter(a=>a.day+(+a.time.slice(0,2))*3600e3>Date.now()-3600e3).sort((a,b)=>(a.day-b.day)||a.time.localeCompare(b.time));
+
+/* ---------- transport logic ---------- */
+function routes(a,b){if(a===b)return[];const d=Math.abs(a-b),h=hash(a+'>'+b);const out=[];
+  out.push({lines:[h%6],dur:d*4+7+h%5,walk:3+h%4,xf:0,via:null});
+  let v=(a+b+3)%10;if(v===a||v===b)v=(v+1)%10;
+  out.push({lines:[(h>>3)%6,(h>>6)%6===(h>>3)%6?((h>>3)%6+2)%6:(h>>6)%6],dur:d*3+11+(h>>2)%6,walk:5+(h>>9)%3,xf:1,via:v});
+  if(h%3)out.push({lines:[5],dur:Math.max(9,d*2+9+(h>>5)%4),walk:8,xf:0,via:null});
+  out.sort((x,y)=>x.dur-y.dur);return out}
+const etaTxt=s=>s<=20?T('now','сейчас'):Math.floor(s/60)+':'+pad(s%60);
+
+/* ---------- phone screens ---------- */
+const back=(a,v)=>'<button class="back" data-a="'+a+'" data-v="'+(v||'')+'">'+ic('back',16)+T('Back','Назад')+'</button>';
+const steps=(n,of)=>'<div class="steps">'+Array.from({length:of},(_,i)=>'<i class="'+(i<n?'on':'')+'"></i>').join('')+'</div>';
+
+function scrHome(){
+  const u=U(),h=new Date().getHours();
+  const greet=h<11?T('Good morning','Доброе утро'):h<17?T('Good afternoon','Добрый день'):T('Good evening','Добрый вечер');
+  const t=activeTickets()[0],ap=upcomingAppts()[0],unpaid=S.bills.filter(b=>!b.paid);
+  let up='';
+  if(t)up+='<button class="li" data-a="tab" data-v="queue"><span class="ic">🎫</span><span class="sp"><b>'+(t.num||'—')+' · '+esc(OFF.find(o=>o.id===t.off)[L()])+'</b><div>'+tStatusLine(t)+'</div></span><span class="chev">'+ic('chev',16)+'</span></button>';
+  if(ap)up+='<button class="li" data-a="tab" data-v="doctor"><span class="ic">'+SPEC[ap.s].ic+'</span><span class="sp"><b>'+esc(SPEC[ap.s][L()])+' · '+dShort(ap.day)+', '+ap.time+'</b><div>'+esc(DOCN[L()][ap.d])+'</div></span><span class="chev">'+ic('chev',16)+'</span></button>';
+  if(unpaid.length)up+='<button class="li" data-a="tab" data-v="wallet"><span class="ic">🧾</span><span class="sp"><b>'+T(unpaid.length+' bills to pay','Счетов к оплате: '+unpaid.length)+'</b><div>'+T('Total ','Всего ')+money(unpaid.reduce((s,b)=>s+b.amt,0))+'</div></span><span class="chev">'+ic('chev',16)+'</span></button>';
+  up+='<button class="li" data-a="tab" data-v="transport"><span class="ic">🚌</span><span class="sp"><b>'+T('Transit card','Транспортная карта')+' · '+money(S.card.bal)+'</b><div>'+lnTag(ui.arr[0].l).replace('style="','style="height:17px;font-size:10px;min-width:24px;padding:0 5px;')+' '+T('at','на')+' '+esc(stop(NEAR))+' · <span class="eta0">'+(S.online?etaTxt(ui.arr[0].eta):'≈ '+Math.ceil(ui.arr[0].eta/60)+T(' min',' мин'))+'</span></div></span><span class="chev">'+ic('chev',16)+'</span></button>';
+  const news=S.notes.slice(0,2).map(n=>noteHtml(n)).join('');
+  return '<div class="screen-in"><div class="hello"><div class="ava">'+u.ini+'</div><div class="sp"><div class="xs muted">'+greet+'</div><div class="nm">'+esc(u.name)+'</div></div><span class="pill ok" style="font-size:11px">'+ic('shield',13)+' '+T('Verified','Подтверждён')+'</span></div>'+
+  '<div class="idc"><div class="idin'+(ui.flip?' fl':'')+'" data-a="flip">'+
+   '<div class="face fr"><div class="idtop"><span class="emb">W+</span><div><div class="t1">'+T('DIGITAL IDENTITY','ЦИФРОВОЕ УДОСТОВЕРЕНИЕ')+'</div><div class="t2">Warga+ · '+T('demo specimen','демо-образец')+'</div></div><span class="chipz"></span></div>'+
+    '<div class="idmid"><div class="photo"><svg viewBox="0 0 60 72"><rect width="60" height="72" fill="#cfe9df"/><circle cx="30" cy="27" r="13" fill="#6f988a"/><path d="M5 72c2-17 12-25 25-25s23 8 25 25z" fill="#6f988a"/></svg></div>'+
+    '<div class="fields"><div><i>'+T('Name','ФИО')+'</i><b>'+esc(u.full)+'</b></div><div><i>'+T('ID number','Номер')+'</i><b class="mono">'+u.nik+'</b></div>'+
+    '<div class="two"><div><i>'+T('Born','Рождение')+'</i><b>'+u.dob+'</b></div><div><i>'+T('Valid','Действует')+'</i><b>'+T('Lifetime','Бессрочно')+'</b></div></div></div></div>'+
+    '<div class="idbot"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(u.addr)+'</span><span class="vf">✓ OIDC</span></div></div>'+
+   '<div class="face bk"><canvas id="idqr" width="232" height="232"></canvas><div class="qrside"><div class="ring"><svg viewBox="0 0 36 36"><circle class="rb" cx="18" cy="18" r="15.5"/><circle id="qrRing" class="rf" cx="18" cy="18" r="15.5" pathLength="100" stroke-dasharray="100" stroke-dashoffset="'+(100-ui.qrT/30*100)+'"/></svg><b id="qrT">'+ui.qrT+'</b></div>'+
+    '<div class="xs" style="font-weight:700">'+T('Verification code','Код проверки')+'</div><div class="code mono" id="qrC">'+fmtCode(ui.code)+'</div><div class="op">'+T('Signed on device, rotates every 30 s. Officers verify it offline.','Подписан на устройстве, меняется каждые 30 с. Проверяется и без связи.')+'</div></div></div>'+
+  '</div></div><div class="hint">'+(ui.flip?T('Tap the card to turn it back','Нажмите на карту, чтобы перевернуть'):T('Tap the card to show the verification QR','Нажмите на карту, чтобы показать QR для проверки'))+'</div>'+
+  '<div class="tiles">'+TABS.slice(1).map(x=>'<button class="tile" data-a="tab" data-v="'+x[0]+'"><i>'+ic(x[0],24)+'</i><span>'+T(x[1],x[2])+'</span></button>').join('')+'</div>'+
+  '<div class="sect">'+T('Coming up','Ближайшее')+'</div>'+up+
+  '<div class="sect">'+T('Latest updates','Новости и уведомления')+'<button data-a="tab" data-v="notes">'+T('All','Все')+'</button></div>'+news+'</div>';
+}
+function tStatusLine(t){
+  if(t.st==='pend')return '<span class="amb">'+T('Waiting for connection — number on sync','Ждёт связи — номер после синхронизации')+'</span>';
+  if(t.st==='called')return '<span style="color:var(--gold2);font-weight:700">'+T('Your turn — window '+t.win,'Ваша очередь — окно '+t.win)+'</span>';
+  if(t.st==='booked')return T('Slot at ','Время: ')+t.slot+' · '+T('check in on arrival','отметьтесь по приходу');
+  return T('People ahead: ','Перед вами: ')+'<b class="ah-'+t.id+'">'+t.ahead+'</b>';
+}
+function ticketHtml(t){
+  const o=OFF.find(x=>x.id===t.off),sv=SVC[t.svc];
+  const cls=t.st==='called'?' called':t.st==='pend'?' pend':'';
+  let mid='',ft='';
+  if(t.st==='live'){const pct=t.ahead0?Math.round((1-t.ahead/t.ahead0)*100):100;
+    mid='<div class="row" style="margin-top:6px"><span class="'+(S.online?'live':'live off')+'">'+(S.online?T('Live','Онлайн'):T('Paused · offline','Пауза · офлайн'))+'</span></div><div class="ahead"><span class="ah-'+t.id+'">'+t.ahead+'</span> <span class="sm muted" style="font-weight:600">'+T('ahead of you','перед вами')+'</span></div><div class="prog"><i class="pg-'+t.id+'" style="width:'+pct+'%"></i></div><div class="xs muted" style="margin-top:4px">≈ <span class="wt-'+t.id+'">'+t.ahead*sv.m+'</span> '+T('min · demo time runs ×60','мин · время в демо ×60')+'</div>';
+    ft='<button class="btn xs dng" data-a="tCancel" data-v="'+t.id+'">'+T('Leave queue','Выйти из очереди')+'</button><span class="sp"></span><span class="xs muted">'+T('We\'ll push you when it\'s your turn','Пришлём push, когда подойдёт очередь')+'</span>'}
+  else if(t.st==='booked'){mid='<div class="xs muted" style="margin-top:6px">'+T('Booked for','Запись на')+' <b style="color:var(--text);display:inline">'+t.slot+'</b>. '+T('Check in within 15 min of the slot to join the live queue.','Отметьтесь за 15 мин до времени — попадёте в живую очередь.')+'</div>';
+    ft='<button class="btn xs pri" data-a="tCheck" data-v="'+t.id+'">📍 '+T('Check in','Отметиться')+'</button><button class="btn xs dng" data-a="tCancel" data-v="'+t.id+'">'+T('Cancel','Отменить')+'</button>'}
+  else if(t.st==='called'){mid='<div class="ahead" style="color:var(--gold2)">'+T('Window '+t.win,'Окно '+t.win)+'</div><div class="xs muted">'+T('Please proceed now — the officer is waiting','Пройдите сейчас — специалист ждёт')+'</div>';
+    ft='<button class="btn xs gold" data-a="tDone" data-v="'+t.id+'">✓ '+T('I\'ve been served','Меня обслужили')+'</button>'}
+  else{mid='<div class="xs amb" style="margin-top:6px">'+T('Saved offline. A ticket number is issued as soon as the phone is back online.','Сохранено офлайн. Номер выдадут, как только появится связь.')+'</div>';
+    ft='<button class="btn xs dng" data-a="tCancel" data-v="'+t.id+'">'+T('Cancel','Отменить')+'</button>'}
+  return '<div class="ticket'+cls+'"><div class="tk"><div class="num"><span>'+T('Ticket','Талон')+'</span><b>'+(t.num||'···')+'</b><span>'+(t.slot==='now'?T('live','сейчас'):t.slot)+'</span></div><div class="inf"><b>'+esc(sv[L()])+'</b><div class="m">'+o.ic+' '+esc(o[L()])+'</div>'+mid+'</div></div><div class="ft">'+ft+'</div></div>';
+}
+function scrQueue(){
+  const q=ui.q;
+  if(!q){const tk=activeTickets();
+    return '<div class="screen-in">'+(tk.length?'<div class="sect" style="margin-top:4px">'+T('My tickets','Мои талоны')+'</div>'+tk.map(ticketHtml).join(''):'<div class="empty" style="margin:6px 0 4px">🎫<br>'+T('No active tickets. Pick an office below — no more waiting in the hall.','Активных талонов нет. Выберите офис ниже — без ожидания в зале.')+'</div>')+
+    '<div class="sect">'+T('Choose an office','Выберите учреждение')+'<span class="xs" style="text-transform:none;letter-spacing:0;font-weight:600">'+T('nearest first','сначала ближайшие')+'</span></div>'+
+    OFF.slice().sort((a,b)=>a.km-b.km).map(o=>{const ld=Math.min(.98,o.load+((hash(o.id+new Date().getMinutes())%10)-5)/100);const col=ld>.8?'var(--red)':ld>.55?'var(--amber)':'var(--mal3)';
+      return '<button class="li" data-a="qOff" data-v="'+o.id+'"><span class="ic">'+o.ic+'</span><span class="sp"><b>'+esc(o[L()])+'</b><div>'+esc(L()==='ru'?o.aru:o.aen)+' · '+o.km.toLocaleString(loc())+T(' km',' км')+'</div><div class="load"><i style="width:'+Math.round(ld*100)+'%;background:'+col+'"></i></div></span><span class="r" style="color:'+col+'">'+(ld>.8?T('Busy','Много людей'):ld>.55?T('Moderate','Средне'):T('Quiet','Свободно'))+'</span></button>'}).join('')+'</div>'}
+  const o=OFF.find(x=>x.id===q.off);
+  if(q.step==='svc')return '<div class="screen-in">'+back('qBack','root')+steps(1,3)+'<div class="h2">'+esc(o[L()])+'</div><div class="sub">'+T('What do you need today?','Какая услуга нужна?')+'</div>'+
+    o.svc.map(s=>{const w=svcWaiting(o.id,s);return '<button class="li" data-a="qSvc" data-v="'+s+'"><span class="ic mono" style="font-weight:800;color:var(--mal3)">'+SVC[s].p+'</span><span class="sp"><b>'+esc(SVC[s][L()])+'</b><div>'+T('In queue now: ','Сейчас в очереди: ')+w+' · ≈ '+SVC[s].m+T(' min per visit',' мин на приём')+'</div></span><span class="chev">'+ic('chev',16)+'</span></button>'}).join('')+'</div>';
+  if(q.step==='time'){const w=svcWaiting(o.id,q.svc);const sl=qSlots(o.id);
+    return '<div class="screen-in">'+back('qBack','svc')+steps(2,3)+'<div class="h2">'+esc(SVC[q.svc][L()])+'</div><div class="sub">'+esc(o[L()])+'</div>'+
+    '<div class="slots"><button class="slot now'+(q.slot==='now'?' on':'')+'" data-a="qSlot" data-v="now"><span class="live" style="'+(q.slot==='now'?'color:#1a1306':'')+'"></span>'+T('Join live queue now','Встать в живую очередь')+' · '+w+T(' ahead',' перед вами')+'</button>'+
+    sl.map(s=>'<button class="slot'+(q.slot===s.t?' on':'')+'" data-a="qSlot" data-v="'+s.t+'"'+(s.taken?' disabled':'')+'>'+s.t+'</button>').join('')+'</div>'+
+    '<div class="xs muted">'+T('Crossed-out times are fully booked.','Зачёркнутое время занято.')+'</div>'+
+    (q.slot?'<div class="sum" style="margin-top:12px"><div class="r"><span>'+T('Office','Учреждение')+'</span><span>'+esc(o[L()])+'</span></div><div class="r"><span>'+T('Service','Услуга')+'</span><span>'+esc(SVC[q.svc][L()])+'</span></div><div class="r"><span>'+T('Time','Время')+'</span><span>'+(q.slot==='now'?T('Now · live queue','Сейчас · живая очередь'):T('Today ','Сегодня ')+q.slot)+'</span></div><div class="r"><span>'+T('Bring','Взять с собой')+'</span><span>'+T('Digital ID (in app)','Цифровое удостоверение (в приложении)')+'</span></div></div>'+
+     '<button class="btn pri pbtn" data-a="qTake">🎫 '+T('Get ticket','Получить талон')+(S.online?'':' · '+T('offline','офлайн'))+'</button>':'')+'</div>'}
+  return '';
+}
+function apptHtml(a){
+  const d=new Date(a.day),dn=DOCN[L()][a.d],cl=CLIN[a.c];
+  return '<div class="appt"><div class="dt"><div class="cal"><span>'+d.toLocaleDateString(loc(),{month:'short'}).replace('.','')+'</span><b>'+d.getDate()+'</b></div><div style="flex:1;min-width:0"><b style="display:block;font-size:14px">'+esc(SPEC[a.s][L()])+' · '+a.time+'</b><div class="sm muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(dn)+'</div><div class="xs muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(cl[L()])+' · '+T('room ','каб. ')+a.room+'</div></div></div>'+
+  '<div class="ft">'+(a.st==='pend'?'<span class="pendtag" style="margin:0">'+T('waiting to sync','ждёт отправки')+'</span>':'<span class="pill ok" style="font-size:11px">✓ '+T('Confirmed','Подтверждено')+'</span>')+'<span class="sp"></span><span class="xs muted">'+dShort(a.day)+'</span><button class="btn xs dng" data-a="dCancelAsk" data-v="'+a.id+'">'+T('Cancel','Отменить')+'</button></div></div>';
+}
+function scrDoctor(){
+  const q=ui.d;
+  if(!q){const up=upcomingAppts();
+    return '<div class="screen-in"><div class="sect" style="margin-top:4px">'+T('My appointments','Мои записи')+'<span class="xs" style="text-transform:none;letter-spacing:0">'+up.length+'</span></div>'+
+    (up.length?up.map(apptHtml).join(''):'<div class="empty">🩺<br>'+T('No upcoming appointments','Предстоящих записей нет')+'</div>')+
+    '<button class="btn pri pbtn" data-a="dNew">+ '+T('Book an appointment','Записаться к врачу')+'</button>'+
+    '<div class="sect">'+T('Health services','Медицинские сервисы')+'</div>'+
+    '<div class="li" style="cursor:default"><span class="ic">💊</span><span class="sp"><b>'+T('e-Prescriptions','Электронные рецепты')+'</b><div>'+T('2 active · shown to any pharmacy by QR','2 активных · показываются в аптеке по QR')+'</div></span></div>'+
+    '<div class="li" style="cursor:default"><span class="ic">📄</span><span class="sp"><b>'+T('Visit summaries & lab results','Заключения и анализы')+'</b><div>'+T('Last: complete blood count, 4 Nov','Последнее: общий анализ крови, 4 ноя')+'</div></span></div></div>'}
+  if(q.step==='clinic')return '<div class="screen-in">'+back('dBack','root')+steps(1,4)+'<div class="h2">'+T('Choose a clinic','Выберите учреждение')+'</div><div class="sub">'+T('Attached clinic is listed first','Поликлиника прикрепления — первая')+'</div>'+
+    CLIN.map((c,i)=>'<button class="li" data-a="dClinic" data-v="'+i+'"><span class="ic">🏥</span><span class="sp"><b>'+esc(c[L()])+(i===0?' <span class="pill ok" style="font-size:10px;padding:0 6px">'+T('yours','ваша')+'</span>':'')+'</b><div>'+esc(L()==='ru'?c.aru:c.aen)+' · '+c.km.toLocaleString(loc())+T(' km',' км')+'</div></span><span class="chev">'+ic('chev',16)+'</span></button>').join('')+'</div>';
+  if(q.step==='spec')return '<div class="screen-in">'+back('dBack','clinic')+steps(2,4)+'<div class="h2">'+T('Specialty','Специальность')+'</div><div class="sub">'+esc(CLIN[q.c][L()])+'</div>'+
+    SPEC.map((s,i)=>{const f=4+hash('f'+q.c+i)%26;return '<button class="li" data-a="dSpec" data-v="'+i+'"><span class="ic">'+s.ic+'</span><span class="sp"><b>'+esc(s[L()])+'</b><div>'+T(f+' free slots this week','Свободно на неделе: '+f)+'</div></span><span class="chev">'+ic('chev',16)+'</span></button>'}).join('')+'</div>';
+  if(q.step==='doc')return '<div class="screen-in">'+back('dBack','spec')+steps(3,4)+'<div class="h2">'+esc(SPEC[q.s][L()])+'</div><div class="sub">'+esc(CLIN[q.c][L()])+'</div>'+
+    docsFor(q.c,q.s).map(x=>{const nm=DOCN[L()][x.d];const ini=nm.replace('dr. ','').split(' ').slice(0,2).map(w=>w[0]).join('');
+      const nx=dDays().map(day=>({day,s:dSlots(x.d,day).find(s=>!s.dis)})).find(z=>z.s);
+      return '<button class="li" data-a="dDoc" data-v="'+x.d+'|'+x.room+'"><span class="doc"><span class="dp" style="background:'+DOCC[x.d]+'">'+ini+'</span></span><span class="sp"><b>'+esc(nm)+'</b><div>★ '+x.rt+' · '+T(x.exp+' yrs experience','стаж '+x.exp+' лет')+'</div><div class="pos" style="font-weight:600">'+(nx?T('Next: ','Ближайшее: ')+dShort(nx.day)+', '+nx.s.t:'—')+'</div></span><span class="chev">'+ic('chev',16)+'</span></button>'}).join('')+'</div>';
+  if(q.step==='slot'){const days=dDays();if(q.day==null)q.day=days.find(d=>dSlots(q.doc,d).some(s=>!s.dis))||days[1];const sl=dSlots(q.doc,q.day);
+    return '<div class="screen-in">'+back('dBack','doc')+steps(4,4)+'<div class="h2">'+esc(DOCN[L()][q.doc])+'</div><div class="sub">'+esc(SPEC[q.s][L()])+' · '+esc(CLIN[q.c][L()])+'</div>'+
+    '<div class="days">'+days.map(d=>{const dt=new Date(d);const free=dSlots(q.doc,d).filter(s=>!s.dis).length;return '<button class="day'+(q.day===d?' on':'')+'" data-a="dDay" data-v="'+d+'"'+(free?'':' style="opacity:.4"')+'>'+dt.toLocaleDateString(loc(),{weekday:'short'})+'<b>'+dt.getDate()+'</b>'+free+'</button>'}).join('')+'</div>'+
+    '<div class="slots">'+sl.map(s=>'<button class="slot'+(q.time===s.t?' on':'')+'" data-a="dTime" data-v="'+s.t+'"'+(s.dis?' disabled':'')+'>'+s.t+'</button>').join('')+'</div>'+
+    (sl.every(s=>s.dis)?'<div class="empty">'+T('No free slots on this day','В этот день свободного времени нет')+'</div>':'')+
+    (q.time?'<div class="sum" style="margin-top:10px"><div class="r"><span>'+T('Patient','Пациент')+'</span><span>'+esc(U().full)+'</span></div><div class="r"><span>'+T('When','Когда')+'</span><span>'+dShort(q.day)+', '+q.time+'</span></div><div class="r"><span>'+T('Where','Где')+'</span><span>'+esc(CLIN[q.c][L()])+', '+T('room ','каб. ')+q.room+'</span></div><div class="r"><span>'+T('Cost','Стоимость')+'</span><span class="pos">'+T('Covered by national insurance','По полису ОМС — бесплатно')+'</span></div></div>'+
+     '<button class="btn pri pbtn" data-a="dBook">'+T('Confirm booking','Подтвердить запись')+(S.online?'':' · '+T('offline','офлайн'))+'</button>':'')+'</div>'}
+  return '';
+}
+function scrTransport(){
+  const tr=ui.tr,res=tr.res;
+  const opts=i=>STOP[L()].map((s,j)=>'<option value="'+j+'"'+(j===i?' selected':'')+'>'+esc(s)+'</option>').join('');
+  let rh='';
+  if(res){rh=res.length?res.map((r,i)=>'<div class="rt'+(i===0?' best':'')+'"><div class="top2">'+r.lines.map(lnTag).join('<span class="muted" style="font-size:11px">›</span>')+(i===0?'<span class="pill ok" style="font-size:10px;padding:0 7px">'+T('fastest','быстрее всего')+'</span>':'')+'<span class="dur">'+r.dur+T(' min',' мин')+'</span></div>'+
+      '<div class="meta">🚶 '+r.walk+T(' min walk',' мин пешком')+' · '+(r.xf?T('1 transfer at ','1 пересадка: ')+esc(stop(r.via)):T('direct','без пересадок'))+' · '+T('arrive ','прибытие ')+hhmm(Date.now()+r.dur*60e3)+'</div>'+
+      '<div class="ft"><span class="sm">'+T('Fare ','Тариф ')+'<b>'+money(FARE)+'</b>'+(r.xf?' <span class="xs muted">'+T('(transfer free)','(пересадка бесплатно)')+'</span>':'')+'</span><span class="sp"></span><button class="btn xs pri" data-a="trTap" data-v="'+i+'">'+T('Tap in with card','Оплатить картой')+'</button></div></div>').join(''):'<div class="empty">'+T('Choose two different stops','Выберите разные остановки')+'</div>';
+    if(!S.online&&res.length)rh='<div class="xs amb" style="margin-bottom:6px">'+T('Planned from the cached timetable — live traffic unavailable offline','Построено по сохранённому расписанию — пробки офлайн не учитываются')+'</div>'+rh}
+  return '<div class="screen-in"><div class="tcard"><div class="row"><div class="sp"><div class="l">'+T('Transit card','Транспортная карта')+'</div><div class="v">'+money(S.card.bal)+'</div></div><span style="font-size:26px;position:relative;z-index:1">🚌</span></div><div class="n">'+S.card.no+'</div></div>'+
+   '<div class="chips" style="margin-top:0">'+[20,50,100].map(v=>'<button class="chip" data-a="cardTop" data-v="'+v+'">+ '+money(v)+'</button>').join('')+'</div>'+
+   '<div class="sect">'+T('Plan a trip','Маршрут')+'</div>'+
+   '<div class="srch"><div class="stp"><select data-c="from" aria-label="From">'+opts(tr.from)+'</select><select data-c="to" aria-label="To">'+opts(tr.to)+'</select></div><button class="ibtn" data-a="trSwap" title="Swap">'+ic('swap',18)+'</button></div>'+
+   '<button class="btn pri pbtn" data-a="trGo">'+T('Find routes','Найти маршрут')+'</button><div style="margin-top:10px">'+rh+'</div>'+
+   '<div class="sect">'+T('Departures · ','Отправления · ')+esc(stop(NEAR))+'<span class="'+(S.online?'live':'live off')+'">'+(S.online?'GPS':T('schedule','расписание'))+'</span></div>'+
+   '<div class="board">'+ui.arr.map((a,i)=>'<div class="arr">'+lnTag(a.l)+'<span class="sp"><b>→ '+esc(stop(a.dest))+'</b><span class="xs muted">'+T('Seats','Места')+'<span class="crowd">'+[0,1,2].map(k=>'<i class="'+(k<=2-a.cr?'f':'')+'"></i>').join('')+'</span></span></span><span class="eta'+(S.online?'':' cached')+'" id="eta'+i+'">'+(S.online?etaTxt(a.eta):'≈ '+Math.ceil(a.eta/60)+T(' min',' мин'))+'</span></div>').join('')+'</div></div>';
+}
+function scrWallet(){
+  const unpaid=S.bills.filter(b=>!b.paid),paid=S.bills.filter(b=>b.paid);
+  const billHtml=b=>{const dd=Math.ceil((b.due-dayStart(Date.now()))/DAY);const col=dd<=3?'red':dd<=7?'amb':'muted';
+    return '<div class="li" style="cursor:default"><span class="ic">'+b.ic+'</span><span class="sp"><b>'+esc(b[L()])+'</b><div class="mono" style="font-size:11px">'+b.ref+'</div><div class="due '+col+'">'+(b.paid?'<span class="pos">✓ '+T('Paid','Оплачено')+'</span>'+(b.pend?'<span class="pendtag">'+T('sync','синхр.')+'</span>':''):T('Due in '+dd+' days','Оплатить за '+dd+' дн.'))+'</div></span><span style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="r">'+money(b.amt)+'</span>'+(b.paid?'':'<button class="btn xs gold" data-a="billAsk" data-v="'+b.id+'">'+T('Pay','Оплатить')+'</button>')+'</span></div>'};
+  return '<div class="screen-in"><div class="wbal"><div class="l">'+T('Wallet balance','Баланс кошелька')+'</div><div class="v">'+money(S.wallet)+'</div><div class="xs" style="opacity:.75;position:relative;z-index:1">'+(S.online?T('Updated just now','Обновлено только что'):T('Cached at ','Кэш на ')+hhmm(S.cachedAt))+'</div>'+
+   '<div class="acts"><button data-a="wTopAsk">⬆ '+T('Top up','Пополнить')+'</button><button data-a="tab" data-v="transport">🚌 '+T('Travel card','Проездной')+'</button><button data-a="flipHome">🪪 '+T('Show ID','Мой ID')+'</button></div></div>'+
+   '<div class="sect">'+T('Bills & fines','Счета и штрафы')+'<span class="xs" style="text-transform:none;letter-spacing:0">'+unpaid.length+' '+T('open','к оплате')+'</span></div>'+
+   (unpaid.length?unpaid.map(billHtml).join(''):'<div class="empty">✓ '+T('Everything is paid','Всё оплачено')+'</div>')+(paid.length?paid.map(billHtml).join(''):'')+
+   '<div class="sect">'+T('History','История')+'</div>'+
+   S.hist.slice(0,12).map(h=>'<div class="li" style="cursor:default"><span class="ic">'+h.ic+'</span><span class="sp"><b>'+esc(h[L()])+(h.pend?'<span class="pendtag">'+T('pending','в очереди')+'</span>':'')+'</b><div>'+ago(h.ts)+(h.card?' · '+T('transit card','транспортная карта'):'')+'</div></span><span class="r '+(h.amt>0?'pos':'')+'">'+smoney(h.amt)+'</span></div>').join('')+'</div>';
+}
+function noteHtml(n){const t=T(n.ten,n.tru),b=T(n.ben,n.bru);
+  return '<div class="nt'+(n.read?'':' un')+(n.crit?' crit':'')+'" data-a="noteOpen" data-v="'+n.id+'"><span class="ic">'+n.ic+'</span><div class="sp"><b>'+esc(t)+'</b><p>'+esc(b)+'</p><span class="t">'+ago(n.ts)+(n.camp?' · '+n.camp:'')+'</span></div></div>'}
+function scrNotes(){const un=S.notes.filter(n=>!n.read).length;
+  return '<div class="screen-in"><div class="row" style="margin:2px 0 10px"><span class="sm muted sp">'+(un?T(un+' unread',un+' непрочитанных'):T('All caught up','Всё прочитано'))+'</span>'+(un?'<button class="btn xs" data-a="notesRead">'+T('Mark all read','Прочитать все')+'</button>':'')+'</div>'+
+  (S.notes.length?S.notes.map(noteHtml).join(''):'<div class="empty">'+T('No notifications','Уведомлений нет')+'</div>')+
+  '<div class="xs muted" style="text-align:center;margin-top:10px">'+T('Critical alerts ignore quiet hours. Manage channels in Settings.','Экстренные оповещения приходят и в тихие часы. Каналы — в настройках.')+'</div></div>'}
+const SCR={home:scrHome,queue:scrQueue,doctor:scrDoctor,transport:scrTransport,wallet:scrWallet,notes:scrNotes};
+
+/* ---------- render ---------- */
+function paintChrome(){
+  $('#ptitle').textContent=TITLE[S.tab]();
+  $('#tabbar').innerHTML=TABS.map(x=>'<button data-a="tab" data-v="'+x[0]+'" class="'+(S.tab===x[0]?'on':'')+'">'+ic(x[0],22)+'<span>'+T(x[1],x[2])+'</span></button>').join('');
+  const un=S.notes.filter(n=>!n.read).length;
+  $('#bellBtn').innerHTML=ic('bell',19)+(un?'<span class="bd">'+un+'</span>':'');
+  $('#bellBtn').classList.toggle('on',S.tab==='notes');
+  const nb=$('#netBtn');nb.innerHTML=ic(S.online?'cloud':'cloudoff',19);nb.classList.toggle('offl',!S.online);nb.title=T(S.online?'Go offline (simulate no signal)':'Go back online',S.online?'Отключить связь (симуляция)':'Вернуть связь');
+  $('#sig').innerHTML=S.online?'<span>5G</span><span>▂▄▆█</span><span>86%</span>':'<span class="off">'+T('No signal','Нет сети')+'</span><span>86%</span>';
+  const ob=S.outbox.length;
+  $('#banner').innerHTML=!S.online?'<div class="ban off">'+ic('cloudoff',16)+'<span>'+T('Offline — showing data cached at ','Офлайн — данные из кэша на ')+hhmm(S.cachedAt)+(ob?' · '+T(ob+' action(s) waiting to sync','ждут отправки: '+ob):'')+'</span></div>':
+    ui.syncing?'<div class="ban sync"><span class="bio" style="width:14px;height:14px;margin:0;border-width:2px"></span><span>'+T('Back online — syncing ','Связь есть — отправляем ')+ob+T(' queued action(s)…',' действий из очереди…')+'</span></div>':'';
+}
+function renderPhone(reset){
+  const b=$('#pbody');const st=b.scrollTop;
+  paintChrome();
+  b.innerHTML=SCR[S.tab]();
+  b.scrollTop=reset?0:st;
+  const cv=$('#idqr');if(cv)drawQR(cv,ui.token);
+  renderSheet();
+  $$('#feats .feat').forEach(f=>f.classList.toggle('on',f.dataset.go===S.tab||(f.dataset.go==='offline'&&!S.online)));
+}
+function go(tab){if(S.tab!==tab){S.tab=tab;save()}if(tab==='queue')ui.q=null;if(tab==='doctor')ui.d=null;ui.sheet=null;renderPhone(true)}
+
+/* ---------- sheet ---------- */
+function openSheet(fn){ui.sheet=fn;renderSheet()}
+function closeSheet(){ui.sheet=null;renderSheet()}
+function renderSheet(){const h=$('#sheetHost');if(!ui.sheet){h.innerHTML='';return}
+  const keep=h.querySelector('.sheet');h.innerHTML='<div class="shbg" data-a="sheetClose"'+(keep?' style="animation:none"':'')+'></div><div class="sheet"'+(keep?' style="animation:none"':'')+'>'+ui.sheet()+'</div>'}
+const okView=(title,sub,wait)=>'<div class="ctr"><div class="okm'+(wait?' wait':'')+'">'+(wait?'<span style="font-size:34px">⏳</span>':CHECK)+'</div><h4>'+title+'</h4><div class="sm muted" style="margin-bottom:6px">'+sub+'</div><button class="btn pbtn" data-a="sheetClose">'+T('Done','Готово')+'</button></div>';
+const bioView=()=>'<div class="ctr"><div class="bio"></div><h4>'+T('Confirming with biometrics…','Подтверждение биометрией…')+'</h4><div class="sm muted">'+T('Signed with the device key','Подпись ключом устройства')+'</div></div>';
+
+/* ---------- push ---------- */
+function showPush(n){const scr=$('#scr');$$('.push',scr).forEach(p=>p.remove());
+  const el=document.createElement('div');el.className='push'+(n.crit?' crit':'');
+  el.innerHTML='<span class="ic">'+n.ic+'</span><div class="sp"><div class="hd"><span>Warga+'+(n.crit?' · '+T('critical alert','экстренно'):'')+'</span><span>'+T('now','сейчас')+'</span></div><b>'+esc(T(n.ten,n.tru))+'</b><p>'+esc(T(n.ben,n.bru))+'</p></div>';
+  el.onclick=()=>{n.read=1;save();el.remove();go(n.link||'notes')};
+  scr.append(el);setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),320)},6000)}
+function deliverPush(c){notify({ic:c.ic,ten:c.t,tru:c.t,ben:c.b,bru:c.b,link:c.link,crit:c.p===2,camp:c.id});log('PUSH','go','Received '+c.id+' via FCM → opens “'+c.link+'”','Получен '+c.id+' через FCM → открывает «'+c.link+'»')}
+
+/* ---------- phone actions ---------- */
+const A={
+  tab:v=>go(v),
+  net:()=>setOnline(!S.online),
+  flip:()=>{ui.flip=!ui.flip;const el=$('.idin');if(el)el.classList.toggle('fl',ui.flip);const h=$('.hint');if(h)h.textContent=ui.flip?T('Tap the card to turn it back','Нажмите на карту, чтобы перевернуть'):T('Tap the card to show the verification QR','Нажмите на карту, чтобы показать QR для проверки');if(ui.flip)log('ID','in','Verification QR shown (offline-verifiable, Ed25519 signature)','Показан QR для проверки (проверяется офлайн, подпись Ed25519)')},
+  flipHome:()=>{ui.flip=true;go('home')},
+  sheetClose:()=>closeSheet(),
+  /* queue */
+  qOff:v=>{if(activeTickets().length>=3)return toast(T('Up to 3 active tickets at a time','Не больше 3 активных талонов'),'warn');ui.q={off:v,step:'svc'};renderPhone(true)},
+  qSvc:v=>{ui.q.svc=v;ui.q.step='time';ui.q.slot=null;renderPhone(true)},
+  qSlot:v=>{ui.q.slot=v;renderPhone()},
+  qBack:v=>{if(v==='root')ui.q=null;else ui.q.step=v;renderPhone(true)},
+  qTake:()=>{const q=ui.q;const t={id:uid('t'),off:q.off,svc:q.svc,slot:q.slot,ts:Date.now(),num:null,st:'pend',ahead:0,ahead0:0};S.tickets.unshift(t);
+    const ok=commit({kind:'ticket',api:'/queue/v2/tickets',en:'Ticket '+SVC[q.svc].en,ru:'Талон: '+SVC[q.svc].ru,ref:{t:'tickets',id:t.id}});
+    if(ok){assignTicket(t);toast('🎫 '+T('Ticket '+t.num+' issued','Выдан талон '+t.num))}else toast(T('Saved offline — the number will arrive when you are back online','Сохранено офлайн — номер придёт, когда появится связь'),'warn');
+    save();ui.q=null;renderPhone(true)},
+  tCancel:v=>openSheet(()=>{const t=S.tickets.find(x=>x.id===v);if(!t)return okView(T('Cancelled','Отменено'),'');return '<h4>'+T('Cancel ticket?','Отменить талон?')+'</h4><div class="sm muted" style="margin-bottom:10px">'+esc(SVC[t.svc][L()])+' · '+(t.num||'—')+'</div><button class="btn pri pbtn" style="background:var(--red)" data-a="tCancelGo" data-v="'+v+'">'+T('Yes, cancel','Да, отменить')+'</button><button class="btn pbtn" data-a="sheetClose">'+T('Keep it','Оставить')+'</button>'}),
+  tCancelGo:v=>{const t=S.tickets.find(x=>x.id===v);S.tickets=S.tickets.filter(x=>x.id!==v);
+    const qi=S.outbox.findIndex(o=>o.ref&&o.ref.id===v);if(qi>=0){S.outbox.splice(qi,1);log('QUEUE','wa','Queued ticket removed before sync','Талон удалён из очереди до отправки')}
+    else commit({kind:'cancel',api:'DELETE /queue/v2/tickets/'+(t&&t.num||v),en:'Cancel ticket',ru:'Отмена талона'});
+    save();closeSheet();renderPhone();toast(T('Ticket cancelled','Талон отменён'))},
+  tCheck:v=>{const t=S.tickets.find(x=>x.id===v);if(!t)return;if(!S.online)return toast(T('Check-in needs a connection (geofence is verified by the office)','Для отметки нужна связь (геозону проверяет учреждение)'),'warn');
+    t.st='live';t.ahead=t.ahead0=2+hash(t.id)%3;save();log('POST','ok','/queue/v2/tickets/'+t.num+'/check-in → 200 (geofence ✓)','/queue/v2/tickets/'+t.num+'/check-in → 200 (геозона ✓)');renderPhone();toast('📍 '+T('Checked in — you are in the live queue','Вы отметились — вы в живой очереди'))},
+  tDone:v=>{const t=S.tickets.find(x=>x.id===v);if(t)t.st='done';save();renderPhone();openSheet(()=>okView(T('Thanks for visiting','Спасибо за визит'),T('Rate the service in the follow-up notification','Оцените обслуживание в уведомлении')));setTimeout(()=>notify({ic:'⭐',ten:'How was your visit?',tru:'Как прошёл визит?',ben:'Rate '+(t?OFF.find(o=>o.id===t.off).en:'the office')+' — it takes 5 seconds.',bru:'Оцените '+(t?OFF.find(o=>o.id===t.off).ru:'учреждение')+' — это займёт 5 секунд.',link:'queue'}),2500)},
+  /* doctor */
+  dNew:()=>{ui.d={step:'clinic'};renderPhone(true)},
+  dBack:v=>{if(v==='root')ui.d=null;else{ui.d.step=v;if(v!=='slot'){ui.d.time=null;ui.d.day=null}}renderPhone(true)},
+  dClinic:v=>{ui.d.c=+v;ui.d.step='spec';renderPhone(true)},
+  dSpec:v=>{ui.d.s=+v;ui.d.step='doc';renderPhone(true)},
+  dDoc:v=>{const [d,r]=v.split('|');ui.d.doc=+d;ui.d.room=+r;ui.d.step='slot';ui.d.day=null;ui.d.time=null;renderPhone(true)},
+  dDay:v=>{ui.d.day=+v;ui.d.time=null;renderPhone()},
+  dTime:v=>{ui.d.time=v;renderPhone();const b=$('#pbody');b.scrollTo({top:b.scrollHeight,behavior:'smooth'})},
+  dBook:()=>{const q=ui.d;const a={id:uid('a'),c:q.c,s:q.s,d:q.doc,day:q.day,time:q.time,room:q.room,st:'pend'};S.appts.push(a);
+    const ok=commit({kind:'appt',api:'/health/v1/appointments',en:'Appointment '+SPEC[q.s].en+' '+q.time,ru:'Запись: '+SPEC[q.s].ru+' '+q.time,ref:{t:'appts',id:a.id}});
+    if(ok)a.st='ok';save();ui.d=null;renderPhone(true);
+    openSheet(()=>okView(ok?T('Appointment booked','Вы записаны'):T('Saved offline','Сохранено офлайн'),esc(SPEC[a.s][L()])+' · '+dShort(a.day)+', '+a.time+'<br>'+esc(DOCN[L()][a.d])+(ok?'':'<br>'+T('It will be sent to the clinic when you are back online.','Запись уйдёт в поликлинику, когда появится связь.')),!ok));
+    if(ok)setTimeout(()=>notify({ic:'🩺',ten:'Appointment confirmed',tru:'Запись подтверждена',ben:SPEC[a.s].en+', '+new Date(a.day).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' at '+a.time+'. We will remind you the day before.',bru:SPEC[a.s].ru+', '+new Date(a.day).toLocaleDateString('ru-RU',{day:'numeric',month:'short'})+' в '+a.time+'. Напомним накануне.',link:'doctor'}),1800)},
+  dCancelAsk:v=>openSheet(()=>{const a=S.appts.find(x=>x.id===v);if(!a)return okView(T('Cancelled','Отменено'),'');return '<h4>'+T('Cancel appointment?','Отменить запись?')+'</h4><div class="sm muted" style="margin-bottom:10px">'+esc(SPEC[a.s][L()])+' · '+dShort(a.day)+', '+a.time+'<br>'+T('The slot is released for other patients.','Время освободится для других пациентов.')+'</div><button class="btn pri pbtn" style="background:var(--red)" data-a="dCancel" data-v="'+v+'">'+T('Yes, cancel','Да, отменить')+'</button><button class="btn pbtn" data-a="sheetClose">'+T('Keep','Оставить')+'</button>'}),
+  dCancel:v=>{S.appts=S.appts.filter(x=>x.id!==v);const qi=S.outbox.findIndex(o=>o.ref&&o.ref.id===v);
+    if(qi>=0)S.outbox.splice(qi,1);else commit({kind:'cancel',api:'DELETE /health/v1/appointments/'+v,en:'Cancel appointment',ru:'Отмена записи'});
+    save();closeSheet();renderPhone();toast(T('Appointment cancelled','Запись отменена'))},
+  /* transport */
+  trSwap:()=>{const t=ui.tr;[t.from,t.to]=[t.to,t.from];if(t.res)t.res=routes(t.from,t.to);renderPhone()},
+  trGo:()=>{ui.tr.res=routes(ui.tr.from,ui.tr.to);renderPhone();log('GET',S.online?'ok':'wa',S.online?'/transit/v1/plan → 200 ('+ui.tr.res.length+' options)':'Route planned locally from cached GTFS timetable',S.online?'/transit/v1/plan → 200 (вариантов: '+ui.tr.res.length+')':'Маршрут построен локально по сохранённому расписанию GTFS')},
+  trTap:v=>{const r=ui.tr.res&&ui.tr.res[+v];if(!r)return;if(S.card.bal<FARE)return toast(T('Not enough on the card — top it up','На карте мало денег — пополните'),'bad');
+    S.card.bal-=FARE;const h={id:uid('h'),ic:'🚌',en:'Bus fare · route '+LINE[r.lines[0]].en,ru:'Проезд · маршрут '+LINE[r.lines[0]].ru,amt:-FARE,ts:Date.now(),card:1};S.hist.unshift(h);
+    if(!commit({kind:'tap',api:'/transit/v1/taps',en:'Fare tap',ru:'Оплата проезда',ref:{t:'hist',id:h.id}}))h.pend=1;save();
+    openSheet(()=>okView(T('Have a good trip','Хорошей поездки'),money(FARE)+' · '+r.lines.map(i=>LINE[i][L()]).join(' › ')+'<br>'+T('Card balance: ','Остаток на карте: ')+money(S.card.bal)));renderPhone()},
+  cardTop:v=>{v=+v;openSheet(()=>'<h4>'+T('Top up transit card','Пополнить транспортную карту')+'</h4><div class="sum" style="margin:10px 0"><div class="r"><span>'+T('Amount','Сумма')+'</span><span>'+money(v)+'</span></div><div class="r"><span>'+T('From','Откуда')+'</span><span>'+T('Warga+ wallet','Кошелёк Warga+')+' · '+money(S.wallet)+'</span></div><div class="r"><span>'+T('Card','Карта')+'</span><span class="mono">•••• '+S.card.no.slice(-4)+'</span></div><div class="r"><span>'+T('Fee','Комиссия')+'</span><span class="pos">0</span></div></div><button class="btn pri pbtn" data-a="cardTopGo" data-v="'+v+'">'+T('Top up ','Пополнить на ')+money(v)+'</button><button class="btn pbtn" data-a="sheetClose">'+T('Cancel','Отмена')+'</button>')},
+  cardTopGo:async v=>{v=+v;if(S.wallet<v)return toast(T('Not enough in the wallet','Недостаточно средств в кошельке'),'bad');ui.sheet=bioView;renderSheet();await sleep(900);
+    S.wallet-=v;S.card.bal+=v;const h={id:uid('h'),ic:'🎫',en:'Transit card top-up',ru:'Пополнение транспортной карты',amt:-v,ts:Date.now()};S.hist.unshift(h);
+    const ok=commit({kind:'topcard',api:'/wallet/v1/transfers',en:'Card top-up',ru:'Пополнение карты',ref:{t:'hist',id:h.id}});if(!ok)h.pend=1;save();
+    ui.sheet=()=>okView(T('Card topped up','Карта пополнена'),'+'+money(v)+' · '+T('balance ','баланс ')+money(S.card.bal)+(ok?'':'<br><span class="amb">'+T('Will be confirmed when online','Подтвердится при появлении связи')+'</span>'));renderPhone()},
+  /* wallet */
+  billAsk:v=>openSheet(()=>{const b=S.bills.find(x=>x.id===v);return '<h4>'+b.ic+' '+esc(b[L()])+'</h4><div class="sum" style="margin:10px 0"><div class="r"><span>'+T('Reference','Номер')+'</span><span class="mono">'+b.ref+'</span></div><div class="r"><span>'+T('Due','Срок')+'</span><span>'+dShort(b.due)+'</span></div><div class="r"><span>'+T('Amount','Сумма')+'</span><span>'+money(b.amt)+'</span></div><div class="r"><span>'+T('Fee','Комиссия')+'</span><span class="pos">0</span></div><div class="r"><span>'+T('Pay from','Списать с')+'</span><span>'+T('Wallet','Кошелёк')+' · '+money(S.wallet)+'</span></div></div>'+
+    (S.online?'':'<div class="xs amb" style="margin-bottom:6px">'+T('Offline: the payment is signed now and executed on reconnect (idempotent, no double charge).','Офлайн: платёж подписывается сейчас и проводится при появлении связи (без двойного списания).')+'</div>')+
+    '<button class="btn gold pbtn" data-a="billPay" data-v="'+v+'">'+T('Pay ','Оплатить ')+money(b.amt)+'</button><button class="btn pbtn" data-a="sheetClose">'+T('Cancel','Отмена')+'</button>'}),
+  billPay:async v=>{const b=S.bills.find(x=>x.id===v);if(!b||b.paid)return;if(S.wallet<b.amt)return toast(T('Not enough in the wallet — top up first','Недостаточно средств — пополните кошелёк'),'bad');
+    ui.sheet=bioView;renderSheet();await sleep(1000);
+    S.wallet-=b.amt;b.paid=1;const h={id:uid('h'),ic:b.ic,en:b.en,ru:b.ru,amt:-b.amt,ts:Date.now()};S.hist.unshift(h);
+    const ok=commit({kind:'bill',bill:b.id,api:'/payments/v1/bills/'+b.ref.replace(/\s/g,''),en:'Payment '+b.en,ru:'Оплата: '+b.ru,ref:{t:'hist',id:h.id}});if(!ok){h.pend=1;b.pend=1}save();
+    const rc='RC-'+String(hash(h.id)%1e8).padStart(8,'0');
+    ui.sheet=()=>okView(ok?T('Paid','Оплачено'):T('Payment queued','Платёж в очереди'),money(b.amt)+' · '+esc(b[L()])+'<br><span class="mono xs">'+rc+'</span>',!ok);renderPhone();
+    if(ok)setTimeout(()=>notify({ic:'🧾',ten:'Receipt '+rc,tru:'Чек '+rc,ben:b.en+' — Rp '+Math.round(b.amt*1000).toLocaleString('id-ID')+' paid. Receipt saved in the Wallet.',bru:b.ru+' — оплачено '+Math.round(b.amt*10).toLocaleString('ru-RU')+' ₽. Чек сохранён в Кошельке.',link:'wallet'},false),300)},
+  wTopAsk:()=>openSheet(()=>'<h4>'+T('Top up wallet','Пополнить кошелёк')+'</h4><div class="sm muted" style="margin-bottom:8px">'+T('From your linked bank account','С привязанного банковского счёта')+'</div><div class="chips">'+[100,250,500,1000].map(x=>'<button class="chip" data-a="wTop" data-v="'+x+'">+ '+money(x)+'</button>').join('')+'</div><div class="sum"><div class="r"><span>'+T('Virtual account','Виртуальный счёт')+'</span><span class="mono">8808 0812 3456 7790</span></div></div>'+(S.online?'':'<div class="xs amb" style="margin-top:8px">'+T('Top-ups need a connection to your bank.','Для пополнения нужна связь с банком.')+'</div>')+'<button class="btn pbtn" data-a="sheetClose">'+T('Close','Закрыть')+'</button>'),
+  wTop:async v=>{v=+v;if(!S.online)return toast(T('Top-up needs a connection to your bank','Для пополнения нужна связь с банком'),'warn');ui.sheet=bioView;renderSheet();await sleep(900);
+    S.wallet+=v;S.hist.unshift({id:uid('h'),ic:'⬆',en:'Top-up · virtual account',ru:'Пополнение · с банковской карты',amt:v,ts:Date.now()});save();log('POST','ok','/wallet/v1/topups → 201','/wallet/v1/topups → 201');
+    ui.sheet=()=>okView(T('Wallet topped up','Кошелёк пополнен'),'+'+money(v)+' · '+T('balance ','баланс ')+money(S.wallet));renderPhone()},
+  /* notes */
+  noteOpen:v=>{const n=S.notes.find(x=>x.id===v);if(!n)return;n.read=1;save();if(n.link&&n.link!=='notes')go(n.link);else renderPhone()},
+  notesRead:()=>{S.notes.forEach(n=>n.read=1);save();renderPhone()}
+};
+$('#scr').addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||!$('#scr').contains(el)||el.disabled)return;const f=A[el.dataset.a];if(f){e.preventDefault();f(el.dataset.v,el)}});
+$('#scr').addEventListener('change',e=>{const c=e.target.dataset.c;if(!c)return;ui.tr[c]=+e.target.value;if(ui.tr.res){ui.tr.res=routes(ui.tr.from,ui.tr.to);renderPhone()}});
+
+/* ---------- side: features ---------- */
+const FEATS=[
+ {go:'home',ic:'🪪',en:['Digital ID','Flip the card to show a signed QR that rotates every 30 s — officers verify it even offline.'],ru:['Цифровое удостоверение','Переверните карту — QR с подписью меняется каждые 30 с и проверяется даже без связи.']},
+ {go:'queue',ic:'🎫',en:['E-queue','Office → service → time slot → ticket number, live “people ahead” countdown and push when it is your turn.'],ru:['Электронная очередь','Учреждение → услуга → время → талон, живой счётчик «перед вами» и push, когда подошла очередь.']},
+ {go:'doctor',ic:'🩺',en:['Doctor booking','Clinic, specialty, doctor and a free slot in four taps; reminders and one-tap cancel.'],ru:['Запись к врачу','Поликлиника, специальность, врач и свободное время за четыре нажатия; напоминания и отмена.']},
+ {go:'transport',ic:'🚌',en:['Transport','Trip planner between stops, live GPS departures ticking down, transit-card top-up and tap-in.'],ru:['Транспорт','Маршрут между остановками, живые отправления по GPS, пополнение и оплата проездного.']},
+ {go:'wallet',ic:'👛',en:['Wallet','Bills, fines and taxes in one list, biometric confirmation, receipts and history.'],ru:['Кошелёк','Счета, штрафы и налоги одним списком, подтверждение биометрией, чеки и история.']},
+ {go:'notes',ic:'🔔',en:['Notifications','Segmented push campaigns from the console on the right; critical alerts bypass quiet hours.'],ru:['Уведомления','Push-рассылки по сегментам из консоли справа; экстренные приходят и в тихие часы.']},
+ {go:'offline',ic:'📴',en:['Offline-first','Toggle the cloud icon: cached data stays usable, actions queue in an outbox and sync on reconnect.'],ru:['Офлайн-режим','Нажмите значок облака: данные из кэша работают, действия копятся и уходят при появлении связи.']}
+];
+function renderFeats(){$('#feats').innerHTML=FEATS.map(f=>'<div class="feat'+(f.go===S.tab||(f.go==='offline'&&!S.online)?' on':'')+'" data-go="'+f.go+'"><span class="fi">'+f.ic+'</span><div><b>'+f[L()][0]+'</b><span>'+f[L()][1]+'</span></div></div>').join('')}
+$('#feats').addEventListener('click',e=>{const f=e.target.closest('.feat');if(!f)return;const g=f.dataset.go;if(g==='offline'){setOnline(!S.online)}else{if(g==='home'){ui.flip=false}go(g)}
+  if(innerWidth<=860)$('#scr').scrollIntoView({behavior:'smooth',block:'start'})});
+
+/* ---------- console ---------- */
+const SEG=[{id:'all',en:'All citizens',ru:'Все жители',n:12.4e6},{id:'reg',en:'Jakarta Selatan residents',ru:'Жители ЦАО',n:1.18e6},{id:'appt',en:'Upcoming doctor visit',ru:'Есть запись к врачу',n:86400},{id:'transit',en:'Transit card holders',ru:'Владельцы проездного',n:3.2e6},{id:'test',en:'Test devices only',ru:'Только тестовые устройства',n:12}];
+const TPL=[
+ {id:'flood',ic:'🌊',p:2,link:'notes',en:['Flood alert','Flood warning: Ciliwung river','Water at the Katulampa gate is rising. Avoid riverside roads in Kampung Melayu until 22:00.'],ru:['Шторм','Штормовое предупреждение','Ожидается ветер до 25 м/с. Не оставляйте машины под деревьями и держитесь дальше от рекламных щитов до 22:00.']},
+ {id:'vax',ic:'💉',p:1,link:'doctor',en:['Vaccination','Free flu vaccination this week','Book a slot at your nearest Puskesmas — it takes two minutes in Warga+.'],ru:['Вакцинация','Бесплатная прививка от гриппа','Запишитесь в ближайшую поликлинику — две минуты в приложении.']},
+ {id:'tax',ic:'🧾',p:1,link:'wallet',en:['Tax deadline','Property tax due 30 November','Pay in the Wallet and avoid the 2% monthly late penalty.'],ru:['Налоги','Налог на имущество — до 1 декабря','Оплатите в Кошельке и избегите пеней.']},
+ {id:'bus',ic:'🚌',p:1,link:'transport',en:['Transit','Route 6B diverted','Roadworks on Jl. Sudirman: route 6B skips Dukuh Atas until Sunday. Plan your trip in Warga+.'],ru:['Транспорт','Маршрут т17 изменён','Ремонт на Тверской: т17 не заходит на «Театральную» до воскресенья. Постройте маршрут в приложении.']},
+ {id:'queue',ic:'🎫',p:1,link:'queue',en:['E-queue','Skip the queue at Samsat','Take an e-ticket before you leave home — average wait today is 12 minutes.'],ru:['Очередь','Без очереди в МФЦ','Возьмите электронный талон заранее — сегодня среднее ожидание 12 минут.']}
+];
+const LINKS=['home','queue','doctor','transport','wallet','notes'];
+function renderConsole(){
+  const seg=$('#cSeg').value||'reg',lk=$('#cLink').value||'notes',pr=$('#cPri').value||'1',wh=$('#cWhen').value||'now';
+  $('#cSeg').innerHTML=SEG.map(s=>'<option value="'+s.id+'">'+T(s.en,s.ru)+' · '+compact(s.n)+'</option>').join('');$('#cSeg').value=seg;
+  $('#cLink').innerHTML=LINKS.map(l=>'<option value="'+l+'">'+TITLE[l]().replace('Warga+',T('Home','Главная'))+'</option>').join('');$('#cLink').value=lk;
+  $('#cPri').innerHTML='<option value="0">'+T('Low · silent','Низкий · без звука')+'</option><option value="1">'+T('Normal','Обычный')+'</option><option value="2">'+T('Critical alert','Экстренное оповещение')+'</option>';$('#cPri').value=pr;
+  $('#cWhen').innerHTML='<option value="now">'+T('Send now','Сразу')+'</option><option value="local">'+T('Now, respect quiet hours','Сразу, с учётом тихих часов')+'</option>';$('#cWhen').value=wh;
+  $('#tpl').innerHTML=TPL.map(t=>'<button class="chip'+(ui.tpl===t.id?' on':'')+'" data-t="'+t.id+'">'+t.ic+' '+t[L()][0]+'</button>').join('');
+  $('#cSend').textContent='📣 '+T('Send push campaign','Отправить рассылку');
+  $('#netLbl').textContent=S.online?T('Online','В сети'):T('Offline','Офлайн');$('#netSw').checked=S.online;
+  renderReach();renderCamps();renderKpis();renderLog();
+}
+function renderReach(){const s=SEG.find(x=>x.id===$('#cSeg').value)||SEG[0];const pr=+$('#cPri').value;
+  $('#cReach').innerHTML='<span>👥 <b>'+compact(s.n)+'</b> '+T('devices','устройств')+'</span><span>FCM · APNs · HMS</span><span>'+T('≈ ','≈ ')+'<b>'+Math.max(2,Math.round(s.n/400000))+T(' s',' с')+'</b> '+T('to deliver','на доставку')+'</span>'+(pr===2?'<span class="pill bad" style="font-size:11px">'+T('bypasses quiet hours','игнорирует тихие часы')+'</span>':'')+'<span>+ '+T('this test phone','этот тестовый телефон')+'</span>';
+  const n=$('#cBody').value.length;$('#cCnt').textContent=n+'/180'}
+function renderCamps(){
+  $('#cHist').innerHTML=S.camps.slice().reverse().map(c=>{const sg=SEG.find(s=>s.id===c.seg)||SEG[0];const p=c.prog==null?1:c.prog;const e=1-Math.pow(1-p,2);
+    const dv=c.dr*e,op=c.or*e*e;
+    return '<tr><td class="mono" style="font-size:11.5px">'+c.ic+' '+c.id+'</td><td class="tt" title="'+esc(c.t)+'">'+esc(PT.lang==='ru'&&c.tr?c.tr:c.t)+'</td><td class="muted">'+compact(c.n)+'</td><td class="num"><span class="bar"><i style="width:'+dv*100+'%"></i></span>'+(dv*100).toFixed(1)+'%</td><td class="num"><span class="bar g"><i style="width:'+op*100+'%"></i></span>'+(op*100).toFixed(1)+'%</td></tr>'}).join('')}
+function renderKpis(){const today=dayStart(Date.now());
+  $('#kDev').textContent=compact(ui.dev);
+  $('#kCamp').textContent=S.camps.filter(c=>c.ts>=today).length;
+  const fin=S.camps.filter(c=>c.prog==null||c.prog>=1);$('#kOpen').textContent=(fin.length?fin.reduce((s,c)=>s+c.or,0)/fin.length*100:0).toFixed(1)+'%';
+  $('#kSync').textContent=compact(41200+S.syncs*3+Math.floor((Date.now()/1000)%600));
+  $('#tokT').textContent=ui.tok>0?Math.floor(ui.tok/60)+':'+pad(ui.tok%60):T('expired','истёк');
+  $('#obN').textContent=S.outbox.length;$('#cacheT').textContent=S.online?T('live','актуален'):hhmm(S.cachedAt)}
+$('#tpl').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;const t=TPL.find(x=>x.id===b.dataset.t);ui.tpl=t.id;
+  $('#cTitle').value=t[L()][1];$('#cBody').value=t[L()][2];$('#cLink').value=t.link;$('#cPri').value=t.p;if(t.id==='flood')$('#cSeg').value='reg';if(t.id==='vax')$('#cSeg').value='all';if(t.id==='bus')$('#cSeg').value='transit';if(t.id==='tax')$('#cSeg').value='all';if(t.id==='queue')$('#cSeg').value='reg';
+  $$('#tpl .chip').forEach(c=>c.classList.toggle('on',c===b));renderReach()});
+['cSeg','cPri','cBody'].forEach(id=>$('#'+id).addEventListener('input',renderReach));
+$('#cSend').onclick=()=>{const t=$('#cTitle').value.trim(),b=$('#cBody').value.trim();
+  if(!t)return toast(T('Add a title first','Сначала заполните заголовок'),'bad');if(!b)return toast(T('Write the message text','Напишите текст сообщения'),'bad');
+  const sg=SEG.find(s=>s.id===$('#cSeg').value)||SEG[0],p=+$('#cPri').value,tp=TPL.find(x=>x.id===ui.tpl);
+  const c={id:'C-'+(S.seq++),ic:tp?tp.ic:'📣',t,tr:t,b,seg:sg.id,n:sg.n,link:$('#cLink').value,p,dr:.95+Math.random()*.035,or:p===2?.55+Math.random()*.12:.24+Math.random()*.16,ts:Date.now(),prog:0};
+  S.camps.push(c);save();renderCamps();renderKpis();
+  log('PUSH','go',c.id+' queued for '+compact(c.n)+' devices ('+(p===2?'critical':'normal')+')',c.id+' поставлен в отправку на '+compact(c.n)+' устройств ('+(p===2?'экстренно':'обычно')+')');
+  toast('📣 '+T('Campaign '+c.id+' is going out','Рассылка '+c.id+' отправляется'),'gold');
+  setTimeout(()=>{if(S.online)deliverPush(c);else{ui.pushQ.push(c);log('PUSH','wa',c.id+': test device offline — FCM holds the message (TTL 24 h)',c.id+': тестовое устройство офлайн — FCM хранит сообщение (TTL 24 ч)')}},1400);
+  if(innerWidth<=860)$('#scr').scrollIntoView({behavior:'smooth',block:'start'});
+  $('#cTitle').value='';$('#cBody').value='';ui.tpl=null;$$('#tpl .chip').forEach(x=>x.classList.remove('on'));renderReach()};
+$('#netSw').addEventListener('change',e=>setOnline(e.target.checked));
+$('#tokBtn').onclick=async()=>{ui.tok=0;renderKpis();log('OIDC','er','Access & refresh tokens revoked by admin','Access и refresh-токены отозваны администратором');
+  if(!S.online)return toast(T('Re-login will happen when the phone is online; the ID card keeps working offline','Повторный вход — при появлении связи; удостоверение работает офлайн'),'warn');
+  await sleep(700);log('OIDC','in','Authorization code + PKCE → national IdP','Код авторизации + PKCE → госпровайдер входа');await sleep(800);log('OIDC','ok','Biometric unlock ✓ · new tokens issued (300 s)','Биометрия ✓ · выданы новые токены (300 с)');ui.tok=300;renderKpis();toast(T('Session restored with biometrics — no password typed','Сессия восстановлена биометрией — без ввода пароля'))};
+$('#resetBtn').onclick=()=>{S=fresh();save();ui.q=null;ui.d=null;ui.sheet=null;ui.flip=false;ui.pushQ=[];ui.tr.res=null;newToken();renderAll();toast(T('Demo data reset','Данные демо сброшены'))};
+
+/* ---------- live loop ---------- */
+function tick(){
+  const now=new Date();$('#clock').textContent=now.getHours()+':'+pad(now.getMinutes());
+  // QR rotation
+  ui.qrT--;if(ui.qrT<=0){newToken();const cv=$('#idqr');if(cv)drawQR(cv,ui.token);const c=$('#qrC');if(c)c.textContent=fmtCode(ui.code);if(ui.flip&&S.tab==='home')log('ID','in','QR token rotated · code '+fmtCode(ui.code),'QR-токен обновлён · код '+fmtCode(ui.code))}
+  const qt=$('#qrT');if(qt){qt.textContent=ui.qrT;const rg=$('#qrRing');if(rg)rg.setAttribute('stroke-dashoffset',100-ui.qrT/30*100)}
+  // queue
+  let big=false;
+  if(S.online)S.tickets.forEach(t=>{if(t.st==='live'&&t.ahead>0&&Math.random()<.2){t.ahead--;save();
+    $$('.ah-'+t.id).forEach(e=>e.textContent=t.ahead);$$('.wt-'+t.id).forEach(e=>e.textContent=t.ahead*SVC[t.svc].m);$$('.pg-'+t.id).forEach(e=>e.style.width=Math.round((1-t.ahead/t.ahead0)*100)+'%');
+    if(t.ahead===1)notify({ic:'⏱',ten:'You are next',tru:'Вы следующий',ben:'Ticket '+t.num+': one person ahead. Please head to the waiting area.',bru:'Талон '+t.num+': перед вами один человек. Подойдите к залу ожидания.',link:'queue'});
+    if(t.ahead===0){t.st='called';t.win=1+hash(t.id)%8;save();big=true;notify({ic:'🔔',crit:true,ten:'Your turn! Window '+t.win,tru:'Ваша очередь! Окно '+t.win,ben:'Ticket '+t.num+' — '+SVC[t.svc].en+'. Please proceed now.',bru:'Талон '+t.num+' — '+SVC[t.svc].ru+'. Пройдите сейчас.',link:'queue'});log('WS','go','queue.called '+t.num+' → window '+t.win,'queue.called '+t.num+' → окно '+t.win)}}});
+  if(big&&(S.tab==='queue'||S.tab==='home'))renderPhone();
+  // ETAs
+  ui.arr.forEach((a,i)=>{if(S.online){a.eta--;if(a.eta<-15){a.eta=280+Math.floor(Math.random()*620);a.cr=Math.floor(Math.random()*3);a.dest=(a.dest+3)%10===NEAR?(a.dest+4)%10:(a.dest+3)%10}}
+    const e=$('#eta'+i);if(e&&S.online){e.textContent=etaTxt(Math.max(0,a.eta));e.classList.toggle('now',a.eta<=20)}});
+  const e0=$('.eta0');if(e0&&S.online)e0.textContent=etaTxt(Math.max(0,ui.arr[0].eta));
+  if(S.online&&ui.arr.some(a=>a.eta===-15)&&S.tab==='transport')renderPhone();
+  // OIDC token
+  if(ui.tok>0){ui.tok--;if(ui.tok===0&&S.online){ui.tok=300;log('OIDC','in','Silent refresh → new access token (300 s)','Тихое обновление → новый access-токен (300 с)')}}
+  // campaigns
+  let anim=false;S.camps.forEach(c=>{if(c.prog!=null&&c.prog<1){c.prog=Math.min(1,c.prog+.07);anim=true;if(c.prog>=1){save();log('PUSH','ok',c.id+' done: delivered '+(c.dr*100).toFixed(1)+'%, opened '+(c.or*100).toFixed(1)+'%',c.id+' завершена: доставлено '+(c.dr*100).toFixed(1)+'%, открыто '+(c.or*100).toFixed(1)+'%')}}});
+  if(anim)renderCamps();
+  ui.dev=Math.max(3.5e6,ui.dev+(Math.random()-.48)*9000);
+  renderKpis();
+  if(S.online&&now.getSeconds()===0)S.cachedAt=Date.now();
+}
+setInterval(tick,1000);
+
+function renderAll(){renderFeats();renderConsole();renderPhone()}
+newToken();
+log('BOOT','in','Warga+ 3.8.2 · Flutter 3.29 · encrypted cache opened','Warga+ 3.8.2 · Flutter 3.29 · зашифрованный кэш открыт');
+log('OIDC','ok','Signed in with national ID (OIDC + PKCE) · token 300 s','Вход через госID (OIDC + PKCE) · токен 300 с');
+PT.onLang(renderAll);
+renderAll();
+if(S.online&&S.outbox.length)sync();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

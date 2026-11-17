@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Procura Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1320px;margin:0 auto;padding:16px 20px 90px}
+.hdr{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800;font-size:19px;letter-spacing:-.01em}
+.brand b{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal),var(--gold));color:#fff;font-size:17px}
+.brand small{display:block;font-size:11px;color:var(--muted);font-weight:500;letter-spacing:0}
+.srch{flex:1;min-width:220px;position:relative}
+.srch input{width:100%;padding-left:38px;height:44px;font-size:15px}
+.srch:before{content:"⌕";position:absolute;left:13px;top:9px;font-size:20px;color:var(--dim)}
+.role{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:3px}
+.role button{border:0;background:none;color:var(--muted);font:inherit;font-weight:700;font-size:13px;padding:8px 13px;border-radius:9px;cursor:pointer}
+.role button.on{background:var(--mal);color:#fff}
+.hint{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.hint>div{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1px dashed color-mix(in srgb,var(--gold) 55%,transparent);border-radius:12px;background:color-mix(in srgb,var(--gold) 6%,transparent);font-size:13.5px}
+.hint>div>b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#111;font-size:12px}
+.facts{display:flex;flex-wrap:wrap;padding:0;overflow:hidden;margin-bottom:14px}
+.facts>div{flex:1 1 150px;padding:10px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:-1px}
+.facts small{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);font-weight:700}
+.facts span{font-weight:700;font-size:13.5px}
+.nav{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:16px;position:sticky;top:45px;background:var(--bg);z-index:20}
+.nav button{flex:none;border:0;background:none;color:var(--muted);font:inherit;font-weight:700;font-size:13.5px;padding:11px 13px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.nav button.on{color:var(--text);border-bottom-color:var(--gold)}
+.nav button em{font-style:normal;background:var(--mal);color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;margin-left:5px}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.cl{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+.fac{position:sticky;top:100px;max-height:calc(100vh - 110px);overflow:auto}
+.fac h4{margin:14px 0 7px;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim)}
+.fac h4:first-child{margin-top:0}
+.fac label{display:flex;gap:8px;align-items:center;font-size:13px;padding:3px 0;cursor:pointer}
+.fac label span{flex:1}.fac label i{font-style:normal;color:var(--dim);font-size:11.5px;font-family:var(--mono)}
+.fac input[type=checkbox]{accent-color:var(--mal);width:15px;height:15px}
+.fac input[type=range]{width:100%;accent-color:var(--gold)}
+.fbtn{display:none}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;font-size:13px}
+.bar .sp{flex:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));gap:12px}
+.pc{display:flex;flex-direction:column;gap:8px;padding:14px;transition:.15s}
+.pc:hover{border-color:var(--line2);transform:translateY(-2px)}
+.pc .ic{height:86px;border-radius:10px;display:grid;place-items:center;font-size:36px;position:relative}
+.pc .ic .sb{position:absolute;left:8px;top:8px}
+.pc .nm{font-weight:700;font-size:14px;line-height:1.3;cursor:pointer}
+.pc .nm:hover{color:var(--mal3)}
+.pc .meta{font-size:11.5px;color:var(--dim);font-family:var(--mono)}
+.badges{display:flex;gap:4px;flex-wrap:wrap}
+.bdg{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;border:1px solid var(--line2);color:var(--muted)}
+.bdg.taa{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 45%,transparent)}
+.bdg.s508{color:var(--violet);border-color:color-mix(in srgb,var(--violet) 45%,transparent)}
+.bdg.cld{color:var(--mal3);border-color:color-mix(in srgb,var(--mal2) 45%,transparent)}
+.bdg.sbz{color:var(--gold2);border-color:color-mix(in srgb,var(--gold) 50%,transparent)}
+.pc .pr{display:flex;align-items:baseline;gap:6px;margin-top:auto}
+.pc .pr b{font-size:18px;font-variant-numeric:tabular-nums}
+.pc .pr small{color:var(--muted);font-size:11.5px}
+.pc .act{display:flex;gap:6px;align-items:center}
+.pc .act label{font-size:12px;display:flex;gap:5px;align-items:center;color:var(--muted);cursor:pointer;margin-right:auto}
+.btn.sm{padding:6px 11px;font-size:12.5px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.tray{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:900;background:var(--panel2);border:1px solid var(--gold);border-radius:14px;padding:9px 12px;display:none;gap:10px;align-items:center;box-shadow:var(--shadow);max-width:calc(100vw - 24px);font-size:13px}
+.tray.on{display:flex}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cmp td:first-child{color:var(--muted);font-weight:600;white-space:nowrap;position:sticky;left:0;background:var(--panel)}
+.cmp td{min-width:170px}
+.best{color:var(--mal3);font-weight:800}
+.g2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.g3{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:14px;align-items:start}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.hl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.hl label{display:flex;gap:7px;align-items:center;font-size:12.5px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;cursor:pointer;background:var(--bg2)}
+.hl label.carry{border-color:color-mix(in srgb,var(--mal2) 50%,transparent)}
+.qty{width:70px;text-align:right}
+.li{padding:11px 12px;border:1px solid var(--line);border-radius:11px;margin-bottom:8px;cursor:pointer;background:var(--bg2)}
+.li.on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 6%,var(--bg2))}
+.li .t{font-weight:700;font-size:13.5px;display:flex;gap:6px;align-items:center}
+.li .m{font-size:12px;color:var(--muted);margin-top:3px}
+.qcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(190px,100%),1fr));gap:8px;margin-bottom:14px}
+.qc{border:1px solid var(--line);border-radius:11px;padding:10px 12px;background:var(--bg2);font-size:12.5px}
+.qc .n{font-weight:700;font-size:13px}
+.qc.wait{opacity:.75}.qc.wait .n:after{content:" ···";animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.2}}
+.qc.in{border-color:color-mix(in srgb,var(--mal2) 55%,transparent);animation:fade .3s}
+.wts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.wts label{font-size:12px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between}
+.wts input{width:100%;accent-color:var(--gold)}
+.sbar{height:8px;border-radius:5px;background:var(--line);overflow:hidden;min-width:90px}
+.sbar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal),var(--gold))}
+.trk{display:flex;gap:0;margin:6px 0 14px}
+.trk div{flex:1;text-align:center;font-size:11.5px;color:var(--dim);position:relative;padding-top:26px;font-weight:600}
+.trk div:before{content:"";position:absolute;top:8px;left:0;right:0;height:3px;background:var(--line)}
+.trk div:first-child:before{left:50%}.trk div:last-child:before{right:50%}
+.trk div i{position:absolute;top:0;left:50%;transform:translateX(-50%);width:19px;height:19px;border-radius:50%;background:var(--panel2);border:2px solid var(--line2);z-index:1;font-style:normal;font-size:10px;display:grid;place-items:center}
+.trk div.d{color:var(--text)}.trk div.d:before{background:var(--mal2)}.trk div.d i{background:var(--mal2);border-color:var(--mal2);color:#fff}
+.trk div.c i{border-color:var(--gold);animation:blink 1.2s infinite}
+.po{background:#fff;color:#151515;border-radius:14px;padding:26px;font-size:13px;box-shadow:var(--shadow)}
+.po h2{margin:0;font-size:20px}.po table{font-size:12.5px}.po th{background:#f2f2f2;color:#555}.po td{border-color:#e5e5e5;color:#151515}
+.po .sig{margin-top:16px;border:1px dashed #9a9a9a;border-radius:10px;padding:12px;font-family:var(--mono);font-size:11.5px;word-break:break-all;background:#fafaf5}
+.po .sig b{font-family:'Brush Script MT',cursive;font-size:26px;font-weight:400;color:#1d3a8a}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}.kpi .v{font-size:24px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}.kpi .s{font-size:11.5px;color:var(--dim);margin-top:2px}
+.chart svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;place-items:center;padding:16px}
+.modal-bg.on{display:grid}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:18px;max-width:640px;width:100%;padding:22px;box-shadow:var(--shadow);max-height:88vh;overflow:auto}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--gold);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:330px;animation:fade .2s}
+.toast.ok{border-left-color:var(--mal2)}.toast.bad{border-left-color:var(--red)}
+.empty{text-align:center;padding:36px 16px;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin-top:8px}
+@media print{body *{visibility:hidden}.po,.po *{visibility:visible}.po{position:absolute;left:0;top:0;width:100%;box-shadow:none}.po .btn{display:none}}
+@media (max-width:1000px){.g2,.g3{grid-template-columns:minmax(0,1fr)}.wts{grid-template-columns:repeat(3,minmax(0,1fr))}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.hint{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){.cl{grid-template-columns:minmax(0,1fr)}.fac{display:none;position:static;max-height:none}.fac.open{display:block}.fbtn{display:inline-flex}}
+@media (max-width:560px){.wrap{padding:12px 14px 90px}.fg,.hl{grid-template-columns:minmax(0,1fr)}.wts{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi .v{font-size:19px}.po{padding:16px}.trk div{font-size:10px}.srch{flex-basis:100%;order:3}}
+</style>
+</head>
+<body data-demo-en="Procura — government-wide IT procurement marketplace" data-demo-ru="Procura — маркетплейс ИТ-закупок для всех ведомств">
+<div class="wrap">
+  <div class="hdr">
+    <div class="brand"><b>P</b><div>Procura<small data-en="Federal IT Acquisition Office" data-ru="Федеральное бюро ИТ-закупок"></small></div></div>
+    <div class="srch"><input class="input" id="q" data-en-ph="Search 64 products & services, SKUs, holders…" data-ru-ph="Поиск по 64 товарам и услугам, артикулам, поставщикам…"></div>
+    <div class="role" id="role"><button data-r="buyer" class="on" data-en="Agency buyer" data-ru="Заказчик"></button><button data-r="vendor" data-en="Vendor view" data-ru="Поставщик"></button></div>
+  </div>
+  <div class="hint">
+    <div><b>1</b><span data-en="Search or filter the catalog, tick up to 4 items for <b>Compare</b>, add a few to the <b>Cart</b>." data-ru="Найдите или отфильтруйте товары, отметьте до 4 для <b>Сравнения</b>, добавьте несколько в <b>Корзину</b>."></span></div>
+    <div><b>2</b><span data-en="In the cart send an <b>RFQ</b> — quotes arrive live. Move the weight sliders, then <b>Award</b> and e-sign the purchase order." data-ru="Из корзины отправьте <b>запрос котировок</b> — ответы приходят вживую. Двигайте веса, затем <b>присудите</b> и подпишите заказ."></span></div>
+    <div><b>3</b><span data-en="Track delivery in <b>Orders</b>, see spend on the <b>Dashboard</b>, or switch to <b>Vendor view</b> to answer RFQs." data-ru="Следите за поставкой в <b>Заказах</b>, расходы — на <b>Дашборде</b>, а в <b>режиме поставщика</b> отвечайте на запросы."></span></div>
+  </div>
+  <div class="card facts">
+    <div><small data-en="Tender" data-ru="Тендер"></small><span data-en="IT products & services GWAC" data-ru="Рамочный контракт на ИТ-товары и услуги (GWAC)"></span></div>
+    <div><small data-en="Years" data-ru="Годы"></small><span>2025–2036</span></div>
+    <div><small data-en="Budget" data-ru="Бюджет"></small><span data-en="$60B ceiling" data-ru="Потолок $60 млрд"></span></div>
+    <div><small data-en="Client" data-ru="Заказчик"></small><span data-en="Federal IT Acquisition Office (fictional)" data-ru="Федеральное бюро ИТ-закупок (вымышленное)"></span></div>
+    <div><small data-en="Stack" data-ru="Стек"></small><span>Next.js · Postgres · search · e-signature</span></div>
+  </div>
+  <div class="nav" id="nav"></div>
+
+  <section class="view" id="v-cat"><div class="cl">
+    <aside class="card fac" id="fac"></aside>
+    <div><div class="bar"><button class="btn sm fbtn" id="fbtn">☰ <span data-en="Filters" data-ru="Фильтры"></span></button><span id="cnt" class="muted"></span><span class="sp"></span><select class="input" id="sort" style="width:auto"></select><button class="btn sm" id="csv">⬇ CSV</button></div><div class="grid" id="grid"></div></div>
+  </div></section>
+  <section class="view" id="v-cmp"><div id="cmpBox"></div></section>
+  <section class="view" id="v-cart"><div class="g2"><div class="card"><h3 data-en="Cart" data-ru="Корзина"></h3><div id="cartT"></div></div><div class="card" id="rfqForm"></div></div></section>
+  <section class="view" id="v-rfq"><div class="g3"><div id="rfqL"></div><div id="rfqD"></div></div></section>
+  <section class="view" id="v-ord"><div class="g3"><div id="ordL"></div><div id="ordD"></div></div></section>
+  <section class="view" id="v-dash"><div class="kpis" id="dK"></div><div class="g2"><div class="card"><h3 data-en="Spend by category, FY26 ($M)" data-ru="Расходы по категориям, 2026 ФГ ($ млн)"></h3><div class="chart" id="cCat"></div></div><div class="card"><h3 data-en="Contract ceiling usage" data-ru="Использование потолка контракта"></h3><div class="chart" id="cGauge" style="max-width:340px;margin:0 auto"></div></div></div><div class="g2" style="margin-top:14px"><div class="card"><h3 data-en="Monthly obligations ($M)" data-ru="Обязательства по месяцам ($ млн)"></h3><div class="chart" id="cMon"></div></div><div class="card"><h3 data-en="Spend by contract holder" data-ru="Расходы по поставщикам"></h3><div class="chart" id="cVen"></div></div></div></section>
+  <section class="view" id="v-ven"><div class="card" style="margin-bottom:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span class="muted" style="font-size:13px" data-en="Signed in as contract holder:" data-ru="Вы вошли как поставщик:"></span><select class="input" id="persona" style="width:auto;max-width:100%"></select><span id="pBadge"></span></div><div class="kpis" id="vK"></div><div class="g2"><div class="card"><h3 data-en="Incoming RFQs" data-ru="Входящие запросы котировок"></h3><div id="vR"></div></div><div class="card"><h3 data-en="My contract price list" data-ru="Мой прайс по контракту"></h3><div class="note" style="margin:-6px 0 10px" data-en="Edit a price — the catalog updates instantly (catalog modification, auditable)." data-ru="Измените цену — каталог обновится сразу (модификация каталога с журналом)."></div><div class="tw" style="max-height:520px;overflow:auto"><table id="vP"></table></div></div></div></section>
+</div>
+<div class="tray" id="tray"></div>
+<div class="modal-bg" id="mod"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const T=(e,r)=>PT.t(e,r),L=o=>typeof o==='string'?o:(PT.lang==='ru'?o.ru:o.en);
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const usd=(v,d)=>'$'+v.toLocaleString('en-US',{minimumFractionDigits:d??2,maximumFractionDigits:d??2});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=(n,l)=>String(n).padStart(l||2,'0');
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const hash=s=>{let h=2166136261;for(const c of String(s))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+function toast(m,k){const d=document.createElement('div');d.className='toast '+(k||'');d.innerHTML=m;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),3800)}
+function modal(h){$('#modal').innerHTML=h;$('#mod').classList.add('on')}
+function closeM(){$('#mod').classList.remove('on')}
+$('#mod').onclick=e=>{if(e.target.id==='mod')closeM()};
+
+/* ---------- reference data ---------- */
+const CATS={lap:{en:'Laptops & tablets',ru:'Ноутбуки и планшеты',ic:'💻',c:'--blue'},desk:{en:'Desktops & displays',ru:'ПК и мониторы',ic:'🖥',c:'--violet'},srv:{en:'Servers & storage',ru:'Серверы и СХД',ic:'🗄',c:'--mal2'},net:{en:'Networking',ru:'Сетевое оборудование',ic:'📡',c:'--amber'},sec:{en:'Cybersecurity',ru:'Кибербезопасность',ic:'🛡',c:'--red'},cloud:{en:'Cloud & SaaS',ru:'Облако и SaaS',ic:'☁',c:'--mal3'},svc:{en:'Professional services',ru:'Профессиональные услуги',ic:'🧑‍💻',c:'--gold'},per:{en:'Peripherals & AV',ru:'Периферия и AV',ic:'🎧',c:'--gold2'}};
+const UNITS={ea:{en:'each',ru:'шт.'},usr:{en:'user / yr',ru:'польз./год'},hr:{en:'hour',ru:'час'},mo:{en:'month',ru:'мес.'},tb:{en:'TB / month',ru:'ТБ/мес.'}};
+const RAW={lap:[['Strata 14 Pro laptop',1890],['Strata 16 workstation laptop',2840],['Kestrel 13 rugged tablet',2310],['Arden 12 education laptop',410],['Vela 2-in-1 convertible',1460],['Kestrel 10 field tablet',980],['Strata 14 Secure (TPM, smart-card)',2120],['Orbis 15 developer laptop',2560]],
+desk:[['Cubic mini desktop',720],['Cubic tower workstation',2380],['Clearview 27" 4K monitor',410],['Clearview 34" ultrawide',690],['Arden 24" all-in-one',1040],['Cubic thin client',380],['Clearview 24" privacy monitor',340],['Dockline USB-C dock',210]],
+srv:[['Monolith 2U rack server',9400],['Monolith 1U edge server',5200],['Tessera all-flash array 100 TB',68000],['Tessera hybrid array 400 TB',92000],['Archiva tape library',31000],['Gridnode HCI 4-node cluster',148000],['Monolith GPU server 8×',212000],['Coldvault backup appliance',24500]],
+net:[['Meshline 48-port switch',4200],['Meshline core router',18800],['Skylink Wi-Fi 7 access point',640],['Perimeter NGFW 3400',22600],['Skylink outdoor AP',1180],['Fibrecore 100G transceiver',890],['Branchbox SD-WAN appliance',2950],['Meshline PoE+ 24-port switch',1950]],
+sec:[['Bastion endpoint protection',58],['Beacon SIEM platform',310],['Vaultline privileged access',190],['Cipherkey MFA token',44,'ea'],['Harbourmail email security',36],['Lattice zero-trust gateway',122],['Opal DLP suite',71],['Graywall vulnerability scanner',95]],
+cloud:[['Nimbus IaaS compute (vCPU)',38,'mo'],['Nimbus object storage',21,'tb'],['Atrium collaboration suite',96,'usr'],['Ledgerly e-signature',120,'usr'],['Quill case management',540,'usr'],['Harbor managed Kubernetes',410,'mo'],['Cartograph GIS platform',880,'usr'],['Relay contact-centre seat',660,'usr']],
+svc:[['Cloud migration architect',215],['Senior software engineer',168],['Cyber incident responder',240],['Data scientist',182],['Accessibility (508) tester',118],['Help-desk tier 2 analyst',74],['Program manager (PMP)',196],['UX researcher',142]],
+per:[['Vox conference speakerbar',1290],['Vox noise-cancelling headset',145],['Scribe A3 multifunction printer',3400],['Lens 4K conference camera',820],['Keyline smart-card keyboard',62],['Scribe label printer',290],['Panorama 75" meeting display',3900],['Ferry rugged carry case',120]]};
+const H=[{id:'cob',n:'Cobalt Ridge Systems',c:'PRC-25-0101',sb:0},{id:'mer',n:'Meridian Data Federal',c:'PRC-25-0102',sb:0},{id:'hal',n:'Halcyon Integrators',c:'PRC-25-0103',sb:0},{id:'pin',n:'Pinegate Technologies',c:'PRC-25-0114',sb:1,t:{en:'Small business',ru:'Малый бизнес'}},{id:'blu',n:'Bluefjord Networks',c:'PRC-25-0117',sb:1,t:{en:'Women-owned small',ru:'Малый, женский'}},{id:'tes',n:'Tessellate Solutions',c:'PRC-25-0121',sb:1,t:{en:'Disadvantaged small',ru:'Малый, соц. поддержка'}},{id:'irn',n:'Ironleaf Cyber',c:'PRC-25-0125',sb:1,t:{en:'Veteran-owned small',ru:'Малый, ветеранский'}},{id:'qha',n:'Quanta Harbor IT',c:'PRC-25-0130',sb:0},{id:'gpd',n:'Granite Peak Digital',c:'PRC-25-0133',sb:1,t:{en:'Rural-zone small',ru:'Малый, сельская зона'}},{id:'arc',n:'Arclight Federal Services',c:'PRC-25-0140',sb:0}];
+const HC=['--blue','--violet','--mal2','--gold','--amber','--red','--mal3','--gold2','--muted','--dim'];
+const hb=id=>H.find(h=>h.id===id);
+const AG=[{en:'Dept. of Coastal Affairs',ru:'Департамент прибрежных дел'},{en:'National Weather Bureau',ru:'Национальное бюро погоды'},{en:'Office of Rural Health',ru:'Управление сельского здравоохранения'},{en:'Federal Archives Agency',ru:'Федеральное архивное агентство'}];
+const P=[];let pi=0;
+Object.keys(RAW).forEach(ck=>RAW[ck].forEach(([n,b,u])=>{const r=rng(1000+pi*7);const hw=['lap','desk','srv','net','per'].includes(ck);const hs=H.slice();for(let i=hs.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[hs[i],hs[j]]=[hs[j],hs[i]]}
+  const k=2+Math.floor(r()*3);const offers=hs.slice(0,k).map(h=>({h:h.id,price:Math.round(b*(.9+r()*.18)*100)/100,days:ck==='svc'||ck==='cloud'?2+Math.floor(r()*12):5+Math.floor(r()*26)}));
+  P.push({id:'P'+pad(pi,3),sku:ck.toUpperCase()+'-'+(1000+Math.floor(r()*9000)),n,ck,b,u:u||(ck==='svc'?'hr':ck==='sec'?'usr':'ea'),taa:hw?r()>.12:ck!=='svc'&&r()>.5,s508:ck==='svc'?n.includes('508')||r()>.6:r()>.15,cl:ck==='cloud'||ck==='sec'?(r()>.55?'High':r()>.2?'Mod':''):'',offers,rt:(3.6+r()*1.4).toFixed(1)});pi++}));
+const pb=id=>P.find(p=>p.id===id);
+const avgP=p=>p.offers.reduce((a,o)=>a+o.price,0)/p.offers.length;
+const minP=p=>Math.min(...p.offers.map(o=>o.price)),minD=p=>Math.min(...p.offers.map(o=>o.days));
+const bestOff=p=>p.offers.reduce((a,o)=>o.price<a.price?o:a);
+const hasSB=p=>p.offers.some(o=>hb(o.h).sb);
+
+/* ---------- state ---------- */
+const KEY='pt-procura-v1';
+const D0=()=>({cart:[],cmp:[],rfqs:[],orders:[],W:{price:40,deliv:20,tech:25,pp:10,sb:5},mods:{},persona:'irn',ext:[{id:'RFQ-0091',ag:AG[1],lines:[['P040',120],['P043',2]],due:3,st:'open'},{id:'RFQ-0094',ag:AG[3],lines:[['P034',400]],due:5,st:'open'},{id:'RFQ-0097',ag:AG[2],lines:[['P050',320],['P052',160]],due:2,st:'open'}],seq:{rfq:101,po:4400},F:{cat:[],hold:[],comp:[],sb:false,max:250000,ship:30,sort:'rel'},view:'cat'});
+let D;try{D=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!D||!D.seq)D=D0();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}};
+Object.entries(D.mods).forEach(([k,v])=>{const[pid,h]=k.split('|');const o=(pb(pid)||{offers:[]}).offers.find(x=>x.h===h);if(o)o.price=v});
+let q='',view=D.view||'cat',role='buyer',selR=null,selO=null;
+
+/* ---------- catalog ---------- */
+const COMP=[['taa','TAA'],['s508','Section 508'],['cl',{en:'Cloud-authorised',ru:'Облачная аттестация'}]];
+function passes(p,skip){const F=D.F;const ql=q.toLowerCase();if(ql&&!(p.n+' '+p.sku+' '+L(CATS[p.ck])+' '+p.offers.map(o=>hb(o.h).n).join(' ')).toLowerCase().includes(ql))return false;
+  if(skip!=='cat'&&F.cat.length&&!F.cat.includes(p.ck))return false;if(skip!=='hold'&&F.hold.length&&!p.offers.some(o=>F.hold.includes(o.h)))return false;
+  if(F.comp.some(c=>!p[c]))return false;if(F.sb&&!hasSB(p))return false;if(minP(p)>F.max)return false;if(minD(p)>F.ship)return false;return true}
+function list(){const r=P.filter(p=>passes(p));const s=D.F.sort;if(s==='pa')r.sort((a,b)=>minP(a)-minP(b));if(s==='pd')r.sort((a,b)=>minP(b)-minP(a));if(s==='ship')r.sort((a,b)=>minD(a)-minD(b));if(s==='rt')r.sort((a,b)=>b.rt-a.rt);return r}
+function renderFac(){const F=D.F;const cnt=(k,v)=>P.filter(p=>passes(p,k)&&(k==='cat'?p.ck===v:p.offers.some(o=>o.h===v))).length;
+  $('#fac').innerHTML=`<h4>${T('Category','Категория')}</h4>`+Object.keys(CATS).map(k=>`<label><input type="checkbox" data-fc="cat|${k}" ${F.cat.includes(k)?'checked':''}><span>${CATS[k].ic} ${L(CATS[k])}</span><i>${cnt('cat',k)}</i></label>`).join('')+
+  `<h4>${T('Compliance','Соответствие')}</h4>`+COMP.map(c=>`<label><input type="checkbox" data-fc="comp|${c[0]}" ${F.comp.includes(c[0])?'checked':''}><span>${L(c[1])}</span></label>`).join('')+`<label><input type="checkbox" id="fsb" ${F.sb?'checked':''}><span>${T('Small-business offer','Есть малый бизнес')}</span></label>`+
+  `<h4>${T('Max unit price','Макс. цена за ед.')}: <span class="mono">${usd(F.max,0)}</span></h4><input type="range" id="fmax" min="50" max="250000" step="50" value="${F.max}">`+
+  `<h4>${T('Delivers within','Поставка за')}: <span class="mono">${F.ship} ${T('days','дн.')}</span></h4><input type="range" id="fship" min="3" max="30" value="${F.ship}">`+
+  `<h4>${T('Contract holder','Поставщик')}</h4>`+H.map(h=>`<label><input type="checkbox" data-fc="hold|${h.id}" ${F.hold.includes(h.id)?'checked':''}><span>${h.n}${h.sb?' <span class="bdg sbz">SB</span>':''}</span><i>${cnt('hold',h.id)}</i></label>`).join('')+`<button class="btn sm" id="fclr" style="margin-top:12px;width:100%;justify-content:center">${T('Clear all filters','Сбросить фильтры')}</button>`}
+$('#fac').addEventListener('change',e=>{const t=e.target,F=D.F;if(t.dataset.fc){const[k,v]=t.dataset.fc.split('|');F[k]=t.checked?[...F[k],v]:F[k].filter(x=>x!==v)}else if(t.id==='fsb')F.sb=t.checked;else return;save();renderCat()});
+$('#fac').addEventListener('input',e=>{if(e.target.id==='fmax'||e.target.id==='fship'){D.F[e.target.id==='fmax'?'max':'ship']=+e.target.value;save();renderGrid();e.target.previousElementSibling.querySelector('span').textContent=e.target.id==='fmax'?usd(D.F.max,0):D.F.ship+' '+T('days','дн.')}});
+$('#fac').addEventListener('click',e=>{if(e.target.id==='fclr'){D.F=D0().F;q='';$('#q').value='';save();renderCat()}});
+$('#fbtn').onclick=()=>$('#fac').classList.toggle('open');
+function badges(p){return `<div class="badges">${p.taa?'<span class="bdg taa">TAA</span>':''}${p.s508?'<span class="bdg s508">508</span>':''}${p.cl?`<span class="bdg cld">☁ ${p.cl}</span>`:''}${hasSB(p)?'<span class="bdg sbz">SB</span>':''}</div>`}
+function renderGrid(){const r=list();$('#cnt').innerHTML=`<b>${r.length}</b> ${T('of','из')} ${P.length} ${T('items','позиций')} · ${H.length} ${T('contract holders','поставщиков')}`;
+  $('#grid').innerHTML=r.length?r.map(p=>{const c=CATS[p.ck];return `<div class="card pc"><div class="ic" style="background:color-mix(in srgb,var(${c.c}) 14%,var(--bg2))">${c.ic}</div><div><div class="nm" data-det="${p.id}">${esc(p.n)}</div><div class="meta">${p.sku} · ★ ${p.rt}</div></div>${badges(p)}<div class="pr"><small>${T('from','от')}</small><b>${usd(minP(p))}</b><small>/ ${L(UNITS[p.u])}</small></div><div class="meta">${p.offers.length} ${T('contracts','контракта')} · ${T('ships in','поставка')} ${minD(p)}–${Math.max(...p.offers.map(o=>o.days))} ${T('d','дн.')}</div><div class="act"><label><input type="checkbox" data-cmp="${p.id}" ${D.cmp.includes(p.id)?'checked':''}>${T('Compare','Сравнить')}</label><button class="btn sm pri" data-add="${p.id}">+ ${T('Cart','В корзину')}</button></div></div>`}).join(''):`<div class="card empty" style="grid-column:1/-1">${T('No items match. Try clearing filters.','Ничего не найдено. Сбросьте фильтры.')}</div>`}
+function renderCat(){$('#sort').innerHTML=[['rel',T('Sort: relevance','Сортировка: релевантность')],['pa',T('Price ↑','Цена ↑')],['pd',T('Price ↓','Цена ↓')],['ship',T('Fastest delivery','Быстрая поставка')],['rt',T('Top rated','Рейтинг')]].map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('');$('#sort').value=D.F.sort;renderFac();renderGrid()}
+$('#sort').onchange=e=>{D.F.sort=e.target.value;save();renderGrid()};
+$('#q').oninput=e=>{q=e.target.value.trim();if(role!=='buyer')setRole('buyer');if(view!=='cat')go('cat');else{renderFac();renderGrid()}};
+document.addEventListener('change',e=>{const c=e.target.closest('[data-cmp]');if(!c)return;const id=c.dataset.cmp;if(c.checked){if(D.cmp.length>=4){c.checked=false;toast(T('Compare holds up to 4 items','Сравнить можно до 4 позиций'),'bad');return}D.cmp.push(id)}else D.cmp=D.cmp.filter(x=>x!==id);save();renderTray();renderNav()});
+document.addEventListener('click',e=>{const a=e.target.closest('[data-add]');if(a){addCart(a.dataset.add,a.dataset.h);return}const d=e.target.closest('[data-det]');if(d)detail(d.dataset.det)});
+function addCart(id,h){const p=pb(id);const l=D.cart.find(x=>x.pid===id);if(l)l.qty+=p.ck==='svc'?40:1;else D.cart.push({pid:id,qty:p.ck==='svc'?160:p.u==='usr'?50:p.ck==='srv'?2:10,h:h||null});save();renderNav();toast('🛒 '+esc(p.n)+T(' added',' в корзине'),'ok')}
+function detail(id){const p=pb(id),c=CATS[p.ck];modal(`<div style="display:flex;gap:12px;align-items:flex-start"><div style="font-size:34px;width:60px;height:60px;border-radius:12px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(${c.c}) 14%,var(--bg2))">${c.ic}</div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:17px">${esc(p.n)}</div><div class="muted mono" style="font-size:12px">${p.sku} · ${L(c)} · ★ ${p.rt}</div><div style="margin-top:6px">${badges(p)}</div></div><button class="btn sm" id="mx">✕</button></div>
+  <div class="tw" style="margin-top:14px"><table><thead><tr><th>${T('Holder','Поставщик')}</th><th>${T('Contract','Контракт')}</th><th class="num">${T('Price','Цена')} / ${L(UNITS[p.u])}</th><th class="num">${T('Delivery','Поставка')}</th><th></th></tr></thead><tbody>${p.offers.slice().sort((a,b)=>a.price-b.price).map((o,i)=>{const h=hb(o.h);return `<tr><td><b>${h.n}</b>${h.sb?`<div><span class="bdg sbz">${L(h.t)}</span></div>`:''}</td><td class="mono">${h.c}</td><td class="num mono ${i===0?'best':''}">${usd(o.price)}</td><td class="num">${o.days} ${T('d','дн.')}</td><td><button class="btn sm" data-add="${p.id}" data-h="${o.h}">+</button></td></tr>`}).join('')}</tbody></table></div>
+  <div class="note">${T('Prices are contract ceiling prices; the RFQ usually yields further discounts. TAA — made in designated countries; 508 — accessible; Cloud-authorised — security-assessed cloud service (fictional programme).','Цены — предельные по контракту; запрос котировок обычно даёт скидку. TAA — страна происхождения; 508 — доступность; облачная аттестация — проверенная безопасность облака (вымышленная программа).')}</div>`);$('#mx').onclick=closeM}
+$('#csv').onclick=()=>{const rows=[['SKU','Name','Category','Unit','Holder','Contract','Price','Delivery days','TAA','508','Cloud']];list().forEach(p=>p.offers.forEach(o=>rows.push([p.sku,p.n,CATS[p.ck].en,p.u,hb(o.h).n,hb(o.h).c,o.price,o.days,p.taa?'Y':'N',p.s508?'Y':'N',p.cl||'-'])));const b=new Blob(['﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='procura-catalog.csv';a.click();toast(T('Exported ','Выгружено ')+(rows.length-1)+T(' price lines',' строк цен'),'ok')};
+
+/* ---------- compare ---------- */
+function renderTray(){const t=$('#tray');t.classList.toggle('on',D.cmp.length>0&&view!=='cmp'&&role==='buyer');t.innerHTML=`<b>${D.cmp.length}/4</b><span>${T('to compare','к сравнению')}</span><button class="btn sm gold" id="trGo">${T('Compare →','Сравнить →')}</button><button class="btn sm" id="trX">✕</button>`;$('#trGo').onclick=()=>go('cmp');$('#trX').onclick=()=>{D.cmp=[];save();renderTray();renderNav();if(view==='cat')renderGrid()}}
+function renderCmp(){const ps=D.cmp.map(pb).filter(Boolean);if(!ps.length){$('#cmpBox').innerHTML=`<div class="card empty">${T('Tick “Compare” on up to 4 catalog items.','Отметьте «Сравнить» у 4 позиций каталога.')}<div style="margin-top:12px"><button class="btn pri" data-go="cat">${T('Open catalog','Открыть каталог')}</button></div></div>`;return}
+  const mn=Math.min(...ps.map(minP)),md=Math.min(...ps.map(minD));const yn=v=>v?'<span class="pill ok">✓</span>':'<span class="pill">—</span>';
+  const rows=[[T('Category','Категория'),p=>CATS[p.ck].ic+' '+L(CATS[p.ck])],['SKU',p=>`<span class="mono">${p.sku}</span>`],[T('Lowest price','Мин. цена'),p=>`<span class="mono ${minP(p)===mn?'best':''}">${usd(minP(p))}</span> / ${L(UNITS[p.u])}`],[T('Price spread','Разброс цен'),p=>`<span class="mono">${usd(minP(p),0)} – ${usd(Math.max(...p.offers.map(o=>o.price)),0)}</span>`],[T('Fastest delivery','Быстрейшая поставка'),p=>`<span class="${minD(p)===md?'best':''}">${minD(p)} ${T('days','дн.')}</span>`],[T('Contracts','Контрактов'),p=>p.offers.length],['TAA',p=>yn(p.taa)],['Section 508',p=>yn(p.s508)],[T('Cloud authorisation','Облачная аттестация'),p=>p.cl?`<span class="pill ok">${p.cl}</span>`:'<span class="pill">—</span>'],[T('Small-business offer','Малый бизнес'),p=>yn(hasSB(p))],[T('Rating','Рейтинг'),p=>'★ '+p.rt],[T('Holders','Поставщики'),p=>p.offers.map(o=>`<div style="font-size:12px">${hb(o.h).n} — <span class="mono">${usd(o.price,0)}</span></div>`).join('')]];
+  $('#cmpBox').innerHTML=`<div class="tw"><table class="cmp"><thead><tr><th></th>${ps.map(p=>`<th style="white-space:normal;min-width:170px"><div style="font-size:13px;color:var(--text);text-transform:none;letter-spacing:0">${esc(p.n)}</div><div style="display:flex;gap:6px;margin-top:8px"><button class="btn sm pri" data-add="${p.id}">+ ${T('Cart','В корзину')}</button><button class="btn sm" data-uncmp="${p.id}">✕</button></div></th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td>${ps.map(p=>`<td>${r[1](p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+$('#cmpBox').onclick=e=>{const u=e.target.closest('[data-uncmp]');if(u){D.cmp=D.cmp.filter(x=>x!==u.dataset.uncmp);save();renderCmp();renderNav()}};
+
+/* ---------- cart & RFQ ---------- */
+let rfqInv=null;
+function renderCart(){const c=D.cart;if(!c.length){$('#cartT').innerHTML=`<div class="empty">${T('Cart is empty.','Корзина пуста.')}<div style="margin-top:12px"><button class="btn pri" data-go="cat">${T('Browse catalog','В каталог')}</button></div></div>`;$('#rfqForm').innerHTML=`<h3>${T('Request for quotation','Запрос котировок')}</h3><div class="muted" style="font-size:13px">${T('Add items to start an RFQ.','Добавьте позиции, чтобы создать запрос.')}</div>`;return}
+  const tot=c.reduce((a,l)=>a+l.qty*avgP(pb(l.pid)),0);
+  $('#cartT').innerHTML=`<div class="tw"><table><thead><tr><th>${T('Item','Позиция')}</th><th class="num">${T('Qty','Кол-во')}</th><th class="num">${T('Est. unit','Оценка ед.')}</th><th class="num">${T('Est. total','Оценка сумма')}</th><th></th></tr></thead><tbody>${c.map((l,i)=>{const p=pb(l.pid);return `<tr><td style="min-width:170px"><b>${esc(p.n)}</b><div class="muted mono" style="font-size:11px">${p.sku} · ${L(UNITS[p.u])}</div></td><td class="num"><input class="input mono qty" type="number" min="1" value="${l.qty}" data-qty="${i}"></td><td class="num mono">${usd(avgP(p))}</td><td class="num mono">${usd(l.qty*avgP(p),0)}</td><td><button class="btn sm" data-rm="${i}">✕</button></td></tr>`}).join('')}</tbody></table></div><div style="display:flex;justify-content:space-between;margin-top:12px;font-weight:800;font-size:16px"><span>${T('Independent government estimate','Оценка заказчика (НМЦ)')}</span><span class="mono">${usd(tot,0)}</span></div>`;
+  const carry=new Set(c.flatMap(l=>pb(l.pid).offers.map(o=>o.h)));if(!rfqInv)rfqInv=new Set(carry);
+  $('#rfqForm').innerHTML=`<h3>${T('Request for quotation','Запрос котировок')}</h3><div class="fg"><div class="f"><label>${T('Ordering agency','Ведомство-заказчик')}</label><select class="input" id="rAg">${AG.map((a,i)=>`<option value="${i}">${L(a)}</option>`).join('')}</select></div><div class="f"><label>${T('Quotes due in','Срок ответа')}</label><select class="input" id="rDue"><option value="3">3 ${T('days','дн.')}</option><option value="5" selected>5 ${T('days','дн.')}</option><option value="10">10 ${T('days','дн.')}</option></select></div></div>
+  <div class="f"><label>${T('Invite contract holders (green = carries items in cart)','Пригласить поставщиков (зелёные — есть товары из корзины)')}</label></div><div class="hl">${H.map(h=>`<label class="${carry.has(h.id)?'carry':''}"><input type="checkbox" data-inv="${h.id}" ${rfqInv.has(h.id)?'checked':''}><span style="flex:1">${h.n}</span>${h.sb?'<span class="bdg sbz">SB</span>':''}</label>`).join('')}</div>
+  <div class="note" id="fairNote"></div><button class="btn pri" id="sendR" style="width:100%;justify-content:center;margin-top:12px">${T('Send RFQ','Отправить запрос')} →</button>`;fair()}
+function fair(){const n=rfqInv.size;$('#fairNote').innerHTML=n<3?'<span style="color:var(--amber)">⚠ '+T('Fair-opportunity rule: invite at least 3 holders (now ','Правило равных возможностей: пригласите минимум 3 поставщиков (сейчас ')+n+').</span>':'✓ '+n+T(' holders invited — fair opportunity met.',' поставщиков — требование равных возможностей выполнено.');$('#sendR').disabled=n<3}
+$('#cartT').addEventListener('change',e=>{const i=e.target.dataset.qty;if(i!=null){D.cart[+i].qty=Math.max(1,parseInt(e.target.value)||1);save();renderCart()}});
+$('#cartT').addEventListener('click',e=>{const r=e.target.closest('[data-rm]');if(r){D.cart.splice(+r.dataset.rm,1);rfqInv=null;save();renderCart();renderNav()}});
+$('#rfqForm').addEventListener('change',e=>{const h=e.target.dataset.inv;if(h){e.target.checked?rfqInv.add(h):rfqInv.delete(h);fair()}});
+$('#rfqForm').addEventListener('click',e=>{if(e.target.id!=='sendR')return;const r={id:'RFQ-'+pad(D.seq.rfq++,4),ts:Date.now(),ag:+$('#rAg').value,due:+$('#rDue').value,lines:D.cart.map(l=>[l.pid,l.qty]),est:D.cart.reduce((a,l)=>a+l.qty*avgP(pb(l.pid)),0),inv:[...rfqInv],quotes:{},st:'open'};r.inv.forEach(h=>r.quotes[h]={st:'wait'});D.rfqs.unshift(r);D.cart=[];rfqInv=null;save();schedule(r);selR=r.id;go('rfq');toast('📨 '+r.id+T(' sent to ',' отправлен ')+r.inv.length+T(' holders',' поставщикам'),'ok')});
+function genQuote(r,h){const x=rng(hash(r.id+h));let carried=0;let tot=r.lines.reduce((a,[pid,qty])=>{const p=pb(pid),o=p.offers.find(o=>o.h===h);if(o)carried++;return a+qty*(o?o.price:p.b*(1.04+x()*.12))},0);
+  if(!carried&&x()<.5)return{st:'nobid',at:Date.now()};tot=Math.round(tot*(1-.03-x()*.11));const days=Math.max(...r.lines.map(([pid])=>{const o=pb(pid).offers.find(o=>o.h===h);return o?o.days:18+Math.floor(x()*10)}))+Math.floor(x()*4);
+  return{st:'in',tot,days,tech:Math.round(66+x()*32),pp:Math.round(70+x()*29),at:Date.now(),note:[T('Includes 3-yr warranty','Гарантия 3 года'),T('Delivery & install included','Доставка и монтаж включены'),T('Partial shipment allowed','Возможна частичная поставка'),T('Price valid 60 days','Цена действует 60 дней')][Math.floor(x()*4)]}}
+function schedule(r){Object.keys(r.quotes).forEach(h=>{if(r.quotes[h].st!=='wait')return;setTimeout(()=>{if(r.quotes[h].st!=='wait')return;r.quotes[h]=genQuote(r,h);save();if(view==='rfq')renderRfq();renderNav();if(r.quotes[h].st==='in')toast('💬 '+hb(h).n+': '+usd(r.quotes[h].tot,0))},900+Math.random()*5200)})}
+D.rfqs.forEach(r=>Object.keys(r.quotes).forEach(h=>{if(r.quotes[h].st==='wait')r.quotes[h]=genQuote(r,h)}));
+function scores(r){const qs=Object.entries(r.quotes).filter(([,q])=>q.st==='in');if(!qs.length)return[];const mt=Math.min(...qs.map(([,q])=>q.tot)),md=Math.min(...qs.map(([,q])=>q.days)),W=D.W,sw=W.price+W.deliv+W.tech+W.pp+W.sb||1;
+  return qs.map(([h,q])=>{const s={price:mt/q.tot,deliv:md/q.days,tech:q.tech/100,pp:q.pp/100,sb:hb(h).sb?1:0};return{h,q,s,score:(W.price*s.price+W.deliv*s.deliv+W.tech*s.tech+W.pp*s.pp+W.sb*s.sb)/sw*100}}).sort((a,b)=>b.score-a.score)}
+const WL={price:{en:'Price',ru:'Цена'},deliv:{en:'Delivery',ru:'Срок'},tech:{en:'Technical',ru:'Техника'},pp:{en:'Past perf.',ru:'Репутация'},sb:{en:'Small biz',ru:'Малый бизнес'}};
+function renderRfq(){if(!D.rfqs.length){$('#rfqL').innerHTML='';$('#rfqD').innerHTML=`<div class="card empty">${T('No RFQs yet — add items to the cart and send one.','Запросов пока нет — добавьте товары в корзину и отправьте запрос.')}<div style="margin-top:12px"><button class="btn pri" data-go="cat">${T('Browse catalog','В каталог')}</button></div></div>`;return}
+  if(!selR||!D.rfqs.find(r=>r.id===selR))selR=D.rfqs[0].id;const r=D.rfqs.find(x=>x.id===selR);
+  $('#rfqL').innerHTML=D.rfqs.map(x=>{const n=Object.values(x.quotes).filter(q=>q.st!=='wait').length;return `<div class="li ${x.id===selR?'on':''}" data-r="${x.id}"><div class="t"><span class="mono">${x.id}</span><span class="pill ${x.st==='awarded'?'ok':'gold'}" style="margin-left:auto">${x.st==='awarded'?T('Awarded','Присуждён'):T('Open','Открыт')}</span></div><div class="m">${L(AG[x.ag])} · ${x.lines.length} ${T('lines','поз.')} · ${n}/${x.inv.length} ${T('responses','ответов')}</div></div>`}).join('');
+  const sc=scores(r),top=sc[0];
+  $('#rfqD').innerHTML=`<div class="card" style="margin-bottom:14px"><h3><span class="mono">${r.id}</span><span class="muted" style="font-weight:500;font-size:13px">${L(AG[r.ag])} · ${T('IGE','НМЦ')} ${usd(r.est,0)}</span></h3><div style="font-size:12.5px" class="muted">${r.lines.map(([pid,qty])=>qty+' × '+esc(pb(pid).n)).join(' · ')}</div></div>
+  <div class="qcards">${r.inv.map(h=>{const q=r.quotes[h];return `<div class="qc ${q.st}"><div class="n">${hb(h).n}</div>${q.st==='wait'?`<div class="muted">${T('Preparing quote','Готовит котировку')}</div>`:q.st==='nobid'?`<div class="muted">${T('No bid','Отказ от участия')}</div>`:`<div style="font-size:16px;font-weight:800" class="mono">${usd(q.tot,0)}</div><div class="muted">${q.days} ${T('days','дн.')} · ${esc(q.note)}${q.rev?' · <b style="color:var(--gold2)">'+T('revised','обновлено')+'</b>':''}</div>`}</div>`}).join('')}</div>
+  <div class="card"><h3>${T('Best-value evaluation','Оценка лучшего соотношения')}<span class="sp"></span><button class="btn sm" id="wReset">${T('Reset weights','Сбросить веса')}</button></h3><div class="wts">${Object.keys(WL).map(k=>`<div><label><span>${L(WL[k])}</span><b class="mono">${D.W[k]}</b></label><input type="range" min="0" max="60" value="${D.W[k]}" data-w="${k}"></div>`).join('')}</div>
+  ${sc.length?`<div class="tw"><table><thead><tr><th>#</th><th>${T('Holder','Поставщик')}</th><th class="num">${T('Price','Цена')}</th><th class="num">${T('Days','Дней')}</th><th class="num">${T('Tech','Техн.')}</th><th class="num">${T('Past perf.','Репут.')}</th><th>${T('Score','Балл')}</th></tr></thead><tbody>${sc.map((s,i)=>`<tr ${i===0?'style="font-weight:700"':''}><td>${i===0?'🏆':i+1}</td><td style="white-space:nowrap">${hb(s.h).n}${hb(s.h).sb?' <span class="bdg sbz">SB</span>':''}</td><td class="num mono">${usd(s.q.tot,0)}</td><td class="num">${s.q.days}</td><td class="num">${s.q.tech}</td><td class="num">${s.q.pp}</td><td><div style="display:flex;gap:8px;align-items:center"><div class="sbar" style="flex:1"><i style="width:${s.score}%"></i></div><b class="mono">${s.score.toFixed(1)}</b></div></td></tr>`).join('')}</tbody></table></div>`:`<div class="muted">${T('Waiting for quotes…','Ждём котировки…')}</div>`}
+  ${r.st==='awarded'?`<div style="margin-top:12px" class="pill ok">✓ ${T('Awarded to ','Присуждён: ')}${hb(r.award).n} · ${r.po}</div> <button class="btn sm" data-po="${r.po}" style="margin-top:10px">${T('Open order →','Открыть заказ →')}</button>`:top?`<div style="display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap"><span style="font-size:13px">${T('Recommended:','Рекомендуется:')} <b>${hb(top.h).n}</b> — ${T('saves','экономия')} <b class="best">${usd(Math.max(0,r.est-top.q.tot),0)}</b> ${T('vs estimate','к НМЦ')}</span><span class="sp" style="flex:1"></span><select class="input" id="awH" style="width:auto">${sc.map(s=>`<option value="${s.h}">${hb(s.h).n}</option>`).join('')}</select><button class="btn gold" id="awB">${T('Award & sign PO','Присудить и подписать')}</button></div>`:''}</div>`}
+$('#rfqL').onclick=e=>{const l=e.target.closest('[data-r]');if(l){selR=l.dataset.r;renderRfq()}};
+$('#rfqD').addEventListener('input',e=>{const k=e.target.dataset.w;if(!k)return;D.W[k]=+e.target.value;save();const pos=e.target;renderRfq();const n=$(`[data-w="${k}"]`);if(n)n.focus()});
+$('#rfqD').addEventListener('click',e=>{if(e.target.id==='wReset'){D.W=D0().W;save();renderRfq()}if(e.target.id==='awB')award(D.rfqs.find(r=>r.id===selR),$('#awH').value);const p=e.target.closest('[data-po]');if(p){selO=p.dataset.po;go('ord')}});
+function award(r,h){const q=r.quotes[h];modal(`<h3 style="margin:0 0 6px">${T('Award & e-sign purchase order','Присуждение и подпись заказа')}</h3><div class="muted" style="font-size:13px">${r.id} → <b>${hb(h).n}</b> (${hb(h).c}) · <b class="mono">${usd(q.tot,0)}</b></div>
+  <div class="f" style="margin-top:14px"><label>${T('Contracting officer','Контрактный управляющий')}</label><input class="input" id="sgN" value="Jordan Okafor"></div><div class="f" style="margin-top:10px"><label>${T('Signing PIN (any 4–6 digits)','PIN подписи (любые 4–6 цифр)')}</label><input class="input mono" id="sgP" type="password" maxlength="6" inputmode="numeric" value="2468"></div>
+  <label style="display:flex;gap:8px;margin-top:12px;font-size:13px"><input type="checkbox" id="sgF" checked>${T('I certify funds are available (line of accounting 26-0417-IT).','Подтверждаю наличие средств (строка финансирования 26-0417-IT).')}</label><div class="note" id="sgE" style="color:var(--red)"></div>
+  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn" id="sgX">${T('Cancel','Отмена')}</button><button class="btn gold" id="sgOk" style="flex:1;justify-content:center">✍ ${T('Sign & issue PO','Подписать и выпустить')}</button></div>`);
+  $('#sgX').onclick=closeM;$('#sgOk').onclick=()=>{const n=$('#sgN').value.trim(),pin=$('#sgP').value;if(n.length<3||!/^\d{4,6}$/.test(pin)||!$('#sgF').checked){$('#sgE').textContent=T('Enter a name, a 4–6 digit PIN and certify funds.','Укажите имя, PIN из 4–6 цифр и подтвердите средства.');return}
+    $('#sgOk').disabled=true;$('#sgOk').textContent=T('Signing…','Подписание…');setTimeout(()=>{const po='PO-FITAO-26-'+pad(D.seq.po++,6),ts=Date.now();const sig=[1,2,3,4].map(i=>hash(po+n+ts+i).toString(16).padStart(8,'0')).join('').toUpperCase();
+      D.orders.unshift({po,rfq:r.id,h,ag:r.ag,tot:q.tot,est:r.est,days:q.days,lines:r.lines,ts,sig,signer:n,stage:0,st:[ts],trk:'PRC'+Math.floor(1e9+Math.random()*9e9)});r.st='awarded';r.award=h;r.po=po;save();closeM();selO=po;go('ord');toast('✅ '+po+T(' signed and sent to ',' подписан и отправлен ')+hb(h).n,'ok')},900)}}
+
+/* ---------- orders & tracking ---------- */
+const STG=[{en:'Awarded',ru:'Присуждён'},{en:'Acknowledged',ru:'Подтверждён'},{en:'Shipped',ru:'Отгружен'},{en:'Delivered',ru:'Доставлен'},{en:'Accepted',ru:'Принят'}];
+setInterval(()=>{let ch=false;D.orders.forEach(o=>{if(o.stage<3&&Date.now()-o.st[o.stage]>4000){o.stage++;o.st.push(Date.now());ch=true;if(o.stage===3)toast('📦 '+o.po+T(' delivered — please accept',' доставлен — подтвердите приёмку'))}});if(ch){save();if(view==='ord')renderOrd();if(view==='dash')renderDash()}},1000);
+function renderOrd(){if(!D.orders.length){$('#ordL').innerHTML='';$('#ordD').innerHTML=`<div class="card empty">${T('No orders yet — award an RFQ first.','Заказов пока нет — сначала присудите запрос.')}</div>`;return}
+  if(!selO||!D.orders.find(o=>o.po===selO))selO=D.orders[0].po;const o=D.orders.find(x=>x.po===selO),h=hb(o.h);
+  $('#ordL').innerHTML=D.orders.map(x=>`<div class="li ${x.po===selO?'on':''}" data-o="${x.po}"><div class="t"><span class="mono" style="font-size:12.5px">${x.po}</span></div><div class="m">${hb(x.h).n} · ${usd(x.tot,0)}</div><div class="m"><span class="pill ${x.stage===4?'ok':'gold'}">${L(STG[x.stage])}</span></div></div>`).join('');
+  $('#ordD').innerHTML=`<div class="card" style="margin-bottom:14px"><h3>${T('Delivery tracking','Отслеживание поставки')}<span class="sp"></span><span class="mono muted" style="font-size:12px">${o.trk}</span></h3><div class="trk">${STG.map((s,i)=>`<div class="${i<=o.stage?'d':i===o.stage+1?'c':''}"><i>${i<=o.stage?'✓':''}</i>${L(s)}${o.st[i]?`<div class="mono" style="font-size:10px;color:var(--dim)">${new Date(o.st[i]).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</div>`:''}</div>`).join('')}</div>
+  ${o.stage===3?`<button class="btn pri" id="accept">✓ ${T('Inspect & accept delivery','Проверить и принять')}</button>`:o.stage===4?`<span class="pill ok">✓ ${T('Receiving report RR-','Акт приёмки RR-')}${o.po.slice(-6)} · ${T('invoice released for payment','счёт передан к оплате')}</span>`:`<span class="muted" style="font-size:13px">${T('Updates arrive from the holder’s system automatically…','Статусы приходят из системы поставщика автоматически…')}</span>`}</div>
+  <div class="po"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><div style="font-size:11px;letter-spacing:.08em;color:#777;font-weight:700">${T('PURCHASE ORDER','ЗАКАЗ НА ПОСТАВКУ')}</div><h2>${o.po}</h2><div style="color:#666">${new Date(o.ts).toLocaleString(loc())}</div></div><div style="text-align:right"><b>${T('Federal IT Acquisition Office','Федеральное бюро ИТ-закупок')}</b><div style="color:#666">${T('on behalf of','в интересах')} ${L(AG[o.ag])}</div><div style="color:#666">GWAC Procura · RFQ ${o.rfq}</div></div></div>
+  <div style="display:flex;gap:24px;margin:14px 0;flex-wrap:wrap"><div><div style="color:#777;font-size:11px">${T('CONTRACTOR','ПОСТАВЩИК')}</div><b>${h.n}</b><div>${T('Contract','Контракт')} ${h.c}</div></div><div><div style="color:#777;font-size:11px">${T('DELIVER BY','СРОК ПОСТАВКИ')}</div><b>${new Date(o.ts+o.days*864e5).toLocaleDateString(loc())}</b><div>${o.days} ${T('days ARO','дн. с даты заказа')}</div></div></div>
+  <div style="overflow-x:auto"><table><thead><tr><th>#</th><th>${T('Item','Позиция')}</th><th class="num">${T('Qty','Кол-во')}</th><th class="num">${T('Amount','Сумма')}</th></tr></thead><tbody>${(()=>{const w=o.lines.map(([pid,qty])=>qty*minP(pb(pid))),sw=w.reduce((a,b)=>a+b,0);return o.lines.map(([pid,qty],i)=>`<tr><td>${i+1}</td><td>${esc(pb(pid).n)}<div style="color:#888;font-size:11px">${pb(pid).sku}</div></td><td class="num">${qty}</td><td class="num">${usd(o.tot*w[i]/sw)}</td></tr>`).join('')})()}<tr><td></td><td><b>${T('Total','Итого')}</b></td><td></td><td class="num"><b>${usd(o.tot)}</b></td></tr></tbody></table></div>
+  <div style="color:#2e7d32;margin-top:8px;font-weight:600">${T('Savings vs estimate: ','Экономия к НМЦ: ')}${usd(Math.max(0,o.est-o.tot),0)} (${Math.max(0,(o.est-o.tot)/o.est*100).toFixed(1)}%)</div>
+  <div class="sig"><div style="color:#777">${T('Digitally signed by','Подписано электронной подписью')}</div><b>${esc(o.signer)}</b><div>${T('Contracting Officer','Контрактный управляющий')} · ${new Date(o.ts).toISOString()}</div><div>SHA-256: ${o.sig.match(/.{8}/g).join(' ')}…</div></div>
+  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn sm" id="prPo">🖨 ${T('Print / PDF','Печать / PDF')}</button><button class="btn sm" id="vfy">🔏 ${T('Verify signature','Проверить подпись')}</button></div></div>`;
+  const a=$('#accept');if(a)a.onclick=()=>{o.stage=4;o.st.push(Date.now());save();renderOrd();toast(T('Delivery accepted — receiving report filed','Поставка принята — акт оформлен'),'ok')};
+  $('#prPo').onclick=()=>window.print();$('#vfy').onclick=()=>toast('🔏 '+T('Signature valid · certificate FITAO-CA-2 · not revoked','Подпись верна · сертификат FITAO-CA-2 · не отозван'),'ok')}
+$('#ordL').onclick=e=>{const l=e.target.closest('[data-o]');if(l){selO=l.dataset.o;renderOrd()}};
+
+/* ---------- dashboard ---------- */
+const BASE=(()=>{const r=rng(77);const cat={};Object.keys(CATS).forEach(k=>cat[k]=Math.round(180+r()*900));const ven={};H.forEach(h=>ven[h.id]=Math.round(h.sb?70+r()*190:420+r()*900));const mon=Array.from({length:12},(_,i)=>Math.round(320+r()*260+(i===8?280:0)));return{cat,ven,mon}})();
+function agg(){const cat={...BASE.cat},ven={...BASE.ven},mon=BASE.mon.slice();D.orders.forEach(o=>{const m=o.tot/1e6;ven[o.h]+=m;mon[new Date(o.ts).getMonth()]+=m;const w=o.lines.map(([pid,qty])=>qty*minP(pb(pid))),sw=w.reduce((a,b)=>a+b,0);o.lines.forEach(([pid],i)=>cat[pb(pid).ck]+=m*w[i]/sw)});return{cat,ven,mon}}
+function renderDash(){const A=agg(),tot=Object.values(A.ven).reduce((a,b)=>a+b,0),sb=H.filter(h=>h.sb).reduce((a,h)=>a+A.ven[h.id],0),used=14.2e9+D.orders.reduce((a,o)=>a+o.tot,0),sav=D.orders.reduce((a,o)=>a+Math.max(0,o.est-o.tot),0);
+  $('#dK').innerHTML=[[T('Obligated FY26','Обязательства 2026 ФГ'),'$'+(tot/1000).toFixed(2)+(PT.lang==='ru'?' млрд':'B'),T('all agencies','все ведомства')],[T('Small-business share','Доля малого бизнеса'),(sb/tot*100).toFixed(1)+'%',T('goal 23%','цель 23%')],[T('Your orders','Ваши заказы'),D.orders.length,D.orders.filter(o=>o.stage===4).length+T(' accepted',' принято')],[T('Your savings vs IGE','Ваша экономия к НМЦ'),usd(sav,0),T('from competition','за счёт конкуренции')]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+  const ks=Object.keys(CATS).sort((a,b)=>A.cat[b]-A.cat[a]),mx=Math.max(...ks.map(k=>A.cat[k])),W=560,rh=30;let g='';ks.forEach((k,i)=>{const w=(A.cat[k]/mx)*(W-230);g+=`<text x="0" y="${i*rh+19}" font-size="12" fill="${css('--muted')}">${CATS[k].ic} ${L(CATS[k])}</text><rect x="170" y="${i*rh+7}" width="${Math.max(2,w)}" height="16" rx="4" fill="${css(CATS[k].c)}"/><text x="${176+w}" y="${i*rh+19}" font-size="11.5" font-weight="700" fill="${css('--text')}">${A.cat[k].toFixed(0)}</text>`});$('#cCat').innerHTML=`<svg viewBox="0 0 ${W} ${ks.length*rh}" font-family="Inter,sans-serif">${g}</svg>`;
+  const pc=used/60e9,R=80,len=Math.PI*R;$('#cGauge').innerHTML=`<svg viewBox="0 0 200 130" font-family="Inter,sans-serif"><path d="M20,105 A80,80 0 0 1 180,105" fill="none" stroke="${css('--line')}" stroke-width="16" stroke-linecap="round"/><path d="M20,105 A80,80 0 0 1 180,105" fill="none" stroke="${css(pc>.8?'--red':pc>.6?'--amber':'--mal2')}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${len*pc} ${len}"/><text x="100" y="88" text-anchor="middle" font-size="26" font-weight="800" fill="${css('--text')}">${(pc*100).toFixed(2)}%</text><text x="100" y="106" text-anchor="middle" font-size="10" fill="${css('--muted')}">$${(used/1e9).toFixed(3)}B ${T('of','из')} $60B</text><text x="20" y="125" font-size="9" text-anchor="middle" fill="${css('--dim')}">0</text><text x="180" y="125" font-size="9" text-anchor="middle" fill="${css('--dim')}">$60B</text></svg><div class="note" style="text-align:center">${T('Ordering period 2025–2036 · year 2 of 11 · on track','Период заказов 2025–2036 · год 2 из 11 · в графике')}</div>`;
+  const MW=560,MH=200,mm=Math.max(...A.mon)*1.1,bw=(MW-40)/12;const mn=PT.lang==='ru'?['Я','Ф','М','А','М','И','И','А','С','О','Н','Д']:['J','F','M','A','M','J','J','A','S','O','N','D'];let m='';[0,.5,1].forEach(f=>m+=`<line x1="34" x2="${MW}" y1="${MH-20-f*(MH-40)}" y2="${MH-20-f*(MH-40)}" stroke="${css('--line')}"/><text x="30" y="${MH-16-f*(MH-40)}" font-size="10" text-anchor="end" fill="${css('--dim')}">${Math.round(mm*f)}</text>`);
+  const cm=new Date().getMonth();A.mon.forEach((v,i)=>{const h=v/mm*(MH-40);m+=`<rect x="${40+i*bw+3}" y="${MH-20-h}" width="${bw-6}" height="${h}" rx="3" fill="${css(i===cm?'--gold':'--mal2')}" opacity="${i>cm?.35:1}"/><text x="${40+i*bw+bw/2}" y="${MH-5}" font-size="10" text-anchor="middle" fill="${css('--dim')}">${mn[i]}</text>`});$('#cMon').innerHTML=`<svg viewBox="0 0 ${MW} ${MH}" font-family="Inter,sans-serif">${m}</svg>`;
+  const vs=H.slice().sort((a,b)=>A.ven[b.id]-A.ven[a.id]);let off=0;const C=2*Math.PI*60;let d='';vs.forEach((h,i)=>{const f=A.ven[h.id]/tot;d+=`<circle cx="80" cy="80" r="60" fill="none" stroke="${css(HC[i])}" stroke-width="26" stroke-dasharray="${f*C} ${C}" stroke-dashoffset="${-off*C}" transform="rotate(-90 80 80)"/>`;off+=f});
+  $('#cVen').innerHTML=`<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><svg viewBox="0 0 160 160" style="width:160px;flex:none" font-family="Inter,sans-serif">${d}<text x="80" y="78" text-anchor="middle" font-size="18" font-weight="800" fill="${css('--text')}">${H.length}</text><text x="80" y="94" text-anchor="middle" font-size="9.5" fill="${css('--muted')}">${T('holders','поставщиков')}</text></svg><div style="flex:1;min-width:180px">${vs.map((h,i)=>`<div style="display:flex;gap:8px;align-items:center;font-size:12.5px;padding:3px 0"><i style="width:10px;height:10px;border-radius:3px;background:var(${HC[i]});flex:none"></i><span style="flex:1">${h.n}${h.sb?' <span class="bdg sbz">SB</span>':''}</span><b class="mono">${(A.ven[h.id]/tot*100).toFixed(1)}%</b></div>`).join('')}</div></div>`}
+
+/* ---------- vendor view ---------- */
+function vRfqs(){const me=D.persona;return D.rfqs.filter(r=>r.inv.includes(me)).map(r=>({r,own:true,id:r.id,ag:AG[r.ag],lines:r.lines,q:r.quotes[me],open:r.st==='open'})).concat(D.ext.map(x=>({x,id:x.id,ag:x.ag,lines:x.lines,q:(x.resp||{})[me],open:x.st==='open'})))}
+function renderVen(){const me=hb(D.persona);$('#persona').innerHTML=H.map(h=>`<option value="${h.id}">${h.n} — ${h.c}</option>`).join('');$('#persona').value=me.id;$('#pBadge').innerHTML=me.sb?`<span class="pill gold">${L(me.t)}</span>`:`<span class="pill">${T('Large business','Крупный бизнес')}</span>`;
+  const rs=vRfqs(),won=D.orders.filter(o=>o.h===me.id),sub=rs.filter(x=>x.q&&x.q.st==='in').length;
+  $('#vK').innerHTML=[[T('Invited RFQs','Приглашений'),rs.length],[T('Quotes submitted','Котировок подано'),sub],[T('Awards won','Побед'),won.length],[T('Revenue via Procura','Выручка через Procura'),usd(won.reduce((a,o)=>a+o.tot,0),0)]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
+  $('#vR').innerHTML=rs.length?rs.map(x=>{const est=x.lines.reduce((a,[pid,qty])=>{const p=pb(pid),o=p.offers.find(o=>o.h===me.id);return a+qty*(o?o.price:p.b)},0);const q=x.q;return `<div class="li" style="cursor:default"><div class="t"><span class="mono">${x.id}</span><span class="muted" style="font-weight:500;font-size:12px">${L(x.ag)}</span><span class="pill ${!x.open?'':q&&q.st==='in'?'ok':'warn'}" style="margin-left:auto">${!x.open?(x.r&&x.r.award===me.id?T('Won','Победа'):T('Closed','Закрыт')):q&&q.st==='in'?T('Submitted','Подано'):T('Response due','Ждёт ответа')}</span></div><div class="m">${x.lines.map(([pid,qty])=>qty+' × '+esc(pb(pid).n)).join(' · ')}</div>${x.open?`<div style="display:flex;gap:8px;margin-top:9px;flex-wrap:wrap;align-items:flex-end"><div class="f" style="flex:1;min-width:110px"><label>${T('Total price','Цена, всего')}</label><input class="input mono" data-vp="${x.id}" value="${q&&q.tot?q.tot:Math.round(est*.95)}"></div><div class="f" style="width:90px"><label>${T('Days','Дней')}</label><input class="input mono" data-vd="${x.id}" value="${q&&q.days?q.days:14}"></div><button class="btn sm pri" data-vs="${x.id}">${q&&q.st==='in'?T('Revise','Обновить'):T('Submit','Подать')}</button></div>`:''}</div>`}).join(''):`<div class="empty">${T('No RFQs for this holder.','Нет запросов для этого поставщика.')}</div>`;
+  const mine=P.filter(p=>p.offers.some(o=>o.h===me.id));$('#vP').innerHTML=`<thead><tr><th>${T('Item','Позиция')}</th><th class="num">${T('Lowest rival','Мин. у конкурентов')}</th><th class="num">${T('My price','Моя цена')}</th></tr></thead><tbody>`+mine.map(p=>{const o=p.offers.find(o=>o.h===me.id),riv=p.offers.filter(x=>x.h!==me.id).map(x=>x.price);const rv=riv.length?Math.min(...riv):null;return `<tr><td style="min-width:160px">${esc(p.n)}<div class="muted mono" style="font-size:11px">${p.sku}</div></td><td class="num mono">${rv?usd(rv):'—'}</td><td class="num"><input class="input mono qty" style="width:110px" data-mp="${p.id}" value="${o.price.toFixed(2)}">${rv&&o.price<=rv?' <span class="pill ok">'+T('best','лучшая')+'</span>':''}</td></tr>`}).join('')+'</tbody>'}
+$('#persona').onchange=e=>{D.persona=e.target.value;save();renderVen()};
+$('#vR').onclick=e=>{const b=e.target.closest('[data-vs]');if(!b)return;const id=b.dataset.vs,tot=parseFloat($(`[data-vp="${id}"]`).value),days=parseInt($(`[data-vd="${id}"]`).value);if(!(tot>0)||!(days>0)){toast(T('Enter price and days','Укажите цену и срок'),'bad');return}
+  const me=D.persona,r=D.rfqs.find(x=>x.id===id);if(r){const old=r.quotes[me]||{};r.quotes[me]={st:'in',tot:Math.round(tot),days,tech:old.tech||88,pp:old.pp||90,at:Date.now(),note:T('Submitted via vendor portal','Подано через портал поставщика'),rev:true}}else{const x=D.ext.find(x=>x.id===id);x.resp=x.resp||{};x.resp[me]={st:'in',tot:Math.round(tot),days}}save();renderVen();renderNav();toast('📤 '+T('Quote sent for ','Котировка отправлена: ')+id+(r?T(' — buyer sees it in evaluation',' — заказчик видит её в оценке'):''),'ok')};
+$('#vP').addEventListener('change',e=>{const id=e.target.dataset.mp;if(!id)return;const v=parseFloat(e.target.value);if(!(v>0)){toast(T('Invalid price','Неверная цена'),'bad');renderVen();return}const o=pb(id).offers.find(o=>o.h===D.persona);o.price=Math.round(v*100)/100;D.mods[id+'|'+D.persona]=o.price;save();renderVen();toast(T('Catalog modification logged: ','Изменение каталога записано: ')+pb(id).sku+' → '+usd(o.price),'ok')});
+
+/* ---------- navigation ---------- */
+const NAV=[['cat',{en:'Catalog',ru:'Каталог'}],['cmp',{en:'Compare',ru:'Сравнение'}],['cart',{en:'Cart',ru:'Корзина'}],['rfq',{en:'RFQs & evaluation',ru:'Запросы и оценка'}],['ord',{en:'Orders',ru:'Заказы'}],['dash',{en:'Dashboard',ru:'Дашборд'}]];
+function renderNav(){const b={cmp:D.cmp.length,cart:D.cart.length,rfq:D.rfqs.filter(r=>r.st==='open').length,ord:D.orders.filter(o=>o.stage===3).length};$('#nav').style.display=role==='buyer'?'':'none';$('#nav').innerHTML=NAV.map(n=>`<button class="${view===n[0]?'on':''}" data-go="${n[0]}">${L(n[1])}${b[n[0]]?`<em>${b[n[0]]}</em>`:''}</button>`).join('');renderTray()}
+function go(v){view=v;D.view=v;save();$$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));renderNav();({cat:renderCat,cmp:renderCmp,cart:renderCart,rfq:renderRfq,ord:renderOrd,dash:renderDash,ven:renderVen})[v]();try{history.replaceState(null,'','#'+v)}catch(e){}}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){if(role!=='buyer')setRole('buyer');go(g.dataset.go);window.scrollTo(0,0)}});
+function setRole(r){role=r;$$('#role button').forEach(b=>b.classList.toggle('on',b.dataset.r===r));if(r==='vendor')go('ven');else go(view==='ven'?'cat':view)}
+$('#role').onclick=e=>{const b=e.target.closest('[data-r]');if(b)setRole(b.dataset.r)};
+PT.onLang(()=>go(view));
+const h0=location.hash.slice(1);if(h0==='ven'){role='vendor';$$('#role button').forEach(b=>b.classList.toggle('on',b.dataset.r==='vendor'))}
+if(h0&&(NAV.find(n=>n[0]===h0)||h0==='ven'))view=h0;else if(view==='ven')view='cat';
+go(view);
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

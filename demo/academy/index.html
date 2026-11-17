@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Orbit Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1400px;margin:0 auto;padding:18px 20px 60px}
+.intro{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-bottom:18px}
+.howto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.howto div{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-size:13px;line-height:1.4}
+.howto b{width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:12px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;padding:12px 14px;margin:0}
+.facts dt{color:var(--muted)}.facts dd{margin:0;font-weight:600}
+.layout{display:grid;grid-template-columns:400px minmax(0,1fr);gap:22px;align-items:start}
+.phone{border-radius:50px;padding:12px;background:linear-gradient(160deg,#2a3b35,#0b1512);box-shadow:var(--shadow),inset 0 0 0 2px #3a4f47;position:sticky;top:60px}
+.scr{border-radius:38px;overflow:hidden;background:var(--bg);height:770px;display:flex;flex-direction:column;position:relative}
+.sbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:12.5px;font-weight:700;flex:none;position:relative}
+.isl{position:absolute;left:50%;top:7px;transform:translateX(-50%);width:96px;height:24px;border-radius:14px;background:#000}
+.ahd{padding:6px 16px 10px;flex:none;border-bottom:1px solid var(--line)}
+.ahd .r1{display:flex;align-items:center;gap:10px}
+.av{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--violet),var(--blue));font-size:14px;position:relative}
+.av .lv{position:absolute;right:-6px;bottom:-6px;background:var(--gold);color:#1a1306;border-radius:8px;font-size:10px;padding:0 5px;border:2px solid var(--bg)}
+.chips{margin-left:auto;display:flex;gap:6px}
+.chip{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:800;font-size:12.5px}
+.chip.fire{color:#ff8a3d}.chip.coin{color:var(--gold2)}
+.xpbar{height:7px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:9px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3),var(--gold));transition:width .6s cubic-bezier(.2,.9,.3,1.2)}
+.xpl{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:3px;font-weight:600}
+.pbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 14px 20px;scroll-behavior:smooth}
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);background:var(--bg2);flex:none;padding:6px 4px 14px}
+.tabbar button{border:0;background:none;color:var(--dim);font-size:10.5px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;position:relative}
+.tabbar button span{font-size:19px;filter:grayscale(1);opacity:.7}
+.tabbar button.on{color:var(--mal3)}.tabbar button.on span{filter:none;opacity:1}
+.tabbar .dotn{position:absolute;top:2px;right:22%;width:8px;height:8px;border-radius:50%;background:var(--red)}
+.daily{border-radius:18px;padding:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 26%,var(--panel)),var(--panel));border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);display:flex;gap:12px;align-items:center;margin-bottom:16px;cursor:pointer}
+.daily .ic{font-size:30px}.daily b{display:block;font-size:14px}.daily small{color:var(--muted);font-size:11.5px}
+.daily.done{opacity:.6;cursor:default}
+.chd{display:flex;align-items:center;gap:10px;margin:18px 0 6px;padding:10px 12px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+.chd .e{font-size:22px}.chd b{font-size:13.5px;display:block}.chd small{font-size:11px;color:var(--muted)}
+.chd .new{margin-left:auto;font-size:10px;background:var(--gold);color:#1a1306;border-radius:6px;padding:1px 6px;font-weight:800}
+.path{display:flex;flex-direction:column;align-items:center;gap:40px;padding:14px 0 34px}
+.node{width:66px;height:62px;border-radius:50%;border:0;cursor:pointer;font-size:24px;display:grid;place-items:center;position:relative;transition:transform .15s;background:var(--panel2);box-shadow:0 6px 0 var(--line2);color:var(--dim)}
+.node:active{transform:translateY(4px);box-shadow:0 2px 0 var(--line2)}
+.node.done{background:linear-gradient(180deg,var(--mal3),var(--mal));box-shadow:0 6px 0 var(--mal2);color:#fff}
+.node.cur{background:linear-gradient(180deg,var(--gold2),var(--gold));box-shadow:0 6px 0 color-mix(in srgb,var(--gold) 60%,#000);color:#1a1306;animation:bob 1.6s ease-in-out infinite}
+.node.cur:after{content:"";position:absolute;inset:-9px;border-radius:50%;border:3px solid color-mix(in srgb,var(--gold) 55%,transparent);animation:ring 1.6s ease-out infinite}
+.node .lb{position:absolute;top:100%;margin-top:10px;z-index:2;background:color-mix(in srgb,var(--bg) 80%,transparent);padding:1px 6px;border-radius:6px;font-size:10.5px;font-weight:700;color:var(--muted);white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis}
+.node .tip{position:absolute;bottom:calc(100% + 10px);background:var(--text);color:var(--bg);font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px;white-space:nowrap}
+@keyframes bob{50%{transform:translateY(-4px)}}@keyframes ring{from{opacity:1;transform:scale(.9)}to{opacity:0;transform:scale(1.25)}}
+.sheet{position:absolute;inset:0;background:var(--bg);z-index:30;display:flex;flex-direction:column;animation:up .25s ease}
+@keyframes up{from{transform:translateY(30px);opacity:0}}
+.shd{display:flex;align-items:center;gap:10px;padding:44px 14px 10px}
+.shd .x{border:0;background:var(--panel);color:var(--text);width:32px;height:32px;border-radius:10px;cursor:pointer;font-size:15px}
+.prog{flex:1;height:10px;border-radius:9px;background:var(--line);overflow:hidden}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .3s}
+.stack{flex:1;position:relative;margin:10px 18px}
+.lcard{position:absolute;inset:0;border-radius:24px;padding:22px 20px;background:linear-gradient(170deg,var(--panel2),var(--panel));border:1px solid var(--line2);box-shadow:var(--shadow);display:flex;flex-direction:column;touch-action:pan-y;user-select:none;cursor:grab}
+.lcard.back{transform:scale(.94) translateY(14px);opacity:.55;pointer-events:none}
+.lcard .em{font-size:44px;margin-bottom:10px}.lcard h3{margin:0 0 10px;font-size:21px;letter-spacing:-.01em}.lcard p{margin:0;color:var(--muted);line-height:1.55;font-size:14.5px}
+.lcard .n{margin-top:auto;font-size:11px;color:var(--dim);font-weight:700}
+.sfoot{display:flex;gap:10px;padding:12px 18px 22px;align-items:center}
+.sfoot .btn{flex:1;justify-content:center}
+.hint{font-size:11px;color:var(--dim);text-align:center}
+.q{padding:6px 18px;flex:1;display:flex;flex-direction:column}
+.q h3{font-size:19px;margin:6px 0 16px;line-height:1.3}
+.opt{display:block;width:100%;text-align:left;padding:14px;border-radius:14px;border:2px solid var(--line2);background:var(--panel);color:var(--text);font-size:14.5px;font-weight:600;margin-bottom:10px;cursor:pointer;box-shadow:0 4px 0 var(--line2)}
+.opt.ok{border-color:var(--mal3);background:color-mix(in srgb,var(--mal) 18%,var(--panel));box-shadow:0 4px 0 var(--mal2)}
+.opt.no{border-color:var(--red);background:color-mix(in srgb,var(--red) 14%,var(--panel));animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.timer{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;font-family:var(--mono)}
+.timer .prog i{background:linear-gradient(90deg,var(--amber),var(--gold2))}
+.timer.low{color:var(--red)}.timer.low .prog i{background:var(--red)}
+.res{text-align:center;padding:30px 20px;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.res .big{font-size:60px;animation:pop .45s}.res h2{margin:8px 0 4px}
+.gain{display:flex;gap:10px;margin:16px 0}.gain div{padding:10px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-weight:800}
+@keyframes pop{from{transform:scale(.5);opacity:0}}
+.lvup{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--gold) 35%,var(--bg)),var(--bg) 70%);text-align:center;padding:20px}
+.lvup .ring{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold),var(--mal3),var(--gold2),var(--gold));animation:spin 3s linear infinite;box-shadow:0 0 60px color-mix(in srgb,var(--gold) 60%,transparent)}
+.lvup .ring b{width:126px;height:126px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:58px;font-weight:900;animation:spin 3s linear infinite reverse}
+.lvup h2{font-size:28px;margin:22px 0 4px;animation:pop .6s .2s both}
+@keyframes spin{to{transform:rotate(360deg)}}
+canvas.conf{position:absolute;inset:0;pointer-events:none;z-index:60}
+.ptoast{position:absolute;left:14px;right:14px;top:44px;z-index:70;background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal3);padding:10px 12px;border-radius:12px;box-shadow:var(--shadow);font-size:13px;font-weight:600;animation:up .25s}
+.sec{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:800;margin:16px 0 8px}
+.vs{border-radius:18px;padding:14px;background:var(--panel);border:1px solid var(--line);margin-bottom:12px}
+.vs .row{display:flex;align-items:center;gap:8px;margin:10px 0 4px;font-weight:800;font-size:13px}
+.vs .row span:last-child{margin-left:auto;font-family:var(--mono)}
+.tbar{height:16px;border-radius:9px;background:var(--line);overflow:hidden}.tbar i{display:block;height:100%;transition:width .8s ease;border-radius:9px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:3px;margin-bottom:12px}
+.seg button{border:0;background:none;padding:7px;border-radius:9px;cursor:pointer;font-weight:700;color:var(--muted);font-size:12.5px}
+.seg button.on{background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff}
+.lb{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:12px;font-size:13px}
+.lb.me{background:color-mix(in srgb,var(--mal) 14%,transparent);border:1px solid color-mix(in srgb,var(--mal) 40%,transparent)}
+.lb .rk{width:24px;text-align:center;font-weight:800;color:var(--dim)}
+.lb .pa{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-weight:800;color:#fff;font-size:12px}
+.lb .nm{flex:1;min-width:0}.lb .nm small{display:block;color:var(--muted);font-size:10.5px}
+.podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:end;margin-bottom:10px;text-align:center;font-size:11.5px;font-weight:700}
+.podium div div{border-radius:12px 12px 4px 4px;background:var(--panel2);border:1px solid var(--line2);display:grid;place-items:center;font-size:22px;font-weight:900}
+.shop{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{border-radius:16px;padding:12px;background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.item .e{font-size:30px}.item b{font-size:13px}.item small{color:var(--muted);font-size:11px;flex:1}
+.item .btn{justify-content:center;padding:7px;font-size:12.5px}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.bdg{text-align:center;font-size:10px;font-weight:700;color:var(--muted);cursor:pointer;background:none;border:0;padding:0}
+.bdg div{width:56px;height:56px;margin:0 auto 4px;border-radius:18px;display:grid;place-items:center;font-size:26px;background:var(--panel2);border:1px solid var(--line2);filter:grayscale(1);opacity:.45}
+.bdg.on div{filter:none;opacity:1;background:linear-gradient(145deg,color-mix(in srgb,var(--gold) 30%,var(--panel2)),var(--panel2));border-color:color-mix(in srgb,var(--gold) 50%,transparent)}
+.cert{border-radius:16px;padding:12px;background:var(--panel);border:1px solid var(--line);display:flex;gap:10px;align-items:center;margin-bottom:8px;cursor:pointer}
+.certfull{margin:10px 16px;border-radius:18px;padding:18px;background:linear-gradient(160deg,color-mix(in srgb,var(--gold) 14%,var(--panel)),var(--panel));border:2px solid color-mix(in srgb,var(--gold) 55%,transparent);text-align:center}
+.certfull h2{margin:6px 0;font-size:20px}
+.qr{background:#fff;padding:8px;border-radius:10px;display:inline-block;margin-top:12px}
+.cons{min-width:0}
+.ctabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.ctabs button{border:0;background:none;padding:10px 13px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.ctabs button.on{color:var(--text);border-bottom-color:var(--mal)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.kpi .l{font-size:11.5px;color:var(--muted);font-weight:600}.kpi .v{font-size:22px;font-weight:800;margin-top:2px}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.card h3 .sp{flex:1}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.blist{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.bi{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);font-size:12.5px}
+.bi .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bi button{border:0;background:none;color:var(--red);cursor:pointer;font-size:14px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);padding:8px 10px;border-bottom:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}tr:last-child td{border-bottom:0}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.hm td.c{text-align:center;font-weight:800;cursor:pointer;min-width:58px;border-left:1px solid var(--bg)}
+.hm td.c:hover{outline:2px solid var(--gold);outline-offset:-2px}
+.chart svg{width:100%;height:auto;display:block}
+.btn.sm{padding:6px 12px;font-size:12.5px}.btn:disabled{opacity:.4;cursor:not-allowed}
+.sm{font-size:12.5px}.xs{font-size:11.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:330px;animation:pop .2s}
+.toast.gold{border-left-color:var(--gold)}
+@media (max-width:1180px){.intro{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:960px){.layout{grid-template-columns:minmax(0,1fr)}.phone{position:relative;top:0;max-width:400px;margin:0 auto;width:100%}}
+@media (max-width:860px){.howto{grid-template-columns:minmax(0,1fr)}.phone{padding:0;background:none;box-shadow:none;max-width:none}.scr{border-radius:24px;height:calc(100svh - 110px);min-height:600px;max-height:860px;border:1px solid var(--line)}.isl{display:none}.sbar{height:12px}.sbar *{display:none}.shd{padding-top:20px}.ptoast{top:16px}.toasts{left:16px;right:16px;top:auto;bottom:16px}.toast{max-width:none}}
+@media (max-width:520px){.wrap{padding:12px 12px 40px}.fgrid{grid-template-columns:minmax(0,1fr)}.kpi .v{font-size:19px}}
+</style>
+</head>
+<body data-demo-en="Orbit Academy — gamified corporate learning app" data-demo-ru="Orbit Academy — обучение-игра для корпорации">
+<div class="wrap">
+  <div class="intro">
+    <div class="howto">
+      <div><b>1</b><span data-en="In the phone, tap the glowing node on the learning path: swipe the lesson cards, then beat the timed quiz." data-ru="В телефоне нажмите светящийся шаг на карте обучения: пролистайте карточки урока и пройдите квиз на время."></span></div>
+      <div><b>2</b><span data-en="Earn XP and coins → level up, push your team in the battle, spend coins in the shop, collect a certificate with QR." data-ru="Получайте XP и монеты → новый уровень, помогите команде в битве, потратьте монеты в магазине, получите сертификат с QR."></span></div>
+      <div><b>3</b><span data-en="On the right, the L&amp;D console: build a course, publish it — it appears in the app instantly. Check the funnel and skills heatmap." data-ru="Справа — консоль L&amp;D: соберите курс и опубликуйте — он сразу появится в приложении. Смотрите воронку и тепловую карту навыков."></span></div>
+    </div>
+    <dl class="card facts">
+      <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Corporate learning &amp; loyalty" data-ru="Корпоративное обучение и лояльность"></dd>
+      <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $420k</dd>
+      <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Nordania Telecom — national operator of the Republic of Nordania (fictional)" data-ru="Nordania Telecom — нацоператор Республики Нордания (вымышленный)"></dd>
+      <dt data-en="Stack" data-ru="Стек"></dt><dd class="mono" style="font-size:11.5px">Flutter · gamification engine · analytics</dd>
+    </dl>
+  </div>
+  <div class="layout">
+    <div class="phone"><div class="scr" id="scr">
+      <div class="sbar"><span id="clock">9:41</span><div class="isl"></div><span>5G ▮▮▮</span></div>
+      <div class="ahd" id="ahd"></div>
+      <div class="pbody" id="pbody"></div>
+      <div class="tabbar" id="tabbar"></div>
+      <div id="overlay"></div>
+    </div></div>
+    <div class="cons" id="cons"></div>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+const $=s=>document.querySelector(s),T=(e,r)=>PT.t(e,r),L2=a=>a?T(a[0],a[1]):'';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const st={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const today=()=>new Date().toISOString().slice(0,10);
+function toast(m,c){const d=document.createElement('div');d.className='toast '+(c||'');d.innerHTML=m;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),3400)}
+function ptoast(m){const d=document.createElement('div');d.className='ptoast';d.innerHTML=m;$('#scr').appendChild(d);setTimeout(()=>d.remove(),2600)}
+
+/* ---------- reference ---------- */
+const DEPTS={net:['Network Ops','Сетевые операции',420],ret:['Retail Sales','Розничные продажи',610],care:['Customer Care','Клиентский сервис',380],it:['IT & Digital','ИТ и цифровые',240],fin:['Finance','Финансы',90]};
+const SKILLS=[['5G','5G'],['Customer empathy','Эмпатия к клиенту'],['Cybersecurity','Кибербезопасность'],['Sales','Продажи'],['Data literacy','Работа с данными'],['Compliance','Комплаенс']];
+const c_=(e,h,b)=>({e,h,b});const q_=(q,o,a)=>({q,o,a});
+const SEED_COURSES=[
+ {id:'5g',icon:'📡',skill:0,t:['5G for everyone','5G для всех'],depts:['all'],nodes:[
+  {k:'lesson',t:['What is 5G','Что такое 5G'],cards:[c_('📶',['Three pillars','Три опоры'],['eMBB — fast mobile broadband, URLLC — ultra-reliable low latency, mMTC — millions of IoT devices per km².','eMBB — быстрый мобильный интернет, URLLC — сверхнадёжная низкая задержка, mMTC — миллионы IoT-устройств на км².']),c_('🌊',['Spectrum layers','Слои частот'],['Low band travels far, mid band balances speed and range, mmWave is the fastest but short-range.','Низкие частоты бьют далеко, средние — баланс скорости и дальности, mmWave — самые быстрые, но на коротком расстоянии.']),c_('⚡',['Latency','Задержка'],['About 10 ms on 5G vs ~40 ms on 4G — enough for remote control and cloud gaming.','Около 10 мс в 5G против ~40 мс в 4G — хватает для дистанционного управления и облачных игр.']),c_('🧩',['Network slicing','Нарезка сети'],['One physical network, many virtual ones — each slice has its own speed and reliability guarantees.','Одна физическая сеть, много виртуальных — у каждого «ломтика» свои гарантии скорости и надёжности.'])]},
+  {k:'lesson',t:['Selling 5G','Продажа 5G'],cards:[c_('🗺️',['Check coverage first','Сначала покрытие'],['Open the coverage map with the customer and check home and work addresses.','Откройте карту покрытия вместе с клиентом и проверьте дом и работу.']),c_('📱',['Device fit','Подходит ли телефон'],['Not every phone supports our mid-band. Use the IMEI checker in the POS app.','Не каждый телефон поддерживает наш средний диапазон. Проверьте IMEI в кассовом приложении.']),c_('🎯',['Plan fit','Подбор тарифа'],['Recommend by usage, not by speed: heavy streamers → Unlimited 5G, others → Smart 30.','Советуйте по потреблению, а не по скорости: любителям видео — «Безлимит 5G», остальным — «Смарт 30».'])]},
+  {k:'quiz',t:['5G quiz','Квиз по 5G'],qs:[q_(['Which pillar is about massive IoT?','Какая опора про массовый IoT?'],[['eMBB','eMBB'],['URLLC','URLLC'],['mMTC','mMTC']],2),q_(['mmWave gives…','mmWave даёт…'],[['the longest range','самую большую дальность'],['the highest capacity','наибольшую ёмкость'],['the best indoor coverage','лучшее покрытие внутри зданий']],1),q_(['Network slicing means…','Нарезка сети — это…'],[['virtual networks with own guarantees','виртуальные сети со своими гарантиями'],['splitting one SIM in two','деление SIM-карты на две'],['turning towers off at night','отключение вышек ночью']],0)]}]},
+ {id:'care',icon:'💬',skill:1,t:['Customer care excellence','Безупречный сервис'],depts:['all'],nodes:[
+  {k:'lesson',t:['The LEAR method','Метод LEAR'],cards:[c_('👂',['Listen','Выслушать'],['Let the customer finish. Take notes. No interruptions, no scripts yet.','Дайте клиенту договорить. Записывайте. Не перебивайте и пока не читайте скрипт.']),c_('🤝',['Empathise','Посочувствовать'],['Name the feeling: “I understand how frustrating a dropped call is.”','Назовите чувство: «Понимаю, как раздражает обрыв звонка».']),c_('🙏',['Apologise','Извиниться'],['Apologise for the experience, even before the root cause is known.','Извинитесь за ситуацию, даже если причина ещё неизвестна.']),c_('✅',['Resolve','Решить'],['Aim for first-contact resolution. Confirm the fix before closing.','Стремитесь решить с первого обращения. Подтвердите результат перед закрытием.'])]},
+  {k:'quiz',t:['Service quiz','Квиз по сервису'],qs:[q_(['FCR stands for…','FCR означает…'],[['First contact resolution','Решение с первого обращения'],['Fast customer reply','Быстрый ответ клиенту'],['Final call review','Итоговый разбор звонка']],0),q_(['Second step of LEAR?','Второй шаг LEAR?'],[['Listen','Выслушать'],['Empathise','Посочувствовать'],['Resolve','Решить']],1),q_(['An angry customer calls. First you…','Звонит злой клиент. Сначала вы…'],[['offer a discount','предлагаете скидку'],['listen without interrupting','слушаете не перебивая'],['transfer the call','переводите звонок']],1)]}]},
+ {id:'cyber',icon:'🛡️',skill:2,t:['Cyber hygiene','Кибергигиена'],depts:['all'],nodes:[
+  {k:'lesson',t:['Spot the phish','Распознай фишинг'],cards:[c_('🎣',['Urgency is a red flag','Срочность — тревожный знак'],['“Your account closes in 1 hour” — attackers rush you so you don’t think.','«Ваш аккаунт закроют через час» — злоумышленник торопит, чтобы вы не думали.']),c_('🔗',['Hover before you click','Наведи перед кликом'],['Check the real link domain. nordania-telecom-support.co is not ours.','Проверьте настоящий домен ссылки. nordania-telecom-support.co — не наш.']),c_('🔐',['MFA everywhere','MFA везде'],['Never share a one-time code — IT will never ask for it.','Никому не сообщайте одноразовый код — ИТ никогда его не просит.']),c_('📣',['Report, don’t delete','Сообщи, не удаляй'],['Use the “Report phish” button — it protects 6 000 colleagues.','Нажмите «Сообщить о фишинге» — это защитит 6 000 коллег.'])]},
+  {k:'quiz',t:['Security quiz','Квиз по безопасности'],qs:[q_(['IT asks for your MFA code by phone. You…','ИТ просит по телефону ваш MFA-код. Вы…'],[['read it out','диктуете'],['refuse and report','отказываете и сообщаете'],['send it by e-mail','отправляете письмом']],1),q_(['Biggest phishing signal?','Главный признак фишинга?'],[['urgency and pressure','срочность и давление'],['a company logo','логотип компании'],['a long e-mail','длинное письмо']],0),q_(['Suspicious e-mail — best action?','Подозрительное письмо — лучшее действие?'],[['delete it','удалить'],['forward to friends','переслать друзьям'],['report it','сообщить']],2)]}]}];
+const SHOP=[{id:'coffee',e:'☕',t:['Coffee voucher','Купон на кофе'],d:['Any café in HQ','Любое кафе в офисе'],c:120},{id:'charity',e:'🌱',t:['Plant 5 trees','Посадить 5 деревьев'],d:['Nordania Forest Fund','Фонд лесов Нордании'],c:200},{id:'cinema',e:'🎬',t:['Cinema for two','Кино на двоих'],d:['CineNord, any session','CineNord, любой сеанс'],c:300},{id:'hoodie',e:'🧥',t:['Orbit hoodie','Худи Orbit'],d:['Merch, sizes S–XXL','Мерч, размеры S–XXL'],c:600},{id:'dayoff',e:'🏖️',t:['Extra day off','Дополнительный выходной'],d:['Agreed with your manager','По согласованию с руководителем'],c:1500},{id:'conf',e:'🎤',t:['Conference pass','Билет на конференцию'],d:['NordTech Summit','NordTech Summit'],c:2000}];
+const BADGES=[{id:'first',e:'🌱',t:['First step','Первый шаг'],d:['Finish a lesson','Пройти урок']},{id:'ace',e:'🎯',t:['Quiz ace','Снайпер'],d:['100% on a quiz','100% в квизе']},{id:'streak7',e:'🔥',t:['7-day streak','Серия 7 дней'],d:['Learn 7 days in a row','Учиться 7 дней подряд']},{id:'lvl6',e:'🚀',t:['Level 6','Уровень 6'],d:['Reach level 6','Достичь 6 уровня']},{id:'course',e:'🎓',t:['Graduate','Выпускник'],d:['Finish a course','Закончить курс']},{id:'shop',e:'🛍️',t:['Treat yourself','Порадуй себя'],d:['Redeem a reward','Получить награду']},{id:'daily',e:'☀️',t:['Early bird','Ранняя пташка'],d:['Daily challenge','Задание дня']},{id:'team',e:'⚔️',t:['Team player','Командный игрок'],d:['Add 100 XP to battle','100 XP в битву']}];
+const PEOPLE=['Ari Lindqvist','Maja Holm','Oskar Brenn','Liv Sandberg','Emil Varga','Nora Falk','Tomas Reid','Ida Kovač','Jonas Aalto','Sara Mints','Viktor Lund','Elin Rask','Hugo Strand','Alma Berg','Felix Moen','Ronja Dahl'];
+const nextId=()=>Date.now().toString(36);
+
+function seed(){const R=rng(11);const emp=PEOPLE.slice(1).map((n,i)=>{const d=Object.keys(DEPTS)[i%5];return{n,d,xp:600+Math.floor(R()*2600),w:40+Math.floor(R()*420)}});
+  const hm={};Object.keys(DEPTS).forEach((d,i)=>hm[d]=SKILLS.map((s,j)=>Math.round(25+R()*60+(d==='net'&&j===0?15:0)+(d==='care'&&j===1?18:0)+(d==='it'&&j===2?20:0)+(d==='ret'&&j===3?22:0)-(d==='ret'&&j===2?18:0)-(d==='care'&&j===0?14:0))));
+  const fn={};SEED_COURSES.forEach((c,i)=>{const a=Object.values(DEPTS).reduce((s,d)=>s+d[2],0);const f=[a,Math.round(a*(.86-i*.04)),Math.round(a*(.68-i*.05)),Math.round(a*(.55-i*.06)),Math.round(a*(.47-i*.07))];fn[c.id]=f});
+  return{xp:1190,wxp:160,coins:420,streak:6,last:'',done:{},dailyDone:'',tab:'learn',lbm:'w',ctab:'build',as:'net',courses:JSON.parse(JSON.stringify(SEED_COURSES)),badges:[],bought:[],certs:[],emp,hm,fn,battle:{a:6420,b:6710,mine:0},fsel:'5g',
+    draft:{t:'Roaming 2026 update',icon:'✈️',skill:5,depts:['ret','care'],cards:[{h:'New EU-style zones',b:'From 1 January roaming is free in Zone 1 and €2/day in Zone 2.'},{h:'Bill shock guard',b:'Customers get an SMS at 80% and data stops at €50 unless they confirm.'}],qs:[{q:'Daily price in Zone 2?',o:['Free','€2','€5'],a:1},{q:'When does the bill-shock SMS arrive?',o:['At 50%','At 80%','At 100%'],a:1}]}}}
+let S=st.get('orbit-v1',null)||seed();
+const save=()=>st.set('orbit-v1',S);
+const lvl=xp=>1+Math.floor(xp/250),lvlBase=l=>(l-1)*250;
+const visible=()=>S.courses.filter(c=>c.depts.includes('all')||c.depts.includes(S.as));
+const nid=(c,i)=>c.id+':'+i;
+function courseDone(c){return c.nodes.every((n,i)=>S.done[nid(c,i)])}
+function currentNode(){for(const c of visible())for(let i=0;i<c.nodes.length;i++)if(!S.done[nid(c,i)])return nid(c,i);return null}
+
+/* ---------- phone ---------- */
+function renderHead(){const l=lvl(S.xp),p=(S.xp-lvlBase(l))/250*100;
+  $('#ahd').innerHTML=`<div class="r1"><div class="av">AL<span class="lv">${l}</span></div><div><b style="font-size:14px">${T('Hi, Ari','Привет, Ари')} 👋</b><div class="xs" style="color:var(--muted)">${L2(DEPTS[S.as])}</div></div><div class="chips"><span class="chip fire">🔥 ${S.streak}</span><span class="chip coin" id="coinchip">🪙 ${fmt(S.coins)}</span></div></div><div class="xpbar"><i style="width:${p}%"></i></div><div class="xpl"><span>${T('Level','Уровень')} ${l} · ${fmt(S.xp)} XP</span><span>${fmt(lvlBase(l+1)-S.xp)} XP ${T('to level','до уровня')} ${l+1}</span></div>`}
+const TABS=[['learn','🗺️','Learn','Учёба'],['battle','⚔️','Battle','Битва'],['ranks','🏆','Ranks','Рейтинг'],['shop','🎁','Shop','Магазин'],['me','🎓','Me','Профиль']];
+function renderTabs(){$('#tabbar').innerHTML=TABS.map(t=>`<button class="${S.tab===t[0]?'on':''}" data-act="tab" data-t="${t[0]}"><span>${t[1]}</span>${T(t[2],t[3])}${t[0]==='learn'&&S.dailyDone!==today()?'<i class="dotn"></i>':''}</button>`).join('')}
+const P={};
+P.learn=()=>{const cn=currentNode();let h=`<div class="daily ${S.dailyDone===today()?'done':''}" data-act="daily"><div class="ic">☀️</div><div style="flex:1"><b>${T('Daily challenge','Задание дня')}</b><small>${S.dailyDone===today()?T('Done for today — come back tomorrow','Выполнено — возвращайтесь завтра'):T('3 rapid questions · 30 s · double XP','3 быстрых вопроса · 30 с · двойной XP')}</small></div><span class="chip coin">${S.dailyDone===today()?'✓':'×2'}</span></div>`;
+  visible().forEach((c,ci)=>{const dn=c.nodes.filter((n,i)=>S.done[nid(c,i)]).length;h+=`<div class="chd"><span class="e">${c.icon}</span><div><b>${esc(L2(c.t))}</b><small>${dn}/${c.nodes.length} ${T('steps','шагов')} · ${L2(SKILLS[c.skill])}</small></div>${c.isNew?`<span class="new">${T('NEW','НОВЫЙ')}</span>`:courseDone(c)?'<span class="new" style="background:var(--mal3)">🎓</span>':''}</div><div class="path">`;
+    c.nodes.forEach((n,i)=>{const id=nid(c,i),done=S.done[id],cur=id===cn,x=Math.round(Math.sin((i+ci)*1.3)*70);h+=`<button class="node ${done?'done':cur?'cur':''}" style="transform:translateX(${x}px)" data-act="node" data-id="${id}">${done?'✓':!cur?'🔒':n.k==='quiz'?'⏱':'📖'}${cur?`<span class="tip">${T('START','СТАРТ')}</span>`:''}<span class="lb">${esc(L2(n.t))}</span></button>`});h+='</div>'});
+  return h+'<div style="height:30px"></div>'};
+P.battle=()=>{const b=S.battle,tot=Math.max(b.a,b.b)*1.15,me=S.as;return`<div class="sec">${T('Weekly team battle','Битва команд недели')}</div><div class="vs"><div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);font-weight:700"><span>${T('Ends Sunday 23:59','До воскресенья 23:59')}</span><span id="live" style="color:var(--red)">● LIVE</span></div>
+  <div class="row"><span>🟢</span><span>${L2(DEPTS[me])} ${T('(you)','(вы)')}</span><span id="ba">${fmt(b.a)}</span></div><div class="tbar"><i id="bai" style="width:${b.a/tot*100}%;background:linear-gradient(90deg,var(--mal2),var(--mal3))"></i></div>
+  <div class="row"><span>🟠</span><span>${L2(DEPTS[me==='ret'?'care':'ret'])}</span><span id="bb">${fmt(b.b)}</span></div><div class="tbar"><i id="bbi" style="width:${b.b/tot*100}%;background:linear-gradient(90deg,var(--amber),var(--gold2))"></i></div>
+  <div class="xs" style="margin-top:10px;color:var(--muted)" id="bst">${b.a>=b.b?T('Your team leads — keep going!','Ваша команда впереди — так держать!'):T(`Behind by ${fmt(b.b-b.a)} XP — every lesson counts`,`Отстаём на ${fmt(b.b-b.a)} XP — важен каждый урок`)}</div></div>
+  <div class="vs"><b>${T('Your contribution','Ваш вклад')}</b><div style="font-size:28px;font-weight:900;margin:4px 0;color:var(--mal3)">+${fmt(b.mine)} XP</div><div class="xs" style="color:var(--muted)">${T('All XP you earn this week goes to your team.','Весь XP за неделю идёт в зачёт команды.')}</div><button class="btn pri" style="width:100%;justify-content:center;margin-top:10px" data-act="tab" data-t="learn">⚔️ ${T('Earn XP for the team','Заработать XP для команды')}</button></div>
+  <div class="sec">${T('Top fighters','Лучшие бойцы')}</div>${S.emp.filter(e=>e.d===me).slice(0,3).map((e,i)=>`<div class="lb"><span class="rk">${i+1}</span><span class="pa" style="background:${['#17b58a','#4ea4ff','#a78bfa'][i]}">${e.n.split(' ').map(x=>x[0]).join('')}</span><span class="nm">${e.n}</span><b>${e.w} XP</b></div>`).join('')}`};
+P.ranks=()=>{const w=S.lbm==='w';const L=[...S.emp.map(e=>({n:e.n,d:e.d,v:w?e.w:e.xp})),{n:'Ari Lindqvist',d:S.as,v:w?S.wxp:S.xp,me:1}].sort((a,b)=>b.v-a.v);const mi=L.findIndex(x=>x.me);const col=['#17b58a','#4ea4ff','#a78bfa','#f0a83a','#ef5a5a'];
+  return`<div class="seg"><button class="${w?'on':''}" data-act="lbm" data-m="w">${T('This week','Неделя')}</button><button class="${!w?'on':''}" data-act="lbm" data-m="a">${T('All time','За всё время')}</button></div>
+  <div class="podium">${[1,0,2].map(i=>`<div>${L[i].n.split(' ')[0]}<div style="height:${[86,64,50][i]}px;margin-top:4px;${i===0?'background:linear-gradient(180deg,var(--gold2),var(--gold));color:#1a1306':''}">${['🥇','🥈','🥉'][i]}</div><span class="xs" style="color:var(--muted)">${fmt(L[i].v)}</span></div>`).join('')}</div>
+  ${L.map((p,i)=>`<div class="lb ${p.me?'me':''}"><span class="rk">${i+1}</span><span class="pa" style="background:${col[i%5]}">${p.n.split(' ').map(x=>x[0]).join('')}</span><span class="nm">${p.me?T('You','Вы'):p.n}<small>${L2(DEPTS[p.d])}</small></span><b>${fmt(p.v)}</b></div>`).join('')}
+  <div class="xs" style="text-align:center;color:var(--muted);margin-top:8px">${T('Your rank','Ваше место')}: #${mi+1} / ${L.length}</div>`};
+P.shop=()=>`<div class="vs" style="display:flex;align-items:center;gap:10px"><span style="font-size:30px">🪙</span><div><div style="font-size:24px;font-weight:900;color:var(--gold2)">${fmt(S.coins)}</div><div class="xs" style="color:var(--muted)">${T('coins · earn 10 per correct answer','монет · 10 за верный ответ')}</div></div></div>
+  <div class="shop">${SHOP.map(it=>`<div class="item"><span class="e">${it.e}</span><b>${L2(it.t)}</b><small>${L2(it.d)}</small><button class="btn ${S.coins>=it.c?'gold':''}" data-act="buy" data-id="${it.id}" ${S.coins>=it.c?'':'disabled'}>🪙 ${fmt(it.c)}</button></div>`).join('')}</div>
+  ${S.bought.length?`<div class="sec">${T('My rewards','Мои награды')}</div>${S.bought.map(b=>{const it=SHOP.find(x=>x.id===b.id);return`<div class="cert"><span style="font-size:24px">${it.e}</span><div style="flex:1"><b class="sm">${L2(it.t)}</b><div class="xs mono" style="color:var(--gold2)">${b.code}</div></div><span class="pill ok">${T('active','активен')}</span></div>`}).join('')}`:''}`;
+P.me=()=>`<div class="vs" style="display:flex;gap:12px;align-items:center"><div class="av" style="width:54px;height:54px;font-size:19px;border-radius:16px">AL<span class="lv">${lvl(S.xp)}</span></div><div><b>Ari Lindqvist</b><div class="xs" style="color:var(--muted)">${L2(DEPTS[S.as])} · ${fmt(S.xp)} XP · 🔥 ${S.streak}</div></div></div>
+  <div class="sec">${T('Badges','Значки')} · ${S.badges.length}/${BADGES.length}</div><div class="badges">${BADGES.map(b=>`<button class="bdg ${S.badges.includes(b.id)?'on':''}" data-act="badge" data-id="${b.id}"><div>${b.e}</div>${L2(b.t)}</button>`).join('')}</div>
+  <div class="sec">${T('Certificates','Сертификаты')}</div>${S.certs.length?S.certs.map((c,i)=>{const co=S.courses.find(x=>x.id===c.id);return`<div class="cert" data-act="cert" data-i="${i}"><span style="font-size:26px">🎓</span><div style="flex:1;min-width:0"><b class="sm">${esc(L2(co?co.t:['Course','Курс']))}</b><div class="xs" style="color:var(--muted)">${c.date} · ${c.code}</div></div><span>›</span></div>`}).join(''):`<div class="xs" style="color:var(--muted)">${T('Finish all steps of a course to get a verifiable certificate.','Пройдите все шаги курса — получите сертификат с проверкой.')}</div>`}`;
+function renderPhone(){renderHead();renderTabs();const b=$('#pbody');b.innerHTML=P[S.tab]();}
+
+/* ---------- lesson / quiz sheets ---------- */
+let SH=null;
+function openNode(id){const[cid,i]=id.split(':');const c=S.courses.find(x=>x.id===cid),n=c.nodes[+i];if(n.k==='lesson')SH={k:'lesson',id,c,n,i:0};else SH={k:'quiz',id,c,qs:n.qs,i:0,ok:0,t:15,ans:null};drawSheet()}
+function closeSheet(){clearInterval(SH&&SH.tm);SH=null;$('#overlay').innerHTML='';renderPhone()}
+function drawSheet(){if(!SH)return;const o=$('#overlay');
+  if(SH.k==='lesson'){const cs=SH.n.cards,i=SH.i,last=i===cs.length;
+    if(last){o.innerHTML=`<div class="sheet"><div class="res"><div class="big">🎉</div><h2>${T('Lesson complete','Урок пройден')}</h2><div class="sm" style="color:var(--muted)">${esc(L2(SH.n.t))}</div><div class="gain"><div style="color:var(--mal3)">+40 XP</div><div style="color:var(--gold2)">+15 🪙</div></div><button class="btn pri" style="width:100%;justify-content:center" data-act="lessondone">${T('Continue','Продолжить')}</button></div></div>`;return}
+    const cd=cs[i],nx=cs[i+1];o.innerHTML=`<div class="sheet"><div class="shd"><button class="x" data-act="close">✕</button><div class="prog"><i style="width:${i/cs.length*100}%"></i></div><b class="xs">${i+1}/${cs.length}</b></div><div class="stack">${nx?`<div class="lcard back"><div class="em">${nx.e||'💡'}</div><h3>${esc(L2(nx.h))}</h3></div>`:''}<div class="lcard" id="lc"><div class="em">${cd.e||'💡'}</div><h3>${esc(L2(cd.h))}</h3><p>${esc(L2(cd.b))}</p><div class="n">${esc(L2(SH.n.t))} · ${T('card','карточка')} ${i+1}</div></div></div><div class="hint">${T('Swipe left for next · right to go back','Свайп влево — дальше · вправо — назад')}</div><div class="sfoot"><button class="btn" data-act="lprev" ${i?'':'disabled'}>←</button><button class="btn pri" data-act="lnext">${i===cs.length-1?T('Finish','Завершить'):T('Next','Дальше')} →</button></div></div>`;swipe($('#lc'));return}
+  const q=SH.qs[SH.i];if(!q){const n=SH.qs.length,ok=SH.ok,pass=ok>=Math.ceil(n*2/3),xp=(SH.daily?40:20)*ok+(ok===n?20:0),co=10*ok;SH.res={pass,xp,co,perfect:ok===n};
+    o.innerHTML=`<div class="sheet"><div class="res"><div class="big">${pass?ok===n?'🏆':'⭐':'💪'}</div><h2>${ok}/${n} ${T('correct','верно')}</h2><div class="sm" style="color:var(--muted)">${pass?T(SH.daily?'Daily challenge complete':'Quiz passed — step unlocked',SH.daily?'Задание дня выполнено':'Квиз пройден — шаг открыт'):T('Need '+Math.ceil(n*2/3)+' correct to pass','Нужно '+Math.ceil(n*2/3)+' верных')}</div><div class="gain"><div style="color:var(--mal3)">+${xp} XP${SH.daily?' ×2':''}</div><div style="color:var(--gold2)">+${co} 🪙</div></div><button class="btn pri" style="width:100%;justify-content:center" data-act="quizdone">${pass?T('Collect','Забрать'):T('Collect & retry later','Забрать и повторить позже')}</button></div></div>`;return}
+  o.innerHTML=`<div class="sheet"><div class="shd"><button class="x" data-act="close">✕</button><div class="prog"><i style="width:${SH.i/SH.qs.length*100}%"></i></div><b class="xs">${SH.i+1}/${SH.qs.length}</b></div><div class="q"><div class="timer" id="tmr"><span>⏱</span><div class="prog"><i id="tmi" style="width:100%"></i></div><span id="tms">${SH.t}s</span></div><h3>${esc(L2(q.q))}</h3>${q.o.map((x,j)=>`<button class="opt" data-act="ans" data-j="${j}">${'ABC'[j]}. ${esc(L2(x))}</button>`).join('')}<div style="margin-top:auto" class="hint">${SH.daily?T('Daily challenge · shared 30 s timer','Задание дня · общий таймер 30 с'):T('15 seconds per question','15 секунд на вопрос')}</div></div></div>`;
+  clearInterval(SH.tm);const lim=SH.daily?30:15;if(!SH.daily)SH.t=15;SH.ans=null;const tick=()=>{const p=SH.t/lim*100;const ti=$('#tmi');if(!ti)return;ti.style.width=p+'%';$('#tms').textContent=SH.t+'s';$('#tmr').classList.toggle('low',SH.t<=5)};tick();
+  SH.tm=setInterval(()=>{if(!SH||SH.ans!=null)return;SH.t--;tick();if(SH.t<=0){answer(-1)}},1000)}
+function answer(j){if(SH.ans!=null)return;SH.ans=j;const q=SH.qs[SH.i],btns=[...document.querySelectorAll('.opt')];btns[q.a].classList.add('ok');if(j===q.a)SH.ok++;else if(j>=0)btns[j].classList.add('no');else ptoast('⏱ '+T('Time is up!','Время вышло!'));
+  if(SH.daily&&SH.t<=0){setTimeout(()=>{if(!SH)return;SH.i=SH.qs.length;clearInterval(SH.tm);drawSheet()},800);return}const cur=SH;setTimeout(()=>{if(SH!==cur)return;SH.i++;drawSheet()},800)}
+function swipe(el){let x0=null,dx=0;el.onpointerdown=e=>{x0=e.clientX;el.setPointerCapture(e.pointerId);el.style.transition='none'};
+  el.onpointermove=e=>{if(x0==null)return;dx=e.clientX-x0;el.style.transform=`translateX(${dx}px) rotate(${dx/18}deg)`};
+  el.onpointerup=()=>{if(x0==null)return;x0=null;el.style.transition='transform .25s';if(dx<-70){el.style.transform='translateX(-140%) rotate(-18deg)';setTimeout(()=>{SH.i++;drawSheet()},180)}else if(dx>70&&SH.i>0){el.style.transform='translateX(140%) rotate(18deg)';setTimeout(()=>{SH.i--;drawSheet()},180)}else el.style.transform='';dx=0}}
+
+/* ---------- rewards engine ---------- */
+function gain(xp,coins){const l0=lvl(S.xp);S.xp+=xp;S.wxp+=xp;S.coins+=coins;S.battle.a+=xp;S.battle.mine+=xp;const e=S.emp.find(x=>x.d===S.as);
+  if(S.last!==today()){S.streak++;S.last=today();setTimeout(()=>ptoast('🔥 '+T(`Streak: ${S.streak} days!`,`Серия: ${S.streak} дн.!`)),400)}
+  S.hm[S.as]=S.hm[S.as].map((v,i)=>v);const l1=lvl(S.xp);checkBadges();save();if(l1>l0)setTimeout(()=>levelUp(l1),250)}
+function award(id){if(S.badges.includes(id))return;S.badges.push(id);const b=BADGES.find(x=>x.id===id);setTimeout(()=>ptoast(`${b.e} ${T('Badge unlocked','Новый значок')}: <b>${L2(b.t)}</b>`),900);toast(`${b.e} ${T('Badge','Значок')}: ${L2(b.t)}`,'gold')}
+function checkBadges(){if(Object.keys(S.done).length)award('first');if(S.streak>=7)award('streak7');if(lvl(S.xp)>=6)award('lvl6');if(S.battle.mine>=100)award('team');if(S.bought.length)award('shop');if(S.certs.length)award('course')}
+function levelUp(l){$('#overlay').insertAdjacentHTML('beforeend',`<div class="lvup" id="lvup"><div class="ring"><b>${l}</b></div><h2>${T('Level up!','Новый уровень!')}</h2><div style="color:var(--muted);font-weight:600">${T('You reached level','Вы достигли уровня')} ${l} · +50 🪙 ${T('bonus','бонус')}</div><button class="btn gold" style="margin-top:22px" data-act="closelv">${T('Awesome!','Отлично!')}</button></div>`);S.coins+=50;save();confetti();renderHead()}
+function confetti(){const scr=$('#scr'),c=document.createElement('canvas');c.className='conf';c.width=scr.clientWidth*2;c.height=scr.clientHeight*2;scr.appendChild(c);const x=c.getContext('2d'),cols=[cv('--gold'),cv('--mal3'),cv('--gold2'),cv('--violet'),cv('--blue')];
+  const ps=Array.from({length:140},()=>({x:c.width/2,y:c.height*.4,vx:(Math.random()-.5)*22,vy:-Math.random()*24-6,r:Math.random()*6+4,c:cols[Math.floor(Math.random()*5)],a:Math.random()*6}));let f=0;
+  (function fr(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.vy+=.7;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<110)requestAnimationFrame(fr);else c.remove()})()}
+function certFor(c){if(S.certs.find(x=>x.id===c.id))return;const code='OA-'+c.id.toUpperCase().slice(0,4)+'-'+Math.abs([...c.id+S.xp].reduce((a,ch)=>a*31+ch.charCodeAt(0)|0,7)).toString(36).toUpperCase().slice(0,5);S.certs.push({id:c.id,code,date:today()});S.hm[S.as][c.skill]=Math.min(100,S.hm[S.as][c.skill]+3);(S.fn[c.id]||[])[4]++;checkBadges();save();setTimeout(()=>showCert(S.certs.length-1),1300)}
+function qrSVG(code){const n=25,R=rng([...code].reduce((a,c)=>a*33+c.charCodeAt(0)|0,5)),cell=4;let s=`<svg width="${n*cell}" height="${n*cell}" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges"><rect width="${n}" height="${n}" fill="#fff"/>`;const fin=(x,y)=>x<7&&y<7||x>=n-7&&y<7||x<7&&y>=n-7;
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){if(fin(x,y))continue;if(R()<.48)s+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#0b1512"/>`}
+  [[0,0],[n-7,0],[0,n-7]].forEach(([x,y])=>s+=`<rect x="${x}" y="${y}" width="7" height="7" fill="#0b1512"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#0b1512"/>`);return s+'</svg>'}
+function showCert(i){const c=S.certs[i],co=S.courses.find(x=>x.id===c.id);$('#overlay').innerHTML=`<div class="sheet"><div class="shd"><button class="x" data-act="close">✕</button><b class="sm" style="flex:1">${T('Certificate','Сертификат')}</b></div><div style="overflow:auto;flex:1"><div class="certfull"><div style="font-size:11px;letter-spacing:.2em;color:var(--gold2);font-weight:800">ORBIT ACADEMY · NORDANIA TELECOM</div><div style="font-size:44px;margin:10px 0">🎓</div><div class="xs" style="color:var(--muted)">${T('This certifies that','Настоящим подтверждается, что')}</div><h2>Ari Lindqvist</h2><div class="xs" style="color:var(--muted)">${T('has completed the course','успешно прошёл(а) курс')}</div><h2 style="color:var(--mal3)">${esc(L2(co.t))}</h2><div class="xs" style="color:var(--muted)">${T('Skill','Навык')}: ${L2(SKILLS[co.skill])} · ${c.date}</div><div class="qr">${qrSVG(c.code)}</div><div class="mono xs" style="margin-top:8px">${c.code}</div><div class="xs" style="color:var(--muted);margin-top:4px">${T('Scan to verify','Сканируйте для проверки')}: academy.nordania-telecom.example/v/${c.code}</div></div><div style="display:flex;gap:8px;padding:0 16px 20px"><button class="btn" style="flex:1;justify-content:center" data-act="sharecert" data-i="${i}">↗ ${T('Share','Поделиться')}</button><button class="btn pri" style="flex:1;justify-content:center" data-act="verify" data-i="${i}">✓ ${T('Verify','Проверить')}</button></div></div></div>`}
+
+/* ---------- console ---------- */
+const CT=[['build','Course builder','Конструктор курса'],['assign','Assign','Назначения'],['funnel','Funnel','Воронка'],['skills','Skills heatmap','Карта навыков'],['export','Export','Экспорт']];
+function heads(){return Object.values(DEPTS).reduce((a,d)=>a+d[2],0)}
+const C={};
+C.build=()=>{const d=S.draft;return`<div class="card"><h3>${T('New micro-course','Новый микрокурс')}<span class="sp"></span><span class="pill">${d.cards.length} ${T('cards','карт.')} · ${d.qs.length} ${T('questions','вопр.')}</span></h3>
+  <div class="fgrid"><div class="f full"><label>${T('Course title','Название курса')}</label><input class="input" data-in="dt" value="${esc(d.t)}"></div>
+  <div class="f"><label>${T('Icon','Значок')}</label><select class="input" data-in="di">${['✈️','💡','📊','🔧','🌍','🧠','💼','📶'].map(e=>`<option ${e===d.icon?'selected':''}>${e}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Skill','Навык')}</label><select class="input" data-in="ds">${SKILLS.map((s,i)=>`<option value="${i}" ${i===d.skill?'selected':''}>${L2(s)}</option>`).join('')}</select></div>
+  <div class="f full"><label>${T('Assign to departments','Назначить отделам')}</label><div style="display:flex;gap:6px;flex-wrap:wrap">${Object.keys(DEPTS).map(k=>`<button class="btn sm ${d.depts.includes(k)?'pri':''}" data-act="ddept" data-k="${k}">${L2(DEPTS[k])}</button>`).join('')}</div></div></div></div>
+  <div class="card" style="margin-top:12px"><h3>📖 ${T('Lesson cards','Карточки урока')}</h3><div class="blist">${d.cards.map((c,i)=>`<div class="bi"><b>${i+1}</b><span class="t"><b>${esc(c.h)}</b> — ${esc(c.b)}</span><button data-act="rmcard" data-i="${i}">✕</button></div>`).join('')}</div>
+  <div class="fgrid"><div class="f"><label>${T('Heading','Заголовок')}</label><input class="input" id="bh" data-en-ph="e.g. Fair-use policy" data-ru-ph="напр. Политика честного использования" placeholder="${T('e.g. Fair-use policy','напр. Политика честного использования')}"></div><div class="f"><label>${T('Text','Текст')}</label><input class="input" id="bbody" data-en-ph="One idea, two sentences" data-ru-ph="Одна мысль, два предложения" placeholder="${T('One idea, two sentences','Одна мысль, два предложения')}"></div></div><button class="btn sm" style="margin-top:8px" data-act="addcard">＋ ${T('Add card','Добавить карточку')}</button></div>
+  <div class="card" style="margin-top:12px"><h3>⏱ ${T('Quiz','Квиз')}</h3><div class="blist">${d.qs.map((q,i)=>`<div class="bi"><b>Q${i+1}</b><span class="t">${esc(q.q)} <span style="color:var(--mal3)">→ ${esc(q.o[q.a])}</span></span><button data-act="rmq" data-i="${i}">✕</button></div>`).join('')}</div>
+  <div class="fgrid"><div class="f full"><label>${T('Question','Вопрос')}</label><input class="input" id="qq" data-en-ph="Question text" data-ru-ph="Текст вопроса" placeholder="${T('Question text','Текст вопроса')}"></div>${[0,1,2].map(j=>`<div class="f"><label><input type="radio" name="qa" value="${j}" ${j===0?'checked':''} style="accent-color:var(--mal)"> ${T('Option','Вариант')} ${'ABC'[j]} ${j===0?T('(correct)','(верный)'):''}</label><input class="input" id="qo${j}"></div>`).join('')}</div><button class="btn sm" style="margin-top:8px" data-act="addq">＋ ${T('Add question','Добавить вопрос')}</button></div>
+  <div style="display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap"><button class="btn pri" data-act="pubcourse" id="pubc">🚀 ${T('Publish to app','Опубликовать в приложение')}</button><span class="xs" style="color:var(--muted)">${T('Push notification to','Уведомление получат')} ${fmt(d.depts.reduce((a,k)=>a+DEPTS[k][2],0))} ${T('employees','сотрудников')}</span></div>`};
+C.assign=()=>`<div class="card"><h3>${T('Course assignments','Назначение курсов')}<span class="sp"></span><span class="xs" style="color:var(--muted)">${T('Preview app as','Смотреть приложение как')}</span><select class="input" data-in="as" style="width:auto;padding:6px 8px">${Object.keys(DEPTS).map(k=>`<option value="${k}" ${k===S.as?'selected':''}>${L2(DEPTS[k])}</option>`).join('')}</select></h3>
+  <div class="tw"><table><thead><tr><th>${T('Course','Курс')}</th><th>${T('Everyone','Все')}</th>${Object.keys(DEPTS).map(k=>`<th>${L2(DEPTS[k])}</th>`).join('')}</tr></thead><tbody>${S.courses.map((c,ci)=>`<tr><td>${c.icon} <b>${esc(L2(c.t))}</b></td><td><input type="checkbox" data-in="asg" data-c="${ci}" data-k="all" ${c.depts.includes('all')?'checked':''}></td>${Object.keys(DEPTS).map(k=>`<td><input type="checkbox" data-in="asg" data-c="${ci}" data-k="${k}" ${c.depts.includes(k)||c.depts.includes('all')?'checked':''} ${c.depts.includes('all')?'disabled':''}></td>`).join('')}</tr>`).join('')}</tbody></table></div><div class="xs" style="color:var(--muted);margin-top:8px">${T('Changes apply to the phone on the left immediately (preview department: ','Изменения сразу видны в телефоне слева (отдел просмотра: ')}${L2(DEPTS[S.as])}).</div></div>`;
+C.funnel=()=>{const c=S.courses.find(x=>x.id===S.fsel)||S.courses[0];const f=S.fn[c.id]||[0,0,0,0,0];const lab=[['Assigned','Назначено'],['Started','Начали'],['Lessons done','Уроки пройдены'],['Quiz passed','Квиз сдан'],['Certified','Сертификат']];const W=620,H=250,mx=f[0]||1,cols=[cv('--mal2'),cv('--mal'),cv('--mal3'),cv('--gold'),cv('--gold2')];
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;f.forEach((v,i)=>{const w=(W-160)*v/mx,x=150+(W-160-w)/2,y=8+i*48;s+=`<text x="0" y="${y+24}" font-size="12.5" fill="${cv('--muted')}" font-weight="600">${L2(lab[i])}</text><rect x="${x}" y="${y}" width="${Math.max(w,2)}" height="36" rx="8" fill="${cols[i]}"/><text x="${150+(W-160)/2}" y="${y+23}" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${fmt(v)} · ${Math.round(v/mx*100)}%</text>`;if(i)s+=`<text x="${W}" y="${y+4}" text-anchor="end" font-size="10.5" fill="${cv('--red')}">−${Math.round((1-v/(f[i-1]||1))*100)}%</text>`});s+='</svg>';
+  const worst=f.slice(1).map((v,i)=>[i,1-v/(f[i]||1)]).sort((a,b)=>b[1]-a[1])[0];
+  return`<div class="card chart"><h3>${T('Completion funnel','Воронка прохождения')}<span class="sp"></span><select class="input" data-in="fsel" style="width:auto;padding:6px 8px">${S.courses.map(x=>`<option value="${x.id}" ${x.id===c.id?'selected':''}>${x.icon} ${esc(L2(x.t))}</option>`).join('')}</select></h3>${s}<div class="sm" style="margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg2);border:1px solid var(--line)">💡 ${T('Biggest drop-off','Наибольшие потери')}: <b>${L2(lab[worst[0]])} → ${L2(lab[worst[0]+1])}</b> (−${Math.round(worst[1]*100)}%). ${T('Suggestion: send a nudge push and add a 2× XP weekend.','Совет: отправить напоминание и включить выходные с двойным XP.')} <button class="btn sm gold" data-act="nudge" style="margin-left:6px">🔔 ${T('Send nudge','Напомнить')}</button></div></div>`};
+C.skills=()=>{const ds=Object.keys(DEPTS);return`<div class="card"><h3>${T('Skills heatmap by department','Тепловая карта навыков по отделам')}<span class="sp"></span><span class="xs" style="color:var(--muted)">${T('click a weak cell to assign a course','нажмите слабую ячейку — назначить курс')}</span></h3><div class="tw"><table class="hm"><thead><tr><th>${T('Department','Отдел')}</th>${SKILLS.map(s=>`<th style="text-align:center">${L2(s)}</th>`).join('')}</tr></thead><tbody>${ds.map(d=>`<tr><td><b>${L2(DEPTS[d])}</b> <span class="xs" style="color:var(--muted)">${DEPTS[d][2]}</span></td>${S.hm[d].map((v,j)=>`<td class="c" data-act="hm" data-d="${d}" data-j="${j}" style="background:color-mix(in srgb,${v<45?'var(--red)':v<65?'var(--amber)':'var(--mal)'} ${Math.round(18+Math.abs(v-55)*.9)}%,var(--panel));color:var(--text)">${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  <div style="display:flex;gap:14px;margin-top:10px;font-size:11.5px;color:var(--muted);flex-wrap:wrap"><span>🟥 &lt;45 ${T('gap','пробел')}</span><span>🟧 45–64 ${T('developing','развивается')}</span><span>🟩 ≥65 ${T('strong','сильный')}</span><span>${T('Score = assessments + quiz results, 0–100','Балл = оценки + результаты квизов, 0–100')}</span></div></div>`};
+C.export=()=>`<div class="card"><h3>${T('Export for HRIS / BI','Экспорт для HRIS / BI')}</h3><div class="sm" style="color:var(--muted);margin-bottom:12px">${T('CSV files are generated in the browser from the current demo state.','CSV формируется в браузере из текущих данных демо.')}</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri sm" data-act="csv" data-k="emp">⇩ ${T('Learners progress','Прогресс сотрудников')}</button><button class="btn sm" data-act="csv" data-k="fn">⇩ ${T('Course funnels','Воронки курсов')}</button><button class="btn sm" data-act="csv" data-k="hm">⇩ ${T('Skills matrix','Матрица навыков')}</button></div>
+  <div class="tw" style="margin-top:14px;max-height:280px;overflow:auto"><table><thead><tr><th>${T('Employee','Сотрудник')}</th><th>${T('Department','Отдел')}</th><th class="num">XP</th><th class="num">${T('Week','Неделя')}</th><th>${T('Level','Ур.')}</th></tr></thead><tbody>${[{n:'Ari Lindqvist',d:S.as,xp:S.xp,w:S.wxp},...S.emp].map(e=>`<tr><td>${e.n}</td><td>${L2(DEPTS[e.d])}</td><td class="num">${fmt(e.xp)}</td><td class="num">${fmt(e.w)}</td><td>${lvl(e.xp)}</td></tr>`).join('')}</tbody></table></div></div>`;
+function renderCons(){const tot=heads(),act=Math.round(tot*.78)+S.certs.length,f=Object.values(S.fn),comp=f.reduce((a,x)=>a+x[4],0)/f.reduce((a,x)=>a+x[0],0)*100;
+  $('#cons').innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap"><div><div class="xs" style="color:var(--dim)">${T('L&D manager console','Консоль менеджера L&D')} · Nordania Telecom</div><h2 style="margin:2px 0 0;font-size:21px">${T('Learning operations','Управление обучением')}</h2></div><span style="flex:1"></span><span class="pill ok">● ${fmt(Math.round(act*.21))} ${T('learning now','учатся сейчас')}</span></div>
+  <div class="kpis"><div class="card kpi"><div class="l">${T('Active learners','Активные')}</div><div class="v">${fmt(act)}</div><div class="xs" style="color:var(--muted)">${T('of','из')} ${fmt(tot)}</div></div><div class="card kpi"><div class="l">${T('Completion rate','Завершают')}</div><div class="v" style="color:var(--mal3)">${comp.toFixed(1)}%</div></div><div class="card kpi"><div class="l">${T('Avg XP / week','Средний XP / нед.')}</div><div class="v">${fmt(S.emp.reduce((a,e)=>a+e.w,S.wxp)/(S.emp.length+1))}</div></div><div class="card kpi"><div class="l">${T('Courses live','Курсов')}</div><div class="v" style="color:var(--gold2)">${S.courses.length}</div></div></div>
+  <div class="ctabs">${CT.map(t=>`<button class="${S.ctab===t[0]?'on':''}" data-act="ctab" data-t="${t[0]}">${T(t[1],t[2])}</button>`).join('')}</div><div id="cbody">${C[S.ctab]()}</div>`}
+function renderAll(){renderPhone();renderCons();if(SH)drawSheet();save()}
+
+/* ---------- actions ---------- */
+const A={
+  tab:el=>{S.tab=el.dataset.t;renderPhone();$('#pbody').scrollTop=0},
+  node:el=>{const id=el.dataset.id,cn=currentNode();if(id!==cn&&!S.done[id]){ptoast('🔒 '+T('Finish the previous step first','Сначала пройдите предыдущий шаг'));return}openNode(id)},
+  daily:()=>{if(S.dailyDone===today()){ptoast('✓ '+T('Already done today','Уже выполнено сегодня'));return}const pool=S.courses.flatMap(c=>c.nodes.filter(n=>n.k==='quiz').flatMap(n=>n.qs)),R=rng(+today().replace(/-/g,''));const qs=pool.slice().sort(()=>R()-.5).slice(0,3);SH={k:'quiz',daily:1,qs,i:0,ok:0,t:30};drawSheet()},
+  close:closeSheet,
+  lnext:()=>{SH.i++;drawSheet()},lprev:()=>{SH.i=Math.max(0,SH.i-1);drawSheet()},
+  lessondone:()=>{S.done[SH.id]=1;const c=SH.c;gain(40,15);if(courseDone(c))certFor(c);closeSheet();ptoast('✓ +40 XP · +15 🪙')},
+  ans:el=>answer(+el.dataset.j),
+  quizdone:()=>{const r=SH.res;if(SH.daily){S.dailyDone=today();award('daily')}else if(r.pass){S.done[SH.id]=1;if(courseDone(SH.c))certFor(SH.c)}if(r.perfect)award('ace');const c=SH.c;gain(r.xp,r.co);closeSheet();renderCons()},
+  closelv:()=>{const e=$('#lvup');if(e)e.remove()},
+  lbm:el=>{S.lbm=el.dataset.m;renderPhone()},
+  buy:el=>{const it=SHOP.find(x=>x.id===el.dataset.id);if(S.coins<it.c)return;S.coins-=it.c;const code=it.id.toUpperCase().slice(0,3)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();S.bought.unshift({id:it.id,code});checkBadges();save();renderPhone();ptoast(`${it.e} ${T('Redeemed! Code','Получено! Код')}: <span class="mono">${code}</span>`)},
+  badge:el=>{const b=BADGES.find(x=>x.id===el.dataset.id);ptoast(`${b.e} <b>${L2(b.t)}</b> — ${L2(b.d)} ${S.badges.includes(b.id)?'✓':'🔒'}`)},
+  cert:el=>showCert(+el.dataset.i),
+  sharecert:el=>{const c=S.certs[+el.dataset.i];const t='https://academy.nordania-telecom.example/v/'+c.code;try{navigator.clipboard.writeText(t)}catch(e){}ptoast('↗ '+T('Verification link copied','Ссылка для проверки скопирована'))},
+  verify:async el=>{const c=S.certs[+el.dataset.i];el.disabled=true;el.textContent='…';await new Promise(r=>setTimeout(r,700));el.disabled=false;el.textContent='✓ '+T('Valid','Действителен');ptoast('✅ '+c.code+' — '+T('valid, issued to Ari Lindqvist','действителен, выдан Ari Lindqvist'))},
+  ctab:el=>{S.ctab=el.dataset.t;renderCons()},
+  ddept:el=>{const d=S.draft,k=el.dataset.k;d.depts=d.depts.includes(k)?d.depts.filter(x=>x!==k):[...d.depts,k];renderCons()},
+  addcard:()=>{const h=$('#bh').value.trim(),b=$('#bbody').value.trim();if(!h||!b){toast(T('Fill heading and text','Заполните заголовок и текст'));return}S.draft.cards.push({h,b});renderCons()},
+  rmcard:el=>{S.draft.cards.splice(+el.dataset.i,1);renderCons()},
+  addq:()=>{const q=$('#qq').value.trim(),o=[0,1,2].map(j=>$('#qo'+j).value.trim());if(!q||o.some(x=>!x)){toast(T('Fill the question and all 3 options','Заполните вопрос и 3 варианта'));return}const a=+(document.querySelector('input[name=qa]:checked')||{value:0}).value;S.draft.qs.push({q,o,a});renderCons()},
+  rmq:el=>{S.draft.qs.splice(+el.dataset.i,1);renderCons()},
+  pubcourse:async()=>{const d=S.draft;if(!d.t.trim()||!d.cards.length||!d.qs.length||!d.depts.length){toast(T('Need a title, ≥1 card, ≥1 question and a department','Нужны название, ≥1 карточка, ≥1 вопрос и отдел'));return}const b=$('#pubc');b.disabled=true;b.textContent='⏳ '+T('Publishing…','Публикация…');await new Promise(r=>setTimeout(r,800));
+    const id='c'+nextId(),both=s=>[s,s];const c={id,icon:d.icon,skill:d.skill,t:both(d.t),depts:d.depts.slice(),isNew:true,nodes:[{k:'lesson',t:both(T('Lesson','Урок')+': '+d.t),cards:d.cards.map(x=>({e:'💡',h:both(x.h),b:both(x.b)}))},{k:'quiz',t:both(T('Quiz','Квиз')),qs:d.qs.map(x=>({q:both(x.q),o:x.o.map(both),a:x.a}))}]};
+    S.courses.forEach(x=>delete x.isNew);S.courses.push(c);const n=d.depts.reduce((a,k)=>a+DEPTS[k][2],0);S.fn[id]=[n,Math.round(n*.12),Math.round(n*.05),Math.round(n*.03),0];S.fsel=id;
+    if(!d.depts.includes(S.as))S.as=d.depts[0];S.tab='learn';renderAll();setTimeout(()=>{const p=$('#pbody');p.scrollTop=p.scrollHeight},80);ptoast('🔔 '+T('New course assigned','Назначен новый курс')+': <b>'+esc(d.t)+'</b>');toast(T(`Published · pushed to ${fmt(n)} employees`,`Опубликовано · уведомление ${fmt(n)} сотрудникам`),'gold')},
+  nudge:()=>{const c=S.fsel,f=S.fn[c];if(f){f[1]=Math.min(f[0],Math.round(f[1]*1.06));f[2]=Math.min(f[1],Math.round(f[2]*1.08));f[3]=Math.min(f[2],Math.round(f[3]*1.07))}renderCons();ptoast('🔔 '+T('Reminder: finish your course this week for double XP!','Напоминание: закончите курс на этой неделе — двойной XP!'));toast(T('Nudge sent · funnel improving','Напоминание отправлено · воронка растёт'))},
+  hm:el=>{const d=el.dataset.d,j=+el.dataset.j,c=S.courses.find(x=>x.skill===j);if(!c){toast(T('No course for this skill yet — build one in Course builder','Курса по навыку пока нет — создайте в конструкторе'));S.draft.skill=j;S.draft.depts=[d];S.ctab='build';renderCons();return}if(!c.depts.includes('all')&&!c.depts.includes(d))c.depts.push(d);toast(T(`“${L2(c.t)}” assigned to ${L2(DEPTS[d])}`,`«${L2(c.t)}» назначен отделу ${L2(DEPTS[d])}`),'gold');renderAll()},
+  csv:el=>{const k=el.dataset.k;let rows;if(k==='emp')rows=[['employee','department','xp_total','xp_week','level'],['Ari Lindqvist',DEPTS[S.as][0],S.xp,S.wxp,lvl(S.xp)],...S.emp.map(e=>[e.n,DEPTS[e.d][0],e.xp,e.w,lvl(e.xp)])];
+    else if(k==='fn')rows=[['course','assigned','started','lessons_done','quiz_passed','certified'],...S.courses.map(c=>[c.t[0],...(S.fn[c.id]||[0,0,0,0,0])])];else rows=[['department',...SKILLS.map(s=>s[0])],...Object.keys(DEPTS).map(d=>[DEPTS[d][0],...S.hm[d]])];
+    const txt=rows.map(r=>r.map(v=>/[",]/.test(String(v))?'"'+String(v).replace(/"/g,'""')+'"':v).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv'}));a.download='orbit-'+k+'-'+today()+'.csv';document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),300);toast('⇩ '+a.download)},
+  reset:()=>{try{localStorage.removeItem('orbit-v1')}catch(e){}S=seed();SH=null;$('#overlay').innerHTML='';renderAll()}
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;const f=A[el.dataset.act];if(f)f(el,e)});
+document.addEventListener('input',e=>{const el=e.target;if(el.dataset.in==='dt'){S.draft.t=el.value;save()}});
+document.addEventListener('change',e=>{const el=e.target,k=el.dataset.in;if(!k)return;
+  if(k==='di')S.draft.icon=el.value;else if(k==='ds')S.draft.skill=+el.value;else if(k==='as'){S.as=el.value;renderAll();return}else if(k==='fsel')S.fsel=el.value;
+  else if(k==='asg'){const c=S.courses[+el.dataset.c],d=el.dataset.k;if(d==='all')c.depts=el.checked?['all']:Object.keys(DEPTS);else c.depts=el.checked?[...c.depts,d]:c.depts.filter(x=>x!==d);if(!c.depts.length)c.depts=[d];renderAll();toast(T('Assignment updated · app refreshed','Назначение обновлено · приложение обновлено'));return}
+  renderCons()});
+/* live battle + clock */
+setInterval(()=>{const b=S.battle;b.a+=Math.floor(Math.random()*14);b.b+=Math.floor(Math.random()*15);if(S.tab==='battle'&&!SH){const tot=Math.max(b.a,b.b)*1.15;const s=(id,v)=>{const e=$(id);if(e)e.textContent=fmt(v)};s('#ba',b.a);s('#bb',b.b);const ai=$('#bai'),bi=$('#bbi');if(ai){ai.style.width=b.a/tot*100+'%';bi.style.width=b.b/tot*100+'%'}const lv=$('#live');if(lv)lv.style.opacity=lv.style.opacity==='0.3'?'1':'0.3'}},1500);
+setInterval(()=>{const d=new Date();$('#clock').textContent=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')},10000);
+PT.onLang(()=>renderAll());
+document.addEventListener('DOMContentLoaded',()=>{renderAll();const d=new Date();$('#clock').textContent=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

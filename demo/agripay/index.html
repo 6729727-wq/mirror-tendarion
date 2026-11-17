@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgriPay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:16px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;min-height:40px}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center}
+.who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.gside{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:14px}
+.mt{margin-top:14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px}
+.input.bad{border-color:var(--red)}
+select.input{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:30px}
+textarea.input{min-height:76px;resize:vertical}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+tr.sel td{background:color-mix(in srgb,var(--mal) 10%,transparent)}
+tr.clk{cursor:pointer} tr.clk:hover td{background:var(--panel2)}
+tr.tot td{font-weight:800;background:var(--panel2)}
+td.neg{color:var(--red)}
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.chart svg,.map svg{width:100%;height:auto;display:block}
+.map{border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.map polygon.pc{cursor:pointer;transition:opacity .15s}
+.map polygon.pc:hover{opacity:.82}
+.legend{display:flex;gap:6px 14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.log{font-size:13px}
+.log div{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.log div:last-child{border:0}
+.log .t{font-family:var(--mono);font-size:11.5px;color:var(--dim);flex:none;width:44px;padding-top:2px}
+.log span{flex:1;min-width:0;overflow-wrap:anywhere}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;padding:60px 16px 20px;overflow:auto}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);max-width:640px;width:100%;padding:22px;box-shadow:var(--shadow);position:relative}
+.modal .x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-size:16px}
+.dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.dl div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 12px;min-width:0}
+.dl span{display:block;font-size:11.5px;color:var(--muted)} .dl b{font-size:14px;overflow-wrap:anywhere}
+.chk,.f label.chk{display:flex;color:var(--text);font-weight:500;gap:10px;align-items:flex-start;font-size:13.5px;cursor:pointer;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg2);margin-bottom:6px}
+.chk input{width:18px;height:18px;margin-top:1px;accent-color:var(--mal);flex:none}
+.chk span{flex:1;min-width:0}
+.chk small{display:block;color:var(--muted);font-size:11.5px}
+.chk.dis{opacity:.5;padding-block:6px;cursor:not-allowed}
+.chk .r{flex:none;margin-left:auto;padding-left:6px;font-family:var(--mono);font-size:12px;color:var(--gold2);white-space:nowrap}
+.issues div{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;margin-bottom:6px;font-size:13px;background:var(--bg2);border:1px solid var(--line)}
+.issues div.e{border-color:color-mix(in srgb,var(--red) 45%,transparent)}
+.issues div.w{border-color:color-mix(in srgb,var(--amber) 45%,transparent)}
+.issues span{flex:1;min-width:0;overflow-wrap:anywhere}
+.issues b.i{flex:none;width:20px;text-align:center}
+.steps{display:flex;margin:6px 0 4px}
+.step{flex:1;text-align:center;position:relative;font-size:11.5px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:13px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:28px;height:28px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800;font-size:12px}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.plist{display:flex;flex-direction:column;gap:8px;max-height:760px;overflow:auto}
+.pc2{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg2);cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;text-align:left;width:100%}
+.pc2:hover{border-color:var(--mal)}
+.pc2.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.pc2 b{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc2 small{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc2 svg{grid-row:span 2;width:70px;height:28px}
+.banner{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-radius:12px;border:1px solid color-mix(in srgb,var(--gold) 50%,transparent);background:color-mix(in srgb,var(--gold) 10%,transparent);font-size:13.5px;margin-bottom:14px}
+.banner span{flex:1;min-width:180px}
+.photo{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg2);margin-top:10px}
+.photo img{width:120px;height:90px;object-fit:cover;border-radius:8px;flex:none;background:var(--panel2)}
+.photo div{flex:1;min-width:0;font-size:12.5px;overflow-wrap:anywhere}
+.big{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.stack{display:flex;height:14px;border-radius:9px;overflow:hidden;background:var(--line);margin:10px 0}
+.stack i{display:block;height:100%}
+.bl{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.bl:last-child{border:0}
+.bl span{min-width:0}
+.bl b{font-family:var(--mono);white-space:nowrap}
+.bl.neg b{color:var(--red)}
+.bl.tot{font-size:15px;border-top:2px solid var(--line2);border-bottom:0;padding-top:10px;margin-top:4px}
+.toggle{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13.5px}
+.toggle input{width:40px;height:22px;appearance:none;border-radius:999px;background:var(--line2);position:relative;cursor:pointer;flex:none;transition:.15s}
+.toggle input:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}
+.toggle input:checked{background:var(--mal)} .toggle input:checked:after{left:21px}
+.qi{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg2);cursor:pointer;margin-bottom:8px;text-align:left;width:100%;display:block}
+.qi:hover{border-color:var(--mal)} .qi.on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 9%,transparent)}
+.qi .top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.qi .top b{flex:1;min-width:0;font-size:13.5px;overflow-wrap:anywhere}
+.qi .rs{font-size:12.5px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+.empty .bg{font-size:34px}
+.hint{font-size:12px;color:var(--muted)}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(1200px 500px at 70% -10%,color-mix(in srgb,var(--mal) 16%,transparent),transparent),radial-gradient(900px 400px at 0% 110%,color-mix(in srgb,var(--gold) 12%,transparent),transparent)}
+.lbox{width:100%;max-width:960px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:center}
+.lhero h2{font-size:34px;line-height:1.15;margin:12px 0;letter-spacing:-.02em}
+.lhero p{color:var(--muted);margin:0 0 16px}
+.lhero ul{list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:14px}
+.lhero li{display:flex;gap:10px;align-items:flex-start}
+.lhero li b{color:var(--mal3)}
+.lcard{padding:24px;border-radius:var(--r2);box-shadow:var(--shadow)}
+.lcard h3{margin:0 0 4px;font-size:19px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.role{border:1px solid var(--line2);border-radius:12px;padding:10px;cursor:pointer;background:var(--bg2);text-align:left}
+.role b{display:block;font-size:13.5px} .role span{font-size:11.5px;color:var(--muted)}
+.role.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:960px){.gside{grid-template-columns:minmax(0,1fr)}.plist{max-height:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .lbox{grid-template-columns:minmax(0,1fr)}
+  .lhero h2{font-size:26px}
+  .grid2e{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}.dl{grid-template-columns:1fr 1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.step span{font-size:9.5px}.modal .box{padding:18px 14px}.lhero ul{display:none}.big{font-size:28px}.plist{grid-template-columns:minmax(0,1fr)}.photo img{width:90px;height:68px}.card{padding:14px}}
+</style>
+</head>
+<body data-demo-en="AgriPay — Farm subsidies &amp; land parcel system (CAP IACS)" data-demo-ru="AgriPay — Субсидии фермерам и система участков (CAP IACS)">
+<section class="login" id="login">
+  <div class="lbox">
+    <div class="lhero">
+      <span class="pill gold" data-en="Agricultural Paying Agency · Republic of Arvenia" data-ru="Сельскохозяйственное платёжное агентство · Республика Арвения"></span>
+      <h2 data-en="Declare your fields. Satellites check. Payments follow." data-ru="Заявите поля. Спутник проверит. Выплата придёт."></h2>
+      <p data-en="AgriPay is the integrated administration and control system for CAP direct payments: geospatial aid application on the LPIS map, Sentinel-2 area monitoring, eco-schemes and on-the-spot checks." data-ru="AgriPay — интегрированная система администрирования и контроля прямых выплат: геопространственная заявка на карте LPIS, спутниковый мониторинг Sentinel-2, эко-схемы и выездные проверки."></p>
+      <ul>
+        <li><b>✓</b><span data-en="Geospatial application pre-filled from the land parcel register" data-ru="Геопространственная заявка, заполненная из реестра участков"></span></li>
+        <li><b>✓</b><span data-en="Area monitoring: NDVI time series matched to every declared crop" data-ru="Мониторинг площадей: ряд NDVI сверяется с каждой заявленной культурой"></span></li>
+        <li><b>✓</b><span data-en="Geotagged photos resolve doubts without a field visit" data-ru="Фото с геометкой снимают сомнения без выезда инспектора"></span></li>
+      </ul>
+    </div>
+    <div class="card lcard">
+      <h3 data-en="Sign in to AgriPay" data-ru="Вход в AgriPay"></h3>
+      <div class="muted" style="font-size:13px" data-en="Demo credentials are prefilled — choose a role and continue." data-ru="Демо-данные уже заполнены — выберите роль и войдите."></div>
+      <div class="roles">
+        <button class="role on" data-role="farmer"><b data-en="Farmer" data-ru="Фермер"></b><span data-en="Dovan Agro · 11 parcels" data-ru="Дован Агро · 11 участков"></span></button>
+        <button class="role" data-role="inspector"><b data-en="Inspector" data-ru="Инспектор"></b><span data-en="Selva regional office" data-ru="Региональный офис Сельва"></span></button>
+      </div>
+      <div class="f" style="margin-bottom:10px"><label data-en="Farmer ID or email" data-ru="ID фермера или эл. почта"></label><input class="input" id="lEmail" value="m.dovan@dovanagro.ar" autocomplete="username"><div class="err" id="lEmailE"></div></div>
+      <div class="f" style="margin-bottom:14px"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lPass" type="password" value="agripay-demo" autocomplete="current-password"><div class="err" id="lPassE"></div></div>
+      <button class="btn pri" id="loginBtn" style="width:100%;justify-content:center;padding:12px" data-en="Sign in with demo account" data-ru="Войти в демо-аккаунт"></button>
+      <div class="muted" style="font-size:11.5px;margin-top:10px;text-align:center" data-en="Secured by national eID (demo mode)" data-ru="Защищено национальной eID (демо-режим)"></div>
+    </div>
+  </div>
+</section>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>❦</b><div>AgriPay<small data-en="CAP IACS · Campaign 2026" data-ru="CAP IACS · Кампания 2026"></small></div></div>
+    <div class="sec" data-en="Overview" data-ru="Обзор"></div>
+    <button class="nav" data-view="dash"><span class="ic">◧</span><span data-en="Dashboard" data-ru="Сводка"></span></button>
+    <div class="sec" data-en="Farmer" data-ru="Фермер"></div>
+    <button class="nav" data-view="app"><span class="ic">▦</span><span data-en="Application &amp; map" data-ru="Заявка и карта"></span><span class="cnt" id="cntA"></span></button>
+    <button class="nav" data-view="sat"><span class="ic">◉</span><span data-en="Satellite checks" data-ru="Спутниковый контроль"></span><span class="cnt r" id="cntS"></span></button>
+    <button class="nav" data-view="pay"><span class="ic">€</span><span data-en="Payment calculation" data-ru="Расчёт выплаты"></span></button>
+    <div class="sec" data-en="Paying agency" data-ru="Платёжное агентство"></div>
+    <button class="nav" data-view="insp"><span class="ic">⚑</span><span data-en="Inspector queue" data-ru="Очередь инспектора"></span><span class="cnt" id="cntI"></span></button>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="logout" style="flex:1;justify-content:center" data-en="Log out" data-ru="Выйти"></button>
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    </div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <span class="sp"></span>
+      <button class="btn sm" id="roleP" title="Switch role"></button>
+    </div>
+    <section class="view" id="v-dash"></section>
+    <section class="view" id="v-app"></section>
+    <section class="view" id="v-sat"></section>
+    <section class="view" id="v-pay"></section>
+    <section class="view" id="v-insp"></section>
+  </main>
+</div>
+<div class="modal" id="modal"><div class="box" id="mbox"></div></div>
+<div class="toasts" id="toasts"></div>
+<input type="file" id="fileIn" accept="image/*" capture="environment" hidden>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=o=>o?(o[PT.lang]||o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const P='pt_agripay_', KEY=P+'state';
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const D=86400000;
+const fmtD=t=>new Date(t).toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'});
+const fmtDs=t=>new Date(t).toLocaleDateString(loc(),{day:'numeric',month:'short'});
+const hm=t=>new Date(t).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});
+const eur=n=>(n<0?'−':'')+new Intl.NumberFormat(loc(),{style:'currency',currency:'EUR',minimumFractionDigits:2,maximumFractionDigits:2}).format(Math.abs(n));
+const eur0=n=>(n<0?'−':'')+new Intl.NumberFormat(loc(),{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Math.abs(n));
+const ha=n=>(+n).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2})+' '+T('ha','га');
+const r2=n=>Math.round(n*100)/100;
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function openModal(html){$('#mbox').innerHTML='<button class="x" id="mx" aria-label="Close">✕</button>'+html;$('#modal').classList.add('on');$('#mx').onclick=closeModal}
+function closeModal(){$('#modal').classList.remove('on')}
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+
+/* ---------- reference data ---------- */
+const CROPS={
+ wheat:{en:'Winter wheat',ru:'Озимая пшеница',c:'#d4a83e',ar:1,p:[[0,.38],[.12,.55],[.28,.84],[.4,.78],[.5,.45],[.56,.22],[.75,.2],[1,.3]]},
+ barley:{en:'Spring barley',ru:'Яровой ячмень',c:'#b99c62',ar:1,p:[[0,.14],[.1,.2],[.25,.6],[.35,.8],[.45,.62],[.55,.24],[1,.22]]},
+ rapeseed:{en:'Winter rapeseed',ru:'Озимый рапс',c:'#c3d23a',ar:1,p:[[0,.52],[.12,.82],[.22,.78],[.35,.5],[.42,.2],[.7,.25],[1,.4]]},
+ maize:{en:'Grain maize',ru:'Кукуруза на зерно',c:'#e8843a',ar:1,p:[[0,.14],[.25,.16],[.38,.4],[.5,.78],[.65,.82],[.8,.6],[.92,.3],[1,.22]]},
+ sunflower:{en:'Sunflower',ru:'Подсолнечник',c:'#efc51f',ar:1,p:[[0,.14],[.22,.16],[.32,.42],[.42,.72],[.52,.66],[.62,.4],[.75,.24],[1,.2]]},
+ soybean:{en:'Soybean',ru:'Соя',c:'#8cbf55',ar:1,cp:'prot',p:[[0,.13],[.3,.15],[.42,.45],[.55,.84],[.7,.8],[.82,.45],[1,.2]]},
+ beet:{en:'Sugar beet',ru:'Сахарная свёкла',c:'#a274cf',ar:1,cp:'beet',p:[[0,.12],[.25,.14],[.38,.4],[.5,.78],[.6,.82],[.9,.8],[1,.6]]},
+ alfalfa:{en:'Alfalfa',ru:'Люцерна',c:'#33a88a',ar:1,cp:'prot',p:[[0,.45],[.15,.75],[.22,.8],[.24,.4],[.36,.78],[.38,.42],[.52,.8],[.54,.45],[.7,.76],[1,.58]]},
+ grass:{en:'Permanent grassland',ru:'Постоянные луга',c:'#4c9a3c',ar:0,p:[[0,.5],[.2,.75],[.3,.78],[.32,.5],[.5,.72],[.52,.52],[.75,.7],[1,.6]]},
+ fallow:{en:'Land lying fallow',ru:'Пар',c:'#a38a68',ar:1,p:[[0,.38],[.3,.55],[.6,.5],[1,.42]]},
+ bare:{en:'Bare soil / no activity',ru:'Голая почва / нет активности',c:'#7d6a58',p:[[0,.12],[.5,.18],[1,.14]],x:1}
+};
+const DECL=Object.keys(CROPS).filter(k=>!CROPS[k].x);
+const R={biss:168.40,criss:58.10,crissCap:30,young:92.00,youngCap:60,prot:118.50,beet:214.00,fd:0.026,fdFree:2000};
+const ECO={
+ cover:{en:'Winter cover crop after harvest',ru:'Зимний покровный посев после уборки',r:64.00,ok:['wheat','barley','rapeseed','sunflower']},
+ nutri:{en:'Precision nutrient management plan',ru:'План точного внесения удобрений',r:41.50,ok:['wheat','barley','rapeseed','maize','sunflower','soybean','beet']},
+ notill:{en:'Reduced / no tillage',ru:'Минимальная / нулевая обработка почвы',r:52.00,ok:['wheat','barley','rapeseed','maize','sunflower','soybean']},
+ strip:{en:'Non-productive land for biodiversity',ru:'Непродуктивные земли для биоразнообразия',r:312.00,ok:['fallow']},
+ grass:{en:'Extensive grassland (≤1.4 LU/ha)',ru:'Экстенсивные луга (≤1,4 УГ/га)',r:78.00,ok:['grass']}
+};
+const SST={ok:['Compliant','Соответствует','ok'],warn:['Warning','Предупреждение','warn'],bad:['Non-compliant','Не соответствует','bad'],review:['Under inspection','На проверке','gold'],none:['Not declared','Не заявлен','']};
+const N=24, T0=Date.UTC(2026,2,4), DT=9*D;
+const wkDate=i=>T0+i*DT;
+const prof=(c,t)=>{const a=CROPS[c].p;for(let i=1;i<a.length;i++)if(t<=a[i][0]){const[x0,y0]=a[i-1],[x1,y1]=a[i];return y0+(y1-y0)*(t-x0)/(x1-x0)}return a[a.length-1][1]};
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function series(actual,seed){const r=rng(seed);const out=[];for(let i=0;i<N;i++){const cl=r()<.17;const v=prof(actual,i/(N-1))+(r()-.5)*.07;out.push(cl?null:Math.max(.03,Math.min(.95,r2(v))))}return out}
+const mae=(s,c)=>{let a=0,n=0;s.forEach((v,i)=>{if(v!=null){a+=Math.abs(v-prof(c,i/(N-1)));n++}});return n?a/n:0};
+const classify=s=>DECL.concat('bare').map(c=>[c,mae(s,c)]).sort((a,b)=>a[1]-b[1])[0][0];
+
+/* ---------- geometry (LPIS) ---------- */
+const GEO=[
+ ['01',{en:'Long Acre',ru:'Длинное поле'},[[14,14],[190,12],[196,120],[16,126]]],
+ ['02',{en:'Mill Hill',ru:'Мельничный холм'},[[200,12],[356,10],[360,112],[206,120]]],
+ ['03',{en:'Birch Corner',ru:'Берёзовый угол'},[[366,10],[500,16],[492,112],[370,112]]],
+ ['04',{en:'Church Field',ru:'Церковное поле'},[[16,134],[196,128],[200,200],[18,204]]],
+ ['05',{en:'Middle Furlong',ru:'Средний клин'},[[206,128],[360,120],[364,200],[208,200]]],
+ ['06',{en:'Well Close',ru:'Поле у колодца'},[[370,120],[490,120],[480,200],[372,200]]],
+ ['07',{en:'Western Strip',ru:'Западная полоса'},[[18,230],[150,230],[140,420],[14,424]]],
+ ['08',{en:'Clay Pits',ru:'Глиняные ямы'},[[160,230],[330,230],[336,330],[154,330]]],
+ ['09',{en:'Lark Meadow Margin',ru:'Жаворонковый край'},[[160,338],[336,338],[340,426],[150,428]]],
+ ['10',{en:'New Ground',ru:'Новая земля'},[[344,230],[440,230],[452,426],[350,426]]],
+ ['11',{en:'River Meadow',ru:'Приречный луг'},[[450,230],[540,226],[556,424],[462,426]]]
+];
+const ACT={'01':'wheat','02':'rapeseed','03':'barley','04':'beet','05':'sunflower','06':'wheat','07':'alfalfa','08':'bare','09':'fallow','10':'maize','11':'grass'};
+const area=pts=>{let s=0;pts.forEach((p,i)=>{const q=pts[(i+1)%pts.length];s+=p[0]*q[1]-q[0]*p[1]});return Math.abs(s)/2};
+const cen=pts=>[pts.reduce((a,p)=>a+p[0],0)/pts.length,pts.reduce((a,p)=>a+p[1],0)/pts.length];
+const geo=(x,y)=>[(45.3184-y*0.000021).toFixed(5),(19.8742+x*0.000029).toFixed(5)];
+
+const OTHERS=[
+ {id:'AR-31044-03',holder:'Lenka Varos',crop:'rapeseed',area:8.72,act:'bare',reason:{en:'No harvest event detected; NDVI flat since May',ru:'Уборка не обнаружена; NDVI плоский с мая'},prio:'high',impact:1468},
+ {id:'AR-27719-11',holder:'Tomas Belic',crop:'grass',area:14.20,act:'grass',reason:{en:'Eco-scheme: no mowing or grazing detected',ru:'Эко-схема: не обнаружено скашивания или выпаса'},prio:'med',impact:1108},
+ {id:'AR-40922-02',holder:{en:'Kolar Agro LLC',ru:'ООО «Колар Агро»'},crop:'maize',area:22.50,act:'maize',reason:{en:'Possible over-declaration (+1.8 ha vs LPIS)',ru:'Возможное завышение площади (+1,8 га к LPIS)'},prio:'low',impact:455}
+];
+
+function seed(){
+  const now=Date.now();
+  const parcels=GEO.map(([n,name,pts],i)=>{const lp=r2(area(pts)*0.00105);return{id:'AR-40817-'+n,n,name,pts,lpis:lp,act:ACT[n],series:series(ACT[n],1000+i*77),decl:null,photo:null,insp:null}});
+  const d=(n,crop,a,eco)=>{const p=parcels.find(x=>x.n===n);p.decl={crop,area:r2(a==null?p.lpis:a(p.lpis)),eco:eco||[]}};
+  d('01','wheat',l=>l-0.3,['cover','nutri']);d('02','rapeseed',null,['nutri']);d('03','barley',null,['notill']);d('04','beet',null,['nutri']);
+  d('05','maize',null,['notill']);d('06','wheat',l=>l+0.85,[]);d('07','alfalfa');d('08','soybean',null,['nutri']);d('09','fallow',null,['strip']);d('11','grass',null,['grass']);
+  const log=[
+   {t:now-35*60e3,en:'Sentinel-2 acquisition processed: 11 parcels updated',ru:'Обработан снимок Sentinel-2: обновлено 11 участков'},
+   {t:now-3.1*3600e3,en:'Monitoring warning on parcel 05: signal differs from Grain maize',ru:'Предупреждение мониторинга по участку 05: сигнал не похож на кукурузу'},
+   {t:now-6*3600e3,en:'Parcel 08 flagged: no crop development detected',ru:'Участок 08 отмечен: развитие культуры не обнаружено'},
+   {t:now-28*3600e3,en:'Application pre-filled from LPIS 2026 reference layer',ru:'Заявка предзаполнена из эталонного слоя LPIS 2026'}];
+  return{user:null,role:'farmer',view:'dash',parcels,others:{},app:{status:'draft',ver:0,ref:null,submitted:null},young:true,log,sel:'AR-40817-05',satSel:'AR-40817-05',qSel:null};
+}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||!S.parcels)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast(T('Storage is full — photo not saved','Хранилище заполнено — фото не сохранено'),'bad')}};
+const pById=id=>S.parcels.find(p=>p.id===id);
+function addLog(en,ru){S.log.unshift({t:Date.now(),en,ru});S.log=S.log.slice(0,30)}
+const cropName=c=>c?T(CROPS[c].en,CROPS[c].ru):'—';
+const pName=p=>p.n+' · '+L(p.name);
+
+/* ---------- monitoring logic ---------- */
+function baseStatus(p){if(!p.decl)return'none';const m=mae(p.series,p.decl.crop);return m<0.085?'ok':m<0.2?'warn':'bad'}
+function satStatus(p){
+  if(!p.decl)return'none';
+  if(p.insp)return p.insp.decision==='approved'?'ok':'bad';
+  const b=baseStatus(p);
+  if(b==='warn'&&p.photo)return'ok';
+  if(b==='bad'&&p.photo)return'review';
+  return b;
+}
+const stPill=s=>`<span class="pill ${SST[s][2]}">${T(SST[s][0],SST[s][1])}</span>`;
+function statusNote(p){
+  const s=satStatus(p),b=baseStatus(p);
+  if(s==='none')return T('Parcel is not part of the application.','Участок не включён в заявку.');
+  if(p.insp)return p.insp.decision==='approved'?T('Confirmed by field inspection on ','Подтверждено выездной проверкой ')+fmtD(p.insp.t)+'.':T('Rejected after field inspection: ','Отклонено после выездной проверки: ')+esc(p.insp.notes);
+  if(s==='ok'&&b==='warn')return T('Warning resolved by geotagged photo — evidence accepted automatically.','Предупреждение снято фото с геометкой — доказательство принято автоматически.');
+  if(s==='ok')return T('Satellite signal matches the declared crop throughout the season.','Спутниковый сигнал соответствует заявленной культуре весь сезон.');
+  const g=classify(p.series);
+  if(s==='warn')return T('Signal is atypical for ','Сигнал нетипичен для ')+cropName(p.decl.crop)+T('. Closest profile: ','. Ближайший профиль: ')+cropName(g)+T('. Upload a geotagged photo or amend the declaration.','. Загрузите фото с геометкой или исправьте заявку.');
+  if(s==='review')return T('Photo received; signal conflict is too strong for automatic clearance — sent to an inspector.','Фото получено; расхождение слишком сильное для автоматического снятия — передано инспектору.');
+  return T('No development consistent with ','Нет развития, соответствующего культуре ')+cropName(p.decl.crop)+T('. Closest profile: ','. Ближайший профиль: ')+cropName(g)+T('. Payment for this parcel is withheld.','. Выплата по участку удержана.');
+}
+
+/* ---------- validation ---------- */
+function validate(){
+  const out=[];const e=(sev,pid,en,ru,fix)=>out.push({sev,pid,en,ru,fix});
+  const dec=S.parcels.filter(p=>p.decl);
+  if(dec.reduce((a,p)=>a+p.decl.area,0)<1)e('e',null,'Total declared area is below the 1 ha minimum.','Общая заявленная площадь меньше минимума 1 га.');
+  dec.forEach(p=>{const d=p.decl;
+    if(!(d.area>0))e('e',p.id,`Parcel ${p.n}: declared area must be greater than zero.`,`Участок ${p.n}: заявленная площадь должна быть больше нуля.`);
+    else if(d.area<0.3)e('e',p.id,`Parcel ${p.n}: below the 0.30 ha minimum parcel size.`,`Участок ${p.n}: меньше минимального размера 0,30 га.`);
+    if(d.area>p.lpis+0.005)e('e',p.id,`Parcel ${p.n}: ${d.area.toFixed(2)} ha exceeds the LPIS maximum eligible area ${p.lpis.toFixed(2)} ha.`,`Участок ${p.n}: ${d.area.toFixed(2)} га больше максимальной допустимой площади LPIS ${p.lpis.toFixed(2)} га.`,'max');
+    d.eco.forEach(k=>{if(!ECO[k].ok.includes(d.crop))e('e',p.id,`Parcel ${p.n}: eco-scheme “${ECO[k].en}” is not compatible with ${CROPS[d.crop].en}.`,`Участок ${p.n}: эко-схема «${ECO[k].ru}» несовместима с культурой «${CROPS[d.crop].ru}».`,'eco')});
+    const s=satStatus(p);
+    if(s==='bad')e('w',p.id,`Parcel ${p.n}: satellite monitoring finds no ${CROPS[d.crop].en.toLowerCase()} — payment withheld unless resolved.`,`Участок ${p.n}: мониторинг не видит культуру «${CROPS[d.crop].ru}» — выплата удержана до решения.`);
+    if(s==='warn')e('w',p.id,`Parcel ${p.n}: monitoring warning — eco-scheme payment on hold until evidence is provided.`,`Участок ${p.n}: предупреждение мониторинга — эко-выплата приостановлена до доказательств.`);
+  });
+  S.parcels.filter(p=>!p.decl).forEach(p=>e('w',p.id,`Parcel ${p.n} (${p.lpis.toFixed(2)} ha) is not declared — no payment for it.`,`Участок ${p.n} (${p.lpis.toFixed(2)} га) не заявлен — выплаты по нему не будет.`));
+  const arable=dec.filter(p=>CROPS[p.decl.crop].ar);const arA=arable.reduce((a,p)=>a+p.decl.area,0);
+  const by={};arable.forEach(p=>by[p.decl.crop]=(by[p.decl.crop]||0)+p.decl.area);
+  const nC=Object.keys(by).length,main=Math.max(0,...Object.values(by));
+  if(arA>10&&nC<2)e('e',null,'GAEC 7: arable land over 10 ha needs at least 2 crops.','GAEC 7: на пашне больше 10 га нужно не менее 2 культур.');
+  if(arA>30&&nC<3)e('e',null,'GAEC 7: arable land over 30 ha needs at least 3 crops.','GAEC 7: на пашне больше 30 га нужно не менее 3 культур.');
+  if(arA>10&&main/arA>0.75)e('e',null,`GAEC 7: main crop covers ${Math.round(main/arA*100)}% of arable land (max 75%).`,`GAEC 7: основная культура занимает ${Math.round(main/arA*100)}% пашни (макс. 75%).`);
+  return out;
+}
+
+/* ---------- payment ---------- */
+function calc(){
+  const rows=[];let det=0;
+  S.parcels.forEach(p=>{
+    const r={p,det:0,biss:0,eco:0,cp:0,red:0,notes:[],st:satStatus(p)};rows.push(r);
+    if(!p.decl)return;const d=p.decl;
+    const max=p.insp&&p.insp.decision==='approved'?Math.min(p.insp.measured,p.lpis):p.lpis;
+    const dA=Math.max(0,Math.min(d.area,max));
+    r.det=dA;r.biss=dA*R.biss;
+    d.eco.forEach(k=>{if(ECO[k].ok.includes(d.crop))r.eco+=dA*ECO[k].r});
+    const cp=CROPS[d.crop].cp;if(cp)r.cp=dA*R[cp];
+    if(r.st==='bad'||r.st==='review'){
+      r.red+=r.biss+r.eco+r.cp;r.notes.push(r.st==='bad'?T('Ineligible (non-compliant)','Неприемлемо (нарушение)'):T('On hold (inspection)','Удержано (проверка)'));
+      if(r.st==='bad'){const pen=1.5*d.area*R.biss*0.5;r.red+=pen;r.pen=pen;r.notes.push(T('Over-declaration penalty','Штраф за завышение'))}
+      r.det=0;
+    }else{
+      if(r.st==='warn'&&r.eco){r.red+=r.eco;r.notes.push(T('Eco-scheme on hold','Эко-выплата приостановлена'))}
+      const over=d.area-dA;
+      if(over>0.005){r.notes.push(T('Paid on determined area','Оплата по установленной площади'));if(over>Math.min(2,dA*0.03)){const pen=1.5*over*R.biss;r.red+=pen;r.pen=pen;r.notes.push(T('Over-declaration penalty','Штраф за завышение'))}}
+    }
+    det+=r.det;
+  });
+  const crissA=Math.min(det,R.crissCap),criss=crissA*R.criss;
+  const youngA=S.young?Math.min(det,R.youngCap):0,young=youngA*R.young;
+  rows.forEach(r=>{r.criss=det?criss*r.det/det:0;r.young=det?young*r.det/det:0;r.gross=r.biss+r.eco+r.cp+r.criss+r.young;r.net=r.gross-r.red});
+  const sum=k=>rows.reduce((a,r)=>a+(r[k]||0),0);
+  const gross=sum('gross'),red=sum('red'),sub=gross-red;
+  const fd=Math.max(0,sub-R.fdFree)*R.fd;
+  return{rows,det,criss,young,biss:sum('biss'),eco:sum('eco'),cp:sum('cp'),gross,red,fd,total:Math.max(0,sub-fd),declared:S.parcels.reduce((a,p)=>a+(p.decl?p.decl.area:0),0)};
+}
+
+/* ---------- SVG helpers ---------- */
+function mapSvg(o){
+  o=o||{};const bg=cssv('--bg2'),ln=cssv('--line2'),tx='#fff',pf=o.pfx||'m';
+  const C={ok:cssv('--mal3'),warn:cssv('--amber'),bad:cssv('--red'),review:cssv('--gold'),none:cssv('--dim')};
+  let s=`<svg viewBox="0 0 640 440" role="img" aria-label="${T('Parcel map','Карта участков')}"><defs><pattern id="${pf}h" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="${bg}"/><line x1="0" y1="0" x2="0" y2="8" stroke="${ln}" stroke-width="3"/></pattern><pattern id="${pf}f" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#2f5d3a"/><circle cx="4" cy="4" r="3.4" fill="#3d7448"/><circle cx="11" cy="10" r="3" fill="#356a40"/></pattern></defs>`;
+  s+=`<rect width="640" height="440" fill="${bg}"/>`;
+  s+=`<path d="M506 16 L548 8 L556 120 L520 200 L494 206 L486 120Z" fill="url(#${pf}f)" opacity=".9"/>`;
+  s+=`<path d="M590 0 C560 80 600 150 572 230 C548 300 600 360 590 440" stroke="#3d86c6" stroke-width="16" fill="none" opacity=".75"/>`;
+  s+=`<rect x="0" y="208" width="580" height="14" fill="${ln}" opacity=".9"/><line x1="0" y1="215" x2="580" y2="215" stroke="${bg}" stroke-dasharray="10 8" stroke-width="1.5"/>`;
+  S.parcels.forEach(p=>{
+    const sel=o.sel===p.id,st=satStatus(p);const fill=p.decl?CROPS[p.decl.crop].c:`url(#${pf}h)`;
+    s+=`<polygon class="pc" data-pid="${p.id}" points="${p.pts.map(q=>q.join(',')).join(' ')}" fill="${fill}" fill-opacity="${p.decl?.88:1}" stroke="${sel?cssv('--text'):ln}" stroke-width="${sel?4:1.5}" stroke-linejoin="round"/>`;
+    const [cx,cy]=cen(p.pts);
+    s+=`<text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="17" font-weight="800" fill="${tx}" stroke="rgba(0,0,0,.55)" stroke-width="3" paint-order="stroke" pointer-events="none" font-family="Inter,sans-serif">${p.n}</text>`;
+    if(o.status!==false&&st!=='none')s+=`<circle cx="${cx+22}" cy="${cy-12}" r="7" fill="${C[st]}" stroke="#fff" stroke-width="2" pointer-events="none"/>`;
+  });
+  s+=`<text x="626" y="430" text-anchor="end" font-size="11" fill="${cssv('--muted')}" font-family="Inter,sans-serif">${T('LPIS 2026 · ortho 25 cm · 1:7 500','LPIS 2026 · орто 25 см · 1:7 500')}</text></svg>`;
+  return s;
+}
+function ndviSvg(p,o){
+  o=o||{};const W=o.w||640,H=o.h||250,pl=o.mini?2:36,pr=o.mini?2:10,pt=o.mini?2:12,pb=o.mini?2:26;
+  const x=i=>pl+(W-pl-pr)*i/(N-1),y=v=>pt+(H-pt-pb)*(1-v);
+  const m=cssv('--mal3'),ln=cssv('--line'),mu=cssv('--muted'),g=cssv('--gold'),rd=cssv('--red'),am=cssv('--amber');
+  const st=satStatus(p);const col=st==='bad'?rd:st==='warn'?am:st==='review'?g:m;
+  let s=`<svg viewBox="0 0 ${W} ${H}" ${o.mini?'preserveAspectRatio="none"':''}>`;
+  if(!o.mini){
+    [0,.25,.5,.75,1].forEach(v=>s+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${ln}"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="10.5" fill="${mu}" font-family="JetBrains Mono,monospace">${v.toFixed(2)}</text>`);
+    for(let i=0;i<N;i+=3)s+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="${mu}" font-family="Inter,sans-serif">${fmtDs(wkDate(i))}</text>`;
+  }
+  if(p.decl){
+    const up=[],dn=[];for(let i=0;i<N;i++){const v=prof(p.decl.crop,i/(N-1));up.push(x(i)+','+y(Math.min(1,v+.085)));dn.unshift(x(i)+','+y(Math.max(0,v-.085)))}
+    s+=`<polygon points="${up.concat(dn).join(' ')}" fill="${g}" fill-opacity=".16"/>`;
+    if(!o.mini){let d='';for(let i=0;i<N;i++)d+=(i?'L':'M')+x(i)+' '+y(prof(p.decl.crop,i/(N-1)));s+=`<path d="${d}" fill="none" stroke="${g}" stroke-width="1.5" stroke-dasharray="5 4"/>`}
+  }
+  let d='',pen=false;p.series.forEach((v,i)=>{if(v==null){pen=false;return}d+=(pen?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1);pen=true});
+  s+=`<path d="${d}" fill="none" stroke="${col}" stroke-width="${o.mini?2:2.4}" stroke-linejoin="round"/>`;
+  if(!o.mini)p.series.forEach((v,i)=>{s+=v==null?`<text x="${x(i)}" y="${y(0)-4}" text-anchor="middle" font-size="11" fill="${mu}">☁</text>`:`<circle cx="${x(i)}" cy="${y(v)}" r="3.2" fill="${col}"><title>${fmtD(wkDate(i))} · NDVI ${v.toFixed(2)}</title></circle>`});
+  return s+'</svg>';
+}
+function samplePhoto(crop){
+  const c=document.createElement('canvas');c.width=240;c.height=180;const x=c.getContext('2d');
+  const sky=x.createLinearGradient(0,0,0,80);sky.addColorStop(0,'#7fb3e0');sky.addColorStop(1,'#cfe4f2');x.fillStyle=sky;x.fillRect(0,0,240,80);
+  x.fillStyle='#4a6b45';x.fillRect(0,68,240,14);
+  x.fillStyle=CROPS[crop].c;x.fillRect(0,78,240,102);
+  x.strokeStyle='rgba(0,0,0,.18)';x.lineWidth=2;for(let i=-10;i<20;i++){x.beginPath();x.moveTo(120,78);x.lineTo(i*24,180);x.stroke()}
+  x.fillStyle='rgba(0,0,0,.45)';x.fillRect(0,160,240,20);x.fillStyle='#fff';x.font='10px monospace';x.fillText('GNSS ±3m · '+new Date().toISOString().slice(0,16).replace('T',' '),6,173);
+  return c.toDataURL('image/jpeg',.7);
+}
+function shrink(file,cb){
+  const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,240/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.7))};im.onerror=()=>toast(T('This file is not a readable image','Файл не является изображением'),'bad');im.src=fr.result};fr.readAsDataURL(file);
+}
+
+const VIEWS={dash:['Holding dashboard','Сводка по хозяйству'],app:['Single application & field map','Единая заявка и карта полей'],sat:['Satellite area monitoring','Спутниковый мониторинг площадей'],pay:['Payment calculation','Расчёт выплаты'],insp:['Inspector queue & field visits','Очередь инспектора и выезды']};
+const APPST={draft:['Draft','Черновик','gold'],submitted:['Submitted','Подана','ok'],amended:['Amended — resubmit','Изменена — подайте снова','warn']};
+const appPill=()=>{const a=APPST[S.app.status];return`<span class="pill ${a[2]}">${T(a[0],a[1])}</span>`};
+
+function render(){
+  $('#login').hidden=!!S.user;$('#app').hidden=!S.user;
+  if(!S.user)return;
+  $$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.view===S.view));
+  $$('.view').forEach(v=>{const on=v.id==='v-'+S.view;v.classList.toggle('on',on);if(!on)v.innerHTML=''});
+  $('#title').textContent=T(...VIEWS[S.view]);
+  $('#crumb').textContent='AgriPay · '+T('Arvenian Agricultural Paying Agency','Платёжное агентство Арвении');
+  $('#roleP').textContent='⇄ '+(S.role==='inspector'?T('Inspector','Инспектор'):T('Farmer','Фермер'));
+  const iss=validate().filter(x=>x.sev==='e').length;$('#cntA').textContent=iss||'';$('#cntA').style.display=iss?'':'none';
+  const fl=S.parcels.filter(p=>['bad','warn'].includes(satStatus(p))).length;$('#cntS').textContent=fl||'';$('#cntS').style.display=fl?'':'none';
+  const q=queue().length;$('#cntI').textContent=q||'';$('#cntI').style.display=q?'':'none';
+  $('#who').innerHTML=S.role==='inspector'?`<div class="av">IR</div><div><b>${T('Ilina Radek','Илина Радек')}</b>${T('Field inspector · Selva office','Инспектор · офис Сельва')}</div>`:`<div class="av">MD</div><div><b>${T('Marek Dovan','Марек Дован')}</b>${T('Dovan Agro · AR-HLD-40817','Дован Агро · AR-HLD-40817')}</div>`;
+  ({dash:rDash,app:rApp,sat:rSat,pay:rPay,insp:rInsp})[S.view]();
+}
+function go(v){S.view=v;save();render();$('#side').classList.remove('open');window.scrollTo(0,0)}
+function roleBanner(need){
+  if(S.role===need)return'';
+  return`<div class="banner"><b>ⓘ</b><span>${need==='inspector'?T('Read-only: you are signed in as the farmer. Switch to the inspector role to record field-visit decisions.','Только просмотр: вы вошли как фермер. Переключитесь на роль инспектора, чтобы вносить решения.'):T('Read-only: inspectors cannot edit a farmer’s declaration.','Только просмотр: инспектор не может менять заявку фермера.')}</span><button class="btn sm gold" data-role-sw="${need}">⇄ ${need==='inspector'?T('Switch to inspector','Стать инспектором'):T('Switch to farmer','Стать фермером')}</button></div>`;
+}
+function bindRoleSw(el){$$('[data-role-sw]',el).forEach(b=>b.onclick=()=>setRole(b.dataset.roleSw))}
+function setRole(r){S.role=r;save();render();toast(T('Role switched: ','Роль: ')+(r==='inspector'?T('Inspector','Инспектор'):T('Farmer','Фермер')))}
+
+/* ---------- dashboard ---------- */
+function rDash(){
+  const el=$('#v-dash');const c=calc();const sts=S.parcels.map(satStatus);
+  const cnt=k=>sts.filter(s=>s===k).length;const decN=S.parcels.filter(p=>p.decl).length;
+  const iss=validate();const sub=S.app.status==='submitted';
+  const open=queue().filter(x=>x.own).length;
+  const stepIdx=!sub?0:(cnt('bad')+cnt('review')+cnt('warn'))?1:open?2:3;
+  const steps=[['Application','Заявка'],['Area monitoring','Мониторинг'],['Checks','Проверки'],['Payment','Выплата']];
+  const byC={};S.parcels.forEach(p=>{if(p.decl)byC[p.decl.crop]=(byC[p.decl.crop]||0)+p.decl.area});
+  const cr=Object.entries(byC).sort((a,b)=>b[1]-a[1]);const mx=cr.length?cr[0][1]:1;
+  const parts=[[c.biss,'--mal',T('Basic income support','Базовая поддержка доходов')],[c.criss,'--blue',T('Redistributive','Перераспределительная')],[c.young,'--violet',T('Young farmer','Молодой фермер')],[c.eco,'--mal3',T('Eco-schemes','Эко-схемы')],[c.cp,'--gold',T('Coupled support','Связанная поддержка')]];
+  const tg=parts.reduce((a,x)=>a+x[0],0)||1;
+  el.innerHTML=`
+  <div class="kpis">
+    <div class="card kpi"><div class="l">${T('Declared area','Заявленная площадь')}</div><div class="v">${ha(c.declared)}</div><div class="d">${decN} ${T('of','из')} ${S.parcels.length} ${T('parcels','участков')}</div></div>
+    <div class="card kpi"><div class="l">${T('Estimated payment 2026','Расчётная выплата 2026')}</div><div class="v" style="color:var(--mal3)">${eur0(c.total)}</div><div class="d">${T('after reductions','после сокращений')}: ${eur0(c.red+c.fd)}</div></div>
+    <div class="card kpi"><div class="l">${T('Monitoring status','Статус мониторинга')}</div><div class="v">${cnt('ok')}/${decN}</div><div class="d">${T('compliant','соответствуют')} · <span style="color:var(--amber)">${cnt('warn')} ⚠</span> · <span style="color:var(--red)">${cnt('bad')} ✕</span></div></div>
+    <div class="card kpi"><div class="l">${T('Application','Заявка')}</div><div class="v" style="font-size:20px;padding:5px 0">${appPill()}</div><div class="d">${S.app.ref?esc(S.app.ref):T('deadline 15 May 2026 (amendments to 30 Sep)','срок 15 мая 2026 (изменения до 30 сен)')}</div></div>
+  </div>
+  <div class="card"><h3>${T('Campaign 2026 progress','Ход кампании 2026')}</h3><div class="steps">${steps.map((s,i)=>`<div class="step ${i<stepIdx?'ok':i===stepIdx?'cur':''}"><div class="dot">${i<stepIdx?'✓':i+1}</div><span>${T(s[0],s[1])}</span></div>`).join('')}</div></div>
+  <div class="grid2 mt">
+    <div class="card"><h3>${T('Field map','Карта полей')}<span class="sp"></span><button class="btn sm" id="dMap">${T('Open application','Открыть заявку')} →</button></h3><div class="map">${mapSvg({pfx:'d'})}</div>
+      <div class="legend mt"><span><i style="background:var(--mal3)"></i>${T('Compliant','Соответствует')}</span><span><i style="background:var(--amber)"></i>${T('Warning','Предупреждение')}</span><span><i style="background:var(--red)"></i>${T('Non-compliant','Нарушение')}</span><span><i style="background:var(--gold)"></i>${T('Under inspection','На проверке')}</span></div></div>
+    <div>
+      <div class="card"><h3>${T('Action needed','Нужны действия')}</h3><div class="issues">${(()=>{const a=[];
+        if(iss.some(x=>x.sev==='e'))a.push(`<div class="e"><b class="i" style="color:var(--red)">!</b><span>${T(iss.filter(x=>x.sev==='e').length+' validation error(s) block submission','Ошибок проверки: '+iss.filter(x=>x.sev==='e').length+' — подача заблокирована')}</span><button class="btn sm" data-go="app">${T('Fix','Исправить')}</button></div>`);
+        S.parcels.filter(p=>['warn','bad'].includes(satStatus(p))).forEach(p=>a.push(`<div class="${satStatus(p)==='bad'?'e':'w'}"><b class="i">${satStatus(p)==='bad'?'✕':'⚠'}</b><span>${T('Parcel','Участок')} ${pName(p)} — ${T(SST[satStatus(p)][0],SST[satStatus(p)][1]).toLowerCase()}</span><button class="btn sm" data-sat="${p.id}">${T('Resolve','Решить')}</button></div>`));
+        if(!sub&&!iss.some(x=>x.sev==='e'))a.push(`<div class="w"><b class="i">✉</b><span>${T('Application is ready — submit it','Заявка готова — подайте её')}</span><button class="btn sm pri" data-go="app">${T('Submit','Подать')}</button></div>`);
+        return a.join('')||`<div class="empty"><div class="bg">✓</div>${T('Nothing to do — all parcels are clear.','Всё в порядке — по участкам нет вопросов.')}</div>`})()}</div></div>
+      <div class="card mt"><h3>${T('Payment composition','Состав выплаты')}</h3><div class="stack">${parts.map(x=>`<i style="width:${x[0]/tg*100}%;background:var(${x[1]})" title="${esc(x[2])}"></i>`).join('')}</div><div class="legend">${parts.map(x=>`<span><i style="background:var(${x[1]})"></i>${x[2]} · ${eur0(x[0])}</span>`).join('')}</div></div>
+    </div>
+  </div>
+  <div class="grid2e mt">
+    <div class="card"><h3>${T('Crop mix (declared)','Структура посевов (заявлено)')}</h3>${cr.map(([k,v])=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px"><span style="width:130px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><i class="sw" style="background:${CROPS[k].c}"></i>${cropName(k)}</span><div class="stack" style="flex:1;margin:0;height:9px"><i style="width:${v/mx*100}%;background:${CROPS[k].c}"></i></div><b class="mono" style="width:66px;text-align:right;font-size:12px">${v.toFixed(2)}</b></div>`).join('')}</div>
+    <div class="card"><h3>${T('Activity','Журнал')}</h3><div class="log">${S.log.slice(0,7).map(l=>`<div><span class="t">${hm(l.t)}</span><span>${esc(T(l.en,l.ru))}</span></div>`).join('')}</div></div>
+  </div>`;
+  $('#dMap').onclick=()=>go('app');
+  $$('[data-go]',el).forEach(b=>b.onclick=()=>go(b.dataset.go));
+  $$('[data-sat]',el).forEach(b=>b.onclick=()=>{S.satSel=b.dataset.sat;go('sat')});
+  $$('.pc',el).forEach(g=>g.onclick=()=>{S.sel=g.dataset.pid;go('app')});
+}
+
+/* ---------- application ---------- */
+let draft=null;
+function rApp(){
+  const el=$('#v-app');const p=pById(S.sel)||S.parcels[0];const ro=S.role!=='farmer';
+  if(!draft||draft.id!==p.id)draft={id:p.id,on:!!p.decl,crop:p.decl?p.decl.crop:'',area:p.decl?p.decl.area:p.lpis,eco:p.decl?p.decl.eco.slice():[]};
+  const iss=validate();const errs=iss.filter(x=>x.sev==='e');const c=calc();
+  el.innerHTML=`${roleBanner('farmer')}
+  <div class="card" style="margin-bottom:14px"><div class="row"><b>${T('Single application','Единая заявка')} 2026</b>${appPill()}<span class="muted" style="font-size:13px">${S.app.ref?esc(S.app.ref)+' · '+T('version','версия')+' '+S.app.ver+' · '+fmtD(S.app.submitted):T('Holding AR-HLD-40817 · pre-filled from LPIS','Хозяйство AR-HLD-40817 · предзаполнено из LPIS')}</span><span class="sp" style="flex:1"></span><span class="muted" style="font-size:13px">${T('Estimated payment','Расчётная выплата')}</span><b class="mono" style="font-size:18px;color:var(--mal3)">${eur(c.total)}</b></div></div>
+  <div class="grid2">
+    <div class="card"><h3>${T('Field map — click a parcel','Карта — нажмите на участок')}<span class="sp"></span><span class="hint">${T('Hatched = not declared','Штриховка = не заявлен')}</span></h3><div class="map" id="aMap">${mapSvg({sel:p.id,pfx:'a'})}</div>
+      <div class="legend mt">${DECL.map(k=>`<span><i style="background:${CROPS[k].c}"></i>${cropName(k)}</span>`).join('')}</div></div>
+    <div class="card" id="ed"></div>
+  </div>
+  <div class="card mt"><h3>${T('Declarations','Заявленные участки')}<span class="sp"></span><span class="hint">${S.parcels.filter(x=>x.decl).length} / ${S.parcels.length}</span></h3>
+    <div class="tw"><table><thead><tr><th>${T('Parcel','Участок')}</th><th>${T('Crop','Культура')}</th><th class="num">${T('LPIS max','Макс. LPIS')}</th><th class="num">${T('Declared','Заявлено')}</th><th>${T('Eco-schemes','Эко-схемы')}</th><th>${T('Monitoring','Мониторинг')}</th><th class="num">${T('Net payment','Выплата')}</th></tr></thead><tbody>
+    ${c.rows.map(r=>{const q=r.p;const over=q.decl&&q.decl.area>q.lpis+0.005;return`<tr class="clk ${q.id===p.id?'sel':''}" data-pid="${q.id}"><td><b class="mono">${q.n}</b> ${esc(L(q.name))}</td><td>${q.decl?`<i class="sw" style="background:${CROPS[q.decl.crop].c}"></i>${cropName(q.decl.crop)}`:'<span class="muted">—</span>'}</td><td class="num">${q.lpis.toFixed(2)}</td><td class="num" style="${over?'color:var(--red);font-weight:700':''}">${q.decl?q.decl.area.toFixed(2):'—'}</td><td>${q.decl&&q.decl.eco.length?q.decl.eco.map(k=>`<span class="pill" style="margin-right:4px">${k}</span>`).join(''):'<span class="muted">—</span>'}</td><td>${stPill(r.st)}</td><td class="num">${q.decl?eur(r.net):'—'}</td></tr>`}).join('')}
+    </tbody></table></div></div>
+  <div class="card mt"><h3>${T('Validation','Проверка')}<span class="sp"></span>${errs.length?`<span class="pill bad">${errs.length} ${T('errors','ошибок')}</span>`:`<span class="pill ok">${T('No blocking errors','Нет блокирующих ошибок')}</span>`}<span class="pill warn">${iss.length-errs.length} ${T('warnings','предупр.')}</span></h3>
+    <div class="issues">${iss.map((x,i)=>`<div class="${x.sev}"><b class="i" style="color:var(${x.sev==='e'?'--red':'--amber'})">${x.sev==='e'?'✕':'⚠'}</b><span>${esc(T(x.en,x.ru))}</span>${x.pid?`<button class="btn sm" data-fix="${i}">${x.fix==='max'?T('Set to max','Поставить макс.'):x.fix==='eco'?T('Remove scheme','Убрать схему'):T('Open','Открыть')}</button>`:''}</div>`).join('')||`<div class="empty">${T('All checks passed.','Все проверки пройдены.')}</div>`}</div>
+    <div class="row mt"><button class="btn pri" id="aSubmit" ${ro?'disabled':''}>✉ ${S.app.status==='draft'?T('Submit application','Подать заявку'):T('Submit amendment','Подать изменения')}</button><button class="btn" id="aVal">${T('Re-run validation','Повторить проверку')}</button><span class="hint">${T('Signed with national eID on submission','Подписывается eID при подаче')}</span></div></div>`;
+  rEditor(p,ro);
+  $$('#aMap .pc').forEach(g=>g.onclick=()=>{S.sel=g.dataset.pid;draft=null;save();rApp()});
+  $$('tr[data-pid]',el).forEach(t=>t.onclick=()=>{S.sel=t.dataset.pid;draft=null;save();rApp();$('#ed').scrollIntoView({behavior:'smooth',block:'nearest'})});
+  $$('[data-fix]',el).forEach(b=>b.onclick=()=>{const x=iss[+b.dataset.fix];const q=pById(x.pid);if(ro){S.sel=q.id;draft=null;rApp();return}
+    if(x.fix==='max'){q.decl.area=q.lpis;touch();addLog(`Parcel ${q.n}: area set to LPIS maximum ${q.lpis.toFixed(2)} ha`,`Участок ${q.n}: площадь = максимум LPIS ${q.lpis.toFixed(2)} га`);toast(T('Area corrected','Площадь исправлена'))}
+    else if(x.fix==='eco'){q.decl.eco=q.decl.eco.filter(k=>ECO[k].ok.includes(q.decl.crop));touch();toast(T('Incompatible scheme removed','Несовместимая схема убрана'))}
+    S.sel=q.id;draft=null;save();render()});
+  $('#aVal').onclick=()=>{const v=validate();toast(v.some(x=>x.sev==='e')?T('Validation: ','Проверка: ')+v.filter(x=>x.sev==='e').length+T(' error(s)',' ошибок'):T('Validation passed','Проверка пройдена'),v.some(x=>x.sev==='e')?'bad':'')};
+  $('#aSubmit').onclick=submitApp;
+  bindRoleSw(el);
+}
+function touch(){if(S.app.status==='submitted')S.app.status='amended'}
+function rEditor(p,ro){
+  const ed=$('#ed');const st=satStatus(p);const dis=ro?'disabled':'';
+  const est=()=>{const pr=pById(p.id);const bk=pr.decl;pr.decl=draft.on&&draft.crop?{crop:draft.crop,area:+draft.area||0,eco:draft.eco.filter(k=>ECO[k].ok.includes(draft.crop))}:null;const c=calc();const r=c.rows.find(x=>x.p.id===p.id);pr.decl=bk;return[r,c.total]};
+  const [lp,ln]=geo(...cen(p.pts));
+  ed.innerHTML=`<h3><span class="mono">${p.id}</span><span class="sp"></span>${stPill(st)}</h3>
+   <div style="font-weight:700;font-size:17px;margin:-6px 0 4px">${esc(L(p.name))}</div>
+   <div class="dl"><div><span>${T('LPIS eligible area','Площадь LPIS')}</span><b>${ha(p.lpis)}</b></div><div><span>${T('Land cover','Тип земли')}</span><b>${CROPS[p.act].ar===0?T('Grassland','Луг'):T('Arable','Пашня')}</b></div><div><span>${T('Centroid','Центр')}</span><b class="mono" style="font-size:11.5px">${lp}, ${ln}</b></div></div>
+   <label class="toggle" style="margin-bottom:12px"><input type="checkbox" id="eOn" ${draft.on?'checked':''} ${dis}><span>${T('Include parcel in the 2026 application','Включить участок в заявку 2026')}</span></label>
+   <div id="eBody" style="${draft.on?'':'display:none'}">
+   <div class="fgrid"><div class="f"><label>${T('Crop','Культура')}</label><select class="input" id="eCrop" ${dis}><option value="">${T('— choose crop —','— выберите культуру —')}</option>${DECL.map(k=>`<option value="${k}" ${draft.crop===k?'selected':''}>${cropName(k)}</option>`).join('')}</select><div class="err" id="eCropE"></div></div>
+   <div class="f"><label>${T('Declared area, ha','Заявленная площадь, га')}</label><input class="input mono" id="eArea" type="number" step="0.01" min="0" value="${draft.area}" ${dis}><div class="err" id="eAreaE"></div></div></div>
+   <div class="f mt"><label>${T('Eco-schemes on this parcel','Эко-схемы на участке')}</label><div id="eEco"></div></div>
+   </div>
+   <div class="bl tot"><span>${T('Parcel payment (estimate)','Выплата по участку (оценка)')}</span><b id="eEst" style="color:var(--mal3)"></b></div>
+   <div class="hint" id="eTot"></div>
+   <div class="row mt"><button class="btn pri" id="eSave" ${dis}>${T('Save declaration','Сохранить')}</button>${p.decl?`<button class="btn danger" id="eDel" ${dis}>${T('Remove','Убрать')}</button>`:''}<button class="btn sm" id="eSat" style="margin-left:auto">◉ ${T('Satellite','Спутник')}</button></div>`;
+  const drawEco=()=>{$('#eEco').innerHTML=Object.entries(ECO).map(([k,e])=>{const ok=draft.crop&&e.ok.includes(draft.crop);return`<label class="chk ${ok?'':'dis'}" title="${ok?'':T('Not available for this crop','Недоступно для этой культуры')}"><input type="checkbox" data-eco="${k}" ${draft.eco.includes(k)&&ok?'checked':''} ${ok&&!ro?'':'disabled'}><span>${T(e.en,e.ru)}</span><span class="r">${eur(e.r)}/${T('ha','га')}</span></label>`}).join('');
+    $$('[data-eco]').forEach(b=>b.onchange=()=>{const k=b.dataset.eco;draft.eco=b.checked?[...new Set(draft.eco.concat(k))]:draft.eco.filter(x=>x!==k);upd()})};
+  const upd=()=>{const a=+draft.area;$('#eAreaE').textContent=!(a>0)?T('Enter an area above 0','Введите площадь больше 0'):a>p.lpis+0.005?T('Exceeds LPIS max ','Больше максимума LPIS ')+p.lpis.toFixed(2):'';$('#eArea').classList.toggle('bad',!!$('#eAreaE').textContent);
+    const [r,t]=est();$('#eEst').textContent=r&&r.p.decl!==undefined&&draft.on&&draft.crop?eur(r.net):eur(0);$('#eTot').textContent=T('Holding total with this change: ','Итого по хозяйству с этим изменением: ')+eur(t)};
+  drawEco();upd();
+  $('#eOn').onchange=e=>{draft.on=e.target.checked;$('#eBody').style.display=draft.on?'':'none';upd()};
+  $('#eCrop').onchange=e=>{draft.crop=e.target.value;$('#eCropE').textContent='';drawEco();upd()};
+  $('#eArea').oninput=e=>{draft.area=e.target.value;upd()};
+  $('#eSat').onclick=()=>{S.satSel=p.id;go('sat')};
+  $('#eSave').onclick=()=>{
+    if(draft.on){if(!draft.crop){$('#eCropE').textContent=T('Choose a crop','Выберите культуру');return}const a=r2(+draft.area);if(!(a>0)){$('#eAreaE').textContent=T('Enter an area above 0','Введите площадь больше 0');return}
+      const prevCrop=p.decl&&p.decl.crop;const before=calc().total;
+      p.decl={crop:draft.crop,area:a,eco:draft.eco.filter(k=>ECO[k].ok.includes(draft.crop))};
+      if(prevCrop!==draft.crop){p.photo=null;p.insp=null}
+      addLog(`Parcel ${p.n} declared: ${CROPS[draft.crop].en}, ${a.toFixed(2)} ha`,`Участок ${p.n} заявлен: ${CROPS[draft.crop].ru}, ${a.toFixed(2)} га`);
+      touch();save();draft=null;render();const after=calc().total;toast(T('Declaration saved · monitoring: ','Сохранено · мониторинг: ')+T(...SST[satStatus(p)].slice(0,2))+'<br>'+T('Payment ','Выплата ')+eur(before)+' → <b>'+eur(after)+'</b>',satStatus(p)==='ok'?'':'gold');
+    }else{if(p.decl){p.decl=null;p.photo=null;p.insp=null;touch();addLog(`Parcel ${p.n} removed from the application`,`Участок ${p.n} исключён из заявки`)}save();draft=null;render();toast(T('Parcel excluded from the application','Участок исключён из заявки'))}
+  };
+  if($('#eDel'))$('#eDel').onclick=()=>{p.decl=null;p.photo=null;p.insp=null;touch();addLog(`Parcel ${p.n} removed from the application`,`Участок ${p.n} исключён из заявки`);save();draft=null;render();toast(T('Parcel removed','Участок убран'))};
+}
+function submitApp(){
+  const v=validate();const errs=v.filter(x=>x.sev==='e');
+  if(errs.length){toast(T('Cannot submit: fix ','Нельзя подать: исправьте ')+errs.length+T(' error(s) first',' ошибок'),'bad');$('.issues').scrollIntoView({behavior:'smooth',block:'center'});return}
+  S.app.ver++;S.app.status='submitted';S.app.submitted=Date.now();S.app.ref=S.app.ref||'SA-2026-40817-'+String(Math.floor(Math.random()*9000+1000));
+  const c=calc();addLog(`Application ${S.app.ref} v${S.app.ver} submitted: ${c.declared.toFixed(2)} ha`,`Заявка ${S.app.ref} в.${S.app.ver} подана: ${c.declared.toFixed(2)} га`);save();render();
+  openModal(`<h3 style="margin:0 0 6px;font-size:19px">✓ ${T('Application submitted','Заявка подана')}</h3><div class="muted" style="font-size:13px">${T('Receipt signed with national eID. Keep it for your records.','Квитанция подписана eID. Сохраните её.')}</div>
+   <div class="dl"><div><span>${T('Reference','Номер')}</span><b class="mono">${esc(S.app.ref)}</b></div><div><span>${T('Version','Версия')}</span><b>${S.app.ver}</b></div><div><span>${T('Submitted','Подана')}</span><b>${fmtD(S.app.submitted)} ${hm(S.app.submitted)}</b></div><div><span>${T('Parcels','Участков')}</span><b>${S.parcels.filter(p=>p.decl).length}</b></div><div><span>${T('Declared area','Площадь')}</span><b>${ha(c.declared)}</b></div><div><span>${T('Estimated payment','Расчётная выплата')}</span><b style="color:var(--mal3)">${eur(c.total)}</b></div></div>
+   <div class="hint">${T('Warnings remain open: ','Открытых предупреждений: ')+v.length+T('. Area monitoring continues until 30 Sep — you can still amend.','. Мониторинг идёт до 30 сен — изменения ещё возможны.')}</div>
+   <div class="row mt"><button class="btn pri" id="mPay">${T('View payment calculation','Расчёт выплаты')}</button><button class="btn" id="mOk">${T('Close','Закрыть')}</button></div>`);
+  $('#mPay').onclick=()=>{closeModal();go('pay')};$('#mOk').onclick=closeModal;
+}
+
+/* ---------- satellite ---------- */
+function rSat(){
+  const el=$('#v-sat');const dec=S.parcels.filter(p=>p.decl);
+  let p=pById(S.satSel);if(!p||!p.decl)p=dec[0];
+  if(!p){el.innerHTML=`<div class="card empty"><div class="bg">◉</div>${T('No declared parcels to monitor.','Нет заявленных участков для мониторинга.')}</div>`;return}
+  const sts=dec.map(satStatus);const cnt=k=>sts.filter(s=>s===k).length;const st=satStatus(p);const b=baseStatus(p);
+  const valid=p.series.filter(v=>v!=null);const ro=S.role!=='farmer';const [lt,lg]=geo(...cen(p.pts));
+  el.innerHTML=`
+  <div class="kpis">
+    <div class="card kpi"><div class="l">${T('Compliant','Соответствуют')}</div><div class="v" style="color:var(--mal3)">${cnt('ok')}</div><div class="d">${T('parcels','участков')}</div></div>
+    <div class="card kpi"><div class="l">${T('Warnings','Предупреждения')}</div><div class="v" style="color:var(--amber)">${cnt('warn')}</div><div class="d">${T('evidence requested','нужны доказательства')}</div></div>
+    <div class="card kpi"><div class="l">${T('Non-compliant','Нарушения')}</div><div class="v" style="color:var(--red)">${cnt('bad')}</div><div class="d">${T('payment withheld','выплата удержана')}</div></div>
+    <div class="card kpi"><div class="l">${T('Last acquisition','Последний снимок')}</div><div class="v" style="font-size:20px;padding:4px 0">${fmtDs(wkDate(N-1))}</div><div class="d">Sentinel-2 L2A · ${N} ${T('scenes','снимков')}</div></div>
+  </div>
+  <div class="gside">
+    <div class="plist" id="sList">${dec.map(q=>`<button class="pc2 ${q.id===p.id?'on':''}" data-pid="${q.id}"><b>${pName(q)}</b>${ndviSvg(q,{mini:1,w:70,h:28})}<small>${cropName(q.decl.crop)} · ${T(SST[satStatus(q)][0],SST[satStatus(q)][1])}</small></button>`).join('')}</div>
+    <div>
+      <div class="card"><h3>${T('NDVI time series','Временной ряд NDVI')} · ${pName(p)}<span class="sp"></span>${stPill(st)}</h3>
+        <div class="chart">${ndviSvg(p)}</div>
+        <div class="legend mt"><span><i style="background:var(--gold);opacity:.5"></i>${T('Expected profile','Ожидаемый профиль')}: ${cropName(p.decl.crop)}</span><span><i style="background:${st==='bad'?'var(--red)':st==='warn'?'var(--amber)':'var(--mal3)'}"></i>${T('Observed (Sentinel-2)','Наблюдение (Sentinel-2)')}</span><span>☁ ${T('cloud-masked','облачность')}: ${N-valid.length}</span></div>
+        <div class="dl"><div><span>${T('Declared crop','Заявлено')}</span><b>${cropName(p.decl.crop)}</b></div><div><span>${T('Signal looks like','Сигнал похож на')}</span><b>${cropName(classify(p.series))}</b></div><div><span>${T('Mean deviation','Среднее отклонение')}</span><b class="mono">${mae(p.series,p.decl.crop).toFixed(3)}</b></div><div><span>${T('Peak NDVI','Пик NDVI')}</span><b class="mono">${Math.max(...valid).toFixed(2)}</b></div><div><span>${T('Declared area','Площадь')}</span><b>${ha(p.decl.area)}</b></div><div><span>${T('Thresholds','Пороги')}</span><b class="mono" style="font-size:12px">&lt;.085 · &lt;.20</b></div></div>
+        <div class="issues"><div class="${st==='bad'?'e':st==='ok'?'':'w'}"><b class="i">${st==='ok'?'✓':st==='bad'?'✕':'⚠'}</b><span>${statusNote(p)}</span></div></div>
+      </div>
+      <div class="card mt"><h3>${T('Evidence','Доказательства')}<span class="sp"></span><span class="hint">${T('Geotagged photo must be taken inside the parcel','Фото с геометкой — изнутри участка')}</span></h3>
+        ${ro?roleBanner('farmer'):''}
+        ${p.photo?`<div class="photo"><img src="${p.photo.img}" alt=""><div><b>${esc(p.photo.name)}</b><br>GPS ${p.photo.lat}, ${p.photo.lon} · ±${p.photo.acc} m · ${T('heading','азимут')} ${p.photo.hd}°<br>${fmtD(p.photo.t)} ${hm(p.photo.t)}<br><span class="pill ${st==='ok'?'ok':'gold'}" style="margin-top:6px">${st==='ok'?T('Accepted · inside parcel','Принято · внутри участка'):T('Forwarded to inspector','Передано инспектору')}</span></div></div>`:''}
+        <div class="row mt">${st!=='ok'||!p.photo?`<button class="btn pri" id="sUp" ${ro||p.insp?'disabled':''}>📷 ${T('Upload geotagged photo','Загрузить фото с геометкой')}</button><button class="btn" id="sSample" ${ro||p.insp?'disabled':''}>${T('Take photo in app','Снять в приложении')}</button>`:''}<button class="btn" id="sAmend" ${ro?'disabled':''}>✎ ${T('Amend declaration','Изменить заявку')}</button></div>
+        <div class="hint mt">${b==='ok'?T('No evidence required for this parcel.','Для этого участка доказательства не нужны.'):b==='warn'?T('A photo clears the warning automatically.','Фото автоматически снимет предупреждение.'):T('Strong conflict: a photo sends the case to an inspector for a field visit.','Сильное расхождение: фото отправит дело инспектору на выезд.')}</div>
+      </div>
+    </div>
+  </div>`;
+  $$('#sList .pc2').forEach(x=>x.onclick=()=>{S.satSel=x.dataset.pid;save();rSat()});
+  const attach=(img,name)=>{const c=cen(p.pts);const r=rng(Date.now()&0xffff);const [la,lo]=geo(c[0]+(r()-.5)*20,c[1]+(r()-.5)*20);
+    p.photo={img,name,lat:la,lon:lo,acc:Math.round(2+r()*4),hd:Math.round(r()*359),t:Date.now()};
+    const s=satStatus(p);addLog(`Geotagged photo uploaded for parcel ${p.n} → ${SST[s][0]}`,`Загружено фото с геометкой для участка ${p.n} → ${SST[s][1]}`);
+    save();render();toast(s==='ok'?T('Photo accepted — warning resolved','Фото принято — предупреждение снято'):T('Photo sent to inspector for a field visit','Фото отправлено инспектору на выезд'),s==='ok'?'':'gold')};
+  if($('#sUp'))$('#sUp').onclick=()=>{const f=$('#fileIn');f.value='';f.onchange=()=>{const file=f.files[0];if(!file)return;if(!/^image\//.test(file.type)){toast(T('Please choose an image','Выберите изображение'),'bad');return}shrink(file,img=>attach(img,file.name))};f.click()};
+  if($('#sSample'))$('#sSample').onclick=()=>attach(samplePhoto(p.act),'IMG_'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'_'+p.n+'.jpg');
+  $('#sAmend').onclick=()=>{S.sel=p.id;draft=null;go('app')};
+  bindRoleSw(el);
+}
+
+/* ---------- payment ---------- */
+function rPay(){
+  const el=$('#v-pay');const c=calc();
+  const lines=[[T('Basic income support (BISS)','Базовая поддержка доходов (BISS)'),c.biss,`${c.det.toFixed(2)} ${T('ha','га')} × ${eur(R.biss)}`],
+    [T('Complementary redistributive (CRISS)','Перераспределительная (CRISS)'),c.criss,`${Math.min(c.det,R.crissCap).toFixed(2)} ${T('ha (first 30)','га (первые 30)')} × ${eur(R.criss)}`],
+    [T('Young farmer support','Поддержка молодых фермеров'),c.young,S.young?`${Math.min(c.det,R.youngCap).toFixed(2)} ${T('ha (max 60)','га (макс. 60)')} × ${eur(R.young)}`:T('not claimed','не заявлено')],
+    [T('Eco-schemes','Эко-схемы'),c.eco,T('per scheme & hectare','по схемам и гектарам')],
+    [T('Coupled income support','Связанная поддержка'),c.cp,T('protein crops, sugar beet','белковые, сахарная свёкла')]];
+  el.innerHTML=`
+  <div class="grid2">
+    <div class="card">
+      <h3>${T('Payment statement · campaign 2026','Расчёт выплаты · кампания 2026')}<span class="sp"></span>${appPill()}</h3>
+      ${lines.map(l=>`<div class="bl"><span>${l[0]}<br><small class="hint">${l[2]}</small></span><b>${eur(l[1])}</b></div>`).join('')}
+      <div class="bl" style="font-weight:700"><span>${T('Gross entitlement','Начислено брутто')}</span><b>${eur(c.gross)}</b></div>
+      <div class="bl neg"><span>${T('Reductions (monitoring, checks, penalties)','Сокращения (мониторинг, проверки, штрафы)')}</span><b>${eur(-c.red)}</b></div>
+      <div class="bl neg"><span>${T('Financial discipline 2.6% (above €2,000)','Финансовая дисциплина 2,6% (свыше 2 000 €)')}</span><b>${eur(-c.fd)}</b></div>
+      <div class="bl tot"><span><b style="font-family:var(--font)">${T('Net payment','К выплате')}</b></span><b class="big" style="color:var(--mal3)" id="pTot">${eur(c.total)}</b></div>
+    </div>
+    <div>
+      <div class="card"><h3>${T('Options','Параметры')}</h3>
+        <label class="toggle"><input type="checkbox" id="pYoung" ${S.young?'checked':''} ${S.role!=='farmer'?'disabled':''}><span>${T('Claim young farmer support (holder under 40, first installed 2022)','Заявить поддержку молодого фермера (до 40 лет, с 2022)')}</span></label>
+        <div class="hint mt">${T('Totals recalculate instantly when you change declarations, upload evidence or an inspector records a decision.','Суммы пересчитываются сразу при изменении заявки, загрузке доказательств или решении инспектора.')}</div></div>
+      <div class="card mt"><h3>${T('Payment schedule','График выплат')}</h3>
+        <div class="bl"><span>${T('Advance 70% · from 16 Oct 2026','Аванс 70% · с 16 окт 2026')}</span><b>${eur(c.total*.7)}</b></div>
+        <div class="bl"><span>${T('Balance 30% · from 1 Dec 2026','Остаток 30% · с 1 дек 2026')}</span><b>${eur(c.total-r2(c.total*.7))}</b></div>
+        <div class="bl"><span>${T('Bank account','Счёт')}</span><b style="font-size:12px">AR62 0410 ···· 8817</b></div>
+        <div class="hint">${S.app.status==='submitted'?T('Payment order will be issued after checks are closed.','Платёжное поручение — после закрытия проверок.'):T('Submit the application to schedule payment.','Подайте заявку, чтобы запланировать выплату.')}</div></div>
+      <div class="card mt"><h3>${T('Rates 2026 (€/ha)','Ставки 2026 (€/га)')}</h3><div class="dl" style="margin:0"><div><span>BISS</span><b>${R.biss.toFixed(2)}</b></div><div><span>CRISS</span><b>${R.criss.toFixed(2)}</b></div><div><span>${T('Young','Молодой')}</span><b>${R.young.toFixed(2)}</b></div><div><span>${T('Protein','Белковые')}</span><b>${R.prot.toFixed(2)}</b></div><div><span>${T('Sugar beet','Свёкла')}</span><b>${R.beet.toFixed(2)}</b></div><div><span>${T('Eco max','Эко макс.')}</span><b>312.00</b></div></div></div>
+    </div>
+  </div>
+  <div class="card mt"><h3>${T('Per-parcel breakdown','По участкам')}</h3>
+  <div class="tw"><table><thead><tr><th>${T('Parcel','Участок')}</th><th>${T('Crop','Культура')}</th><th>${T('Status','Статус')}</th><th class="num">${T('Determined ha','Устан. га')}</th><th class="num">BISS</th><th class="num">CRISS</th><th class="num">${T('Young','Молод.')}</th><th class="num">${T('Eco','Эко')}</th><th class="num">${T('Coupled','Связ.')}</th><th class="num">${T('Reductions','Сокращения')}</th><th class="num">${T('Net','Итого')}</th><th>${T('Notes','Примечания')}</th></tr></thead><tbody>
+  ${c.rows.filter(r=>r.p.decl).map(r=>`<tr class="clk" data-pid="${r.p.id}"><td><b class="mono">${r.p.n}</b> ${esc(L(r.p.name))}</td><td><i class="sw" style="background:${CROPS[r.p.decl.crop].c}"></i>${cropName(r.p.decl.crop)}</td><td>${stPill(r.st)}</td><td class="num">${r.det.toFixed(2)}</td><td class="num">${eur(r.biss)}</td><td class="num">${eur(r.criss)}</td><td class="num">${eur(r.young)}</td><td class="num">${eur(r.eco)}</td><td class="num">${eur(r.cp)}</td><td class="num ${r.red?'neg':''}">${r.red?eur(-r.red):'—'}</td><td class="num"><b>${eur(r.net)}</b></td><td class="hint">${r.notes.join(' · ')||'—'}</td></tr>`).join('')}
+  <tr class="tot"><td colspan="3">${T('Total before financial discipline','Итого до фин. дисциплины')}</td><td class="num">${c.det.toFixed(2)}</td><td class="num">${eur(c.biss)}</td><td class="num">${eur(c.criss)}</td><td class="num">${eur(c.young)}</td><td class="num">${eur(c.eco)}</td><td class="num">${eur(c.cp)}</td><td class="num neg">${eur(-c.red)}</td><td class="num">${eur(c.gross-c.red)}</td><td></td></tr>
+  </tbody></table></div></div>`;
+  $('#pYoung').onchange=e=>{S.young=e.target.checked;save();const before=$('#pTot').textContent;rPay();toast(T('Young farmer support ','Поддержка молодого фермера ')+(S.young?T('added','добавлена'):T('removed','убрана'))+': '+before+' → <b>'+eur(calc().total)+'</b>')};
+  $$('tr[data-pid]',el).forEach(t=>t.onclick=()=>{S.satSel=t.dataset.pid;go('sat')});
+}
+
+/* ---------- inspector ---------- */
+function queue(){
+  const own=S.parcels.filter(p=>p.decl&&!p.insp&&['bad','review'].includes(satStatus(p))).map(p=>({key:p.id,own:true,p,holder:T('Dovan Agro','Дован Агро'),crop:p.decl.crop,area:p.decl.area,prio:satStatus(p)==='review'?'high':'med',reason:satStatus(p)==='review'?T('Farmer photo contradicts satellite signal','Фото фермера противоречит спутнику'):T('Non-compliant: no development of ','Нарушение: нет развития культуры ')+cropName(p.decl.crop)}));
+  const oth=OTHERS.filter(o=>!S.others[o.id]).map(o=>({key:o.id,own:false,o,holder:L(typeof o.holder==='string'?{en:o.holder}:o.holder),crop:o.crop,area:o.area,prio:o.prio,reason:L(o.reason)}));
+  return own.concat(oth);
+}
+const PRIO={high:['High','Высокий','bad'],med:['Medium','Средний','warn'],low:['Low','Низкий','']};
+function rInsp(){
+  const el=$('#v-insp');const q=queue();const ro=S.role!=='inspector';
+  let it=q.find(x=>x.key===S.qSel)||q[0];
+  const decided=S.parcels.filter(p=>p.insp).map(p=>({id:p.id,holder:T('Dovan Agro','Дован Агро'),crop:p.decl?p.decl.crop:p.act,area:p.insp.measured,dec:p.insp.decision,t:p.insp.t,notes:p.insp.notes})).concat(OTHERS.filter(o=>S.others[o.id]).map(o=>({id:o.id,holder:L(typeof o.holder==='string'?{en:o.holder}:o.holder),crop:o.crop,area:S.others[o.id].measured,dec:S.others[o.id].decision,t:S.others[o.id].t,notes:S.others[o.id].notes}))).sort((a,b)=>b.t-a.t);
+  const sp=it&&it.own?it.p:it?{series:series(it.o.act,7000+it.o.area*100|0),decl:{crop:it.o.crop},pts:[],id:it.key}:null;
+  const todayISO=new Date().toISOString().slice(0,10);
+  el.innerHTML=`${roleBanner('inspector')}
+  <div class="kpis">
+    <div class="card kpi"><div class="l">${T('Open cases','Открытые дела')}</div><div class="v">${q.length}</div><div class="d">${T('Selva region','регион Сельва')}</div></div>
+    <div class="card kpi"><div class="l">${T('High priority','Высокий приоритет')}</div><div class="v" style="color:var(--red)">${q.filter(x=>x.prio==='high').length}</div><div class="d">${T('visit within 5 days','выезд за 5 дней')}</div></div>
+    <div class="card kpi"><div class="l">${T('Decided','Решено')}</div><div class="v">${decided.length}</div><div class="d">${decided.filter(d=>d.dec==='approved').length} ${T('approved','одобрено')} · ${decided.filter(d=>d.dec==='rejected').length} ${T('rejected','отклонено')}</div></div>
+    <div class="card kpi"><div class="l">${T('Check sample','Выборка проверок')}</div><div class="v">1.0%</div><div class="d">${T('risk-based · CAP AMS','по рискам · CAP AMS')}</div></div>
+  </div>
+  <div class="gside">
+    <div><div class="card"><h3>${T('Queue','Очередь')}<span class="sp"></span><span class="hint">${q.length}</span></h3>${q.map(x=>`<button class="qi ${it&&x.key===it.key?'on':''}" data-q="${x.key}"><div class="top"><b class="mono">${x.key}</b><span class="pill ${PRIO[x.prio][2]}">${T(PRIO[x.prio][0],PRIO[x.prio][1])}</span></div><div class="rs">${esc(x.holder)} · ${cropName(x.crop)} · ${ha(x.area)}</div><div class="rs">${esc(x.reason)}</div></button>`).join('')||`<div class="empty"><div class="bg">✓</div>${T('Queue is empty','Очередь пуста')}</div>`}</div></div>
+    <div>${it?`
+      <div class="card"><h3>${T('Case','Дело')} <span class="mono">${it.key}</span><span class="sp"></span><span class="pill ${PRIO[it.prio][2]}">${T(PRIO[it.prio][0],PRIO[it.prio][1])}</span></h3>
+        <div class="dl"><div><span>${T('Holder','Владелец')}</span><b>${esc(it.holder)}</b></div><div><span>${T('Declared','Заявлено')}</span><b>${cropName(it.crop)}</b></div><div><span>${T('Declared area','Площадь')}</span><b>${ha(it.area)}</b></div></div>
+        <div class="issues"><div class="e"><b class="i">⚑</b><span>${esc(it.reason)}${it.own?'<br><small class="hint">'+T('Payment at stake: ','Сумма под риском: ')+eur(calcIf(it.p,'approved')-calcIf(it.p,'rejected'))+'</small>':'<br><small class="hint">'+T('Payment at stake: ','Сумма под риском: ')+eur(it.o.impact*it.area/it.area*1)+'</small>'}</span></div></div>
+        <div class="grid2e">
+          ${it.own?`<div class="map">${mapSvg({sel:it.p.id,pfx:'i',status:false})}</div>`:''}
+          <div class="chart" style="${it.own?'':'grid-column:1/-1'}">${ndviSvg(sp,{h:it.own?300:220})}</div>
+        </div>
+        ${it.own&&it.p.photo?`<div class="photo"><img src="${it.p.photo.img}" alt=""><div><b>${T('Farmer evidence','Доказательство фермера')}</b><br>${esc(it.p.photo.name)}<br>GPS ${it.p.photo.lat}, ${it.p.photo.lon} · ±${it.p.photo.acc} m<br>${fmtD(it.p.photo.t)}</div></div>`:''}
+      </div>
+      <div class="card mt"><h3>${T('Field-visit report','Акт выездной проверки')}</h3>
+        <div class="fgrid">
+          <div class="f"><label>${T('Visit date','Дата выезда')}</label><input class="input" type="date" id="iDate" value="${todayISO}" ${ro?'disabled':''}></div>
+          <div class="f"><label>${T('Measurement method','Метод измерения')}</label><select class="input" id="iMeth" ${ro?'disabled':''}><option value="gnss">${T('GNSS perimeter walk','Обход по GNSS')}</option><option value="ortho">${T('Ortho-image delineation','По ортофото')}</option><option value="tape">${T('Tape measurement','Рулеткой')}</option></select></div>
+          <div class="f"><label>${T('Measured area, ha','Измеренная площадь, га')}</label><input class="input mono" type="number" step="0.01" id="iArea" value="${it.own?it.p.lpis.toFixed(2):(it.area-(it.o.id==='AR-40922-02'?1.8:0)).toFixed(2)}" ${ro?'disabled':''}><div class="err" id="iAreaE"></div></div>
+          <div class="f"><label>${T('Crop observed on site','Культура на месте')}</label><select class="input" id="iCrop" ${ro?'disabled':''}>${DECL.concat('bare').map(k=>`<option value="${k}" ${k===(it.own?it.p.act:it.o.act)?'selected':''}>${cropName(k)}</option>`).join('')}</select><div class="hint">${T('Satellite suggests: ','Спутник предполагает: ')}${cropName(classify(sp.series))}</div></div>
+          <div class="f full"><label>${T('Findings','Выводы')}</label><textarea class="input" id="iNotes" ${ro?'disabled':''} placeholder="${T('Describe what was observed on the parcel…','Опишите, что обнаружено на участке…')}"></textarea><div class="err" id="iNotesE"></div></div>
+        </div>
+        <div class="row mt"><button class="btn pri" id="iOk" ${ro?'disabled':''}>✓ ${T('Approve','Одобрить')}</button><button class="btn danger" id="iNo" ${ro?'disabled':''}>✕ ${T('Reject','Отклонить')}</button><span class="hint">${T('Approve with a different observed crop corrects the declaration.','Одобрение с другой культурой исправит заявку.')}</span></div>
+      </div>`:`<div class="card empty"><div class="bg">✓</div>${T('All cases decided. New cases arrive after each satellite pass.','Все дела решены. Новые появятся после следующего пролёта спутника.')}</div>`}
+    </div>
+  </div>
+  <div class="card mt"><h3>${T('Decisions','Решения')}</h3><div class="tw"><table><thead><tr><th>${T('Parcel','Участок')}</th><th>${T('Holder','Владелец')}</th><th>${T('Crop','Культура')}</th><th class="num">${T('Measured','Измерено')}</th><th>${T('Decision','Решение')}</th><th>${T('Date','Дата')}</th><th>${T('Findings','Выводы')}</th></tr></thead><tbody>
+  ${decided.map(d=>`<tr><td class="mono">${d.id}</td><td>${esc(d.holder)}</td><td>${cropName(d.crop)}</td><td class="num">${(+d.area).toFixed(2)}</td><td>${d.dec==='approved'?`<span class="pill ok">${T('Approved','Одобрено')}</span>`:`<span class="pill bad">${T('Rejected','Отклонено')}</span>`}</td><td>${fmtD(d.t)}</td><td style="white-space:normal;min-width:200px">${esc(d.notes)}</td></tr>`).join('')||`<tr><td colspan="7" class="muted">${T('No decisions yet','Решений пока нет')}</td></tr>`}
+  </tbody></table></div></div>`;
+  $$('[data-q]',el).forEach(b=>b.onclick=()=>{S.qSel=b.dataset.q;save();rInsp()});
+  bindRoleSw(el);
+  if(!it||ro)return;
+  const decide=dec=>{
+    const m=r2(+$('#iArea').value),notes=$('#iNotes').value.trim(),obs=$('#iCrop').value;let ok=true;
+    $('#iAreaE').textContent=m>0?'':(ok=false,T('Enter the measured area','Введите измеренную площадь'));
+    $('#iNotesE').textContent=dec==='rejected'&&notes.length<10?(ok=false,T('Rejection needs findings (10+ characters)','Для отказа нужны выводы (от 10 символов)')):'';
+    if(!ok)return;
+    const txt=notes||T('Declared crop confirmed on site.','Заявленная культура подтверждена на месте.');
+    if(it.own){const p=it.p;const before=calc().total;
+      if(dec==='approved'&&obs!==p.decl.crop&&obs!=='bare'){p.decl.crop=obs;p.decl.eco=p.decl.eco.filter(k=>ECO[k].ok.includes(obs))}
+      p.insp={decision:dec,measured:m,observed:obs,notes:txt,t:Date.now(),method:$('#iMeth').value};
+      addLog(`Inspector ${dec} parcel ${p.n} (${m.toFixed(2)} ha measured)`,`Инспектор ${dec==='approved'?'одобрил':'отклонил'} участок ${p.n} (измерено ${m.toFixed(2)} га)`);
+      save();render();toast(`${dec==='approved'?'✓':'✕'} ${T('Decision recorded','Решение записано')}<br>${T('Farmer payment ','Выплата фермеру ')}${eur(before)} → <b>${eur(calc().total)}</b>`,dec==='approved'?'':'bad');
+    }else{S.others[it.key]={decision:dec,measured:m,notes:txt,t:Date.now()};addLog(`Inspector ${dec} case ${it.key}`,`Инспектор ${dec==='approved'?'одобрил':'отклонил'} дело ${it.key}`);save();render();toast((dec==='approved'?'✓ ':'✕ ')+T('Decision recorded for ','Решение записано: ')+it.key,dec==='approved'?'':'bad')}
+    S.qSel=null;
+  };
+  $('#iOk').onclick=()=>decide('approved');$('#iNo').onclick=()=>decide('rejected');
+}
+function calcIf(p,dec){const bk=p.insp;p.insp={decision:dec,measured:p.lpis,notes:'',t:0};const t=calc().total;p.insp=bk;return t}
+
+/* ---------- shell ---------- */
+$$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.view));
+$$('.role').forEach(b=>b.onclick=()=>{$$('.role').forEach(r=>r.classList.toggle('on',r===b));S.role=b.dataset.role;$('#lEmail').value=S.role==='inspector'?'i.radek@aapa.gov.ar':'m.dovan@dovanagro.ar'});
+$('#loginBtn').onclick=()=>{const e=$('#lEmail').value.trim(),p=$('#lPass').value;let ok=true;
+  $('#lEmailE').textContent=/^\S+@\S+\.\S+$/.test(e)||/^AR-\d+/i.test(e)?'':(ok=false,T('Enter a valid email or farmer ID','Введите адрес или ID фермера'));
+  $('#lPassE').textContent=p.length>=4?'':(ok=false,T('Enter the password','Введите пароль'));
+  if(!ok)return;S.user=e;S.view=S.role==='inspector'?'insp':'dash';save();render();toast(T('Signed in as ','Вход выполнен: ')+esc(e))};
+$('#roleP').onclick=()=>setRole(S.role==='inspector'?'farmer':'inspector');
+$('#logout').onclick=()=>{S.user=null;save();render()};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{Object.keys(localStorage).filter(k=>k.startsWith(P)).forEach(k=>localStorage.removeItem(k));location.reload()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+PT.onLang(()=>{draft=null;render();if($('#modal').classList.contains('on'))closeModal()});
+$$('.role').forEach(r=>r.classList.toggle('on',r.dataset.role===S.role));
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

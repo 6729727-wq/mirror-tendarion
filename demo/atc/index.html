@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SkyFlow ATC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px;line-height:1.2}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.r{background:var(--red);color:#fff}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center;margin-top:8px}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+.who span{color:var(--muted)}
+.sidebtns{display:flex;gap:6px;margin-top:8px}
+.sidebtns .btn{flex:1;justify-content:center}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.intro.hide{display:none}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.card{min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h3 .x{font-size:12px;color:var(--muted);font-weight:500}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fgrid .full{grid-column:1/-1}
+.f{min-width:0}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px;display:none}
+.f.bad .input{border-color:var(--red)} .f.bad .err{display:block}
+select.input{appearance:auto}
+textarea.input{resize:vertical}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row .sp{flex:1}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 9px;font-size:12px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)} .blue-t{color:var(--blue)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.prog.gold i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.prog.red i{background:var(--red)} .prog.amber i{background:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;overflow-wrap:anywhere}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack>*+*{margin-top:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.risk{display:inline-block;min-width:38px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:8px;padding:2px 6px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;min-width:0}
+.li:last-child{border-bottom:0}
+.li>.grow{min-width:0}
+.li small{display:block;color:var(--muted);font-size:12px}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:100px;max-height:240px;overflow:auto;overflow-wrap:anywhere}
+.log div{padding:2px 0} .log .t{color:var(--dim)}
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 10%,transparent);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.alert.warn{border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.alert.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.alert b{display:block}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13.5px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow:auto;padding:20px;animation:fade .2s}
+.modal .box h3{margin:0 0 14px;font-size:17px;display:flex;gap:8px;align-items:center}
+.modal .box h3 .sp{flex:1}
+.mclose{border:0;background:none;font-size:20px;cursor:pointer;color:var(--muted);padding:0 4px}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.lg-hero{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 60%),radial-gradient(90% 80% at 100% 100%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 60%),var(--bg2);border-right:1px solid var(--line);padding:48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.lg-hero .bigb{display:flex;align-items:center;gap:14px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+.lg-hero .bigb b{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:26px}
+.lg-hero h2{font-size:34px;line-height:1.15;margin:0;letter-spacing:-.02em;max-width:560px}
+.lg-hero p{color:var(--muted);margin:0;max-width:520px}
+.lg-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px}
+.lg-feats div{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 70%,transparent);border-radius:12px;padding:10px 12px;font-size:13px}
+.lg-feats div b{display:block;font-size:13.5px}
+.lg-form{display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-form .card{width:100%;max-width:420px;padding:26px}
+.lg-form h3{font-size:20px;margin:0 0 4px}
+.lg-form .f{margin-top:12px}
+.lg-demo{border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-top:14px;color:var(--muted)}
+.lg-demo b{color:var(--gold2)}
+.lg-sec{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--dim);margin-top:14px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.split,.intro,.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .login{grid-template-columns:minmax(0,1fr)}
+  .lg-hero{padding:28px 18px;border-right:0;border-bottom:1px solid var(--line)}
+  .lg-hero h2{font-size:24px}
+  .lg-form{padding:20px 14px 40px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.fgrid.c3,.opts,.lg-feats{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.card{padding:14px}.step span{font-size:10px}.lg-form .card{padding:18px}.modal .box{padding:16px}}
+.btn.xs{padding:3px 10px;font-size:11.5px;min-height:28px}
+#headx{min-width:0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;border:1px solid var(--line2);color:var(--muted)}
+.mt{margin-top:14px}
+
+.sg{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;align-items:start}
+.rc{padding:10px}
+.tb{gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.tb .chips{flex-wrap:wrap}
+.cvw{position:relative;width:100%;aspect-ratio:1/1;max-height:640px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.cvw canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
+.clk{font-size:13px;padding:5px 9px;border:1px solid var(--line);border-radius:8px}
+.ro{display:flex;flex-wrap:wrap;gap:6px}
+.ro span{padding:4px 9px;border-radius:8px;background:color-mix(in srgb,var(--blue) 10%,transparent);font-size:12.5px}
+.al{border-radius:10px;padding:8px 11px;margin-bottom:6px;display:grid;gap:2px;font-size:13px;cursor:pointer;border:1px solid var(--line)}
+.al small{color:var(--muted);font-size:12px}
+.al.bad{border-color:var(--red);background:color-mix(in srgb,var(--red) 10%,transparent);color:var(--red);animation:atcb 1s infinite}
+.al.warn{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.al.ok{border-color:color-mix(in srgb,var(--mal) 40%,transparent);background:color-mix(in srgb,var(--mal) 7%,transparent);cursor:default}
+@keyframes atcb{50%{background:color-mix(in srgb,var(--red) 22%,transparent)}}
+.comms{margin-top:8px;max-height:230px;overflow:auto;font-size:12.5px;display:grid;gap:3px}
+.cm{padding:3px 6px;border-left:3px solid var(--line);overflow-wrap:anywhere}
+.cm .mono{color:var(--muted);font-size:11px}
+.cm.ctl{border-color:var(--blue)}.cm.plt{border-color:var(--mal)}.cm.ctr{border-color:var(--gold)}.cm.sys{border-color:var(--red)}
+tr.strip{cursor:pointer}
+tr.strip.arr td:first-child{box-shadow:inset 3px 0 var(--blue)}
+tr.strip.dep td:first-child{box-shadow:inset 3px 0 var(--mal)}
+tr.strip.sel td{background:color-mix(in srgb,var(--blue) 10%,transparent)}
+.sb{display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--text)}
+.sb.in{background:var(--amber)}.sb.off{background:var(--muted)}
+.sb2{width:28px;height:28px;flex:none;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--blue) 12%,transparent)}
+.sb2.in{background:color-mix(in srgb,var(--amber) 18%,transparent)}
+.cf{color:var(--red)}
+.li .grow{flex:1;min-width:0}.li .grow small{display:block;color:var(--muted);font-size:12px}
+.li .btn.xs{margin-left:4px}
+.nt{border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13.5px;display:grid;gap:5px}
+.nt.tfr,.nt.rwy{border-left-color:var(--red)}
+.nt .row{gap:6px;flex-wrap:wrap}
+@media(max-width:960px){.sg{grid-template-columns:1fr}}
+@media(max-width:520px){.cvw{aspect-ratio:1/1.05}.rc{padding:6px}}
+
+</style>
+</head>
+<body data-demo-en="SkyFlow ATC — Air traffic control: radar, clearances, conflict alerts" data-demo-ru="SkyFlow ATC — УВД: радар, разрешения, конфликты">
+<div class="login" id="login" hidden></div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side"></aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <div id="headx" class="row"></div>
+      <button class="btn sm" id="showIntro" hidden title="How to try it">?</button>
+    </div>
+    <div class="intro" id="intro"></div>
+    <section class="view on" id="view"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div class="modal" id="modal"></div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const TT=a=>a?(PT.lang==='ru'?a[1]:a[0]):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtDS=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+const fmtN=(n,dg=0)=>Number(n).toLocaleString(loc(),{minimumFractionDigits:dg,maximumFractionDigits:dg});
+const pct=(n,dg=0)=>fmtN(n,dg)+'%';
+const uid=(p)=>(p||'')+Math.random().toString(36).slice(2,8).toUpperCase();
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body,mount){const m=$('#modal');m.innerHTML=`<div class="box" role="dialog"><h3><span>${title}</span><span class="sp"></span><button class="mclose" aria-label="Close">×</button></h3>${body}</div>`;m.classList.add('on');$('.mclose',m).onclick=closeModal;m.onclick=e=>{if(e.target===m)closeModal()};if(mount)mount($('.box',m))}
+function closeModal(){const m=$('#modal');m.classList.remove('on');m.innerHTML=''}
+/* form validation: fields = [[id, test(v)->bool, [en,ru] message]] ; returns true if ok */
+function validate(fields,root){let ok=true;fields.forEach(([id,test,msg])=>{const el=$('#'+id,root||document);if(!el)return;const f=el.closest('.f');const good=test(el.type==='checkbox'?el.checked:el.value.trim());if(f){f.classList.toggle('bad',!good);let e=$('.err',f);if(!e){e=document.createElement('div');e.className='err';f.append(e)}e.textContent=TT(msg)}if(!good)ok=false});if(!ok)toast(T('Please fix the highlighted fields','Исправьте выделенные поля'),'bad');return ok}
+const fld=(id,label,inner,cls)=>`<div class="f ${cls||''}"><label for="${id}">${label}</label>${inner}</div>`;
+const inp=(id,label,val,cls,type,attrs)=>fld(id,label,`<input class="input" id="${id}" type="${type||'text'}" value="${esc(val==null?'':val)}" ${attrs||''}>`,cls);
+const sel=(id,label,opts,val,cls)=>fld(id,label,`<select class="input" id="${id}">${opts.map(o=>`<option value="${esc(o[0])}" ${String(o[0])===String(val)?'selected':''}>${esc(o.length>2?T(o[1],o[2]):o[1])}</option>`).join('')}</select>`,cls);
+const pill=(txt,cls)=>`<span class="pill ${cls||''}">${txt}</span>`;
+const kpi=(l,v,d,cls)=>`<div class="card kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}</div>${d!=null?`<div class="d">${d}</div>`:''}</div>`;
+const chipsH=(items,cur,attr)=>items.map(x=>`<button class="chip ${String(cur)===String(x[0])?'on':''}" data-${attr}="${esc(x[0])}">${x.length>2?T(x[1],x[2]):x[1]}</button>`).join('');
+const bind=(root,attr,fn)=>$$('[data-'+attr+']',root).forEach(b=>b.onclick=e=>{e.stopPropagation();fn(b.dataset[attr.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())],b,e)});
+const tbl=(heads,rows,empty)=>`<div class="tw"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${heads.length}" class="muted">${empty||T('Nothing here yet','Пока пусто')}</td></tr>`}</tbody></table></div>`;
+function dl(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type||'text/plain'}));a.download=name;document.body.append(a);a.click();a.remove()}catch(e){}}
+/* ---- inline SVG charts (theme-aware via CSS vars in style attrs) ---- */
+const C=['var(--mal)','var(--gold)','var(--blue)','var(--violet)','var(--amber)','var(--red)','var(--mal3)'];
+function lineChart(o){/* o:{series:[{name,data:[...],color,dash,area}], labels:[...], w,h, yfmt, min,max, band:[y0,y1,color]} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=12,pt=14,pb=28;const all=o.series.flatMap(s=>s.data).filter(v=>v!=null);
+  let mn=o.min!=null?o.min:Math.min(...all),mx=o.max!=null?o.max:Math.max(...all);if(mx===mn)mx=mn+1;const pad=(mx-mn)*.08;if(o.min==null)mn-=pad;if(o.max==null)mx+=pad;
+  const n=Math.max(...o.series.map(s=>s.data.length));const X=i=>pl+(n<2?0:i*(W-pl-pr)/(n-1)),Y=v=>pt+(1-(v-mn)/(mx-mn))*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  if(o.band){s+=`<rect x="${pl}" y="${Y(o.band[1])}" width="${W-pl-pr}" height="${Math.max(0,Y(o.band[0])-Y(o.band[1]))}" style="fill:${o.band[2]||'var(--mal)'};opacity:.1"/>`}
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/8);(o.labels||[]).forEach((l,i)=>{if(i%step===0||i===n-1)s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  o.series.forEach((se,k)=>{const col=se.color||C[k%C.length];const pts=se.data.map((v,i)=>v==null?null:[X(i),Y(v)]).filter(Boolean);if(!pts.length)return;const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+    if(se.area)s+=`<path d="${d}L${pts[pts.length-1][0]} ${H-pb}L${pts[0][0]} ${H-pb}Z" style="fill:${col};opacity:.14"/>`;
+    s+=`<path d="${d}" fill="none" style="stroke:${col}" stroke-width="${se.width||2.2}" stroke-linejoin="round" stroke-linecap="round" ${se.dash?'stroke-dasharray="6 5"':''}/>`;
+    if(se.dots!==false&&pts.length<=40)pts.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${se.dots===true?3.2:2.4}" style="fill:${col}"><title>${esc((o.labels||[])[i]||'')} · ${yf(se.data[i])}</title></circle>`})});
+  return s+'</svg>'}
+function barChart(o){/* o:{labels,series:[{name,data,color}],stacked,w,h,yfmt,hl:index} */
+  const W=o.w||640,H=o.h||240,pl=46,pr=10,pt=16,pb=30;const n=o.labels.length;const sums=o.labels.map((_,i)=>o.stacked?o.series.reduce((a,s)=>a+(s.data[i]||0),0):Math.max(...o.series.map(s=>s.data[i]||0)));
+  const mx=(o.max||Math.max(...sums,1))*1.08;const bw=(W-pl-pr)/n;const Y=v=>pt+(1-v/mx)*(H-pt-pb);const yf=o.yfmt||(v=>fmtN(v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let i=0;i<=4;i++){const v=mx*i/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" style="fill:var(--muted)">${yf(v)}</text>`}
+  const step=Math.ceil(n/12);
+  o.labels.forEach((l,i)=>{const x0=pl+i*bw;let acc=0;const ns=o.series.length;
+    o.series.forEach((se,k)=>{const v=se.data[i]||0;const col=se.color||C[k%C.length];
+      if(o.stacked){const y=Y(acc+v),h=Y(acc)-y;s+=`<rect x="${x0+bw*.18}" y="${y}" width="${bw*.64}" height="${Math.max(0,h)}" rx="3" style="fill:${col}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`;acc+=v}
+      else{const w=bw*.7/ns;const y=Y(v);s+=`<rect x="${x0+bw*.15+k*w}" y="${y}" width="${Math.max(1,w-2)}" height="${Math.max(0,H-pb-y)}" rx="3" style="fill:${col};opacity:${o.hl!=null&&o.hl!==i?.45:1}"><title>${esc(l)} · ${esc(se.name||'')}: ${yf(v)}</title></rect>`}});
+    if(i%step===0)s+=`<text x="${x0+bw/2}" y="${H-10}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(l)}</text>`});
+  (o.hlines||[]).forEach(h=>{s+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(h.v)}" y2="${Y(h.v)}" style="stroke:${h.color||'var(--red)'}" stroke-dasharray="5 4"/><text x="${W-pr}" y="${Y(h.v)-4}" text-anchor="end" font-size="10" font-weight="700" style="fill:${h.color||'var(--red)'}">${esc(h.label||'')}</text>`});
+  return s+'</svg>'}
+function hbars(items,o){/* items:[[label,value,color?]] */o=o||{};const mx=o.max||Math.max(...items.map(x=>x[1]),1);const f=o.fmt||(v=>fmtN(v));
+  return items.map(x=>`<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:7px"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x[0]}</span><div class="prog" style="width:${o.w||110}px;flex:none"><i style="width:${x[1]/mx*100}%;${x[2]?'background:'+x[2]:''}"></i></div><span class="mono" style="width:${o.vw||48}px;text-align:right;flex:none">${f(x[1])}</span></div>`).join('')}
+function donut(parts,o){/* parts:[[label,value,color]] */o=o||{};const sz=o.size||140,r=sz/2-12,c=2*Math.PI*r;const tot=parts.reduce((a,p)=>a+p[1],0)||1;let off=0;
+  let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" style="flex:none"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="16"/>`;
+  parts.forEach((p,i)=>{const L=c*p[1]/tot;s+=`<circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" style="stroke:${p[2]||C[i%C.length]}" stroke-width="16" stroke-dasharray="${L} ${c-L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${sz/2} ${sz/2})"><title>${esc(p[0])}: ${fmtN(p[1])}</title></circle>`;off+=L});
+  s+=`<text x="${sz/2}" y="${sz/2+2}" text-anchor="middle" font-size="${o.fs||20}" font-weight="800" style="fill:var(--text)">${o.center!=null?o.center:fmtN(tot)}</text>${o.sub?`<text x="${sz/2}" y="${sz/2+18}" text-anchor="middle" font-size="10" style="fill:var(--muted)">${esc(o.sub)}</text>`:''}</svg>`;
+  const leg=`<div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;min-width:0">${parts.map((p,i)=>`<div style="display:flex;gap:8px;align-items:center"><i style="width:10px;height:10px;border-radius:3px;background:${p[2]||C[i%C.length]};flex:none"></i><span style="flex:1;min-width:0">${p[0]}</span><b class="mono">${o.fmt?o.fmt(p[1]):fmtN(p[1])}</b></div>`).join('')}</div>`;
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${s}${leg}</div>`}
+function gauge(p,o){o=o||{};const r=50,c=Math.PI*r;const col=o.color||(p>=90?'var(--red)':p>=75?'var(--amber)':'var(--mal)');
+  return `<svg viewBox="0 0 120 70" style="width:${o.w||150}px;max-width:100%"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:var(--line)" stroke-width="11" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 110 62" fill="none" style="stroke:${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${c*clamp(p,0,100)/100} ${c}"/><text x="60" y="58" text-anchor="middle" font-size="19" font-weight="800" style="fill:var(--text)">${o.label!=null?o.label:Math.round(p)+'%'}</text></svg>`}
+function spark(data,col){const W=110,H=30,mn=Math.min(...data),mx=Math.max(...data)||1;const d=data.map((v,i)=>(i?'L':'M')+(i*W/(data.length-1)).toFixed(1)+' '+(H-3-(v-mn)/((mx-mn)||1)*(H-6)).toFixed(1)).join('');return `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;flex:none"><path d="${d}" fill="none" style="stroke:${col||'var(--mal)'}" stroke-width="2"/></svg>`}
+
+//@demo SkyFlow ATC|Air traffic control: radar, clearances, conflict alerts|УВД: радар, разрешения, конфликты
+const FIX=[['ALVER',-28,22],['BRISK',30,25],['KOMET',32,-20],['DUNAR',-25,-30],['ORSEN',0,36],['TIVAN',-36,-4]];
+const AL=[['NRD','Nordair'],['DLH','Lufthansa'],['BAW','Speedbird'],['KLM','KLM'],['SAS','Scandinavian'],['FIN','Finnair'],['UAE','Emirates'],['ICE','Iceair']];
+const TY={A320:[390,170,340],B738:[410,170,340],A21N:[390,170,340],E190:[410,160,320],B77W:[430,180,350],A359:[430,180,350],DH8D:[270,140,280]};
+const BND=40;let SIM=null,RAF=null,SEL=null,SPD=1,PAUSE=false,RANGE=45,COL={},TICK=0,LASTSIG='',CV=null;
+const rad=d=>d*Math.PI/180,dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),brg=(a,b)=>(Math.atan2(b.x-a.x,b.y-a.y)*180/Math.PI+360)%360;
+const FL=a=>a>=10000?'FL'+String(Math.round(a/100)).padStart(3,'0'):fmtN(Math.round(a/100)*100)+' ft';
+const clk=t=>{const s=Math.floor(50400+t)%86400;return [s/3600|0,(s/60|0)%60,s%60].map(x=>String(x).padStart(2,'0')).join(':')};
+const say=(cs,en,ru,who)=>{S.log.unshift({t:S.simT,cs,en,ru,who:who||'ctl'});S.log.length=Math.min(S.log.length,80)};
+const ac=cs=>S.ac.find(a=>a.cs===cs);
+const rwClosed=()=>S.notam.some(n=>n.k==='rwy'&&n.exp>Date.now());
+const tfrs=()=>S.notam.filter(n=>n.k==='tfr'&&n.exp>Date.now());
+function mk(R,kind){const al=AL[R()*AL.length|0],tys=Object.keys(TY),ty=tys[R()*tys.length|0];const cs=al[0]+(100+(R()*899|0));
+if(kind==='dep'){const f=FIX[R()*FIX.length|0];return{cs,ty,k:'dep',x:(R()-.5)*2,y:0,hdg:brg({x:0,y:0},{x:f[1],y:f[2]}),tHdg:null,alt:1500,tAlt:6000,spd:180,tSpd:250,st:'own',dir:f[0],fr:'ARV',to:f[0],sq:String(1000+(R()*6777|0)).replace(/[89]/g,'7'),tr:[]}}
+const b=R()*360,r=BND+3;const x=Math.sin(rad(b))*r,y=Math.cos(rad(b))*r;const hdg=(brg({x,y},{x:0,y:0})+(R()-.5)*30+360)%360;const alt=Math.round((11000+R()*14000)/1000)*1000;
+return{cs,ty,k:'arr',x,y,hdg,tHdg:hdg,alt,tAlt:alt,spd:280,tSpd:280,st:'in',fr:['EGLL','EDDF','EHAM','ESSA','EFHK','OMDB'][R()*6|0],to:'ARV',sq:String(2000+(R()*5777|0)).replace(/[89]/g,'6'),tr:[],ho:12+R()*20|0}}
+function step(dt){const R=Math.random;S.simT+=dt;
+S.wx.forEach(w=>{w.x+=w.vx*dt;w.y+=w.vy*dt;if(Math.hypot(w.x,w.y)>RANGE+12){w.x=-w.x*.9;w.y=-w.y*.9}});
+const gone=[];
+S.ac.forEach(a=>{
+if(a.dir){const f=FIX.find(x=>x[0]===a.dir);if(f){a.tHdg=brg(a,{x:f[1],y:f[2]});if(Math.hypot(a.x-f[1],a.y-f[2])<1.2)a.dir=null}}
+const d0=Math.hypot(a.x,a.y);
+if(a.app){a.tHdg=brg(a,{x:0,y:0});a.tAlt=Math.max(0,Math.min(a.tAlt,d0*318));a.tSpd=d0<8?140:180;if(d0<1.2&&a.alt<900){gone.push(a);S.st.land++;say(a.cs,'landed runway 27, contact ground 121.9','посадка ВПП 27, работайте с землёй 121,9','plt');return}}
+if(a.tHdg!=null){let df=((a.tHdg-a.hdg+540)%360)-180;const mx=3*dt;a.hdg=(a.hdg+clamp(df,-mx,mx)+360)%360}
+const rate=(a.app?17:33)*dt;a.alt+=clamp(a.tAlt-a.alt,-rate,rate);a.spd+=clamp(a.tSpd-a.spd,-1.5*dt,1.5*dt);
+const m=a.spd/3600*dt;a.x+=Math.sin(rad(a.hdg))*m;a.y+=Math.cos(rad(a.hdg))*m;
+a.ta=(a.ta||0)+dt;if(a.ta>=6){a.ta=0;a.tr.push([a.x,a.y]);if(a.tr.length>6)a.tr.shift()}
+if(a.k==='dep'&&a.st==='own'&&a.alt>=a.tAlt-50&&a.tAlt<10000&&!a.ask){a.ask=1;say(a.cs,'request higher','прошу набор','plt')}
+if(a.hp!=null){a.hp-=dt;if(a.hp<=0){a.hp=null;a.st='off';S.st.hoOut++;say(a.cs,'NORD Centre: radar contact','Норд-Контроль: в радарном контакте','ctr')}}
+if(a.st==='in'){a.ho-=dt;if(a.ho<=-90&&!a.late){a.late=1;say(a.cs,'handoff not accepted for 90 s — Centre calling','передача не принята 90 с — Контроль вызывает','ctr')}}
+const d=Math.hypot(a.x,a.y);
+if(d>BND+9){gone.push(a);if(a.st==='own'){S.st.viol++;S.ev.unshift({t:S.simT,k:'viol',a:a.cs,b:'',d:0,v:0});say(a.cs,'left the sector without handoff','покинул сектор без передачи','sys')}}
+});
+S.ac=S.ac.filter(a=>!gone.includes(a));if(SEL&&!ac(SEL))SEL=null;
+const live={},pred={};const A=S.ac.filter(a=>a.alt>200);
+for(let i=0;i<A.length;i++)for(let j=i+1;j<A.length;j++){const a=A[i],b=A[j],k=[a.cs,b.cs].sort().join('|');const dh=dist(a,b),dv=Math.abs(a.alt-b.alt);
+if(dh<5&&dv<1000){live[k]=[dh,dv];if(!S.conf[k]){S.st.conf++;S.ev.unshift({t:S.simT,k:'loss',a:a.cs,b:b.cs,d:+dh.toFixed(1),v:Math.round(dv)});say('',`CONFLICT ${a.cs} / ${b.cs}: ${dh.toFixed(1)} NM, ${Math.round(dv)} ft`,`КОНФЛИКТ ${a.cs} / ${b.cs}: ${dh.toFixed(1)} NM, ${Math.round(dv)} ft`,'sys');if(S.view==='scope')toast(T(`Conflict alert: ${a.cs} / ${b.cs}`,`Конфликт: ${a.cs} / ${b.cs}`),'bad')}continue}
+for(let s=10;s<=120;s+=10){const p=(o,tt)=>({x:o.x+Math.sin(rad(o.hdg))*o.spd/3600*tt,y:o.y+Math.cos(rad(o.hdg))*o.spd/3600*tt,alt:o.alt+clamp(o.tAlt-o.alt,-33*tt,33*tt)});const pa=p(a,s),pb=p(b,s);if(dist(pa,pb)<5&&Math.abs(pa.alt-pb.alt)<1000){pred[k]=s;break}}}
+S.conf=live;S.pred=pred;S.ev.length=Math.min(S.ev.length,60);
+tfrs().forEach(n=>S.ac.forEach(a=>{if(Math.hypot(a.x-n.x,a.y-n.y)<n.r&&a.alt<n.top){const k=n.id+a.cs;if(!S.tin[k]){S.tin[k]=1;S.st.tfr++;S.ev.unshift({t:S.simT,k:'tfr',a:a.cs,b:n.id,d:0,v:0});say(a.cs,`entered restricted area ${n.id}`,`вошёл в запретную зону ${n.id}`,'sys')}}}));
+S.nx-=dt;if(S.nx<=0&&S.ac.length<13){S.nx=35+R()*40;const dep=R()<.45&&!rwClosed();const a=mk(R,dep?'dep':'arr');if(!ac(a.cs)){S.ac.push(a);if(dep){S.st.dep++;say(a.cs,'airborne runway 27, passing 1,500','взлёт ВПП 27, проходим 1500','plt')}else say(a.cs,'NORD Centre: handoff offered, '+FL(a.alt),'Норд-Контроль: предлагает передачу, '+FL(a.alt),'ctr')}}
+S.wsT=(S.wsT||0)+dt;if(S.wsT>=10){S.wsT=0;S.cnt.push(S.ac.length);if(S.cnt.length>60)S.cnt.shift()}}
+function ensureSim(){if(SIM)return;let last=performance.now();SIM=setInterval(()=>{if(!S||!S.user){clearInterval(SIM);SIM=null;return}const now=performance.now(),rdt=Math.min(1,(now-last)/1000);last=now;if(!PAUSE)step(rdt*SPD*4);TICK++;if(TICK%12===0)save();live()},250)}
+function live(){const sig=S.ac.filter(a=>a.st==='in').length+'|'+Object.keys(S.conf).length+'|'+S.notam.filter(n=>n.exp>Date.now()).length;if(sig!==LASTSIG){LASTSIG=sig;const ae=document.activeElement;if(!(ae&&ae.closest&&ae.closest('#side'))){renderShell()}}
+const v=$('#view');if(!v)return;const f=v.dataset.v;
+if(f==='scope'){upd('#stripBox',stripsH);upd('#alBox',alertsH);updSel()}
+if(f==='hand')upd('#hoBox',handH);if(f==='wx')upd('#ntBox',notamH);
+$$('[data-clk]').forEach(e=>e.textContent=clk(S.simT))}
+function upd(sel,fn){const e=$(sel);if(e){const h=fn();if(e._h!==h){e._h=h;e.innerHTML=h}}}
+
+const APP={slug:'atc',ver:1,icon:'🛫',name:'SkyFlow ATC',sub:['Arvel Approach · sector ARV','Подход Арвель · сектор ARV'],
+login:{user:'k.lindqvist',pass:'skyflow-demo',name:'Karin Lindqvist',role:['Approach controller','Диспетчер подхода'],
+roles:[['ctl','Approach controller','Диспетчер подхода'],['sup','Watch supervisor','Руководитель смены']],tag:['Arvel terminal airspace','Узловой район Арвель'],
+hero:['A radar position you can actually work','Рабочее место диспетчера, которое действительно работает'],
+heroP:['Live radar with moving traffic, drifting weather and restricted areas. Issue altitude, heading and speed clearances, accept and initiate handoffs, and get conflict alerts the moment separation is lost — or two minutes before.','Живой радар с движущимися бортами, смещающимися грозами и запретными зонами. Давайте разрешения по высоте, курсу и скорости, принимайте и передавайте борта, получайте предупреждение о конфликте в момент потери эшелонирования — или за 2 минуты до.'],
+feats:[['📡','Live radar','Живой радар','Canvas, 4× time','Canvas, время ×4'],['⚠','Conflict alert','Конфликты','5 NM / 1000 ft + 2-min probe','5 NM / 1000 ft + прогноз 2 мин'],['🤝','Handoffs','Передачи','Accept · reject · initiate','Принять · отклонить · передать'],['⛈','Weather & NOTAMs','Погода и NOTAM','Drift and expiry','Смещение и истечение']]},
+how:[['Click an aircraft on the radar or a flight strip, then <b>issue a clearance</b> — altitude, heading or direct-to-fix. The pilot reads it back in the comms log.','Нажмите на борт на радаре или стрип, затем <b>дайте разрешение</b> — высота, курс или прямо на точку. Пилот повторит его в журнале связи.'],
+['Amber blips are <b>inbound handoffs</b> from Centre — accept them. Arrivals inside 25 NM below 11,000 ft can be <b>cleared for the ILS</b>; departures are handed off to Centre.','Жёлтые борта — <b>входящие передачи</b> от Контроля, примите их. Прибывающим ближе 25 NM и ниже 11 000 ft можно дать <b>заход ILS</b>; вылетающих передайте Контролю.'],
+['Two aircraft closer than <b>5 NM and 1,000 ft</b> raise a red conflict; a dashed amber line warns of a predicted conflict up to 2 minutes ahead.','Борта ближе <b>5 NM и 1000 ft</b> дают красный конфликт; жёлтая пунктирная линия — прогноз конфликта на 2 минуты вперёд.']],
+facts:[['Tender','Тендер','Terminal radar ATC modernisation','Модернизация радарного УВД'],['Year · budget','Год · бюджет','2025 · $210M'],['Client','Заказчик','Air Navigation Services, Republic of Nordania (fictional)','Аэронавигация Республики Нордания (вымышл.)'],['Stack','Стек','ASTERIX feed · STCA · Electronic strips']],
+groups:[['ops','Position','Рабочее место'],['sup','Supervisor','Руководитель']],
+views:[['scope','📡','Radar scope','Радар','ops'],['hand','🤝','Handoffs','Передачи','ops'],['wx','⛈','Weather & NOTAMs','Погода и NOTAM','ops'],['stats','📊','Traffic statistics','Статистика','sup'],['ev','⚠','Separation events','События эшелонирования','sup']],
+badge(id){if(id==='scope'){syncRole();const n=Object.keys(S.conf||{}).length;return n?[n,1]:null}if(id==='hand'){const n=S.ac.filter(a=>a.st==='in').length;return n?[n,0]:null}if(id==='wx'){const n=S.notam.filter(n=>n.exp>Date.now()).length;return n?[n,0]:null}if(id==='ev'){const n=S.ev.filter(e=>e.k!=='ok').length;return n?[n,1]:null}return null},
+head(){return `<span class="clk mono" data-clk>${clk(S.simT)}</span><select class="input" id="roleSel" style="width:auto;padding:6px 10px">${this.login.roles.map(r=>`<option value="${r[0]}" ${S.role===r[0]?'selected':''}>${T(r[1],r[2])}</option>`).join('')}</select>`},
+bindHead(){$('#roleSel').onchange=e=>{audit('Role → '+e.target.value,'Роль → '+e.target.value,'auth');go(e.target.value==='ctl'?'scope':'stats')}},
+leave(){if(RAF){cancelAnimationFrame(RAF);RAF=null}if(CV&&CV.ro){CV.ro.disconnect()}CV=null},
+onLogin(){ensureSim()},
+seed(){const R=rng(31);const acs=[];
+[['NRD412','A320','arr',-14,18,150,9000,250,'own','EGLL'],['DLH7KT','A21N','arr',22,-8,290,12000,270,'own','EDDF'],['KLM1385','E190','dep',6,9,35,8000,250,'own','BRISK'],['SAS921','B738','arr',-30,-14,62,15000,290,'own','ESSA'],['UAE51','B77W','arr',31,15,240,15000,290,'own','OMDB'],['FIN6AB','DH8D','dep',-10,-5,215,7000,220,'own','DUNAR'],['BAW88V','A320','arr',-38,20,115,17000,300,'in','EGLL'],['ICE430','B738','arr',18,38,195,14000,290,'in','BIKF'],['NRD27','A359','dep',2,-26,175,23000,320,'own','KOMET']].forEach(r=>acs.push({cs:r[0],ty:r[1],k:r[2],x:r[3],y:r[4],hdg:r[5],tHdg:r[5],alt:r[6],tAlt:r[6],spd:r[7],tSpd:r[7],st:r[8],fr:r[2]==='dep'?'ARV':r[9],to:r[2]==='dep'?r[9]:'ARV',sq:String(2100+(R()*5000|0)).replace(/[89]/g,'5'),tr:[],ho:20}));
+const sa=acs.find(a=>a.cs==='SAS921');sa.tAlt=12000;const ua=acs.find(a=>a.cs==='UAE51');ua.tAlt=14000;
+const now=Date.now();
+return{role:'ctl',simT:0,nx:30,ac:acs,conf:{},pred:{},tin:{},log:[{t:0,cs:'',en:'Position open — Arvel Approach 119.45',ru:'Пост открыт — Арвель-Подход 119,45',who:'sys'}],ev:[],cnt:[],
+wx:[{x:-12,y:-20,r:6,int:3,vx:.0028,vy:.0016},{x:15,y:8,r:4.5,int:2,vx:-.002,vy:.001},{x:-26,y:6,r:8,int:1,vx:.0018,vy:-.0012},{x:26,y:-28,r:5,int:2,vx:-.0012,vy:.0024}],
+notam:[{id:'A0412/26',k:'tfr',x:16,y:-14,r:4,top:5000,en:'Temporary flight restriction — stadium event, SFC–5,000 ft',ru:'Временное ограничение — стадион, от земли до 5000 ft',from:now-36e5,exp:now+30*6e4,by:'Ops'},{id:'A0415/26',k:'nav',en:'ARV VOR 113.70 unserviceable — use RNAV',ru:'VOR ARV 113,70 не работает — используйте RNAV',from:now-72e5,exp:now+90*6e4,by:'Ops'},{id:'A0398/26',k:'crane',en:'Crane 2 NM west of RWY 27 threshold, 410 ft AMSL, lit',ru:'Кран в 2 NM западнее порога ВПП 27, 410 ft, с подсветкой',from:now-864e5,exp:now-6e5,by:'Ops'}],
+st:{land:0,dep:0,hoIn:0,hoOut:0,rej:0,conf:0,viol:0,tfr:0,clr:0},
+hr:[...Array(24)].map((_,h)=>{const b=h<6?4:h<9?22:h<12?30:h<18?26:h<22?20:9;return[Math.round(b*(.8+R()*.4)),Math.round(b*.9*(.8+R()*.4))]})}},
+R:{}
+};
+function syncRole(){if(!S.user)return;const want=['stats','ev'].includes(S.view)?'sup':'ctl';if(S.role===want)return;S.role=want;const r=APP.login.roles.find(x=>x[0]===want);S.user.role=[r[1],r[2]];S.user.rk=want;S.user.name=want==='ctl'?APP.login.name:'Erik Dahl'}
+
+
+function readCol(){const cs=getComputedStyle(document.body);['--panel','--text','--muted','--line','--mal','--blue','--amber','--red','--gold'].forEach(k=>COL[k]=cs.getPropertyValue(k).trim()||'#888')}
+function draw(){if(!CV)return;const c=CV.c,ctx=c.getContext('2d'),W=c.clientWidth,H=c.clientHeight,dpr=window.devicePixelRatio||1;if(c.width!==Math.round(W*dpr)||c.height!==Math.round(H*dpr)){c.width=Math.round(W*dpr);c.height=Math.round(H*dpr)}
+ctx.setTransform(dpr,0,0,dpr,0,0);const sc=Math.min(W,H)/2/RANGE,cx=W/2,cy=H/2,P=(x,y)=>[cx+x*sc,cy-y*sc];if(TICK%4===0||!COL['--text'])readCol();
+ctx.fillStyle=COL['--panel'];ctx.fillRect(0,0,W,H);ctx.font='10px ui-monospace,Menlo,monospace';
+ctx.strokeStyle=COL['--line'];ctx.lineWidth=1;for(let r=10;r<=RANGE;r+=10){ctx.beginPath();ctx.arc(cx,cy,r*sc,0,7);ctx.stroke();ctx.fillStyle=COL['--muted'];ctx.fillText(r,cx+r*sc*.71+2,cy-r*sc*.71-2)}
+ctx.setLineDash([6,5]);ctx.strokeStyle=COL['--blue'];ctx.globalAlpha=.6;ctx.beginPath();ctx.arc(cx,cy,BND*sc,0,7);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+S.wx.forEach(w=>{const [x,y]=P(w.x,w.y),g=ctx.createRadialGradient(x,y,0,x,y,w.r*sc);const cl=w.int===3?'220,50,50':w.int===2?'230,170,30':'40,170,90';g.addColorStop(0,`rgba(${cl},.75)`);g.addColorStop(.6,`rgba(${cl},.4)`);g.addColorStop(1,`rgba(${cl},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,w.r*sc,0,7);ctx.fill()});
+tfrs().forEach(n=>{const [x,y]=P(n.x,n.y);ctx.strokeStyle=COL['--red'];ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.arc(x,y,n.r*sc,0,7);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=COL['--red'];ctx.fillText(n.id,x-20,y+3)});
+ctx.strokeStyle=COL['--text'];ctx.lineWidth=3;const [r1x,r1y]=P(-1.2,0),[r2x,r2y]=P(1.2,0);ctx.beginPath();ctx.moveTo(r1x,r1y);ctx.lineTo(r2x,r2y);ctx.stroke();ctx.lineWidth=1;
+ctx.globalAlpha=.4;ctx.setLineDash([2,4]);const [fx,fy]=P(14,0);ctx.beginPath();ctx.moveTo(r2x,r2y);ctx.lineTo(fx,fy);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;ctx.fillStyle=COL['--muted'];ctx.fillText(rwClosed()?'ARV RWY 27 CLSD':'ARV 27',cx-16,cy+14);
+FIX.forEach(f=>{const [x,y]=P(f[1],f[2]);ctx.strokeStyle=COL['--muted'];ctx.beginPath();ctx.moveTo(x,y-4);ctx.lineTo(x+4,y+3);ctx.lineTo(x-4,y+3);ctx.closePath();ctx.stroke();ctx.fillStyle=COL['--muted'];ctx.fillText(f[0],x+6,y+3)});
+const blink=(performance.now()/500|0)%2;
+Object.entries(S.pred).forEach(([k,s])=>{if(S.conf[k])return;const [a,b]=k.split('|').map(ac);if(!a||!b)return;ctx.strokeStyle=COL['--amber'];ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(...P(a.x,a.y));ctx.lineTo(...P(b.x,b.y));ctx.stroke();ctx.setLineDash([])});
+Object.keys(S.conf).forEach(k=>{const [a,b]=k.split('|').map(ac);if(!a||!b)return;ctx.strokeStyle=COL['--red'];ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(...P(a.x,a.y));ctx.lineTo(...P(b.x,b.y));ctx.stroke();[a,b].forEach(o=>{ctx.beginPath();ctx.arc(...P(o.x,o.y),2.5*sc,0,7);ctx.stroke()});ctx.lineWidth=1});
+S.ac.forEach(a=>{const [x,y]=P(a.x,a.y);const inC=Object.keys(S.conf).some(k=>k.split('|').includes(a.cs));let col=a.st==='in'?COL['--amber']:a.st==='off'?COL['--muted']:COL['--text'];if(inC)col=COL['--red'];
+ctx.fillStyle=col;ctx.globalAlpha=.35;a.tr.forEach(t=>{const [tx,ty]=P(t[0],t[1]);ctx.fillRect(tx-1,ty-1,2,2)});ctx.globalAlpha=1;
+if(a.st==='in'&&blink){ctx.globalAlpha=.4}ctx.strokeStyle=col;ctx.fillStyle=col;ctx.fillRect(x-3,y-3,6,6);ctx.globalAlpha=1;
+const m=a.spd/60;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.sin(rad(a.hdg))*m*sc,y-Math.cos(rad(a.hdg))*m*sc);ctx.stroke();
+if(a.cs===SEL){ctx.strokeStyle=COL['--blue'];ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,9,0,7);ctx.stroke();ctx.lineWidth=1}
+const lx=x+12,ly=y-14;ctx.strokeStyle=col;ctx.globalAlpha=.5;ctx.beginPath();ctx.moveTo(x+4,y-4);ctx.lineTo(lx-2,ly+6);ctx.stroke();ctx.globalAlpha=1;
+const ar=a.tAlt>a.alt+60?'↑':a.tAlt<a.alt-60?'↓':' ';ctx.fillStyle=col;ctx.fillText(a.cs+(a.app?' ILS':''),lx,ly);ctx.fillText(String(Math.round(a.alt/100)).padStart(3,'0')+ar+String(Math.round(a.tAlt/100)).padStart(3,'0'),lx,ly+11);ctx.fillText(String(Math.round(a.spd/10)).padStart(2,'0')+' '+a.ty,lx,ly+22)});
+if(PAUSE){ctx.fillStyle=COL['--amber'];ctx.font='bold 12px system-ui';ctx.fillText(T('PAUSED','ПАУЗА'),10,18)}
+RAF=requestAnimationFrame(draw)}
+
+function stripsH(){const L=S.ac.filter(a=>a.st!=='off').sort((a,b)=>(a.st==='in')-(b.st==='in')||a.cs.localeCompare(b.cs));
+return tbl(['',T('Callsign','Позывной'),T('Type','Тип'),T('Route','Маршрут'),T('Alt / cleared','Высота / разреш.'),T('Hdg','Курс'),T('Spd','Скор.'),'SSR',''],L.map(a=>{const inWx=S.wx.some(w=>w.int===3&&Math.hypot(a.x-w.x,a.y-w.y)<w.r);const cf=Object.keys(S.conf).some(k=>k.split('|').includes(a.cs));
+return `<tr class="strip ${a.k} ${a.cs===SEL?'sel':''}" data-sa="${a.cs}"><td><i class="sb ${a.st}"></i></td><td><b>${a.cs}</b>${cf?' <span class="cf">⚠</span>':''}${inWx?' ⛈':''}</td><td>${a.ty}</td><td class="mono">${a.fr}→${a.to}</td><td class="mono">${FL(a.alt)} / ${FL(a.tAlt)}</td><td class="mono">${String(Math.round(a.hdg)).padStart(3,'0')}${a.dir?' →'+a.dir:''}</td><td class="mono">${Math.round(a.spd)}</td><td class="mono">${a.sq}</td><td>${a.st==='in'?pill(T('Offered','Предложен'),'warn'):a.app?pill('ILS','ok'):a.hp!=null?pill(T('Handing off','Передача'),'gold'):''}</td></tr>`}),T('No traffic','Нет бортов'))}
+function alertsH(){const c=Object.entries(S.conf),p=Object.entries(S.pred).filter(([k])=>!S.conf[k]);
+return (c.length||p.length?c.map(([k,v])=>`<div class="al bad" data-sk="${k.split('|')[0]}"><b>⚠ ${k.replace('|',' / ')}</b><small>${v[0].toFixed(1)} NM · ${Math.round(v[1])} ft — ${T('separation lost','эшелонирование нарушено')}</small></div>`).join('')+p.map(([k,s])=>`<div class="al warn" data-sk="${k.split('|')[0]}"><b>◔ ${k.replace('|',' / ')}</b><small>${T(`predicted conflict in ${s} s`,`прогноз конфликта через ${s} с`)}</small></div>`).join(''):`<div class="al ok"><b>✓ ${T('Separation OK','Эшелонирование в норме')}</b><small>${S.ac.length} ${T('aircraft','бортов')}</small></div>`)+
+`<div class="comms">${S.log.slice(0,9).map(l=>`<div class="cm ${l.who}"><span class="mono">${clk(l.t)}</span> ${l.cs?`<b>${l.cs}</b> `:''}${esc(T(l.en,l.ru))}</div>`).join('')}</div>`}
+function selPanel(){const a=SEL&&ac(SEL);if(!a)return `<div class="empty">${T('Select an aircraft on the radar or in the strips','Выберите борт на радаре или в стрипах')}</div>`;const t=TY[a.ty];
+const opts=FIX.map(f=>[f[0],T('Direct ','Прямо на ')+f[0],T('Direct ','Прямо на ')+f[0]]);
+return `<div class="row"><h3 style="margin:0">${a.cs}</h3><span class="muted">${a.ty} · ${a.fr}→${a.to}</span><div class="sp"></div>${a.st==='in'?pill(T('Offered by Centre','Предложен Контролем'),'warn'):a.st==='off'?pill(T('Handed off','Передан'),''):pill(T('Owned','Под контролем'),'ok')}</div>
+<div class="ro mono mt" id="selRo"></div>
+${a.st==='in'?`<div class="row mt"><button class="btn danger" id="hRej">${T('Reject','Отклонить')}</button><div class="sp"></div><button class="btn pri" id="hAcc">${T('Accept handoff','Принять передачу')}</button></div>`:a.st==='off'?`<div class="muted mt">${T('Now with NORD Centre 132.85.','Теперь на связи с Норд-Контролем 132,85.')}</div>`:
+`<div class="fgrid c3 mt">${inp('cAlt',T('Altitude, ft','Высота, ft'),Math.round(a.tAlt),'','number',`min="2000" max="${t[0]*100}" step="1000"`)}${inp('cHdg',T('Heading','Курс'),a.dir?'':Math.round(a.tHdg==null?a.hdg:a.tHdg)||360,'','number','min="1" max="360" step="5"')}${inp('cSpd',T('Speed, kt','Скорость, kt'),Math.round(a.tSpd),'','number',`min="${t[1]}" max="${t[2]}" step="10"`)}</div>
+${sel('cDir',T('Or route','Или маршрут'),[['',T('— keep heading —','— по курсу —'),T('— keep heading —','— по курсу —')]].concat(opts),a.dir||'')}
+<div class="row mt" style="flex-wrap:wrap;gap:6px"><button class="btn pri" id="cGo">📻 ${T('Issue clearance','Дать разрешение')}</button>${a.k==='arr'&&!a.app?`<button class="btn" id="cIls">🛬 ${T('Cleared ILS 27','Заход ILS 27')}</button>`:''}${a.k==='dep'&&a.hp==null?`<button class="btn" id="cHo">🤝 ${T('Hand off to Centre','Передать Контролю')}</button>`:''}</div>`}`}
+function updSel(){const e=$('#selRo'),a=SEL&&ac(SEL);if(!e||!a)return;e.innerHTML=`<span>${FL(a.alt)}${a.tAlt>a.alt+60?' ↑':a.tAlt<a.alt-60?' ↓':''}</span><span>${String(Math.round(a.hdg)).padStart(3,'0')}°</span><span>${Math.round(a.spd)} kt</span><span>${Math.hypot(a.x,a.y).toFixed(1)} NM</span>`}
+function accept(a){a.st='own';S.st.hoIn++;say(a.cs,`Arvel Approach, ${a.cs} with you ${FL(a.alt)}`,`Арвель-Подход, ${a.cs} на связи, ${FL(a.alt)}`,'plt');audit('Handoff accepted '+a.cs,'Передача принята '+a.cs,'ho')}
+function reject(a,why){a.st='off';a.tHdg=(a.hdg+180)%360;S.st.rej++;say(a.cs,'handoff rejected: '+why,'передача отклонена: '+why,'ctl');audit('Handoff rejected '+a.cs,'Передача отклонена '+a.cs,'ho')}
+function rejModal(a,after){modal(T('Reject handoff','Отклонить передачу')+' · '+a.cs,`${sel('rjW',T('Reason','Причина'),[['vol','Sector volume — hold at boundary','Загрузка сектора — ожидание на границе'],['wx','Weather on the arrival route','Погода на маршруте прибытия'],['alt','Wrong altitude for transfer','Неверная высота передачи']],'vol')}<div class="row mt"><div class="sp"></div><button class="btn danger" id="rjGo">${T('Reject','Отклонить')}</button></div>`,m=>{$('#rjGo',m).onclick=()=>{reject(a,$('#rjW',m).selectedOptions[0].textContent);save();closeModal();after();toast(T('Rejected — Centre keeps the aircraft','Отклонено — борт остаётся у Контроля'))}})}
+
+APP.R.scope=el=>{ensureSim();
+el.innerHTML=`<div class="sg"><div class="card rc"><div class="row tb"><b>ARV APP</b><span class="mono muted" data-clk>${clk(S.simT)}</span><div class="sp"></div><div class="chips">${chipsH([['30','30 NM','30 NM'],['45','45 NM','45 NM'],['60','60 NM','60 NM']],String(RANGE),'rg')}</div><div class="chips">${chipsH([['0','⏸','⏸'],['1','1×','1×'],['3','3×','3×']],PAUSE?'0':String(SPD),'sp')}</div></div>
+<div class="cvw"><canvas id="rad" aria-label="radar"></canvas></div><div class="legend"><span><i style="background:var(--text)"></i>${T('Owned','Свои')}</span><span><i style="background:var(--amber)"></i>${T('Handoff offered','Предложен')}</span><span><i style="background:var(--muted)"></i>${T('Handed off','Переданы')}</span><span><i style="background:var(--red)"></i>${T('Conflict','Конфликт')}</span></div></div>
+<div class="sd"><div class="card" id="selBox">${selPanel()}</div><div class="card mt" id="alBox"></div></div></div>
+<div class="card mt"><h3>${T('Flight strips','Полётные стрипы')}</h3><div id="stripBox"></div></div>`;
+const c=$('#rad');CV={c};readCol();RAF=requestAnimationFrame(draw);
+c.onclick=e=>{const r=c.getBoundingClientRect(),sc=Math.min(r.width,r.height)/2/RANGE;const x=(e.clientX-r.left-r.width/2)/sc,y=-(e.clientY-r.top-r.height/2)/sc;let best=null,bd=4;S.ac.forEach(a=>{const d=Math.hypot(a.x-x,a.y-y);if(d<bd){bd=d;best=a}});SEL=best?best.cs:null;bindSel(el)};
+bind(el,'rg',v=>{RANGE=+v;APP.R.scope(el)});bind(el,'sp',v=>{if(v==='0')PAUSE=true;else{PAUSE=false;SPD=+v}APP.R.scope(el)});
+el.onclick=(e=>{const s=e.target.closest('[data-sa],[data-sk]');if(!s)return;SEL=s.dataset.sa||s.dataset.sk;bindSel(el)});
+live();bindSel(el)};
+function bindSel(el){const b=$('#selBox',el);if(!b)return;b.innerHTML=selPanel();updSel();upd('#stripBox',stripsH);const a=SEL&&ac(SEL);if(!a)return;
+const acc=$('#hAcc',b);if(acc)acc.onclick=()=>{accept(a);save();bindSel(el);live();toast(T('Radar contact — '+a.cs+' is yours','Радарный контакт — '+a.cs+' ваш'),'ok')};
+const rj=$('#hRej',b);if(rj)rj.onclick=()=>rejModal(a,()=>{bindSel(el);live()});
+const go_=$('#cGo',b);if(!go_)return;const t=TY[a.ty];
+go_.onclick=()=>{const dir=$('#cDir',b).value;if(!validate([['cAlt',v=>+v>=2000&&+v<=t[0]*100&&+v%100===0,[`2,000–${fmtN(t[0]*100)} ft, step 100`,`2000–${fmtN(t[0]*100)} ft, шаг 100`]],['cHdg',v=>dir||(+v>=1&&+v<=360),['1–360°','1–360°']],['cSpd',v=>+v>=t[1]&&+v<=t[2],[`${t[1]}–${t[2]} kt for ${a.ty}`,`${t[1]}–${t[2]} kt для ${a.ty}`]]],b))return;
+const nA=+$('#cAlt',b).value,nH=+$('#cHdg',b).value%360,nS=+$('#cSpd',b).value;if(nA<10000&&nS>250){toast(T('Max 250 kt below FL100','Не более 250 kt ниже FL100'),'bad');return}
+const parts=[],partsR=[];if(nA!==Math.round(a.tAlt)){const w=nA>a.alt?['climb','набирайте']:['descend','снижайтесь'];parts.push(`${w[0]} and maintain ${FL(nA)}`);partsR.push(`${w[1]} ${FL(nA)}`)}
+if(dir&&dir!==a.dir){parts.push('proceed direct '+dir);partsR.push('следуйте прямо на '+dir)}else if(!dir&&a.tHdg!==nH){const L=((nH-a.hdg+360)%360)>180;parts.push(`turn ${L?'left':'right'} heading ${String(nH||360).padStart(3,'0')}`);partsR.push(`${L?'влево':'вправо'} курс ${String(nH||360).padStart(3,'0')}`)}
+if(nS!==Math.round(a.tSpd)){parts.push(`speed ${nS}`);partsR.push(`скорость ${nS}`)}
+if(!parts.length){toast(T('Nothing changed','Ничего не изменено'),'warn');return}
+const hh=dir?null:nH||360;if(hh!=null){const px=a.x+Math.sin(rad(hh))*10,py=a.y+Math.cos(rad(hh))*10;const hit=S.wx.find(w=>w.int===3&&[.25,.5,.75,1].some(f=>Math.hypot(a.x+(px-a.x)*f-w.x,a.y+(py-a.y)*f-w.y)<w.r));if(hit)toast(T('Heading leads into a heavy cell — pilot may request deviation','Курс ведёт в сильную грозу — пилот может запросить обход'),'warn')}
+a.tAlt=nA;a.tSpd=nS;if(dir){a.dir=dir}else{a.dir=null;a.tHdg=nH||360}a.ask=0;S.st.clr++;
+say(a.cs,parts.join(', '),partsR.join(', '),'ctl');setTimeout(()=>{say(a.cs,parts.join(', ')+', '+a.cs,partsR.join(', ')+', '+a.cs,'plt');live()},900);audit(`Clearance ${a.cs}: ${parts.join(', ')}`,`Разрешение ${a.cs}: ${partsR.join(', ')}`,'clr');save();bindSel(el);live();toast(T('Clearance issued','Разрешение выдано'),'ok')};
+const ils=$('#cIls',b);if(ils)ils.onclick=()=>{const d=Math.hypot(a.x,a.y);if(rwClosed()){toast(T('Runway 27 closed by NOTAM','ВПП 27 закрыта NOTAM'),'bad');return}if(d>25||a.alt>11000){toast(T('Too far or too high: need ≤ 25 NM and ≤ 11,000 ft','Далеко или высоко: нужно ≤ 25 NM и ≤ 11 000 ft'),'bad');return}a.app=1;a.dir=null;a.tAlt=Math.min(a.tAlt,4000);say(a.cs,'cleared ILS approach runway 27','заход ILS ВПП 27 разрешён','ctl');S.st.clr++;save();bindSel(el);live();toast(T('Cleared for the approach','Заход разрешён'),'ok')};
+const ho=$('#cHo',b);if(ho)ho.onclick=()=>{if(a.alt<9500){toast(T('Climb above FL100 before handoff','Наберите выше FL100 перед передачей'),'bad');return}a.hp=4+Math.random()*6;say(a.cs,'contact NORD Centre 132.85, good day','работайте с Норд-Контролем 132,85, всего доброго','ctl');save();bindSel(el);live();toast(T('Handoff initiated','Передача начата'))}}
+
+
+function handH(){const inn=S.ac.filter(a=>a.st==='in'),out=S.ac.filter(a=>a.hp!=null),cand=S.ac.filter(a=>a.st==='own'&&a.k==='dep'&&a.hp==null);
+const row=(a,btn)=>`<div class="li"><span class="sb2 ${a.st}">${a.k==='arr'?'⬇':'⬆'}</span><div class="grow"><b>${a.cs}</b> <span class="muted">${a.ty}</span><small>${a.fr}→${a.to} · ${FL(a.alt)} · ${Math.round(a.spd)} kt · ${Math.hypot(a.x,a.y).toFixed(1)} NM</small></div>${btn}</div>`;
+return `<div class="grid2"><div class="card"><h3>${T('Inbound from NORD Centre','Входящие от Норд-Контроля')} <span class="muted">${inn.length}</span></h3>${inn.map(a=>row(a,`${a.ho<0?`<span class="pill bad">${Math.round(-a.ho)} s</span>`:''}<button class="btn xs" data-hr="${a.cs}">${T('Reject','Отклонить')}</button><button class="btn xs pri" data-ha="${a.cs}">${T('Accept','Принять')}</button>`)).join('')||`<div class="empty">${T('No handoffs offered','Предложений нет')}</div>`}
+${inn.length>1?`<button class="btn mt" data-hall="1">${T('Accept all','Принять все')}</button>`:''}</div>
+<div class="card"><h3>${T('Outbound to Centre','Исходящие Контролю')}</h3>${out.map(a=>row(a,pill(T('awaiting','ожидание'),'gold'))).join('')}${cand.map(a=>row(a,`<button class="btn xs" data-ho="${a.cs}">${T('Initiate','Передать')}</button>`)).join('')||(!out.length?`<div class="empty">${T('No departures to hand off','Нет вылетающих для передачи')}</div>`:'')}
+<div class="kpis mt">${kpi(T('Accepted','Принято'),S.st.hoIn)}${kpi(T('Rejected','Отклонено'),S.st.rej)}${kpi(T('Handed off','Передано'),S.st.hoOut)}</div></div></div>`}
+APP.R.hand=el=>{ensureSim();el.innerHTML=`<div id="hoBox"></div>`;upd('#hoBox',handH);
+el.onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+if(d.ha){const a=ac(d.ha);if(a&&a.st==='in'){accept(a);save();live();toast(T('Accepted ','Принят ')+a.cs,'ok')}}
+else if(d.hr){const a=ac(d.hr);if(a&&a.st==='in')rejModal(a,live)}
+else if(d.hall){S.ac.filter(a=>a.st==='in').forEach(accept);save();live();toast(T('All handoffs accepted','Все передачи приняты'),'ok')}
+else if(d.ho){const a=ac(d.ho);if(!a)return;if(a.alt<9500){toast(T('Climb above FL100 before handoff','Наберите выше FL100 перед передачей'),'bad');return}a.hp=4+Math.random()*6;say(a.cs,'contact NORD Centre 132.85','работайте с Норд-Контролем 132,85','ctl');save();live();toast(T('Handoff initiated','Передача начата'))}}};
+
+
+const NK=[['tfr','Restricted area (TFR)','Запретная зона (TFR)'],['rwy','Runway 09/27 closure','Закрытие ВПП 09/27'],['nav','Navaid outage','Отказ радиосредства'],['crane','Obstacle','Препятствие']];
+function notamH(){const now=Date.now(),act=S.notam.filter(n=>n.exp>now),old=S.notam.filter(n=>n.exp<=now);const left=n=>{const m=Math.round((n.exp-now)/6e4);return m>=60?Math.floor(m/60)+T(' h ',' ч ')+m%60+T(' min',' мин'):m+T(' min',' мин')};
+return `${act.map(n=>`<div class="nt ${n.k}"><div class="row"><b class="mono">${n.id}</b>${pill(T(...NK.find(x=>x[0]===n.k).slice(1)),n.k==='rwy'||n.k==='tfr'?'bad':'warn')}<div class="sp"></div><small class="muted">${T('expires in ','истекает через ')}${left(n)}</small></div><div>${esc(T(n.en,n.ru))}</div><div class="row mt"><small class="muted">${T('by ','автор ')}${esc(n.by)}</small><div class="sp"></div><button class="btn xs" data-nx="${n.id}">${T('+30 min','+30 мин')}</button><button class="btn xs" data-nc="${n.id}">${T('Cancel','Отменить')}</button></div></div>`).join('')||`<div class="empty">${T('No active NOTAMs','Нет действующих NOTAM')}</div>`}
+${old.length?`<h3 class="mt">${T('Expired / cancelled','Истекшие / отменённые')}</h3>${old.slice(0,6).map(n=>`<div class="li"><span class="mono muted">${n.id}</span><div class="grow muted">${esc(T(n.en,n.ru))}</div></div>`).join('')}`:''}`}
+APP.R.wx=el=>{ensureSim();
+el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Weather cells','Грозовые очаги')}</h3>${tbl([T('Cell','Очаг'),T('Intensity','Интенсивность'),T('Position','Положение'),T('Moving','Смещение'),T('Aircraft inside','Борта внутри')],S.wx.map((w,i)=>{const sp=Math.hypot(w.vx,w.vy)*3600,dirn=Math.round(brg({x:0,y:0},{x:w.vx,y:w.vy}));const ins=S.ac.filter(a=>Math.hypot(a.x-w.x,a.y-w.y)<w.r).map(a=>a.cs);
+return `<tr><td><b>WX${i+1}</b></td><td>${pill(['',T('Light','Слабая'),T('Moderate','Умеренная'),T('Heavy','Сильная')][w.int],['','ok','warn','bad'][w.int])}</td><td class="mono">${String(Math.round(brg({x:0,y:0},w))).padStart(3,'0')}° / ${Math.hypot(w.x,w.y).toFixed(0)} NM</td><td class="mono">${String(dirn).padStart(3,'0')}° ${sp.toFixed(0)} kt</td><td>${ins.join(', ')||'—'}</td></tr>`}))}
+<div class="row mt"><button class="btn" id="wAdd">⛈ ${T('Add cell (sim)','Добавить очаг (симул.)')}</button><button class="btn" id="wClr">☀ ${T('Clear light cells','Убрать слабые')}</button></div>
+<h3 class="mt">${T('Issue NOTAM','Выпустить NOTAM')}</h3><div class="fgrid">${sel('nK',T('Type','Тип'),NK,'tfr')}${inp('nMin',T('Duration, min','Длительность, мин'),20,'','number','min="1" max="1440"')}${inp('nTx',T('Text','Текст'),'','full')}</div><div id="nGeo" class="fgrid c3">${inp('nB',T('Bearing °','Пеленг °'),120,'','number','min="0" max="359"')}${inp('nD',T('Distance NM','Дальность NM'),15,'','number','min="0" max="40"')}${inp('nR',T('Radius NM','Радиус NM'),3,'','number','min="1" max="10"')}</div><div class="row mt"><div class="sp"></div><button class="btn pri" id="nGo">${T('Publish NOTAM','Опубликовать')}</button></div></div>
+<div class="card"><h3>${T('NOTAMs','NOTAM')}</h3><div id="ntBox"></div></div></div>`;upd('#ntBox',notamH);
+$('#nK').onchange=e=>$('#nGeo').style.display=e.target.value==='tfr'?'':'none';
+$('#wAdd').onclick=()=>{const b=Math.random()*6.28,d=10+Math.random()*25;S.wx.push({x:Math.sin(b)*d,y:Math.cos(b)*d,r:3+Math.random()*4,int:1+(Math.random()*3|0),vx:(Math.random()-.5)*.005,vy:(Math.random()-.5)*.005});if(S.wx.length>8)S.wx.shift();save();APP.R.wx(el);toast(T('Cell added','Очаг добавлен'))};
+$('#wClr').onclick=()=>{const n=S.wx.length;S.wx=S.wx.filter(w=>w.int>1);save();APP.R.wx(el);toast(T(`Removed ${n-S.wx.length}`,`Убрано: ${n-S.wx.length}`))};
+$('#nGo').onclick=()=>{const k=$('#nK').value;if(!validate([['nMin',v=>+v>=1&&+v<=1440,['1–1440 min','1–1440 мин']],['nTx',v=>v.trim().length>=6,['Describe the NOTAM (6+ chars)','Опишите NOTAM (от 6 символов)']]].concat(k==='tfr'?[['nD',v=>+v>=0&&+v<=40,['0–40 NM','0–40 NM']],['nR',v=>+v>=1&&+v<=10,['1–10 NM','1–10 NM']]]:[]),el))return;
+const tx=$('#nTx').value.trim(),n={id:`A${String(420+S.notam.length).padStart(4,'0')}/26`,k,en:tx,ru:tx,from:Date.now(),exp:Date.now()+ +$('#nMin').value*6e4,by:S.user.name};
+if(k==='tfr'){const b=rad(+$('#nB').value),d=+$('#nD').value;n.x=Math.sin(b)*d;n.y=Math.cos(b)*d;n.r=+$('#nR').value;n.top=6000}
+S.notam.unshift(n);if(k==='rwy')say('','NOTAM '+n.id+': runway 27 closed — departures held, no ILS clearances','NOTAM '+n.id+': ВПП 27 закрыта — вылеты задержаны, заходы запрещены','sys');audit('NOTAM '+n.id+' issued','NOTAM '+n.id+' выпущен','notam');save();APP.R.wx(el);live();toast(T('NOTAM published','NOTAM опубликован'),'ok')};
+el.onclick=e=>{const b=e.target.closest('[data-nx],[data-nc]');if(!b)return;const n=S.notam.find(x=>x.id===(b.dataset.nx||b.dataset.nc));if(!n)return;if(b.dataset.nx){n.exp=Math.max(n.exp,Date.now())+30*6e4;toast(T('Extended 30 min','Продлён на 30 мин'))}else{n.exp=Date.now()-1;toast(T('NOTAM cancelled','NOTAM отменён'))}audit('NOTAM '+n.id+(b.dataset.nx?' extended':' cancelled'),'NOTAM '+n.id+(b.dataset.nx?' продлён':' отменён'),'notam');save();$('#ntBox')._h='';upd('#ntBox',notamH);live()}};
+
+
+APP.R.stats=el=>{ensureSim();const st=S.st,hr=S.hr;const tot=hr.reduce((a,h)=>a+h[0]+h[1],0)+st.land+st.dep;const ty={};S.ac.forEach(a=>ty[a.ty]=(ty[a.ty]||0)+1);
+const pal=['var(--blue)','var(--mal)','var(--gold)','var(--amber)','var(--red)','var(--violet,#8b5cf6)','var(--muted)'];
+el.innerHTML=`<div class="kpis">${kpi(T('Movements today','Движений за сутки'),fmtN(tot))}${kpi(T('In sector now','В секторе'),S.ac.length)}${kpi(T('Landed / departed (session)','Посадки / вылеты (сессия)'),st.land+' / '+st.dep)}${kpi(T('Separation losses','Потери эшелонирования'),st.conf,T('session','сессия'),st.conf?'bad-t':'ok-t')}</div>
+<div class="grid2"><div class="card"><h3>${T('Movements by hour (UTC)','Движения по часам (UTC)')}</h3><div class="chart">${barChart({labels:hr.map((_,i)=>String(i).padStart(2,'0')),series:[{name:T('Arrivals','Прилёты'),data:hr.map(h=>h[0]),color:'var(--blue)'},{name:T('Departures','Вылеты'),data:hr.map(h=>h[1]),color:'var(--mal)'}],stacked:1,hlines:[{v:56,label:T('capacity 56/h','пропускная 56/ч'),color:'var(--red)'}]})}</div><div class="legend"><span><i style="background:var(--blue)"></i>${T('Arrivals','Прилёты')}</span><span><i style="background:var(--mal)"></i>${T('Departures','Вылеты')}</span></div></div>
+<div class="card"><h3>${T('Aircraft in sector (live, 10-s samples)','Борта в секторе (каждые 10 с)')}</h3><div class="chart" id="cntCh">${S.cnt.length>1?lineChart({labels:S.cnt.map((_,i)=>String(i)),series:[{name:'n',data:S.cnt,color:'var(--blue)',area:1}],min:0}):`<div class="empty">${T('Collecting samples…','Сбор данных…')}</div>`}</div></div></div>
+<div class="grid2 mt"><div class="card"><h3>${T('Fleet mix in sector','Типы ВС в секторе')}</h3>${donut(Object.entries(ty).map(([k,v],i)=>[k,v,pal[i%pal.length]]),{center:S.ac.length,sub:T('aircraft','бортов')})}</div>
+<div class="card"><h3>${T('Controller actions','Действия диспетчера')}</h3>${hbars([[T('Clearances','Разрешения'),st.clr,'var(--blue)'],[T('Handoffs accepted','Принято передач'),st.hoIn,'var(--mal)'],[T('Handoffs out','Передано'),st.hoOut,'var(--gold)'],[T('Rejected','Отклонено'),st.rej,'var(--amber)'],[T('Airspace / TFR events','Нарушения зоны / TFR'),st.viol+st.tfr,'var(--red)']],{fmt:v=>v})}</div></div>`};
+
+
+APP.R.ev=el=>{ensureSim();const K={loss:[T('Loss of separation','Потеря эшелонирования'),'bad'],viol:[T('Left sector without handoff','Выход без передачи'),'warn'],tfr:[T('TFR infringement','Нарушение TFR'),'bad'],ok:[T('Reviewed','Разобрано'),'ok']};
+el.innerHTML=`<div class="card"><div class="row"><h3 style="margin:0">${T('Separation & airspace events','События эшелонирования и ВП')}</h3><div class="sp"></div><button class="btn" id="eCsv">⬇ CSV</button></div><p class="muted" style="font-size:13px">${T('Recorded automatically by the conflict probe. Mark each as reviewed after the debrief.','Пишутся автоматически системой контроля. После разбора отметьте событие.')}</p>
+${tbl([T('Time','Время'),T('Event','Событие'),T('Aircraft','Борта'),T('Lateral','Горизонт.'),T('Vertical','Вертик.'),''],S.ev.map((e,i)=>`<tr><td class="mono">${clk(e.t)}</td><td>${pill(K[e.k][0],K[e.k][1])}</td><td><b>${e.a}</b>${e.b?' / '+e.b:''}</td><td class="mono">${e.k==='loss'?e.d+' NM':'—'}</td><td class="mono">${e.k==='loss'?e.v+' ft':'—'}</td><td>${e.k==='ok'?'':`<button class="btn xs" data-er="${i}">${T('Mark reviewed','Разобрано')}</button>`}</td></tr>`),T('No events yet — let traffic run, or steer two aircraft together on the radar.','Событий пока нет — подождите или сведите два борта на радаре.'))}</div>`;
+bind(el,'er',i=>{const e=S.ev[+i];e.k='ok';audit('Event reviewed '+e.a,'Событие разобрано '+e.a,'ev');save();APP.R.ev(el)});
+$('#eCsv').onclick=()=>{dl('separation-events.csv','time,event,a,b,lateral_nm,vertical_ft\n'+S.ev.map(e=>[clk(e.t),e.k,e.a,e.b,e.d,e.v].join(',')).join('\n'),'text/csv');toast(T('Exported','Выгружено'),'ok')}};
+
+/* ---- boot: state, login, shell, router ---- */
+const KEY='pt_'+APP.slug+'_state';
+let S=null;
+function fresh(){const s=APP.seed();s.v=APP.ver||1;s.view=APP.views[0][0];s.user=null;s.intro=true;s.audit=s.audit||[];return s}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||S.v!==(APP.ver||1))S=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function audit(en,ru,kind){S.audit=S.audit||[];S.audit.unshift({t:Date.now(),en,ru,k:kind||'',u:S.user?S.user.name:'system'});if(S.audit.length>300)S.audit.length=300;save()}
+const auditTxt=a=>PT.lang==='ru'?a.ru:a.en;
+let lgVals=null;
+function rerender(){if(!S.user){renderLogin();return}renderShell();renderView()}
+function go(id){S.view=id;save();closeSide();renderShell();renderView();window.scrollTo(0,0)}
+function closeSide(){const s=$('#side');if(s)s.classList.remove('open')}
+function renderLogin(){
+  $('#app').hidden=true;const L=$('#login');L.hidden=false;const lg=APP.login;
+  const v=lgVals||{u:lg.user,p:lg.pass,r:(lg.roles||[[0]])[0][0]};
+  L.innerHTML=`<div class="lg-hero">
+    <div class="bigb"><b>${APP.icon}</b><div>${esc(APP.name)}<div style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0">${TT(APP.sub)}</div></div></div>
+    <h2>${TT(lg.hero)}</h2><p>${TT(lg.heroP)}</p>
+    <div class="lg-feats">${lg.feats.map(f=>`<div><b>${f[0]} ${T(f[1],f[2])}</b>${T(f[3],f[4])}</div>`).join('')}</div>
+  </div>
+  <div class="lg-form"><div class="card">
+    <h3>${T('Sign in to','Вход в')} ${esc(APP.name)}</h3><div class="muted" style="font-size:13px">${TT(lg.tag)}</div>
+    ${inp('lgU',T('User ID','Логин'),v.u,'','text','autocomplete="username"')}
+    ${inp('lgP',T('Password','Пароль'),v.p,'','password','autocomplete="current-password"')}
+    ${lg.roles?sel('lgR',T('Sign in as','Войти как'),lg.roles.map(r=>[r[0],r[1],r[2]]),v.r):''}
+    <button class="btn pri" id="lgGo" style="width:100%;justify-content:center;margin-top:16px;padding:12px">${T('Sign in','Войти')} →</button>
+    <div class="lg-demo">${T('<b>Demo access.</b> Credentials are prefilled — press <b>Sign in</b>. All data is synthetic and stays in this browser.','<b>Демо-доступ.</b> Логин и пароль уже введены — нажмите <b>Войти</b>. Все данные вымышленные и хранятся только в этом браузере.')}</div>
+    <div class="lg-sec">🔒 <span>${TT(lg.secure||['Demo environment · MFA simulated · session in local storage','Демо-среда · MFA имитируется · сессия в локальном хранилище'])}</span></div>
+  </div></div>`;
+  const keep=()=>{lgVals={u:$('#lgU').value,p:$('#lgP').value,r:$('#lgR')?$('#lgR').value:v.r}};
+  $$('input,select',L).forEach(i=>i.oninput=keep);
+  const go2=()=>{keep();if(!validate([['lgU',x=>x.length>=3,['Enter your user ID','Введите логин']],['lgP',x=>x.length>=4,['Enter the password','Введите пароль']]],L))return;
+    const role=lg.roles?lg.roles.find(r=>String(r[0])===String(lgVals.r)):null;
+    S.user={id:lgVals.u,name:lg.name,role:role?[role[1],role[2]]:lg.role,rk:role?role[0]:null};
+    if(APP.onLogin)APP.onLogin(role?role[0]:null);
+    audit('Signed in as '+lgVals.u,'Вход: '+lgVals.u,'auth');save();
+    toast(T('Welcome, ','Добро пожаловать, ')+esc(lg.name.split(' ')[0]),'ok');lgVals=null;rerender()};
+  $('#lgGo').onclick=go2;$$('input',L).forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')go2()});
+}
+function renderShell(){
+  $('#login').hidden=true;$('#app').hidden=false;const u=S.user;
+  const groups=APP.groups||[[null]];
+  $('#side').innerHTML=`<div class="brand"><b>${APP.icon}</b><div>${esc(APP.name)}<small>${TT(APP.sub)}</small></div></div>
+    ${groups.map(g=>`${g[0]!=null&&g[1]?`<div class="sec">${T(g[1],g[2])}</div>`:''}${APP.views.filter(v=>(v[4]||null)===g[0]&&(!APP.visible||APP.visible(v[0]))).map(v=>{const b=APP.badge?APP.badge(v[0]):null;return `<button class="nav ${S.view===v[0]?'on':''}" data-go="${v[0]}"><span class="ic">${v[1]}</span><span>${T(v[2],v[3])}</span>${b&&b[0]?`<span class="cnt ${b[1]?'r':''}">${b[0]}</span>`:''}</button>`}).join('')}`).join('')}
+    <div class="grow"></div>
+    ${APP.sideExtra?APP.sideExtra():''}
+    <div class="who"><div class="av">${esc(u.name.split(' ').map(x=>x[0]).slice(0,2).join(''))}</div><div style="min-width:0"><b>${esc(u.name)}</b><span>${TT(u.role)}</span></div></div>
+    <div class="sidebtns"><button class="btn sm" id="sOut">${T('Sign out','Выйти')}</button><button class="btn sm" id="sReset">${T('Reset demo','Сбросить демо')}</button></div>`;
+  bind($('#side'),'go',id=>go(id));
+  if(APP.bindSide)APP.bindSide($('#side'));
+  $('#sOut').onclick=()=>{audit('Signed out','Выход','auth');S.user=null;save();closeModal();rerender()};
+  $('#sReset').onclick=()=>{if(!confirmReset())return;try{Object.keys(localStorage).filter(k=>k.indexOf('pt_'+APP.slug+'_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}const u=S.user;S=fresh();S.user=u;if(APP.onLogin)APP.onLogin(u.rk);save();closeModal();rerender();toast(T('Demo data reset','Демо-данные сброшены'),'ok')};
+  const cur=APP.views.find(v=>v[0]===S.view)||APP.views[0];
+  const g=groups.find(x=>x[0]===(cur[4]||null));
+  $('#crumb').innerHTML=esc(APP.name)+(g&&g[1]?' · '+T(g[1],g[2]):'');
+  $('#title').innerHTML=T(cur[2],cur[3]);
+  $('#headx').innerHTML=APP.head?APP.head():'';
+  if(APP.bindHead)APP.bindHead($('#headx'));
+  const I=$('#intro');
+  if(S.intro){I.className='intro';I.innerHTML=`<div class="card"><h3><span>${T('How to try it','Как попробовать')}</span><span class="sp"></span><button class="btn xs" id="introX">${T('Hide','Скрыть')}</button></h3><div class="how">${APP.how.map((h,i)=>`<div><b>${i+1}</b><span>${TT(h)}</span></div>`).join('')}</div></div>
+    <div class="card"><dl class="facts">${APP.facts.map(f=>`<dt>${T(f[0],f[1])}</dt><dd>${f.length>3?T(f[2],f[3]):f[2]}</dd>`).join('')}</dl></div>`;
+    $('#introX').onclick=()=>{S.intro=false;save();renderShell()}}
+  else{I.className='intro hide';I.innerHTML=''}
+  $('#showIntro').hidden=S.intro;
+}
+let confirmReset=()=>true;
+function renderView(){
+  if(!APP.views.find(v=>v[0]===S.view))S.view=APP.views[0][0];
+  const el=$('#view');el.className='view on';el.dataset.v=S.view;
+  if(APP.leave)APP.leave();
+  try{APP.R[S.view](el)}catch(e){console.error(e);el.innerHTML='<div class="card">'+esc(e.message)+'</div>'}
+}
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+$('#showIntro').onclick=()=>{S.intro=true;save();renderShell()};
+document.addEventListener('click',e=>{const s=$('#side');if(s&&s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+let booted=false;
+PT.onLang(()=>{booted=true;rerender()});
+if(document.readyState!=='loading')setTimeout(()=>{if(!booted)rerender()},0);
+
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

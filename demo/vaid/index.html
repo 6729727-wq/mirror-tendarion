@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Valor ID</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .lk{margin-left:auto;font-size:11px;color:var(--dim)}
+.grow{flex:1}
+.a11y{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;flex-direction:column;gap:8px}
+.a11y b{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.steps{display:flex;margin:4px 0 18px}
+.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.cap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.shot{border:2px dashed var(--line2);border-radius:16px;aspect-ratio:1.586;display:grid;place-items:center;position:relative;overflow:hidden;background:var(--bg2)}
+.shot svg{width:100%;height:100%;display:block}
+.shot .scan{position:absolute;left:0;right:0;height:3px;background:var(--mal3);box-shadow:0 0 16px var(--mal3);animation:scan 1.2s linear infinite}
+@keyframes scan{from{top:0}to{top:100%}}
+.qc{list-style:none;padding:0;margin:10px 0 0;font-size:12.5px}
+.qc li{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed var(--line)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+.live{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:18px;align-items:center}
+.oval{position:relative;width:100%;max-width:280px;aspect-ratio:3/4;margin:auto;border-radius:50%/42%;background:radial-gradient(circle at 50% 40%,var(--panel2),var(--bg2));border:3px solid var(--line2);overflow:hidden}
+.oval.go{border-color:var(--gold)} .oval.done{border-color:var(--mal)}
+.oval svg{position:absolute;inset:0;width:100%;height:100%}
+.tgt{position:absolute;width:34px;height:34px;border-radius:50%;border:3px solid var(--gold2);box-shadow:0 0 18px var(--gold);left:calc(50% - 17px);top:calc(45% - 17px);transition:left .8s cubic-bezier(.5,0,.3,1),top .8s cubic-bezier(.5,0,.3,1);display:none}
+.tgt.on{display:block}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:120px;max-height:220px;overflow:auto}
+.log div{padding:2px 0} .log .t{color:var(--dim)}
+.svc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.svc div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.svc span{display:block;font-size:11.5px;color:var(--muted)} .svc b{font-size:14px}
+.ial{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}
+.ial div{flex:1;min-width:120px;border:1px solid var(--line2);border-radius:14px;padding:12px;text-align:center;font-size:12.5px;color:var(--muted)}
+.ial div b{display:block;font-size:20px;color:var(--text)}
+.ial div.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent);color:var(--text)}
+pre.tok{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;margin:0}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+.claim{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)}
+.claim .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.claim .top b{flex:1;min-width:150px}
+.tl{display:flex;margin-top:12px}
+.tl div{flex:1;position:relative;text-align:center;font-size:11px;color:var(--dim);min-width:0}
+.tl div:before{content:"";position:absolute;top:6px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.tl div:first-child:before{display:none}
+.tl i{display:block;width:14px;height:14px;border-radius:50%;margin:0 auto 4px;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1}
+.tl .ok i{background:var(--mal);border-color:var(--mal)} .tl .ok:before,.tl .cur:before{background:var(--mal)}
+.tl .cur i{border-color:var(--gold);background:var(--gold)} .tl .ok,.tl .cur{color:var(--text)}
+.tl span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.letter{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.letter span{flex:1}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.opt{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.opt b{display:block} .opt span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.map svg{width:100%;height:auto;display:block}
+.ctr{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:var(--bg2)}
+.ctr.on{border-color:var(--mal)} .ctr b{display:block;font-size:13.5px} .ctr span{font-size:12px;color:var(--muted)}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px}
+.slot{padding:8px 0;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-family:var(--mono);font-size:13px}
+.slot.on{background:var(--mal);color:#fff;border-color:var(--mal)}
+.slot:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.risk{display:inline-block;min-width:38px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:8px;padding:2px 6px}
+.sig{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.sig .w{font-family:var(--mono);font-size:12px;margin-left:auto;flex:none}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.ring{display:flex;gap:14px;align-items:center}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.lock{text-align:center;padding:40px 20px}
+.lock .big{font-size:44px}
+.qr{display:grid;grid-template-columns:repeat(21,1fr);width:126px;height:126px;background:#fff;padding:6px;border-radius:8px;flex:none}
+.qr i{background:#0b1512}.qr s{background:#fff}
+/* accessibility */
+html.a-lg main{zoom:1.18}
+html.a-hc{--bg:#000;--bg2:#000;--panel:#050505;--panel2:#111;--line:#bdbdbd;--line2:#ffffff;--text:#fff;--muted:#f2f2f2;--dim:#d0d0d0;--mal:#00b386;--mal2:#008a66;--mal3:#3dffc8;--gold:#ffd24a;--gold2:#ffe27d;color-scheme:dark}
+html.a-hc a,html.a-hc .nav{text-decoration:underline}
+html.a-hc :focus-visible{outline:3px solid #ffd24a;outline-offset:2px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.split,.intro{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .live{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.cap,.fgrid,.opts{grid-template-columns:1fr}.svc{grid-template-columns:1fr 1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.step span{font-size:10px}.tl span{font-size:9.5px}}
+</style>
+</head>
+<body data-demo-en="Valor ID — veterans identity & benefits access" data-demo-ru="Valor ID — идентификация ветеранов и доступ к льготам">
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>★</b><div>Valor ID<small data-en="Veterans Affairs · Nordania" data-ru="Минветеранов · Нордания"></small></div></div>
+    <div class="sec" data-en="Veteran" data-ru="Ветеран"></div>
+    <div id="navV"></div>
+    <div class="sec" data-en="Back office" data-ru="Бэк-офис"></div>
+    <div id="navA"></div>
+    <div class="grow"></div>
+    <div class="a11y">
+      <b data-en="Accessibility" data-ru="Доступность"></b>
+      <button class="sw" id="aLg"><span data-en="Large text" data-ru="Крупный текст"></span><i></i></button>
+      <button class="sw" id="aHc"><span data-en="High contrast" data-ru="Высокий контраст"></span><i></i></button>
+    </div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill" id="ialPill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Create an account and pass remote proofing: scan the ID, follow the liveness circle, match the service record." data-ru="Создайте аккаунт и пройдите удалённую проверку: скан документа, круг «живости», сверка с послужным списком."></span></div>
+          <div><b>2</b><span data-en="Reach IAL2, open <b>Benefits</b>: rating, healthcare, education, claims, letters. File a new claim." data-ru="Получите IAL2, откройте <b>Льготы</b>: инвалидность, медицина, обучение, заявления, справки. Подайте новое заявление."></span></div>
+          <div><b>3</b><span data-en="Switch to <b>Fraud review</b> and <b>Funnel</b> in the back office; try the accessibility toggles." data-ru="Перейдите в <b>Проверку мошенничества</b> и <b>Воронку</b> бэк-офиса; включите режимы доступности."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Veterans identity services" data-ru="Сервисы идентификации ветеранов"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $199.9M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Veterans Affairs Department, Republic of Nordania (fictional)" data-ru="Департамент по делам ветеранов, Республика Нордания (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>identity proofing · OIDC · benefits API</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-proof"></section>
+    <section class="view" id="v-ben"></section>
+    <section class="view" id="v-claim"></section>
+    <section class="view" id="v-inperson"></section>
+    <section class="view" id="v-fraud"></section>
+    <section class="view" id="v-funnel"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const KEY='valorid-v1';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const money=n=>'NDK '+Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+
+const CLAIM_ST=[['Received','Получено'],['Evidence','Доказательства'],['Review','Рассмотрение'],['Decision','Решение'],['Closed','Закрыто']];
+const CTYPES={dis:['Disability compensation','Компенсация по инвалидности','New or worsened service-connected condition','Новое или ухудшившееся заболевание, связанное со службой'],
+ edu:['Education benefit','Образовательная льгота','Tuition, vocational training, certification','Обучение, профподготовка, сертификация'],
+ dep:['Add a dependent','Добавить иждивенца','Spouse or child on your award','Супруг(а) или ребёнок к выплате'],
+ hc:['Healthcare travel refund','Возмещение поездок к врачу','Mileage to the veterans clinic','Проезд до клиники для ветеранов']};
+const CONDS=[['Tinnitus','Шум в ушах'],['Knee injury','Травма колена'],['Lower back pain','Боль в пояснице'],['PTSD','ПТСР'],['Hearing loss','Потеря слуха'],['Sleep apnea','Апноэ сна']];
+const CENTRES=[['Velmar Central','Вельмар, центр',62,44],['Velmar North','Вельмар, север',60,30],['Haldby','Хальдбю',30,58],['Skarvik Port','Порт Скарвик',80,70],['Ostmark','Остмарк',48,78],['Fjellsund','Фьелльсунд',22,26],['Norrby','Норрбю',72,18],['Lindmo','Линдмо',40,40]];
+
+function seed(){
+  const r=rng(77);
+  const names=['A. Lindqvist','J. Berg','M. Halvorsen','E. Strand','K. Dahl','N. Aune','T. Moberg','S. Vik','O. Nordin','L. Eklund','H. Sund','F. Holm','P. Lund','I. Ek'];
+  const SIG=[['svc','Service number used in {n} applications in 24 h','Служебный номер в {n} заявках за 24 ч',30],['email','Email address created {n} days ago','Почта создана {n} дн. назад',12],['voip','Phone is a VOIP / virtual number','Телефон — VOIP / виртуальный номер',14],['tmpl','Document template mismatch (font, microprint)','Шаблон документа не совпадает (шрифт, микротекст)',28],['emu','Device emulator / rooted device','Эмулятор или устройство с root',18],['thin','Thin credit & address history (synthetic pattern)','Тонкая история адресов и кредита (синтетика)',22],['geo','IP country ≠ document country','Страна IP ≠ страна документа',10],['face','Face seen on {n} other accounts','Лицо найдено в {n} других аккаунтах',35],['dob','DOB inconsistent with service start age','Дата рождения не сходится с возрастом призыва',20],['inj','Injection attack on camera stream suspected','Подозрение на подмену видеопотока камеры',32]];
+  const fraud=[];
+  for(let i=0;i<14;i++){const k=2+Math.floor(r()*3);const pool=SIG.slice().sort(()=>r()-.5).slice(0,k);
+    const sig=pool.map(s=>({en:s[1].replace('{n}',2+Math.floor(r()*6)),ru:s[2].replace('{n}',2+Math.floor(r()*6)),w:s[3]}));
+    const score=Math.min(99,sig.reduce((a,s)=>a+s.w,0)+Math.floor(r()*10));
+    fraud.push({id:'FR-'+(5810+i),name:names[i%names.length],step:['doc','live','rec','acct'][Math.floor(r()*4)],score,sig,status:'pending',ip:'185.'+Math.floor(r()*250)+'.'+Math.floor(r()*250)+'.'+Math.floor(r()*250),dev:['iPhone 15 · iOS 19','Pixel 9 · Android 16','Windows · Chrome 141','Android emulator · x86'][Math.floor(r()*4)],age:Math.floor(r()*50)+3});}
+  fraud.sort((a,b)=>b.score-a.score);
+  return{view:'proof',step:0,acct:null,doc:{type:'id',front:null,back:null,backTries:0},live:null,rec:null,ial:0,
+    claims:[{id:'CL-24-01988',type:'dis',st:4,date:'2024-11-04',res:{en:'Granted · rating 70%',ru:'Удовлетворено · 70%'}},{id:'CL-26-07714',type:'edu',st:2,date:'2026-09-21'},{id:'CL-26-08102',type:'hc',st:1,date:'2026-10-30'}],
+    nextClaim:9204,booking:null,fraud,a11y:{lg:false,hc:false},completed:0,wiz:{s:0,type:null,conds:[],desc:'',files:[],auto:true,decl:false},sel:null};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+
+const VIEWS=[['proof','🪪','Identity proofing','Подтверждение личности','V'],['ben','🎖','Benefits','Льготы','V'],['claim','📝','New claim','Новое заявление','V'],['inperson','📍','In-person proofing','Очная проверка','V'],['fraud','🛡','Fraud review','Проверка мошенничества','A'],['funnel','📊','Proofing funnel','Воронка проверки','A']];
+function nav(){
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';if(v[0]==='fraud'){const n=S.fraud.filter(f=>f.status==='pending').length;if(n)x=`<span class="cnt">${n}</span>`}
+    if((v[0]==='ben'||v[0]==='claim')&&S.ial<2)x='<span class="lk">🔒</span>';
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navV').innerHTML=mk('V');$('#navA').innerHTML=mk('A');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  nav();const v=VIEWS.find(x=>x[0]===S.view);
+  $('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=v[4]==='V'?T('Veteran portal','Портал ветерана'):T('Back office · Department staff','Бэк-офис · сотрудники департамента');
+  $('#ialPill').className='pill '+(S.ial>=2?'ok':'warn');$('#ialPill').textContent=S.ial>=2?T('Identity level: IAL2 ✓','Уровень: IAL2 ✓'):T('Identity level: '+(S.ial?'IAL1':'none'),'Уровень: '+(S.ial?'IAL1':'нет'));
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+S.view));
+  ({proof:rProof,ben:rBen,claim:rClaim,inperson:rIn,fraud:rFraud,funnel:rFunnel})[S.view]();
+  $('#aLg').classList.toggle('on',S.a11y.lg);$('#aHc').classList.toggle('on',S.a11y.hc);
+  document.documentElement.classList.toggle('a-lg',S.a11y.lg);document.documentElement.classList.toggle('a-hc',S.a11y.hc);
+}
+
+/* ---------- PROOFING ---------- */
+const PSTEPS=[['Account','Аккаунт'],['Document','Документ'],['Liveness','Живость'],['Service record','Послужной список'],['Verified','Готово']];
+function stepsBar(cur){return `<div class="steps">${PSTEPS.map((s,i)=>`<div class="step ${i<cur||(cur===4&&i===4)?'ok':i===cur?'cur':''}"><div class="dot">${i<cur||(cur===4&&i===4)?'✓':i+1}</div><span>${T(s[0],s[1])}</span></div>`).join('')}</div>`}
+function docSvg(side,ok){
+  const g=cssv('--gold'),m=cssv('--mal'),t=cssv('--text'),d=cssv('--dim');
+  if(side==='front')return `<svg viewBox="0 0 320 202"><rect x="4" y="4" width="312" height="194" rx="14" fill="${m}" opacity=".16" stroke="${m}"/><rect x="4" y="4" width="312" height="34" rx="14" fill="${m}" opacity=".35"/><text x="16" y="27" fill="${t}" font-size="13" font-weight="700">REPUBLIC OF NORDANIA · ID</text><rect x="18" y="52" width="78" height="98" rx="8" fill="${d}" opacity=".5"/><circle cx="57" cy="88" r="18" fill="${t}" opacity=".5"/><rect x="33" y="112" width="48" height="34" rx="16" fill="${t}" opacity=".5"/><g fill="${t}" font-size="11"><text x="110" y="64" opacity=".6">SURNAME / NAME</text><text x="110" y="80" font-weight="700">LINDGREN, MARTIN</text><text x="110" y="100" opacity=".6">DATE OF BIRTH</text><text x="110" y="115" font-weight="700">14.03.1984</text><text x="110" y="135" opacity=".6">DOC NO · EXPIRY</text><text x="110" y="150" font-weight="700">NR4418207 · 2031</text></g><circle cx="282" cy="160" r="20" fill="none" stroke="${g}" stroke-width="2" opacity=".8"/><text x="18" y="182" fill="${d}" font-size="9" font-family="monospace">IDNOR4418207&lt;&lt;8403141M3107</text></svg>`;
+  return `<svg viewBox="0 0 320 202"><rect x="4" y="4" width="312" height="194" rx="14" fill="${m}" opacity=".12" stroke="${m}"/>${ok?'':`<ellipse cx="200" cy="80" rx="70" ry="40" fill="#fff" opacity=".55"/>`}<rect x="18" y="20" width="200" height="56" rx="4" fill="${t}" opacity=".08"/>${Array.from({length:38},(_,i)=>`<rect x="${20+i*7}" y="96" width="${i%3?3:5}" height="46" fill="${t}" opacity=".75"/>`).join('')}<text x="18" y="168" fill="${t}" font-size="9" font-family="monospace" opacity=".8">IDNOR4418207&lt;8403141M3107&lt;&lt;&lt;</text><text x="18" y="182" fill="${t}" font-size="9" font-family="monospace" opacity=".8">LINDGREN&lt;&lt;MARTIN&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text></svg>`;
+}
+function shot(side){
+  const d=S.doc[side];
+  if(d==='busy')return `<div class="shot"><svg viewBox="0 0 320 202"><rect x="30" y="20" width="260" height="162" rx="14" fill="none" stroke="${cssv('--mal3')}" stroke-dasharray="10 6" stroke-width="3"/></svg><div class="scan"></div></div><div class="muted" style="font-size:12.5px;margin-top:8px">${T('Hold steady… auto-capturing','Держите ровно… автосъёмка')}</div>`;
+  if(!d)return `<div class="shot"><div style="text-align:center;color:var(--muted)"><div style="font-size:34px">📷</div>${side==='front'?T('Front side','Лицевая сторона'):T('Back side','Обратная сторона')}</div></div><button class="btn sm pri" data-cap="${side}" style="margin-top:10px">${T('Capture','Снять')}</button>`;
+  const q=d.q;
+  return `<div class="shot" style="border-style:solid;border-color:${d.ok?'var(--mal)':'var(--red)'}">${docSvg(side,d.ok)}</div><ul class="qc">${q.map(x=>`<li><span>${T(x[0],x[1])}</span><b class="${x[3]?'ok-t':'bad-t'}">${x[2]} ${x[3]?'✓':'✗'}</b></li>`).join('')}</ul>${d.ok?'':`<div class="row" style="margin-top:8px"><span class="bad-t" style="font-size:12.5px">${T('Glare over barcode — tilt the card away from light.','Блик на штрихкоде — наклоните карту от света.')}</span><button class="btn sm gold" data-cap="${side}">${T('Retake','Переснять')}</button></div>`}`;
+}
+async function capture(side){
+  S.doc[side]='busy';rProof();await wait(1500);
+  let ok=true;if(side==='back'){S.doc.backTries++;ok=S.doc.backTries>1}
+  const q=[['Edges / 4 corners','Границы / 4 угла','4/4',true],['Sharpness','Резкость',(0.88+Math.random()*.1).toFixed(2),true],['Glare','Блики',ok?'0.4%':'8.7%',ok],[side==='front'?'Security features':'MRZ + PDF417 readable',side==='front'?'Защитные элементы':'MRZ + PDF417 читаются',ok?'OK':'—',ok]];
+  S.doc[side]={ok,q};save();rProof();toast(ok?T('Captured · quality checks passed','Снято · проверки качества пройдены'):T('Quality check failed — please retake','Проверка качества не пройдена — переснимите'),ok?'':'bad');
+}
+function rProof(){
+  const el=$('#v-proof');const s=S.step;let h=stepsBar(s);
+  if(s===0){
+    h+=`<div class="card" style="max-width:720px"><h3>${T('Create your Valor ID account','Создайте аккаунт Valor ID')}<span class="sp"></span><span class="pill">IAL1</span></h3>
+    <div class="fgrid"><div class="f"><label>${T('Full name','ФИО')}</label><input class="input" id="aName" value="Martin Lindgren"></div><div class="f"><label>Email</label><input class="input" id="aMail" value="m.lindgren@mail.nd"></div>
+    <div class="f"><label>${T('Mobile phone','Мобильный телефон')}</label><input class="input" id="aPh" value="+47 912 44 018"></div><div class="f"><label>${T('Password','Пароль')}</label><input class="input" id="aPw" type="password" value="Valor-2025!north"><div class="prog" style="margin-top:6px"><i id="pwBar"></i></div><div class="muted" style="font-size:11.5px" id="pwT"></div></div>
+    <div class="f full" id="otpBox"></div></div>
+    <div class="row" style="margin-top:14px"><button class="btn pri" id="aGo">${T('Create account & send code','Создать аккаунт и отправить код')}</button><span class="muted" style="font-size:12.5px">${T('Prefilled with a demo veteran — just click.','Заполнено демо-данными — просто нажмите.')}</span></div></div>`;
+    el.innerHTML=h;
+    const pw=()=>{const v=$('#aPw').value;let sc=0;if(v.length>=10)sc++;if(/[A-Z]/.test(v)&&/[a-z]/.test(v))sc++;if(/\d/.test(v))sc++;if(/[^\w]/.test(v))sc++;$('#pwBar').style.width=sc*25+'%';$('#pwBar').style.background=sc<3?'var(--amber)':'';$('#pwT').textContent=[T('very weak','очень слабый'),T('weak','слабый'),T('fair','средний'),T('good','хороший'),T('strong','надёжный')][sc]};
+    $('#aPw').oninput=pw;pw();
+    $('#aGo').onclick=async()=>{
+      if($('#aName').value.trim().length<3||!/@/.test($('#aMail').value)){toast(T('Enter name and valid email','Введите имя и корректную почту'),'bad');return}
+      const code=String(100000+Math.floor(Math.random()*899999));$('#aGo').disabled=true;await wait(600);
+      toast(T('Demo SMS: your code is <b class="mono">'+code+'</b>','Демо-SMS: код <b class="mono">'+code+'</b>'),'gold');
+      $('#otpBox').innerHTML=`<label>${T('6-digit code from SMS','Код из SMS (6 цифр)')}</label><div class="row"><input class="input mono" id="otp" maxlength="6" style="max-width:160px;letter-spacing:.3em" placeholder="••••••"><button class="btn sm pri" id="otpGo">${T('Verify','Подтвердить')}</button><button class="btn sm" id="otpFill">${T('Autofill demo code','Вставить демо-код')}</button></div>`;
+      $('#otpFill').onclick=()=>$('#otp').value=code;
+      $('#otpGo').onclick=()=>{if($('#otp').value!==code){toast(T('Wrong code','Неверный код'),'bad');return}
+        S.acct={name:$('#aName').value.trim(),mail:$('#aMail').value.trim(),ph:$('#aPh').value.trim()};S.ial=1;S.step=1;save();toast(T('Account created · IAL1','Аккаунт создан · IAL1'));render()};
+    };
+  }else if(s===1){
+    const both=S.doc.front&&S.doc.front.ok&&S.doc.back&&S.doc.back.ok;
+    h+=`<div class="card"><h3>${T('Capture your identity document','Сфотографируйте документ')}<span class="sp"></span><select class="input" id="dType" style="width:auto">${[['id','National ID card','ID-карта Нордании'],['pp','Passport','Паспорт'],['vet','Veteran ID card','Удостоверение ветерана']].map(o=>`<option value="${o[0]}" ${S.doc.type===o[0]?'selected':''}>${T(o[1],o[2])}</option>`).join('')}</select></h3>
+    <div class="cap"><div>${shot('front')}</div><div>${shot('back')}</div></div>
+    ${both?`<div class="svc"><div><span>${T('Name','Имя')}</span><b>LINDGREN, MARTIN</b></div><div><span>${T('Date of birth','Дата рождения')}</span><b>14.03.1984</b></div><div><span>${T('Document · expiry','Документ · срок')}</span><b class="mono">NR4418207 · 2031</b></div></div>`:''}
+    <div class="row" style="margin-top:14px"><button class="btn pri" id="dNext" ${both?'':'disabled'}>${T('Continue to liveness','Далее — проверка живости')}</button><span class="muted" style="font-size:12.5px">${T('Tip: the back side fails the glare check once — retake it.','Подсказка: обратная сторона один раз не пройдёт проверку бликов — переснимите.')}</span></div></div>`;
+    el.innerHTML=h;
+    $$('[data-cap]',el).forEach(b=>b.onclick=()=>capture(b.dataset.cap));
+    $('#dType').onchange=e=>{S.doc.type=e.target.value;save()};
+    $('#dNext').onclick=()=>{S.step=2;save();rProof()};
+  }else if(s===2){
+    const L=S.live;
+    h+=`<div class="card"><h3>${T('Selfie liveness check','Проверка живости по селфи')}<span class="sp"></span><span class="pill">ISO 30107-3 PAD</span></h3><div class="live">
+    <div class="oval ${L&&L.done?'done':''}" id="oval"><svg viewBox="0 0 300 400"><circle cx="150" cy="170" r="70" fill="${cssv('--dim')}" opacity=".45"/><path d="M40 400c10-90 60-130 110-130s100 40 110 130z" fill="${cssv('--dim')}" opacity=".45"/></svg><div class="tgt" id="tgt"></div></div>
+    <div><div id="lvTxt" style="font-size:16px;font-weight:700;margin-bottom:8px">${L&&L.done?T('Liveness confirmed','Живость подтверждена'):T('Follow the gold circle with your nose','Следите носом за золотым кругом')}</div>
+    <div class="muted" style="font-size:13px;margin-bottom:12px">${T('Random motion challenge defeats photos, screen replays and masks. No video is stored — only the result.','Случайная траектория отсекает фото, повтор с экрана и маски. Видео не хранится — только результат.')}</div>
+    <div class="prog"><i id="lvBar" style="width:${L&&L.done?100:0}%"></i></div>
+    ${L&&L.done?`<ul class="qc"><li><span>${T('Liveness score','Оценка живости')}</span><b class="ok-t">${L.score} ✓</b></li><li><span>${T('Face match to document','Совпадение с фото документа')}</span><b class="ok-t">${L.match} ✓</b></li><li><span>${T('Presentation attack','Атака подменой')}</span><b class="ok-t">${T('not detected','не обнаружена')}</b></li></ul>
+      <div class="row" style="margin-top:12px"><button class="btn pri" id="lvNext">${T('Continue to record match','Далее — сверка послужного списка')}</button></div>`
+    :`<div class="row" style="margin-top:12px"><button class="btn pri" id="lvGo">${T('Start camera','Включить камеру')}</button><button class="btn sm" id="lvIn">${T('Can’t do it online? Verify in person','Не получается онлайн? Очная проверка')}</button></div>`}
+    </div></div></div>`;
+    el.innerHTML=h;
+    if($('#lvIn'))$('#lvIn').onclick=()=>go('inperson');
+    if($('#lvNext'))$('#lvNext').onclick=()=>{S.step=3;save();rProof()};
+    if($('#lvGo'))$('#lvGo').onclick=async()=>{
+      $('#lvGo').disabled=true;$('#oval').classList.add('go');const t=$('#tgt');t.classList.add('on');
+      const pts=[[50,45],[22,30],[78,32],[70,70],[28,68],[50,45]].sort((a,b)=>a===b?0:0);const pr=[[50,45],[22+Math.random()*10,28],[78-Math.random()*10,32],[70,66+Math.random()*8],[26,68],[50,45]];
+      const msgs=[T('Centre your face','Лицо по центру'),T('Move up-left','Вверх влево'),T('Move up-right','Вверх вправо'),T('Down-right','Вниз вправо'),T('Down-left','Вниз влево'),T('Back to centre','Обратно в центр')];
+      for(let i=0;i<pr.length;i++){t.style.left=`calc(${pr[i][0]}% - 17px)`;t.style.top=`calc(${pr[i][1]}% - 17px)`;$('#lvTxt').textContent=msgs[i];$('#lvBar').style.width=Math.round((i+1)/pr.length*100)+'%';await wait(900)}
+      $('#lvTxt').textContent=T('Analysing…','Анализ…');await wait(700);
+      S.live={done:true,score:(0.96+Math.random()*.03).toFixed(3),match:(0.93+Math.random()*.05).toFixed(3)};save();rProof();toast(T('Liveness passed','Живость подтверждена'));
+    };
+  }else if(s===3){
+    const R=S.rec;
+    h+=`<div class="card"><h3>${T('Match against the service record','Сверка с послужным списком')}<span class="sp"></span><span class="pill">DPR · Defence Personnel Records</span></h3>
+    <div class="fgrid" style="max-width:640px"><div class="f"><label>${T('Service number','Личный номер')}</label><input class="input mono" id="rSn" value="NDF-4471-2093"></div><div class="f"><label>${T('Date of birth (from document)','Дата рождения (из документа)')}</label><input class="input mono" value="1984-03-14" disabled></div></div>
+    <div class="row" style="margin:12px 0"><button class="btn pri" id="rGo" ${R?'disabled':''}>${T('Query service record','Запросить послужной список')}</button></div>
+    <div class="log" id="rLog">${R?R.log.map(l=>`<div><span class="t">${l[0]}</span> ${T(l[1],l[2])}</div>`).join(''):`<span class="muted">${T('Waiting for query…','Ожидание запроса…')}</span>`}</div>
+    <div id="rOut">${R?recOut():''}</div></div>`;
+    el.innerHTML=h;
+    if($('#rNext'))$('#rNext').onclick=finishProof;
+    $('#rGo').onclick=async()=>{
+      if(!/^NDF-\d{4}-\d{4}$/.test($('#rSn').value.trim())){toast(T('Format: NDF-0000-0000','Формат: NDF-0000-0000'),'bad');return}
+      $('#rGo').disabled=true;const lines=[['Querying DPR via benefits API (mTLS)…','Запрос в DPR через API льгот (mTLS)…'],['Keys: name + DOB + service number','Ключи: имя + дата рождения + личный номер'],['1 candidate record · score 0.992','Найдена 1 запись · оценка 0.992'],['Cross-check doc NR4418207 with civil registry ✓','Сверка документа NR4418207 с реестром ✓'],['Discharge certificate DD-N 214 found ✓','Найдена справка об увольнении DD-N 214 ✓'],['Veteran status: CONFIRMED','Статус ветерана: ПОДТВЕРЖДЁН']];
+      const log=[];$('#rLog').innerHTML='';
+      for(const l of lines){await wait(520);const ts=new Date().toTimeString().slice(0,8);log.push([ts,l[0],l[1]]);$('#rLog').insertAdjacentHTML('beforeend',`<div><span class="t">${ts}</span> ${T(l[0],l[1])}</div>`);$('#rLog').scrollTop=1e4}
+      S.rec={log};save();$('#rOut').innerHTML=recOut();$('#rNext').onclick=finishProof;
+    };
+  }else{
+    const tok={iss:'https://id.valor.nd',sub:'vet_8f3a21c9',aud:'benefits-portal',acr:'urn:nd:ial2',amr:['pwd','otp','doc','face'],vet_status:'confirmed',branch:'army',iat:Math.floor(Date.now()/1000)};
+    h+=`<div class="card" style="text-align:center;padding:28px"><div style="font-size:52px">🎖</div><h2 style="margin:6px 0">${T('Identity verified — welcome, '+esc(S.acct?S.acct.name:'veteran'),'Личность подтверждена — добро пожаловать, '+esc(S.acct?S.acct.name:'ветеран'))}</h2>
+    <div class="muted">${T('Your account is now at Identity Assurance Level 2. You can sign in to any partner service with Valor ID.','Аккаунт получил уровень IAL2. Входите в любые сервисы-партнёры через Valor ID.')}</div>
+    <div class="ial"><div class="on"><b>IAL1</b>${T('self-asserted','со слов')}</div><div class="on"><b>IAL2</b>${T('remote proofing ✓','удалённая проверка ✓')}</div><div><b>IAL3</b>${T('in-person, supervised','очно, под контролем')}</div></div>
+    <div class="row" style="justify-content:center"><button class="btn gold" id="toBen">${T('Open benefits dashboard →','Открыть кабинет льгот →')}</button><button class="btn sm" id="restart">${T('Run proofing again','Пройти проверку заново')}</button></div></div>
+    <div class="card" style="margin-top:14px"><h3>${T('OIDC ID token issued to the benefits portal','ID-токен OIDC для портала льгот')}<span class="sp"></span><span class="pill ok">RS256</span></h3><pre class="tok">${esc(JSON.stringify(tok,null,2))}</pre></div>`;
+    el.innerHTML=h;$('#toBen').onclick=()=>go('ben');
+    $('#restart').onclick=()=>{S.step=0;S.ial=0;S.doc={type:'id',front:null,back:null,backTries:0};S.live=null;S.rec=null;save();render()};
+  }
+}
+function recOut(){return `<div class="svc"><div><span>${T('Branch','Род войск')}</span><b>${T('Nordanian Army','Армия Нордании')}</b></div><div><span>${T('Service','Служба')}</span><b>2004 – 2016</b></div><div><span>${T('Discharge','Увольнение')}</span><b class="ok-t">${T('Honourable','С почётом')}</b></div><div><span>${T('Rank','Звание')}</span><b>${T('Sergeant (OR-5)','Сержант (OR-5)')}</b></div><div><span>${T('Unit','Часть')}</span><b>${T('3rd Mechanised Bde','3-я мехбригада')}</b></div><div><span>${T('Deployments','Командировки')}</span><b>${T('Northern Shield ’09, Coastal Guard ’13','«Северный щит» ’09, «Береговая стража» ’13')}</b></div></div>
+<div class="row" style="margin-top:14px"><button class="btn pri" id="rNext">${T('Confirm — this is my record','Подтвердить — это мои данные')}</button></div>`}
+function finishProof(){S.step=4;S.ial=2;S.completed++;save();toast(T('IAL2 achieved','Получен уровень IAL2'),'gold');render()}
+
+/* ---------- BENEFITS ---------- */
+function locked(el){el.innerHTML=`<div class="card lock"><div class="big">🔒</div><h2>${T('Verify your identity first','Сначала подтвердите личность')}</h2><p class="muted">${T('Benefits data is protected and requires IAL2.','Данные о льготах защищены и требуют уровня IAL2.')}</p><button class="btn pri" id="lkGo">${T('Start identity proofing','Начать проверку')}</button></div>`;$('#lkGo').onclick=()=>go('proof')}
+function ringSvg(p){const r=38,c=2*Math.PI*r;return `<svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="${r}" fill="none" stroke="${cssv('--line')}" stroke-width="10"/><circle cx="48" cy="48" r="${r}" fill="none" stroke="${cssv('--gold')}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${c*p/100} ${c}" transform="rotate(-90 48 48)"/><text x="48" y="54" text-anchor="middle" fill="${cssv('--text')}" font-size="20" font-weight="800">${p}%</text></svg>`}
+function rBen(){
+  const el=$('#v-ben');if(S.ial<2)return locked(el);
+  const used=Object.values(S.claims).filter(c=>c.type==='edu').length;
+  const eduM=36-12-used*1.5;
+  el.innerHTML=`<div class="kpis">
+  <div class="card kpi"><div class="l">${T('Disability rating','Степень инвалидности')}</div><div class="ring">${ringSvg(70)}<div><div class="v" style="font-size:20px">${money(1842)}</div><div class="d">${T('per month · next 1 Dec','в месяц · след. 1 дек')}</div></div></div></div>
+  <div class="card kpi"><div class="l">${T('Healthcare','Медицина')}</div><div class="v ok-t" style="font-size:20px">${T('Enrolled','Прикреплён')}</div><div class="d">${T('Priority group 2 · Velmar Veterans Clinic','Группа приоритета 2 · Клиника ветеранов Вельмара')}</div><div class="row" style="margin-top:8px"><button class="btn sm" data-a="card">${T('Health card','Мед. карта')}</button></div></div>
+  <div class="card kpi"><div class="l">${T('Education benefit','Образовательная льгота')}</div><div class="v">${Math.floor(eduM)} ${T('mo','мес')} ${Math.round((eduM%1)*30)} ${T('d','д')}</div><div class="prog" style="margin:6px 0"><i style="width:${eduM/36*100}%"></i></div><div class="d">${money(eduM*1450)} ${T('remaining of 36 months','остаток из 36 мес.')}</div></div>
+  <div class="card kpi"><div class="l">${T('Open claims','Заявления в работе')}</div><div class="v">${S.claims.filter(c=>c.st<4).length}</div><div class="d">${T('Average decision time 41 days','Среднее время решения 41 день')}</div><div class="row" style="margin-top:8px"><button class="btn sm pri" data-a="new">＋ ${T('New claim','Новое')}</button></div></div></div>
+  <div class="grid2"><div class="card"><h3>${T('Claims & status','Заявления и статус')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('“Advance” simulates the department working','«Продвинуть» имитирует работу департамента')}</span></h3>
+  ${S.claims.slice().reverse().map(c=>`<div class="claim"><div class="top"><span class="mono muted" style="font-size:12px">${c.id}</span><b>${T(CTYPES[c.type][0],CTYPES[c.type][1])}</b><span class="pill ${c.st>=4?'ok':c.st>=2?'gold':''}">${T(CLAIM_ST[c.st][0],CLAIM_ST[c.st][1])}</span>${c.st<4?`<button class="btn sm" data-adv="${c.id}">${T('Advance ▸','Продвинуть ▸')}</button>`:''}</div>
+  <div class="muted" style="font-size:12px;margin-top:4px">${T('Filed','Подано')} ${fmtD(c.date)}${c.res?' · '+T(c.res.en,c.res.ru):''}${c.conds&&c.conds.length?' · '+c.conds.map(i=>T(CONDS[i][0],CONDS[i][1])).join(', '):''}</div>
+  <div class="tl">${CLAIM_ST.map((s,i)=>`<div class="${i<c.st||c.st===4?'ok':i===c.st?'cur':''}"><i></i><span>${T(s[0],s[1])}</span></div>`).join('')}</div></div>`).join('')}</div>
+  <div class="card"><h3>${T('Letters','Справки и письма')}</h3>
+  ${[['sum','Benefit summary letter','Справка о льготах'],['svc','Proof of service letter','Справка о прохождении службы'],['rat','Disability rating decision','Решение о степени инвалидности'],['civ','Civil service preference letter','Письмо о преимуществе при госнайме']].map(l=>`<div class="letter">📄<span>${T(l[1],l[2])}</span><button class="btn sm" data-dl="${l[0]}">⇩ PDF</button></div>`).join('')}
+  <div class="muted" style="font-size:12px;margin-top:10px">${T('Letters are signed with the department seal and carry a verification code.','Письма подписаны печатью департамента и имеют код проверки.')}</div></div></div>`;
+  $$('[data-adv]',el).forEach(b=>b.onclick=()=>{const c=S.claims.find(x=>x.id===b.dataset.adv);c.st++;if(c.st===4)c.res={en:'Granted',ru:'Удовлетворено'};save();rBen();toast(c.id+' → '+T(CLAIM_ST[c.st][0],CLAIM_ST[c.st][1]),c.st===4?'gold':'')});
+  $$('[data-a]',el).forEach(b=>b.onclick=()=>{if(b.dataset.a==='new')go('claim');else toast(T('Health card added to Wallet (demo)','Мед. карта добавлена в Wallet (демо)'))});
+  $$('[data-dl]',el).forEach(b=>b.onclick=()=>letter(b.dataset.dl,b.parentNode.querySelector('span').textContent));
+}
+function letter(k,title){
+  const code='VAL-'+Math.random().toString(36).slice(2,8).toUpperCase();
+  const txt=[T('REPUBLIC OF NORDANIA — VETERANS AFFAIRS DEPARTMENT (fictional demo)','РЕСПУБЛИКА НОРДАНИЯ — ДЕПАРТАМЕНТ ПО ДЕЛАМ ВЕТЕРАНОВ (вымышленное демо)'),'',title.toUpperCase(),T('Date: ','Дата: ')+fmtD(Date.now()),'',T('Name: ','Имя: ')+(S.acct?S.acct.name:'Martin Lindgren'),T('Service: Nordanian Army, 2004–2016, honourable discharge','Служба: Армия Нордании, 2004–2016, увольнение с почётом'),T('Combined disability rating: 70%','Общая степень инвалидности: 70%'),T('Monthly compensation: NDK 1,842','Ежемесячная компенсация: NDK 1 842'),T('Healthcare: enrolled, priority group 2','Медицина: прикреплён, группа приоритета 2'),'',T('Verification code: ','Код проверки: ')+code,T('Verify at id.valor.nd/verify','Проверить: id.valor.nd/verify')].join('\n');
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));a.download='valor-'+k+'-'+code+'.txt';document.body.append(a);a.click();a.remove()}catch(e){}
+  toast(T('Downloaded · code ','Скачано · код ')+'<b class="mono">'+code+'</b>');
+}
+
+/* ---------- NEW CLAIM ---------- */
+function rClaim(){
+  const el=$('#v-claim');if(S.ial<2)return locked(el);
+  const W=S.wiz;const ws=[['Type','Тип'],['Details','Детали'],['Evidence','Доказательства'],['Review','Проверка']];
+  let h=`<div class="steps">${ws.map((s,i)=>`<div class="step ${i<W.s?'ok':i===W.s?'cur':''}"><div class="dot">${i<W.s?'✓':i+1}</div><span>${T(s[0],s[1])}</span></div>`).join('')}</div><div class="card" style="max-width:820px">`;
+  if(W.s===0){h+=`<h3>${T('What would you like to claim?','Что вы хотите заявить?')}</h3><div class="opts">${Object.entries(CTYPES).map(([k,c])=>`<button class="opt ${W.type===k?'on':''}" data-t="${k}"><b>${T(c[0],c[1])}</b><span>${T(c[2],c[3])}</span></button>`).join('')}</div>`}
+  else if(W.s===1){h+=`<h3>${T(CTYPES[W.type][0],CTYPES[W.type][1])}</h3>${W.type==='dis'?`<div class="f"><label>${T('Conditions (select all that apply)','Заболевания (выберите все подходящие)')}</label><div class="chips">${CONDS.map((c,i)=>`<button class="chip ${W.conds.includes(i)?'on':''}" data-c="${i}">${T(c[0],c[1])}</button>`).join('')}</div></div>`:''}
+    <div class="fgrid" style="margin-top:12px"><div class="f"><label>${T('Start date','Дата начала')}</label><input class="input" type="date" id="wDate" value="2026-06-01"></div><div class="f"><label>${T('Related deployment','Связанная командировка')}</label><select class="input"><option>${T('Northern Shield 2009','«Северный щит» 2009')}</option><option>${T('Coastal Guard 2013','«Береговая стража» 2013')}</option><option>${T('Not related','Не связано')}</option></select></div>
+    <div class="f full"><label>${T('Describe in your own words','Опишите своими словами')}</label><textarea class="input" id="wDesc" rows="3">${esc(W.desc||T('Pain in the right knee since a vehicle exit drill; worsened this year.','Боль в правом колене после учений по выходу из машины; ухудшилась в этом году.'))}</textarea></div></div>`}
+  else if(W.s===2){h+=`<h3>${T('Supporting evidence','Подтверждающие документы')}</h3><div class="row"><button class="btn" id="wUp">📎 ${T('Attach medical report (demo file)','Приложить мед. заключение (демо-файл)')}</button></div>
+    <div style="margin-top:10px">${W.files.map(f=>`<div class="letter">📄<span>${esc(f.n)} <span class="muted">· ${f.kb} KB</span></span><b class="ok-t" style="font-size:12px">${T('scanned · clean','проверен · чисто')}</b></div>`).join('')||`<div class="muted" style="font-size:13px">${T('No files yet.','Файлов пока нет.')}</div>`}</div>
+    <button class="sw ${W.auto?'on':''}" id="wAuto" style="margin-top:14px;max-width:520px"><span>${T('Let the department request my service & medical records automatically','Разрешить департаменту автоматически запросить мои служебные и медицинские записи')}</span><i></i></button>`}
+  else{h+=`<h3>${T('Review & submit','Проверка и отправка')}</h3><dl class="facts" style="font-size:13.5px"><dt>${T('Type','Тип')}</dt><dd>${T(CTYPES[W.type][0],CTYPES[W.type][1])}</dd>${W.conds.length?`<dt>${T('Conditions','Заболевания')}</dt><dd>${W.conds.map(i=>T(CONDS[i][0],CONDS[i][1])).join(', ')}</dd>`:''}<dt>${T('Evidence','Доказательства')}</dt><dd>${W.files.length} ${T('file(s)','файл(ов)')}${W.auto?' + '+T('auto records request','автозапрос записей'):''}</dd><dt>${T('Signed by','Подписано')}</dt><dd>Valor ID · IAL2 · ${esc(S.acct?S.acct.name:'')}</dd></dl>
+    <button class="sw ${W.decl?'on':''}" id="wDecl" style="margin-top:14px;max-width:520px"><span>${T('I confirm the information is true and complete','Подтверждаю, что сведения верны и полны')}</span><i></i></button>`}
+  const can=W.s===0?!!W.type:W.s===1?(W.type!=='dis'||W.conds.length>0):W.s===2?(W.files.length>0||W.auto):W.decl;
+  h+=`<div class="row" style="margin-top:16px">${W.s>0?`<button class="btn" id="wBack">← ${T('Back','Назад')}</button>`:''}<span style="flex:1"></span><button class="btn ${W.s===3?'gold':'pri'}" id="wNext" ${can?'':'disabled'}>${W.s===3?T('Submit claim','Подать заявление'):T('Continue','Далее')} →</button></div></div>`;
+  el.innerHTML=h;
+  $$('[data-t]',el).forEach(b=>b.onclick=()=>{W.type=b.dataset.t;save();rClaim()});
+  $$('[data-c]',el).forEach(b=>b.onclick=()=>{const i=+b.dataset.c;W.conds=W.conds.includes(i)?W.conds.filter(x=>x!==i):[...W.conds,i];save();rClaim()});
+  if($('#wDesc'))$('#wDesc').oninput=e=>{W.desc=e.target.value;save()};
+  if($('#wUp'))$('#wUp').onclick=async()=>{$('#wUp').disabled=true;$('#wUp').textContent=T('Uploading & virus scan…','Загрузка и антивирус…');await wait(900);W.files.push({n:['knee_MRI_report.pdf','clinic_notes_2026.pdf','audiogram.pdf'][W.files.length%3],kb:180+Math.floor(Math.random()*900)});save();rClaim()};
+  if($('#wAuto'))$('#wAuto').onclick=()=>{W.auto=!W.auto;save();rClaim()};
+  if($('#wDecl'))$('#wDecl').onclick=()=>{W.decl=!W.decl;save();rClaim()};
+  if($('#wBack'))$('#wBack').onclick=()=>{W.s--;save();rClaim()};
+  $('#wNext').onclick=async()=>{if(W.s<3){W.s++;save();rClaim();return}
+    $('#wNext').disabled=true;$('#wNext').textContent=T('Submitting…','Отправка…');await wait(900);
+    const id='CL-26-'+String(S.nextClaim++).padStart(5,'0');S.claims.push({id,type:W.type,st:0,date:new Date().toISOString().slice(0,10),conds:W.conds.slice()});
+    S.wiz={s:0,type:null,conds:[],desc:'',files:[],auto:true,decl:false};save();toast(T('Claim '+id+' submitted','Заявление '+id+' подано'),'gold');go('ben')};
+}
+
+/* ---------- IN PERSON ---------- */
+function rIn(){
+  const el=$('#v-inperson');S.ip=S.ip||{c:0,d:0,t:null};const ip=S.ip;
+  if(S.booking){const b=S.booking;const r=rng(b.code.length*97+b.code.charCodeAt(4));
+    el.innerHTML=`<div class="card" style="max-width:720px"><h3>✅ ${T('Appointment booked','Запись подтверждена')}<span class="sp"></span><span class="pill gold">IAL2 / IAL3</span></h3><div class="row" style="align-items:flex-start;gap:18px"><div class="qr">${Array.from({length:441},(_,i)=>{const x=i%21,y=Math.floor(i/21);const f=(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);const fin=f?((x%20<1||y%20<1||x===6||y===6||x===14||y===14||(x>1&&x<5&&y>1&&y<5)||(x>15&&x<19&&y>1&&y<5)||(x>1&&x<5&&y>15&&y<19))):r()<.5;return fin?'<i></i>':'<s></s>'}).join('')}</div>
+    <div style="flex:1;min-width:200px"><dl class="facts" style="font-size:13.5px"><dt>${T('Centre','Центр')}</dt><dd>${T(CENTRES[b.c][0],CENTRES[b.c][1])}</dd><dt>${T('When','Когда')}</dt><dd>${fmtD(b.date)} · ${b.t}</dd><dt>${T('Booking','Бронь')}</dt><dd class="mono">${b.code}</dd></dl>
+    <p class="muted" style="font-size:13px">${T('Bring: photo ID and discharge certificate. A trained agent verifies you in about 10 minutes.','Возьмите: документ с фото и справку об увольнении. Сотрудник проверит вас примерно за 10 минут.')}</p>
+    <div class="row"><button class="btn sm" id="bAdd">📅 ${T('Add to calendar','В календарь')}</button><button class="btn sm danger" id="bCancel">${T('Cancel booking','Отменить запись')}</button>${S.ial<2?`<button class="btn sm gold" id="bDone">${T('Simulate visit completed','Имитировать визит')}</button>`:''}</div></div></div></div>`;
+    $('#bCancel').onclick=()=>{S.booking=null;save();rIn();toast(T('Booking cancelled','Запись отменена'))};
+    $('#bAdd').onclick=()=>toast(T('Calendar invite created (.ics)','Приглашение в календарь создано (.ics)'));
+    if($('#bDone'))$('#bDone').onclick=()=>{S.ial=2;S.step=4;S.completed++;save();toast(T('Verified in person · IAL2','Подтверждено очно · IAL2'),'gold');render()};
+    return;}
+  const r=rng(ip.c*31+ip.d*7+3);const days=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()+i+1);return d});
+  const times=['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30'];const taken=times.map(()=>r()<.4);
+  const m=cssv('--mal'),g=cssv('--gold'),ln=cssv('--line2'),pn=cssv('--panel2'),tx=cssv('--text');
+  el.innerHTML=`<div class="split"><div class="card"><h3>${T('Find a verification centre','Найдите центр проверки')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('Tap a pin or a row','Нажмите метку или строку')}</span></h3>
+  <div class="map"><svg viewBox="0 0 100 90"><path d="M18 12 L40 6 L62 10 L84 8 L92 26 L86 46 L94 66 L80 84 L56 86 L34 82 L12 72 L8 50 L14 32Z" fill="${pn}" stroke="${ln}" stroke-width=".6"/><path d="M40 6 L44 40 L34 82 M44 40 L86 46" stroke="${ln}" stroke-width=".3" fill="none" stroke-dasharray="1 1"/>
+  ${CENTRES.map((c,i)=>`<g data-pin="${i}" style="cursor:pointer"><circle cx="${c[2]}" cy="${c[3]}" r="${i===ip.c?3.2:2.2}" fill="${i===ip.c?g:m}" stroke="#fff" stroke-width=".5"/>${i===ip.c?`<text x="${c[2]}" y="${c[3]-4.5}" text-anchor="middle" font-size="3.4" fill="${tx}" font-weight="700">${T(c[0],c[1])}</text>`:''}</g>`).join('')}<circle cx="58" cy="50" r="1.4" fill="${cssv('--blue')}"/><circle cx="58" cy="50" r="3.5" fill="none" stroke="${cssv('--blue')}" stroke-width=".4"/></svg></div>
+  <div style="margin-top:10px">${CENTRES.map((c,i)=>{const dist=Math.hypot(c[2]-58,c[3]-50)*1.6;return `<div class="ctr ${i===ip.c?'on':''}" data-ct="${i}"><span style="font-size:18px">📍</span><div style="flex:1"><b>${T(c[0],c[1])}</b><span>${dist.toFixed(1)} km · ${T('wheelchair access','доступно для колясок')}${i%3===0?' · '+T('sign language','сурдоперевод'):''}</span></div><span class="pill ${i%4===1?'warn':'ok'}">${i%4===1?T('busy','загружен'):T('slots today','есть окна')}</span></div>`}).sort((a,b)=>0).join('')}</div></div>
+  <div class="card"><h3>${T('Choose a time','Выберите время')} — ${T(CENTRES[ip.c][0],CENTRES[ip.c][1])}</h3>
+  <div class="chips">${days.map((d,i)=>`<button class="chip ${i===ip.d?'on':''}" data-d="${i}">${d.toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{weekday:'short',day:'numeric'})}</button>`).join('')}</div>
+  <div class="slots" style="margin-top:12px">${times.map((t,i)=>`<button class="slot ${ip.t===t?'on':''}" data-tm="${t}" ${taken[i]?'disabled':''}>${t}</button>`).join('')}</div>
+  <div class="row" style="margin-top:14px"><button class="btn gold" id="bGo" ${ip.t?'':'disabled'}>${T('Book appointment','Записаться')}</button></div>
+  <p class="muted" style="font-size:12.5px;margin-top:12px">${T('In-person proofing is the fallback for anyone who can’t complete the remote flow — no smartphone, failed liveness or thin records.','Очная проверка — запасной путь для тех, кто не может пройти онлайн: нет смартфона, не прошла живость или мало данных.')}</p></div></div>`;
+  $$('[data-pin]',el).forEach(p=>p.onclick=()=>{ip.c=+p.dataset.pin;ip.t=null;save();rIn()});
+  $$('[data-ct]',el).forEach(p=>p.onclick=()=>{ip.c=+p.dataset.ct;ip.t=null;save();rIn()});
+  $$('[data-d]',el).forEach(p=>p.onclick=()=>{ip.d=+p.dataset.d;ip.t=null;save();rIn()});
+  $$('[data-tm]',el).forEach(p=>p.onclick=()=>{ip.t=p.dataset.tm;save();rIn()});
+  $('#bGo').onclick=()=>{S.booking={c:ip.c,date:days[ip.d].toISOString(),t:ip.t,code:'IP-'+Math.random().toString(36).slice(2,7).toUpperCase()};save();rIn();toast(T('Appointment booked','Запись подтверждена'),'gold')};
+}
+
+/* ---------- FRAUD ---------- */
+const STEPN={acct:['Account','Аккаунт'],doc:['Document','Документ'],live:['Liveness','Живость'],rec:['Record match','Сверка']};
+function rFraud(){
+  const el=$('#v-fraud');S.ff=S.ff||'pending';
+  const list=S.fraud.filter(f=>S.ff==='all'||f.status===S.ff);
+  if(!S.sel||!S.fraud.find(f=>f.id===S.sel))S.sel=(list[0]||{}).id;
+  const p=S.fraud.filter(f=>f.status==='pending');const den=S.fraud.filter(f=>f.status==='denied').length,ap=S.fraud.filter(f=>f.status==='approved').length;
+  const rc=s=>s>=70?'var(--red)':s>=45?'var(--amber)':'var(--mal3)';
+  const f=S.fraud.find(x=>x.id===S.sel);
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Pending review','Ждут проверки')}</div><div class="v">${p.length}</div><div class="d">${T('SLA 4 h','SLA 4 ч')}</div></div><div class="card kpi"><div class="l">${T('Avg risk (pending)','Средний риск')}</div><div class="v">${p.length?Math.round(p.reduce((a,x)=>a+x.score,0)/p.length):0}</div><div class="d">${T('0–100 model score','оценка модели 0–100')}</div></div><div class="card kpi"><div class="l">${T('Approved / denied','Одобрено / отклонено')}</div><div class="v">${ap} / ${den}</div><div class="d">${T('this session','за сессию')}</div></div><div class="card kpi"><div class="l">${T('Auto-blocked today','Автоблок сегодня')}</div><div class="v">${312+den}</div><div class="d">${T('score ≥ 90 · no human review','оценка ≥ 90 · без ручной проверки')}</div></div></div>
+  <div class="split"><div><div class="row" style="margin-bottom:10px">${[['pending','Pending','Ожидают'],['approved','Approved','Одобрено'],['denied','Denied','Отклонено'],['all','All','Все']].map(x=>`<button class="chip ${S.ff===x[0]?'on':''}" data-ff="${x[0]}">${T(x[1],x[2])}</button>`).join('')}</div>
+  <div class="tw"><table><thead><tr><th>${T('Case','Дело')}</th><th>${T('Applicant','Заявитель')}</th><th>${T('Step','Шаг')}</th><th>${T('Risk','Риск')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>${list.map(x=>`<tr class="clk ${x.id===S.sel?'sel':''}" data-id="${x.id}"><td class="mono">${x.id}</td><td>${x.name}</td><td>${T(STEPN[x.step][0],STEPN[x.step][1])}</td><td><span class="risk" style="color:${rc(x.score)};background:color-mix(in srgb,${rc(x.score)} 14%,transparent)">${x.score}</span></td><td><span class="pill ${x.status==='approved'?'ok':x.status==='denied'?'bad':'warn'}">${x.status==='pending'?T('pending','ожидает'):x.status==='approved'?T('approved','одобрено'):T('denied','отклонено')}</span></td></tr>`).join('')||`<tr><td colspan="5" class="muted">${T('Queue is empty 🎉','Очередь пуста 🎉')}</td></tr>`}</tbody></table></div></div>
+  <div class="card">${f?`<h3><span class="mono">${f.id}</span> · ${f.name}<span class="sp"></span><span class="risk" style="font-size:18px;color:${rc(f.score)}">${f.score}</span></h3>
+  <div class="muted" style="font-size:12.5px">${T('Stopped at','Остановлен на шаге')}: ${T(STEPN[f.step][0],STEPN[f.step][1])} · IP <span class="mono">${f.ip}</span> · ${f.dev} · ${f.age} ${T('min ago','мин назад')}</div>
+  <div style="margin:10px 0 4px;font-weight:700;font-size:13px">${T('Synthetic-identity & fraud signals','Сигналы синтетической личности и мошенничества')}</div>
+  ${f.sig.map(s=>`<div class="sig"><span style="color:${rc(s.w*2.5)}">●</span><span>${T(s.en,s.ru)}</span><span class="w">+${s.w}</span></div>`).join('')}
+  <div class="row" style="margin-top:14px">${f.status==='pending'?`<button class="btn pri sm" data-dec="approved">✓ ${T('Approve','Одобрить')}</button><button class="btn danger sm" data-dec="denied">✕ ${T('Deny & flag','Отклонить и пометить')}</button><button class="btn sm" data-dec="esc">↗ ${T('Request in-person','Направить очно')}</button>`:`<span class="pill ${f.status==='approved'?'ok':'bad'}">${f.status==='approved'?T('Approved','Одобрено'):T('Denied · added to watch-list','Отклонено · в стоп-листе')}</span><button class="btn sm" data-dec="pending">↺ ${T('Reopen','Вернуть')}</button>`}</div>`:`<div class="muted">${T('Select a case','Выберите дело')}</div>`}</div></div>`;
+  $$('[data-ff]',el).forEach(b=>b.onclick=()=>{S.ff=b.dataset.ff;S.sel=null;save();rFraud()});
+  $$('tr[data-id]',el).forEach(r=>r.onclick=()=>{S.sel=r.dataset.id;save();rFraud()});
+  $$('[data-dec]',el).forEach(b=>b.onclick=()=>{let d=b.dataset.dec;if(d==='esc'){toast(T('Applicant asked to verify in person','Заявителю предложена очная проверка'),'gold');d='denied'}
+    f.status=d;if(d!=='pending'){const nx=S.fraud.find(x=>x.status==='pending');S.sel=nx?nx.id:f.id;toast(f.id+' · '+(d==='approved'?T('approved','одобрено'):T('denied','отклонено')),d==='approved'?'':'bad')}save();render()});
+}
+
+/* ---------- FUNNEL ---------- */
+function rFunnel(){
+  const el=$('#v-funnel');S.fp=S.fp||30;S.fc=S.fc||'all';
+  const r=rng(S.fp*13+(S.fc==='web'?1:S.fc==='app'?2:0));
+  const base=Math.round(S.fp*(S.fc==='all'?1840:S.fc==='web'?760:1080)*(0.95+r()*.1));
+  const rates=[1,0.86+r()*.04,0.71+r()*.05,0.62+r()*.05,0.55+r()*.04,0.52+r()*.03];
+  const vals=rates.map((x,i)=>Math.round(base*x)+(i===5||i===0?S.completed:0));
+  const labels=[['Started','Начали'],['Account created','Аккаунт'],['Document passed','Документ'],['Liveness passed','Живость'],['Record matched','Сверка'],['IAL2 achieved','IAL2']];
+  const W=680,H=300,pad=40,bw=(W-pad*2)/6;const m=cssv('--mal'),g=cssv('--gold'),tx=cssv('--text'),mu=cssv('--muted'),ln=cssv('--line'),rd=cssv('--red');
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let i=0;i<=4;i++){const y=30+i*(H-90)/4;svg+=`<line x1="${pad}" x2="${W-10}" y1="${y}" y2="${y}" stroke="${ln}"/><text x="${pad-6}" y="${y+4}" text-anchor="end" font-size="10" fill="${mu}">${Math.round(100-i*25)}%</text>`}
+  vals.forEach((v,i)=>{const h=(v/vals[0])*(H-90);const x=pad+i*bw+8,y=30+(H-90)-h;
+    svg+=`<rect x="${x}" y="${y}" width="${bw-16}" height="${h}" rx="6" fill="${i===5?g:m}" opacity="${i===5?1:.55+i*.08}"><title>${v}</title></rect><text x="${x+(bw-16)/2}" y="${y-6}" text-anchor="middle" font-size="11" font-weight="700" fill="${tx}">${v.toLocaleString()}</text><text x="${x+(bw-16)/2}" y="${H-38}" text-anchor="middle" font-size="10.5" fill="${mu}">${T(labels[i][0],labels[i][1])}</text>`;
+    if(i>0){const d=(1-v/vals[i-1])*100;svg+=`<text x="${x+(bw-16)/2}" y="${H-20}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${d>12?rd:mu}">−${d.toFixed(1)}%</text>`}});
+  svg+='</svg>';
+  const reasons=[['Document','Документ',[['Glare / blur on back side','Блик / размытие оборота',41],['Unsupported document','Неподдерживаемый документ',23],['Expired document','Просроченный документ',19],['Abandoned capture','Брошено на съёмке',17]]],['Liveness','Живость',[['Poor lighting','Плохое освещение',38],['Camera permission denied','Нет доступа к камере',27],['Timed out','Время истекло',21],['PAD attack detected','Атака подменой',14]]],['Record match','Сверка',[['Service no. not found','Личный номер не найден',46],['Name mismatch (marriage)','Несовпадение фамилии',31],['Pre-1990 paper records','Бумажные записи до 1990',23]]]];
+  el.innerHTML=`<div class="row" style="margin-bottom:12px">${[[7,'7 days','7 дней'],[30,'30 days','30 дней'],[90,'90 days','90 дней']].map(x=>`<button class="chip ${S.fp===x[0]?'on':''}" data-fp="${x[0]}">${T(x[1],x[2])}</button>`).join('')}<span style="width:12px"></span>${[['all','All channels','Все каналы'],['web','Web','Веб'],['app','Mobile app','Приложение']].map(x=>`<button class="chip ${S.fc===x[0]?'on':''}" data-fc="${x[0]}">${T(x[1],x[2])}</button>`).join('')}</div>
+  <div class="kpis"><div class="card kpi"><div class="l">${T('Started','Начали')}</div><div class="v">${vals[0].toLocaleString()}</div></div><div class="card kpi"><div class="l">${T('Completion rate','Доля завершивших')}</div><div class="v ok-t">${(vals[5]/vals[0]*100).toFixed(1)}%</div><div class="d">${T('target 55%','цель 55%')}</div></div><div class="card kpi"><div class="l">${T('Biggest drop-off','Наибольший отвал')}</div><div class="v" style="font-size:20px">${(()=>{let mi=1,md=0;vals.forEach((v,i)=>{if(i){const d=1-v/vals[i-1];if(d>md){md=d;mi=i}}});return T(labels[mi][0],labels[mi][1])})()}</div></div><div class="card kpi"><div class="l">${T('Sent to in-person','Направлено очно')}</div><div class="v">${Math.round(vals[0]*0.06).toLocaleString()}</div><div class="d">${T('fallback path','запасной путь')}</div></div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('Proofing funnel · drop-off per step','Воронка проверки · отвал на каждом шаге')}<span class="sp"></span><span class="legend"><span><i style="background:${m}"></i>${T('in progress','в процессе')}</span><span><i style="background:${g}"></i>IAL2</span></span></h3>${svg}<div class="muted" style="font-size:12px">${T('Your own completions in this demo are added live: ','Ваши прохождения в демо добавляются сразу: ')}<b>${S.completed}</b></div></div>
+  <div class="card"><h3>${T('Top drop-off reasons','Главные причины отвала')}</h3>${reasons.map(g=>`<div style="font-weight:700;font-size:13px;margin:10px 0 6px">${T(g[0],g[1])}</div>${g[2].map(x=>`<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:5px"><span style="flex:1">${T(x[0],x[1])}</span><div class="prog" style="width:90px"><i style="width:${x[2]}%"></i></div><span class="mono" style="width:32px;text-align:right">${x[2]}%</span></div>`).join('')}`).join('')}</div></div>`;
+  $$('[data-fp]',el).forEach(b=>b.onclick=()=>{S.fp=+b.dataset.fp;save();rFunnel()});
+  $$('[data-fc]',el).forEach(b=>b.onclick=()=>{S.fc=b.dataset.fc;save();rFunnel()});
+}
+
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#aLg').onclick=()=>{S.a11y.lg=!S.a11y.lg;save();render()};
+$('#aHc').onclick=()=>{S.a11y.hc=!S.a11y.hc;save();render()};
+$('#reset').onclick=()=>{store.clear();S=seed();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

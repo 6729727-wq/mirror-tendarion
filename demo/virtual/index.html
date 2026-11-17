@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VirtuaCare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center}
+.who i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);font-style:normal;font-weight:800;flex:none}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.btn.redf{background:var(--red);border-color:var(--red);color:#fff}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{color:var(--red);font-size:11.5px;margin-top:3px;min-height:0}
+.input.bad{border-color:var(--red)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:7px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.chip.red.on{background:color-mix(in srgb,var(--red) 16%,transparent);border-color:var(--red);color:var(--red)}
+.tri{border-radius:14px;padding:14px;border:1px solid var(--line2);background:var(--bg2)}
+.tri.em{border-color:var(--red);background:color-mix(in srgb,var(--red) 10%,transparent)}
+.tri.ur{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.tri.ro{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.tri b.l{font-size:20px;display:block}
+.meter{height:10px;border-radius:9px;background:linear-gradient(90deg,var(--mal),var(--amber),var(--red));position:relative;margin:10px 0 4px}
+.meter i{position:absolute;top:-4px;width:4px;height:18px;border-radius:3px;background:var(--text);transition:left .3s}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px}
+.slot{padding:8px 0;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-family:var(--mono);font-size:13px}
+.slot.on{background:var(--mal);color:#fff;border-color:var(--mal)}
+.slot:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:12px}
+.doc{border:1px solid var(--line2);border-radius:12px;padding:10px;cursor:pointer;background:var(--bg2);text-align:left;display:flex;gap:10px;align-items:center}
+.doc.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.doc i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);font-style:normal;font-weight:800;flex:none;font-size:12px}
+.doc b{display:block;font-size:13px}.doc span{font-size:11.5px;color:var(--muted)}
+.ap{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ap .dt{text-align:center;min-width:54px;border-right:1px solid var(--line);padding-right:12px}
+.ap .dt b{display:block;font-size:20px;line-height:1}.ap .dt span{font-size:11px;color:var(--muted);text-transform:uppercase}
+.ap .mid{flex:1;min-width:160px}
+.ap .mid b{display:block}.ap .mid span{font-size:12.5px;color:var(--muted)}
+.call{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start}
+.stage{position:relative;border-radius:18px;overflow:hidden;background:#0b1a24;aspect-ratio:16/10;border:1px solid var(--line2)}
+.stage svg.remote{width:100%;height:100%;display:block}
+.pip{position:absolute;right:12px;bottom:70px;width:26%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;border:2px solid rgba(255,255,255,.5);background:#1d2b36;display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px}
+.pip svg{width:100%;height:100%}
+.ovl{position:absolute;left:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap;right:12px}
+.ovl span{background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:4px 10px;border-radius:999px;font-weight:600}
+.ctrl{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:10px}
+.ctrl button{width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:18px;cursor:pointer;backdrop-filter:blur(6px)}
+.ctrl button.off{background:#fff;color:#111}
+.ctrl button.end{background:var(--red);width:58px;border-radius:24px}
+.mouth{transform-origin:center;transform-box:fill-box}
+.talk .mouth{animation:talk .28s infinite alternate}
+@keyframes talk{to{transform:scaleY(2.6)}}
+.chat{height:220px;overflow:auto;display:flex;flex-direction:column;gap:6px;font-size:13px;padding:2px}
+.msg{max-width:85%;padding:7px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--line)}
+.msg.me{align-self:flex-end;background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:color-mix(in srgb,var(--mal) 40%,transparent)}
+.msg small{display:block;color:var(--dim);font-size:10.5px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.bar{height:8px;border-radius:9px;background:var(--line);overflow:hidden;min-width:80px}
+.bar i{display:block;height:100%}
+.rx{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:var(--bg2);display:flex;gap:12px;align-items:flex-start}
+.rx .body{flex:1;min-width:0}
+.rx .body b{display:block}.rx .body span{font-size:12.5px;color:var(--muted)}
+.qr{display:grid;grid-template-columns:repeat(17,1fr);width:84px;height:84px;background:#fff;padding:4px;border-radius:8px;flex:none}
+.qr i{background:#0b1512}.qr s{background:#fff}
+.alert{border-radius:12px;padding:10px 12px;font-size:13px;margin-top:10px;border:1px solid}
+.alert.hi{border-color:var(--red);background:color-mix(in srgb,var(--red) 10%,transparent)}
+.alert.mo{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.map svg{width:100%;height:auto;display:block}
+.map .node{cursor:pointer}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sp-row{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.sp-row span{flex:1;min-width:0}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.chart svg{width:100%;height:auto;display:block}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;max-height:180px;overflow:auto}
+.log div{padding:2px 0}.log .t{color:var(--dim)}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.gate{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(900px 500px at 20% 0%,color-mix(in srgb,var(--mal) 14%,transparent),transparent),var(--bg)}
+.gate .box{width:100%;max-width:420px}
+.gate .logo{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+.gate .logo b{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:24px}
+.gate h2{margin:0;font-size:22px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.empty{padding:26px;text-align:center;color:var(--muted);font-size:13.5px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.call{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.pip{width:34%;bottom:66px}.ctrl button{width:40px;height:40px;font-size:16px}.ctrl button.end{width:52px}.ap .dt{border:0;padding:0}.rx{flex-wrap:wrap}}
+</style>
+</head>
+<body data-demo-en="VirtuaCare — virtual hospital & telemedicine network" data-demo-ru="VirtuaCare — виртуальная больница и телемедицина">
+<div class="gate" id="gate">
+  <div class="box card">
+    <div class="logo"><b>✚</b><div><h2>VirtuaCare</h2><div class="muted" style="font-size:13px" data-en="National virtual hospital · Ministry of Health" data-ru="Национальная виртуальная больница · Минздрав"></div></div></div>
+    <div class="f" style="margin-bottom:10px"><label data-en="National ID or email" data-ru="Нац. ID или почта"></label><input class="input" id="lgU" value="patient.demo@virtuacare.gov"></div>
+    <div class="f" style="margin-bottom:10px"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lgP" type="password" value="demo-2025"></div>
+    <div class="f" style="margin-bottom:14px"><label data-en="Sign in as" data-ru="Войти как"></label>
+      <div class="roles"><button class="chip on" data-role="pat" data-en="Patient" data-ru="Пациент"></button><button class="chip" data-role="min" data-en="Ministry staff" data-ru="Сотрудник министерства"></button></div></div>
+    <button class="btn pri" id="login" style="width:100%;justify-content:center" data-en="Sign in to demo" data-ru="Войти в демо"></button>
+    <div class="muted" style="font-size:12px;margin-top:10px;text-align:center" data-en="Demo credentials are prefilled · one-time code skipped" data-ru="Демо-данные уже введены · одноразовый код пропущен"></div>
+  </div>
+</div>
+<div class="app" id="app" style="display:none">
+  <aside class="side" id="side">
+    <div class="brand"><b>✚</b><div>VirtuaCare<small data-en="Ministry of Health · Qadira" data-ru="Минздрав · Кадира"></small></div></div>
+    <div class="sec" data-en="Patient" data-ru="Пациент"></div>
+    <div id="navP"></div>
+    <div class="sec" data-en="Clinician" data-ru="Врач"></div>
+    <div id="navC"></div>
+    <div class="sec" data-en="Ministry" data-ru="Министерство"></div>
+    <div id="navM"></div>
+    <div class="grow"></div>
+    <div class="who"><i>MS</i><div><b>Mona Saleh</b><div class="muted" data-en="Patient · MRN 400-118-27" data-ru="Пациент · МК 400-118-27"></div></div></div>
+    <button class="btn sm" id="logout" style="margin-top:8px;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+    <button class="btn sm" id="reset" style="margin-top:6px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill ok" id="netPill"></span>
+    </div>
+    <section class="view" id="v-book"></section>
+    <section class="view" id="v-visits"></section>
+    <section class="view" id="v-call"></section>
+    <section class="view" id="v-rx"></section>
+    <section class="view" id="v-net"></section>
+    <section class="view" id="v-cap"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt_virtual_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const fmtD=d=>new Date(d).toLocaleDateString(loc(),{weekday:'short',day:'numeric',month:'short'});
+const fmtT=d=>new Date(d).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+const pad=n=>String(n).padStart(2,'0');
+
+const SPECS={gp:['General practice','Терапия','🩺'],cardio:['Cardiology','Кардиология','❤️'],resp:['Pulmonology','Пульмонология','🫁'],derm:['Dermatology','Дерматология','🧴'],neuro:['Neurology','Неврология','🧠'],psych:['Mental health','Психиатрия','💬'],endo:['Endocrinology','Эндокринология','🧪'],peds:['Paediatrics','Педиатрия','🧸']};
+const DOCS={gp:[['Dr. Layla Haddad','Д-р Лейла Хаддад'],['Dr. Omar Farouk','Д-р Омар Фарук'],['Dr. Hana Saleh','Д-р Хана Салех']],cardio:[['Dr. Yusuf Karim','Д-р Юсуф Карим'],['Dr. Mariam Aziz','Д-р Мариам Азиз']],resp:[['Dr. Tariq Mansour','Д-р Тарик Мансур'],['Dr. Noor Jaber','Д-р Нур Джабер']],derm:[['Dr. Reem Qasim','Д-р Рим Касим'],['Dr. Ali Zaid','Д-р Али Заид']],neuro:[['Dr. Khalid Rahim','Д-р Халид Рахим'],['Dr. Dana Musa','Д-р Дана Муса']],psych:[['Dr. Samir Idris','Д-р Самир Идрис'],['Dr. Lina Fares','Д-р Лина Фарес']],endo:[['Dr. Faisal Amin','Д-р Фейсал Амин'],['Dr. Sara Nasser','Д-р Сара Нассер']],peds:[['Dr. Adel Hamdan','Д-р Адель Хамдан'],['Dr. Rana Khoury','Д-р Рана Хури']]};
+const SYM=[['fever','Fever','Температура',2,'gp'],['throat','Sore throat','Боль в горле',1,'gp'],['cough','Cough','Кашель',1,'resp'],['sob','Shortness of breath','Одышка',4,'resp'],['chest','Chest pain','Боль в груди',5,'cardio'],['palp','Palpitations','Сердцебиение',3,'cardio'],['rash','Skin rash','Сыпь',1,'derm'],['itch','Itching','Зуд',1,'derm'],['head','Headache','Головная боль',2,'neuro'],['weak','Face / arm weakness','Слабость лица / руки',8,'neuro'],['anx','Anxiety, low mood','Тревога, подавленность',2,'psych'],['sleep','Poor sleep','Плохой сон',1,'psych'],['thirst','Excess thirst','Сильная жажда',2,'endo'],['kid','Child under 5 with fever','Ребёнок до 5 лет с температурой',3,'peds']];
+const DUR=[['h','Less than 24 h','Меньше суток',2],['d3','1–3 days','1–3 дня',1],['w','About a week','Около недели',0],['m','Over a month','Больше месяца',0]];
+const HOSP=[
+ ['hub','VirtuaCare Hub · Nahr City','Хаб VirtuaCare · Нахр',300,190,'hub',['gp','cardio','resp','derm','neuro','psych','endo','peds']],
+ ['nmc','Nahr Medical City','Медгород Нахр',330,215,'spoke',['cardio','neuro','endo']],
+ ['wsg','Wadi Sahel General','Больница Вади-Сахель',170,250,'spoke',['gp','resp','peds']],
+ ['rch','Rimal Coastal Hospital','Прибрежная больница Римал',95,150,'spoke',['gp','derm','psych']],
+ ['jnh','Jabal North Hospital','Больница Джабаль-Север',280,70,'spoke',['gp','cardio','resp']],
+ ['oeh','Oasis East Hospital','Больница Оазис-Восток',470,170,'spoke',['gp','endo','psych']],
+ ['hph','Hadeed Port Hospital','Больница порта Хадид',520,300,'spoke',['gp','resp','derm']],
+ ['nch','Najm Children\'s Hospital','Детская больница Наджм',245,330,'spoke',['peds','neuro']],
+ ['sbk','Sabkha Rural Clinic','Сельская клиника Сабха',395,360,'clinic',['gp']],
+ ['qrn','Qarn Highlands Clinic','Клиника Карн-Хайлендс',140,60,'clinic',['gp','psych']]];
+const DRUGS={amox:['Amoxicillin','Амоксициллин',['250 mg','500 mg'],'caps','капс.',[]],parac:['Paracetamol','Парацетамол',['500 mg','1 g'],'tab','таб.',[]],ibup:['Ibuprofen','Ибупрофен',['200 mg','400 mg'],'tab','таб.',['warf']],clari:['Clarithromycin','Кларитромицин',['250 mg','500 mg'],'tab','таб.',['ator']],amlo:['Amlodipine','Амлодипин',['5 mg','10 mg'],'tab','таб.',[]],metf:['Metformin','Метформин',['500 mg','850 mg'],'tab','таб.',[]],sert:['Sertraline','Сертралин',['50 mg','100 mg'],'tab','таб.',[]],salb:['Salbutamol inhaler','Сальбутамол ингалятор',['100 mcg'],'puff','вдох',[]],hydro:['Hydrocortisone cream','Гидрокортизон крем',['1%'],'appl','нанес.',[]]};
+const CUR_MEDS=[['warf','Warfarin 3 mg daily','Варфарин 3 мг в день'],['ator','Atorvastatin 20 mg nightly','Аторвастатин 20 мг на ночь']];
+const INTER={warf:['HIGH: NSAID + warfarin — major bleeding risk. Prefer paracetamol.','ВЫСОКИЙ: НПВС + варфарин — риск кровотечения. Лучше парацетамол.','hi'],ator:['MODERATE: clarithromycin raises atorvastatin levels (myopathy). Pause statin during course.','СРЕДНИЙ: кларитромицин повышает уровень аторвастатина (миопатия). Приостановить статин на курс.','mo']};
+const FREQ=[['OD','once daily','1 раз в день',1],['BD','twice daily','2 раза в день',2],['TDS','three times daily','3 раза в день',3],['QDS','four times daily','4 раза в день',4],['PRN','as needed','по необходимости',2]];
+const PHARM=[['Al-Shifa Pharmacy · Nahr','Аптека Аш-Шифа · Нахр'],['Rimal Care Pharmacy','Аптека Римал Кэр'],['Home delivery (48 h)','Доставка на дом (48 ч)']];
+const DX=[['J06.9','Acute upper respiratory infection','Острая инфекция верхних дыхательных путей','amox'],['I10','Essential hypertension','Эссенциальная гипертензия','amlo'],['L20.9','Atopic dermatitis','Атопический дерматит','hydro'],['F41.1','Generalised anxiety disorder','Генерализованное тревожное расстройство','sert'],['E11.9','Type 2 diabetes','Сахарный диабет 2 типа','metf'],['R51','Headache','Головная боль','parac']];
+
+function addDays(n,h,m){const d=new Date();d.setDate(d.getDate()+n);d.setHours(h||0,m||0,0,0);return d.getTime()}
+function seed(){
+  const r=rng(31);
+  const hosp=HOSP.map(h=>{const beds=h[5]==='hub'?60:h[5]==='clinic'?24:Math.round(180+r()*260);const icu=h[5]==='clinic'?0:Math.round(beds*.1);
+    return{id:h[0],beds,occ:Math.round(beds*(.62+r()*.33)),icu,icuOcc:Math.round(icu*(.5+r()*.48)),vent:Math.round(icu*.6),er:Math.round(10+r()*70),vw:Math.round(20+r()*140)}});
+  const online={};HOSP.forEach(h=>{online[h[0]]={};h[6].forEach(s=>online[h[0]][s]=1+Math.floor(r()*(h[5]==='hub'?7:3)))});
+  const trend=[];let v=78;for(let i=0;i<21;i++){v+=(r()-.45)*3;v=Math.max(64,Math.min(93,v));trend.push(+v.toFixed(1))}
+  return{auth:false,role:'pat',view:'book',
+    tri:{sym:[],sev:2,dur:'d3',age:34,notes:''},res:null,doc:null,slot:null,consent:false,
+    appts:[{id:'VC-30418',spec:'derm',doc:0,when:addDays(-9,10,30),level:'ro',status:'done',dx:'L20.9'},{id:'VC-30577',spec:'gp',doc:1,when:addDays(0,new Date().getHours()+1,0),level:'ur',status:'booked',reason:['Fever, sore throat','Температура, боль в горле']}],
+    nextA:30602,call:null,
+    rx:[{id:'RX-77120',drug:'hydro',str:'1%',dose:1,freq:'BD',days:14,ref:1,ph:0,status:'disp',date:addDays(-9,11,0),doc:['Dr. Reem Qasim','Д-р Рим Касим']}],nextRx:77231,
+    draft:null,hosp,online,trend,mapSpec:'all',mapSel:'hub',capSel:null,xlog:[]};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+
+const VIEWS=[['book','🩺','Triage & booking','Триаж и запись','P'],['visits','📅','My appointments','Мои приёмы','P'],['call','🎥','Video consult','Видеоконсультация','C'],['rx','💊','E-prescriptions','Эл. рецепты','C'],['net','🗺','Specialist network','Сеть специалистов','M'],['cap','🏥','Hospital capacity','Загрузка больниц','M']];
+function nav(){
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';
+    if(v[0]==='visits'){const n=S.appts.filter(a=>a.status==='booked').length;if(n)x=`<span class="cnt">${n}</span>`}
+    if(v[0]==='rx'){const n=S.rx.filter(a=>a.status==='iss').length;if(n)x=`<span class="cnt">${n}</span>`}
+    if(v[0]==='call'&&S.call)x='<span class="cnt" style="background:var(--red);color:#fff">LIVE</span>';
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navP').innerHTML=mk('P');$('#navC').innerHTML=mk('C');$('#navM').innerHTML=mk('M');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0})}
+function render(){
+  $('#gate').style.display=S.auth?'none':'grid';$('#app').style.display=S.auth?'grid':'none';
+  $$('#gate [data-role]').forEach(b=>b.classList.toggle('on',b.dataset.role===S.role));
+  if(!S.auth)return;
+  nav();const v=VIEWS.find(x=>x[0]===S.view);
+  $('#title').textContent=T(v[2],v[3]);
+  $('#crumb').textContent={P:T('Patient portal','Портал пациента'),C:T('Clinician workspace','Рабочее место врача'),M:T('Ministry command centre','Центр управления министерства')}[v[4]];
+  const on=Object.values(S.online).reduce((a,o)=>a+Object.values(o).reduce((x,y)=>x+y,0),0);
+  $('#netPill').textContent=T(on+' specialists online','Специалистов онлайн: '+on);
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+S.view));
+  if(S.view!=='call')stopTimer();
+  ({book:rBook,visits:rVisits,call:rCall,rx:rRx,net:rNet,cap:rCap})[S.view]();
+}
+
+/* ---------- TRIAGE & BOOKING ---------- */
+function triage(){
+  const t=S.tri;const sel=SYM.filter(s=>t.sym.includes(s[0]));
+  let score=sel.reduce((a,s)=>a+s[3],0)+(t.sev-1)*2+(DUR.find(d=>d[0]===t.dur)||[0,0,0,0])[3];
+  if(t.age>=70||t.age<2)score+=2;
+  const red=[];
+  if(t.sym.includes('weak'))red.push(['Possible stroke signs (FAST)','Возможные признаки инсульта (FAST)']);
+  if(t.sym.includes('chest')&&(t.sym.includes('sob')||t.sev>=4))red.push(['Chest pain with breathlessness or high severity','Боль в груди с одышкой или высокой интенсивностью']);
+  const level=red.length||score>=16?'em':score>=8?'ur':'ro';
+  const cnt={};sel.forEach(s=>cnt[s[4]]=(cnt[s[4]]||0)+s[3]);
+  const spec=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0]||'gp';
+  return{score,level,spec,red};
+}
+const LV={em:['Emergency','Экстренно','Go to the nearest emergency department or call 997 now. Video consult is not safe for these symptoms.','Немедленно в приёмное отделение или звоните 997. Видеоконсультация при таких симптомах небезопасна.'],ur:['Urgent · same day','Срочно · сегодня','A clinician should see you today. Slots from today are prioritised.','Врач должен осмотреть вас сегодня. Приоритет — слоты на сегодня.'],ro:['Routine','Планово','A video consult in the next days is appropriate. Self-care advice is attached.','Подойдёт видеоприём в ближайшие дни. Советы по самопомощи приложены.']};
+function slotsFor(spec,level){
+  const r=rng(spec.length*97+(level==='ur'?7:3));const now=Date.now();const days=level==='ur'?[0,1]:[1,2,3];const out=[];
+  days.forEach(d=>{const ts=[];for(let h=8;h<18;h++)for(const m of [0,30]){const t=addDays(d,h,m);if(t<now+30*60000)continue;ts.push({t,busy:r()<.35||S.appts.some(a=>a.when===t&&a.status!=='cancel')})}if(ts.length)out.push({d,ts})});
+  return out;
+}
+function rBook(){
+  const el=$('#v-book');const t=S.tri;const res=S.res;
+  el.innerHTML=`<div class="grid2"><div class="stack">
+  <div class="card"><h3>${T('1 · Symptom check','1 · Проверка симптомов')}<span class="sp"></span><span class="pill">${T('Clinical protocol v4.2','Клинический протокол v4.2')}</span></h3>
+   <div class="muted" style="font-size:13px;margin-bottom:10px">${T('Select everything you feel now. Red-flag symptoms escalate to emergency automatically.','Отметьте всё, что чувствуете сейчас. Опасные симптомы сразу переводят в «экстренно».')}</div>
+   <div class="chips" id="syms">${SYM.map(s=>`<button class="chip ${s[3]>=5?'red':''} ${t.sym.includes(s[0])?'on':''}" data-s="${s[0]}">${T(s[1],s[2])}</button>`).join('')}</div>
+   <div class="fgrid" style="margin-top:14px">
+    <div class="f"><label>${T('Severity','Интенсивность')}: <b id="sevv">${t.sev}</b>/5</label><input type="range" min="1" max="5" value="${t.sev}" id="sev" style="width:100%;accent-color:var(--mal)"></div>
+    <div class="f"><label>${T('How long?','Как давно?')}</label><select class="input" id="dur">${DUR.map(d=>`<option value="${d[0]}" ${t.dur===d[0]?'selected':''}>${T(d[1],d[2])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Age','Возраст')}</label><input class="input" id="age" type="number" min="0" max="120" value="${t.age}"><div class="err" id="ageErr"></div></div>
+    <div class="f"><label>${T('Current medicines (from record)','Текущие лекарства (из карты)')}</label><div style="font-size:12.5px;padding-top:4px">${CUR_MEDS.map(m=>T(m[1],m[2])).join('<br>')}</div></div>
+    <div class="f full"><label>${T('Describe in your words (optional)','Опишите своими словами (необязательно)')}</label><textarea class="input" id="tnotes" rows="2" data-en-ph="e.g. started after a cold, worse at night" placeholder="${T('e.g. started after a cold, worse at night','напр. началось после простуды, хуже ночью')}">${esc(t.notes)}</textarea></div>
+   </div>
+   <div class="row" style="margin-top:12px"><button class="btn pri" id="runTri">${T('Run triage','Пройти триаж')}</button><span class="muted" style="font-size:12px" id="symErr"></span></div>
+  </div>
+  ${res&&res.level!=='em'?`<div class="card"><h3>${T('2 · Choose clinician & time','2 · Врач и время')}<span class="sp"></span><span class="pill gold">${SPECS[res.spec][2]} ${T(SPECS[res.spec][0],SPECS[res.spec][1])}</span></h3>
+   <div class="docs">${DOCS[res.spec].map((d,i)=>`<button class="doc ${S.doc===i?'on':''}" data-doc="${i}"><i>${d[0].split(' ').slice(1).map(x=>x[0]).join('')}</i><div><b>${T(d[0],d[1])}</b><span>${T(SPECS[res.spec][0],SPECS[res.spec][1])} · ★ ${(4.6+i*.1).toFixed(1)}</span></div></button>`).join('')}</div>
+   ${slotsFor(res.spec,res.level).map(g=>`<div style="font-weight:700;font-size:13px;margin:10px 0 6px">${g.d===0?T('Today','Сегодня'):fmtD(addDays(g.d))}</div><div class="slots">${g.ts.map(s=>`<button class="slot ${S.slot===s.t?'on':''}" data-t="${s.t}" ${s.busy?'disabled':''}>${fmtT(s.t)}</button>`).join('')}</div>`).join('')}
+   <label class="row" style="margin-top:14px;font-size:13px;cursor:pointer"><input type="checkbox" id="consent" ${S.consent?'checked':''}> ${T('I consent to a video consultation and to sharing my record with the clinician.','Согласен(на) на видеоприём и доступ врача к моей медкарте.')}</label>
+   <div class="row" style="margin-top:12px"><button class="btn pri" id="bookBtn">${T('Confirm booking','Подтвердить запись')}</button><span class="muted" style="font-size:12px" id="bookErr"></span></div>
+  </div>`:''}
+  </div>
+  <div class="stack"><div class="card"><h3>${T('Triage result','Результат триажа')}</h3>${res?`<div class="tri ${res.level}"><span class="muted" style="font-size:12px">${T('Acuity','Срочность')}</span><b class="l">${T(LV[res.level][0],LV[res.level][1])}</b><div class="meter"><i style="left:calc(${Math.min(100,res.score/22*100)}% - 2px)"></i></div><div class="muted" style="font-size:11.5px;display:flex;justify-content:space-between"><span>${T('routine','планово')}</span><span>${T('score','балл')} ${res.score}</span><span>${T('emergency','экстренно')}</span></div><p style="font-size:13.5px;margin:10px 0 0">${T(LV[res.level][2],LV[res.level][3])}</p>
+    ${res.red.map(x=>`<div class="alert hi">⚠ ${T(x[0],x[1])}</div>`).join('')}
+    ${res.level==='em'?`<div class="row" style="margin-top:12px"><button class="btn redf" id="call997">📞 ${T('Call 997','Позвонить 997')}</button><button class="btn" id="nearEr">🏥 ${T('Nearest ER','Ближайшее приёмное')}</button></div>`:`<div style="font-size:13px;margin-top:10px">${T('Routed to','Направлено в')}: <b>${T(SPECS[res.spec][0],SPECS[res.spec][1])}</b></div>`}
+    </div>`:`<div class="empty">${T('Select symptoms and run triage to see your acuity and the right specialist.','Выберите симптомы и пройдите триаж — увидите срочность и нужного специалиста.')}</div>`}</div>
+   <div class="card"><h3>${T('Why VirtuaCare','Почему VirtuaCare')}</h3><div style="font-size:13px;line-height:1.6" class="muted">${T('One national virtual hospital: 10 sites, 8 specialties, shared FHIR record. Average wait for a video consult today: <b>14 min</b>.','Единая виртуальная больница: 10 площадок, 8 специальностей, общая карта FHIR. Среднее ожидание видеоприёма сегодня: <b>14 мин</b>.')}</div></div></div></div>`;
+  $$('#syms .chip',el).forEach(b=>b.onclick=()=>{const k=b.dataset.s;t.sym=t.sym.includes(k)?t.sym.filter(x=>x!==k):[...t.sym,k];b.classList.toggle('on');save()});
+  $('#sev',el).oninput=e=>{t.sev=+e.target.value;$('#sevv',el).textContent=t.sev;save()};
+  $('#dur',el).onchange=e=>{t.dur=e.target.value;save()};
+  $('#tnotes',el).oninput=e=>{t.notes=e.target.value;save()};
+  $('#runTri',el).onclick=()=>{const a=+$('#age',el).value;
+    if(!$('#age',el).value||a<0||a>120){$('#age',el).classList.add('bad');$('#ageErr',el).textContent=T('Enter age 0–120','Возраст 0–120');return}
+    t.age=a;if(!t.sym.length){$('#symErr',el).textContent=T('Select at least one symptom','Выберите хотя бы один симптом');return}
+    S.res=triage();S.doc=null;S.slot=null;save();rBook();toast(T('Triage complete: ','Триаж готов: ')+T(LV[S.res.level][0],LV[S.res.level][1]),S.res.level==='em'?'bad':'')};
+  $$('[data-doc]',el).forEach(b=>b.onclick=()=>{S.doc=+b.dataset.doc;save();rBook()});
+  $$('.slot',el).forEach(b=>b.onclick=()=>{S.slot=+b.dataset.t;save();$$('.slot',el).forEach(x=>x.classList.toggle('on',x===b))});
+  const c=$('#consent',el);if(c)c.onchange=()=>{S.consent=c.checked;save()};
+  const bb=$('#bookBtn',el);if(bb)bb.onclick=()=>{
+    const e=[];if(S.doc==null)e.push(T('choose a clinician','выберите врача'));if(!S.slot)e.push(T('choose a time','выберите время'));if(!S.consent)e.push(T('give consent','дайте согласие'));
+    if(e.length){$('#bookErr',el).textContent=T('Please ','Пожалуйста: ')+e.join(', ');return}
+    const sel=SYM.filter(s=>t.sym.includes(s[0]));
+    const a={id:'VC-'+(S.nextA++),spec:S.res.spec,doc:S.doc,when:S.slot,level:S.res.level,status:'booked',reason:[sel.map(s=>s[1]).join(', '),sel.map(s=>s[2]).join(', ')]};
+    S.appts.unshift(a);S.tri={sym:[],sev:2,dur:'d3',age:t.age,notes:''};S.res=null;S.slot=null;S.doc=null;S.consent=false;save();
+    toast(T('Booked ','Запись ')+a.id+' · '+fmtD(a.when)+' '+fmtT(a.when));go('visits')};
+  const c9=$('#call997',el);if(c9)c9.onclick=()=>toast(T('Connecting to emergency line 997… (demo)','Соединение с линией 997… (демо)'),'bad');
+  const ne=$('#nearEr',el);if(ne)ne.onclick=()=>{S.mapSel='nmc';go('net');toast(T('Nearest ER: Nahr Medical City · 6 km · wait ','Ближайшее: Медгород Нахр · 6 км · ожидание ')+S.hosp[1].er+T(' min',' мин'),'gold')};
+}
+
+/* ---------- APPOINTMENTS ---------- */
+const AST={booked:['Booked','Записан','gold'],live:['In progress','Идёт','warn'],done:['Completed','Завершён','ok'],cancel:['Cancelled','Отменён','bad']};
+function rVisits(){
+  const el=$('#v-visits');const up=S.appts.filter(a=>a.status==='booked'||a.status==='live'),past=S.appts.filter(a=>a.status==='done'||a.status==='cancel');
+  const card=a=>{const d=DOCS[a.spec][a.doc]||DOCS[a.spec][0];const dt=new Date(a.when);const dx=a.dx&&DX.find(x=>x[0]===a.dx);
+    return `<div class="ap"><div class="dt"><b>${dt.getDate()}</b><span>${dt.toLocaleDateString(loc(),{month:'short'})}</span></div><div class="mid"><b>${T(d[0],d[1])} · ${T(SPECS[a.spec][0],SPECS[a.spec][1])}</b><span>${a.id} · ${fmtT(a.when)}${a.reason?' · '+esc(T(a.reason[0],a.reason[1])):''}${dx?' · '+dx[0]+' '+T(dx[1],dx[2]):''}</span></div>
+    <span class="pill ${AST[a.status][2]}">${T(AST[a.status][0],AST[a.status][1])}</span>
+    ${a.status==='booked'||a.status==='live'?`<button class="btn pri sm" data-join="${a.id}">🎥 ${T('Join video','Войти в видео')}</button><button class="btn sm danger" data-cancel="${a.id}">${T('Cancel','Отменить')}</button>`:''}</div>`};
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Upcoming','Предстоящие')}</div><div class="v">${up.length}</div><div class="d">${T('video consults','видеоприёмы')}</div></div><div class="card kpi"><div class="l">${T('Completed','Завершено')}</div><div class="v">${past.filter(a=>a.status==='done').length}</div><div class="d">${T('this year','в этом году')}</div></div><div class="card kpi"><div class="l">${T('Active prescriptions','Активные рецепты')}</div><div class="v">${S.rx.filter(r=>r.status==='iss').length}</div><div class="d">${T('ready at pharmacy','ждут в аптеке')}</div></div><div class="card kpi"><div class="l">${T('Avg wait today','Ожидание сегодня')}</div><div class="v">14 ${T('min','мин')}</div><div class="d">${T('national','по стране')}</div></div></div>
+  <div class="grid2"><div class="card"><h3>${T('Upcoming','Предстоящие')}<span class="sp"></span><button class="btn sm" id="newB">+ ${T('New booking','Новая запись')}</button></h3>${up.map(card).join('')||`<div class="empty">${T('No upcoming consults','Нет предстоящих приёмов')}</div>`}</div>
+  <div class="card"><h3>${T('History','История')}</h3>${past.map(card).join('')||`<div class="empty">—</div>`}</div></div>`;
+  $('#newB',el).onclick=()=>go('book');
+  $$('[data-join]',el).forEach(b=>b.onclick=()=>startCall(b.dataset.join));
+  $$('[data-cancel]',el).forEach(b=>b.onclick=()=>{const a=S.appts.find(x=>x.id===b.dataset.cancel);a.status='cancel';if(S.call&&S.call.id===a.id)S.call=null;save();render();toast(T('Appointment cancelled','Приём отменён'),'bad')});
+}
+
+/* ---------- VIDEO CALL ---------- */
+let timer=null;
+function stopTimer(){if(timer){clearInterval(timer);timer=null}}
+function startCall(id){const a=S.appts.find(x=>x.id===id);a.status='live';
+  if(!S.call||S.call.id!==id)S.call={id,start:Date.now(),mic:true,cam:true,share:false,q:4,dx:'',notes:'',chat:[{me:0,en:'Hello Mona, I can see your triage notes. How are you feeling now?',ru:'Здравствуйте, Мона, я вижу данные триажа. Как вы сейчас себя чувствуете?',t:Date.now()}]};
+  save();go('call')}
+const REPL=[['Thank you. Can you show me your throat to the camera, please?','Спасибо. Покажите, пожалуйста, горло в камеру.'],['I see some redness. Any allergies to penicillin?','Вижу покраснение. Есть аллергия на пенициллин?'],['Understood. I will send an e-prescription to your pharmacy.','Понятно. Отправлю электронный рецепт в вашу аптеку.'],['Drink plenty of fluids and rest. Book a follow-up if not better in 3 days.','Пейте больше жидкости и отдыхайте. Если через 3 дня не лучше — запишитесь повторно.']];
+function docSVG(){const sk='#c58c62',coat='#f4f6f8';
+  return `<svg class="remote" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3a4a"/><stop offset="1" stop-color="#0d1c26"/></linearGradient></defs><rect width="640" height="400" fill="url(#bgg)"/>
+  <rect x="40" y="40" width="150" height="190" rx="6" fill="#28485a"/><rect x="52" y="54" width="126" height="10" rx="3" fill="#3d6478"/><rect x="52" y="74" width="100" height="10" rx="3" fill="#3d6478"/><rect x="52" y="94" width="110" height="10" rx="3" fill="#3d6478"/>
+  <rect x="470" y="60" width="120" height="90" rx="8" fill="#2c4f61"/><path d="M490 120 l18-26 16 18 12-12 22 20z" fill="#4c7d8f"/>
+  <path d="M190 400 C200 300 250 270 320 270 C390 270 440 300 450 400Z" fill="${coat}"/><path d="M300 272 L320 330 L340 272Z" fill="#7fa6c0"/>
+  <path d="M262 290 C250 340 280 360 300 350" stroke="#2b3b48" stroke-width="5" fill="none"/><circle cx="300" cy="352" r="9" fill="#9fb0bd"/>
+  <rect x="300" y="226" width="40" height="52" rx="12" fill="${sk}"/><ellipse cx="320" cy="180" rx="62" ry="74" fill="${sk}"/>
+  <path d="M258 170 C256 108 300 92 330 96 C372 100 388 140 382 172 C370 140 340 128 300 132 C280 136 266 150 258 170Z" fill="#2a1d16"/>
+  <circle cx="297" cy="182" r="6" fill="#1b1410"/><circle cx="343" cy="182" r="6" fill="#1b1410"/><path d="M287 166 q10-6 20 0 M333 166 q10-6 20 0" stroke="#2a1d16" stroke-width="4" fill="none"/>
+  <rect class="mouth" x="308" y="222" width="24" height="5" rx="2.5" fill="#7b3b30"/></svg>`}
+function rCall(){
+  const el=$('#v-call');stopTimer();
+  const c=S.call;
+  if(!c){const nx=S.appts.filter(a=>a.status==='booked');el.innerHTML=`<div class="card"><div class="empty"><div style="font-size:42px">🎥</div>${T('No active consultation.','Нет активной консультации.')}<div class="row" style="justify-content:center;margin-top:12px">${nx.map(a=>`<button class="btn pri sm" data-join="${a.id}">${T('Start','Начать')} ${a.id} · ${fmtT(a.when)}</button>`).join('')||`<button class="btn sm" id="gb">${T('Book a consult','Записаться')}</button>`}</div></div></div>`;
+    $$('[data-join]',el).forEach(b=>b.onclick=()=>startCall(b.dataset.join));const gb=$('#gb',el);if(gb)gb.onclick=()=>go('book');return}
+  const a=S.appts.find(x=>x.id===c.id);const d=DOCS[a.spec][a.doc]||DOCS[a.spec][0];
+  el.innerHTML=`<div class="call"><div class="stack"><div class="stage" id="stage">${docSVG()}
+   <div class="ovl"><span>● REC · <b id="ctime">00:00</b></span><span>${T(d[0],d[1])}</span><span id="qual">${'▮'.repeat(c.q)}${'▯'.repeat(5-c.q)} ${c.q>=4?'HD 720p':'SD 360p'}</span>${c.share?`<span style="background:var(--mal)">🖥 ${T('Sharing lab results','Показ анализов')}</span>`:''}${!c.mic?`<span style="background:var(--red)">🔇 ${T('You are muted','Микрофон выключен')}</span>`:''}</div>
+   <div class="pip">${c.cam?`<svg viewBox="0 0 160 120"><rect width="160" height="120" fill="#33424e"/><circle cx="80" cy="52" r="22" fill="#d9a77d"/><path d="M58 40 q22-30 44 0 q-4-14-22-16 q-18 2-22 16z" fill="#3a2a22"/><path d="M40 120 q4-38 40-38 q36 0 40 38z" fill="#5b8fb0"/></svg>`:'MS'}</div>
+   <div class="ctrl"><button id="cMic" class="${c.mic?'':'off'}" title="Mic">${c.mic?'🎙':'🔇'}</button><button id="cCam" class="${c.cam?'':'off'}" title="Camera">${c.cam?'📷':'🚫'}</button><button id="cShare" class="${c.share?'off':''}" title="Share">🖥</button><button id="cEnd" class="end" title="End">✆</button></div></div>
+   <div class="card"><h3>${T('Clinical notes (clinician view)','Клинические заметки (вид врача)')}<span class="sp"></span><span class="pill">FHIR Encounter · ${a.id}</span></h3>
+    <div class="fgrid"><div class="f"><label>${T('Diagnosis (ICD-10)','Диагноз (МКБ-10)')}</label><select class="input" id="dx"><option value="">${T('— select —','— выберите —')}</option>${DX.map(x=>`<option value="${x[0]}" ${c.dx===x[0]?'selected':''}>${x[0]} · ${T(x[1],x[2])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Reason for visit','Причина обращения')}</label><div style="font-size:13px;padding-top:6px">${a.reason?esc(T(a.reason[0],a.reason[1])):'—'}</div></div>
+    <div class="f full"><label>${T('Notes','Заметки')}</label><textarea class="input" id="cnotes" rows="3">${esc(c.notes)}</textarea></div></div>
+    <div class="row" style="margin-top:10px"><button class="btn sm" id="saveN">${T('Save notes','Сохранить')}</button><button class="btn gold sm" id="toRx">💊 ${T('Write e-prescription','Выписать эл. рецепт')}</button></div></div></div>
+   <div class="card"><h3>💬 ${T('Chat','Чат')}<span class="sp"></span><span class="pill ok">${T('End-to-end encrypted','Сквозное шифрование')}</span></h3>
+    <div class="chat" id="chat">${c.chat.map(m=>`<div class="msg ${m.me?'me':''}"><small>${m.me?T('You','Вы'):T(d[0],d[1])} · ${fmtT(m.t)}</small>${esc(m.me?m.txt:T(m.en,m.ru))}</div>`).join('')}</div>
+    <div class="row" style="margin-top:10px;flex-wrap:nowrap"><input class="input" id="chIn" placeholder="${T('Type a message…','Сообщение…')}"><button class="btn pri sm" id="chSend">➤</button></div>
+    <div style="margin-top:14px;font-size:12.5px" class="muted">${T('Vitals shared from home kit','Показатели с домашнего набора')}</div>
+    <div class="row" style="margin-top:6px;font-size:13px"><span class="pill">🌡 37.9°C</span><span class="pill">❤ 88 bpm</span><span class="pill">SpO₂ 97%</span><span class="pill">🩸 128/82</span></div></div></div>`;
+  const tick=()=>{const e=$('#ctime');if(!e||!S.call){stopTimer();return}const s=Math.floor((Date.now()-S.call.start)/1000);e.textContent=pad(Math.floor(s/60))+':'+pad(s%60)};tick();timer=setInterval(tick,1000);
+  const ch=$('#chat',el);ch.scrollTop=ch.scrollHeight;
+  $('#cMic',el).onclick=()=>{c.mic=!c.mic;save();rCall()};$('#cCam',el).onclick=()=>{c.cam=!c.cam;save();rCall()};
+  $('#cShare',el).onclick=()=>{c.share=!c.share;save();rCall()};
+  $('#cEnd',el).onclick=()=>{a.status='done';a.dx=c.dx||a.dx;a.notes=c.notes;S.call=null;save();toast(T('Consultation ended · summary saved to record','Консультация завершена · итог в медкарте'));go('visits')};
+  $('#dx',el).onchange=e=>{c.dx=e.target.value;save()};$('#cnotes',el).oninput=e=>{c.notes=e.target.value;save()};
+  $('#saveN',el).onclick=()=>{save();toast(T('Notes saved to encounter','Заметки сохранены'))};
+  $('#toRx',el).onclick=()=>{const dx=DX.find(x=>x[0]===c.dx);S.draft={drug:dx?dx[3]:'parac',str:'',dose:1,freq:'BD',days:7,ref:0,ph:0,note:'',ovr:false,reason:''};S.draft.str=DRUGS[S.draft.drug][2][0];save();go('rx')};
+  const send=()=>{const i=$('#chIn',el);const v=i.value.trim();if(!v)return;c.chat.push({me:1,txt:v,t:Date.now()});save();rCall();
+    const st=$('#stage');if(st)st.classList.add('talk');
+    setTimeout(()=>{if(!S.call||S.call.id!==c.id)return;const k=c.chat.filter(m=>!m.me).length-1;const rp=REPL[Math.min(k,REPL.length-1)];c.chat.push({me:0,en:rp[0],ru:rp[1],t:Date.now()});c.q=3+Math.floor(Math.random()*3);save();if(S.view==='call'){rCall();const s2=$('#stage');if(s2){s2.classList.add('talk');setTimeout(()=>s2.classList.remove('talk'),1800)}}},1100)};
+  $('#chSend',el).onclick=send;$('#chIn',el).onkeydown=e=>{if(e.key==='Enter')send()};
+}
+
+/* ---------- E-PRESCRIPTIONS ---------- */
+const RST={iss:['Issued','Выписан','gold'],disp:['Dispensed','Выдан','ok'],canc:['Cancelled','Отменён','bad']};
+function qr(seedS){const r=rng([...seedS].reduce((a,c)=>a+c.charCodeAt(0)*31,7));let h='';for(let y=0;y<17;y++)for(let x=0;x<17;x++){const f=(x<5&&y<5)||(x>11&&y<5)||(x<5&&y>11);const v=f?((x%4===0||y%4===0||(x>11&&(x-12)%4===0)||(y>11&&(y-12)%4===0))||(x%4===2&&y%4===2)):r()<.5;h+=v?'<i></i>':'<s></s>'}return `<div class="qr">${h}</div>`}
+function rRx(){
+  const el=$('#v-rx');if(!S.draft)S.draft={drug:'parac',str:'500 mg',dose:1,freq:'BD',days:5,ref:0,ph:0,note:'',ovr:false,reason:''};
+  const D=S.draft;const dg=DRUGS[D.drug];const it=dg[5].filter(k=>CUR_MEDS.some(m=>m[0]===k)).map(k=>INTER[k]);
+  const fq=FREQ.find(f=>f[0]===D.freq);const qty=D.dose*fq[3]*D.days;const flt=S.rxF||'all';
+  const list=S.rx.filter(r=>flt==='all'||r.status===flt);
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('New e-prescription','Новый эл. рецепт')}<span class="sp"></span><span class="pill">${T('Patient','Пациент')}: Mona Saleh · 34</span></h3>
+   <div class="fgrid">
+    <div class="f"><label>${T('Medicine','Препарат')}</label><select class="input" id="rDrug">${Object.entries(DRUGS).map(([k,v])=>`<option value="${k}" ${D.drug===k?'selected':''}>${T(v[0],v[1])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Strength','Дозировка')}</label><select class="input" id="rStr">${dg[2].map(s=>`<option ${D.str===s?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Dose (units)','Доза (ед.)')}</label><input class="input" id="rDose" type="number" min="1" max="4" value="${D.dose}"><div class="err" id="eDose"></div></div>
+    <div class="f"><label>${T('Frequency','Частота')}</label><select class="input" id="rFreq">${FREQ.map(f=>`<option value="${f[0]}" ${D.freq===f[0]?'selected':''}>${f[0]} · ${T(f[1],f[2])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Duration (days)','Курс (дней)')}</label><input class="input" id="rDays" type="number" min="1" max="90" value="${D.days}"><div class="err" id="eDays"></div></div>
+    <div class="f"><label>${T('Repeats','Повторы')}</label><select class="input" id="rRef">${[0,1,2,3].map(n=>`<option ${D.ref===n?'selected':''}>${n}</option>`).join('')}</select></div>
+    <div class="f full"><label>${T('Pharmacy','Аптека')}</label><select class="input" id="rPh">${PHARM.map((p,i)=>`<option value="${i}" ${D.ph===i?'selected':''}>${T(p[0],p[1])}</option>`).join('')}</select></div>
+    <div class="f full"><label>${T('Instructions for patient','Указания пациенту')}</label><input class="input" id="rNote" value="${esc(D.note)}" placeholder="${T('e.g. take after food','напр. после еды')}"></div>
+   </div>
+   <div style="margin-top:10px;font-size:13px">${T('Total quantity','Всего')}: <b class="mono">${qty} ${T(dg[3],dg[4])}</b> · ${T('Checked against current medicines','Проверено с текущими лекарствами')}: ${CUR_MEDS.map(m=>T(m[1],m[2])).join(', ')}</div>
+   ${it.length?it.map(x=>`<div class="alert ${x[2]}">⚠ ${T(x[0],x[1])}</div>`).join('')+(it.some(x=>x[2]==='hi')?`<label class="row" style="margin-top:8px;font-size:13px"><input type="checkbox" id="rOvr" ${D.ovr?'checked':''}> ${T('Override with clinical reason','Переопределить с обоснованием')}</label><input class="input" id="rReason" style="margin-top:6px" value="${esc(D.reason)}" placeholder="${T('Clinical reason (min 10 chars)','Обоснование (мин. 10 символов)')}">`:''):`<div class="alert" style="border-color:var(--mal)">✓ ${T('No interactions with current medicines','Взаимодействий с текущими лекарствами нет')}</div>`}
+   <div class="row" style="margin-top:12px"><button class="btn pri" id="rSign">✍ ${T('Sign & issue','Подписать и выписать')}</button><span class="muted" style="font-size:12px" id="rErr"></span></div></div>
+  <div class="card"><h3>${T('Prescriptions','Рецепты')}<span class="sp"></span><div class="chips">${[['all','All','Все'],['iss','Issued','Выписаны'],['disp','Dispensed','Выданы'],['canc','Cancelled','Отменены']].map(f=>`<button class="chip ${flt===f[0]?'on':''}" data-rf="${f[0]}">${T(f[1],f[2])}</button>`).join('')}</div></h3>
+   ${list.map(r=>{const g=DRUGS[r.drug];const f=FREQ.find(x=>x[0]===r.freq);return `<div class="rx">${qr(r.id)}<div class="body"><div class="row"><b style="flex:1">${T(g[0],g[1])} ${r.str}</b><span class="pill ${RST[r.status][2]}">${T(RST[r.status][0],RST[r.status][1])}</span></div><span>${r.dose} ${T(g[3],g[4])} · ${T(f[1],f[2])} · ${r.days} ${T('days','дн.')} · ${T('repeats','повт.')} ${r.ref}</span><br><span class="mono">${r.id}</span> <span>· ${T(r.doc[0],r.doc[1])} · ${T(PHARM[r.ph][0],PHARM[r.ph][1])}</span>
+   ${r.status==='iss'?`<div class="row" style="margin-top:8px"><button class="btn sm" data-disp="${r.id}">✓ ${T('Pharmacy: dispense','Аптека: выдать')}</button><button class="btn sm danger" data-canc="${r.id}">${T('Cancel','Отменить')}</button></div>`:''}</div></div>`}).join('')||`<div class="empty">${T('No prescriptions','Нет рецептов')}</div>`}</div></div>`;
+  const upd=(k,v)=>{D[k]=v;save();rRx()};
+  $('#rDrug',el).onchange=e=>{D.drug=e.target.value;D.str=DRUGS[D.drug][2][0];D.ovr=false;save();rRx()};
+  $('#rStr',el).onchange=e=>upd('str',e.target.value);$('#rFreq',el).onchange=e=>upd('freq',e.target.value);
+  $('#rRef',el).onchange=e=>upd('ref',+e.target.value);$('#rPh',el).onchange=e=>upd('ph',+e.target.value);
+  $('#rDose',el).onchange=e=>upd('dose',Math.max(0,+e.target.value||0));$('#rDays',el).onchange=e=>upd('days',Math.max(0,+e.target.value||0));
+  $('#rNote',el).oninput=e=>{D.note=e.target.value;save()};
+  const ov=$('#rOvr',el);if(ov)ov.onchange=()=>{D.ovr=ov.checked;save()};const rs=$('#rReason',el);if(rs)rs.oninput=e=>{D.reason=e.target.value;save()};
+  $$('[data-rf]',el).forEach(b=>b.onclick=()=>{S.rxF=b.dataset.rf;save();rRx()});
+  $('#rSign',el).onclick=()=>{let ok=true;
+    if(D.dose<1||D.dose>4){$('#eDose',el).textContent=T('1–4 units','1–4 ед.');$('#rDose',el).classList.add('bad');ok=false}
+    if(D.days<1||D.days>90){$('#eDays',el).textContent=T('1–90 days','1–90 дней');$('#rDays',el).classList.add('bad');ok=false}
+    if(it.some(x=>x[2]==='hi')&&(!D.ovr||D.reason.trim().length<10)){$('#rErr',el).textContent=T('High-risk interaction: tick override and give a reason','Опасное взаимодействие: отметьте переопределение и укажите причину');ok=false}
+    if(!ok)return;
+    const doc=S.appts.find(a=>a.status==='live'||a.status==='done');const dn=doc?(DOCS[doc.spec][doc.doc]||DOCS[doc.spec][0]):DOCS.gp[0];
+    const r={id:'RX-'+(S.nextRx++),drug:D.drug,str:D.str,dose:D.dose,freq:D.freq,days:D.days,ref:D.ref,ph:D.ph,status:'iss',date:Date.now(),doc:dn};
+    S.rx.unshift(r);S.draft=null;S.rxF='all';save();render();toast(T('E-prescription ','Эл. рецепт ')+r.id+T(' signed and sent to pharmacy',' подписан и отправлен в аптеку'))};
+  $$('[data-disp]',el).forEach(b=>b.onclick=()=>{S.rx.find(r=>r.id===b.dataset.disp).status='disp';save();render();toast(T('Dispensed at pharmacy','Выдан в аптеке'))});
+  $$('[data-canc]',el).forEach(b=>b.onclick=()=>{S.rx.find(r=>r.id===b.dataset.canc).status='canc';save();render();toast(T('Prescription cancelled','Рецепт отменён'),'bad')});
+}
+
+/* ---------- SPECIALIST NETWORK MAP ---------- */
+function rNet(){
+  const el=$('#v-net');const m=cssv('--mal'),g=cssv('--gold'),ln=cssv('--line2'),pn=cssv('--panel2'),tx=cssv('--text'),mu=cssv('--muted'),bl=cssv('--blue');
+  const f=S.mapSpec;const cnt=id=>Object.entries(S.online[id]).filter(([s])=>f==='all'||s===f).reduce((a,[,n])=>a+n,0);
+  const hub=HOSP[0];
+  const nodes=HOSP.map(h=>{const n=cnt(h[0]);const has=f==='all'||h[6].includes(f);const r=h[5]==='hub'?20:h[5]==='clinic'?9:13;const col=h[5]==='hub'?g:has?m:ln;
+    return `<g class="node" data-h="${h[0]}" opacity="${has?1:.35}"><circle cx="${h[3]}" cy="${h[4]}" r="${r+8}" fill="${col}" opacity="${S.mapSel===h[0]?.35:.12}"/><circle cx="${h[3]}" cy="${h[4]}" r="${r}" fill="${col}" stroke="${S.mapSel===h[0]?tx:'none'}" stroke-width="2"/><text x="${h[3]}" y="${h[4]+4}" text-anchor="middle" font-size="${h[5]==='hub'?13:10}" font-weight="800" fill="#fff">${n}</text><text x="${h[3]}" y="${h[4]+r+15}" text-anchor="middle" font-size="10.5" fill="${mu}">${esc(T(h[1],h[2]).split(' · ')[0].split(' ').slice(0,2).join(' '))}</text></g>`}).join('');
+  const links=HOSP.slice(1).map(h=>`<line x1="${hub[3]}" y1="${hub[4]}" x2="${h[3]}" y2="${h[4]}" stroke="${bl}" stroke-width="1.5" stroke-dasharray="4 5" opacity=".55"><animate attributeName="stroke-dashoffset" from="18" to="0" dur="1.4s" repeatCount="indefinite"/></line>`).join('');
+  const sel=HOSP.find(h=>h[0]===S.mapSel)||HOSP[0];const hs=S.hosp.find(x=>x.id===sel[0]);
+  const total=HOSP.reduce((a,h)=>a+cnt(h[0]),0);
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="chips"><button class="chip ${f==='all'?'on':''}" data-sf="all">${T('All specialties','Все специальности')}</button>${Object.entries(SPECS).map(([k,v])=>`<button class="chip ${f===k?'on':''}" data-sf="${k}">${v[2]} ${T(v[0],v[1])}</button>`).join('')}</div></div>
+  <div class="grid2"><div class="card map"><h3>${T('Hub-and-spoke network','Сеть «хаб — филиалы»')}<span class="sp"></span><span class="legend"><span><i style="background:${g}"></i>${T('Virtual hub','Вирт. хаб')}</span><span><i style="background:${m}"></i>${T('Hospital / clinic','Больница / клиника')}</span><span><i style="background:${bl}"></i>${T('Tele-link','Телесвязь')}</span></span></h3>
+   <svg viewBox="0 0 620 420"><path d="M60 120 L140 40 L260 30 L360 50 L450 90 L560 120 L590 210 L560 300 L560 360 L470 395 L340 400 L230 380 L150 330 L80 280 L40 200Z" fill="${pn}" stroke="${ln}" stroke-width="2"/><path d="M60 120 L40 200 L80 280" stroke="${bl}" stroke-width="5" fill="none" opacity=".25"/>${links}${nodes}</svg>
+   <div class="muted" style="font-size:12px">${T('Numbers = specialists online now','Числа — специалисты онлайн сейчас')} · ${T('total','всего')} <b>${total}</b></div></div>
+  <div class="card"><h3>${T(sel[1],sel[2])}<span class="sp"></span><span class="pill ${sel[5]==='hub'?'gold':''}">${sel[5]==='hub'?T('Virtual hub','Вирт. хаб'):sel[5]==='clinic'?T('Rural clinic','Сельская клиника'):T('Hospital','Больница')}</span></h3>
+   <div class="row" style="font-size:12.5px;margin-bottom:8px"><span class="pill">${T('Beds','Койки')} ${hs.occ}/${hs.beds}</span><span class="pill">${T('ER wait','Ожидание')} ${hs.er} ${T('min','мин')}</span><span class="pill">${T('Virtual ward','Вирт. палата')} ${hs.vw}</span></div>
+   ${sel[6].map(s=>{const n=S.online[sel[0]][s];return `<div class="sp-row"><span>${SPECS[s][2]} ${T(SPECS[s][0],SPECS[s][1])}</span><span class="dot" style="background:${n?m:cssv('--red')};flex:none"></span><b class="mono" style="width:24px;text-align:right">${n}</b><button class="btn sm" data-bk="${s}" ${n?'':'disabled'}>${T('Book','Записаться')}</button><button class="btn sm" data-tg="${s}" title="toggle">${n?'−':'+'}</button></div>`}).join('')}
+   <div class="muted" style="font-size:12px;margin-top:10px">${T('“−/+” simulates a specialist going off / on shift.','«−/+» — специалист уходит со смены / выходит на смену.')}</div></div></div>`;
+  $$('[data-sf]',el).forEach(b=>b.onclick=()=>{S.mapSpec=b.dataset.sf;save();rNet()});
+  $$('.node',el).forEach(n=>n.onclick=()=>{S.mapSel=n.dataset.h;save();rNet()});
+  $$('[data-bk]',el).forEach(b=>b.onclick=()=>{const s=b.dataset.bk;const sym=SYM.find(x=>x[4]===s);S.tri={sym:sym?[sym[0]]:[],sev:2,dur:'d3',age:34,notes:''};S.res=triage();S.res.spec=s;if(S.res.level==='em')S.res.level='ur';S.doc=0;S.slot=null;save();go('book')});
+  $$('[data-tg]',el).forEach(b=>b.onclick=()=>{const s=b.dataset.tg;const o=S.online[sel[0]];o[s]=o[s]?o[s]-1:2;save();render()});
+}
+
+/* ---------- CAPACITY ---------- */
+function rCap(){
+  const el=$('#v-cap');const H=S.hosp;const m=cssv('--mal'),g=cssv('--gold'),rd=cssv('--red'),am=cssv('--amber'),ln=cssv('--line'),mu=cssv('--dim');
+  const tb=H.reduce((a,h)=>a+h.beds,0),to=H.reduce((a,h)=>a+h.occ,0),ti=H.reduce((a,h)=>a+h.icu,0),tio=H.reduce((a,h)=>a+h.icuOcc,0),vw=H.reduce((a,h)=>a+h.vw,0);
+  const pc=(a,b)=>b?Math.round(a/b*100):0;const col=p=>p>=90?rd:p>=80?am:m;
+  const tr=S.trend.slice();tr[tr.length-1]=+(to/tb*100).toFixed(1);
+  const W=600,Hh=200,P=30,xs=i=>P+i*(W-P-10)/(tr.length-1),ys=v=>Hh-24-(v-60)/(100-60)*(Hh-40);
+  const path=tr.map((v,i)=>(i?'L':'M')+xs(i).toFixed(1)+' '+ys(v).toFixed(1)).join(' ');
+  const grid=[60,70,80,90,100].map(v=>`<line x1="${P}" x2="${W-10}" y1="${ys(v)}" y2="${ys(v)}" stroke="${ln}"/><text x="${P-6}" y="${ys(v)+4}" font-size="10" text-anchor="end" fill="${mu}">${v}%</text>`).join('');
+  const surge=`<rect x="${P}" y="${ys(100)}" width="${W-P-10}" height="${ys(90)-ys(100)}" fill="${rd}" opacity=".08"/><text x="${W-14}" y="${ys(95)+4}" font-size="10" text-anchor="end" fill="${rd}">${T('surge zone','зона перегрузки')}</text>`;
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Bed occupancy','Занятость коек')}</div><div class="v" style="color:${col(pc(to,tb))}">${pc(to,tb)}%</div><div class="d">${to.toLocaleString()} / ${tb.toLocaleString()}</div></div><div class="card kpi"><div class="l">${T('ICU occupancy','Занятость ОРИТ')}</div><div class="v" style="color:${col(pc(tio,ti))}">${pc(tio,ti)}%</div><div class="d">${tio} / ${ti}</div></div><div class="card kpi"><div class="l">${T('Virtual ward patients','Пациенты вирт. палат')}</div><div class="v">${vw}</div><div class="d">${T('remote monitoring','удалённый мониторинг')}</div></div><div class="card kpi"><div class="l">${T('Sites in surge','Площадок в перегрузке')}</div><div class="v" style="color:${rd}">${H.filter(h=>pc(h.occ,h.beds)>=90).length}</div><div class="d">≥ 90%</div></div></div>
+  <div class="grid2"><div class="stack"><div class="card"><h3>${T('Capacity by site','Загрузка по площадкам')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('Click a row to adjust','Нажмите строку для правки')}</span></h3>
+   <div class="tw"><table><thead><tr><th>${T('Site','Площадка')}</th><th>${T('Beds','Койки')}</th><th></th><th>${T('ICU','ОРИТ')}</th><th>${T('ER wait','Ожидание')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+   ${H.map(h=>{const hh=HOSP.find(x=>x[0]===h.id);const p=pc(h.occ,h.beds),pi=pc(h.icuOcc,h.icu);return `<tr class="clk ${S.capSel===h.id?'sel':''}" data-cs="${h.id}"><td><b>${esc(T(hh[1],hh[2]))}</b></td><td class="mono">${h.occ}/${h.beds}</td><td><div class="bar"><i style="width:${p}%;background:${col(p)}"></i></div></td><td class="mono">${h.icu?h.icuOcc+'/'+h.icu:'—'}</td><td class="mono">${h.er}′</td><td><span class="pill ${p>=90?'bad':p>=80?'warn':'ok'}">${p>=90?T('Surge','Перегрузка'):p>=80?T('High','Высокая'):T('Normal','Норма')}</span></td></tr>`+(S.capSel===h.id?`<tr><td colspan="6" style="white-space:normal;background:var(--bg2)"><div class="row"><span style="font-size:12.5px">${T('Occupied beds','Занято коек')}</span><button class="btn sm" data-adj="-5">−5</button><button class="btn sm" data-adj="5">+5</button><span style="font-size:12.5px;margin-left:10px">${T('ICU','ОРИТ')}</span><button class="btn sm" data-ai="-1" ${h.icu?'':'disabled'}>−1</button><button class="btn sm" data-ai="1" ${h.icu?'':'disabled'}>+1</button><button class="btn sm" data-vw="1">+${T('virtual ward','вирт. палата')}</button></div></td></tr>`:'')}).join('')}</tbody></table></div></div>
+   <div class="card chart"><h3>${T('National occupancy · 21 days','Занятость по стране · 21 день')}</h3><svg viewBox="0 0 ${W} ${Hh}">${surge}${grid}<path d="${path} L${xs(tr.length-1)} ${Hh-24} L${P} ${Hh-24}Z" fill="${m}" opacity=".12"/><path d="${path}" fill="none" stroke="${m}" stroke-width="2.5"/>${tr.map((v,i)=>i===tr.length-1?`<circle cx="${xs(i)}" cy="${ys(v)}" r="5" fill="${g}"/><text x="${xs(i)-6}" y="${ys(v)-10}" font-size="11" font-weight="700" text-anchor="end" fill="${g}">${v}%</text>`:'').join('')}</svg></div></div>
+  <div class="stack"><div class="card"><h3>🚑 ${T('Transfer a patient','Перевод пациента')}</h3>
+   <div class="fgrid"><div class="f full"><label>${T('From','Откуда')}</label><select class="input" id="xFrom">${HOSP.map(h=>`<option value="${h[0]}">${esc(T(h[1],h[2]))}</option>`).join('')}</select></div>
+   <div class="f full"><label>${T('To','Куда')}</label><select class="input" id="xTo">${HOSP.map((h,i)=>`<option value="${h[0]}" ${i===1?'selected':''}>${esc(T(h[1],h[2]))}</option>`).join('')}</select></div>
+   <div class="f full"><label class="row" style="cursor:pointer;color:var(--text)"><input type="checkbox" id="xIcu"> ${T('Needs ICU bed','Нужна койка ОРИТ')}</label></div></div>
+   <div class="row" style="margin-top:8px"><button class="btn pri" id="xGo">${T('Request transfer','Запросить перевод')}</button></div><div class="err" id="xErr" style="color:var(--red);font-size:12.5px;margin-top:6px"></div></div>
+   <div class="card"><h3>${T('Transfer log','Журнал переводов')}</h3><div class="log">${S.xlog.map(x=>`<div><span class="t">${fmtT(x.t)}</span> ${esc(T(x.en,x.ru))}</div>`).join('')||`<div class="t">${T('No transfers yet','Переводов пока нет')}</div>`}</div></div></div></div>`;
+  $$('[data-cs]',el).forEach(r=>r.onclick=()=>{S.capSel=S.capSel===r.dataset.cs?null:r.dataset.cs;save();rCap()});
+  const h=H.find(x=>x.id===S.capSel);
+  $$('[data-adj]',el).forEach(b=>b.onclick=()=>{h.occ=Math.max(0,Math.min(h.beds,h.occ+ +b.dataset.adj));save();rCap()});
+  $$('[data-ai]',el).forEach(b=>b.onclick=()=>{h.icuOcc=Math.max(0,Math.min(h.icu,h.icuOcc+ +b.dataset.ai));save();rCap()});
+  $$('[data-vw]',el).forEach(b=>b.onclick=()=>{if(h.occ>0){h.occ--;h.vw++;save();rCap();toast(T('Patient moved to virtual ward — bed released','Пациент переведён в вирт. палату — койка освобождена'))}});
+  $('#xGo',el).onclick=()=>{const f=$('#xFrom',el).value,t=$('#xTo',el).value,icu=$('#xIcu',el).checked;const A=H.find(x=>x.id===f),B=H.find(x=>x.id===t);const e=$('#xErr',el);
+    if(f===t){e.textContent=T('Choose two different sites','Выберите разные площадки');return}
+    if(icu&&B.icuOcc>=B.icu){e.textContent=T('No free ICU bed at destination','В пункте назначения нет свободной койки ОРИТ');return}
+    if(!icu&&B.occ>=B.beds){e.textContent=T('Destination is full','Пункт назначения заполнен');return}
+    if(icu){if(A.icuOcc>0)A.icuOcc--;B.icuOcc++}else{if(A.occ>0)A.occ--;B.occ++}
+    const a=HOSP.find(x=>x[0]===f),b=HOSP.find(x=>x[0]===t);
+    S.xlog.unshift({t:Date.now(),en:`${icu?'ICU ':''}transfer ${a[1]} → ${b[1]}`,ru:`Перевод${icu?' (ОРИТ)':''} ${a[2]} → ${b[2]}`});save();rCap();toast(T('Transfer accepted · ambulance dispatched','Перевод принят · скорая выехала'))};
+}
+
+$$('#gate [data-role]').forEach(b=>b.onclick=()=>{S.role=b.dataset.role;$('#lgU').value=S.role==='pat'?'patient.demo@virtuacare.gov':'ops.demo@moh.gov';save();render()});
+$('#login').onclick=()=>{if(!$('#lgU').value.trim()||!$('#lgP').value){toast(T('Enter login and password','Введите логин и пароль'),'bad');return}S.auth=true;S.view=S.role==='min'?'cap':'book';save();render();toast(T('Signed in · welcome to VirtuaCare','Вход выполнен · добро пожаловать в VirtuaCare'))};
+$('#logout').onclick=()=>{S.auth=false;stopTimer();save();render()};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{stopTimer();store.clear();S=seed();S.auth=true;save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

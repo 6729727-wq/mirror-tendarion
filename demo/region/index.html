@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Region.Online Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%,var(--mal3),var(--mal2));color:#fff;font-size:15px;box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 40%,transparent)}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.side .grow{flex:1}
+.who{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;font-size:12.5px;background:var(--panel)}
+.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--mal));display:grid;place-items:center;font-weight:800;color:#10261d;flex:none}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.head h1{font-size:23px;margin:0}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:12px;margin-bottom:16px}
+.howto{display:flex;gap:10px;flex-wrap:wrap;padding-right:30px !important;background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 14%,var(--panel)),var(--panel));border:1px solid color-mix(in srgb,var(--blue) 35%,var(--line));border-radius:var(--r);padding:14px;position:relative}
+.howto .st{flex:1;min-width:150px;display:flex;gap:10px;font-size:13px}
+.howto .st>b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#1a1306;display:grid;place-items:center;font-size:12px}
+.howto .x{position:absolute;top:6px;right:8px;border:0;background:none;cursor:pointer;color:var(--dim);font-size:16px}
+.facts{font-size:12.5px;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;padding:12px 14px;margin:0}
+.facts dt{color:var(--dim);font-weight:600}.facts dd{margin:0;font-weight:600}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.btn.sm{padding:6px 12px;font-size:12.5px}.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--panel);cursor:pointer;text-align:left;color:var(--text);font:inherit;transition:.15s;position:relative}
+.tile:hover{border-color:var(--mal);transform:translateY(-2px);box-shadow:var(--shadow)}
+.tile .i{font-size:26px;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 14%,transparent);margin-bottom:10px}
+.tile b{display:block;font-size:14.5px}.tile small{color:var(--muted);font-size:12.5px}
+.tile .off{position:absolute;top:12px;right:12px}
+.tile.dis{opacity:.45;cursor:not-allowed}
+.f{margin-bottom:10px}.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{color:var(--red);font-size:12px;margin-top:4px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.fgrid .full{grid-column:1/-1}
+.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;background:none;font-weight:600;color:var(--muted)}
+.chip.on{border-color:var(--mal);color:var(--text);background:color-mix(in srgb,var(--mal) 14%,transparent)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.sso{max-width:460px;margin:30px auto;text-align:center}
+.sso .logo{width:64px;height:64px;border-radius:18px;margin:0 auto 12px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff}
+.consent{text-align:left;border:1px solid var(--line);border-radius:12px;padding:6px 12px;margin:14px 0}
+.consent label{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;align-items:center;cursor:pointer}
+.consent label:last-child{border:0}
+.consent small{margin-left:auto;color:var(--dim);font-size:11.5px}
+.map svg{width:100%;height:auto;display:block}
+.map .d{cursor:pointer;transition:.15s;stroke:var(--bg);stroke-width:3}
+.map .d:hover{filter:brightness(1.15)}
+.map text{pointer-events:none;font-weight:700}
+.tl{position:relative;padding-left:22px;margin-top:8px}
+.tl:before{content:"";position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:var(--line2)}
+.tl .e{position:relative;padding:4px 0 10px;font-size:13px}
+.tl .e:before{content:"";position:absolute;left:-19px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--panel2);border:2px solid var(--line2)}
+.tl .e.ok:before{background:var(--mal);border-color:var(--mal)}
+.tl .e.cur:before{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 25%,transparent)}
+.tl .e small{display:block;color:var(--dim);font-family:var(--mono);font-size:11px}
+.req{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel);margin-bottom:10px}
+.req .top{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.req .top b{flex:1;min-width:160px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal button{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:8px 0;font:inherit;font-size:13px;color:var(--text);cursor:pointer}
+.cal button small{display:block;font-size:10px;color:var(--dim)}
+.cal button:disabled{opacity:.3;cursor:default}
+.cal button.on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 14%,transparent)}
+.slots{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.slots button{border:1px solid var(--line2);background:none;border-radius:8px;padding:6px 10px;font-family:var(--mono);font-size:12.5px;color:var(--text);cursor:pointer}
+.slots button.on{background:var(--mal);border-color:var(--mal);color:#fff}
+.slots button:disabled{text-decoration:line-through;opacity:.35;cursor:default}
+.qpos{font-size:52px;font-weight:800;color:var(--gold2);line-height:1;font-variant-numeric:tabular-nums}
+.big-ok{text-align:center;padding:20px 10px}
+.big-ok .c{width:68px;height:68px;border-radius:50%;background:var(--mal);color:#fff;font-size:34px;display:grid;place-items:center;margin:0 auto 10px;animation:pop .3s}
+.mini{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel2)}
+.ent{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.ent:last-child{border:0}
+.ent .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--bg2);flex:none}
+.ent .grow{flex:1;min-width:0}
+.ent small{display:block;color:var(--dim);font-size:12px}
+.sw{position:relative;width:38px;height:22px;flex:none;display:inline-block}
+.sw input{opacity:0;width:0;height:0}
+.sw i{position:absolute;inset:0;border-radius:999px;background:var(--line2);transition:.2s;cursor:pointer}
+.sw i:after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+i{background:var(--mal)}
+.sw input:checked+i:after{transform:translateX(16px)}
+.fb{display:flex;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:var(--panel);font-size:13px}
+.fb .grow{flex:1;min-width:0}
+.fb select,.fb input{padding:5px 8px;font-size:12.5px}
+.stars{color:var(--gold);letter-spacing:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--mal3)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:9px 14px;font:inherit;font-weight:600;font-size:13.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--text);border-bottom-color:var(--gold)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.on{display:flex}
+.modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);padding:22px;box-shadow:var(--shadow);animation:pop .18s}
+@keyframes pop{from{transform:scale(.95);opacity:0}}
+.modal h2{margin:0 0 14px;font-size:19px;display:flex;gap:10px;align-items:center}
+.modal h2 .x{margin-left:auto;border:0;background:none;color:var(--dim);font-size:20px;cursor:pointer}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--gold);border-radius:50%;animation:rot .7s linear infinite;vertical-align:-2px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+.warnbox{border:1px solid color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 9%,transparent);border-radius:10px;padding:9px 12px;font-size:13px;margin-top:8px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.intro{grid-template-columns:minmax(0,1fr)}.grid3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 16px 50px}.head h1{font-size:19px}
+}
+@media (max-width:560px){.fgrid,.grid3{grid-template-columns:minmax(0,1fr)}.tiles{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.tile{padding:12px}.tile .i{width:38px;height:38px;font-size:20px}.kpi .v{font-size:20px}.qpos{font-size:40px}.cal button{font-size:12px;padding:6px 0}}
+</style>
+</head>
+<body data-demo-en="Region.Online — regional public services portal" data-demo-ru="Регион.Онлайн — региональный портал госуслуг">
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>R</b><div><span data-en="Region.Online" data-ru="Регион.Онлайн"></span><small data-en="Northern Province" data-ru="Северная губерния"></small></div></div>
+    <div class="sec" data-en="Resident" data-ru="Житель"></div>
+    <button class="nav" data-v="home"><span class="ic">⌂</span><span data-en="Services" data-ru="Услуги"></span></button>
+    <button class="nav" data-v="cabinet"><span class="ic">◉</span><span data-en="My cabinet" data-ru="Личный кабинет"></span></button>
+    <button class="nav" data-v="reqs"><span class="ic">⏱</span><span data-en="My requests" data-ru="Мои заявления"></span><span class="cnt" id="cReq"></span></button>
+    <button class="nav" data-v="pays"><span class="ic">₽</span><span data-en="Payments" data-ru="Платежи"></span></button>
+    <div class="sec" data-en="Ministry admin" data-ru="Администратор министерства"></div>
+    <button class="nav" data-v="catalog"><span class="ic">⚙</span><span data-en="Service catalog" data-ru="Каталог услуг"></span></button>
+    <button class="nav" data-v="stats"><span class="ic">▤</span><span data-en="District statistics" data-ru="Статистика районов"></span></button>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo data" data-ru="Сбросить данные"></button>
+  </aside>
+  <main>
+    <div class="intro" id="intro">
+      <div class="howto"><button class="x" id="hideIntro">×</button>
+        <div class="st"><b>1</b><span data-en="Sign in with the national SSO — review the consent screen and choose which data to share." data-ru="Войдите через госавторизацию — посмотрите экран согласия и выберите, какими данными поделиться."></span></div>
+        <div class="st"><b>2</b><span data-en="Pick a district on the map, then try a service: meter readings (enter 9999 to trigger validation), kindergarten queue, booking, payments." data-ru="Выберите район на карте и попробуйте услугу: показания счётчиков (введите 9999 — сработает проверка), очередь в сад, запись, оплата."></span></div>
+        <div class="st"><b>3</b><span data-en="Open <b>Service catalog</b> as admin: switch a service off or add a form field — the resident side changes instantly." data-ru="Откройте <b>Каталог услуг</b>: выключите услугу или добавьте поле в форму — у жителя всё изменится сразу."></span></div>
+      </div>
+      <dl class="card facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Regional public services portal" data-ru="Региональный портал госуслуг"></dd>
+        <dt data-en="Year" data-ru="Год"></dt><dd>2024</dd>
+        <dt data-en="Budget" data-ru="Бюджет"></dt><dd class="mono" style="color:var(--gold2)" data-en="₽ 180 M" data-ru="180 млн ₽"></dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Ministry of Digital Development, Northern Province (fictional)" data-ru="Министерство цифрового развития Северной губернии (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd class="mono" style="font-size:12px" data-en="React · Postgres · national SSO · inter-agency bus" data-ru="React · Postgres · госавторизация · СМЭВ-шина"></dd>
+      </dl>
+    </div>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span id="headRight"></span>
+    </div>
+    <section class="view" id="v-login"></section>
+    <section class="view" id="v-home"></section>
+    <section class="view" id="v-cabinet"></section>
+    <section class="view" id="v-reqs"></section>
+    <section class="view" id="v-pays"></section>
+    <section class="view" id="v-catalog"></section>
+    <section class="view" id="v-stats"></section>
+  </main>
+</div>
+<div class="modal-bg" id="mbg"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru),L=o=>o?(PT.lang==='ru'?o.ru:o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='regiononline-v1',DAY=864e5;
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const money=n=>(PT.lang==='ru'?n.toLocaleString('ru-RU')+' ₽':'₽'+n.toLocaleString('en-US'));
+const fmtD=t=>new Date(t).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'2-digit',month:'short',year:'numeric'});
+const fmtT=t=>new Date(t).toLocaleString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+
+// districts: abstract polygons
+const DIST=[
+ {id:'nv',en:'Novoozersk',ru:'Новоозёрск',pts:'20,30 150,12 175,95 95,130 30,110',pop:142},
+ {id:'kr',en:'Krasnobor',ru:'Краснобор',pts:'150,12 290,22 300,90 175,95',pop:88},
+ {id:'ld',en:'Ledyanoy',ru:'Ледяной',pts:'290,22 400,40 390,130 300,90',pop:41},
+ {id:'sv',en:'Severomorsk-2',ru:'Североморск-2',pts:'30,110 95,130 120,210 40,220',pop:63},
+ {id:'cn',en:'Central',ru:'Центральный',pts:'95,130 175,95 300,90 280,180 170,205 120,210',pop:310},
+ {id:'zr',en:'Zarechny',ru:'Заречный',pts:'300,90 390,130 380,230 280,180',pop:74},
+ {id:'pr',en:'Pribrezhny',ru:'Прибрежный',pts:'40,220 120,210 170,205 280,180 380,230 300,268 60,262',pop:96}];
+const DB=Object.fromEntries(DIST.map(d=>[d.id,d]));
+const SVC={
+ meter:{i:'⚡',en:'Utility meter readings',ru:'Показания счётчиков',d:{en:'Water, heat & power — monthly',ru:'Вода, тепло и свет — ежемесячно'}},
+ kinder:{i:'🧸',en:'Kindergarten & school enrolment',ru:'Запись в детсад и школу',d:{en:'Live queue position',ru:'Место в очереди онлайн'}},
+ book:{i:'📅',en:'Book a local office visit',ru:'Запись на приём',d:{en:'Multifunctional centres',ru:'МФЦ и ведомства района'}},
+ pay:{i:'🅿',en:'Parking & regional fees',ru:'Парковка и сборы',d:{en:'Paid zones, fishing permits',ru:'Платные зоны, путёвки на рыбалку'}},
+ issue:{i:'🛠',en:'Report a local issue',ru:'Сообщить о проблеме',d:{en:'Potholes, lighting, snow',ru:'Ямы, освещение, снег'}},
+ waste:{i:'♻',en:'Bulky waste pickup',ru:'Вывоз крупного мусора',d:{en:'Schedule a free collection',ru:'Бесплатный вывоз по записи'}}};
+const STATES=[{en:'Submitted',ru:'Подано'},{en:'Received by agency',ru:'Принято ведомством'},{en:'In progress',ru:'В работе'},{en:'Completed',ru:'Исполнено'}];
+function seed(){
+  const now=Date.now(),hist=[];const r=rng(9);
+  for(let i=11;i>=0;i--){const m=new Date();m.setMonth(m.getMonth()-i-1);hist.push({m:m.getTime(),cold:+(4+r()*2.2).toFixed(1),hot:+(2.4+r()*1.5).toFixed(1),kwh:Math.round(190+r()*90+(i>6?60:0))})}
+  return{auth:false,consent:null,district:'cn',
+   person:{en:'Anna Volkova',ru:'Анна Волкова',snils:'123-456-789 00'},
+   family:[{en:'Mikhail Volkov',ru:'Михаил Волков',rel:{en:'Spouse',ru:'Супруг'},dob:'1987-03-14'},{en:'Sofia Volkova',ru:'София Волкова',rel:{en:'Daughter',ru:'Дочь'},dob:'2021-09-02'},{en:'Ilya Volkov',ru:'Илья Волков',rel:{en:'Son',ru:'Сын'},dob:'2017-05-20'}],
+   cars:[{plate:'А 482 СН 51',en:'Lada Vesta, 2020',ru:'Лада Веста, 2020'},{plate:'В 117 КО 51',en:'Kia Rio, 2017',ru:'Киа Рио, 2017'}],
+   prop:[{en:'Flat, 14 Polar St., apt 37',ru:'Квартира, ул. Полярная, 14, кв. 37',area:64.2,acc:'4407-112-37'},{en:'Garage, co-op «Sever» no. 112',ru:'Гараж, ГСК «Север» № 112',area:21,acc:'4407-900-112'}],
+   meters:hist,
+   reqs:[{id:'R-240311',svc:'issue',t:now-DAY*6,st:3,en:'Pothole at Polar St. 14',ru:'Яма у ул. Полярная, 14',log:[now-DAY*6,now-DAY*5,now-DAY*4,now-DAY*1],rate:null},
+         {id:'R-240402',svc:'kinder',t:now-DAY*40,st:1,en:'Kindergarten no. 7 «Snowflake» — Sofia',ru:'Детсад № 7 «Снежинка» — София',log:[now-DAY*40,now-DAY*39],q:41}],
+   pays:[{t:now-DAY*12,en:'Parking, zone Central, 2 h',ru:'Парковка, зона Центр, 2 ч',sum:120,id:'P-88123'},{t:now-DAY*33,en:'Fishing permit, Lake Imandra',ru:'Путёвка на рыбалку, оз. Имандра',sum:450,id:'P-87011'}],
+   svcOn:{meter:true,kinder:true,book:true,pay:true,issue:true,waste:true},
+   forms:{issue:[{k:'cat',en:'Category',ru:'Категория',type:'select',opts:'Road;Lighting;Snow;Yard'},{k:'addr',en:'Address',ru:'Адрес',type:'text',req:true},{k:'desc',en:'Description',ru:'Описание',type:'textarea',req:true}]},
+   booked:{},nid:500,ratings:[]};
+}
+let S=store.load()||seed();const save=()=>store.save(S);
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body){$('#modal').innerHTML=`<h2>${title}<button class="x" id="mx">×</button></h2>${body}`;$('#mbg').classList.add('on');$('#mx').onclick=closeModal}
+const closeModal=()=>$('#mbg').classList.remove('on');
+$('#mbg').onclick=e=>{if(e.target.id==='mbg')closeModal()};
+function addReq(svc,en,ru,extra){const id='R-'+(++S.nid+240000);const r=Object.assign({id,svc,t:Date.now(),st:0,en,ru,log:[Date.now()],rate:null},extra||{});S.reqs.unshift(r);save();
+ setTimeout(()=>{r.st=1;r.log.push(Date.now());save();toast(T('Request '+id+' received by agency (via inter-agency bus)','Заявление '+id+' принято ведомством (через СМЭВ)'));if(view==='reqs')rReqs();counts()},4000);return r}
+
+const VIEWS={login:{en:'Sign in',ru:'Вход'},home:{en:'Services in your district',ru:'Услуги вашего района'},cabinet:{en:'Personal cabinet',ru:'Личный кабинет'},reqs:{en:'My requests',ru:'Мои заявления'},pays:{en:'Payment history',ru:'История платежей'},catalog:{en:'Service catalog editor',ru:'Редактор каталога услуг'},stats:{en:'Statistics by district',ru:'Статистика по районам'}};
+let view='home';try{view=localStorage.getItem(KEY+'-v')||'home'}catch(e){}
+function go(v){if(!S.auth&&['home','cabinet','reqs','pays'].includes(v))v='login';view=v;try{localStorage.setItem(KEY+'-v',v)}catch(e){}
+ $$('.nav').forEach(n=>n.classList.toggle('on',n.dataset.v===v));$$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));$('#side').classList.remove('open');render()}
+$$('.nav').forEach(n=>n.onclick=()=>go(n.dataset.v));
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#hideIntro').onclick=()=>$('#intro').style.display='none';
+$('#reset').onclick=()=>{store.clear();S=seed();save();toast(T('Demo data reset','Данные сброшены'));go('home')};
+function counts(){const n=S.reqs.filter(r=>r.st<3).length;$('#cReq').textContent=n;$('#cReq').style.display=n&&S.auth?'':'none'}
+function render(){
+  $('#title').textContent=L(VIEWS[view]);$('#crumb').textContent=T('Region.Online','Регион.Онлайн')+' / '+(['catalog','stats'].includes(view)?T('Admin','Администратор'):T('Resident','Житель'));
+  $('#who').innerHTML=S.auth?`<span class="av">${L(S.person)[0]}</span><div style="min-width:0"><b>${L(S.person)}</b><div class="muted">${L(DB[S.district])} · <a href="#" id="logout" style="color:var(--mal3)">${T('Sign out','Выйти')}</a></div></div>`:`<span class="av">?</span><div><b>${T('Guest','Гость')}</b><div class="muted">${T('Not signed in','Не выполнен вход')}</div></div>`;
+  if($('#logout'))$('#logout').onclick=e=>{e.preventDefault();S.auth=false;save();go('login')};
+  $('#headRight').innerHTML=S.auth&&!['catalog','stats'].includes(view)?`<span class="pill ok">🔒 ${T('National SSO · level: confirmed','Госавторизация · уровень: подтверждённый')}</span>`:'';
+  counts();({login:rLogin,home:rHome,cabinet:rCab,reqs:rReqs,pays:rPays,catalog:rCat,stats:rStats})[view]();
+}
+
+// ---------- SSO ----------
+function rLogin(){
+  const F=[['name',T('Full name','ФИО'),T('required','обязательно'),1],['snils',T('Personal insurance number','СНИЛС'),T('required','обязательно'),1],['addr',T('Registered address','Адрес регистрации'),'',1],['family',T('Family members','Члены семьи'),'',1],['cars',T('Vehicles','Транспортные средства'),'',1],['prop',T('Property records','Сведения о недвижимости'),'',1],['phone',T('Mobile phone','Мобильный телефон'),'',0]];
+  $('#v-login').innerHTML=`<div class="card sso"><div class="logo">🛡</div><h2 style="margin:0">${T('National SSO','Единая госавторизация')}</h2><p class="muted" style="font-size:13px">${T('The service «Region.Online — Northern Province» requests access to:','Сервис «Регион.Онлайн — Северная губерния» запрашивает доступ к данным:')}</p>
+  <div class="consent">${F.map(f=>`<label><input type="checkbox" data-cf="${f[0]}" ${f[3]?'checked':''} ${f[2]?'disabled':''}> ${f[1]}<small>${f[2]}</small></label>`).join('')}</div>
+  <div class="f" style="text-align:left"><label>${T('Login','Логин')}</label><input class="input" value="anna.volkova@mail.example" id="lg"></div>
+  <div class="f" style="text-align:left"><label>${T('Password','Пароль')}</label><input class="input" type="password" value="demo-demo" id="pw"></div>
+  <button class="btn pri" id="go" style="width:100%;justify-content:center">${T('Allow & sign in','Разрешить и войти')}</button>
+  <p class="muted" style="font-size:11.5px;margin-top:10px">${T('Demo: credentials are prefilled. Consent can be revoked in the cabinet at any time.','Демо: данные уже заполнены. Согласие можно отозвать в кабинете в любой момент.')}</p></div>`;
+  $('#go').onclick=()=>{const c={};$$('[data-cf]').forEach(x=>c[x.dataset.cf]=x.checked);$('#go').innerHTML=`<span class="spin"></span> ${T('Redirecting to SSO…','Переход в госавторизацию…')}`;$('#go').disabled=true;
+   setTimeout(()=>{$('#go').innerHTML=`<span class="spin"></span> ${T('Fetching profile via inter-agency bus…','Получаем профиль через СМЭВ…')}`},700);
+   setTimeout(()=>{S.auth=true;S.consent=c;save();toast(T('Signed in as Anna Volkova','Вход выполнен: Анна Волкова'));go('home')},1500)};
+}
+
+// ---------- home ----------
+function mapSvg(sel,vals,onPick){
+  const mal=cssv('--mal'),gold=cssv('--gold'),txt='#fff';const mx=vals?Math.max(...Object.values(vals)):1;
+  return`<div class="map"><svg viewBox="0 0 420 280">${DIST.map(d=>{const p=d.pts.split(' ').map(x=>x.split(',').map(Number));const cx=p.reduce((a,b)=>a+b[0],0)/p.length,cy=p.reduce((a,b)=>a+b[1],0)/p.length;
+   const fill=vals?`color-mix(in srgb,${mal} ${Math.round(20+vals[d.id]/mx*80)}%,${cssv('--panel2')})`:d.id===sel?gold:`color-mix(in srgb,${mal} 55%,${cssv('--panel2')})`;
+   return`<polygon class="d" data-dist="${d.id}" points="${d.pts}" style="fill:${fill}"><title>${L(d)}</title></polygon><text x="${cx}" y="${cy}" text-anchor="middle" font-size="11" fill="${d.id===sel&&!vals?'#1a1306':txt}">${L(d)}</text>${vals?`<text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="10" fill="${txt}" opacity=".85">${vals[d.id]}</text>`:''}`}).join('')}</svg></div>`;
+}
+function rHome(){
+  const d=DB[S.district],r=rng(S.district.charCodeAt(0)*7);
+  const on=Object.keys(SVC).filter(k=>S.svcOn[k]);
+  $('#v-home').innerHTML=`<div class="grid2" style="margin-bottom:14px"><div class="card"><h3>${T('Your district','Ваш район')}<span class="sp"></span><span class="pill gold">${L(d)}</span></h3>${mapSvg(S.district)}<div class="muted" style="font-size:12px">${T('Tap a district to switch — offices, slots and fees are local.','Нажмите на район — приёмные, слоты и тарифы зависят от района.')}</div></div>
+   <div class="card"><h3>${L(d)} ${T('today','сегодня')}</h3><div class="grid3" style="grid-template-columns:repeat(2,minmax(0,1fr))">${[[T('Population','Население'),d.pop+T('k',' тыс.')],[T('Open issues','Открытых обращений'),Math.round(5+r()*40)],[T('Avg. fix time','Среднее устранение'),(2+r()*4).toFixed(1)+T(' d',' дн')],[T('Office queue now','Очередь в МФЦ'),Math.round(r()*12)+T(' people',' чел.')]].map(x=>`<div class="mini"><div class="muted" style="font-size:12px">${x[0]}</div><b style="font-size:20px">${x[1]}</b></div>`).join('')}</div>
+   <div class="warnbox" style="margin-top:12px">❄ ${T('Snow clearance on main streets of ','Уборка снега на главных улицах района ')}${L(d)}${T(' tonight 23:00–05:00 — move cars from marked zones.',' сегодня 23:00–05:00 — уберите машины из отмеченных зон.')}</div></div></div>
+   <div class="tiles">${Object.keys(SVC).map(k=>`<button class="tile ${S.svcOn[k]?'':'dis'}" data-svc="${k}"><div class="i">${SVC[k].i}</div><b>${L(SVC[k])}</b><small>${L(SVC[k].d)}</small>${S.svcOn[k]?'':`<span class="pill off">${T('Paused','Приостановлена')}</span>`}</button>`).join('')}</div>`;
+  $$('[data-dist]').forEach(p=>p.onclick=()=>{S.district=p.dataset.dist;save();toast(T('District: ','Район: ')+L(DB[S.district]));render()});
+  $$('[data-svc]').forEach(b=>b.onclick=()=>{const k=b.dataset.svc;if(!S.svcOn[k]){toast(T('This service is temporarily paused by the ministry','Услуга временно приостановлена министерством'),'bad');return}({meter:sMeter,kinder:sKinder,book:sBook,pay:sPay,issue:sIssue,waste:sWaste})[k]()});
+}
+function meterChart(){
+  const W=520,H=170,p=[30,10,22,8],m=S.meters.slice(-12),mx=Math.max(...m.map(x=>x.kwh))*1.15;
+  const x=i=>p[0]+i*(W-p[0]-p[3])/(m.length-1),y=v=>p[1]+(H-p[1]-p[2])*(1-v/mx);const c=cssv('--mal3'),g=cssv('--gold'),dim=cssv('--dim'),line=cssv('--line');
+  const bw=(W-p[0]-p[3])/m.length*.55;
+  return`<svg viewBox="0 0 ${W} ${H}" width="100%">${[0,.5,1].map(f=>`<line x1="${p[0]}" x2="${W-p[3]}" y1="${y(mx*f)}" y2="${y(mx*f)}" stroke="${line}"/><text x="${p[0]-4}" y="${y(mx*f)+3}" font-size="9" fill="${dim}" text-anchor="end">${Math.round(mx*f)}</text>`).join('')}
+  ${m.map((v,i)=>`<rect x="${x(i)-bw/2}" y="${y(v.kwh)}" width="${bw}" height="${H-p[2]-y(v.kwh)}" rx="3" fill="${i===m.length-1?g:c}" opacity="${i===m.length-1?1:.75}"><title>${v.kwh} kWh</title></rect><text x="${x(i)}" y="${H-6}" font-size="9" fill="${dim}" text-anchor="middle">${new Date(v.m).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{month:'short'})}</text>`).join('')}</svg>`;
+}
+function sMeter(){
+  const last=S.meters[S.meters.length-1],base={cold:1284.6,hot:702.3,kwh:21380};const tot=k=>+(base[k]+S.meters.reduce((a,m)=>a+m[k],0)).toFixed(1);
+  modal('⚡ '+T('Meter readings','Показания счётчиков'),`<div class="muted" style="font-size:12.5px;margin-bottom:10px">${L(S.prop[0])} · ${T('account','л/с')} <span class="mono">${S.prop[0].acc}</span></div>
+  <div class="fgrid">${[['cold',T('Cold water, m³','Холодная вода, м³')],['hot',T('Hot water, m³','Горячая вода, м³')],['kwh',T('Electricity, kWh','Электричество, кВт·ч')]].map(f=>`<div class="f ${f[0]==='kwh'?'full':''}"><label>${f[1]} · ${T('previous','предыдущее')} <span class="mono">${tot(f[0])}</span></label><input class="input mono" data-m="${f[0]}" inputmode="decimal" placeholder="${(tot(f[0])+last[f[0]]).toFixed(f[0]==='kwh'?0:1)}"><div class="err" data-me="${f[0]}"></div></div>`).join('')}</div>
+  <div class="card" style="background:var(--panel2);padding:12px"><b style="font-size:13px">${T('Electricity, last 12 months','Электричество, последние 12 мес.')}</b>${meterChart()}</div>
+  <div class="acts"><button class="btn" id="mfill">${T('Fill typical values','Заполнить типичные')}</button><button class="btn pri" id="msend">${T('Submit readings','Передать показания')}</button></div>`);
+  $('#mfill').onclick=()=>$$('[data-m]').forEach(i=>i.value=i.placeholder);
+  let forced=false;
+  $('#msend').onclick=()=>{let ok=true,warn=false;const v={};$$('[data-m]').forEach(i=>{const k=i.dataset.m,n=parseFloat(i.value.replace(',','.')),e=$(`[data-me="${k}"]`);e.textContent='';const prev=tot(k),avg=S.meters.slice(-6).reduce((a,m)=>a+m[k],0)/6;
+     if(isNaN(n)){e.textContent=T('Enter a value','Введите значение');ok=false;return}
+     if(n<prev){e.textContent=T('Lower than previous reading — counter cannot go back','Меньше предыдущего — счётчик не может идти назад');ok=false;return}
+     if(n-prev>avg*3&&!forced){e.innerHTML=`<span style="color:var(--amber)">⚠ ${T('Consumption ','Расход ')}${(n-prev).toFixed(1)} ${T('is ','в ')}${((n-prev)/avg).toFixed(1)}× ${T('above your 6-month average. Check the digits or submit again to confirm.','выше среднего за 6 мес. Проверьте цифры или отправьте ещё раз для подтверждения.')}</span>`;warn=true}
+     v[k]=+(n-prev).toFixed(1)});
+   if(!ok)return;if(warn){forced=true;return}
+   $('#msend').disabled=true;$('#msend').innerHTML='<span class="spin"></span>';
+   setTimeout(()=>{S.meters.push({m:Date.now(),cold:v.cold,hot:v.hot,kwh:Math.round(v.kwh)});S.meters=S.meters.slice(-24);addReq('meter','Meter readings submitted','Показания переданы');const r=S.reqs[0];r.st=3;r.log=[r.t,r.t,r.t,r.t];save();
+    const bill=Math.round(v.cold*48+v.hot*235+v.kwh*6.4);
+    $('#modal').innerHTML=`<div class="big-ok"><div class="c">✓</div><h2 style="justify-content:center">${T('Readings accepted','Показания приняты')}</h2><p class="muted">${T('Forwarded to «NorthEnergo» and «Vodokanal» via the inter-agency bus. Estimated bill:','Переданы в «СеверЭнерго» и «Водоканал» через СМЭВ. Ожидаемый счёт:')}</p><div class="qpos" style="font-size:36px">${money(bill)}</div><div class="acts" style="justify-content:center"><button class="btn" id="mok">${T('Close','Закрыть')}</button><button class="btn gold" id="mpay">${T('Pay now','Оплатить сейчас')}</button></div></div>`;
+    $('#mok').onclick=closeModal;$('#mpay').onclick=()=>payFlow(T('Utilities, ','ЖКУ, ')+L(S.prop[0]),bill)},900)};
+}
+function sKinder(){
+  const kids=S.family.filter(f=>new Date(f.dob).getFullYear()>2015);
+  modal('🧸 '+T('Kindergarten & school enrolment','Запись в детский сад и школу'),`<div class="fgrid"><div class="f"><label>${T('Child','Ребёнок')}</label><select class="input" id="kc">${kids.map((k,i)=>`<option value="${i}">${L(k)} · ${k.dob}</option>`).join('')}</select></div>
+   <div class="f"><label>${T('Type','Тип')}</label><select class="input" id="kt"><option value="k">${T('Kindergarten','Детский сад')}</option><option value="s">${T('School, 1st grade','Школа, 1 класс')}</option></select></div>
+   <div class="f full"><label>${T('Preferred institutions in ','Желаемые учреждения: ')}${L(DB[S.district])}</label><select class="input" id="ki"><option>№ 7 «${T('Snowflake','Снежинка')}»</option><option>№ 12 «${T('Northern Lights','Северное сияние')}»</option><option>№ 19 «${T('Rowan','Рябинка')}»</option></select></div>
+   <div class="f full"><label><input type="checkbox" id="kb"> ${T('Priority right (large family / public service)','Льгота (многодетная семья / госслужба)')}</label></div></div>
+   <div class="acts"><button class="btn pri" id="ks">${T('Join the queue','Встать в очередь')}</button></div>`);
+  $('#ks').onclick=()=>{const k=kids[+$('#kc').value],ins=$('#ki').value,pr=$('#kb').checked;$('#ks').disabled=true;$('#ks').innerHTML='<span class="spin"></span>';
+   setTimeout(()=>{const q=pr?14:63;const r=addReq('kinder',`${$('#kt').value==='k'?'Kindergarten':'School'} ${ins} — ${k.en}`,`${$('#kt').value==='k'?'Детсад':'Школа'} ${ins} — ${k.ru}`,{q,q0:q});
+    $('#modal').innerHTML=`<div class="big-ok"><div class="c">✓</div><h2 style="justify-content:center">${T('You are in the queue','Вы в очереди')}</h2><div class="muted">${T('Position','Место')}</div><div class="qpos" id="qp">${q}</div><p class="muted" style="font-size:13px">${T('Watch it update live in My requests as other families get places.','Следите в «Моих заявлениях» — место обновляется, когда другие семьи получают путёвки.')}</p><div class="acts" style="justify-content:center"><button class="btn pri" id="kgo">${T('Open my requests','Мои заявления')}</button></div></div>`;
+    $('#kgo').onclick=()=>{closeModal();go('reqs')}},1000)};
+}
+setInterval(()=>{let ch=false;S.reqs.forEach(r=>{if(r.svc==='kinder'&&r.q>1&&r.st<3&&Math.random()<.35){r.q--;ch=true;const el=$(`[data-q="${r.id}"]`);if(el){el.textContent=r.q;el.animate([{color:cssv('--mal3'),transform:'scale(1.25)'},{transform:'none'}],{duration:500})}}});if(ch)save()},2500);
+function sBook(){
+  const offices=[T('MFC «My Documents», ','МФЦ «Мои документы», ')+L(DB[S.district]),T('Social protection office','Отдел соцзащиты'),T('Traffic police registration','Регистрация ТС, ГИБДД')];
+  const days=[];for(let i=0;i<14;i++){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+i);days.push(d)}
+  let sel={o:0,d:null,s:null};
+  const draw=()=>{const r=rng(sel.o*31+(sel.d?sel.d.getDate():0)+S.district.charCodeAt(0));const slots=['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','16:00','16:30','17:00'];
+   modal('📅 '+T('Book an appointment','Запись на приём'),`<div class="f"><label>${T('Office','Ведомство')}</label><select class="input" id="bo">${offices.map((o,i)=>`<option value="${i}" ${i===sel.o?'selected':''}>${o}</option>`).join('')}</select></div>
+   <div class="cal">${days.map((d,i)=>{const we=d.getDay()===0;return`<button data-day="${i}" ${we?'disabled':''} class="${sel.d&&+sel.d===+d?'on':''}"><small>${d.toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{weekday:'short'})}</small>${d.getDate()}</button>`}).join('')}</div>
+   ${sel.d?`<div class="slots">${slots.map(s=>{const busy=r()<.4||S.booked[sel.o+'|'+sel.d.toDateString()+'|'+s];return`<button data-slot="${s}" ${busy?'disabled':''} class="${sel.s===s?'on':''}">${s}</button>`}).join('')}</div>`:`<div class="muted" style="font-size:13px;margin-top:10px">${T('Choose a day','Выберите день')}</div>`}
+   <div class="acts"><button class="btn pri" id="bk" ${sel.s?'':'disabled'}>${T('Confirm booking','Подтвердить запись')}</button></div>`);
+   $('#bo').onchange=()=>{sel.o=+$('#bo').value;sel.s=null;draw()};
+   $$('[data-day]').forEach(b=>b.onclick=()=>{sel.d=days[+b.dataset.day];sel.s=null;draw()});
+   $$('[data-slot]').forEach(b=>b.onclick=()=>{sel.s=b.dataset.slot;draw()});
+   $('#bk').onclick=()=>{S.booked[sel.o+'|'+sel.d.toDateString()+'|'+sel.s]=1;const when=sel.d.toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'long'})+', '+sel.s;
+    addReq('book',`Appointment: ${offices[sel.o]}, ${when}`,`Приём: ${offices[sel.o]}, ${when}`);const tk='Б-'+String(Math.floor(Math.random()*900+100));
+    $('#modal').innerHTML=`<div class="big-ok"><div class="c">✓</div><h2 style="justify-content:center">${T('Booked','Вы записаны')}</h2><p>${offices[sel.o]}<br><b>${when}</b></p><div class="muted">${T('Ticket','Талон')}</div><div class="qpos" style="font-size:40px">${tk}</div><p class="muted" style="font-size:12.5px">${T('A reminder will be sent 1 hour before.','Напоминание придёт за 1 час.')}</p><div class="acts" style="justify-content:center"><button class="btn" id="bok">${T('Done','Готово')}</button></div></div>`;$('#bok').onclick=closeModal}};
+  draw();
+}
+function payFlow(what,sum){
+  modal('💳 '+T('Payment','Оплата'),`<div class="mini" style="margin-bottom:12px"><div class="muted" style="font-size:12px">${T('Payee: Treasury of Northern Province','Получатель: УФК по Северной губернии')}</div><b>${esc(what)}</b><div class="qpos" style="font-size:30px;margin-top:6px">${money(sum)}</div></div>
+   <div class="chips" style="margin-bottom:10px"><button class="chip on" data-pm="card">${T('Card','Карта')}</button><button class="chip" data-pm="sbp">${T('Fast payments (QR)','СБП (QR)')}</button></div>
+   <div id="pmb"><div class="fgrid"><div class="f full"><label>${T('Card number','Номер карты')}</label><input class="input mono" value="2200 7001 2345 6789"></div><div class="f"><label>MM/YY</label><input class="input mono" value="08/28"></div><div class="f"><label>CVC</label><input class="input mono" value="•••"></div></div></div>
+   <div class="acts"><button class="btn gold" id="pp">${T('Pay ','Оплатить ')}${money(sum)}</button></div>`);
+  $$('[data-pm]').forEach(c=>c.onclick=()=>{$$('[data-pm]').forEach(x=>x.classList.toggle('on',x===c));$('#pmb').innerHTML=c.dataset.pm==='sbp'?`<div style="text-align:center"><svg viewBox="0 0 21 21" width="140" style="background:#fff;padding:8px;border-radius:10px">${(()=>{const r=rng(sum);let o='';for(let i=0;i<21;i++)for(let j=0;j<21;j++){const f=(i<7&&j<7)||(i>13&&j<7)||(i<7&&j>13);const on=f?((i%6===0||j%6===0||(i%20>1&&i%20<5&&j%20>1&&j%20<5))&&!(i>13&&(i===14?false:false))):r()>.5;if(f){const a=i>13?i-14:i,b=j>13?j-14:j;if(a===0||a===6||b===0||b===6||(a>1&&a<5&&b>1&&b<5))o+=`<rect x="${i}" y="${j}" width="1" height="1"/>`}else if(on)o+=`<rect x="${i}" y="${j}" width="1" height="1"/>`}return o})()}</svg><div class="muted" style="font-size:12px">${T('Scan in your banking app','Отсканируйте в приложении банка')}</div></div>`:`<div class="fgrid"><div class="f full"><label>${T('Card number','Номер карты')}</label><input class="input mono" value="2200 7001 2345 6789"></div><div class="f"><label>MM/YY</label><input class="input mono" value="08/28"></div><div class="f"><label>CVC</label><input class="input mono" value="•••"></div></div>`});
+  $('#pp').onclick=()=>{$('#pp').disabled=true;$('#pp').innerHTML='<span class="spin"></span> '+T('3-D Secure…','3-D Secure…');setTimeout(()=>{const id='P-'+Math.floor(88200+Math.random()*700);S.pays.unshift({t:Date.now(),en:what,ru:what,sum,id});save();
+   $('#modal').innerHTML=`<div class="big-ok"><div class="c">✓</div><h2 style="justify-content:center">${T('Paid','Оплачено')} ${money(sum)}</h2><p class="muted">${T('Receipt','Квитанция')} <span class="mono">${id}</span> · ${T('sent to the state payments registry','передана в ГИС ГМП')}</p><div class="acts" style="justify-content:center"><button class="btn" id="pok">${T('Close','Закрыть')}</button><button class="btn" id="phist">${T('Payment history','История платежей')}</button></div></div>`;
+   $('#pok').onclick=closeModal;$('#phist').onclick=()=>{closeModal();go('pays')}},1300)};
+}
+function sPay(){
+  const zones={cn:60,nv:40,pr:30};const rate=zones[S.district]||25;
+  modal('🅿 '+T('Parking & regional fees','Парковка и сборы'),`<div class="tabs"><button class="on" data-pt="park">${T('Parking','Парковка')}</button><button data-pt="fee">${T('Regional fees','Сборы')}</button></div><div id="ptb"></div>`);
+  const park=()=>{$('#ptb').innerHTML=`<div class="f"><label>${T('Vehicle','Транспорт')}</label><select class="input" id="pv">${S.cars.map(c=>`<option>${c.plate} · ${L(c)}</option>`).join('')}</select></div><div class="f"><label>${T('Zone','Зона')}: ${L(DB[S.district])} · ${money(rate)}/${T('h','ч')}</label><input type="range" id="ph" min="1" max="8" value="2" style="width:100%"></div><div class="mini"><span id="phl"></span></div><div class="acts"><button class="btn gold" id="pgo">${T('Continue to payment','Перейти к оплате')}</button></div>`;
+   const u=()=>$('#phl').innerHTML=`${$('#ph').value} ${T('h','ч')} → <b class="mono">${money(rate*$('#ph').value)}</b>`;$('#ph').oninput=u;u();
+   $('#pgo').onclick=()=>payFlow(`${T('Parking','Парковка')}, ${L(DB[S.district])}, ${$('#ph').value} ${T('h','ч')} · ${$('#pv').value.split(' · ')[0]}`,rate*$('#ph').value)};
+  const fee=()=>{const F=[[T('Fishing permit, Lake Imandra (1 day)','Путёвка на рыбалку, оз. Имандра (1 день)'),450],[T('Firewood cutting ticket','Билет на заготовку дров'),900],[T('Snowmobile route pass, season','Пропуск на снегоходный маршрут, сезон'),2500]];
+   $('#ptb').innerHTML=F.map((f,i)=>`<div class="ent"><span class="ico">🎫</span><div class="grow">${f[0]}</div><b class="mono">${money(f[1])}</b><button class="btn sm gold" data-fee="${i}">${T('Pay','Оплатить')}</button></div>`).join('');$$('[data-fee]').forEach(b=>b.onclick=()=>payFlow(F[+b.dataset.fee][0],F[+b.dataset.fee][1]))};
+  $$('[data-pt]').forEach(b=>b.onclick=()=>{$$('[data-pt]').forEach(x=>x.classList.toggle('on',x===b));b.dataset.pt==='park'?park():fee()});park();
+}
+function sIssue(){
+  const fields=S.forms.issue;
+  modal('🛠 '+T('Report a local issue','Сообщить о проблеме'),`<div class="muted" style="font-size:12.5px;margin-bottom:10px">${T('District','Район')}: <b>${L(DB[S.district])}</b> · ${T('form fields are configured by the admin','поля формы настраивает администратор')}</div>${formHtml(fields)}<div class="acts"><button class="btn pri" id="is">${T('Send report','Отправить')}</button></div>`);
+  $('#is').onclick=()=>{let ok=true;const vals={};fields.forEach(f=>{const el=$(`[data-ff="${f.k}"]`),e=$(`[data-fe="${f.k}"]`);const v=f.type==='checkbox'?el.checked:el.value.trim();vals[f.k]=v;e.textContent='';if(f.req&&!v){e.textContent=T('Required','Обязательное поле');ok=false}});if(!ok)return;
+   const title=(vals.desc||vals.addr||T('Local issue','Проблема')).toString().slice(0,48);const r=addReq('issue',title+' — '+DB[S.district].en,title+' — '+DB[S.district].ru);
+   $('#modal').innerHTML=`<div class="big-ok"><div class="c">✓</div><h2 style="justify-content:center">${T('Report sent','Сообщение отправлено')}</h2><p class="muted">${T('No. ','№ ')}<span class="mono">${r.id}</span> · ${T('routed to the district road service. Typical fix: 3 days.','направлено в дорожную службу района. Обычно устраняют за 3 дня.')}</p><div class="acts" style="justify-content:center"><button class="btn pri" id="igo">${T('Track status','Отслеживать')}</button></div></div>`;$('#igo').onclick=()=>{closeModal();go('reqs')}};
+}
+function sWaste(){
+  modal('♻ '+T('Bulky waste pickup','Вывоз крупного мусора'),`<div class="f"><label>${T('Items','Что вывезти')}</label><div class="chips">${[T('Furniture','Мебель'),T('Appliances','Бытовая техника'),T('Renovation debris','Строительный мусор'),T('Tyres','Шины')].map(x=>`<button class="chip" data-w>${x}</button>`).join('')}</div></div><div class="f"><label>${T('Address','Адрес')}</label><input class="input" value="${esc(L(S.prop[0]))}"></div><div class="acts"><button class="btn pri" id="ws">${T('Schedule pickup','Заказать вывоз')}</button></div>`);
+  $$('[data-w]').forEach(c=>c.onclick=()=>c.classList.toggle('on'));
+  $('#ws').onclick=()=>{const it=$$('[data-w].on').map(c=>c.textContent);if(!it.length){toast(T('Pick at least one item type','Выберите хотя бы один тип'),'bad');return}addReq('waste',T('Bulky waste: ','Вывоз: ')+it.join(', '),T('Bulky waste: ','Вывоз: ')+it.join(', '));closeModal();toast(T('Pickup scheduled for Saturday 10:00–14:00','Вывоз назначен на субботу 10:00–14:00'))};
+}
+function formHtml(fields){return`<div class="fgrid">${fields.filter(Boolean).map(f=>{const lab=L(f)+(f.req?' *':'');let inp;
+ if(f.type==='select')inp=`<select class="input" data-ff="${f.k}">${(f.opts||'').split(';').filter(Boolean).map(o=>`<option>${esc(o)}</option>`).join('')}</select>`;
+ else if(f.type==='textarea')inp=`<textarea class="input" rows="3" data-ff="${f.k}"></textarea>`;
+ else if(f.type==='checkbox')inp=`<label style="display:flex;gap:8px;font-size:13.5px"><input type="checkbox" data-ff="${f.k}"> ${T('Yes','Да')}</label>`;
+ else inp=`<input class="input" type="${f.type==='date'?'date':f.type==='photo'?'file':'text'}" data-ff="${f.k}" ${f.type==='photo'?'accept="image/*"':''}>`;
+ return`<div class="f ${f.type==='textarea'||f.type==='text'?'full':''}"><label>${esc(lab)}</label>${inp}<div class="err" data-fe="${f.k}"></div></div>`}).join('')}</div>`}
+
+// ---------- cabinet ----------
+function rCab(){
+  const c=S.consent||{};
+  const sec=(t,items,key)=>`<div class="card"><h3>${t}<span class="sp"></span>${c[key]===false?`<span class="pill warn">${T('Not shared','Не передано')}</span>`:`<span class="pill ok">SSO</span>`}</h3>${c[key]===false?`<div class="empty">${T('You did not consent to share this data.','Вы не дали согласие на передачу этих данных.')}<br><button class="btn sm" data-grant="${key}" style="margin-top:8px">${T('Grant access','Разрешить доступ')}</button></div>`:items}</div>`;
+  $('#v-cabinet').innerHTML=`<div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:14px"><span class="av" style="width:56px;height:56px;font-size:22px">${L(S.person)[0]}</span><div style="flex:1;min-width:180px"><b style="font-size:18px">${L(S.person)}</b><div class="muted mono" style="font-size:12.5px">${T('Insurance no.','СНИЛС')} ${S.person.snils}</div><div class="muted" style="font-size:12.5px">${L(S.prop[0])} · ${L(DB[S.district])}</div></div><button class="btn sm danger" id="revoke">${T('Revoke SSO consent','Отозвать согласие')}</button></div>
+  <div class="grid3">
+  ${sec(T('Family','Семья'),S.family.map(f=>`<div class="ent"><span class="ico">👤</span><div class="grow"><b>${L(f)}</b><small>${L(f.rel)} · ${f.dob}</small></div></div>`).join(''),'family')}
+  ${sec(T('Vehicles','Транспорт'),S.cars.map(v=>`<div class="ent"><span class="ico">🚗</span><div class="grow"><b class="mono">${v.plate}</b><small>${L(v)}</small></div><span class="pill ok">${T('No fines','Штрафов нет')}</span></div>`).join(''),'cars')}
+  ${sec(T('Property','Недвижимость'),S.prop.map(p=>`<div class="ent"><span class="ico">🏠</span><div class="grow"><b>${L(p)}</b><small>${p.area} m² · ${T('acc.','л/с')} ${p.acc}</small></div></div>`).join(''),'prop')}
+  </div>`;
+  $$('[data-grant]').forEach(b=>b.onclick=()=>{S.consent=S.consent||{};S.consent[b.dataset.grant]=true;save();toast(T('Access granted via SSO','Доступ предоставлен через госавторизацию'));rCab()});
+  $('#revoke').onclick=()=>{S.auth=false;S.consent=null;save();toast(T('Consent revoked, you were signed out','Согласие отозвано, вы вышли'));go('login')};
+}
+function rReqs(){
+  $('#v-reqs').innerHTML=S.reqs.length?S.reqs.map(r=>`<div class="req"><div class="top"><span style="font-size:20px">${SVC[r.svc].i}</span><b>${esc(L(r))}</b><span class="mono muted" style="font-size:12px">${r.id}</span><span class="pill ${r.st===3?'ok':'gold'}">${L(STATES[r.st])}</span></div>
+   ${r.svc==='kinder'&&r.st<3?`<div style="display:flex;gap:16px;align-items:center;margin-top:10px;flex-wrap:wrap"><div><div class="muted" style="font-size:12px">${T('Queue position','Место в очереди')}</div><div class="qpos" data-q="${r.id}">${r.q}</div></div><div style="flex:1;min-width:160px"><div style="height:8px;border-radius:5px;background:var(--bg2);overflow:hidden"><i style="display:block;height:100%;width:${Math.max(4,100-r.q/(r.q0||70)*100)}%;background:linear-gradient(90deg,var(--mal2),var(--gold))"></i></div><div class="muted" style="font-size:12px;margin-top:4px">${T('Updates live as places are allocated','Обновляется по мере распределения мест')}</div></div></div>`:''}
+   <div class="tl">${STATES.map((s,i)=>`<div class="e ${i<r.st||r.st===3?'ok':i===r.st?'cur':''}">${L(s)}${r.log[i]?`<small>${fmtT(r.log[i])}</small>`:''}</div>`).join('')}</div>
+   ${r.st===3&&r.svc!=='meter'?(r.rate?`<div class="muted" style="font-size:13px">${T('Your rating','Ваша оценка')}: <span class="stars">${'★'.repeat(r.rate)}${'☆'.repeat(5-r.rate)}</span></div>`:`<div style="font-size:13px">${T('Rate the service:','Оцените услугу:')} ${[1,2,3,4,5].map(n=>`<button class="btn sm" data-rate="${r.id}" data-n="${n}" style="padding:3px 8px">★${n}</button>`).join(' ')}</div>`):''}
+   ${r.st===1&&r.svc==='issue'?`<button class="btn sm" data-adv="${r.id}">${T('Simulate: agency starts work','Симуляция: ведомство взяло в работу')}</button>`:''}
+   ${r.st===2?`<button class="btn sm" data-adv="${r.id}">${T('Simulate: completed','Симуляция: исполнено')}</button>`:''}</div>`).join(''):`<div class="card empty">${T('No requests yet','Заявлений пока нет')}</div>`;
+  $$('[data-rate]').forEach(b=>b.onclick=()=>{const r=S.reqs.find(x=>x.id===b.dataset.rate);r.rate=+b.dataset.n;S.ratings.push({svc:r.svc,n:r.rate,d:S.district});save();toast(T('Thank you! Rating sent to the ministry','Спасибо! Оценка отправлена в министерство'));rReqs()});
+  $$('[data-adv]').forEach(b=>b.onclick=()=>{const r=S.reqs.find(x=>x.id===b.dataset.adv);r.st++;r.log.push(Date.now());save();rReqs();counts()});
+}
+function rPays(){
+  const tot=S.pays.reduce((a,p)=>a+p.sum,0);
+  $('#v-pays').innerHTML=`<div class="kpis" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="card kpi"><div class="l">${T('Paid this year','Оплачено за год')}</div><div class="v">${money(tot)}</div></div><div class="card kpi"><div class="l">${T('Payments','Платежей')}</div><div class="v">${S.pays.length}</div></div><div class="card kpi"><div class="l">${T('Debts','Задолженности')}</div><div class="v" style="color:var(--mal3)">0 ₽</div></div></div>
+  <div class="tw"><table><tr><th>${T('Date','Дата')}</th><th>${T('Purpose','Назначение')}</th><th>${T('Receipt','Квитанция')}</th><th style="text-align:right">${T('Amount','Сумма')}</th></tr>${S.pays.map(p=>`<tr><td>${fmtD(p.t)}</td><td>${esc(L(p))}</td><td class="mono">${p.id}</td><td class="mono" style="text-align:right">${money(p.sum)}</td></tr>`).join('')}</table></div>
+  <div class="acts" style="justify-content:flex-start"><button class="btn gold" id="newpay">🅿 ${T('Pay parking or fee','Оплатить парковку или сбор')}</button></div>`;
+  $('#newpay').onclick=sPay;
+}
+
+// ---------- admin ----------
+let editSvc='issue';
+function rCat(){
+  const f=S.forms[editSvc]||(S.forms[editSvc]=[{k:'f1',en:'Comment',ru:'Комментарий',type:'textarea'}]);
+  const TY={text:T('Text','Текст'),textarea:T('Long text','Длинный текст'),select:T('Dropdown','Список'),date:T('Date','Дата'),checkbox:T('Checkbox','Галочка'),photo:T('Photo','Фото')};
+  $('#v-catalog').innerHTML=`<div class="grid2"><div class="card"><h3>${T('Services','Услуги')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${Object.values(S.svcOn).filter(Boolean).length}/${Object.keys(SVC).length} ${T('live','активны')}</span></h3>
+   ${Object.keys(SVC).map(k=>`<div class="ent"><span class="ico">${SVC[k].i}</span><div class="grow"><b>${L(SVC[k])}</b><small>${L(SVC[k].d)}</small></div><button class="btn sm ${editSvc===k?'gold':''}" data-ed="${k}">${T('Form','Форма')}</button><label class="sw"><input type="checkbox" data-tg="${k}" ${S.svcOn[k]?'checked':''}><i></i></label></div>`).join('')}</div>
+   <div class="card"><h3>${T('Form builder','Конструктор формы')}: ${L(SVC[editSvc])}</h3>
+   ${f.map((x,i)=>`<div class="fb"><span class="muted">⋮⋮</span><div class="grow"><input class="input" data-fl="${i}" value="${esc(L(x))}" style="width:100%"></div><select class="input" data-ft="${i}" style="width:auto">${Object.keys(TY).map(t=>`<option value="${t}" ${x.type===t?'selected':''}>${TY[t]}</option>`).join('')}</select><label title="${T('Required','Обязательное')}" style="font-size:12px;display:flex;gap:3px;align-items:center"><input type="checkbox" data-fr="${i}" ${x.req?'checked':''}>*</label><button class="btn sm" data-up="${i}" ${i?'':'disabled'}>↑</button><button class="btn sm danger" data-del="${i}">✕</button></div>${x.type==='select'?`<input class="input" data-fo="${i}" value="${esc(x.opts||'')}" placeholder="a;b;c" style="margin:-2px 0 8px;font-size:12px">`:''}`).join('')}
+   <div class="acts" style="justify-content:flex-start"><button class="btn sm" id="addF">＋ ${T('Add field','Добавить поле')}</button><button class="btn sm pri" id="pub">${T('Publish form','Опубликовать')}</button></div>
+   <div style="margin-top:14px;border-top:1px dashed var(--line2);padding-top:12px"><div class="muted" style="font-size:12px;margin-bottom:8px">${T('LIVE PREVIEW — what residents see','ПРЕДПРОСМОТР — так увидят жители')}</div><div class="mini">${formHtml(f)}</div></div></div></div>`;
+  $$('[data-tg]').forEach(c=>c.onchange=()=>{S.svcOn[c.dataset.tg]=c.checked;save();toast(L(SVC[c.dataset.tg])+': '+(c.checked?T('live','включена'):T('paused','приостановлена')));rCat()});
+  $$('[data-ed]').forEach(b=>b.onclick=()=>{editSvc=b.dataset.ed;rCat()});
+  const set=(i,k,v)=>{f[i][k]=v;save()};
+  $$('[data-fl]').forEach(x=>x.onchange=()=>{set(+x.dataset.fl,PT.lang,x.value);if(!f[+x.dataset.fl][PT.lang==='ru'?'en':'ru'])set(+x.dataset.fl,PT.lang==='ru'?'en':'ru',x.value);rCat()});
+  $$('[data-ft]').forEach(x=>x.onchange=()=>{set(+x.dataset.ft,'type',x.value);if(x.value==='select'&&!f[+x.dataset.ft].opts)set(+x.dataset.ft,'opts',T('Option A;Option B','Вариант А;Вариант Б'));rCat()});
+  $$('[data-fr]').forEach(x=>x.onchange=()=>{set(+x.dataset.fr,'req',x.checked);rCat()});
+  $$('[data-fo]').forEach(x=>x.onchange=()=>{set(+x.dataset.fo,'opts',x.value);rCat()});
+  $$('[data-del]').forEach(b=>b.onclick=()=>{const i=+b.dataset.del;if(!f[i])return;f.splice(i,1);save();rCat()});
+  $$('[data-up]').forEach(b=>b.onclick=()=>{const i=+b.dataset.up;if(!f[i]||!f[i-1])return;[f[i-1],f[i]]=[f[i],f[i-1]];save();rCat()});
+  $('#addF').onclick=()=>{f.push({k:'f'+Date.now(),en:'Photo of the problem',ru:'Фото проблемы',type:'photo'});save();rCat()};
+  $('#pub').onclick=()=>{$('#pub').innerHTML='<span class="spin"></span>';setTimeout(()=>{toast(T('Form v','Форма v')+(f.length+3)+T(' published — residents see it now',' опубликована — жители уже видят её'));rCat()},700)};
+}
+let metric='req';
+function rStats(){
+  const r=rng(2024),M={req:{en:'Requests / month',ru:'Заявлений в месяц'},sat:{en:'Satisfaction, %',ru:'Удовлетворённость, %'},days:{en:'Avg. days to resolve',ru:'Средний срок, дн'}};
+  const data={};DIST.forEach(d=>{data[d.id]={req:Math.round(d.pop*(6+r()*5)),sat:Math.round(78+r()*18),days:+(1.5+r()*5).toFixed(1)}});
+  S.reqs.forEach(q=>data[S.district].req++);
+  const vals=Object.fromEntries(DIST.map(d=>[d.id,data[d.id][metric]]));
+  const svcR=Object.keys(SVC).map(k=>{const own=S.ratings.filter(x=>x.svc===k);const base=3.8+r()*1.1,n=Math.round(200+r()*900);const avg=(base*n+own.reduce((a,x)=>a+x.n,0))/(n+own.length);return{k,avg,n:n+own.length}});
+  const total=Object.values(data).reduce((a,x)=>a+x.req,0);
+  $('#v-stats').innerHTML=`<div class="kpis">${[[T('Requests this month','Заявлений за месяц'),total.toLocaleString(PT.lang==='ru'?'ru-RU':'en-US'),'+9%'],[T('Digital share','Доля онлайн'),'73%',T('+11 pp y/y','+11 п.п. за год')],[T('Avg. satisfaction','Удовлетворённость'),(svcR.reduce((a,x)=>a+x.avg,0)/svcR.length).toFixed(2)+' ★',S.ratings.length+T(' new from you',' новых от вас')],[T('Inter-agency calls','Запросов СМЭВ'),'412k',T('99.97% success','99,97% успешно')]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('')}</div>
+  <div class="grid2"><div class="card"><h3>${T('Map','Карта')}<span class="sp"></span><span class="chips">${Object.keys(M).map(k=>`<button class="chip ${metric===k?'on':''}" data-met="${k}">${L(M[k])}</button>`).join('')}</span></h3>${mapSvg(null,vals)}</div>
+  <div class="card"><h3>${T('Satisfaction by service','Оценки по услугам')}</h3>${svcR.map(x=>`<div class="ent"><span class="ico">${SVC[x.k].i}</span><div class="grow"><b style="font-size:13px">${L(SVC[x.k])}</b><small>${x.n} ${T('ratings','оценок')}</small></div><span class="stars">${'★'.repeat(Math.round(x.avg))}${'☆'.repeat(5-Math.round(x.avg))}</span><b class="mono">${x.avg.toFixed(2)}</b></div>`).join('')}</div></div>
+  <div class="tw" style="margin-top:14px"><table><tr><th>${T('District','Район')}</th><th>${T('Population','Население')}</th><th>${L(M.req)}</th><th>${L(M.sat)}</th><th>${L(M.days)}</th><th>${T('Per 1k residents','На 1 тыс. жителей')}</th></tr>${DIST.map(d=>`<tr><td><b>${L(d)}</b></td><td class="mono">${d.pop}k</td><td class="mono">${data[d.id].req}</td><td><span class="pill ${data[d.id].sat>88?'ok':data[d.id].sat>82?'gold':'warn'}">${data[d.id].sat}%</span></td><td class="mono">${data[d.id].days}</td><td class="mono">${(data[d.id].req/d.pop).toFixed(1)}</td></tr>`).join('')}</table></div>`;
+  $$('[data-met]').forEach(b=>b.onclick=()=>{metric=b.dataset.met;rStats()});
+  $$('#v-stats [data-dist]').forEach(p=>p.onclick=()=>toast(L(DB[p.dataset.dist])+': '+data[p.dataset.dist][metric]+' · '+L(M[metric])));
+}
+PT.onLang(()=>{closeModal();render()});
+go(view);
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

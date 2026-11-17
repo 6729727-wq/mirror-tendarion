@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wallet-ID Credentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1420px;margin:0 auto;padding:18px 20px 60px}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.top h1{margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
+.top h1 b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:13px}
+.top .sp{flex:1}.stk{font-family:var(--mono);font-size:11.5px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.how div{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.4}
+.how b.n{width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:12px}
+.layout{display:grid;grid-template-columns:minmax(0,.9fr) 392px minmax(0,1.2fr);grid-template-areas:"feat phone cons";gap:20px;align-items:start}
+.a-feat{grid-area:feat;display:flex;flex-direction:column;gap:14px;min-width:0}
+.a-phone{grid-area:phone;min-width:0}
+.a-cons{grid-area:cons;display:flex;flex-direction:column;gap:14px;min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card h4{margin:14px 0 8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 14px;font-size:13px;margin:0}
+.facts dt{color:var(--muted)}.facts dd{margin:0;font-weight:600}
+.feat{display:flex;gap:12px;padding:10px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:.15s}
+.feat:hover{border-color:var(--line2);background:var(--panel2)}
+.feat .fi{width:34px;height:34px;border-radius:11px;flex:none;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);font-size:16px}
+.feat b{display:block;font-size:13.5px}.feat span{font-size:12.5px;color:var(--muted);line-height:1.45;display:block}
+/* phone */
+.phone{border-radius:50px;padding:12px;background:linear-gradient(160deg,#2a3b35,#0b1512);box-shadow:var(--shadow),inset 0 0 0 2px #3a4f47;position:sticky;top:60px}
+.scr{border-radius:38px;overflow:hidden;background:var(--bg);height:760px;display:flex;flex-direction:column;position:relative;isolation:isolate}
+.sbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:12.5px;font-weight:700;flex:none}
+.sbar .isl{width:96px;height:24px;background:#000;border-radius:14px}
+.ahd{display:flex;align-items:center;gap:8px;padding:4px 14px 8px;flex:none}
+.ahd .lg{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-weight:800;font-size:11px;flex:none}
+.ahd .tt{flex:1;font-weight:800;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.obadge{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:5px 10px;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--mal3)}
+.obadge i{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.obadge.off{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 12%,transparent)}
+.pbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 14px 18px;position:relative;scrollbar-width:thin}
+.ptr{height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);font-size:12px;gap:8px;transition:height .2s}
+.ptr .spn{width:16px;height:16px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--mal3)}
+.ptr.go .spn{animation:sp .7s linear infinite}
+.tabbar{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);padding:6px 4px 14px;flex:none}
+.tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--dim);cursor:pointer;padding:4px 0;min-width:0;transition:transform .12s}
+.tabbar button:active{transform:scale(.88)}
+.tabbar button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.tabbar button.on{color:var(--mal3)}.tabbar button.on svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--mal) 60%,transparent))}
+.view{animation:vin .28s cubic-bezier(.2,1,.4,1)}
+@keyframes vin{from{opacity:0;transform:translateX(14px)}}
+@keyframes sp{to{transform:rotate(360deg)}}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.h2{font-size:19px;font-weight:800;margin:2px 0 4px;line-height:1.25}
+.sub{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.pbtn{width:100%;justify-content:center;margin-top:8px}
+.btn:active,.tap:active{transform:scale(.96)}
+.back{border:0;background:none;color:var(--muted);cursor:pointer;font-weight:600;padding:2px 0 8px;font-size:13px}
+.sect{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px;display:flex;justify-content:space-between}
+/* credential cards */
+.stack{position:relative;padding-bottom:8px}
+.cc{position:relative;aspect-ratio:1.586;border-radius:18px;color:#fff;padding:12px 14px;display:flex;flex-direction:column;overflow:hidden;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.35);transition:transform .35s cubic-bezier(.2,1,.4,1),filter .3s}
+.stack .cc{margin-top:-46%}.stack .cc:first-child{margin-top:0}
+.stack .cc:hover{transform:translateY(-8px)}
+.cc:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.04) 0 2px,transparent 2px 9px);pointer-events:none}
+.cc:after{content:"";position:absolute;right:-50px;top:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 68%);pointer-events:none}
+.k-mdl{background:radial-gradient(130% 120% at 0 0,#21c99a 0,#0e7458 48%,#093a2e 100%)}
+.k-vreg{background:radial-gradient(130% 120% at 0 0,#4a8de0 0,#1d4f8f 50%,#0c2547 100%)}
+.k-ins{background:radial-gradient(130% 120% at 0 0,#e6c27a 0,#a07425 50%,#4b340d 100%)}
+.k-age{background:radial-gradient(130% 120% at 0 0,#a58bf5 0,#6346c4 50%,#2a1a66 100%)}
+.cc .ct{display:flex;align-items:center;gap:9px;position:relative;z-index:1}
+.emb{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#f3d79a,#c69a3e);color:#1a1306;font-weight:800;font-size:10.5px;flex:none}
+.cc .t1{font-size:9.5px;font-weight:800;letter-spacing:.14em;opacity:.85}.cc .t2{font-size:13px;font-weight:700}
+.cc .fmt{margin-left:auto;font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.16);white-space:nowrap}
+.cc .cm{display:flex;gap:11px;margin-top:10px;flex:1;position:relative;z-index:1;min-height:0}
+.portrait{width:22%;aspect-ratio:.82;border-radius:9px;overflow:hidden;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.35);align-self:flex-start;background:#e9e2cf}
+.portrait svg{display:block;width:100%;height:100%}
+.cf{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.cf i{display:block;font-style:normal;font-size:8.5px;opacity:.7;text-transform:uppercase;letter-spacing:.08em}
+.cf b{display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cf .two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cc .cb{font-size:10px;opacity:.85;position:relative;z-index:1;display:flex;justify-content:space-between;gap:8px;align-items:flex-end;font-family:var(--mono)}
+.cc .big{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.stamp{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-12deg);border:3px solid #fff;color:#fff;font-weight:900;letter-spacing:.18em;padding:4px 14px;border-radius:8px;font-size:18px;background:rgba(200,30,30,.75);animation:stp .5s cubic-bezier(.2,1.6,.4,1)}
+.stamp.sus{background:rgba(200,120,10,.8)}
+@keyframes stp{from{transform:translate(-50%,-50%) rotate(-12deg) scale(2.4);opacity:0}}
+.cc.revoked{filter:grayscale(.75) brightness(.8);box-shadow:0 0 0 2px var(--red),0 10px 26px rgba(0,0,0,.35)}
+.cc.suspended{filter:saturate(.5);box-shadow:0 0 0 2px var(--amber),0 10px 26px rgba(0,0,0,.35)}
+.cc.nw{animation:cin .7s cubic-bezier(.2,1.2,.4,1)}
+@keyframes cin{from{transform:translateY(60px) scale(.9);opacity:0}}
+.shake{animation:shk .5s}
+@keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.flip{perspective:1200px}
+.flin{position:relative;aspect-ratio:1.586;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,.9,.3,1)}
+.flin.fl{transform:rotateY(180deg)}
+.flin>.cc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flin>.cc.bk{transform:rotateY(180deg);background:#f6f2e6;color:#14251f;flex-direction:row;gap:12px;align-items:center}
+.flin>.cc.bk:after{display:none}
+.bk canvas{width:42%;aspect-ratio:1;border-radius:8px;flex:none}
+.bk .bf{flex:1;font-size:11px;line-height:1.5;min-width:0}
+.bk .bf div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;font-size:12.5px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:12px}
+.kv span{color:var(--muted)}.kv b{text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li{display:flex;align-items:center;gap:11px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;width:100%;text-align:left;cursor:pointer}
+.li .ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--panel2);flex:none;font-size:16px}
+.li .sp{flex:1;min-width:0}.li .sp b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .sp div{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:10px}
+.seg button{border:1px solid var(--line2);background:var(--panel);border-radius:12px;padding:9px 8px;cursor:pointer;text-align:left;font-size:12px;line-height:1.3;transition:.15s}
+.seg button b{display:block;font-size:13px}
+.seg button.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.chk{display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer}
+.chk:last-child{border-bottom:0}.chk .sp{flex:1;min-width:0}.chk small{color:var(--muted);font-family:var(--mono);font-size:10.5px}
+.sw{position:relative;width:38px;height:22px;flex:none;display:inline-block}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line2);transition:.2s;cursor:pointer}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+i{background:var(--mal)}.sw input:checked+i:after{transform:translateX(16px)}
+.sw input:disabled+i{opacity:.5}
+.qrbox{background:#fff;border-radius:20px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;color:#14251f;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:pop .35s cubic-bezier(.2,1.3,.4,1)}
+.qrbox canvas{width:200px;height:200px}
+.qrbox .tm{font-family:var(--mono);font-size:12px;color:#4a5e55}
+.qrbar{width:200px;height:4px;border-radius:2px;background:#e3e9e5;overflow:hidden}.qrbar i{display:block;height:100%;background:#0e9a72;transition:width 1s linear}
+.note{border-radius:12px;padding:9px 11px;font-size:12px;line-height:1.4;margin:8px 0;display:flex;gap:8px}
+.note.warn{background:color-mix(in srgb,var(--amber) 13%,transparent);color:var(--amber);border:1px solid color-mix(in srgb,var(--amber) 40%,transparent)}
+.note.bad{background:color-mix(in srgb,var(--red) 13%,transparent);color:var(--red);border:1px solid color-mix(in srgb,var(--red) 40%,transparent)}
+.note.ok{background:color-mix(in srgb,var(--mal) 12%,transparent);color:var(--mal3);border:1px solid color-mix(in srgb,var(--mal) 40%,transparent)}
+/* onboarding */
+.onb{display:flex;flex-direction:column;min-height:100%;gap:10px}
+.vf{position:relative;aspect-ratio:1;border-radius:22px;background:radial-gradient(circle at 50% 40%,#1c3a31,#050b09);overflow:hidden;display:grid;place-items:center}
+.vf .lic{width:74%;aspect-ratio:1.586;border-radius:12px;background:radial-gradient(130% 120% at 0 0,#21c99a,#0e7458 60%,#093a2e);transform:rotate(-4deg);box-shadow:0 10px 30px rgba(0,0,0,.6);opacity:.9}
+.vf .crn{position:absolute;inset:16%;border:0}
+.vf .crn:before,.vf .crn:after{content:"";position:absolute;width:34px;height:34px;border:3px solid var(--mal3)}
+.vf .crn:before{left:0;top:0;border-right:0;border-bottom:0;border-radius:10px 0 0 0}.vf .crn:after{right:0;bottom:0;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.vf .ln{position:absolute;left:12%;right:12%;height:2px;background:var(--mal3);box-shadow:0 0 14px var(--mal3);animation:scan 1.6s ease-in-out infinite alternate}
+@keyframes scan{from{top:22%}to{top:78%}}
+.vf.got .crn:before,.vf.got .crn:after{border-color:var(--gold2)}
+.ocr{font-family:var(--mono);font-size:11.5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 11px;line-height:1.7;min-height:80px}
+.ocr div{animation:vin .3s}
+.face{position:relative;width:220px;height:220px;margin:6px auto}
+.face svg{width:100%;height:100%}
+.face .ring{fill:none;stroke-width:5;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .12s linear}
+.face .dot{fill:var(--mal3);opacity:0;animation:dt .4s forwards}
+@keyframes dt{to{opacity:1}}
+.prov{display:flex;flex-direction:column;gap:6px}
+.pv{display:flex;gap:10px;align-items:center;font-size:12.5px;padding:8px 10px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+.pv .st{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;border:2px solid var(--line2)}
+.pv.run .st{border-color:var(--line2);border-top-color:var(--mal3);animation:sp .7s linear infinite}
+.pv.ok .st{background:var(--mal);border-color:var(--mal);color:#fff}
+.pv.bad .st{background:var(--red);border-color:var(--red);color:#fff}
+.pv.wn .st{background:var(--amber);border-color:var(--amber);color:#1a1306}
+.pv.skip{opacity:.45}
+.pv .sp{flex:1;min-width:0}.pv small{display:block;color:var(--muted);font-family:var(--mono);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pgb{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.pgb i{display:block;height:100%;background:linear-gradient(90deg,var(--mal),var(--mal3));transition:width .4s}
+.bigok{width:84px;height:84px;border-radius:50%;margin:18px auto 6px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:40px;animation:pop .5s cubic-bezier(.2,1.5,.4,1);box-shadow:0 0 0 10px color-mix(in srgb,var(--mal) 18%,transparent)}
+/* push + sheet */
+#pushHost{position:absolute;left:10px;right:10px;top:8px;z-index:40;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.push{border-radius:18px;padding:10px 12px;display:flex;gap:10px;background:color-mix(in srgb,var(--panel2) 90%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line2);box-shadow:0 14px 34px rgba(0,0,0,.35);animation:pdrop .45s cubic-bezier(.2,1.3,.4,1);pointer-events:auto}
+.push.bad{border-color:var(--red)}.push.out{animation:pup .3s forwards}
+.push .ic{width:32px;height:32px;border-radius:10px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:14px}
+.push.bad .ic{background:linear-gradient(135deg,#f07a7a,#b52d2d)}
+.push .sp{flex:1;min-width:0}.push b{display:block;font-size:13px}.push p{margin:1px 0 0;font-size:12px;color:var(--muted);line-height:1.35}
+.push .hd{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+@keyframes pdrop{from{transform:translateY(-130%);opacity:0}}@keyframes pup{to{transform:translateY(-130%);opacity:0}}
+.shade{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.45);animation:fade .25s}
+@keyframes fade{from{opacity:0}}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:21;background:var(--panel);border-radius:24px 24px 0 0;border-top:1px solid var(--line2);padding:10px 16px 22px;max-height:88%;overflow:auto;animation:sup .32s cubic-bezier(.2,1,.4,1)}
+.sheet:before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--line2);margin:0 auto 12px}
+.sheet h4{margin:0 0 4px;font-size:17px}
+@keyframes sup{from{transform:translateY(100%)}}
+.rp{display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 11px;margin:10px 0}
+.rp .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);font-size:18px;flex:none}
+.fid{width:90px;height:90px;margin:20px auto 8px;border-radius:24px;border:3px solid var(--mal3);display:grid;place-items:center;font-size:40px;animation:fidp 1s ease-in-out infinite}
+@keyframes fidp{50%{transform:scale(.92);box-shadow:0 0 0 12px color-mix(in srgb,var(--mal) 18%,transparent)}}
+/* consoles */
+.vdev{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line2);border-radius:20px;padding:14px}
+.vscr{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px;min-height:230px;position:relative;overflow:hidden}
+.vscan{display:grid;place-items:center;height:200px;position:relative}
+.vscan canvas{width:120px;height:120px;border-radius:10px;opacity:.9}
+.vscan .ln{position:absolute;left:25%;right:25%;height:2px;background:var(--mal3);box-shadow:0 0 12px var(--mal3);animation:scan2 .8s ease-in-out infinite alternate}
+@keyframes scan2{from{top:18%}to{top:82%}}
+.vres{display:flex;gap:12px;align-items:center;border-radius:14px;padding:12px;margin-bottom:10px;animation:pop .35s}
+.vres.ok{background:color-mix(in srgb,var(--mal) 16%,transparent);border:1px solid var(--mal)}
+.vres.bad{background:color-mix(in srgb,var(--red) 16%,transparent);border:1px solid var(--red)}
+.vres.wn{background:color-mix(in srgb,var(--amber) 16%,transparent);border:1px solid var(--amber)}
+.vres .big{font-size:26px;font-weight:900;line-height:1}
+.vres .portrait{width:56px}
+.vflds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}
+.vflds div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 9px;font-size:12px;min-width:0}
+.vflds i{display:block;font-style:normal;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.vflds b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vflds .hid b{filter:blur(4px);opacity:.5}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl select{width:auto;padding:7px 10px;font-size:13px}
+.swl{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.kp4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.kp4 div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:0}
+.kp4 span{display:block;font-size:11px;line-height:1.25;min-height:2.5em;color:var(--muted);font-weight:600}
+.kp4 b{font-family:var(--mono);font-size:16px;white-space:nowrap}
+.f2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px;align-items:end}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:300px;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{position:sticky;top:0;background:var(--panel2);text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;white-space:nowrap}
+td{padding:7px 10px;border-top:1px solid var(--line);white-space:nowrap}
+tr.mine td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+tr.fl td{animation:fl 1.6s}
+@keyframes fl{0%{background:color-mix(in srgb,var(--gold) 28%,transparent)}}
+.xb{border:1px solid var(--line2);background:var(--panel2);border-radius:8px;padding:3px 8px;font-size:11.5px;font-weight:600;cursor:pointer;margin-right:4px}
+.xb:hover{border-color:var(--mal)}.xb.r{color:var(--red)}.xb.r.cf{background:var(--red);color:#fff;border-color:var(--red)}
+.log{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;height:200px;overflow:auto;line-height:1.65}
+.log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.log .t{color:var(--dim)}.log .h{color:var(--gold2)}
+.log .k{display:inline-block;min-width:74px;font-weight:700}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}.toast.warn{border-left-color:var(--amber)}.toast.gold{border-left-color:var(--gold)}
+@media (max-width:1180px){
+  .layout{grid-template-columns:392px minmax(0,1fr);grid-template-areas:"phone cons" "feat feat"}
+  .a-feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+}
+@media (max-width:860px){
+  .wrap{padding:12px 16px 50px}
+  .how{grid-template-columns:minmax(0,1fr);gap:6px}
+  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"phone" "cons" "feat"}
+  .a-feat{display:flex}
+  .a-phone{margin:0 -16px}
+  .phone{position:static;padding:0;background:none;box-shadow:none;border-radius:0}
+  .scr{border-radius:0;height:calc(100svh - 41px);min-height:600px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .sbar{display:none}
+  .ahd{padding-top:10px}
+  .toasts{left:16px;right:16px;top:auto;bottom:16px}.toast{max-width:none}
+}
+@media (max-width:520px){
+  .kp4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .f2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .top h1{font-size:19px}
+  .vflds{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body data-demo-en="Wallet-ID — mobile driver licence &amp; verifiable credentials" data-demo-ru="Wallet-ID — мобильные права и цифровые удостоверения">
+<div class="wrap">
+  <div class="top">
+    <h1><b>ID</b>Wallet-ID</h1>
+    <span class="pill gold" data-en="Tender · Digital credentials · $12M" data-ru="Тендер · Цифровые удостоверения · $12M"></span>
+    <span class="sp"></span>
+    <span class="pill ok stk">ISO 18013-5</span><span class="pill ok stk">W3C VC</span><span class="pill ok stk">OpenID4VP</span>
+  </div>
+  <div class="how">
+    <div><b class="n">1</b><span data-en="<b>Onboard</b> in the phone: scan the plastic licence → face match → the issuer provisions 4 credentials." data-ru="<b>Подключите</b> права в телефоне: скан пластиковой карты → сверка лица → ведомство выдаёт 4 удостоверения."></span></div>
+    <div><b class="n">2</b><span data-en="<b>Share</b> tab → pick “Age 18+ only” → Show QR. Then press <b>Scan holder QR</b> in the Verifier and approve consent on the phone." data-ru="Вкладка <b>«Предъявить»</b> → «Только 18+» → Показать QR. Затем <b>«Сканировать QR»</b> у проверяющего и подтвердите согласие в телефоне."></span></div>
+    <div><b class="n">3</b><span data-en="<b>Break it:</b> revoke the licence in the Issuer console (card turns red live) or toggle tampering — the check fails." data-ru="<b>Сломайте:</b> отзовите права в консоли ведомства (карта краснеет сразу) или включите подделку — проверка не пройдёт."></span></div>
+  </div>
+
+  <div class="layout">
+    <aside class="a-feat">
+      <div class="card">
+        <h3 data-en="Project facts" data-ru="О проекте"></h3>
+        <dl class="facts">
+          <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Digital credentials" data-ru="Цифровые удостоверения"></dd>
+          <dt data-en="Year" data-ru="Год"></dt><dd>2026</dd>
+          <dt data-en="Budget" data-ru="Бюджет"></dt><dd>$12M</dd>
+          <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Transport Authority of the Republic of Nordania (fictional)" data-ru="Транспортное агентство Республики Нордания (вымышленное)"></dd>
+          <dt data-en="Stack" data-ru="Стек"></dt><dd class="mono" style="font-size:12px">ISO 18013-5 · W3C VC · OpenID4VP</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <h3><span data-en="What it does" data-ru="Что умеет"></span><span class="sp"></span><span class="pill" data-en="tap to open" data-ru="нажмите"></span></h3>
+        <div id="feats"></div>
+      </div>
+    </aside>
+
+    <div class="a-phone">
+      <div class="phone">
+        <div class="scr" id="scr">
+          <div class="sbar"><span id="clock">9:41</span><span class="isl"></span><span id="sig">5G ▮▮▮</span></div>
+          <div class="ahd">
+            <span class="lg">ID</span><span class="tt" id="ptitle">Wallet-ID</span>
+            <button class="obadge" id="netBtn" data-a="net"></button>
+          </div>
+          <div class="pbody" id="pbody"><div class="ptr" id="ptr"><span class="spn"></span><span id="ptrT"></span></div><div id="pv"></div></div>
+          <nav class="tabbar" id="tabbar"></nav>
+          <div id="sheetHost"></div>
+          <div id="pushHost"></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="a-cons">
+      <div class="card">
+        <h3><span>📷</span><span data-en="Verifier app" data-ru="Приложение проверяющего"></span><span class="sp"></span><label class="swl"><span data-en="Online" data-ru="Онлайн"></span><span class="sw"><input type="checkbox" id="vOnline"><i></i></span></label></h3>
+        <div class="vdev">
+          <div class="seg" id="vMode"></div>
+          <div class="vscr" id="vScr"></div>
+          <div class="ctl">
+            <button class="btn pri" id="vScan" data-en="▣ Scan holder QR" data-ru="▣ Сканировать QR"></button>
+            <span class="sp" style="flex:1"></span>
+            <label class="f" style="margin:0"><select class="input" id="vTamper"></select></label>
+          </div>
+          <div class="muted" style="font-size:11.5px" data-en="Tampering simulates an attacker: altered data, forged issuer signature or a replayed session." data-ru="Подделка имитирует атаку: изменённые данные, поддельная подпись ведомства или повтор старой сессии."></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span>🏛</span><span data-en="Issuer console · Transport Authority" data-ru="Консоль ведомства · Транспортное агентство"></span><span class="sp"></span><span class="pill gold" id="slv"></span></h3>
+        <div class="kp4">
+          <div><span data-en="Active credentials" data-ru="Действующих удостоверений"></span><b id="kAct">—</b></div>
+          <div><span data-en="Verifications today" data-ru="Проверок сегодня"></span><b id="kVer">—</b></div>
+          <div><span data-en="Revoked / suspended" data-ru="Отозвано / приостановлено"></span><b id="kRev">—</b></div>
+          <div><span data-en="Issuance p95" data-ru="Выдача p95"></span><b>1.8 s</b></div>
+        </div>
+        <div class="f2">
+          <div class="f"><label data-en="Holder" data-ru="Владелец"></label><select class="input" id="iHolder"></select></div>
+          <div class="f"><label data-en="Credential" data-ru="Удостоверение"></label><select class="input" id="iKind"></select></div>
+          <button class="btn pri" id="iIssue" style="margin-bottom:10px" data-en="Issue" data-ru="Выдать"></button>
+        </div>
+        <input class="input" id="iSearch" data-en-ph="Search holder or ID…" data-ru-ph="Поиск по владельцу или ID…" style="padding:8px 12px">
+        <div class="tw"><table><thead><tr><th>ID</th><th data-en="Holder" data-ru="Владелец"></th><th data-en="Type" data-ru="Тип"></th><th data-en="Status" data-ru="Статус"></th><th data-en="Actions" data-ru="Действия"></th></tr></thead><tbody id="reg"></tbody></table></div>
+        <h4 data-en="Audit log · hash-chained" data-ru="Журнал аудита · цепочка хешей"></h4>
+        <div class="log" id="log"></div>
+        <div style="margin-top:10px"><button class="btn" id="resetBtn" data-en="Reset demo" data-ru="Сбросить демо"></button></div>
+      </div>
+    </section>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const hhmm=t=>{const d=new Date(t);return pad(d.getHours())+':'+pad(d.getMinutes())};
+const hms=t=>{const d=new Date(t);return hhmm(t)+':'+pad(d.getSeconds())};
+const fmtN=n=>n.toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0)||1}
+const hex=s=>hash(s).toString(16).padStart(8,'0');
+const buzz=()=>{try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}};
+const KEY='pt-wallet-v1';
+
+const KIND={
+  mdl:{en:'Driver licence',ru:'Водительское удостоверение',fmt:'mdoc · 18013-5',cls:'k-mdl',ic:'🚗'},
+  vreg:{en:'Vehicle registration',ru:'Регистрация ТС',fmt:'mdoc · 18013-5',cls:'k-vreg',ic:'🚙'},
+  ins:{en:'Motor insurance',ru:'Автостраховка',fmt:'W3C VC · SD-JWT',cls:'k-ins',ic:'🛡'},
+  age:{en:'Age credential',ru:'Подтверждение возраста',fmt:'W3C VC · SD-JWT',cls:'k-age',ic:'🔞'}
+};
+const HOLD=[['Elin Norvik','Элин Норвик'],['Mikkel Aarno','Миккель Аарно'],['Sanna Lindqvist','Санна Линдквист'],['Oskar Brenn','Оскар Бренн'],['Ilse Varto','Ильзе Варто'],['Jonas Kell','Йонас Келль'],['Freja Holm','Фрея Хольм'],['Teodor Vasse','Теодор Вассе']];
+const hn=i=>HOLD[i][PT.lang==='ru'?1:0];
+// disclosable elements: credential, label, value
+const F={
+  portrait:{c:'mdl',en:'Portrait',ru:'Фото',v:()=>T('photo','фото')},
+  age_over_18:{c:'mdl',en:'Age over 18',ru:'Старше 18',v:()=>T('true','да')},
+  given_name:{c:'mdl',en:'Given name',ru:'Имя',v:()=>T('Elin','Элин')},
+  family_name:{c:'mdl',en:'Family name',ru:'Фамилия',v:()=>T('Norvik','Норвик')},
+  birth_date:{c:'mdl',en:'Birth date',ru:'Дата рождения',v:()=>'1994-03-12'},
+  document_number:{c:'mdl',en:'Licence no.',ru:'Номер прав',v:()=>'NDL-448812-26'},
+  driving_privileges:{c:'mdl',en:'Categories',ru:'Категории',v:()=>'B · A1 · BE'},
+  expiry_date:{c:'mdl',en:'Valid until',ru:'Действует до',v:()=>'2031-05-20'},
+  resident_address:{c:'mdl',en:'Address',ru:'Адрес',v:()=>T('14 Harbour St, Velmar','Велмар, ул. Гаванская, 14')},
+  plate:{c:'vreg',en:'Plate',ru:'Госномер',v:()=>'NR 482 KT'},
+  vehicle:{c:'vreg',en:'Vehicle',ru:'Автомобиль',v:()=>'Volta E3 · 2024'},
+  policy:{c:'ins',en:'Insurance policy',ru:'Полис',v:()=>'PM-77-210934 ✓'}
+};
+const PRESET={
+  age:{en:'Age 18+ only',ru:'Только 18+',den:'Shop, bar, kiosk',dru:'Магазин, бар, киоск',f:['portrait','age_over_18']},
+  lic:{en:'Driver licence',ru:'Водительские права',den:'Car rental, ID check',dru:'Прокат, проверка личности',f:['portrait','given_name','family_name','birth_date','document_number','driving_privileges','expiry_date']},
+  stop:{en:'Traffic stop',ru:'Остановка ДПС',den:'Licence + vehicle + insurance',dru:'Права + ТС + полис',f:['portrait','given_name','family_name','document_number','driving_privileges','expiry_date','plate','vehicle','policy']},
+  custom:{en:'Custom',ru:'Свой набор',den:'Choose each field',dru:'Выбрать поля вручную',f:null}
+};
+const VERIF={
+  shop:{en:'Shop · age check',ru:'Магазин · возраст',ic:'🛒',nen:'Northmart Velmar · reader NM-0231',nru:'Northmart Велмар · считыватель NM-0231',ret:false,want:'age'},
+  police:{en:'Traffic police',ru:'Дорожная полиция',ic:'🚓',nen:'Nordania Traffic Police · device TP-4471',nru:'Дорожная полиция Нордании · устройство TP-4471',ret:true,want:'stop'}
+};
+const TAMPER={none:['No tampering','Без подделки'],alter:['Altered birth date','Изменена дата рождения'],forge:['Forged issuer signature','Поддельная подпись ведомства'],replay:['Replayed old session','Повтор старой сессии']};
+
+function seedReg(){
+  const r=[{id:'MDL-448812',k:'mdl',h:0,st:'active',exp:'2031-05-20',mine:1},{id:'VRG-210457',k:'vreg',h:0,st:'active',exp:'2027-08-01',mine:1},{id:'INS-772109',k:'ins',h:0,st:'active',exp:'2026-12-31',mine:1},{id:'AGE-903114',k:'age',h:0,st:'active',exp:'2036-03-12',mine:1}];
+  const ks=['mdl','vreg','ins','age'],sts=['active','active','active','active','active','suspended','revoked'];
+  for(let i=1;i<HOLD.length;i++)for(let j=0;j<2;j++){const x=hash('r'+i+j);r.push({id:{mdl:'MDL',vreg:'VRG',ins:'INS',age:'AGE'}[ks[x%4]]+'-'+(100000+x%899999),k:ks[x%4],h:i,st:sts[(x>>4)%7],exp:'20'+(27+x%8)+'-0'+(1+x%9)+'-1'+(x%9)})}
+  return r;
+}
+function fresh(){
+  const t=Date.now();
+  return {v:1,onb:false,online:true,reg:seedReg(),audit:[],acts:[],tamper:'none',vmode:'shop',vonline:true,vcache:t-2*3600e3,preset:'age',custom:['portrait','age_over_18'],statusAt:t,slv:412,kAct:2841377,kVer:18342,qr:null};
+}
+let S;try{S=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){S=null}
+if(!S||S.v!==1)S=fresh();
+S.qr=null;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const ui={tab:'wallet',card:null,flip:false,onb:0,sheet:null,sel:null,v:{phase:'idle'},bio:false};
+
+function audit(k,en,ru,id){const prev=S.audit.length?S.audit[S.audit.length-1].h:'00000000';const e={t:Date.now(),k,en,ru,id:id||''};e.h=hex(prev+JSON.stringify(e));S.audit.push(e);if(S.audit.length>120)S.audit.shift();renderLog()}
+if(!S.audit.length){[['ISSUE','Credential MDL-448812 issued (MSO signed, HSM slot 3)','Выдано MDL-448812 (MSO подписан, HSM слот 3)','MDL-448812'],['STATUS','Status list v412 published (bitstring, 131 072 entries)','Опубликован список статусов v412 (131 072 записей)',''],['TRUST','IACA NT-IACA-2026 added to VICAL v14','IACA NT-IACA-2026 добавлен в VICAL v14','']].forEach(a=>audit(...a))}
+
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function push(title,body,bad,ic){const p=document.createElement('div');p.className='push'+(bad?' bad':'');p.innerHTML='<div class="ic">'+(ic||'ID')+'</div><div class="sp"><div class="hd">Wallet-ID · '+T('now','сейчас')+'</div><b>'+title+'</b><p>'+body+'</p></div>';p.onclick=()=>{p.remove();ui.tab='wallet';ui.card=null;renderPhone()};$('#pushHost').append(p);buzz();setTimeout(()=>{p.classList.add('out');setTimeout(()=>p.remove(),320)},4200)}
+
+const portrait=()=>'<svg viewBox="0 0 60 74"><defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9e8e1"/><stop offset="1" stop-color="#b9d0c6"/></linearGradient></defs><rect width="60" height="74" fill="url(#pg)"/><path d="M14 30c0-12 7-20 16-20s16 8 16 20c0 4-1 6-2 8 0-6-3-10-6-12-4 3-12 4-18 3-2 2-3 5-3 9-2-2-3-5-3-8z" fill="#6b4a2b"/><ellipse cx="30" cy="34" rx="11" ry="13" fill="#e8c4a2"/><path d="M8 74c2-14 11-20 22-20s20 6 22 20z" fill="#1f5a49"/><rect x="26" y="45" width="8" height="10" fill="#e0b896"/></svg>';
+
+function cardFront(c,extra){
+  const K=KIND[c.k];let mid='';
+  if(c.k==='mdl')mid='<div class="portrait">'+portrait()+'</div><div class="cf"><div><i>'+T('Name','Имя')+'</i><b>'+hn(0)+'</b></div><div class="two"><div><i>'+T('Born','Рожд.')+'</i><b>1994-03-12</b></div><div><i>'+T('Cat.','Кат.')+'</i><b>B · A1 · BE</b></div></div><div><i>'+T('No.','Номер')+'</i><b class="mono">NDL-448812-26</b></div></div>';
+  else if(c.k==='vreg')mid='<div class="cf"><div><i>'+T('Plate','Госномер')+'</i><b style="font-size:22px;font-family:var(--mono)">NR 482 KT</b></div><div class="two"><div><i>'+T('Vehicle','ТС')+'</i><b>Volta E3</b></div><div><i>VIN</i><b class="mono">…7Q41882</b></div></div><div><i>'+T('Owner','Владелец')+'</i><b>'+hn(0)+'</b></div></div>';
+  else if(c.k==='ins')mid='<div class="cf"><div><i>'+T('Insurer','Страховщик')+'</i><b>Polaris Mutual</b></div><div class="two"><div><i>'+T('Policy','Полис')+'</i><b class="mono">PM-77-210934</b></div><div><i>'+T('Cover','Покрытие')+'</i><b>'+T('Liability + glass','ОСАГО + стёкла')+'</b></div></div><div><i>'+T('Vehicle','ТС')+'</i><b>NR 482 KT</b></div></div>';
+  else mid='<div class="cf" style="justify-content:center"><div class="big">18+ · 21+</div><div style="font-size:11.5px;opacity:.85;margin-top:4px">'+T('Proves age without revealing birth date','Подтверждает возраст без даты рождения')+'</div></div>';
+  const st=c.wst==='revoked'?'<div class="stamp">'+T('REVOKED','ОТОЗВАНО')+'</div>':c.wst==='suspended'?'<div class="stamp sus">'+T('SUSPENDED','ПРИОСТАНОВЛЕНО')+'</div>':'';
+  return '<div class="cc '+K.cls+' '+(c.wst!=='active'?c.wst:'')+' '+(extra||'')+'" data-a="open" data-v="'+c.id+'"><div class="ct"><span class="emb">NT</span><div style="min-width:0"><div class="t1">'+T('REPUBLIC OF NORDANIA','РЕСПУБЛИКА НОРДАНИЯ')+'</div><div class="t2">'+T(K.en,K.ru)+'</div></div><span class="fmt">'+K.fmt+'</span></div><div class="cm">'+mid+'</div><div class="cb"><span>'+c.id+'</span><span>'+T('exp ','до ')+c.exp+'</span></div>'+st+'</div>';
+}
+const myCreds=()=>S.reg.filter(r=>r.mine&&r.wst&&!r.hidden);
+
+/* ---------- onboarding ---------- */
+function onbView(){
+  const s=ui.onb;
+  if(s===0)return '<div class="onb view"><div style="position:relative;height:236px;margin:10px 0">'+['age','ins','vreg','mdl'].map((k,i)=>'<div class="cc '+KIND[k].cls+'" style="position:absolute;aspect-ratio:auto;height:128px;left:'+(8+i*4)+'%;right:'+(8+(3-i)*4)+'%;top:'+(i*34)+'px;cursor:default"><div class="ct"><span class="emb">NT</span><div><div class="t1">NORDANIA</div><div class="t2">'+T(KIND[k].en,KIND[k].ru)+'</div></div></div></div>').join('')+'</div><div class="h2">'+T('Your licence, in your phone','Ваши права — в телефоне')+'</div><div class="sub">'+T('Official mobile driver licence (ISO 18013-5) and verifiable credentials. Works offline over QR + Bluetooth. You decide what to share.','Официальные мобильные права (ISO 18013-5) и цифровые удостоверения. Работают офлайн через QR + Bluetooth. Вы решаете, что показать.')+'</div><div class="note ok">🔐 '+T('Keys never leave the phone’s secure element','Ключи не покидают защищённый чип телефона')+'</div><span style="flex:1"></span><button class="btn pri pbtn" data-a="onb" data-v="1">'+T('Start — scan my licence','Начать — сканировать права')+'</button></div>';
+  if(s===1)return '<div class="onb view"><div class="h2">'+T('Scan your plastic licence','Сканируйте пластиковые права')+'</div><div class="sub">'+T('Front side, inside the frame. We read the PDF417 barcode and MRZ.','Лицевая сторона, в рамке. Считываем штрихкод PDF417 и MRZ.')+'</div><div class="vf" id="vf"><div class="lic"></div><div class="crn"></div><div class="ln"></div></div><div class="ocr mono" id="ocr"><div class="muted">'+T('Hold steady…','Держите ровно…')+'</div></div></div>';
+  if(s===2){const dots=[[80,92],[140,92],[110,120],[92,148],[128,148],[110,152],[70,110],[150,110],[110,70],[85,170],[135,170]];
+    return '<div class="onb view"><div class="h2">'+T('Face match','Сверка лица')+'</div><div class="sub">'+T('Look at the screen and blink. Compared against the portrait in the issuer’s registry.','Смотрите в экран и моргните. Сравниваем с фото в реестре ведомства.')+'</div><div class="face"><svg viewBox="0 0 220 220"><circle cx="110" cy="110" r="104" stroke="var(--line2)" stroke-width="5" fill="none"/><circle class="ring" id="fring" cx="110" cy="110" r="104" stroke="var(--mal3)" stroke-dasharray="653" stroke-dashoffset="653"/><circle cx="110" cy="110" r="92" fill="var(--panel2)"/><ellipse cx="110" cy="118" rx="44" ry="56" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 5"/><path d="M60 214c8-34 26-46 50-46s42 12 50 46" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 5"/>'+dots.map((d,i)=>'<circle class="dot" cx="'+d[0]+'" cy="'+d[1]+'" r="3.2" style="animation-delay:'+(0.2+i*.12)+'s"/>').join('')+'</svg></div><div class="ocr mono" id="fmsg" style="min-height:0;text-align:center">'+T('Detecting landmarks…','Ищем ключевые точки…')+'</div></div>';}
+  if(s===3)return '<div class="onb view"><div class="h2">'+T('Provisioning from issuer','Выпуск от ведомства')+'</div><div class="sub">'+T('Transport Authority of Nordania signs credentials bound to this phone’s key.','Транспортное агентство Нордании подписывает удостоверения, привязанные к ключу этого телефона.')+'</div><div class="pgb"><i id="pgb" style="width:0"></i></div><div class="prov" id="prov" style="margin-top:10px"></div></div>';
+  return '<div class="onb view" style="text-align:center"><div class="bigok">✓</div><div class="h2">'+T('4 credentials added','Добавлено 4 удостоверения')+'</div><div class="sub">'+T('Driver licence, vehicle registration, insurance and age credential are ready — also offline.','Права, регистрация ТС, полис и подтверждение возраста готовы — и офлайн тоже.')+'</div><span style="flex:1"></span><button class="btn pri pbtn" data-a="onbDone">'+T('Open my wallet','Открыть кошелёк')+'</button></div>';
+}
+const PROV=[['Generating device key (P-256) in secure element','Создаём ключ устройства (P-256) в защищённом чипе','kid: se-7f3a…c21'],['Device attestation','Аттестация устройства','key attestation ✓ · OS 18.2'],['Authorising with issuer (OpenID4VCI)','Авторизация у ведомства (OpenID4VCI)','pre-auth code + PIN · DPoP'],['Issuer signs mDL Mobile Security Object','Ведомство подписывает MSO прав','ES256 · DS cert NT-DS-0419'],['Downloading 4 credentials','Загрузка 4 удостоверений','mdoc ×2 · SD-JWT VC ×2'],['Encrypting local storage','Шифрование локального хранилища','AES-256-GCM · biometric gate']];
+async function runOnb(step){
+  if(step===1){await sleep(1700);if(ui.onb!==1)return;const vf=$('#vf');if(vf)vf.classList.add('got');buzz();const lines=['DOC  NDL-448812-26','NAME NORVIK, ELIN','DOB  1994-03-12','CAT  B A1 BE','EXP  2031-05-20'];const o=$('#ocr');if(o)o.innerHTML='';for(const l of lines){await sleep(260);const el=$('#ocr');if(!el)return;el.insertAdjacentHTML('beforeend','<div>'+l+' <span style="color:var(--mal3)">✓</span></div>')}await sleep(700);if(ui.onb===1){ui.onb=2;renderPhone()}}
+  if(step===2){for(let p=0;p<=100;p+=4){await sleep(70);const r=$('#fring');if(!r)return;r.style.strokeDashoffset=653*(1-p/100);if(p===48){const m=$('#fmsg');if(m)m.textContent=T('Liveness: blink detected ✓','Живость: моргание ✓')}}const m=$('#fmsg');if(m)m.innerHTML='<b style="color:var(--mal3)">'+T('Match 98.7% · liveness ✓','Совпадение 98,7% · живость ✓')+'</b>';buzz();await sleep(900);if(ui.onb===2){ui.onb=3;renderPhone()}}
+  if(step===3){const host=$('#prov');PROV.forEach((p,i)=>host.insertAdjacentHTML('beforeend','<div class="pv" id="pv'+i+'"><span class="st"></span><div class="sp">'+T(p[0],p[1])+'<small>'+p[2]+'</small></div></div>'));
+    for(let i=0;i<PROV.length;i++){const el=$('#pv'+i);if(!el)return;el.className='pv run';await sleep(520+i*60);el.className='pv ok';el.querySelector('.st').textContent='✓';const g=$('#pgb');if(g)g.style.width=((i+1)/PROV.length*100)+'%'}
+    S.reg.filter(r=>r.mine).forEach(r=>r.wst=r.st);audit('PROVISION','4 credentials provisioned to device se-7f3a (Elin Norvik)','4 удостоверения выданы на устройство se-7f3a (Элин Норвик)','MDL-448812');await sleep(400);if(ui.onb===3){ui.onb=4;renderPhone()}}
+}
+
+/* ---------- wallet views ---------- */
+function walletView(){
+  const cs=myCreds();
+  if(ui.card){const c=S.reg.find(r=>r.id===ui.card);if(c)return detailView(c)}
+  const bad=cs.filter(c=>c.wst!=='active');
+  return '<div class="view"><div class="row" style="display:flex;align-items:center;margin:2px 0 10px"><div style="flex:1"><div class="h2" style="margin:0">'+T('Hi, Elin','Привет, Элин')+'</div><div class="sub" style="margin:0">'+T('Status as of ','Статусы на ')+hhmm(S.statusAt)+' · '+T('pull down to refresh','потяните вниз — обновить')+'</div></div></div>'+
+   (bad.length?'<div class="note bad">⚠ '+bad.map(c=>T(KIND[c.k].en,KIND[c.k].ru)+': '+stName(c.wst)).join(' · ')+'</div>':'')+
+   '<div class="stack">'+cs.map(c=>cardFront(c,ui.nw===c.id?'nw':'')).join('')+'</div>'+
+   '<div class="sect"><span>'+T('Quick share','Быстро предъявить')+'</span></div>'+
+   '<button class="li tap" data-a="quick" data-v="age"><span class="ic">🔞</span><div class="sp"><b>'+T('Prove I’m over 18','Подтвердить 18+')+'</b><div>'+T('Shares only “age over 18” + photo','Только «старше 18» + фото')+'</div></div><span>›</span></button>'+
+   '<button class="li tap" data-a="quick" data-v="stop"><span class="ic">🚓</span><div class="sp"><b>'+T('Traffic stop','Остановка ДПС')+'</b><div>'+T('Licence, vehicle and insurance','Права, ТС и полис')+'</div></div><span>›</span></button></div>';
+}
+const stName=s=>({active:T('Active','Действует'),revoked:T('Revoked','Отозвано'),suspended:T('Suspended','Приостановлено')}[s]||s);
+function detailView(c){
+  const K=KIND[c.k],flds=Object.entries(F).filter(([k,f])=>f.c===c.k);
+  return '<div class="view"><button class="back" data-a="cardBack">‹ '+T('Wallet','Кошелёк')+'</button><div class="flip"><div class="flin'+(ui.flip?' fl':'')+'" data-a="flip">'+cardFront(c).replace('data-a="open"','')+'<div class="cc bk"><canvas id="bkqr" width="240" height="240"></canvas><div class="bf"><b>'+T(K.en,K.ru)+'</b><div class="mono">'+c.id+'</div><div>'+T('Issuer: Transport Authority','Выдал: Трансп. агентство')+'</div><div>'+T('Device-bound key se-7f3a','Ключ устройства se-7f3a')+'</div><div class="mono">MSO ES256 · '+hex(c.id).slice(0,6)+'</div></div></div></div></div><div class="sub" style="text-align:center;margin:8px 0 0">'+T('Tap the card to flip','Нажмите на карту — перевернуть')+'</div>'+
+   '<div class="kv"><span>'+T('Status','Статус')+'</span><b style="color:'+(c.wst==='active'?'var(--mal3)':c.wst==='revoked'?'var(--red)':'var(--amber)')+'">'+stName(c.wst)+'</b><span>'+T('Format','Формат')+'</span><b class="mono">'+K.fmt+'</b>'+(flds.length?flds.map(([k,f])=>'<span>'+T(f.en,f.ru)+'</span><b>'+f.v()+'</b>').join(''):'<span>age_over_18 / 21</span><b>true / true</b>')+'<span>'+T('Valid until','Действует до')+'</span><b>'+c.exp+'</b></div>'+
+   (c.wst==='revoked'?'<div class="note bad">'+T('The issuer revoked this credential. Verifiers will reject it.','Ведомство отозвало это удостоверение. Проверка его не пропустит.')+'</div><button class="btn pbtn" data-a="remove" data-v="'+c.id+'">'+T('Remove from wallet','Удалить из кошелька')+'</button>':
+    '<button class="btn pri pbtn" data-a="quick" data-v="'+(c.k==='mdl'?'lic':c.k==='age'?'age':'stop')+'">'+T('Present this','Предъявить')+'</button>')+'</div>';
+}
+function selFields(){return S.preset==='custom'?S.custom:PRESET[S.preset].f}
+function shareView(){
+  const lic=S.reg.find(r=>r.id==='MDL-448812');
+  if(S.qr){const left=Math.max(0,Math.ceil((S.qr.exp-Date.now())/1000));
+    return '<div class="view" style="text-align:center"><div class="h2">'+T('Show this to the verifier','Покажите проверяющему')+'</div><div class="sub">'+T('Device engagement QR · session over Bluetooth LE — works offline','QR подключения · сессия по Bluetooth LE — работает офлайн')+'</div><div class="qrbox"><canvas id="qr" width="400" height="400"></canvas><div class="qrbar"><i id="qrBar" style="width:'+(left/90*100)+'%"></i></div><div class="tm" id="qrT">'+T('expires in ','истекает через ')+left+'s · nonce '+S.qr.nonce+'</div></div><div class="note ok" style="text-align:left">👁 '+T('Will offer: ','Будет предложено: ')+selFields().map(k=>T(F[k].en,F[k].ru)).join(', ')+'</div><button class="btn pbtn" data-a="qrCancel">'+T('Cancel','Отмена')+'</button></div>';}
+  const fs=selFields();
+  return '<div class="view"><div class="h2">'+T('Present credentials','Предъявить удостоверения')+'</div><div class="sub">'+T('Selective disclosure — the verifier only gets what you pick.','Выборочное раскрытие — проверяющий получит только выбранное.')+'</div>'+
+   (lic&&lic.wst!=='active'?'<div class="note bad">⚠ '+T('Your licence is '+stName(lic.wst).toLowerCase()+' — verifiers will reject it.','Ваши права: '+stName(lic.wst).toLowerCase()+' — проверка не пройдёт.')+'</div>':'')+
+   '<div class="seg">'+Object.entries(PRESET).map(([k,p])=>'<button class="tap'+(S.preset===k?' on':'')+'" data-a="preset" data-v="'+k+'"><b>'+T(p.en,p.ru)+'</b><span class="muted">'+T(p.den,p.dru)+'</span></button>').join('')+'</div>'+
+   '<div class="card" style="padding:4px 12px">'+Object.entries(F).map(([k,f])=>{const on=fs.includes(k);return '<label class="chk"><span class="sp">'+T(f.en,f.ru)+' <small>'+f.c+'.'+k+'</small></span><span class="sw"><input type="checkbox" data-f="'+k+'"'+(on?' checked':'')+(S.preset!=='custom'?' disabled':'')+'><i></i></span></label>'}).join('')+'</div>'+
+   '<div class="note '+(fs.length<=2?'ok':'warn')+'">'+(fs.length<=2?'🛡 '+T('Minimal disclosure — no name, no birth date.','Минимум данных — без имени и даты рождения.'):'ℹ '+T(fs.length+' data elements will be offered.','Будет предложено элементов: '+fs.length+'.'))+'</div>'+
+   '<button class="btn pri pbtn" data-a="showQR">▣ '+T('Show QR','Показать QR')+'</button>'+(S.online?'':'<div class="sub" style="text-align:center;margin-top:8px">'+T('Offline — presentation still works (QR + BLE).','Офлайн — предъявление всё равно работает (QR + BLE).')+'</div>')+'</div>';
+}
+function actView(){
+  const items=S.acts.slice().reverse();
+  return '<div class="view"><div class="h2">'+T('Activity','Журнал')+'</div><div class="sub">'+T('Every presentation is logged on the device only.','Каждое предъявление записывается только на устройстве.')+'</div>'+
+   (items.length?items.map(a=>'<div class="li"><span class="ic">'+(a.ic||'📤')+'</span><div class="sp"><b>'+T(a.en,a.ru)+'</b><div>'+hms(a.t)+' · '+T(a.den||'',a.dru||'')+'</div></div><span class="pill '+(a.ok==='ok'?'ok':a.ok==='wn'?'warn':'bad')+'">'+(a.ok==='ok'?'✓':a.ok==='wn'?'!':'✕')+'</span></div>').join(''):'<div class="note ok">'+T('No presentations yet — try the Share tab.','Пока пусто — попробуйте вкладку «Предъявить».')+'</div>')+'</div>';
+}
+function meView(){
+  return '<div class="view"><div style="display:flex;gap:12px;align-items:center;margin:4px 0 12px"><div class="portrait" style="width:56px;border-radius:14px">'+portrait()+'</div><div><div class="h2" style="margin:0">'+hn(0)+'</div><div class="sub" style="margin:0">'+T('Verified holder · level of assurance: high','Подтверждённый владелец · уровень доверия: высокий')+'</div></div></div>'+
+   '<div class="kv"><span>'+T('Device key','Ключ устройства')+'</span><b class="mono">se-7f3a…c21 · P-256</b><span>'+T('Storage','Хранилище')+'</span><b>Secure Enclave</b><span>'+T('Status list','Список статусов')+'</span><b class="mono">v'+S.slv+' · '+hhmm(S.statusAt)+'</b><span>'+T('Trust list','Список доверия')+'</span><b class="mono">VICAL v14</b></div>'+
+   '<label class="chk" style="margin-top:10px"><span class="sp">'+T('Airplane / offline mode','Авиарежим / офлайн')+'</span><span class="sw"><input type="checkbox" id="offSw"'+(S.online?'':' checked')+'><i></i></span></label>'+
+   '<button class="btn pbtn" data-a="reOnb">'+T('Re-run onboarding','Пройти подключение заново')+'</button><button class="btn pbtn" data-a="reset">'+T('Reset demo data','Сбросить данные демо')+'</button></div>';
+}
+const ICO={wallet:'<path d="M3 7h18v12H3z M3 7l3-3h12l3 3 M16 13h2"/>',share:'<path d="M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h2v2h-2z M18 18h2v2h-2z"/>',act:'<path d="M3 12h4l3-7 4 14 3-7h4"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 4-7 8-7s7 2 8 7"/>'};
+function renderTabs(){
+  $('#tabbar').style.display=S.onb?'':'none';
+  $('#tabbar').innerHTML=[['wallet','Wallet','Кошелёк'],['share','Share','Предъявить'],['act','Activity','Журнал'],['me','Profile','Профиль']].map(([k,en,ru])=>'<button class="'+(ui.tab===k?'on':'')+'" data-a="tab" data-v="'+k+'"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">'+ICO[k]+'</svg><span>'+T(en,ru)+'</span></button>').join('');
+}
+function renderPhone(anim){
+  const nb=$('#netBtn');nb.className='obadge'+(S.online?'':' off');nb.innerHTML='<i></i>'+(S.online?T('Online','Онлайн'):T('Offline','Офлайн'));
+  $('#sig').textContent=S.online?'5G ▮▮▮':'✈';
+  let h;if(!S.onb)h=onbView();else h={wallet:walletView,share:shareView,act:actView,me:meView}[ui.tab]();
+  $('#pv').innerHTML=h;renderTabs();
+  if(!S.onb&&anim!==false){if(ui.onb>=1&&ui.onb<=3)runOnb(ui.onb)}
+  const q=$('#qr');if(q&&S.qr)drawQR(q,S.qr.nonce);
+  const b=$('#bkqr');if(b)drawQR(b,ui.card);
+  const off=$('#offSw');if(off)off.onchange=()=>A.net();
+  $$('input[data-f]').forEach(i=>i.onchange=()=>{const k=i.dataset.f;S.custom=i.checked?[...new Set([...S.custom,k])]:S.custom.filter(x=>x!==k);save();renderPhone(false)});
+  ui.nw=null;
+}
+function drawQR(cv,seed){
+  const n=29,ctx=cv.getContext('2d'),px=cv.width,m=px/(n+4);let h=hash(seed);
+  const rnd=()=>{h^=h<<13;h^=h>>>17;h^=h<<5;return (h>>>0)/4294967296};
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,px,px);ctx.fillStyle='#0b1a15';
+  const box=(x,y)=>ctx.fillRect((x+2)*m,(y+2)*m,m+.4,m+.4);
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){if((i<8&&j<8)||(i>n-9&&j<8)||(i<8&&j>n-9))continue;if(rnd()<.5)box(i,j)}
+  [[0,0],[n-7,0],[0,n-7]].forEach(([x,y])=>{for(let i=0;i<7;i++)for(let j=0;j<7;j++)if(i===0||i===6||j===0||j===6||(i>1&&i<5&&j>1&&j<5))box(x+i,y+j)});
+}
+
+/* ---------- sheet (consent) ---------- */
+function renderSheet(){
+  const host=$('#sheetHost');if(!ui.sheet){host.innerHTML='';return}
+  const V=VERIF[S.vmode];
+  if(ui.bio){host.innerHTML='<div class="shade"></div><div class="sheet" style="text-align:center"><div class="fid">🙂</div><b>'+T('Confirm with Face ID','Подтвердите Face ID')+'</b><div class="sub">'+T('Signing the session with your device key…','Подписываем сессию ключом устройства…')+'</div></div>';return}
+  const req=ui.sel;
+  host.innerHTML='<div class="shade" data-a="consentNo"></div><div class="sheet"><h4>'+T('Share with this verifier?','Передать данные проверяющему?')+'</h4><div class="rp"><span class="ic">'+V.ic+'</span><div style="flex:1;min-width:0"><b style="font-size:13px">'+T(V.nen,V.nru)+'</b><div class="pill ok" style="margin-top:3px">✓ '+T('Registered relying party','Зарегистрированный проверяющий')+'</div></div></div>'+
+   '<div class="sub" style="margin:0 0 4px">'+T('Requested data · untick to withhold','Запрошенные данные · снимите галочку, чтобы не передавать')+'</div><div class="card" style="padding:2px 12px">'+req.map(k=>'<label class="chk"><span class="sp">'+T(F[k].en,F[k].ru)+'<br><small>'+F[k].v()+'</small></span><span class="sw"><input type="checkbox" data-cs="'+k+'"'+(ui.give.includes(k)?' checked':'')+'><i></i></span></label>').join('')+'</div>'+
+   '<div class="note '+(V.ret?'warn':'ok')+'">'+(V.ret?'🗄 '+T('Verifier will retain data for 30 days (legal basis: Road Traffic Act §41).','Проверяющий сохранит данные на 30 дней (основание: Закон о дорожном движении §41).'):'🛡 '+T('Verifier will not store your data.','Проверяющий не сохраняет ваши данные.'))+'</div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:8px"><button class="btn pbtn" data-a="consentNo">'+T('Decline','Отклонить')+'</button><button class="btn pri pbtn" data-a="consentOk">'+T('Share','Передать')+' ('+ui.give.length+')</button></div></div>';
+  $$('input[data-cs]',host).forEach(i=>i.onchange=()=>{const k=i.dataset.cs;ui.give=i.checked?[...ui.give,k]:ui.give.filter(x=>x!==k);renderSheet()});
+}
+
+/* ---------- verifier ---------- */
+function renderVer(){
+  $('#vMode').innerHTML=Object.entries(VERIF).map(([k,v])=>'<button class="tap'+(S.vmode===k?' on':'')+'" data-a="vmode" data-v="'+k+'"><b>'+v.ic+' '+T(v.en,v.ru)+'</b><span class="muted">'+(k==='shop'?T('asks: age over 18','запрос: старше 18'):T('asks: licence + vehicle + policy','запрос: права + ТС + полис'))+'</span></button>').join('');
+  $('#vTamper').innerHTML=Object.entries(TAMPER).map(([k,v])=>'<option value="'+k+'"'+(S.tamper===k?' selected':'')+'>'+(k==='none'?'':'⚠ ')+T(v[0],v[1])+'</option>').join('');
+  $('#vTamper').style.borderColor=S.tamper!=='none'?'var(--red)':'';
+  $('#vOnline').checked=S.vonline;
+  const v=ui.v,el=$('#vScr');
+  if(v.phase==='idle')el.innerHTML='<div class="vscan"><div style="text-align:center"><div style="font-size:42px">▣</div><b>'+T('Ready to scan','Готов к сканированию')+'</b><div class="muted" style="font-size:12.5px;max-width:280px">'+(S.qr?T('Holder is showing a QR — press “Scan holder QR”.','Владелец показывает QR — нажмите «Сканировать QR».'):T('Ask the holder to open Share → Show QR in the wallet.','Попросите владельца открыть «Предъявить» → «Показать QR».'))+'</div><div class="muted mono" style="font-size:11px;margin-top:8px">'+T('Revocation cache: ','Кэш отзывов: ')+hhmm(S.vcache)+'</div></div></div>';
+  else if(v.phase==='scan')el.innerHTML='<div class="vscan"><canvas id="vq" width="240" height="240"></canvas><div class="ln"></div></div>';
+  else if(v.phase==='wait')el.innerHTML='<div class="vscan"><div style="text-align:center"><div class="pv run" style="display:inline-flex;border:0;background:none"><span class="st"></span></div><b style="display:block">'+T('Waiting for holder consent…','Ждём согласия владельца…')+'</b><div class="muted mono" style="font-size:11px">BLE · '+T('session key','ключ сессии')+' ECDH P-256 · '+T('request','запрос')+': '+PRESET[VERIF[S.vmode].want].f.length+' '+T('elements','эл.')+'</div></div></div>';
+  else if(v.phase==='declined')el.innerHTML='<div class="vres bad"><div class="big">✕</div><div><b>'+T('Holder declined','Владелец отказал')+'</b><div class="muted" style="font-size:12px">'+T('No data received.','Данные не получены.')+'</div></div></div><button class="btn" data-a="vReset">'+T('New check','Новая проверка')+'</button>';
+  else{
+    let h='';
+    if(v.phase==='done'){const r=v.res;
+      h+='<div class="vres '+r+'">'+(v.give.includes('portrait')?'<div class="portrait">'+portrait()+'</div>':'')+'<div style="flex:1;min-width:0"><div class="big">'+(r==='ok'?(S.vmode==='shop'&&v.give.includes('age_over_18')?'18+ ✓':T('VALID','ДЕЙСТВИТЕЛЬНО')):r==='wn'?T('CHECK','ПРОВЕРИТЬ'):T('NOT VALID','НЕДЕЙСТВИТЕЛЬНО'))+'</div><div style="font-size:12.5px;margin-top:4px">'+esc(v.msg)+'</div></div></div>';
+      if(r!=='bad')h+='<div class="vflds">'+v.give.filter(k=>k!=='portrait').map(k=>'<div><i>'+T(F[k].en,F[k].ru)+'</i><b>'+F[k].v()+'</b></div>').join('')+Object.keys(F).filter(k=>!v.give.includes(k)&&F[k].c==='mdl').slice(0,4).map(k=>'<div class="hid"><i>'+T(F[k].en,F[k].ru)+' · '+T('not shared','не передано')+'</i><b>████████</b></div>').join('')+'</div>';
+    }
+    h+='<div class="prov" style="margin-top:10px">'+v.steps.map(s=>'<div class="pv '+s.s+'"><span class="st">'+(s.s==='ok'?'✓':s.s==='bad'?'✕':s.s==='wn'?'!':'')+'</span><div class="sp">'+T(s.en,s.ru)+'<small>'+esc(s.d||'')+'</small></div></div>').join('')+'</div>';
+    if(v.phase==='done')h+='<button class="btn" style="margin-top:10px" data-a="vReset">'+T('New check','Новая проверка')+'</button>';
+    el.innerHTML=h;
+  }
+  const q=$('#vq');if(q&&S.qr)drawQR(q,S.qr.nonce);
+}
+async function runChecks(){
+  const v=ui.v,creds=[...new Set(v.give.map(k=>F[k].c))].map(c=>S.reg.find(r=>r.mine&&r.k===c&&r.wst));
+  const tp=S.tamper;
+  v.steps=[
+    {en:'Secure session (BLE, ECDH)',ru:'Защищённая сессия (BLE, ECDH)',ok:tp!=='replay',d:tp==='replay'?'SessionTranscript nonce reused — replay':'SessionTranscript '+hex(v.nonce).slice(0,8)},
+    {en:'Issuer signature (MSO / SD-JWT)',ru:'Подпись ведомства (MSO / SD-JWT)',ok:tp!=='forge',d:tp==='forge'?'ES256 verify failed — signer not NT-DS-0419':'ES256 ✓ · DS cert NT-DS-0419'},
+    {en:'Issuer certificate chain',ru:'Цепочка сертификатов ведомства',ok:true,d:'NT-IACA-2026 ∈ VICAL v14 ✓'},
+    {en:'Revocation / status list',ru:'Отзыв / список статусов',ok:true},
+    {en:'Device binding',ru:'Привязка к устройству',ok:true,d:'deviceSignature over transcript · key se-7f3a ✓'},
+    {en:'Data integrity (digests)',ru:'Целостность данных (дайджесты)',ok:tp!=='alter',d:tp==='alter'?'valueDigests[12] mismatch: birth_date':'all '+v.give.length+' element digests match'},
+    {en:'Validity period',ru:'Срок действия',ok:true,d:'validFrom ≤ now ≤ validUntil ✓'}
+  ].map(s=>({...s,s:''}));
+  // revocation
+  const rv=v.steps[3];
+  const cacheOld=!S.vonline;
+  if(!S.vonline){rv.d=T('offline · cached list from ','офлайн · кэш списка от ')+hhmm(S.vcache);}else{S.vcache=Date.now();rv.d='status list v'+S.slv+' · '+T('fetched live','получен онлайн')}
+  const badC=creds.find(c=>c&&c.st!=='active');
+  if(badC&&!(cacheOld&&badC.chg>S.vcache)){rv.ok=false;rv.sus=badC.st==='suspended';rv.d=badC.id+' → '+badC.st.toUpperCase()}
+  else if(cacheOld)rv.warn=true;
+  let res='ok',msg=T('All checks passed. Data is authentic and belongs to this phone.','Все проверки пройдены. Данные подлинные и принадлежат этому телефону.');
+  for(const s of v.steps){s.s='run';renderVer();await sleep(380);
+    if(res==='bad'){s.s='skip';continue}
+    if(!s.ok){s.s=s.sus?'wn':'bad';res='bad';msg=T('Rejected: ','Отклонено: ')+T(s.en,s.ru).toLowerCase()+' — '+s.d;buzz()}
+    else if(s.warn){s.s='wn';if(res==='ok'){res='wn';msg=T('Valid, but revocation status is from an offline cache — reconnect to confirm.','Подлинно, но статус отзыва из офлайн-кэша — подключитесь для подтверждения.')}}
+    else s.s='ok';}
+  v.phase='done';v.res=res;v.msg=msg;renderVer();
+  S.kVer++;const V=VERIF[S.vmode];
+  S.acts.push({t:Date.now(),en:'Shared with '+V.nen,ru:'Передано: '+V.nru,den:v.give.length+' elements · '+(res==='ok'?'accepted':res==='wn'?'accepted (cached status)':'rejected'),dru:v.give.length+' эл. · '+(res==='ok'?'принято':res==='wn'?'принято (кэш)':'отклонено'),ok:res,ic:V.ic});
+  audit('VERIFY',(res==='bad'?'FAILED ':'OK ')+'presentation · '+V.nen+' · '+v.give.length+' elements','Проверка '+(res==='bad'?'НЕ пройдена':'пройдена')+' · '+V.nru+' · '+v.give.length+' эл.','');
+  save();renderKpis();
+  toast(res==='ok'?'✓ '+T('Verifier: valid','Проверяющий: действительно'):res==='wn'?T('Verifier: valid, status cached','Проверяющий: подлинно, статус из кэша'):'✕ '+T('Verifier: rejected','Проверяющий: отклонено'),res==='ok'?'':res==='wn'?'warn':'bad');
+  if(S.onb&&ui.tab==='act')renderPhone(false);
+}
+
+/* ---------- issuer ---------- */
+function renderKpis(){
+  const loc=S.reg.filter(r=>r.st==='active').length,rv=S.reg.filter(r=>r.st!=='active').length;
+  $('#kAct').textContent=fmtN(S.kAct+loc);$('#kVer').textContent=fmtN(S.kVer);$('#kRev').textContent=fmtN(48211+rv);$('#slv').textContent=T('Status list v','Список статусов v')+S.slv;
+}
+function renderReg(flash){
+  const q=($('#iSearch').value||'').toLowerCase();
+  const rows=S.reg.filter(r=>!q||r.id.toLowerCase().includes(q)||HOLD[r.h].join(' ').toLowerCase().includes(q));
+  $('#reg').innerHTML=rows.map(r=>'<tr class="'+(r.mine?'mine ':'')+(flash===r.id?'fl':'')+'"><td class="mono">'+r.id+'</td><td>'+hn(r.h)+(r.mine?' <span class="pill gold" style="font-size:10px;padding:0 6px">'+T('this phone','этот телефон')+'</span>':'')+'</td><td>'+KIND[r.k].ic+' '+T(KIND[r.k].en,KIND[r.k].ru)+'</td><td><span class="pill '+(r.st==='active'?'ok':r.st==='revoked'?'bad':'warn')+'">'+stName(r.st)+'</span></td><td>'+
+    (r.st==='active'?'<button class="xb" data-a="iSt" data-v="'+r.id+'|suspended">'+T('Suspend','Приостановить')+'</button>':'')+(r.st==='suspended'?'<button class="xb" data-a="iSt" data-v="'+r.id+'|active">'+T('Reinstate','Восстановить')+'</button>':'')+(r.st!=='revoked'?'<button class="xb r'+(ui.cf===r.id?' cf':'')+'" data-a="iRev" data-v="'+r.id+'">'+(ui.cf===r.id?T('Confirm revoke','Точно отозвать'):T('Revoke','Отозвать'))+'</button>':'<span class="muted" style="font-size:11.5px">'+T('final','окончательно')+'</span>')+'</td></tr>').join('');
+}
+function renderLog(){const el=$('#log');if(!el)return;el.innerHTML=S.audit.slice().reverse().map(e=>'<div><span class="t">'+hms(e.t)+'</span> <span class="k" style="color:'+({REVOKE:'var(--red)',SUSPEND:'var(--amber)',VERIFY:'var(--blue)',ISSUE:'var(--mal3)',PROVISION:'var(--mal3)'}[e.k]||'var(--gold2)')+'">'+e.k+'</span> '+esc(T(e.en,e.ru))+' <span class="h">#'+e.h.slice(0,6)+'</span></div>').join('')}
+function setStatus(id,st){
+  const r=S.reg.find(x=>x.id===id);if(!r)return;r.st=st;r.chg=Date.now();S.slv++;
+  audit(st==='revoked'?'REVOKE':st==='suspended'?'SUSPEND':'REINSTATE',id+' → '+st+' · status list v'+S.slv+' published',id+' → '+stName(st).toLowerCase()+' · опубликован список v'+S.slv,id);
+  toast((st==='revoked'?'⛔ ':st==='suspended'?'⏸ ':'▶ ')+id+' — '+stName(st),st==='active'?'':st==='revoked'?'bad':'warn');
+  if(r.mine&&r.wst){if(S.online)setTimeout(()=>syncWallet(),700);else toast(T('Holder phone is offline — wallet updates when it reconnects','Телефон владельца офлайн — кошелёк обновится при подключении'),'warn')}
+  save();renderReg(id);renderKpis();
+}
+function syncWallet(manual){
+  if(!S.online){if(manual)toast(T('Offline — cannot refresh status list','Офлайн — нельзя обновить статусы'),'warn');return}
+  let ch=0;S.reg.filter(r=>r.mine).forEach(r=>{if(r.wst===r.st)return;const was=r.wst;r.wst=r.st;ch++;
+    const K=KIND[r.k],nm=T(K.en,K.ru);
+    if(!was){ui.nw=r.id;push(T('New credential added','Добавлено удостоверение'),nm+' · '+r.id,false,K.ic)}
+    else if(r.st==='revoked')push(T('Credential revoked','Удостоверение отозвано'),T(nm+' was revoked by the Transport Authority.',nm+': отозвано Транспортным агентством.'),true,'⛔');
+    else if(r.st==='suspended')push(T('Credential suspended','Удостоверение приостановлено'),T(nm+' is suspended pending review.',nm+': приостановлено до проверки.'),true,'⏸');
+    else push(T('Credential reinstated','Удостоверение восстановлено'),T(nm+' is active again.',nm+' снова действует.'),false,'✓');
+  });
+  S.statusAt=Date.now();save();
+  if(S.onb){renderPhone(false);if(ch&&ui.tab==='wallet'&&!ui.card){const st=$$('.stack .cc');st.forEach(c=>{const r=S.reg.find(x=>x.id===c.dataset.v);if(r&&r.st!=='active')c.classList.add('shake')})}}
+  if(manual&&!ch)toast(T('Status list v'+S.slv+' — all up to date','Список статусов v'+S.slv+' — всё актуально'));
+}
+
+/* ---------- actions ---------- */
+const A={
+  tab:v=>{ui.tab=v;ui.card=null;ui.flip=false;$('#pbody').scrollTop=0;renderPhone()},
+  open:v=>{ui.card=v;ui.flip=false;renderPhone()},
+  cardBack:()=>{ui.card=null;renderPhone()},
+  flip:()=>{ui.flip=!ui.flip;const f=$('.flin');if(f)f.classList.toggle('fl',ui.flip)},
+  onb:v=>{ui.onb=+v;renderPhone()},
+  onbDone:()=>{S.onb=true;ui.onb=0;ui.tab='wallet';save();renderPhone();renderVer();toast('✓ '+T('Wallet ready','Кошелёк готов'))},
+  reOnb:()=>{S.onb=false;ui.onb=0;S.qr=null;save();renderPhone()},
+  net:()=>{S.online=!S.online;save();toast(S.online?T('Back online — syncing status list','Снова онлайн — синхронизация статусов'):T('Offline mode — credentials still work via QR + BLE','Офлайн — удостоверения работают через QR + BLE'),S.online?'':'warn');renderPhone(false);if(S.online)setTimeout(()=>syncWallet(),600)},
+  quick:v=>{S.preset=v;if(v!=='custom'&&S.vmode!==(v==='age'?'shop':'police')&&v!=='lic'){S.vmode=v==='age'?'shop':'police';renderVer()}ui.tab='share';ui.card=null;save();A.showQR()},
+  preset:v=>{S.preset=v;save();renderPhone(false)},
+  showQR:()=>{if(!S.onb)return;if(!selFields().length)return toast(T('Pick at least one data element','Выберите хотя бы один элемент'),'warn');S.qr={nonce:hex(Date.now()+Math.random()).slice(0,8),exp:Date.now()+90000};ui.tab='share';renderPhone();renderVer();buzz()},
+  qrCancel:()=>{S.qr=null;renderPhone();renderVer()},
+  remove:v=>{const r=S.reg.find(x=>x.id===v);if(r)r.hidden=1;ui.card=null;save();renderPhone();toast(T('Removed from wallet','Удалено из кошелька'))},
+  reset:()=>{S=fresh();ui.tab='wallet';ui.card=null;ui.v={phase:'idle'};ui.onb=0;save();renderAll();toast(T('Demo data reset','Данные демо сброшены'))},
+  vmode:v=>{S.vmode=v;save();renderVer()},
+  vReset:()=>{ui.v={phase:'idle'};renderVer()},
+  vScan:async()=>{
+    if(!S.onb)return toast(T('First finish onboarding in the phone','Сначала завершите подключение в телефоне'),'warn');
+    if(!S.qr||S.qr.exp<Date.now()){toast(T('No QR on the holder phone — open Share → Show QR','На телефоне нет QR — откройте «Предъявить» → «Показать QR»'),'warn');const b=$('#vScan');b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),500);return}
+    if(ui.v.phase==='scan'||ui.v.phase==='wait'||ui.v.phase==='run')return;
+    ui.v={phase:'scan',nonce:S.qr.nonce};renderVer();buzz();await sleep(1100);
+    ui.v.phase='wait';renderVer();
+    const want=PRESET[VERIF[S.vmode].want].f,offer=selFields();
+    ui.sel=offer;ui.give=want.filter(k=>offer.includes(k));if(!ui.give.length)ui.give=offer.slice();
+    ui.sheet='consent';ui.bio=false;renderSheet();buzz();
+    if(innerWidth<=860)toast(T('Approve on the phone above ↑','Подтвердите в телефоне выше ↑'),'gold');
+  },
+  consentNo:()=>{ui.sheet=null;renderSheet();ui.v.phase='declined';S.qr=null;renderPhone(false);renderVer();toast(T('You declined — nothing was shared','Вы отказали — ничего не передано'),'warn')},
+  consentOk:async()=>{if(!ui.give.length)return toast(T('Select at least one element','Выберите хотя бы один элемент'),'warn');ui.bio=true;renderSheet();await sleep(1000);ui.sheet=null;ui.bio=false;renderSheet();
+    ui.v.give=ui.give.slice();ui.v.phase='run';S.qr=null;renderPhone(false);runChecks()},
+  iSt:v=>{const [id,st]=v.split('|');setStatus(id,st)},
+  iRev:v=>{if(ui.cf!==v){ui.cf=v;renderReg();setTimeout(()=>{if(ui.cf===v){ui.cf=null;renderReg()}},3000);return}ui.cf=null;setStatus(v,'revoked')}
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.tagName==='INPUT')return;const f=A[el.dataset.a];if(f){if(el.closest('#scr'))buzz();f(el.dataset.v)}});
+$('#vScan').onclick=()=>A.vScan();
+$('#vTamper').onchange=e=>{S.tamper=e.target.value;save();renderVer();if(S.tamper!=='none')toast('⚠ '+T('Tampering on: ','Подделка: ')+T(TAMPER[S.tamper][0],TAMPER[S.tamper][1]),'bad')};
+$('#vOnline').onchange=e=>{S.vonline=e.target.checked;save();renderVer()};
+$('#iSearch').oninput=()=>renderReg();
+$('#iIssue').onclick=async()=>{
+  const h=+$('#iHolder').value,k=$('#iKind').value,b=$('#iIssue');b.disabled=true;b.textContent=T('Signing in HSM…','Подпись в HSM…');await sleep(800);b.disabled=false;b.textContent=T('Issue','Выдать');
+  const id={mdl:'MDL',vreg:'VRG',ins:'INS',age:'AGE'}[k]+'-'+(100000+hash(Date.now())%899999);
+  const r={id,k,h,st:'active',exp:'2031-11-17',mine:h===0?1:0};S.reg.unshift(r);
+  audit('ISSUE',id+' issued to '+HOLD[h][0]+' · OpenID4VCI offer sent',id+' выдано: '+HOLD[h][1]+' · отправлено предложение OpenID4VCI',id);
+  toast('✓ '+id+' '+T('issued','выдано'));save();renderReg(id);renderKpis();
+  if(r.mine){if(!S.onb)toast(T('Will be delivered after onboarding','Придёт после подключения кошелька'),'warn');else if(S.online)setTimeout(()=>{ui.tab='wallet';ui.card=null;syncWallet()},900);else toast(T('Holder offline — delivery queued','Владелец офлайн — доставка в очереди'),'warn')}
+};
+$('#resetBtn').onclick=()=>A.reset();
+
+/* pull to refresh */
+(function(){const pb=$('#pbody'),ptr=$('#ptr');let y0=null,dy=0;
+  const start=y=>{if(pb.scrollTop<=0&&S.onb&&!ui.sheet)y0=y};
+  const move=(y,e)=>{if(y0==null)return;dy=Math.max(0,Math.min(90,(y-y0)*.55));if(dy>4&&e.cancelable)e.preventDefault();ptr.style.transition='none';ptr.style.height=dy+'px';$('#ptrT').textContent=dy>55?T('Release to refresh','Отпустите — обновить'):T('Pull to refresh status','Потяните — обновить статусы')};
+  const end=async()=>{if(y0==null)return;y0=null;ptr.style.transition='';if(dy>55){ptr.classList.add('go');ptr.style.height='44px';$('#ptrT').textContent=T('Checking status list…','Проверяем список статусов…');buzz();await sleep(900);ptr.classList.remove('go');ptr.style.height='0';syncWallet(true)}else ptr.style.height='0';dy=0};
+  pb.addEventListener('touchstart',e=>start(e.touches[0].clientY),{passive:true});
+  pb.addEventListener('touchmove',e=>move(e.touches[0].clientY,e),{passive:false});
+  pb.addEventListener('touchend',end);
+  pb.addEventListener('mousedown',e=>{if(e.target.closest('button,input,label,.cc,canvas'))return;start(e.clientY)});
+  addEventListener('mousemove',e=>{if(y0!=null)move(e.clientY,e)});addEventListener('mouseup',end);
+})();
+
+/* features list */
+const FEATS=[
+  ['📇','Onboarding with face match','Подключение со сверкой лица','Licence scan, liveness + 1:1 face match, OpenID4VCI provisioning','Скан прав, проверка живости и лица 1:1, выдача по OpenID4VCI',()=>{A.reOnb()}],
+  ['🗂','Wallet with 4 credentials','Кошелёк из 4 удостоверений','mdoc licence & vehicle, SD-JWT insurance & age — tap to flip','Права и ТС (mdoc), полис и возраст (SD-JWT) — карта переворачивается',()=>A.tab('wallet')],
+  ['🔞','Selective disclosure','Выборочное раскрытие','Prove “over 18” without name or birth date','Доказать «18+» без имени и даты рождения',()=>A.quick('age')],
+  ['📷','Verifier checks','Проверки у проверяющего','Session, issuer signature, trust chain, revocation, device binding','Сессия, подпись, цепочка доверия, отзыв, привязка к устройству',()=>$('#vScr').scrollIntoView({behavior:'smooth',block:'center'})],
+  ['✈','Offline mode','Офлайн-режим','QR + BLE presentation without network; cached status lists','Предъявление по QR + BLE без сети; кэш списков статусов',()=>A.net()],
+  ['⛔','Live revocation','Отзыв в реальном времени','Issuer revokes — card turns red in the wallet within a second','Ведомство отзывает — карта краснеет в кошельке за секунду',()=>$('#reg').scrollIntoView({behavior:'smooth',block:'center'})]
+];
+function renderFeats(){$('#feats').innerHTML=FEATS.map((f,i)=>'<div class="feat" data-fi="'+i+'"><span class="fi">'+f[0]+'</span><div><b>'+T(f[1],f[2])+'</b><span>'+T(f[3],f[4])+'</span></div></div>').join('');$$('#feats .feat').forEach(el=>el.onclick=()=>FEATS[+el.dataset.fi][5]())}
+function renderIssueForm(){const h=$('#iHolder').value||'0',k=$('#iKind').value||'mdl';$('#iHolder').innerHTML=HOLD.map((x,i)=>'<option value="'+i+'">'+hn(i)+(i===0?' ★':'')+'</option>').join('');$('#iKind').innerHTML=Object.entries(KIND).map(([k2,v])=>'<option value="'+k2+'">'+T(v.en,v.ru)+'</option>').join('');$('#iHolder').value=h;$('#iKind').value=k}
+
+/* ticker */
+setInterval(()=>{const d=new Date();$('#clock').textContent=d.getHours()+':'+pad(d.getMinutes());
+  if(S.qr){const left=Math.ceil((S.qr.exp-Date.now())/1000);if(left<=0){S.qr=null;if(ui.v.phase==='idle')renderVer();if(ui.tab==='share'&&!ui.sheet)renderPhone(false);toast(T('QR expired — show a new one','QR истёк — покажите новый'),'warn')}else{const t=$('#qrT');if(t)t.textContent=T('expires in ','истекает через ')+left+'s · nonce '+S.qr.nonce;const b=$('#qrBar');if(b)b.style.width=(left/90*100)+'%'}}
+  if(Math.random()<.3){S.kVer+=1+Math.floor(Math.random()*3);$('#kVer').textContent=fmtN(S.kVer)}
+},1000);
+
+function renderAll(){renderFeats();renderIssueForm();renderPhone();renderSheet();renderVer();renderReg();renderLog();renderKpis()}
+PT.onLang(()=>{renderFeats();renderIssueForm();renderPhone(false);renderSheet();renderVer();renderReg();renderLog();renderKpis()});
+document.addEventListener('DOMContentLoaded',renderAll);
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

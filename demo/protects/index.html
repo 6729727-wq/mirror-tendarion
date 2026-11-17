@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bastion Vulnerability Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal2),var(--mal3));color:#fff;font-size:15px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.nav{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)} .nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--panel2);border:1px solid var(--line2);color:var(--text);border-radius:999px;padding:0 7px;font-weight:700} .nav .cnt.r{background:var(--red);border-color:var(--red);color:#fff}
+.side .grow{flex:1} .sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;margin:10px 10px 4px}
+main{padding:20px 24px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px} .head h1{font-size:23px;margin:0} .head .sp{flex:1} .crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;margin-bottom:14px}
+.hint{display:flex;gap:10px;flex-wrap:wrap;padding:12px 14px;border:1px dashed color-mix(in srgb,var(--gold) 55%,transparent);border-radius:var(--r);background:color-mix(in srgb,var(--gold) 6%,var(--panel))}
+.hint .s{flex:1 1 170px;display:flex;gap:9px;font-size:13px;line-height:1.4}
+.hint .n{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--gold);color:#1a1306;font-weight:800;font-size:12px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;font-size:12.5px;padding:12px 14px} .facts span{color:var(--dim)} .facts b{font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi{padding:14px} .kpi .l{font-size:12px;color:var(--muted);font-weight:600} .kpi .v{font-size:24px;font-weight:800;margin:3px 0 0;letter-spacing:-.02em} .kpi .d{font-size:12px;color:var(--muted)}
+.up{color:var(--red)} .dn{color:var(--mal3)}
+.g2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;align-items:start} .g2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap} .card h3 .sp{flex:1}
+.mt{margin-top:14px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap} tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td{background:color-mix(in srgb,var(--mal) 6%,transparent)}
+tr.new td{animation:fl 1.6s} @keyframes fl{from{background:color-mix(in srgb,var(--gold) 28%,transparent)}}
+tr.od td{background:color-mix(in srgb,var(--red) 8%,transparent)}
+.btn:disabled{opacity:.42;cursor:not-allowed} .btn.sm{padding:6px 12px;font-size:12.5px} .btn.xs{padding:3px 9px;font-size:12px} .btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.view{display:none}.view.on{display:block;animation:fade .2s} @keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center} .tools .input{width:auto;min-width:130px;flex:1;max-width:260px} .tools select.input{flex:0 1 auto}
+.chartw svg{display:block;width:100%;height:auto}
+.prio{display:inline-grid;place-items:center;min-width:28px;padding:1px 6px;border-radius:7px;font-weight:800;font-size:11.5px;font-family:var(--mono)}
+.p1{background:var(--red);color:#fff}.p2{background:var(--amber);color:#1a1306}.p3{background:color-mix(in srgb,var(--blue) 70%,transparent);color:#fff}.p4{background:var(--line2);color:var(--muted)}
+.kev{font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#fff;background:#b3261e;border-radius:5px;padding:1px 6px}
+.epss{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px} .epss i{width:46px;height:5px;border-radius:5px;background:var(--line);position:relative;overflow:hidden} .epss i b{position:absolute;inset:0 auto 0 0;background:var(--red)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden} .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .15s}
+.feed{max-height:330px;overflow:auto;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg2);padding:8px 10px}
+.feed div{padding:3px 0;border-bottom:1px dashed var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .feed div.b{color:var(--red)} .feed div.g{color:var(--mal3)}
+.kan{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}
+.col{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:10px;min-height:120px}
+.col h4{margin:2px 4px 10px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:flex;gap:6px}
+.tk{background:var(--panel);border:1px solid var(--line2);border-radius:11px;padding:10px;margin-bottom:8px;font-size:12.5px} .tk.new{animation:fl 1.6s}
+.tk .t{font-weight:700;font-size:13px;margin:4px 0} .tk .m{color:var(--muted);font-size:12px} .tk .a{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.fam{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.fm{padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--panel);cursor:pointer} .fm:hover,.fm.on{border-color:var(--mal)}
+.fm .id{font-family:var(--mono);font-weight:700;color:var(--gold2)} .fm .nm{font-size:12px;color:var(--muted);margin:2px 0 8px;min-height:30px}
+.bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden} .bar i{display:block;height:100%;background:var(--mal3)}
+.wiz{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.wiz button{flex:1 1 120px;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:8px 10px;color:var(--muted);font-size:12.5px;cursor:pointer;font-family:inherit}
+.wiz button b{display:block;color:var(--text);font-size:13px} .wiz button.on{border-color:var(--gold)} .wiz button.ok{border-color:var(--mal)} .wiz button.ok b:before{content:'✓ ';color:var(--mal3)}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:10px 4px;border-bottom:1px dashed var(--line);font-size:13.5px}
+.chk .bx{width:20px;height:20px;border-radius:6px;border:2px solid var(--line2);flex:none;display:grid;place-items:center;font-size:12px;color:#fff;margin-top:1px}
+.chk.on .bx{background:var(--mal);border-color:var(--mal)} .chk.bad .bx{border-color:var(--red);color:var(--red)} .chk.man{cursor:pointer} .chk small{display:block;color:var(--dim);font-size:11.5px}
+.pkg{border:1px solid var(--line2);border-radius:14px;padding:18px;background:var(--panel2);font-size:13px}
+.pkg .dec{font-size:18px;font-weight:800;margin:4px 0 10px} .pkg dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:0} .pkg dt{color:var(--dim)} .pkg dd{margin:0;font-weight:600}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px} .fgrid .full{grid-column:1/-1} .f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.grpchk{display:flex;flex-wrap:wrap;gap:6px} .grpchk label{border:1px solid var(--line2);border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer;display:flex;gap:6px;align-items:center}
+.funnel{display:grid;gap:8px} .funnel .r{display:grid;grid-template-columns:110px minmax(0,1fr) 70px;gap:10px;align-items:center;font-size:13px} .funnel .r i{display:block;height:20px;border-radius:6px;transition:width .3s}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px} .modal-bg.on{display:flex}
+.modal{width:min(600px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);padding:22px;box-shadow:var(--shadow);animation:pop .18s}
+@keyframes pop{from{transform:scale(.96);opacity:0}} .modal h2{margin:0 0 6px;font-size:19px} .modal .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s} .toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+@media (max-width:1180px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.g2,.g2e{grid-template-columns:minmax(0,1fr)}.kan{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.app{grid-template-columns:minmax(0,1fr)}.side{position:fixed;left:0;top:45px;z-index:1500;width:250px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}.side.open{transform:none}.menu-btn{display:inline-flex}main{padding:14px 14px 50px}.intro{grid-template-columns:minmax(0,1fr)}.head h1{font-size:19px}}
+@media (max-width:520px){.kpis{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.kpi .v{font-size:19px}.kpi:last-child{grid-column:1/-1}.fgrid{grid-template-columns:1fr}.kan{grid-template-columns:minmax(0,1fr)}.tools .input{max-width:none}.funnel .r{grid-template-columns:84px minmax(0,1fr) 56px}.fam{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body data-demo-en="Bastion — vulnerability & compliance management" data-demo-ru="Bastion — управление уязвимостями и соответствием">
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>◆</b><div>Bastion<small data-en="Treasury Dept. · Cyber Office" data-ru="Казначейство · Киберофис"></small></div></div>
+    <div id="navs"></div>
+    <div class="grow"></div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" data-en="Republic of Nordania · Treasury · Continuous monitoring" data-ru="Республика Нордания · Казначейство · Непрерывный мониторинг"></div><h1 id="title"></h1></div>
+      <div class="sp"></div><span class="pill" id="scanPill"></span>
+    </div>
+    <div class="intro">
+      <div class="hint">
+        <div class="s"><span class="n">1</span><span data-en="Open <b>Scans</b> and run a full scan — new findings stream in live." data-ru="Откройте <b>Сканирование</b> и запустите полное — новые находки появляются вживую."></span></div>
+        <div class="s"><span class="n">2</span><span data-en="In <b>Vulnerabilities</b> take the top <b>KEV</b> item → ticket → assign → deploy patch." data-ru="В <b>Уязвимостях</b> возьмите верхнюю с флагом <b>KEV</b> → тикет → исполнитель → патч."></span></div>
+        <div class="s"><span class="n">3</span><span data-en="<b>Rescan</b> — the ticket closes, risk drops. Then build the <b>ATO package</b>." data-ru="<b>Пересканируйте</b> — тикет закрыт, риск падает. Затем соберите <b>пакет ATO</b>."></span></div>
+      </div>
+      <div class="card facts">
+        <span data-en="Tender" data-ru="Тендер"></span><b data-en="Cybersecurity BPA (2025)" data-ru="Рамочный контракт по кибербезопасности (2025)"></b>
+        <span data-en="Ceiling" data-ru="Потолок"></span><b class="mono">$20B</b>
+        <span data-en="Client" data-ru="Заказчик"></span><b data-en="Treasury Dept., Republic of Nordania (fictional)" data-ru="Казначейство Республики Нордания (вымышл.)"></b>
+        <span data-en="Stack" data-ru="Стек"></span><b data-en="scanners · NIST 800-53 · continuous monitoring" data-ru="сканеры · NIST 800-53 · непрерывный мониторинг"></b>
+      </div>
+    </div>
+    <section class="view" id="v-dash"></section>
+    <section class="view" id="v-assets"></section>
+    <section class="view" id="v-scan"></section>
+    <section class="view" id="v-vuln"></section>
+    <section class="view" id="v-rem"></section>
+    <section class="view" id="v-ctl"></section>
+    <section class="view" id="v-poam"></section>
+    <section class="view" id="v-ato"></section>
+    <section class="view" id="v-phish"></section>
+  </main>
+</div>
+<input type="file" id="evFile" hidden>
+<div class="modal-bg" id="mbg"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru),L=o=>o?(PT.lang==='ru'?o.ru:o.en):'',LA=a=>PT.lang==='ru'?a[1]:a[0];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='bastion-v1',DAY=864e5,NOW=Date.now();
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const d10=t=>new Date(t).toISOString().slice(0,10),hm=t=>new Date(t).toTimeString().slice(0,5);
+const fmt=n=>Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+
+/* ---------- reference data ---------- */
+const SYS=[['RCS','Revenue Collection System','Система сбора доходов','High'],['PAY','Payments Hub','Платёжный узел','High'],['DMS','Debt Management','Управление госдолгом','Moderate'],['TPT','Treasury Public Portal','Публичный портал казначейства','Moderate'],
+ ['HRP','Payroll & HR','Зарплата и кадры','Moderate'],['DWH','Fiscal Data Warehouse','Хранилище фискальных данных','Moderate'],['IDP','Identity Provider','Провайдер идентификации','High'],['COL','Email & Collaboration','Почта и совместная работа','Low']]
+ .map(s=>({id:s[0],en:s[1],ru:s[2],imp:s[3]}));
+const IMPR={High:{en:'High',ru:'Высокий'},Moderate:{en:'Moderate',ru:'Умеренный'},Low:{en:'Low',ru:'Низкий'}};
+const ROLE={web:['Web server','Веб-сервер'],app:['App server','Сервер приложений'],db:['Database','База данных'],k8s:['K8s node','Узел K8s'],lb:['Load balancer','Балансировщик'],bkt:['Object storage','Объектное хранилище'],ws:['Admin workstation','АРМ администратора'],bkp:['Backup server','Сервер резервных копий']};
+const OS={web:['NordLinux 9.2','NordLinux 8.6'],app:['NordLinux 9.2','Debian-class 12'],db:['DB Server 15.4','DB Server 14.9'],k8s:['Container OS 1.29'],lb:['LB appliance 17.1'],bkt:['Object store'],ws:['Desktop OS 23H2'],bkp:['NordLinux 8.6']};
+const SEQ=['web','web','app','app','app','db','db','k8s','k8s','lb','bkt','ws'];
+const NET=['TPT','RCS','PAY','IDP','COL'];
+const R0=rng(2025);
+const ASSETS=[];SYS.forEach((s,si)=>SEQ.forEach((r,j)=>{const n=ASSETS.length;const cloud=r==='k8s'||r==='bkt'||(r!=='db'&&r!=='ws'&&R0()<.45)||(s.id==='TPT'&&r!=='ws');
+ ASSETS.push({i:n,n:`${s.id.toLowerCase()}-${r}-${String(j+1).padStart(2,'0')}`,sys:s.id,r,cloud,os:OS[r][Math.floor(R0()*OS[r].length)],ip:cloud?`172.${20+si}.${4+j}.${10+Math.floor(R0()*200)}`:`10.${40+si}.${j}.${10+Math.floor(R0()*200)}`,net:(r==='web'||r==='lb')&&NET.includes(s.id),crit:s.imp==='High'?1.5:s.imp==='Moderate'?1.2:1})}));
+// id, en, ru, cvss, epss, kev, roles, fix
+const VULN=[
+ ['CVE-2025-70114','Web gateway path traversal → remote code execution','Обход пути в веб-шлюзе → удалённое выполнение кода',9.8,.94,1,['web','lb'],'Upgrade gateway to 4.12.3'],
+ ['CVE-2025-70291','Logging library lookup injection (RCE)','Инъекция подстановки в библиотеке журналирования (RCE)',10,.97,1,['app'],'Library 2.24.3 + disable lookups'],
+ ['CVE-2025-70305','Ingress controller configuration injection','Инъекция конфигурации в ingress-контроллер',9.8,.88,1,['k8s'],'Ingress 1.12.1'],
+ ['CVE-2025-70412','App server partial PUT deserialization','Десериализация при частичном PUT в сервере приложений',9.8,.91,1,['app'],'App server 11.0.3'],
+ ['CVE-2024-71877','Compression library supply-chain backdoor','Закладка в библиотеке сжатия (цепочка поставки)',10,.86,1,['web','app','k8s'],'Downgrade to 5.4.6'],
+ ['CVE-2024-72110','VPN appliance out-of-bounds write','Запись за границы буфера в VPN-шлюзе',9.6,.95,1,['lb'],'Firmware 7.4.3'],
+ ['CVE-2025-70533','Hypervisor TOCTOU sandbox escape','Выход из песочницы гипервизора (TOCTOU)',9.3,.41,1,['bkp'],'Hypervisor patch 8.0u3'],
+ ['CVE-2024-72388','Kernel use-after-free privilege escalation','Use-after-free в ядре → повышение привилегий',7.8,.38,1,['web','app','k8s','db','bkp'],'Kernel 6.6.58'],
+ ['CVE-2024-72402','HTTP/2 rapid reset denial of service','Отказ в обслуживании HTTP/2 rapid reset',7.5,.83,1,['web','lb'],'Web server 2.4.62'],
+ ['CVE-2025-70610','Browser engine type confusion','Путаница типов в движке браузера',8.8,.66,1,['ws'],'Browser 131.0.2'],
+ ['CVE-2024-72516','SSH daemon signal-handler race (RCE)','Гонка в обработчике сигналов SSH-демона (RCE)',8.1,.42,0,['web','app','k8s','db','bkp'],'SSH 9.8p1'],
+ ['CVE-2024-72634','TLS library heap overflow','Переполнение кучи в TLS-библиотеке',8.1,.12,0,['web','app','lb'],'TLS lib 3.0.15'],
+ ['CVE-2025-70744','IPv6 stack remote code execution','Удалённое выполнение кода в стеке IPv6',9.8,.31,0,['ws'],'OS cumulative update'],
+ ['CVE-2025-70802','DB server privilege escalation via extension','Повышение привилегий в СУБД через расширение',8.8,.09,0,['db'],'DB 15.8'],
+ ['CVE-2024-72951','Crypto library authentication bypass','Обход аутентификации в крипто-библиотеке',9.1,.21,0,['app','k8s'],'Crypto lib 0.31'],
+ ['CVE-2025-70937','Office document embedded object RCE','RCE через встроенный объект в документе',9.8,.55,0,['ws'],'Office suite update'],
+ ['CVE-2024-73040','Container runtime escape via leaked fd','Выход из контейнера через утёкший дескриптор',8.6,.15,0,['k8s'],'Runtime 1.1.12'],
+ ['CVE-2025-71056','Backup agent unauthenticated API','Неаутентифицированный API агента резервного копирования',8.2,.25,0,['bkp'],'Agent 12.2'],
+ ['BAS-CFG-0007','Object storage bucket allows public listing','Публичный листинг объектного хранилища',7.5,.30,0,['bkt'],'Block public access policy'],
+ ['BAS-CFG-0012','Default DB administrator account active','Активна учётка администратора СУБД по умолчанию',7.2,.07,0,['db'],'Disable default account'],
+ ['CVE-2024-73155','Front-end library prototype pollution','Загрязнение прототипа во фронтенд-библиотеке',6.1,.02,0,['web'],'Library 3.7.1'],
+ ['BAS-CFG-0021','Weak TLS cipher suites enabled','Включены слабые наборы шифров TLS',5.3,.01,0,['web','lb'],'Apply TLS 1.2+ profile'],
+ ['BAS-CFG-0030','Missing HTTP security headers','Нет заголовков безопасности HTTP',4.3,.005,0,['web'],'Add HSTS/CSP headers'],
+ ['BAS-CFG-0034','Certificate expires in < 14 days','Сертификат истекает менее чем через 14 дней',5.0,.001,0,['web','lb','app'],'Renew via internal CA']
+].map((v,i)=>({i,id:v[0],en:v[1],ru:v[2],cvss:v[3],epss:v[4],kev:!!v[5],roles:v[6],fix:v[7]}));
+const ENG=[['A. Lindqvist','А. Линдквист'],['M. Hartmann','М. Хартманн'],['S. Okafor','С. Окафор'],['J. Varga','Я. Варга'],['E. Nyström','Э. Нюстрём'],['R. Castell','Р. Кастель']];
+const SLA={P1:15,P2:30,P3:90,P4:180};
+const FAM=[['AC','Access Control','Управление доступом',25],['AT','Awareness & Training','Обучение и осведомлённость',6],['AU','Audit & Accountability','Аудит и подотчётность',16],['CA','Assessment & Authorization','Оценка и авторизация',9],['CM','Configuration Mgmt','Управление конфигурацией',14],['CP','Contingency Planning','Планирование непрерывности',13],['IA','Identification & Auth','Идентификация и аутентификация',12],['IR','Incident Response','Реагирование на инциденты',10],['MA','Maintenance','Обслуживание',6],['MP','Media Protection','Защита носителей',7],['PE','Physical & Environmental','Физическая защита и среда',18],['PL','Planning','Планирование',7],['PM','Program Management','Управление программой',16],['PS','Personnel Security','Безопасность персонала',9],['PT','PII Processing','Обработка персональных данных',8],['RA','Risk Assessment','Оценка рисков',7],['SA','System Acquisition','Приобретение систем',15],['SC','System & Comms Protection','Защита систем и связи',28],['SI','System & Info Integrity','Целостность систем и информации',16],['SR','Supply Chain Risk','Риски цепочки поставок',12]];
+const KN={'AC-2':['Account Management','Управление учётными записями'],'AC-3':['Access Enforcement','Принудительный контроль доступа'],'AC-6':['Least Privilege','Минимальные привилегии'],'AC-17':['Remote Access','Удалённый доступ'],'AU-2':['Event Logging','Регистрация событий'],'AU-6':['Audit Record Review','Анализ журналов аудита'],'CA-7':['Continuous Monitoring','Непрерывный мониторинг'],'CM-2':['Baseline Configuration','Базовая конфигурация'],'CM-6':['Configuration Settings','Параметры конфигурации'],'CM-8':['System Component Inventory','Инвентаризация компонентов'],'CP-9':['System Backup','Резервное копирование'],'IA-2':['Identification & Authentication (Users)','Идентификация и аутентификация пользователей'],'IA-5':['Authenticator Management','Управление аутентификаторами'],'IR-4':['Incident Handling','Обработка инцидентов'],'IR-6':['Incident Reporting','Сообщение об инцидентах'],'PM-9':['Risk Management Strategy','Стратегия управления рисками'],'RA-3':['Risk Assessment','Оценка рисков'],'RA-5':['Vulnerability Monitoring & Scanning','Мониторинг и сканирование уязвимостей'],'SA-11':['Developer Testing','Тестирование разработчиком'],'SC-7':['Boundary Protection','Защита периметра'],'SC-8':['Transmission Confidentiality','Конфиденциальность передачи'],'SC-13':['Cryptographic Protection','Криптографическая защита'],'SC-28':['Protection of Information at Rest','Защита данных при хранении'],'SI-2':['Flaw Remediation','Устранение недостатков'],'SI-3':['Malicious Code Protection','Защита от вредоносного кода'],'SI-4':['System Monitoring','Мониторинг системы'],'SR-3':['Supply Chain Controls','Меры цепочки поставок'],'AT-2':['Literacy Training & Awareness','Обучение и осведомлённость']};
+const ctlName=(id,f)=>KN[id]?LA(KN[id]):/-1$/.test(id)?T('Policy and Procedures','Политика и процедуры'):T(f[1]+' — requirement '+id.split('-')[1],f[2]+' — требование '+id.split('-')[1]);
+const CBASE={};{const r=rng(77);FAM.forEach((f,k)=>{const p=[.86,.5,.8,.7,.72,.62,.9,.75,.9,.85,.95,.86,.6,.9,.55,.74,.7,.76,.78,.45][k];for(let n=1;n<=f[3];n++){const x=r();CBASE[f[0]+'-'+n]=x<p?'i':x<p+.12?'p':'n'}})}
+const PHT=[{id:'pay',en:'Payroll correction — confirm bank details',ru:'Исправление зарплаты — подтвердите реквизиты',dif:.9},{id:'inv',en:'Shared invoice from a supplier',ru:'Счёт от поставщика в общем доступе',dif:.7},{id:'mfa',en:'MFA re-enrolment required',ru:'Требуется повторная регистрация MFA',dif:1.1},{id:'par',en:'Parcel waiting at mailroom',ru:'Посылка ждёт в экспедиции',dif:.55}];
+const DEP=[['fin','Finance','Финансы',180,1.25],['it','IT','ИТ',64,.55],['hr','HR','Кадры',42,1.1],['proc','Procurement','Закупки',55,1.15],['exec','Executive office','Руководство',12,.9]];
+
+/* ---------- state ---------- */
+function seed(){const r=rng(9),F=[];
+ ASSETS.forEach(a=>VULN.forEach(v=>{if(!v.roles.includes(a.r))return;const x=r();
+  if(v.i===0&&a.net){F.push({a:a.i,v:0,st:'hidden'});return}
+  if(x<(v.kev?.11:.2))F.push({a:a.i,v:v.i,st:'open',d:NOW-Math.floor(r()*110+1)*DAY});else if(x<(v.kev?.15:.26))F.push({a:a.i,v:v.i,st:'hidden'});else if(x<.32)F.push({a:a.i,v:v.i,st:'fixed',d:NOW-200*DAY})}));
+ F.forEach((f,i)=>f.id=i);
+ const trend=[];for(let k=12;k>=1;k--)trend.push({t:NOW-k*7*DAY,v:0,f:1+k*.035+(r()-.5)*.04});
+ return{F,tk:[],nextTk:1042,scans:[{id:'SC-0318',t:NOW-6*DAY,scope:'all',prof:'auth',n:96,nw:7,fx:11,dur:2140}],trend,mttr:{P1:[6.4,8.1,5.2],P2:[18,24,21],P3:[44,61],P4:[97]},ctl:{},ev:{},
+  poam:[['POAM-2026-003','Legacy TLS on payments API','Устаревший TLS на платёжном API','SC-8','PAY','High',-12,'Vendor patch scheduled','Патч поставщика запланирован'],['POAM-2026-005','Shared admin accounts on DWH','Общие админ-учётки в DWH','AC-2','DWH','High',-4,'Migrate to named PAM accounts','Перевод на именные PAM-учётки'],['POAM-2026-007','No offline backup copy for RCS','Нет офлайн-копии резервов RCS','CP-9','RCS','Moderate',21,'Tape vault contract','Договор на хранение лент'],['POAM-2026-008','Audit logs retained 30 days only','Журналы аудита хранятся лишь 30 дней','AU-11','HRP','Moderate',45,'Extend SIEM retention to 1 year','Хранение в SIEM до 1 года'],['POAM-2026-009','Supply-chain SBOM not collected','Не собираются SBOM поставщиков','SR-3','TPT','Moderate',60,'SBOM clause in contracts','Пункт о SBOM в договорах'],['POAM-2026-011','Privacy impact assessment outdated','Устарела оценка влияния на приватность','PT-5','HRP','Low',-1,'PIA refresh','Обновить PIA'],['POAM-2026-012','IR plan not exercised this year','План реагирования не отработан в этом году','IR-3','IDP','Moderate',30,'Tabletop exercise','Штабная тренировка'],['POAM-2026-013','MFA not enforced for service desk','MFA не обязательна для службы поддержки','IA-2','IDP','High',9,'Conditional access policy','Политика условного доступа'],['POAM-2026-014','Unsupported OS on 2 workstations','Неподдерживаемая ОС на 2 АРМ','SI-2','COL','Moderate',-20,'Hardware refresh','Замена оборудования']].map(p=>({id:p[0],w:{en:p[1],ru:p[2]},ctl:p[3],sys:p[4],risk:p[5],due:NOW+p[6]*DAY,ms:{en:p[7],ru:p[8]},st:'open',ext:0})),nextPoam:15,
+  ato:{sys:'PAY',step:0,man:{}},atoPkg:null,
+  ph:[{id:'PH-07',t:NOW-40*DAY,tpl:'par',deps:['fin','hr','proc'],sent:277,open:121,click:38,sub:14,rep:31,by:{fin:21,hr:9,proc:8}},{id:'PH-08',t:NOW-12*DAY,tpl:'inv',deps:['fin','it','exec'],sent:256,open:131,click:41,sub:17,rep:44,by:{fin:33,it:4,exec:4}}],nextPh:9}}
+let S=store.load()||seed();
+function save(){store.save(S)}
+let view='dash',scanning=null,vf={q:'',kev:false,p:'all',sys:'all'},af={q:'',env:'all',sys:'all'},famSel='RA',onlyOd=false,phRun=null,evTarget=null;
+
+/* ---------- risk ---------- */
+const A=i=>ASSETS[i],Vn=i=>VULN[i],sysOf=id=>SYS.find(s=>s.id===id);
+function risk(f){const a=A(f.a),v=Vn(f.v);return Math.min(100,v.cvss/10*(v.kev?1:.25+.75*v.epss)*a.crit*(a.net?1.3:1)*62)}
+function prio(r,v,a){if(r>=70||(v.kev&&a.net))return'P1';if(r>=45||v.kev)return'P2';if(r>=22)return'P3';return'P4'}
+const openF=()=>S.F.filter(f=>f.st==='open'||f.st==='patched');
+const riskIdx=()=>openF().reduce((s,f)=>s+risk(f),0);
+function groups(){const g={};openF().forEach(f=>{const k=f.v;(g[k]||(g[k]={v:Vn(k),f:[],r:0,p:'P4',age:0})).f.push(f)});
+ return Object.values(g).map(x=>{x.f.forEach(f=>{const r=risk(f),p=prio(r,x.v,A(f.a));if(r>x.r)x.r=r;if(p<x.p)x.p=p;x.age=Math.max(x.age,(Date.now()-f.d)/DAY)});x.tk=S.tk.find(t=>t.v===x.v.i&&t.st!=='closed');x.od=x.age>SLA[x.p];return x}).sort((a,b)=>a.p.localeCompare(b.p)||b.r-a.r)}
+const pr=p=>`<span class="prio ${p.toLowerCase()}">${p}</span>`;
+const epss=e=>`<span class="epss"><i><b style="width:${e*100}%"></b></i>${(e*100).toFixed(e<.1?1:0)}%</span>`;
+const ctlSt=id=>S.ctl[id]||CBASE[id];
+const famPct=f=>{let n=0;for(let k=1;k<=f[3];k++)n+=ctlSt(f[0]+'-'+k)==='i'?1:ctlSt(f[0]+'-'+k)==='p'?.5:0;return n/f[3]*100};
+const totPct=()=>{let n=0,t=0;FAM.forEach(f=>{t+=f[3];n+=famPct(f)*f[3]/100});return n/t*100};
+const poamOd=p=>p.st==='open'&&p.due<Date.now();
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+if(S.trend.every(t=>!t.v)){const c=riskIdx();S.trend.forEach(t=>t.v=Math.round(c*t.f));save()}
+function pushTrend(){S.trend.push({t:Date.now(),v:Math.round(riskIdx())});if(S.trend.length>16)S.trend.shift()}
+
+/* ---------- ui helpers ---------- */
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(html,ok){const m=$('#modal');m.innerHTML=html;$('#mbg').classList.add('on');PT.apply(m);$$('[data-close]',m).forEach(b=>b.onclick=closeM);const o=$('[data-ok]',m);if(o)o.onclick=()=>{if(ok(m)!==false)closeM()}}
+function closeM(){$('#mbg').classList.remove('on')}
+$('#mbg').onclick=e=>{if(e.target.id==='mbg')closeM()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
+const opts=(arr,sel)=>arr.map(o=>`<option value="${o[0]}" ${o[0]===sel?'selected':''}>${o[1]}</option>`).join('');
+const sysOpts=sel=>opts([['all',T('All systems','Все системы')]].concat(SYS.map(s=>[s.id,s.id+' · '+L(s)])),sel);
+
+/* ---------- charts ---------- */
+function trendChart(){const W=640,H=220,p={l:46,r:14,t:14,b:26},pts=S.trend.slice(),c=riskIdx();if(Math.abs(pts[pts.length-1].v-c)>1)pts.push({t:Date.now(),v:Math.round(c),now:1});
+ const mx=Math.max(...pts.map(x=>x.v))*1.12,mn=0,X=i=>p.l+i*(W-p.l-p.r)/(pts.length-1),Y=v=>p.t+(1-(v-mn)/(mx-mn))*(H-p.t-p.b);
+ const ln=cssv('--line'),mu=cssv('--dim'),g=cssv('--gold'),m=cssv('--mal3');
+ let s=`<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${g}" stop-opacity=".35"/><stop offset="1" stop-color="${g}" stop-opacity="0"/></linearGradient></defs>`;
+ for(let k=0;k<=4;k++){const v=mx*k/4,y=Y(v);s+=`<line x1="${p.l}" x2="${W-p.r}" y1="${y}" y2="${y}" stroke="${ln}"/><text x="${p.l-6}" y="${y+4}" text-anchor="end" font-size="11" fill="${mu}" font-family="JetBrains Mono,monospace">${Math.round(v/100)/10}k</text>`}
+ const d=pts.map((x,i)=>`${i?'L':'M'}${X(i).toFixed(1)} ${Y(x.v).toFixed(1)}`).join(' ');
+ s+=`<path d="${d} L${X(pts.length-1)} ${H-p.b} L${p.l} ${H-p.b}Z" fill="url(#tg)"/><path d="${d}" fill="none" stroke="${g}" stroke-width="2.5" stroke-linejoin="round"/>`;
+ pts.forEach((x,i)=>{if(i%3===0||i===pts.length-1)s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="${mu}">${new Date(x.t).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'})}</text>`});
+ const l=pts.length-1;s+=`<circle cx="${X(l)}" cy="${Y(pts[l].v)}" r="5" fill="${m}" stroke="${cssv('--panel')}" stroke-width="2"/></svg>`;return s}
+function hbars(rows,max,color){return rows.map(r=>`<div style="display:grid;grid-template-columns:minmax(0,120px) minmax(0,1fr) 52px;gap:8px;align-items:center;font-size:12.5px;margin-bottom:8px;${r.go?'cursor:pointer':''}" ${r.go?`data-sys="${r.go}"`:''}><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.l}</span><span style="background:${cssv('--line')};border-radius:6px;height:12px;overflow:hidden"><i style="display:block;height:100%;width:${Math.max(2,r.v/max*100)}%;background:${r.c||color};border-radius:6px"></i></span><b class="mono" style="text-align:right">${r.t}</b></div>`).join('')}
+
+/* ---------- views ---------- */
+function vDash(){const c=riskIdx(),prev=S.trend[S.trend.length-1].v,g=groups(),kev=openF().filter(f=>Vn(f.v).kev).length,od=S.poam.filter(poamOd).length;
+ const sr=SYS.map(s=>({s,v:openF().filter(f=>A(f.a).sys===s.id).reduce((x,f)=>x+risk(f),0)})).sort((a,b)=>b.v-a.v);
+ const mt=['P1','P2','P3','P4'].map(p=>({l:p,v:avg(S.mttr[p]),t:avg(S.mttr[p]).toFixed(1)+T(' d',' д'),c:cssv(p==='P1'?'--red':p==='P2'?'--amber':p==='P3'?'--blue':'--dim')}));
+ const dl=c-S.trend[S.trend.length-2].v;
+ $('#v-dash').innerHTML=`<div class="kpis">${[[T('Risk score','Индекс риска'),fmt(c),`<span class="${dl>0?'up':'dn'}">${dl>0?'▲':'▼'} ${fmt(Math.abs(dl))}</span> ${T('vs last week','к прошлой неделе')}`],[T('Open findings','Открытые находки'),openF().length,g.length+T(' unique vulns',' уникальных')],[T('KEV exposure','Под KEV'),kev,`<span class="${kev?'up':'dn'}">${kev?T('exploited in the wild','эксплуатируются'):T('none','нет')}</span>`],[T('MTTR · P1','MTTR · P1'),avg(S.mttr.P1).toFixed(1)+T(' d',' д'),T('SLA 15 d','SLA 15 д')],[T('POA&M overdue','POA&M просрочено'),od,S.poam.filter(p=>p.st==='open').length+T(' open',' открыто')]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('')}</div>
+ <div class="g2"><div class="card"><h3>${T('Enterprise risk trend','Динамика риска по ведомству')}<span class="sp"></span><span class="pill gold">${T('weekly + live','по неделям + сейчас')}</span></h3><div class="chartw">${trendChart()}</div></div>
+ <div class="card"><h3>${T('Top risky systems','Самые рискованные системы')}</h3>${hbars(sr.slice(0,6).map(x=>({l:x.s.id+' · '+L(x.s),v:x.v,t:fmt(x.v),go:x.s.id,c:cssv(x.s.imp==='High'?'--red':'--amber')})),sr[0].v||1)}<div class="muted" style="font-size:11.5px">${T('Click a system to see its vulnerabilities','Нажмите систему — откроются её уязвимости')}</div></div></div>
+ <div class="g2 mt"><div class="card"><h3>${T('Fix first (risk-based)','Исправить в первую очередь (по риску)')}<span class="sp"></span><button class="btn sm" data-go="vuln">${T('All vulnerabilities →','Все уязвимости →')}</button></h3><div class="tw"><table><thead><tr><th>${T('Prio','Приор.')}</th><th>${T('Vulnerability','Уязвимость')}</th><th>${T('Risk','Риск')}</th><th>${T('Assets','Активы')}</th></tr></thead><tbody>${g.slice(0,6).map(x=>`<tr class="clk" data-v="${x.v.i}"><td>${pr(x.p)}</td><td><span class="mono" style="font-size:12px">${x.v.id}</span> ${x.v.kev?'<span class="kev">KEV</span>':''}<div style="max-width:380px;overflow:hidden;text-overflow:ellipsis">${L(x.v)}</div></td><td class="mono"><b>${x.r.toFixed(0)}</b></td><td>${x.f.length}${x.tk?` <span class="pill gold mono">${x.tk.id}</span>`:''}</td></tr>`).join('')}</tbody></table></div></div>
+ <div class="card"><h3>${T('Mean time to remediate','Среднее время устранения')}</h3>${hbars(mt,Math.max(...mt.map(x=>x.v)))}<div class="muted" style="font-size:11.5px">${T('Closed tickets, verified by rescan','Закрытые тикеты, подтверждённые пересканированием')}</div></div></div>`;
+ $$('#v-dash [data-sys]').forEach(e=>e.onclick=()=>{vf.sys=e.dataset.sys;go('vuln')});bindVulnRows('#v-dash')}
+function vAssets(){const list=ASSETS.filter(a=>(af.env==='all'||(af.env==='cloud')===a.cloud)&&(af.sys==='all'||a.sys===af.sys)&&(!af.q||(a.n+a.ip+a.os).toLowerCase().includes(af.q)));const cl=ASSETS.filter(a=>a.cloud).length;
+ $('#v-assets').innerHTML=`<div class="tools"><input class="input" id="aq" value="${esc(af.q)}" placeholder="${T('Search host, IP, OS…','Поиск хоста, IP, ОС…')}"><select class="input" id="aenv">${opts([['all',T('Cloud + on-prem','Облако + ЦОД')],['cloud',T('Cloud','Облако')],['prem',T('On-prem','Свой ЦОД')]],af.env)}</select><select class="input" id="asys">${sysOpts(af.sys)}</select><span class="muted" style="font-size:12.5px">${list.length} / ${ASSETS.length} · ☁ ${cl} · ▣ ${ASSETS.length-cl}</span></div>
+ <div class="tw"><table><thead><tr><th>${T('Host','Хост')}</th><th>${T('System','Система')}</th><th>${T('Role','Роль')}</th><th>${T('Hosting','Размещение')}</th><th>${T('OS / platform','ОС / платформа')}</th><th>IP</th><th>${T('Exposure','Доступность')}</th><th>${T('Open','Открыто')}</th><th>${T('Max risk','Макс. риск')}</th></tr></thead><tbody>${list.map(a=>{const fs=openF().filter(f=>f.a===a.i),mr=Math.max(0,...fs.map(risk));return`<tr class="clk" data-a="${a.i}"><td class="mono" style="font-weight:600">${a.n}</td><td>${a.sys}</td><td>${LA(ROLE[a.r])}</td><td>${a.cloud?'☁ '+T('Gov cloud','Гособлако'):'▣ '+T('On-prem DC','Свой ЦОД')}</td><td>${a.os}</td><td class="mono">${a.ip}</td><td>${a.net?`<span class="pill warn">${T('internet','интернет')}</span>`:`<span class="pill">${T('internal','внутр.')}</span>`}</td><td>${fs.length}</td><td>${fs.length?pr(prio(mr,Vn(fs[0].v),a))+' <span class="mono">'+mr.toFixed(0)+'</span>':'<span class="pill ok">0</span>'}</td></tr>`}).join('')}</tbody></table></div>`;
+ $('#aq').oninput=e=>{af.q=e.target.value.toLowerCase();vAssets();const q=$('#aq');q.focus();q.setSelectionRange(q.value.length,q.value.length)};$('#aenv').onchange=e=>{af.env=e.target.value;vAssets()};$('#asys').onchange=e=>{af.sys=e.target.value;vAssets()};
+ $$('#v-assets tr[data-a]').forEach(r=>r.onclick=()=>assetModal(A(+r.dataset.a)))}
+function assetModal(a){const fs=openF().filter(f=>f.a===a.i).sort((x,y)=>risk(y)-risk(x));modal(`<h2 class="mono">${a.n}</h2><div class="muted">${L(sysOf(a.sys))} · ${LA(ROLE[a.r])} · ${a.os} · ${a.ip}</div>
+ <div class="tw mt"><table><thead><tr><th>${T('Finding','Находка')}</th><th>CVSS</th><th>${T('Risk','Риск')}</th><th>${T('First seen','Обнаружено')}</th></tr></thead><tbody>${fs.map(f=>`<tr><td><span class="mono">${Vn(f.v).id}</span> ${Vn(f.v).kev?'<span class="kev">KEV</span>':''}<div class="muted" style="font-size:11.5px">${L(Vn(f.v))}</div></td><td class="mono">${Vn(f.v).cvss}</td><td>${pr(prio(risk(f),Vn(f.v),a))} <span class="mono">${risk(f).toFixed(0)}</span></td><td class="mono">${d10(f.d)}</td></tr>`).join('')||`<tr><td colspan="4" class="muted">${T('No open findings','Нет открытых находок')}</td></tr>`}</tbody></table></div><div class="acts"><button class="btn" data-close>${T('Close','Закрыть')}</button></div>`)}
+
+function vScan(){const sc=scanning;
+ $('#v-scan').innerHTML=`<div class="g2"><div class="card"><h3>${T('Scan runner','Запуск сканирования')}</h3>
+ <div class="fgrid"><div class="f"><label>${T('Scope','Охват')}</label><select class="input" id="sScope" ${sc?'disabled':''}>${opts([['all',T('All 96 assets','Все 96 активов')],['cloud',T('Cloud only','Только облако')],['prem',T('On-prem only','Только свой ЦОД')]].concat(SYS.map(s=>['sys:'+s.id,s.id+' · '+L(s)])),'all')}</select></div>
+ <div class="f"><label>${T('Profile','Профиль')}</label><select class="input" id="sProf" ${sc?'disabled':''}>${opts([['auth',T('Authenticated (agent + creds)','С аутентификацией (агент + учётки)')],['net',T('Network, unauthenticated','Сетевой, без учёток')],['cfg',T('Configuration / benchmark','Конфигурация / бенчмарк')]],'auth')}</select></div></div>
+ <div style="display:flex;gap:10px;align-items:center;margin:14px 0 8px;flex-wrap:wrap"><button class="btn pri" id="sGo" ${sc?'disabled':''}>▶ ${T('Start scan','Запустить сканирование')}</button><span class="muted mono" style="font-size:12.5px" id="sNow">${sc?'':T('idle','ожидание')}</span></div>
+ <div class="prog"><i id="sBar"></i></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:6px" class="muted"><span id="sCnt"></span><span id="sRes"></span></div>
+ <h3 style="margin-top:16px">${T('Live findings','Находки в реальном времени')}</h3><div class="feed" id="feed">${sc?sc.feed.join(''):`<div class="muted">${T('Start a scan to see findings appear here.','Запустите сканирование — находки появятся здесь.')}</div>`}</div></div>
+ <div class="card"><h3>${T('Scan history','История сканирований')}</h3><div class="tw"><table><thead><tr><th>ID</th><th>${T('Date','Дата')}</th><th>${T('Scope','Охват')}</th><th>${T('Hosts','Хосты')}</th><th>${T('New','Новые')}</th><th>${T('Fixed','Закрыто')}</th></tr></thead><tbody>${S.scans.map((s,k)=>`<tr class="${k===0&&s.fresh?'new':''}"><td class="mono">${s.id}</td><td class="mono">${d10(s.t)} ${hm(s.t)}</td><td>${s.scope==='all'?T('all','все'):s.scope}</td><td>${s.n}</td><td>${s.nw?`<span class="pill bad">+${s.nw}</span>`:0}</td><td>${s.fx?`<span class="pill ok">−${s.fx}</span>`:0}</td></tr>`).join('')}</tbody></table></div>
+ <div class="muted" style="font-size:12px;margin-top:10px">${T('Continuous monitoring: authenticated scans weekly, internet-facing hosts daily. Results feed RA-5 and CA-7 evidence automatically.','Непрерывный мониторинг: аутентифицированные скан. еженедельно, интернет-хосты ежедневно. Результаты автоматически идут в доказательства RA-5 и CA-7.')}</div></div></div>`;
+ if(sc)scanUi();const b=$('#sGo');if(b)b.onclick=()=>{const v=$('#sScope').value;const list=ASSETS.filter(a=>v==='all'||(v==='cloud'&&a.cloud)||(v==='prem'&&!a.cloud)||v==='sys:'+a.sys).map(a=>a.i);runScan(list,v.replace('sys:',''),$('#sProf').value)}}
+function runScan(list,scope,prof,cb){if(scanning){toast(T('A scan is already running','Сканирование уже идёт'),'bad');return}
+ const id='SC-0'+(319+S.scans.length);scanning={id,list,k:0,nw:0,fx:0,t0:Date.now(),scope,prof,feed:[]};renderNav();if(view==='scan')vScan();
+ const per=Math.max(60,Math.min(450,5200/list.length));
+ const iv=setInterval(()=>{const sc=scanning,a=A(sc.list[sc.k]);
+  S.F.forEach(f=>{if(f.a!==a.i)return;if(f.st==='hidden'&&prof!=='cfg'||f.st==='hidden'&&prof==='cfg'&&Vn(f.v).id.startsWith('BAS')){f.st='open';f.d=Date.now();f.nw=1;sc.nw++;sc.feed.unshift(`<div class="b">+ ${hm(Date.now())} ${a.n} · ${Vn(f.v).id}${Vn(f.v).kev?' [KEV]':''} · CVSS ${Vn(f.v).cvss}</div>`)}
+   else if(f.st==='patched'){f.st='fixed';f.x=Date.now();sc.fx++;sc.feed.unshift(`<div class="g">✓ ${hm(Date.now())} ${a.n} · ${Vn(f.v).id} ${T('verified fixed','исправление подтверждено')}</div>`)}});
+  if(R()<.25)sc.feed.unshift(`<div class="muted">· ${a.n} ${T('ok','норма')} (${(R()*900+200|0)} ${T('checks','проверок')})</div>`);sc.feed=sc.feed.slice(0,60);
+  sc.k++;if(view==='scan')scanUi();
+  if(sc.k>=sc.list.length){clearInterval(iv);const closed=closeTickets();S.scans.forEach(s=>s.fresh=0);S.scans.unshift({id,t:Date.now(),scope,prof,n:sc.list.length,nw:sc.nw,fx:sc.fx,dur:Date.now()-sc.t0,fresh:1});pushTrend();scanning=null;save();render();
+   toast(`<b>${id}</b> ${T('complete','завершено')}: +${sc.nw} ${T('new','новых')}, −${sc.fx} ${T('fixed','исправлено')}`+(closed.length?`<br>${T('Tickets closed','Тикеты закрыты')}: ${closed.join(', ')}`:''),sc.nw?'bad':'');if(cb)cb()}},per)}
+const R=rng(Date.now()%1e6);
+function scanUi(){const sc=scanning;if(!sc||!$('#sBar'))return;$('#sBar').style.width=(sc.k/sc.list.length*100)+'%';$('#sCnt').textContent=sc.k+' / '+sc.list.length+T(' hosts',' хостов');$('#sRes').innerHTML=`<span class="up">+${sc.nw}</span> · <span class="dn">−${sc.fx}</span>`;$('#sNow').textContent=sc.id+' · '+(A(sc.list[Math.min(sc.k,sc.list.length-1)]).n);$('#feed').innerHTML=sc.feed.join('')}
+function closeTickets(){const c=[];S.tk.forEach(t=>{if(t.st==='pending'&&t.f.every(i=>S.F[i].st==='fixed')){t.st='closed';t.x=Date.now();S.mttr[t.p].push(Math.max(.01,(t.x-t.c)/DAY));c.push(t.id)}});return c}
+
+const vulnHead=()=>`<thead><tr><th>${T('Priority','Приоритет')}</th><th>${T('Vulnerability','Уязвимость')}</th><th>CVSS</th><th>${T('Exploit prob.','Вероятн. эксплуатации')}</th><th>KEV</th><th>${T('Assets','Активы')}</th><th>${T('Risk','Риск')}</th><th>SLA</th><th>${T('Ticket','Тикет')}</th></tr></thead>`;
+function vulnRow(g){const v=g.v,left=SLA[g.p]-g.age;return`<tr class="clk ${g.f.some(f=>f.nw)?'new':''}" data-v="${v.i}"><td>${pr(g.p)}</td><td><span class="mono" style="font-size:12px">${v.id}</span><div style="max-width:340px;overflow:hidden;text-overflow:ellipsis">${L(v)}</div></td><td class="mono"><b>${v.cvss.toFixed(1)}</b></td><td>${epss(v.epss)}</td><td>${v.kev?'<span class="kev">KEV</span>':'<span class="muted">—</span>'}</td><td>${g.f.length}</td><td class="mono"><b>${g.r.toFixed(0)}</b></td><td>${left<0?`<span class="pill bad">${T('overdue ','просрочено ')}${Math.ceil(-left)}${T('d','д')}</span>`:`<span class="pill">${Math.ceil(left)}${T('d left',' д')}</span>`}</td><td>${g.tk?`<span class="pill gold mono">${g.tk.id}</span>`:`<button class="btn xs gold" data-mk="${v.i}">+ ${T('Ticket','Тикет')}</button>`}</td></tr>`}
+function bindVulnRows(sc){$$(sc+' tr[data-v]').forEach(r=>r.onclick=e=>{const mk=e.target.closest('[data-mk]');if(mk){e.stopPropagation();mkTicket(+mk.dataset.mk);return}vulnModal(+r.dataset.v)})}
+function vVuln(){let g=groups().filter(x=>(!vf.kev||x.v.kev)&&(vf.p==='all'||x.p===vf.p)&&(vf.sys==='all'||x.f.some(f=>A(f.a).sys===vf.sys))&&(!vf.q||(x.v.id+x.v.en+x.v.ru).toLowerCase().includes(vf.q)));
+ const cnt=p=>groups().filter(x=>x.p===p).length;
+ $('#v-vuln').innerHTML=`<div class="tools"><input class="input" id="vq" value="${esc(vf.q)}" placeholder="${T('Search CVE or title…','Поиск CVE или названия…')}"><select class="input" id="vp">${opts([['all',T('All priorities','Все приоритеты')],['P1','P1 · '+cnt('P1')],['P2','P2 · '+cnt('P2')],['P3','P3 · '+cnt('P3')],['P4','P4 · '+cnt('P4')]],vf.p)}</select><select class="input" id="vs">${sysOpts(vf.sys)}</select><label class="pill" style="cursor:pointer"><input type="checkbox" id="vk" ${vf.kev?'checked':''}> KEV ${T('only','только')}</label></div>
+ <div class="muted" style="font-size:12px;margin-bottom:10px">${T('Risk = CVSS × exploit probability (KEV = 100%) × asset criticality × internet exposure. Sorted by priority, then risk — not by CVSS alone.','Риск = CVSS × вероятность эксплуатации (KEV = 100%) × критичность актива × доступность из интернета. Сортировка по приоритету и риску, а не только по CVSS.')}</div>
+ <div class="tw"><table>${vulnHead()}<tbody>${g.map(vulnRow).join('')||`<tr><td colspan="9" class="muted">${T('Nothing matches','Ничего не найдено')}</td></tr>`}</tbody></table></div>`;
+ $('#vq').oninput=e=>{vf.q=e.target.value.toLowerCase();vVuln();const q=$('#vq');q.focus();q.setSelectionRange(q.value.length,q.value.length)};$('#vp').onchange=e=>{vf.p=e.target.value;vVuln()};$('#vs').onchange=e=>{vf.sys=e.target.value;vVuln()};$('#vk').onchange=e=>{vf.kev=e.target.checked;vVuln()};bindVulnRows('#v-vuln')}
+function vulnModal(vi){const g=groups().find(x=>x.v.i===vi);if(!g)return;const v=g.v,f0=g.f.slice().sort((a,b)=>risk(b)-risk(a))[0],a0=A(f0.a);
+ modal(`<h2><span class="mono">${v.id}</span> ${v.kev?'<span class="kev">KEV</span>':''}</h2><div style="font-weight:600">${L(v)}</div>
+ <div class="pkg mt"><b>${T('Why this priority','Почему такой приоритет')}</b><div class="mono" style="font-size:12.5px;margin-top:6px">CVSS ${v.cvss} × ${v.kev?'KEV 1.00':T('exploit ','эксплуат. ')+(.25+.75*v.epss).toFixed(2)} × ${T('criticality','критичность')} ${a0.crit} × ${T('exposure','доступность')} ${a0.net?'1.3':'1.0'} → <b>${risk(f0).toFixed(0)}</b> ${pr(g.p)}</div><div class="muted" style="font-size:12px;margin-top:6px">${T('Fix','Исправление')}: ${v.fix} · SLA ${SLA[g.p]} ${T('days','дней')}</div></div>
+ <h3 style="font-size:14px;margin:14px 0 6px">${T('Affected assets','Затронутые активы')} (${g.f.length})</h3><div class="tw"><table><tbody>${g.f.map(f=>`<tr><td class="mono">${A(f.a).n}</td><td>${A(f.a).net?`<span class="pill warn">${T('internet','интернет')}</span>`:''}</td><td class="mono">${risk(f).toFixed(0)}</td><td class="mono">${d10(f.d)}</td><td>${f.st==='patched'?`<span class="pill gold">${T('patched','пропатчен')}</span>`:''}</td></tr>`).join('')}</tbody></table></div>
+ <div class="acts"><button class="btn" data-close>${T('Close','Закрыть')}</button>${g.tk?`<button class="btn gold" data-ok>${T('Open ticket ','Открыть тикет ')}${g.tk.id}</button>`:`<button class="btn gold" data-ok>+ ${T('Create remediation ticket','Создать тикет на устранение')}</button>`}</div>`,()=>{if(g.tk)go('rem');else mkTicket(vi)})}
+function mkTicket(vi){const g=groups().find(x=>x.v.i===vi);if(!g||g.tk)return;const t={id:'REM-'+S.nextTk++,v:vi,f:g.f.map(f=>f.id),p:g.p,st:'open',c:Date.now(),due:Date.now()+SLA[g.p]*DAY,who:null,nw:1};S.tk.unshift(t);save();toast(`${T('Ticket','Тикет')} <b>${t.id}</b> ${T('created','создан')} · ${g.f.length} ${T('assets','активов')}`,'gold');go('rem')}
+
+function vRem(){const cols=[['open',T('Open','Открыт')],['assigned',T('In progress','В работе')],['pending',T('Patched · verify','Пропатчен · проверка')],['closed',T('Closed','Закрыт')]];
+ $('#v-rem').innerHTML=`<div class="muted" style="font-size:12.5px;margin-bottom:12px">${T('Workflow: open → assign → deploy patch → rescan verifies the fix and closes the ticket automatically.','Процесс: открыт → назначен → патч развёрнут → пересканирование подтверждает и само закрывает тикет.')}</div><div class="kan">${cols.map(c=>{const ts=S.tk.filter(t=>t.st===c[0]||(c[0]==='assigned'&&t.st==='patching'));return`<div class="col"><h4>${c[1]}<span class="pill" style="margin-left:auto">${ts.length}</span></h4>${ts.map(tkCard).join('')||`<div class="muted" style="font-size:12px;padding:6px">${c[0]==='open'?T('Create tickets from Vulnerabilities','Создайте тикеты из «Уязвимостей»'):'—'}</div>`}</div>`}).join('')}</div>`;
+ $$('#v-rem [data-t]').forEach(b=>b.onclick=()=>tkAct(S.tk.find(t=>t.id===b.dataset.t),b.dataset.a));S.tk.forEach(t=>t.nw=0)}
+function tkCard(t){const v=Vn(t.v),od=t.st!=='closed'&&t.due<Date.now();const act={open:`<button class="btn xs gold" data-t="${t.id}" data-a="assign">${T('Assign','Назначить')}</button>`,assigned:`<button class="btn xs pri" data-t="${t.id}" data-a="patch">⇪ ${T('Deploy patch','Развернуть патч')}</button>`,patching:`<div class="prog" style="flex:1"><i style="width:${t.pg||0}%"></i></div>`,pending:`<button class="btn xs pri" data-t="${t.id}" data-a="rescan" ${scanning?'disabled':''}>↻ ${T('Rescan to verify','Пересканировать')}</button>`,closed:`<span class="pill ok">✓ ${T('verified','подтверждено')} · ${((t.x-t.c)/DAY<1?Math.max(1,Math.round((t.x-t.c)/6e4))+T(' min',' мин'):((t.x-t.c)/DAY).toFixed(1)+T(' d',' д'))}</span>`}[t.st];
+ return`<div class="tk ${t.nw?'new':''}"><div style="display:flex;gap:6px;align-items:center">${pr(t.p)}<b class="mono">${t.id}</b>${v.kev?'<span class="kev">KEV</span>':''}</div><div class="t">${L(v)}</div><div class="m mono">${v.id} · ${t.f.length} ${T('assets','активов')}</div><div class="m">${t.who?'👤 '+LA(ENG[t.who-1]):T('Unassigned','Не назначен')} · <span class="${od?'up':''}">${T('due ','срок ')}${d10(t.due)}</span></div><div class="a">${act}</div></div>`}
+function tkAct(t,a){if(a==='assign'){modal(`<h2>${T('Assign','Назначить')} ${t.id}</h2><div class="muted">${L(Vn(t.v))}</div><div class="f mt"><label>${T('Engineer','Инженер')}</label><select class="input" id="eng">${ENG.map((e,i)=>`<option value="${i+1}">${LA(e)}</option>`).join('')}</select></div><div class="f mt"><label>${T('Change window','Окно изменений')}</label><select class="input"><option>${T('Emergency (KEV) — now','Экстренно (KEV) — сейчас')}</option><option>${T('Next standard window','Ближайшее плановое окно')}</option></select></div><div class="acts"><button class="btn" data-close>${T('Cancel','Отмена')}</button><button class="btn pri" data-ok>${T('Assign','Назначить')}</button></div>`,m=>{t.who=+$('#eng',m).value;t.st='assigned';save();vRem();renderNav();toast(t.id+' → '+LA(ENG[t.who-1]))});return}
+ if(a==='patch'){t.st='patching';t.pg=0;vRem();const iv=setInterval(()=>{t.pg+=9;if(view==='rem')vRem();if(t.pg>=100){clearInterval(iv);t.st='pending';t.f.forEach(i=>{if(S.F[i].st==='open')S.F[i].st='patched'});save();vRem();renderNav();toast(`⇪ ${T('Patch deployed to','Патч развёрнут на')} ${t.f.length} ${T('assets. Rescan to verify.','активов. Пересканируйте для проверки.')}`,'gold')}},160);return}
+ if(a==='rescan'){const list=[...new Set(t.f.map(i=>S.F[i].a))];toast(T('Targeted rescan of ','Точечное сканирование ')+list.length+T(' hosts…',' хостов…'));runScan(list,t.id,'auth')}}
+
+function vCtl(){const f=FAM.find(x=>x[0]===famSel),tp=totPct();
+ $('#v-ctl').innerHTML=`<div class="g2"><div class="card"><h3>${T('NIST SP 800-53 Rev. 5 · Moderate baseline','NIST SP 800-53 ред. 5 · базовый уровень Moderate')}<span class="sp"></span><span class="pill ${tp>=85?'ok':'warn'}">${tp.toFixed(1)}% ${T('implemented','реализовано')}</span></h3><div class="fam">${FAM.map(x=>{const p=famPct(x);return`<div class="fm ${x[0]===famSel?'on':''}" data-f="${x[0]}"><div style="display:flex;justify-content:space-between"><span class="id">${x[0]}</span><b class="mono" style="font-size:12.5px">${p.toFixed(0)}%</b></div><div class="nm">${PT.lang==='ru'?x[2]:x[1]}</div><div class="bar"><i style="width:${p}%;background:${p>=85?'var(--mal3)':p>=65?'var(--gold)':'var(--red)'}"></i></div></div>`}).join('')}</div></div>
+ <div class="card"><h3><span class="mono" style="color:var(--gold2)">${f[0]}</span> ${PT.lang==='ru'?f[2]:f[1]}<span class="sp"></span><span class="pill">${famPct(f).toFixed(0)}%</span></h3><div class="tw"><table><tbody>${Array.from({length:f[3]},(_,k)=>{const id=f[0]+'-'+(k+1),st=ctlSt(id),ev=S.ev[id];return`<tr><td class="mono" style="font-weight:600">${id}</td><td style="white-space:normal;min-width:150px">${ctlName(id,f)}${ev?`<div class="muted" style="font-size:11.5px">📎 ${esc(ev)}</div>`:''}</td><td>${st==='i'?`<span class="pill ok">${T('implemented','реализ.')}</span>`:st==='p'?`<span class="pill warn">${T('partial','частично')}</span>`:`<span class="pill bad">${T('planned','план')}</span>`}</td><td><button class="btn xs" data-ev="${id}">⇪ ${T('Evidence','Доказ.')}</button></td></tr>`}).join('')}</tbody></table></div>
+ <div class="muted" style="font-size:11.5px;margin-top:8px">${T('Upload any file as evidence — the control becomes implemented. RA-5 and SI-2 evidence is attached by scans automatically.','Загрузите любой файл как доказательство — мера станет реализованной. Для RA-5 и SI-2 доказательства прикладывают сканы автоматически.')}</div></div></div>`;
+ $$('#v-ctl .fm').forEach(d=>d.onclick=()=>{famSel=d.dataset.f;vCtl()});$$('#v-ctl [data-ev]').forEach(b=>b.onclick=()=>{evTarget=b.dataset.ev;$('#evFile').click()})}
+$('#evFile').onchange=e=>{const fl=e.target.files[0];if(!fl||!evTarget)return;S.ev[evTarget]=fl.name+' · '+Math.max(1,Math.round(fl.size/1024))+' KB · '+d10(Date.now());S.ctl[evTarget]='i';save();toast('📎 '+evTarget+' — '+T('evidence attached, control implemented','доказательство приложено, мера реализована'));e.target.value='';vCtl()};
+
+function vPoam(){const list=S.poam.filter(p=>!onlyOd||poamOd(p));
+ const ogs=groups().filter(g=>g.od&&(g.p==='P1'||g.p==='P2')&&!S.poam.some(p=>p.v===g.v.i));
+ $('#v-poam').innerHTML=`<div class="tools"><label class="pill" style="cursor:pointer"><input type="checkbox" id="pod" ${onlyOd?'checked':''}> ${T('Overdue only','Только просроченные')}</label><span class="sp" style="flex:1"></span><button class="btn sm gold" id="pimp" ${ogs.length?'':'disabled'}>+ ${T('Import overdue findings','Импорт просроченных находок')} (${ogs.length})</button><button class="btn sm" id="pexp">⇩ CSV</button></div>
+ <div class="tw"><table><thead><tr><th>ID</th><th>${T('Weakness','Недостаток')}</th><th>${T('Control','Мера')}</th><th>${T('System','Система')}</th><th>${T('Risk','Риск')}</th><th>${T('Milestone','Этап')}</th><th>${T('Scheduled completion','Плановое завершение')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>${list.map(p=>{const od=poamOd(p),dl=Math.round((p.due-Date.now())/DAY);return`<tr class="${od?'od':''}"><td class="mono">${p.id}</td><td style="white-space:normal;min-width:200px">${esc(L(p.w))}</td><td class="mono">${p.ctl}</td><td>${p.sys}</td><td><span class="pill ${p.risk==='High'?'bad':p.risk==='Moderate'?'warn':''}">${L(IMPR[p.risk])}</span></td><td style="white-space:normal;min-width:150px">${esc(L(p.ms))}${p.ext?` <span class="muted">(${T('extended','продлено')} ×${p.ext})</span>`:''}</td><td class="mono">${d10(p.due)}</td><td>${p.st==='done'?`<span class="pill ok">${T('completed','завершено')}</span>`:od?`<span class="pill bad">${T('overdue','просрочено')} ${-dl}${T('d','д')}</span>`:`<span class="pill">${T('on track','в графике')} · ${dl}${T('d','д')}</span>`}</td><td>${p.st==='open'?`<button class="btn xs pri" data-pc="${p.id}">✓</button> <button class="btn xs" data-pe="${p.id}">+30${T('d','д')}</button>`:''}</td></tr>`}).join('')}</tbody></table></div>`;
+ $('#pod').onchange=e=>{onlyOd=e.target.checked;vPoam()};
+ $('#pimp').onclick=()=>{ogs.forEach(g=>S.poam.unshift({id:'POAM-2026-0'+S.nextPoam++,v:g.v.i,w:{en:g.v.id+' on '+g.f.length+' assets: '+g.v.en,ru:g.v.id+' на '+g.f.length+' активах: '+g.v.ru},ctl:'SI-2',sys:A(g.f[0].a).sys,risk:g.p==='P1'?'High':'Moderate',due:Date.now()+30*DAY,ms:{en:g.v.fix,ru:g.v.fix},st:'open',ext:0}));save();vPoam();renderNav();toast(ogs.length+T(' POA&M items created',' позиций POA&M создано'))};
+ $('#pexp').onclick=()=>{const rows=[['id','weakness','control','system','risk','due','status']].concat(S.poam.map(p=>[p.id,p.w.en,p.ctl,p.sys,p.risk,d10(p.due),poamOd(p)?'overdue':p.st]));dl('poam.csv',rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n'))};
+ $$('[data-pc]').forEach(b=>b.onclick=()=>{const p=S.poam.find(x=>x.id===b.dataset.pc);p.st='done';save();vPoam();renderNav();toast(p.id+' '+T('completed','завершён'))});
+ $$('[data-pe]').forEach(b=>b.onclick=()=>{const p=S.poam.find(x=>x.id===b.dataset.pe);modal(`<h2>${T('Extend','Продлить')} ${p.id}</h2><div class="muted">${esc(L(p.w))}</div><div class="f mt"><label>${T('Justification (required)','Обоснование (обязательно)')}</label><textarea class="input" id="just" style="min-height:80px">${T('Vendor fix delayed; compensating control in place (WAF rule).','Исправление поставщика задерживается; действует компенсирующая мера (правило WAF).')}</textarea></div><div class="acts"><button class="btn" data-close>${T('Cancel','Отмена')}</button><button class="btn pri" data-ok>${T('Extend 30 days','Продлить на 30 дней')}</button></div>`,m=>{if(!$('#just',m).value.trim())return false;p.due=Math.max(p.due,Date.now())+30*DAY;p.ext++;save();vPoam();renderNav()})})}
+function dl(name,txt){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));a.download=name;a.click();toast('⇩ '+name)}
+
+const ATOS=[['cat','Categorize','Категоризация'],['sel','Select','Выбор мер'],['imp','Implement','Реализация'],['asm','Assess','Оценка'],['poa','POA&M','POA&M'],['aut','Authorize','Авторизация']];
+function atoChecks(){const s=sysOf(S.ato.sys),fs=openF().filter(f=>A(f.a).sys===s.id),kev=fs.filter(f=>Vn(f.v).kev).length,tp=totPct(),odp=S.poam.filter(p=>p.sys===s.id&&poamOd(p)).length,lastScan=S.scans[0]&&Date.now()-S.scans[0].t<30*DAY;
+ return{cat:[['m','fips',T('FIPS 199 categorization approved: ','Категоризация FIPS 199 утверждена: ')+L(IMPR[s.imp]),''],['m','types',T('Information types identified (SP 800-60)','Типы информации определены (SP 800-60)'),'']],
+ sel:[['a','base',T('Baseline selected: ','Выбран базовый уровень: ')+L(IMPR[s.imp])+' ('+(s.imp==='High'?370:s.imp==='Moderate'?287:149)+T(' controls',' мер')+')',true],['m','tailor',T('Tailoring & overlays documented','Адаптация и оверлеи задокументированы'),'']],
+ imp:[['a','pct',T('Control implementation ≥ 80% (now ','Реализация мер ≥ 80% (сейчас ')+tp.toFixed(1)+'%)',tp>=80,'ctl'],['m','ssp',T('System Security Plan updated','План безопасности системы (SSP) обновлён'),'']],
+ asm:[['a','scan',T('Authenticated scan within last 30 days','Аутентифицированное скан. за последние 30 дней'),!!lastScan,'scan'],['a','kev',T('No open KEV findings on this system (now ','Нет открытых KEV на этой системе (сейчас ')+kev+')',kev===0,'vuln'],['m','sar',T('Security Assessment Report signed by assessor','Отчёт об оценке (SAR) подписан оценщиком'),'']],
+ poa:[['a','od',T('No overdue POA&M items for this system (now ','Нет просроченных POA&M по системе (сейчас ')+odp+')',odp===0,'poam'],['m','isso',T('POA&M reviewed by ISSO','POA&M проверен ответственным за ИБ системы'),'']],aut:[]}}
+function vAto(){const C=atoChecks(),st=S.ato.step,cur=ATOS[st][0],man=S.ato.man[S.ato.sys]||(S.ato.man[S.ato.sys]={});
+ const ok=k=>C[k].every(c=>c[0]==='a'?c[3]:man[c[1]]);
+ $('#v-ato').innerHTML=`<div class="tools"><span class="muted" style="font-size:13px">${T('System','Система')}</span><select class="input" id="asel">${opts(SYS.map(s=>[s.id,s.id+' · '+L(s)+' ('+L(IMPR[s.imp])+')']),S.ato.sys)}</select></div>
+ <div class="wiz">${ATOS.map((a,k)=>`<button class="${k===st?'on':''} ${k<5&&ok(a[0])?'ok':''}" data-st="${k}"><span>${T('Step','Шаг')} ${k+1}</span><b>${LA(a.slice(1))}</b></button>`).join('')}</div>
+ <div class="g2"><div class="card">${cur!=='aut'?`<h3>${LA(ATOS[st].slice(1))}</h3>${C[cur].map(c=>{const on=c[0]==='a'?c[3]:man[c[1]];return`<div class="chk ${on?'on':c[0]==='a'?'bad':''} ${c[0]==='m'?'man':''}" data-m="${c[0]==='m'?c[1]:''}"><span class="bx">${on?'✓':c[0]==='a'?'✕':''}</span><div>${c[2]}<small>${c[0]==='a'?T('Automatic check from live data','Автопроверка по живым данным')+(on?'':` · <a href="#" data-go="${c[4]}" style="color:var(--gold2)">${T('fix →','исправить →')}</a>`):T('Manual attestation — click to confirm','Ручное подтверждение — нажмите')}</small></div></div>`}).join('')}
+ <div style="display:flex;gap:8px;margin-top:14px"><button class="btn" id="aprev" ${st?'':'disabled'}>← ${T('Back','Назад')}</button><button class="btn pri" id="anext">${T('Next','Далее')} →</button></div>`
+ :`<h3>${T('Authorization package','Пакет авторизации')}</h3><div class="muted" style="font-size:13px;margin-bottom:12px">${T('Generates the SSP summary, SAR, POA&M and risk decision for the Authorizing Official.','Формирует сводку SSP, SAR, POA&M и решение о риске для уполномоченного лица.')}</div>${['cat','sel','imp','asm','poa'].map(k=>`<div class="chk ${ok(k)?'on':'bad'}"><span class="bx">${ok(k)?'✓':'!'}</span><div>${LA(ATOS.find(a=>a[0]===k).slice(1))}</div></div>`).join('')}<button class="btn gold mt" id="agen">⚙ ${T('Generate ATO package','Сформировать пакет ATO')}</button>`}</div>
+ <div class="card">${S.atoPkg&&S.atoPkg.sys===S.ato.sys?pkgHtml(S.atoPkg):`<h3>${T('Readiness','Готовность')}</h3>${hbars(ATOS.slice(0,5).map(a=>{const c=C[a[0]],n=c.filter(x=>x[0]==='a'?x[3]:man[x[1]]).length;return{l:LA(a.slice(1)),v:n,t:n+'/'+c.length,c:cssv(n===c.length?'--mal3':'--gold')}}),3)}<div class="muted" style="font-size:12px">${T('Complete all steps, then generate the package on step 6.','Пройдите все шаги, затем сформируйте пакет на шаге 6.')}</div>`}</div></div>`;
+ $('#asel').onchange=e=>{S.ato.sys=e.target.value;save();vAto()};$$('.wiz button').forEach(b=>b.onclick=()=>{S.ato.step=+b.dataset.st;save();vAto()});
+ $$('#v-ato .chk.man').forEach(d=>d.onclick=()=>{man[d.dataset.m]=!man[d.dataset.m];save();vAto()});$$('#v-ato [data-go]').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.dataset.go)});
+ const n=$('#anext');if(n)n.onclick=()=>{S.ato.step=Math.min(5,st+1);save();vAto()};const p=$('#aprev');if(p)p.onclick=()=>{S.ato.step=Math.max(0,st-1);save();vAto()};
+ const g=$('#agen');if(g)g.onclick=()=>{g.disabled=true;g.textContent=T('Compiling SSP, SAR, POA&M…','Сборка SSP, SAR, POA&M…');setTimeout(()=>{const s=sysOf(S.ato.sys),fs=openF().filter(f=>A(f.a).sys===s.id),all=['cat','sel','imp','asm','poa'].every(ok),kev=fs.filter(f=>Vn(f.v).kev).length;
+  S.atoPkg={sys:s.id,t:Date.now(),dec:all?'full':kev&&s.imp==='High'?'deny':'cond',fs:fs.length,kev,crit:fs.filter(f=>prio(risk(f),Vn(f.v),A(f.a))==='P1').length,poam:S.poam.filter(p=>p.sys===s.id&&p.st==='open').length,pct:totPct(),no:'ATO-'+s.id+'-'+(2026)+'-'+(100+(Date.now()/1e3|0)%900)};save();vAto();toast(T('ATO package generated','Пакет ATO сформирован'),'gold')},1400)};
+ const d=$('#adl');if(d)d.onclick=()=>{const k=S.atoPkg,s=sysOf(k.sys);dl(k.no+'.txt',[`AUTHORIZATION PACKAGE ${k.no}`,`System: ${s.id} ${s.en} (FIPS 199 ${s.imp})`,`Decision: ${k.dec==='full'?'Authorization to Operate, 3 years':k.dec==='cond'?'ATO with conditions, 12 months':'Denial of authorization'}`,`Controls implemented: ${k.pct.toFixed(1)}%`,`Open findings: ${k.fs} (P1 ${k.crit}, KEV ${k.kev})`,`Open POA&M items: ${k.poam}`,`Generated: ${new Date(k.t).toISOString()}`].join('\n'))}}
+function pkgHtml(k){const s=sysOf(k.sys),dec={full:[T('Authorization to Operate — 3 years','Разрешение на эксплуатацию — 3 года'),'var(--mal3)'],cond:[T('ATO with conditions — 12 months','ATO с условиями — 12 месяцев'),'var(--gold2)'],deny:[T('Denial of authorization','Отказ в авторизации'),'var(--red)']}[k.dec];
+ return`<div class="pkg"><div class="muted mono" style="font-size:12px">${k.no} · ${d10(k.t)}</div><div class="dec" style="color:${dec[1]}">${dec[0]}</div><dl><dt>${T('System','Система')}</dt><dd>${s.id} · ${L(s)}</dd><dt>FIPS 199</dt><dd>${L(IMPR[s.imp])}</dd><dt>${T('Controls','Меры')}</dt><dd>${k.pct.toFixed(1)}% ${T('implemented','реализовано')}</dd><dt>${T('Open findings','Открытые находки')}</dt><dd>${k.fs} · P1 ${k.crit} · KEV ${k.kev}</dd><dt>POA&amp;M</dt><dd>${k.poam} ${T('open items','открытых')}</dd><dt>${T('Expires','Действует до')}</dt><dd>${k.dec==='deny'?'—':d10(k.t+(k.dec==='full'?3*365:365)*DAY)}</dd><dt>${T('Signed','Подписано')}</dt><dd>${T('Authorizing Official, Treasury CIO','Уполномоченное лицо, CIO Казначейства')}</dd></dl>
+ <div class="muted" style="font-size:12px;margin-top:10px">${k.dec==='full'?T('Residual risk accepted. Continuous monitoring keeps the authorization current.','Остаточный риск принят. Непрерывный мониторинг поддерживает авторизацию.'):T('Close KEV findings and overdue POA&M, then regenerate for a full 3-year ATO.','Закройте KEV и просроченные POA&M, затем сформируйте заново для полного ATO на 3 года.')}</div><button class="btn sm mt" id="adl">⇩ ${T('Download package','Скачать пакет')}</button></div>`}
+
+function vPhish(){const last=S.ph[S.ph.length-1],run=phRun;
+ $('#v-phish').innerHTML=`<div class="g2e"><div class="card"><h3>${T('New phishing simulation','Новая фишинг-симуляция')}</h3><div class="f"><label>${T('Template','Шаблон')}</label><select class="input" id="ptpl" ${run?'disabled':''}>${PHT.map(t=>`<option value="${t.id}">${L(t)} · ${t.dif>=1?T('hard','сложный'):t.dif>=.8?T('medium','средний'):T('easy','лёгкий')}</option>`).join('')}</select></div>
+ <div class="f mt"><label>${T('Target groups','Целевые группы')}</label><div class="grpchk">${DEP.map(d=>`<label><input type="checkbox" value="${d[0]}" ${['fin','hr','proc'].includes(d[0])?'checked':''} ${run?'disabled':''}> ${LA(d.slice(1))} <span class="muted">${d[3]}</span></label>`).join('')}</div></div>
+ <button class="btn gold mt" id="psend" ${run?'disabled':''}>✉ ${T('Send campaign','Отправить кампанию')}</button>
+ <h3 class="mt">${run?T('Live results','Результаты вживую'):T('Last campaign','Последняя кампания')} · <span class="mono">${(run||last).id}</span></h3>${funnel(run||last)}</div>
+ <div class="card"><h3>${T('Click rate by department','Доля переходов по отделам')}</h3>${hbars(DEP.filter(d=>(run||last).deps.includes(d[0])).map(d=>{const n=Math.round(d[3]),c=((run||last).by[d[0]]||0);return{l:LA(d.slice(1)),v:c/n*100,t:(c/n*100).toFixed(1)+'%',c:cssv(c/n>.15?'--red':c/n>.08?'--amber':'--mal3')}}),40)}
+ ${!run&&last.click?`<button class="btn sm" id="ptrain">🎓 ${T('Assign training to ','Назначить обучение ')}${last.click}${T(' clickers',' кликнувшим')}</button>${last.tr?` <span class="pill ok">${T('assigned','назначено')}</span>`:''}`:''}
+ <h3 class="mt">${T('Campaign history','История кампаний')}</h3><div class="tw"><table><thead><tr><th>ID</th><th>${T('Date','Дата')}</th><th>${T('Template','Шаблон')}</th><th>${T('Sent','Отпр.')}</th><th>${T('Clicked','Клик')}</th><th>${T('Reported','Сообщили')}</th></tr></thead><tbody>${S.ph.slice().reverse().map(p=>`<tr><td class="mono">${p.id}</td><td class="mono">${d10(p.t)}</td><td>${L(PHT.find(t=>t.id===p.tpl))}</td><td>${p.sent}</td><td><span class="pill ${p.click/p.sent>.12?'bad':'warn'}">${(p.click/Math.max(1,p.sent)*100).toFixed(1)}%</span></td><td><span class="pill ok">${(p.rep/Math.max(1,p.sent)*100).toFixed(1)}%</span></td></tr>`).join('')}</tbody></table></div></div></div>`;
+ const b=$('#psend');if(b)b.onclick=sendPhish;const tr=$('#ptrain');if(tr)tr.onclick=()=>{last.tr=1;save();vPhish();toast(T('Micro-training assigned (AT-2 evidence attached)','Микро-обучение назначено (доказательство AT-2 приложено)'));S.ev['AT-2']='phish-'+last.id+'-training.csv';S.ctl['AT-2']='i';save()}}
+function funnel(p){const m=Math.max(1,p.tot||p.sent),rows=[[T('Sent','Отправлено'),p.sent,'--blue'],[T('Opened','Открыли'),p.open,'--violet'],[T('Clicked','Перешли'),p.click,'--amber'],[T('Entered creds','Ввели пароль'),p.sub,'--red'],[T('Reported','Сообщили'),p.rep,'--mal3']];
+ return`<div class="funnel">${rows.map(r=>`<div class="r"><span>${r[0]}</span><span><i style="width:${Math.max(1,r[1]/m*100)}%;background:${cssv(r[2])}"></i></span><b class="mono" style="text-align:right">${r[1]}</b></div>`).join('')}</div>`}
+function sendPhish(){const tpl=PHT.find(t=>t.id===$('#ptpl').value),deps=$$('.grpchk input:checked').map(i=>i.value);if(!deps.length){toast(T('Pick at least one group','Выберите хотя бы одну группу'),'bad');return}
+ const tot=DEP.filter(d=>deps.includes(d[0])).reduce((s,d)=>s+d[3],0);const p={id:'PH-'+String(S.nextPh++).padStart(2,'0'),t:Date.now(),tpl:tpl.id,deps,sent:0,open:0,click:0,sub:0,rep:0,by:{},tot};phRun=p;vPhish();
+ const tgt={};DEP.forEach(d=>{if(deps.includes(d[0]))tgt[d[0]]=Math.round(d[3]*.11*tpl.dif*d[4]*(.8+R()*.4))});const tc=Object.values(tgt).reduce((a,b)=>a+b,0);let k=0;
+ const iv=setInterval(()=>{k++;const f=Math.min(1,k/30),e=1-Math.pow(1-f,2);p.sent=Math.round(tot*Math.min(1,f*3));p.open=Math.round(tot*.47*tpl.dif*e);p.click=Math.round(tc*e);p.sub=Math.round(tc*.42*e);p.rep=Math.round(tot*.17/tpl.dif*e);Object.keys(tgt).forEach(d=>p.by[d]=Math.round(tgt[d]*e));if(view==='phish')vPhish();
+  if(f>=1){clearInterval(iv);delete p.tot;S.ph.push(p);phRun=null;save();if(view==='phish')vPhish();toast(`✉ ${p.id}: ${(p.click/p.sent*100).toFixed(1)}% ${T('clicked','перешли')}, ${(p.rep/p.sent*100).toFixed(1)}% ${T('reported','сообщили')}`,'gold')}},180)}
+
+/* ---------- shell ---------- */
+const VIEWS=[['dash','Executive dashboard','Панель руководителя','<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/>',0],['assets','Assets','Активы','<rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/>',0],['scan','Scans','Сканирование','<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',0],['vuln','Vulnerabilities','Уязвимости','<path d="M12 3 2 20h20zM12 10v4M12 17v.5"/>',0],['rem','Remediation','Устранение','<path d="M14 7l3-3 3 3-3 3M17 4v6M4 20l8-8"/>',0],
+ ['ctl','NIST 800-53 controls','Меры NIST 800-53','<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',1],['poam','POA&M','POA&M','<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',1],['ato','ATO package','Пакет ATO','<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M9 15l2 2 4-4"/>',1],['phish','Phishing simulation','Фишинг-симуляция','<path d="M4 6h16v12H4zM4 6l8 7 8-7"/>',2]];
+function renderNav(){const g=groups(),cnt={vuln:[g.filter(x=>x.p==='P1').length,1],rem:[S.tk.filter(t=>t.st!=='closed').length,0],poam:[S.poam.filter(poamOd).length,1]};let sec=-1;
+ $('#navs').innerHTML=VIEWS.map(v=>{let h='';if(v[4]!==sec){sec=v[4];h=`<div class="sec">${[T('Vulnerability mgmt','Уязвимости'),T('Compliance','Соответствие'),T('Awareness','Осведомлённость')][sec]}</div>`}const c=cnt[v[0]];return h+`<button class="nav ${v[0]===view?'on':''}" data-v="${v[0]}"><svg viewBox="0 0 24 24">${v[3]}</svg>${T(v[1],v[2])}${c&&c[0]?`<span class="cnt ${c[1]?'r':''}">${c[0]}</span>`:''}</button>`}).join('');
+ $$('#navs .nav').forEach(b=>b.onclick=()=>go(b.dataset.v));const vv=VIEWS.find(v=>v[0]===view);$('#title').textContent=T(vv[1],vv[2]);
+ $('#scanPill').className='pill '+(scanning?'gold':'ok');$('#scanPill').textContent=scanning?T('Scanning… ','Сканирование… ')+scanning.id:T('Last scan ','Последнее скан. ')+d10(S.scans[0].t)}
+const VF={dash:vDash,assets:vAssets,scan:vScan,vuln:vVuln,rem:vRem,ctl:vCtl,poam:vPoam,ato:vAto,phish:vPhish};
+function go(v){view=v;$$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));$('#side').classList.remove('open');render();scrollTo(0,0)}
+function render(){renderNav();VF[view]();$$('#v-'+view+' [data-go]').forEach(b=>{if(!b.onclick)b.onclick=()=>go(b.dataset.go)})}
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{if(scanning||phRun){toast(T('Wait for the running job to finish','Дождитесь окончания задачи'),'bad');return}store.clear();S=seed();const c=riskIdx();S.trend.forEach(t=>t.v=Math.round(c*t.f));save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>go('dash'));
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

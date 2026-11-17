@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SeaWatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal),var(--mal2));color:#fff;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;min-height:42px}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--red);color:#fff;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.g{background:var(--gold);color:#1a1306}
+.grow{flex:1}
+.user{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;gap:10px;align-items:center}
+.user .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.user b{display:block;font-size:13px} .user span{font-size:11.5px;color:var(--muted)}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mal3);box-shadow:0 0 0 0 var(--mal3);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--mal3) 60%,transparent)}100%{box-shadow:0 0 0 9px transparent}}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:14px}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:7px 12px;font-size:12.5px;min-height:34px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 11px;cursor:pointer;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;min-height:32px}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.mapw{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--bg2)}
+.mapw canvas{display:block;width:100%;height:auto;cursor:crosshair;touch-action:manipulation}
+.maptag{position:absolute;left:10px;bottom:10px;font-family:var(--mono);font-size:11px;background:color-mix(in srgb,var(--panel) 85%,transparent);border:1px solid var(--line);border-radius:8px;padding:4px 8px;color:var(--muted)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 12px;font-size:13px;margin:0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.feed{display:flex;flex-direction:column;gap:8px;max-height:330px;overflow:auto}
+.fi{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg2);cursor:pointer;text-align:left;width:100%}
+.fi:hover{border-color:var(--mal)}
+.fi .dt{width:10px;height:10px;border-radius:50%;margin-top:5px;flex:none}
+.fi b{display:block;font-size:13px} .fi span{font-size:12px;color:var(--muted)}
+.fi .tm{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim);flex:none}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 8%,transparent)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.toolbar .input{max-width:280px;flex:1;min-width:160px}
+select.input{min-height:40px}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.prog.gold i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.prog.red i{background:var(--red)}
+.al{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)}
+.al.sel{border-color:var(--mal);box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 15%,transparent)}
+.al .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.al .top b{flex:1;min-width:150px}
+.al .meta{font-size:12.5px;color:var(--muted);margin:6px 0 8px;overflow-wrap:anywhere}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)} .gold-t{color:var(--gold2)}
+.hist{font-size:12px;border-left:2px solid var(--line2);padding-left:10px;margin:8px 0 0;display:flex;flex-direction:column;gap:3px}
+.hist .t{font-family:var(--mono);color:var(--dim);margin-right:6px}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.fgrid .full{grid-column:1/-1}
+.err{color:var(--red);font-size:12px;margin-top:4px;min-height:0}
+.input.bad{border-color:var(--red)}
+.sp-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.spc{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg2);cursor:pointer;text-align:left;padding:0;width:100%}
+.spc.sel{border-color:var(--mal);box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 15%,transparent)}
+.spc svg{display:block;width:100%;height:auto}
+.spc .b{padding:10px 12px;font-size:12.5px}
+.spc .b b{display:block;font-size:13.5px;margin-bottom:2px}
+.sbig svg{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
+.stages{display:flex;flex-direction:column;gap:6px;font-size:12.5px;margin-top:10px}
+.stages div{display:flex;gap:8px;align-items:center;color:var(--dim)}
+.stages div.ok{color:var(--text)} .stages div.cur{color:var(--gold2)}
+.stages i{width:16px;text-align:center;font-style:normal}
+.asset{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);margin-bottom:8px}
+.asset .ai{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 18%,transparent);font-size:17px;flex:none}
+.asset b{display:block;font-size:13.5px} .asset span{font-size:12px;color:var(--muted)}
+.asset .sp{flex:1;min-width:0}
+.task{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)}
+.task .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.task .top b{flex:1;min-width:140px}
+.chart svg{width:100%;height:auto;display:block}
+.hbar{display:flex;align-items:center;gap:10px;font-size:12.5px;margin-bottom:8px}
+.hbar span{width:130px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar .prog{flex:1}
+.hbar b{width:34px;text-align:right;font-family:var(--mono);font-size:12px}
+.gauge{display:flex;align-items:center;gap:12px}
+.gauge .n{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.empty{padding:26px;text-align:center;color:var(--muted);font-size:13.5px}
+.toasts{position:fixed;right:16px;bottom:16px;pointer-events:none;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:330px;animation:fade .2s;overflow-wrap:anywhere}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.scrim{display:none}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(1200px 600px at 80% -10%,color-mix(in srgb,var(--mal) 16%,transparent),transparent 60%),var(--bg)}
+.login[hidden]{display:none}
+.lbox{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);max-width:960px;width:100%;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}
+.lart{position:relative;padding:28px;background:linear-gradient(160deg,color-mix(in srgb,var(--mal) 22%,var(--bg2)),var(--bg2));display:flex;flex-direction:column;gap:14px;min-height:420px;overflow:hidden}
+.lart svg.radar{position:absolute;right:-90px;bottom:-90px;width:380px;height:380px;opacity:.9}
+.lart h2{margin:0;font-size:28px;letter-spacing:-.02em;position:relative}
+.lart p{margin:0;color:var(--muted);max-width:380px;position:relative;font-size:14px}
+.lart ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;position:relative;font-size:13.5px}
+.lart li:before{content:"◆";color:var(--gold);margin-right:8px;font-size:10px}
+.lform{padding:28px;display:flex;flex-direction:column;gap:14px}
+.lform h3{margin:0;font-size:20px}
+.roles{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.role{border:1px solid var(--line2);border-radius:12px;padding:10px;cursor:pointer;background:var(--bg2);text-align:left}
+.role.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.role b{display:block;font-size:13px} .role span{font-size:11.5px;color:var(--muted)}
+.demo-note{font-size:12px;color:var(--muted);border:1px dashed var(--line2);border-radius:10px;padding:8px 10px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:85vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .scrim.on{display:block;position:fixed;inset:45px 0 0 0;background:rgba(0,0,0,.4);z-index:1400}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .lbox{grid-template-columns:minmax(0,1fr)}
+  .lart{min-height:0;padding:22px}
+  .lart svg.radar{width:240px;height:240px;right:-70px;bottom:-70px;opacity:.5}
+}
+@media (max-width:560px){.fgrid,.roles{grid-template-columns:minmax(0,1fr)}.kpi .v{font-size:20px}.kpis{gap:10px}.kpi{padding:12px}.hbar span{width:96px}.toolbar .input{max-width:none}.lform{padding:20px}.lart h2{font-size:22px}.card{padding:14px}}
+</style>
+</head>
+<body data-demo-en="SeaWatch — Maritime surveillance &amp; vessel tracking" data-demo-ru="SeaWatch — Морской мониторинг и отслеживание судов">
+
+<section class="login" id="login">
+  <div class="lbox">
+    <div class="lart">
+      <svg class="radar" viewBox="0 0 200 200" aria-hidden="true">
+        <g fill="none" style="stroke:var(--mal3)" stroke-opacity=".35"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="70"/><circle cx="100" cy="100" r="44"/><circle cx="100" cy="100" r="18"/><path d="M100 4V196M4 100H196"/></g>
+        <path d="M100 100L100 4A96 96 0 0 1 183 52Z" style="fill:var(--mal3)" fill-opacity=".18"><animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="6s" repeatCount="indefinite"/></path>
+        <circle cx="140" cy="62" r="4" style="fill:var(--gold)"/><circle cx="64" cy="132" r="4" style="fill:var(--red)"/><circle cx="120" cy="150" r="3" style="fill:var(--blue)"/>
+      </svg>
+      <div class="brand" style="padding:0;position:relative"><b>⚓</b><div>SeaWatch<small data-en="Maritime Safety Agency · Republic of Valmora" data-ru="Агентство морской безопасности · Республика Вальмора"></small></div></div>
+      <h2 data-en="One maritime picture for the whole coast" data-ru="Единая морская обстановка по всему побережью"></h2>
+      <p data-en="AIS, satellite SAR imagery and machine learning fused into a live operations picture for watch officers and patrol commanders." data-ru="AIS, спутниковые радарные снимки и машинное обучение в одной живой картине обстановки для дежурных и командиров патрулей."></p>
+      <ul>
+        <li data-en="Live map of moving vessels and patrol assets" data-ru="Живая карта движущихся судов и патрульных средств"></li>
+        <li data-en="Dark vessel alerts: AIS gaps, SAR targets without AIS" data-ru="Тревоги по «тёмным» судам: пропуски AIS, цели SAR без AIS"></li>
+        <li data-en="Oil spill detection on SAR scenes" data-ru="Обнаружение нефтяных разливов на снимках SAR"></li>
+        <li data-en="Patrol tasking with live progress" data-ru="Постановка задач патрулям с живым ходом выполнения"></li>
+      </ul>
+    </div>
+    <div class="lform">
+      <h3 data-en="Sign in to the operations centre" data-ru="Вход в оперативный центр"></h3>
+      <div class="f"><label data-en="Service ID" data-ru="Служебный ID"></label><input class="input" id="lUser" value="watch.officer@msa.vlm" autocomplete="username"><div class="err" id="lUserErr"></div></div>
+      <div class="f"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lPass" type="password" value="demo-2026" autocomplete="current-password"><div class="err" id="lPassErr"></div></div>
+      <div class="f"><label data-en="Role" data-ru="Роль"></label>
+        <div class="roles">
+          <button class="role on" data-role="watch"><b data-en="Watch officer" data-ru="Дежурный офицер"></b><span data-en="Monitors, triages alerts" data-ru="Мониторинг, разбор тревог"></span></button>
+          <button class="role" data-role="cmd"><b data-en="Patrol commander" data-ru="Командир патрулей"></b><span data-en="Tasks ships, aircraft, drones" data-ru="Задачи судам, самолётам, дронам"></span></button>
+        </div></div>
+      <button class="btn pri" id="loginBtn" style="justify-content:center;min-height:44px" data-en="Sign in" data-ru="Войти"></button>
+      <div class="demo-note" data-en="Demo credentials are prefilled. Fictional agency and data — no real vessels." data-ru="Демо-данные для входа уже заполнены. Вымышленное агентство и данные — реальных судов нет."></div>
+    </div>
+  </div>
+</section>
+
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>⚓</b><div>SeaWatch<small data-en="Maritime Safety Agency" data-ru="Агентство морской безопасности"></small></div></div>
+    <div class="sec" data-en="Operations" data-ru="Операции"></div>
+    <button class="nav" data-view="ops"><span class="ic">🗺</span><span data-en="Live map" data-ru="Живая карта"></span></button>
+    <button class="nav" data-view="alerts"><span class="ic">⚠</span><span data-en="Dark vessel alerts" data-ru="Тёмные суда"></span><span class="cnt" id="cAl"></span></button>
+    <button class="nav" data-view="vessels"><span class="ic">⛴</span><span data-en="Vessel profiles" data-ru="Профили судов"></span></button>
+    <button class="nav" data-view="spills"><span class="ic">🛢</span><span data-en="Oil spill detection" data-ru="Нефтяные разливы"></span><span class="cnt" id="cSp"></span></button>
+    <button class="nav" data-view="patrol"><span class="ic">🚁</span><span data-en="Patrol tasking" data-ru="Задачи патрулям"></span><span class="cnt g" id="cTk"></span></button>
+    <div class="sec" data-en="Insight" data-ru="Аналитика"></div>
+    <button class="nav" data-view="stats"><span class="ic">📊</span><span data-en="Analytics" data-ru="Аналитика"></span></button>
+    <div class="grow"></div>
+    <div class="user"><div class="av" id="uAv">WO</div><div style="min-width:0"><b id="uName"></b><span id="uRole"></span></div></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+      <button class="btn sm" id="logout" style="flex:1;justify-content:center" data-en="Log out" data-ru="Выйти"></button>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill ok"><span class="live-dot"></span><span class="mono" id="clock"></span></span>
+    </div>
+    <section class="view" id="v-ops"></section>
+    <section class="view" id="v-alerts"></section>
+    <section class="view" id="v-vessels"></section>
+    <section class="view" id="v-spills"></section>
+    <section class="view" id="v-patrol"></section>
+    <section class="view" id="v-stats"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const P='pt_maritime_';
+const ls={get(k){try{return JSON.parse(localStorage.getItem(P+k))}catch(e){return null}},set(k,v){try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){}},
+  clear(){try{Object.keys(localStorage).filter(k=>k.startsWith(P)).forEach(k=>localStorage.removeItem(k))}catch(e){}}};
+const hm=t=>new Date(t).toISOString().slice(11,16);
+const ago=t=>{const m=Math.max(0,Math.round((Date.now()-t)/60000));return m<1?T('now','сейчас'):m<60?m+T(' min',' мин'):Math.floor(m/60)+T(' h',' ч')};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),4000)}
+function rgba(hex,a){hex=hex.replace('#','');if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');const n=parseInt(hex,16);if(isNaN(n))return 'rgba(128,128,128,'+a+')';return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
+
+/* ---------- geography (map units 1000 x 600) ---------- */
+const LAND=[
+ [[1000,0],[620,0],[648,58],[700,92],[722,150],[688,204],[742,262],[800,300],[822,380],[880,420],[902,520],[958,600],[1000,600]],
+ [[300,120],[360,98],[402,130],[384,182],[322,192],[288,160]],
+ [[0,600],[0,470],[80,482],[150,522],[232,560],[262,600]]];
+const TERR=[[566,0],[594,78],[650,165],[628,226],[700,300],[752,400],[822,470],[852,600]];
+const MPA={x:480,y:430,r:72,en:'Seal Bank marine protected area',ru:'Охраняемая зона «Тюленья банка»'};
+const PORTS=[{x:704,y:168,n:'Port Arvel'},{x:842,y:404,n:'Kessby'},{x:118,y:500,n:'Lindmark'},{x:352,y:150,n:'Holmø'}];
+function pip(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+const inLand=(x,y)=>LAND.some(p=>pip(x,y,p));
+const blocked=(x,y)=>x<12||x>988||y<12||y>588||inLand(x,y);
+const lat=y=>(58.6-y/600*4.2), lon=x=>(16.2+x/1000*9.4);
+const pos=(x,y)=>lat(y).toFixed(3)+'°N '+lon(x).toFixed(3)+'°E';
+const distNm=(a,b)=>Math.round(Math.hypot(a.x-b.x,a.y-b.y)*0.52);
+
+const TYPES={cargo:['Cargo','Грузовое','--blue'],tanker:['Tanker','Танкер','--amber'],fish:['Fishing','Рыболовное','--mal3'],pass:['Passenger','Пассажирское','--violet'],tug:['Tug / service','Буксир / служебное','--muted']};
+const AT={gap:['AIS gap','Пропуск AIS'],sar:['SAR target without AIS','Цель SAR без AIS'],mpa:['Entered protected area','Вход в охраняемую зону'],spoof:['Position spoofing','Подмена координат'],rdv:['Ship-to-ship rendezvous','Встреча судов в море']};
+const AST={new:['New','Новая','bad'],inv:['Investigating','Проверяется','warn'],task:['Patrol tasked','Патруль направлен','gold'],esc:['Escalated','Передана выше','bad'],res:['Resolved','Закрыта','ok']};
+const SST={det:['Detected','Обнаружен','bad'],ver:['Verified','Подтверждён','warn'],resp:['Response dispatched','Реагирование','gold'],closed:['Closed','Закрыт','ok'],fp:['False positive','Ложное срабатывание','']};
+const TST={enroute:['En route','В пути','warn'],onscene:['On scene','На месте','gold'],done:['Completed','Выполнена','ok'],abort:['Aborted','Отменена','bad']};
+const KIND={ship:['Patrol vessel','Патрульное судно','⛴',1.7],air:['Patrol aircraft','Патрульный самолёт','✈',16],drone:['Maritime drone','Морской дрон','🛩',8]};
+const FLAGS=[['VLM','Valmora','Вальмора',0],['OST','Ostrelia','Острелия',4],['KRD','Kardesh','Кардеш',12],['LUM','Lumeria','Лумерия',2],['PNR','Panora','Панора',14],['SVB','Sevrabad','Севрабад',18]];
+const OWN=['Nordhav Shipping','Arvel Line','Kestrel Tankers','Blue Shoal Fisheries','Holm Ferries','Varga Bulk Ltd','Meridian Offshore','Coral Gate Trading','Lindmark Tug Co.','Unknown (shell company)'];
+const NAMES=['Aurora Venn','Baltic Crane','Sea Kestrel','Nordic Ember','Halcyon Star','Iron Gull','Marlin VII','Cape Solace','Silver Tern','Hollow Reef','Ostra Bay','Vega Trader','Polar Dawn','Kessby Pride','Granite Wave','Amber Sound','North Petrel','Saga Horizon','Mistral Rose','Lumen Bay','Storm Finch','Coral Drift','Tundra Spirit','Pelagia','Black Heron','Orca Point','Ventus II','Red Lantern','Starling','Calypso Run','Arvel Express','Sea Wren','Dune Runner','Frost Harbor'];
+
+function freePos(r){let x,y,n=0;do{x=40+r()*900;y=30+r()*540;n++}while(blocked(x,y)&&n<200);return[x,y]}
+function seed(){
+  const r=rng(2611),now=Date.now();
+  const types=['cargo','cargo','cargo','tanker','tanker','fish','fish','fish','pass','tug'];
+  const vessels=NAMES.map((n,i)=>{const [x,y]=freePos(r);const type=types[Math.floor(r()*types.length)];const f=FLAGS[Math.floor(r()*FLAGS.length)];
+    const v={id:'V'+(i+1),name:n,mmsi:String(273000000+Math.floor(r()*999999)).padStart(9,'0'),imo:'IMO '+(9100000+Math.floor(r()*899999)),flag:f[0],type,
+      len:type==='fish'?18+Math.floor(r()*40):type==='tug'?24+Math.floor(r()*14):type==='pass'?120+Math.floor(r()*90):110+Math.floor(r()*220),
+      owner:OWN[Math.floor(r()*OWN.length)],x,y,hdg:r()*Math.PI*2,spd:type==='fish'?0.25+r()*0.4:0.6+r()*0.9,ais:true,gaps:Math.floor(r()*3),watch:false,track:[],insp:[],built:1994+Math.floor(r()*30),dest:PORTS[Math.floor(r()*PORTS.length)].n};
+    for(let k=0;k<26;k++){v.track.unshift([Math.round(x-Math.cos(v.hdg)*k*7+Math.sin(k*.6)*6),Math.round(y-Math.sin(v.hdg)*k*7+Math.cos(k*.5)*5)])}
+    if(r()<.35)v.insp.push({t:now-(20+Math.floor(r()*300))*86400000,en:['Port state control · no deficiencies','Port state control · 2 deficiencies','Fisheries boarding · catch logbook OK'][Math.floor(r()*3)],ru:''});
+    return v});
+  vessels.forEach(v=>v.insp.forEach(i=>i.ru=i.en.replace('Port state control','Контроль государства порта').replace('no deficiencies','без замечаний').replace('2 deficiencies','2 замечания').replace('Fisheries boarding','Рыбоохранный досмотр').replace('catch logbook OK','журнал улова в порядке')));
+  ['V5','V13','V27'].forEach(id=>{const v=vessels.find(x=>x.id===id);v.ais=false;v.gaps+=3;v.darkSince=now-(25+Math.floor(r()*80))*60000});
+  vessels.find(v=>v.id==='V27').flag='SVB';vessels.find(v=>v.id==='V27').owner=OWN[9];vessels.find(v=>v.id==='V13').type='tanker';vessels.find(v=>v.id==='V5').type='fish';
+  const alerts=[];let an=4100;
+  const mk=(vid,type,sev,st,minAgo,en,ru)=>{const v=vessels.find(x=>x.id===vid);const t=now-minAgo*60000;alerts.push({id:'DV-'+(an++),vid,type,sev,st,t,x:v.x,y:v.y,note:'',hist:[{t,en,ru}]})};
+  mk('V5','gap','high','new',38,'AIS signal lost for 31 min inside 12 nm zone','Сигнал AIS пропал на 31 мин в 12-мильной зоне');
+  mk('V13','sar','high','inv',74,'Orbis-1A SAR pass: 186 m target, no AIS match','Пролёт Orbis-1A SAR: цель 186 м без совпадения с AIS');
+  mk('V27','spoof','med','new',22,'Reported position 41 nm off radar track','Заявленная позиция на 41 миль от радарного трека');
+  mk('V9','rdv','med','new',55,'Two vessels stationary 0.2 nm apart for 48 min','Два судна неподвижно в 0,2 мили друг от друга 48 мин');
+  mk('V16','mpa','low','res',260,'Fishing vessel inside Seal Bank MPA at 3.1 kn','Рыболовное судно в охраняемой зоне на 3,1 уз');
+  mk('V21','gap','low','res',410,'AIS gap 12 min near Lindmark (coverage shadow)','Пропуск AIS 12 мин у Линдмарка (тень покрытия)');
+  alerts[1].hist.push({t:now-60*60000,en:'Assigned to watch officer K. Strand',ru:'Назначено дежурному К. Странд'});
+  alerts[4].hist.push({t:now-200*60000,en:'Resolved: vessel left the area after radio call',ru:'Закрыто: судно покинуло зону после радиовызова'});
+  alerts[5].hist.push({t:now-380*60000,en:'Resolved: known coverage gap',ru:'Закрыто: известная тень покрытия'});
+  const spills=[];
+  const ms=(id,x,y,area,conf,src,st,h,sat)=>spills.push({id,x,y,area,conf,src,st,t:now-h*3600000,sat,scene:'S'+Math.floor(1000+r()*8999),poly:blob(r,area),wind:3+Math.floor(r()*9)});
+  ms('OS-0412',420,300,6.8,0.94,'V13','det',2,'Orbis-1A');
+  ms('OS-0409',190,380,2.1,0.81,'V3','ver',19,'Orbis-1B');
+  ms('OS-0403',560,520,11.4,0.97,'V8','resp',41,'Orbis-1A');
+  ms('OS-0398',250,90,0.9,0.58,null,'fp',70,'Orbis-1B');
+  const assets=[
+    {id:'A1',name:'MSV Valkyr',kind:'ship',x:700,y:200,hx:700,hy:200,st:'ready'},
+    {id:'A2',name:'MSV Tordenskjold',kind:'ship',x:830,y:440,hx:830,hy:440,st:'ready'},
+    {id:'A3',name:'Heron 2 (MPA)',kind:'air',x:760,y:140,hx:760,hy:140,st:'ready'},
+    {id:'A4',name:'Skua UAS-04',kind:'drone',x:150,y:470,hx:150,hy:470,st:'ready'},
+    {id:'A5',name:'MSV Brannar',kind:'ship',x:120,y:470,hx:120,hy:470,st:'maint'}];
+  const tasks=[{id:'PT-218',aid:'A2',tk:'spill',ref:'OS-0403',pri:'high',st:'done',t:now-38*3600000,done:now-35*3600000,note:'Containment booms deployed',out:'ok'}];
+  const hourly=[];for(let i=0;i<24;i++)hourly.push(Math.round(5200+2600*Math.sin((i-6)/24*Math.PI*2)+r()*900));
+  return{view:'ops',vessels,alerts,spills,assets,tasks,an,sn:413,tn:219,sel:'V13',selA:null,selS:'OS-0412',vSel:'V13',hourly,
+    layers:{ais:true,dark:true,zones:true,patrol:true,spills:true,tracks:false},af:'open',vq:'',vt:'all',msgs:0,detecting:null};
+}
+function blob(r,area){const n=12,base=10+Math.sqrt(area)*7;const pts=[];const st=r()*Math.PI;for(let i=0;i<n;i++){const a=i/n*Math.PI*2;const rr=base*(0.55+r()*0.7)*(Math.abs(Math.cos(a-st))*0.9+0.45);pts.push([+(Math.cos(a)*rr).toFixed(1),+(Math.sin(a)*rr*0.6).toFixed(1)])}return pts}
+let S=ls.get('state')||seed();
+let AUTH=ls.get('auth');
+let role='watch';
+const save=()=>ls.set('state',S);
+const V=id=>S.vessels.find(v=>v.id===id);
+const A=id=>S.assets.find(a=>a.id===id);
+const SP=id=>S.spills.find(s=>s.id===id);
+const AL=id=>S.alerts.find(a=>a.id===id);
+const risk=v=>{const f=FLAGS.find(x=>x[0]===v.flag);let s=8+(v.type==='tanker'?10:v.type==='fish'?8:0)+v.gaps*7+(v.ais?0:28)+(f?f[3]:0)+(v.watch?8:0)+(v.owner===OWN[9]?14:0)+S.alerts.filter(a=>a.vid===v.id&&a.st!=='res').length*6;return Math.min(99,s)};
+const riskPill=n=>`<span class="pill ${n>=60?'bad':n>=35?'warn':'ok'}">${n}</span>`;
+const flagName=c=>{const f=FLAGS.find(x=>x[0]===c);return f?T(f[1],f[2]):c};
+const tname=t=>T(TYPES[t][0],TYPES[t][1]);
+const stPill=(M,k)=>`<span class="pill ${M[k][2]}">${T(M[k][0],M[k][1])}</span>`;
+
+/* ---------- shell ---------- */
+const VIEWS={ops:['Live map','Живая карта','Operations','Операции'],alerts:['Dark vessel alerts','Тревоги: тёмные суда','Operations','Операции'],vessels:['Vessel profiles','Профили судов','Registry','Реестр'],spills:['Oil spill detection','Обнаружение разливов нефти','SAR · ML','SAR · ML'],patrol:['Patrol tasking','Задачи патрулям','Response','Реагирование'],stats:['Analytics','Аналитика','Insight','Аналитика']};
+function go(v){S.view=v;save();$('#side').classList.remove('open');$('#scrim').classList.remove('on');render();window.scrollTo(0,0)}
+function shell(){
+  $$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.view===S.view));
+  $$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+S.view));
+  const w=VIEWS[S.view];$('#title').textContent=T(w[0],w[1]);$('#crumb').textContent='SeaWatch · '+T(w[2],w[3]);
+  const oa=S.alerts.filter(a=>a.st==='new').length,os=S.spills.filter(s=>s.st==='det').length,ot=S.tasks.filter(t=>t.st==='enroute'||t.st==='onscene').length;
+  $('#cAl').textContent=oa||'';$('#cAl').style.display=oa?'':'none';
+  $('#cSp').textContent=os||'';$('#cSp').style.display=os?'':'none';
+  $('#cTk').textContent=ot||'';$('#cTk').style.display=ot?'':'none';
+  if(AUTH){$('#uName').textContent=AUTH.user.split('@')[0];$('#uRole').textContent=AUTH.role==='cmd'?T('Patrol commander','Командир патрулей'):T('Watch officer','Дежурный офицер');$('#uAv').textContent=AUTH.role==='cmd'?'PC':'WO'}
+  $('#clock').textContent=hm(Date.now())+' UTC';
+}
+function render(){
+  if(!AUTH){$('#login').hidden=false;$('#app').hidden=true;return}
+  $('#login').hidden=true;$('#app').hidden=false;
+  shell();
+  ({ops:rOps,alerts:rAlerts,vessels:rVessels,spills:rSpills,patrol:rPatrol,stats:rStats})[S.view]();
+}
+
+/* ---------- live map ---------- */
+let cv=null,ctx=null,C={};
+function readColors(){['--bg','--bg2','--panel','--panel2','--line','--line2','--text','--muted','--dim','--mal','--mal3','--gold','--gold2','--red','--amber','--blue','--violet'].forEach(k=>C[k]=cssv(k)||'#888')}
+function rOps(){
+  const el=$('#v-ops');
+  const dark=S.vessels.filter(v=>!v.ais).length,open=S.alerts.filter(a=>a.st!=='res').length,act=S.tasks.filter(t=>t.st==='enroute'||t.st==='onscene').length;
+  const L=[['ais','AIS vessels','Суда AIS','--blue'],['dark','Dark / SAR','Тёмные / SAR','--red'],['patrol','Patrol assets','Патрули','--gold'],['spills','Oil spills','Разливы','--amber'],['zones','Zones','Зоны','--mal'],['tracks','Tracks','Треки','--muted']];
+  el.innerHTML=`<div class="kpis">
+    <div class="card kpi"><div class="l">${T('Vessels tracked','Судов на контроле')}</div><div class="v" id="kV">${S.vessels.length}</div><div class="d">${T('AIS + SAR fusion','слияние AIS + SAR')}</div></div>
+    <div class="card kpi"><div class="l">${T('Dark vessels','Тёмные суда')}</div><div class="v bad-t" id="kD">${dark}</div><div class="d">${T('no AIS, seen by SAR/radar','без AIS, видны SAR/радаром')}</div></div>
+    <div class="card kpi"><div class="l">${T('Open alerts','Открытые тревоги')}</div><div class="v warn-t" id="kA">${open}</div><div class="d">${T('triage in Alerts','разбор в «Тревогах»')}</div></div>
+    <div class="card kpi"><div class="l">${T('Active taskings','Активные задачи')}</div><div class="v gold-t" id="kT">${act}</div><div class="d"><span id="kM">${S.msgs.toLocaleString()}</span> ${T('AIS msgs this session','сообщений AIS за сеанс')}</div></div></div>
+  <div class="grid2"><div class="card"><h3><span>${T('Gulf of Arvel · live picture','Арвельский залив · живая обстановка')}</span><span class="sp"></span><span class="pill ok"><span class="live-dot"></span>${T('Live','В эфире')}</span></h3>
+    <div class="chips" style="margin-bottom:10px">${L.map(l=>`<button class="chip ${S.layers[l[0]]?'on':''}" data-ly="${l[0]}"><i style="background:var(${l[3]})"></i>${T(l[1],l[2])}</button>`).join('')}</div>
+    <div class="mapw"><canvas id="map" width="1000" height="600"></canvas><div class="maptag" id="mtag">${T('Tap a vessel','Нажмите на судно')}</div></div>
+    <div class="legend"><span><i style="background:var(--blue)"></i>${tname('cargo')}</span><span><i style="background:var(--amber)"></i>${tname('tanker')}</span><span><i style="background:var(--mal3)"></i>${tname('fish')}</span><span><i style="background:var(--violet)"></i>${tname('pass')}</span><span><i style="background:var(--red)"></i>${T('Dark vessel','Тёмное судно')}</span><span><i style="background:var(--gold)"></i>${T('Patrol','Патруль')}</span></div>
+  </div>
+  <div class="stack"><div class="card" id="selCard"></div>
+    <div class="card"><h3>${T('Latest alerts','Последние тревоги')}<span class="sp"></span><button class="btn sm" data-go="alerts">${T('All','Все')}</button></h3><div class="feed" id="feed"></div></div></div></div>`;
+  $$('[data-ly]',el).forEach(b=>b.onclick=()=>{S.layers[b.dataset.ly]=!S.layers[b.dataset.ly];save();b.classList.toggle('on');draw()});
+  $$('[data-go]',el).forEach(b=>b.onclick=()=>go(b.dataset.go));
+  cv=$('#map');ctx=cv.getContext('2d');readColors();sizeMap();
+  cv.onclick=e=>{const r=cv.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*1000,y=(e.clientY-r.top)/r.height*600;
+    let best=null,bd=1e9;S.vessels.forEach(v=>{const d=Math.hypot(v.x-x,v.y-y);if(d<bd){bd=d;best={k:'v',id:v.id}}});
+    S.assets.forEach(a=>{const d=Math.hypot(a.x-x,a.y-y);if(d<bd){bd=d;best={k:'a',id:a.id}}});
+    if(bd<34){if(best.k==='v'){S.sel=best.id;S.selA=null}else{S.selA=best.id;S.sel=null}save();updOps();draw()}};
+  updOps();draw();
+}
+function sizeMap(){if(!cv)return;const w=cv.clientWidth||600,d=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(w*d);cv.height=Math.round(w*0.6*d)}
+function feedHtml(){return S.alerts.slice().sort((a,b)=>b.t-a.t).slice(0,6).map(a=>{const v=V(a.vid);return `<button class="fi" data-fa="${a.id}"><span class="dt" style="background:var(${a.st==='res'?'--mal':a.sev==='high'?'--red':'--amber'})"></span><div style="min-width:0"><b>${T(AT[a.type][0],AT[a.type][1])}</b><span>${esc(v?v.name:'?')} · ${T(AST[a.st][0],AST[a.st][1])}</span></div><span class="tm">${hm(a.t)}</span></button>`}).join('')}
+function updOps(){
+  if(S.view!=='ops'||!$('#selCard'))return;
+  const c=$('#selCard');
+  if(S.selA){const a=A(S.selA);const tk=S.tasks.find(t=>t.aid===a.id&&(t.st==='enroute'||t.st==='onscene'));
+    c.innerHTML=`<h3>${KIND[a.kind][2]} ${esc(a.name)}<span class="sp"></span>${assetPill(a)}</h3><dl class="kv"><dt>${T('Type','Тип')}</dt><dd>${T(KIND[a.kind][0],KIND[a.kind][1])}</dd><dt>${T('Position','Позиция')}</dt><dd class="mono">${pos(a.x,a.y)}</dd><dt>${T('Tasking','Задача')}</dt><dd>${tk?tk.id+' → '+esc(targetName(tk)):T('none','нет')}</dd></dl><div class="row" style="margin-top:12px"><button class="btn sm" data-go="patrol">${T('Open tasking','Открыть задачи')}</button></div>`;
+  }else{const v=V(S.sel);if(!v){c.innerHTML=`<div class="empty">${T('Tap a vessel on the map to see its profile.','Нажмите на судно на карте, чтобы увидеть профиль.')}</div>`}else{const rk=risk(v);
+    c.innerHTML=`<h3><span style="overflow-wrap:anywhere">${esc(v.name)}</span><span class="sp"></span>${v.ais?`<span class="pill ok">AIS</span>`:`<span class="pill bad">${T('DARK','ТЁМНОЕ')}</span>`}</h3>
+    <dl class="kv"><dt>MMSI</dt><dd class="mono">${v.mmsi}</dd><dt>${T('Type · flag','Тип · флаг')}</dt><dd>${tname(v.type)} · ${flagName(v.flag)}</dd><dt>${T('Position','Позиция')}</dt><dd class="mono" id="sPos">${pos(v.x,v.y)}</dd><dt>${T('Speed · course','Скорость · курс')}</dt><dd class="mono" id="sSpd">${(v.spd*10).toFixed(1)} ${T('kn','уз')} · ${Math.round((v.hdg*180/Math.PI+450)%360)}°</dd><dt>${T('Risk score','Риск')}</dt><dd>${riskPill(rk)}</dd></dl>
+    <div class="row" style="margin-top:12px"><button class="btn sm pri" id="oProf">${T('Vessel profile','Профиль судна')}</button><button class="btn sm" id="oTask">${T('Task patrol','Направить патруль')}</button></div>`;
+    $('#oProf').onclick=()=>{S.vSel=v.id;go('vessels')};
+    $('#oTask').onclick=()=>{let a=S.alerts.find(x=>x.vid===v.id&&x.st!=='res');if(!a){a=newAlert(v,v.ais?'rdv':'sar','med',T('Manual tasking request by watch officer','Ручной запрос дежурного офицера'),T('Manual tasking request by watch officer','Ручной запрос дежурного офицера'),true)}pre={tk:'alert',ref:a.id};go('patrol')};}}
+  $$('[data-go]',c).forEach(b=>b.onclick=()=>go(b.dataset.go));
+  const f=$('#feed');if(f){f.innerHTML=feedHtml();$$('[data-fa]',f).forEach(b=>b.onclick=()=>{const a=AL(b.dataset.fa);S.sel=a.vid;S.selA=null;S.alSel=a.id;save();updOps();draw()})}
+  const dark=S.vessels.filter(v=>!v.ais).length;if($('#kD'))$('#kD').textContent=dark;
+  if($('#kA'))$('#kA').textContent=S.alerts.filter(a=>a.st!=='res').length;
+  if($('#kT'))$('#kT').textContent=S.tasks.filter(t=>t.st==='enroute'||t.st==='onscene').length;
+}
+function draw(){
+  if(!cv||!ctx||S.view!=='ops'||!document.body.contains(cv))return;
+  const W=cv.width,H=cv.height,k=W/1000,ky=H/600,t=Date.now();
+  const X=x=>x*k,Y=y=>y*ky;
+  ctx.clearRect(0,0,W,H);
+  const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,rgba(C['--blue'],.10));g.addColorStop(1,rgba(C['--mal'],.06));ctx.fillStyle=C['--bg2'];ctx.fillRect(0,0,W,H);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // graticule
+  ctx.strokeStyle=rgba(C['--line2'],.55);ctx.lineWidth=1;ctx.font=`${Math.max(9,10*k)}px ${cssv('--mono')||'monospace'}`;ctx.fillStyle=C['--dim'];
+  for(let i=1;i<10;i++){ctx.beginPath();ctx.moveTo(X(i*100),0);ctx.lineTo(X(i*100),H);ctx.stroke()}
+  for(let i=1;i<6;i++){ctx.beginPath();ctx.moveTo(0,Y(i*100));ctx.lineTo(W,Y(i*100));ctx.stroke()}
+  if(k>.5){for(let i=2;i<10;i+=2)ctx.fillText(lon(i*100).toFixed(1)+'°E',X(i*100)+3,H-5);for(let i=1;i<6;i+=2)ctx.fillText(lat(i*100).toFixed(1)+'°N',4,Y(i*100)-3)}
+  // land
+  LAND.forEach(p=>{ctx.beginPath();p.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.closePath();ctx.fillStyle=C['--panel2'];ctx.fill();ctx.strokeStyle=C['--line2'];ctx.lineWidth=1.5;ctx.stroke()});
+  if(S.layers.zones){
+    ctx.setLineDash([6*k+2,5*k+2]);ctx.strokeStyle=rgba(C['--gold'],.8);ctx.lineWidth=1.4;ctx.beginPath();TERR.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.ellipse(X(MPA.x),Y(MPA.y),MPA.r*k,MPA.r*ky,0,0,Math.PI*2);ctx.fillStyle=rgba(C['--mal'],.12);ctx.fill();ctx.strokeStyle=rgba(C['--mal'],.7);ctx.stroke();
+    if(k>.5){ctx.fillStyle=C['--mal3'];ctx.fillText(T('Seal Bank MPA','Зона «Тюленья банка»'),X(MPA.x-50),Y(MPA.y+MPA.r+14));ctx.fillStyle=C['--gold'];ctx.fillText(T('12 nm limit','граница 12 миль'),X(520),Y(40))}
+  }
+  // ports
+  PORTS.forEach(p=>{ctx.fillStyle=C['--text'];ctx.beginPath();ctx.arc(X(p.x),Y(p.y),3*k+1.5,0,Math.PI*2);ctx.fill();if(k>.45){ctx.fillStyle=C['--muted'];ctx.font=`600 ${Math.max(9,11*k)}px ${cssv('--font')||'sans-serif'}`;ctx.fillText(p.n,X(p.x)+6,Y(p.y)-6)}});
+  // spills
+  if(S.layers.spills)S.spills.filter(s=>s.st!=='fp'&&s.st!=='closed').forEach(s=>{ctx.beginPath();s.poly.forEach((q,i)=>{const px=X(s.x+q[0]),py=Y(s.y+q[1]);i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.closePath();ctx.fillStyle=rgba(C['--amber'],.28);ctx.fill();ctx.strokeStyle=C['--amber'];ctx.lineWidth=1.2;ctx.stroke();if(k>.45){ctx.fillStyle=C['--amber'];ctx.font=`700 ${Math.max(9,10*k)}px ${cssv('--mono')||'monospace'}`;ctx.fillText(s.id,X(s.x)+16*k,Y(s.y)-10*k)}});
+  // tracks
+  if(S.layers.tracks)S.vessels.forEach(v=>{if(!S.layers.ais&&v.ais)return;ctx.beginPath();v.track.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.strokeStyle=rgba(C[TYPES[v.type][2]],.35);ctx.lineWidth=1;ctx.stroke()});
+  // task lines
+  S.tasks.filter(t=>t.st==='enroute'||t.st==='onscene').forEach(tk=>{const a=A(tk.aid),p=targetPos(tk);if(!a||!p||!S.layers.patrol)return;ctx.setLineDash([4,4]);ctx.strokeStyle=rgba(C['--gold'],.8);ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(X(a.x),Y(a.y));ctx.lineTo(X(p.x),Y(p.y));ctx.stroke();ctx.setLineDash([])});
+  // vessels
+  const sz=Math.max(4.5,7*k);
+  S.vessels.forEach(v=>{
+    if(v.ais&&!S.layers.ais)return;if(!v.ais&&!S.layers.dark)return;
+    const px=X(v.x),py=Y(v.y);
+    if(!v.ais){const ph=(t%1600)/1600;ctx.beginPath();ctx.arc(px,py,sz+ph*sz*2.2,0,Math.PI*2);ctx.strokeStyle=rgba(C['--red'],1-ph);ctx.lineWidth=1.5;ctx.stroke();
+      ctx.save();ctx.translate(px,py);ctx.rotate(Math.PI/4);ctx.fillStyle=C['--red'];ctx.fillRect(-sz*.6,-sz*.6,sz*1.2,sz*1.2);ctx.restore();
+      if(k>.45){ctx.fillStyle=C['--red'];ctx.font=`700 ${Math.max(9,10*k)}px ${cssv('--mono')||'monospace'}`;ctx.fillText(T('DARK','ТЁМН.'),px+sz+3,py+3)}}
+    else{ctx.save();ctx.translate(px,py);ctx.rotate(v.hdg);ctx.beginPath();ctx.moveTo(sz*1.4,0);ctx.lineTo(-sz*.8,sz*.7);ctx.lineTo(-sz*.4,0);ctx.lineTo(-sz*.8,-sz*.7);ctx.closePath();ctx.fillStyle=C[TYPES[v.type][2]];ctx.fill();ctx.restore()}
+    if(S.sel===v.id){ctx.beginPath();ctx.arc(px,py,sz*2.3,0,Math.PI*2);ctx.strokeStyle=C['--text'];ctx.lineWidth=1.6;ctx.stroke();if(k>.3){ctx.fillStyle=C['--text'];ctx.font=`700 ${Math.max(10,11*k)}px ${cssv('--font')||'sans-serif'}`;const tx=px+sz*2.6,lw=ctx.measureText(v.name).width;ctx.fillText(v.name,tx+lw>W?px-sz*2.6-lw:tx,py-sz*1.6)}}
+  });
+  // patrol assets
+  if(S.layers.patrol)S.assets.forEach(a=>{const px=X(a.x),py=Y(a.y),r=Math.max(6,9*k);ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);ctx.fillStyle=a.st==='maint'?rgba(C['--gold'],.35):C['--gold'];ctx.fill();ctx.strokeStyle=C['--bg'];ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#1a1306';ctx.font=`800 ${Math.max(8,10*k)}px ${cssv('--font')||'sans-serif'}`;ctx.textAlign='center';ctx.fillText(a.kind==='air'?'A':a.kind==='drone'?'D':'P',px,py+3.5*Math.max(.8,k));ctx.textAlign='start';
+    if(S.selA===a.id){ctx.beginPath();ctx.arc(px,py,r*2,0,Math.PI*2);ctx.strokeStyle=C['--gold2'];ctx.lineWidth=1.6;ctx.stroke()}});
+  const tg=$('#mtag');if(tg){const v=V(S.sel);tg.textContent=v?v.name+' · '+pos(v.x,v.y):S.selA?A(S.selA).name:T('Tap a vessel','Нажмите на судно')}
+}
+
+/* ---------- simulation ---------- */
+function newAlert(v,type,sev,en,ru,silent){const a={id:'DV-'+(S.an++),vid:v.id,type,sev,st:'new',t:Date.now(),x:v.x,y:v.y,note:'',hist:[{t:Date.now(),en,ru}]};S.alerts.unshift(a);if(S.alerts.length>60)S.alerts.length=60;
+  if(!silent)toast(`<b>${a.id}</b> · ${T(AT[type][0],AT[type][1])} — ${esc(v.name)}`,sev==='high'?'bad':'gold');return a}
+function targetPos(tk){if(tk.tk==='spill'){const s=SP(tk.ref);return s?{x:s.x,y:s.y}:null}const a=AL(tk.ref);if(!a)return null;const v=V(a.vid);return v?{x:v.x,y:v.y}:{x:a.x,y:a.y}}
+function targetName(tk){if(tk.tk==='spill')return tk.ref+' '+T('oil spill','разлив');const a=AL(tk.ref);const v=a&&V(a.vid);return tk.ref+(v?' · '+v.name:'')}
+let lastSlow=0,lastSave=0,lastEvt=Date.now();
+function step(dt){
+  S.vessels.forEach(v=>{
+    const d=v.spd*dt*6;let nx=v.x+Math.cos(v.hdg)*d,ny=v.y+Math.sin(v.hdg)*d;
+    if(blocked(nx,ny)){v.hdg+=Math.PI*(0.6+Math.random()*0.5);return}
+    v.x=nx;v.y=ny;if(Math.random()<0.004)v.hdg+=(Math.random()-.5)*0.9;
+  });
+  S.assets.forEach(a=>{
+    const tk=S.tasks.find(t=>t.aid===a.id&&t.st==='enroute');let tx,ty;
+    if(tk){const p=targetPos(tk);if(!p)return;tx=p.x;ty=p.y}else if(a.st==='rtb'){tx=a.hx;ty=a.hy}else if(tk===undefined&&S.tasks.find(t=>t.aid===a.id&&t.st==='onscene')){const p=targetPos(S.tasks.find(t=>t.aid===a.id&&t.st==='onscene'));if(p){a.x=p.x+8;a.y=p.y-8}return}else return;
+    const dx=tx-a.x,dy=ty-a.y,dd=Math.hypot(dx,dy),sp=KIND[a.kind][3]*dt*6;
+    if(dd<=sp+4){a.x=tx;a.y=ty;if(tk){tk.st='onscene';tk.arr=Date.now();a.st='onscene';toast(`<b>${esc(a.name)}</b> ${T('is on scene','на месте')} · ${tk.id}`,'gold');save();refreshLight()}else{a.st='ready';save();refreshLight()}}
+    else{const nx=a.x+dx/dd*sp,ny=a.y+dy/dd*sp;if(a.kind==='ship'&&inLand(nx,ny)){a.x+=dy/dd*sp;a.y-=dx/dd*sp}else{a.x=nx;a.y=ny}}
+  });
+  S.msgs+=Math.round(dt*(30+Math.random()*25));
+}
+function slow(){
+  S.vessels.forEach(v=>{v.track.push([Math.round(v.x),Math.round(v.y)]);if(v.track.length>40)v.track.shift();
+    if(v.type==='fish'&&v.ais&&Math.hypot(v.x-MPA.x,v.y-MPA.y)<MPA.r&&!S.alerts.some(a=>a.vid===v.id&&a.type==='mpa'&&a.st!=='res')){newAlert(v,'mpa','med','Fishing vessel entered Seal Bank MPA at '+(v.spd*10).toFixed(1)+' kn','Рыболовное судно вошло в охраняемую зону на '+(v.spd*10).toFixed(1).replace('.',',')+' уз');refreshLight()}});
+  if(Date.now()-lastEvt>14000){lastEvt=Date.now();
+    const lit=S.vessels.filter(v=>v.ais),drk=S.vessels.filter(v=>!v.ais);
+    if(drk.length>=6||(drk.length>2&&Math.random()<.4)){const v=drk[Math.floor(Math.random()*drk.length)];v.ais=true;v.darkSince=null;
+      const a=S.alerts.find(x=>x.vid===v.id&&x.st!=='res');if(a)a.hist.push({t:Date.now(),en:'AIS signal re-acquired',ru:'Сигнал AIS восстановлен'});
+      toast(`${esc(v.name)} — ${T('AIS signal re-acquired','сигнал AIS восстановлен')}`)}
+    else{const v=lit[Math.floor(Math.random()*lit.length)];v.ais=false;v.gaps++;v.darkSince=Date.now();
+      const sar=Math.random()<.4;newAlert(v,sar?'sar':'gap',v.type==='tanker'||v.type==='fish'?'high':'med',sar?'SAR detection with no matching AIS track':'AIS transmissions stopped while under way at '+(v.spd*10).toFixed(1)+' kn',sar?'Обнаружение SAR без совпадающего трека AIS':'Передачи AIS прекратились на ходу, '+(v.spd*10).toFixed(1).replace('.',',')+' уз')}
+    refreshLight();save()}
+}
+function refreshLight(){shell();if(S.view==='ops')updOps();else if(S.view==='alerts')rAlerts();else if(S.view==='patrol')rTaskList()}
+let prev=performance.now();
+function loop(){const now=performance.now();const dt=Math.min(.5,(now-prev)/1000);prev=now;
+  if(AUTH){step(dt);
+    if(Date.now()-lastSlow>2000){lastSlow=Date.now();slow();if(S.view==='ops'){const v=V(S.sel);if(v&&$('#sPos')){$('#sPos').textContent=pos(v.x,v.y);$('#sSpd').textContent=(v.spd*10).toFixed(1)+' '+T('kn','уз')+' · '+Math.round((v.hdg*180/Math.PI+450)%360)+'°'}if($('#kM'))$('#kM').textContent=S.msgs.toLocaleString()}
+      if(S.view==='patrol')updTaskProg();$('#clock').textContent=hm(Date.now())+' UTC'}
+    if(Date.now()-lastSave>5000){lastSave=Date.now();save()}
+    draw()}
+  requestAnimationFrame(loop)}
+
+/* ---------- alerts ---------- */
+function rAlerts(){
+  const el=$('#v-alerts');const F=[['open','Open','Открытые'],['new','New','Новые'],['inv','Investigating','Проверяются'],['task','Patrol tasked','Патруль'],['res','Resolved','Закрытые'],['all','All','Все']];
+  const list=S.alerts.filter(a=>S.af==='all'||(S.af==='open'?a.st!=='res':a.st===S.af)).sort((a,b)=>(a.st==='res')-(b.st==='res')||({high:0,med:1,low:2}[a.sev]-{high:0,med:1,low:2}[b.sev])||b.t-a.t);
+  const cnt=k=>S.alerts.filter(a=>k==='all'||(k==='open'?a.st!=='res':a.st===k)).length;
+  const sev=s=>`<span class="pill ${s==='high'?'bad':s==='med'?'warn':''}">${s==='high'?T('High','Высокая'):s==='med'?T('Medium','Средняя'):T('Low','Низкая')}</span>`;
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row"><div style="flex:1;min-width:220px;font-size:13.5px" class="muted">${T('Dark vessel logic fuses AIS with SAR satellite passes and coastal radar. A vessel that stops transmitting, or a SAR target with no AIS match, raises an alert. Triage it, task a patrol, or resolve.','Логика «тёмных» судов сводит AIS со спутниковыми пролётами SAR и береговыми радарами. Судно, переставшее передавать сигнал, или цель SAR без AIS поднимают тревогу. Разберите её, направьте патруль или закройте.')}</div></div>
+    <div class="chips" style="margin-top:12px">${F.map(f=>`<button class="chip ${S.af===f[0]?'on':''}" data-af="${f[0]}">${T(f[1],f[2])} · ${cnt(f[0])}</button>`).join('')}</div></div>
+  <div id="alList">${list.length?list.map(a=>{const v=V(a.vid);return `<div class="al ${S.alSel===a.id?'sel':''}" id="al-${a.id}"><div class="top"><span class="mono" style="font-weight:700">${a.id}</span><b>${T(AT[a.type][0],AT[a.type][1])} — ${esc(v?v.name:'?')}</b>${sev(a.sev)}${stPill(AST,a.st)}</div>
+    <div class="meta">${tname(v.type)} · ${flagName(v.flag)} · MMSI <span class="mono">${v.mmsi}</span> · <span class="mono">${pos(a.x,a.y)}</span> · ${ago(a.t)} ${T('ago','назад')} · ${T('risk','риск')} ${risk(v)}</div>
+    <div class="row">${a.st==='new'?`<button class="btn sm" data-aa="inv" data-id="${a.id}">${T('Start investigation','Начать проверку')}</button>`:''}
+    ${a.st!=='res'&&a.st!=='task'?`<button class="btn sm gold" data-aa="task" data-id="${a.id}">${T('Task patrol','Направить патруль')}</button>`:''}
+    ${a.st!=='res'&&a.st!=='esc'?`<button class="btn sm danger" data-aa="esc" data-id="${a.id}">${T('Escalate to Navy','Передать ВМС')}</button>`:''}
+    ${a.st!=='res'?`<button class="btn sm pri" data-aa="res" data-id="${a.id}">${T('Resolve','Закрыть')}</button>`:`<button class="btn sm" data-aa="reopen" data-id="${a.id}">${T('Reopen','Открыть снова')}</button>`}
+    <button class="btn sm" data-aa="map" data-id="${a.id}">${T('Show on map','На карте')}</button><button class="btn sm" data-aa="prof" data-id="${a.id}">${T('Profile','Профиль')}</button></div>
+    <div class="hist">${a.hist.slice(-4).map(h=>`<div><span class="t">${hm(h.t)}</span>${esc(T(h.en,h.ru))}</div>`).join('')}</div></div>`}).join(''):`<div class="card empty">${T('No alerts in this filter.','Нет тревог в этом фильтре.')}</div>`}</div>
+  <div class="card" id="resBox" style="display:none;margin-top:12px"></div>`;
+  $$('[data-af]',el).forEach(b=>b.onclick=()=>{S.af=b.dataset.af;save();rAlerts()});
+  $$('[data-aa]',el).forEach(b=>b.onclick=()=>alertAct(b.dataset.aa,AL(b.dataset.id)));
+}
+function alertAct(act,a){
+  const v=V(a.vid),now=Date.now();S.alSel=a.id;
+  if(act==='inv'){a.st='inv';a.hist.push({t:now,en:'Investigation opened by '+AUTH.user.split('@')[0],ru:'Проверку открыл '+AUTH.user.split('@')[0]});toast(a.id+' · '+T('investigating','проверяется'))}
+  else if(act==='esc'){a.st='esc';a.sev='high';a.hist.push({t:now,en:'Escalated to Navy maritime operations centre',ru:'Передано в морской оперативный центр ВМС'});v.watch=true;toast(a.id+' · '+T('escalated, vessel added to watchlist','передано выше, судно в списке наблюдения'),'bad')}
+  else if(act==='res'){
+    const box=$('#resBox');box.style.display='block';box.scrollIntoView({behavior:'smooth',block:'center'});
+    const R=[['Coverage gap / technical','Тень покрытия / техника'],['Vessel contacted, AIS restored','Связались с судном, AIS восстановлен'],['Violation confirmed, fine issued','Нарушение подтверждено, штраф'],['False alarm','Ложная тревога']];
+    box.innerHTML=`<h3>${T('Resolve','Закрыть')} ${a.id}</h3><div class="fgrid"><div class="f"><label>${T('Outcome','Итог')}</label><select class="input" id="rOut">${R.map((r,i)=>`<option value="${i}">${T(r[0],r[1])}</option>`).join('')}</select></div>
+      <div class="f"><label>${T('Note (min 5 chars)','Заметка (не меньше 5 символов)')}</label><input class="input" id="rNote" placeholder="${T('What was found','Что установлено')}"><div class="err" id="rErr"></div></div></div>
+      <div class="row" style="margin-top:12px"><button class="btn pri sm" id="rGo">${T('Confirm resolution','Подтвердить закрытие')}</button><button class="btn sm" id="rCancel">${T('Cancel','Отмена')}</button></div>`;
+    $('#rCancel').onclick=()=>{box.style.display='none'};
+    $('#rGo').onclick=()=>{const n=$('#rNote').value.trim();if(n.length<5){$('#rNote').classList.add('bad');$('#rErr').textContent=T('Please describe the outcome.','Опишите итог.');return}
+      const r=R[+$('#rOut').value];a.st='res';a.hist.push({t:Date.now(),en:'Resolved: '+r[0]+' — '+n,ru:'Закрыто: '+r[1]+' — '+n});if(+$('#rOut').value===1&&!v.ais){v.ais=true;v.darkSince=null}
+      if(+$('#rOut').value===2)v.insp.push({t:Date.now(),en:'Violation: AIS switched off — fine issued',ru:'Нарушение: AIS отключён — штраф'});
+      save();shell();rAlerts();toast(a.id+' · '+T('resolved','закрыта'))};
+    return}
+  else if(act==='reopen'){a.st='inv';a.hist.push({t:now,en:'Reopened',ru:'Открыто снова'})}
+  else if(act==='task'){pre={tk:'alert',ref:a.id};go('patrol');return}
+  else if(act==='map'){S.sel=a.vid;S.selA=null;go('ops');return}
+  else if(act==='prof'){S.vSel=a.vid;go('vessels');return}
+  save();shell();rAlerts();
+}
+
+/* ---------- vessels ---------- */
+function rVessels(){
+  const el=$('#v-vessels');
+  el.innerHTML=`<div class="toolbar"><input class="input" id="vq" placeholder="${T('Search name, MMSI, IMO, owner','Поиск: название, MMSI, IMO, владелец')}" value="${esc(S.vq)}">
+    <select class="input" id="vt" style="max-width:190px">${[['all','All types','Все типы'],...Object.keys(TYPES).map(k=>[k,TYPES[k][0],TYPES[k][1]]),['dark','Dark only','Только тёмные'],['watch','Watchlist','Список наблюдения']].map(o=>`<option value="${o[0]}" ${S.vt===o[0]?'selected':''}>${T(o[1],o[2])}</option>`).join('')}</select></div>
+  <div class="grid2"><div class="tw" id="vTab"></div><div class="card" id="vProf"></div></div>`;
+  $('#vq').oninput=e=>{S.vq=e.target.value;vTable()};
+  $('#vt').onchange=e=>{S.vt=e.target.value;save();vTable()};
+  vTable();vProfile();
+}
+function vTable(){
+  const q=S.vq.trim().toLowerCase();
+  const list=S.vessels.filter(v=>(!q||[v.name,v.mmsi,v.imo,v.owner].join(' ').toLowerCase().includes(q))&&(S.vt==='all'||(S.vt==='dark'?!v.ais:S.vt==='watch'?v.watch:v.type===S.vt))).sort((a,b)=>risk(b)-risk(a));
+  $('#vTab').innerHTML=`<table><thead><tr><th>${T('Vessel','Судно')}</th><th>MMSI</th><th>${T('Type','Тип')}</th><th>${T('Flag','Флаг')}</th><th>AIS</th><th>${T('Risk','Риск')}</th></tr></thead><tbody>${list.map(v=>`<tr class="clk ${S.vSel===v.id?'sel':''}" data-v="${v.id}"><td><b>${esc(v.name)}</b>${v.watch?' <span class="gold-t">★</span>':''}</td><td class="mono">${v.mmsi}</td><td>${tname(v.type)}</td><td>${v.flag}</td><td>${v.ais?`<span class="ok-t">●</span> ${T('on','вкл')}`:`<span class="bad-t">●</span> ${T('dark','нет')}`}</td><td>${riskPill(risk(v))}</td></tr>`).join('')||`<tr><td colspan="6" class="muted">${T('No vessels match.','Нет подходящих судов.')}</td></tr>`}</tbody></table>`;
+  $$('[data-v]',$('#vTab')).forEach(r=>r.onclick=()=>{S.vSel=r.dataset.v;save();vTable();vProfile();if(innerWidth<1100)$('#vProf').scrollIntoView({behavior:'smooth'})});
+}
+function trackSvg(v){
+  const pts=v.track.concat([[v.x,v.y]]);let x0=Math.min(...pts.map(p=>p[0])),x1=Math.max(...pts.map(p=>p[0])),y0=Math.min(...pts.map(p=>p[1])),y1=Math.max(...pts.map(p=>p[1]));
+  const pad=20,w=Math.max(60,x1-x0)+pad*2,h=Math.max(40,y1-y0)+pad*2;x0-=pad;y0-=pad;
+  const vb=`${x0.toFixed(0)} ${y0.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}`;const sw=(w/300).toFixed(2);
+  const gapStart=Math.max(0,pts.length-(v.ais?0:6));
+  const a=pts.slice(0,v.ais?pts.length:gapStart+1).map(p=>p.join(',')).join(' '),b=v.ais?'':pts.slice(gapStart).map(p=>p.join(',')).join(' ');
+  return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:170px;display:block;background:var(--bg2);border-radius:10px;border:1px solid var(--line)"><polyline points="${a}" fill="none" style="stroke:var(--mal3)" stroke-width="${sw*2}" stroke-linejoin="round"/>${b?`<polyline points="${b}" fill="none" style="stroke:var(--red)" stroke-width="${sw*2}" stroke-dasharray="${sw*5} ${sw*4}"/>`:''}<circle cx="${pts[0][0]}" cy="${pts[0][1]}" r="${sw*4}" style="fill:var(--dim)"/><circle cx="${v.x.toFixed(1)}" cy="${v.y.toFixed(1)}" r="${sw*5}" style="fill:var(${v.ais?'--mal3':'--red'})"/></svg>`;
+}
+function vProfile(){
+  const v=V(S.vSel),c=$('#vProf');if(!v){c.innerHTML=`<div class="empty">${T('Select a vessel.','Выберите судно.')}</div>`;return}
+  const rk=risk(v),al=S.alerts.filter(a=>a.vid===v.id);
+  c.innerHTML=`<h3><span style="overflow-wrap:anywhere">${esc(v.name)}</span><span class="sp"></span>${v.ais?`<span class="pill ok">AIS ${T('live','в эфире')}</span>`:`<span class="pill bad">${T('Dark','Тёмное')} · ${v.darkSince?ago(v.darkSince):''}</span>`}</h3>
+   <div class="gauge" style="margin-bottom:12px"><div class="n ${rk>=60?'bad-t':rk>=35?'warn-t':'ok-t'}">${rk}</div><div style="flex:1"><div style="font-size:12px;color:var(--muted);margin-bottom:5px">${T('Risk score (ML: flag, AIS gaps, ownership, alerts)','Оценка риска (ML: флаг, пропуски AIS, владелец, тревоги)')}</div><div class="prog ${rk>=60?'red':rk>=35?'gold':''}"><i style="width:${rk}%"></i></div></div></div>
+   <dl class="kv"><dt>MMSI · IMO</dt><dd class="mono">${v.mmsi} · ${v.imo}</dd><dt>${T('Type','Тип')}</dt><dd>${tname(v.type)} · ${v.len} m · ${T('built','постр.')} ${v.built}</dd><dt>${T('Flag','Флаг')}</dt><dd>${flagName(v.flag)}</dd><dt>${T('Owner','Владелец')}</dt><dd>${esc(v.owner)}</dd><dt>${T('Destination','Назначение')}</dt><dd>${esc(v.dest)}</dd><dt>${T('Position','Позиция')}</dt><dd class="mono">${pos(v.x,v.y)}</dd><dt>${T('AIS gaps (90 d)','Пропуски AIS (90 д)')}</dt><dd>${v.gaps}</dd></dl>
+   <div style="font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 6px">${T('Track, last 80 min','Трек за 80 мин')}${v.ais?'':' · <span class="bad-t">'+T('dashed = estimated while dark','пунктир — оценка без AIS')+'</span>'}</div>${trackSvg(v)}
+   <div style="font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 6px">${T('Alerts','Тревоги')} (${al.length})</div>
+   ${al.length?al.map(a=>`<div class="row" style="font-size:12.5px;padding:4px 0;border-bottom:1px dashed var(--line)"><span class="mono">${a.id}</span><span style="flex:1;min-width:120px">${T(AT[a.type][0],AT[a.type][1])}</span>${stPill(AST,a.st)}</div>`).join(''):`<div class="muted" style="font-size:12.5px">${T('No alerts on record.','Тревог нет.')}</div>`}
+   <div style="font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 6px">${T('Inspections','Досмотры')}</div>
+   ${v.insp.length?v.insp.map(i=>`<div style="font-size:12.5px;padding:4px 0;border-bottom:1px dashed var(--line)"><span class="mono muted">${new Date(i.t).toISOString().slice(0,10)}</span> · ${esc(T(i.en,i.ru))}</div>`).join(''):`<div class="muted" style="font-size:12.5px">${T('No inspections on record.','Досмотров не было.')}</div>`}
+   <div class="row" style="margin-top:14px"><button class="btn sm ${v.watch?'gold':''}" id="pW">${v.watch?'★ '+T('On watchlist','В списке наблюдения'):'☆ '+T('Add to watchlist','В список наблюдения')}</button><button class="btn sm" id="pI">${T('Request port inspection','Запросить досмотр в порту')}</button><button class="btn sm" id="pM">${T('Show on map','На карте')}</button></div>`;
+  $('#pW').onclick=()=>{v.watch=!v.watch;save();vTable();vProfile();toast(v.watch?T('Added to watchlist','Добавлено в список наблюдения'):T('Removed from watchlist','Убрано из списка наблюдения'))};
+  $('#pI').onclick=()=>{v.insp.unshift({t:Date.now(),en:'Inspection requested at '+v.dest+' (pending)',ru:'Запрошен досмотр в порту '+v.dest+' (ожидает)'});save();vProfile();toast(T('Inspection request sent to ','Запрос досмотра отправлен в ')+esc(v.dest),'gold')};
+  $('#pM').onclick=()=>{S.sel=v.id;S.selA=null;go('ops')};
+}
+
+/* ---------- spills ---------- */
+function spillSvg(s,big){
+  const W=big?400:240,H=big?220:120,sc=big?2.2:1.5;
+  const d=s.poly.map((p,i)=>(i?'L':'M')+(W/2+p[0]*sc).toFixed(1)+' '+(H/2+p[1]*sc).toFixed(1)).join(' ')+'Z';
+  const r=rng(parseInt(s.id.slice(3))||7);let speck='';for(let i=0;i<(big?140:70);i++)speck+=`<circle cx="${(r()*W).toFixed(0)}" cy="${(r()*H).toFixed(0)}" r="${(r()*1.4+.3).toFixed(1)}" style="fill:var(--line2)" fill-opacity=".7"/>`;
+  const src=s.src&&V(s.src);
+  return `<svg viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" style="fill:var(--bg)"/>${speck}<path d="${d}" style="fill:var(--amber);stroke:var(--amber)" fill-opacity=".35" stroke-width="1.5"/><path d="${d}" fill="none" style="stroke:var(--text)" stroke-opacity=".25" stroke-width="${big?6:4}" transform="translate(${big?6:4} ${big?3:2})"/>
+   ${src&&big?`<path d="M ${W/2+40} ${H/2-10} q 60 -30 140 -60" style="stroke:var(--red)" stroke-dasharray="5 4" fill="none" stroke-width="1.6"/><circle cx="${W/2+40}" cy="${H/2-10}" r="4" style="fill:var(--red)"/><text x="${W/2+60}" y="${H/2-44}" style="fill:var(--red);font:600 11px var(--mono)">${esc(src.name)}</text>`:''}
+   <text x="8" y="${H-8}" style="fill:var(--muted);font:600 ${big?11:9}px var(--mono)">${s.sat} · ${s.scene}</text>${big?`<g transform="translate(${W-40} 30)"><path d="M0 -14 L5 4 L0 0 L-5 4Z" style="fill:var(--text)"/><text x="-4" y="18" style="fill:var(--muted);font:700 10px var(--mono)">N</text></g>`:''}</svg>`;
+}
+function rSpills(){
+  const el=$('#v-spills');const act=S.spills.filter(s=>s.st!=='closed'&&s.st!=='fp');
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Active slicks','Активные пятна')}</div><div class="v warn-t">${act.length}</div><div class="d">${T('on surface now','на поверхности')}</div></div>
+   <div class="card kpi"><div class="l">${T('Total area','Общая площадь')}</div><div class="v">${act.reduce((a,s)=>a+s.area,0).toFixed(1)} km²</div><div class="d">${T('active detections','активные обнаружения')}</div></div>
+   <div class="card kpi"><div class="l">${T('Scenes processed (30 d)','Снимков обработано (30 д)')}</div><div class="v">${S.sn-180}</div><div class="d">Orbis-1A / 1B SAR</div></div>
+   <div class="card kpi"><div class="l">${T('Model precision','Точность модели')}</div><div class="v ok-t">91.4%</div><div class="d">${T('U-Net v3 · validated','U-Net v3 · проверено')}</div></div></div>
+  <div class="grid2"><div class="stack"><div class="card"><h3>${T('Process new SAR scene','Обработать новый снимок SAR')}<span class="sp"></span><button class="btn sm pri" id="runDet" ${S.detecting!=null?'disabled':''}>${T('Run ML detection','Запустить ML-поиск')}</button></h3>
+     <div class="prog gold"><i id="detBar" style="width:${S.detecting?S.detecting.p:0}%"></i></div><div class="stages" id="stages"></div></div>
+    <div class="sp-list">${S.spills.slice().sort((a,b)=>b.t-a.t).map(s=>`<button class="spc ${S.selS===s.id?'sel':''}" data-s="${s.id}">${spillSvg(s)}<div class="b"><b>${s.id}</b>${s.area.toFixed(1)} km² · ${T('conf.','увер.')} ${Math.round(s.conf*100)}% · ${ago(s.t)}<div style="margin-top:6px">${stPill(SST,s.st)}</div></div></button>`).join('')}</div></div>
+   <div class="card" id="spDet"></div></div>`;
+  $$('[data-s]',el).forEach(b=>b.onclick=()=>{S.selS=b.dataset.s;save();rSpills();if(innerWidth<1100)$('#spDet').scrollIntoView({behavior:'smooth'})});
+  $('#runDet').onclick=runDetection;stagesHtml();spDetail();
+}
+const STAGES=[['Ingesting scene from ground station','Приём снимка с наземной станции'],['Calibration and speckle filtering','Калибровка и фильтрация спеклов'],['ML segmentation of dark slicks','ML-сегментация тёмных пятен'],['Look-alike rejection (wind, algae)','Отсев похожих (ветер, водоросли)'],['Matching AIS tracks to find source','Сопоставление с треками AIS']];
+function stagesHtml(){const e=$('#stages');if(!e)return;const p=S.detecting?S.detecting.p:-1;e.innerHTML=STAGES.map((s,i)=>{const lo=i*20,cls=p>=lo+20?'ok':p>=lo?'cur':'';return `<div class="${cls}"><i>${cls==='ok'?'✓':cls==='cur'?'◌':'·'}</i>${T(s[0],s[1])}</div>`}).join('')}
+function runDetection(){
+  if(S.detecting)return;S.detecting={p:0};$('#runDet').disabled=true;stagesHtml();
+  const iv=setInterval(()=>{S.detecting.p+=5;if($('#detBar'))$('#detBar').style.width=S.detecting.p+'%';stagesHtml();
+    if(S.detecting.p>=100){clearInterval(iv);S.detecting=null;S.sn++;
+      const found=Math.random()<.8;
+      if(!found){toast(T('Scene S'+S.sn+' clean — no slicks found','Снимок S'+S.sn+' чистый — пятен нет'));save();if(S.view==='spills')rSpills();return}
+      let x,y;do{x=80+Math.random()*560;y=60+Math.random()*480}while(blocked(x,y)||blocked(x+30,y)||blocked(x-30,y));
+      const cand=S.vessels.slice().sort((a,b)=>(Math.hypot(a.x-x,a.y-y)-(a.type==='tanker'?80:0))-(Math.hypot(b.x-x,b.y-y)-(b.type==='tanker'?80:0)))[0];
+      const area=+(0.8+Math.random()*9).toFixed(1);const id='OS-0'+(S.sn);
+      S.spills.unshift({id,x,y,area,conf:+(0.7+Math.random()*.28).toFixed(2),src:cand.id,st:'det',t:Date.now(),sat:Math.random()<.5?'Orbis-1A':'Orbis-1B',scene:'S'+S.sn,poly:blob(Math.random,area),wind:3+Math.floor(Math.random()*9)});
+      S.selS=id;save();shell();toast(`<b>${id}</b> · ${T('oil slick detected','обнаружено нефтяное пятно')} ${area} km²`,'bad');if(S.view==='spills')rSpills()}},140);
+}
+function spDetail(){
+  const s=SP(S.selS),c=$('#spDet');if(!s){c.innerHTML=`<div class="empty">${T('Select a detection.','Выберите обнаружение.')}</div>`;return}
+  const src=s.src&&V(s.src);
+  c.innerHTML=`<h3>${s.id}<span class="sp"></span>${stPill(SST,s.st)}</h3><div class="sbig">${spillSvg(s,true)}</div>
+   <dl class="kv" style="margin-top:12px"><dt>${T('Detected','Обнаружено')}</dt><dd>${new Date(s.t).toISOString().slice(0,16).replace('T',' ')} UTC</dd><dt>${T('Satellite · scene','Спутник · снимок')}</dt><dd class="mono">${s.sat} · ${s.scene}</dd><dt>${T('Centre','Центр')}</dt><dd class="mono">${pos(s.x,s.y)}</dd><dt>${T('Area','Площадь')}</dt><dd>${s.area.toFixed(1)} km² · ≈ ${Math.round(s.area*0.9*1000).toLocaleString()} L</dd><dt>${T('Confidence','Уверенность')}</dt><dd>${Math.round(s.conf*100)}%</dd><dt>${T('Wind','Ветер')}</dt><dd>${s.wind} m/s</dd>
+   <dt>${T('Suspected source','Вероятный источник')}</dt><dd>${src?`<a href="#" id="spSrc">${esc(src.name)}</a> · ${tname(src.type)} · ${distNm(src,s)} nm`:T('not identified','не установлен')}</dd></dl>
+   <div class="row" style="margin-top:14px">
+    ${s.st==='det'?`<button class="btn sm pri" data-ss="ver">${T('Verify (analyst)','Подтвердить (аналитик)')}</button><button class="btn sm" data-ss="fp">${T('Mark false positive','Ложное срабатывание')}</button>`:''}
+    ${s.st==='ver'?`<button class="btn sm gold" data-ss="resp">${T('Dispatch response','Направить реагирование')}</button>`:''}
+    ${s.st==='resp'?`<button class="btn sm pri" data-ss="closed">${T('Close: cleaned up','Закрыть: убрано')}</button>`:''}
+    ${s.st==='closed'||s.st==='fp'?`<button class="btn sm" data-ss="det">${T('Reopen','Открыть снова')}</button>`:''}
+    ${src&&s.st!=='fp'?`<button class="btn sm" data-ss="alert">${T('Raise alert on source','Тревога по источнику')}</button>`:''}</div>`;
+  if($('#spSrc'))$('#spSrc').onclick=e=>{e.preventDefault();S.vSel=src.id;go('vessels')};
+  $$('[data-ss]',c).forEach(b=>b.onclick=()=>{const k=b.dataset.ss;
+    if(k==='alert'){const a=newAlert(src,'rdv','high','Suspected discharge source for '+s.id,'Вероятный источник сброса для '+s.id,true);a.type='sar';toast(a.id+' · '+T('alert raised on','тревога по судну')+' '+esc(src.name),'gold');save();shell();return}
+    if(k==='resp'){pre={tk:'spill',ref:s.id};s.st='ver';save();go('patrol');toast(T('Choose an asset to dispatch','Выберите средство для отправки'),'gold');return}
+    s.st=k;save();shell();rSpills();toast(s.id+' · '+T(SST[k][0],SST[k][1]))});
+}
+
+/* ---------- patrol ---------- */
+let pre=null;
+function assetPill(a){const m={ready:['Ready','Готов','ok'],enroute:['En route','В пути','warn'],onscene:['On scene','На месте','gold'],rtb:['Returning','Возвращается',''],maint:['Maintenance','Обслуживание','bad']};const x=m[a.st]||m.ready;return `<span class="pill ${x[2]}">${T(x[0],x[1])}</span>`}
+function rPatrol(){
+  const el=$('#v-patrol');
+  const ready=S.assets.filter(a=>a.st==='ready');
+  const tgts=[...S.alerts.filter(a=>a.st!=='res'&&a.st!=='task').map(a=>({v:'alert:'+a.id,l:a.id+' · '+T(AT[a.type][0],AT[a.type][1])+' · '+(V(a.vid)||{}).name})),...S.spills.filter(s=>s.st==='det'||s.st==='ver').map(s=>({v:'spill:'+s.id,l:s.id+' · '+T('oil spill','разлив')+' '+s.area.toFixed(1)+' km²'}))];
+  const pv=pre?pre.tk+':'+pre.ref:'';
+  el.innerHTML=`<div class="grid2"><div class="stack"><div class="card"><h3>${T('New tasking order','Новая задача')}${AUTH.role!=='cmd'?`<span class="sp"></span><span class="pill warn">${T('Watch officer: request needs commander sign-off (auto in demo)','Дежурный: нужна подпись командира (в демо — авто)')}</span>`:''}</h3>
+    <div class="fgrid"><div class="f"><label>${T('Target','Цель')}</label><select class="input" id="tTg"><option value="">${T('— select alert or spill —','— выберите тревогу или разлив —')}</option>${tgts.map(t=>`<option value="${t.v}" ${t.v===pv?'selected':''}>${esc(t.l)}</option>`).join('')}</select><div class="err" id="eTg"></div></div>
+     <div class="f"><label>${T('Asset','Средство')}</label><select class="input" id="tAs"><option value="">${T('— available assets —','— свободные средства —')}</option>${ready.map(a=>`<option value="${a.id}">${KIND[a.kind][2]} ${esc(a.name)}</option>`).join('')}</select><div class="err" id="eAs"></div></div>
+     <div class="f"><label>${T('Priority','Приоритет')}</label><select class="input" id="tPr"><option value="high">${T('High — immediate','Высокий — немедленно')}</option><option value="med" selected>${T('Medium','Средний')}</option><option value="low">${T('Low — when available','Низкий — по возможности')}</option></select></div>
+     <div class="f"><label>${T('Mission','Миссия')}</label><select class="input" id="tMs"><option value="id">${T('Identify & photograph','Опознать и сфотографировать')}</option><option value="board">${T('Hail and board','Вызов и досмотр')}</option><option value="shadow">${T('Shadow vessel','Сопровождение судна')}</option><option value="sample">${T('Sample slick, deploy booms','Пробы пятна, боновые заграждения')}</option></select></div>
+     <div class="f full"><label>${T('Instructions','Указания')}</label><input class="input" id="tNt" placeholder="${T('e.g. Approach from the north, VHF ch.16','например: подход с севера, УКВ кан. 16')}"></div></div>
+    <div id="eta" class="muted" style="font-size:12.5px;margin-top:10px"></div>
+    <div class="row" style="margin-top:12px"><button class="btn pri" id="tGo">${T('Issue tasking','Выдать задачу')}</button></div></div>
+    <div class="card"><h3>${T('Taskings','Задачи')}</h3><div id="taskList"></div></div></div>
+   <div class="card"><h3>${T('Patrol assets','Патрульные средства')}</h3><div id="assetList"></div></div></div>`;
+  const etaUpd=()=>{const tg=$('#tTg').value,as=$('#tAs').value;if(!tg||!as){$('#eta').textContent='';return}const [k,r]=tg.split(':');const p=targetPos({tk:k,ref:r}),a=A(as);if(!p)return;const nm=distNm(a,p),kn=a.kind==='air'?230:a.kind==='drone'?110:24;$('#eta').innerHTML=T('Distance','Расстояние')+` <b>${nm} nm</b> · ETA <b>${Math.max(1,Math.round(nm/kn*60))} ${T('min','мин')}</b> (${kn} ${T('kn','уз')})`};
+  $('#tTg').onchange=etaUpd;$('#tAs').onchange=etaUpd;
+  if(pre&&ready.length){let best=ready[0],p=targetPos(pre);if(p)ready.forEach(a=>{if(Math.hypot(a.x-p.x,a.y-p.y)<Math.hypot(best.x-p.x,best.y-p.y))best=a});$('#tAs').value=best.id;etaUpd()}
+  $('#tGo').onclick=()=>{
+    const tg=$('#tTg').value,as=$('#tAs').value;let ok=true;
+    $('#eTg').textContent=tg?'':T('Select a target','Выберите цель');$('#tTg').classList.toggle('bad',!tg);
+    $('#eAs').textContent=as?'':T('Select an available asset','Выберите свободное средство');$('#tAs').classList.toggle('bad',!as);
+    if(!tg||!as)return;
+    const [k,r]=tg.split(':');const a=A(as);
+    const tk={id:'PT-'+(S.tn++),aid:as,tk:k,ref:r,pri:$('#tPr').value,ms:$('#tMs').value,st:'enroute',t:Date.now(),note:$('#tNt').value.trim(),d0:distNm(a,targetPos({tk:k,ref:r}))};
+    S.tasks.unshift(tk);a.st='enroute';
+    if(k==='alert'){const al=AL(r);al.st='task';al.hist.push({t:Date.now(),en:'Patrol tasked: '+a.name+' ('+tk.id+')',ru:'Направлен патруль: '+a.name+' ('+tk.id+')'})}else{SP(r).st='resp'}
+    pre=null;save();shell();rPatrol();toast(`<b>${tk.id}</b> · ${esc(a.name)} ${T('dispatched','отправлен')}`,'gold')};
+  rTaskList();
+}
+function rTaskList(){
+  const tl=$('#taskList'),al=$('#assetList');if(!tl)return;
+  const ms={id:['Identify & photograph','Опознать и сфотографировать'],board:['Hail and board','Вызов и досмотр'],shadow:['Shadow vessel','Сопровождение судна'],sample:['Sample slick, deploy booms','Пробы, боновые заграждения']};
+  tl.innerHTML=S.tasks.length?S.tasks.slice(0,12).map(tk=>{const a=A(tk.aid);const p=targetPos(tk);const rem=p?distNm(a,p):0;const pr=tk.st==='enroute'?Math.max(2,Math.min(98,100-rem/Math.max(1,tk.d0||rem)*100)):tk.st==='abort'?0:100;
+    return `<div class="task"><div class="top"><span class="mono" style="font-weight:700">${tk.id}</span><b>${KIND[a.kind][2]} ${esc(a.name)} → ${esc(targetName(tk))}</b>${stPill(TST,tk.st)}</div>
+    <div class="meta muted" style="font-size:12.5px;margin:6px 0 8px">${tk.ms?T(ms[tk.ms][0],ms[tk.ms][1])+' · ':''}${T('priority','приоритет')} ${tk.pri==='high'?T('high','высокий'):tk.pri==='med'?T('medium','средний'):T('low','низкий')} · ${T('issued','выдана')} ${hm(tk.t)} UTC${tk.note?' · '+esc(tk.note):''}</div>
+    <div class="prog ${tk.st==='onscene'?'gold':''}"><i data-tp="${tk.id}" style="width:${pr}%"></i></div><div class="muted mono" style="font-size:11.5px;margin-top:4px" data-tr="${tk.id}">${tk.st==='enroute'?rem+' nm '+T('to go','осталось'):tk.st==='onscene'?T('on scene since ','на месте с ')+hm(tk.arr||Date.now()):''}</div>
+    ${tk.st==='enroute'||tk.st==='onscene'?`<div class="row" style="margin-top:8px">${tk.st==='onscene'?`<button class="btn sm pri" data-tc="${tk.id}">${T('Complete & report','Завершить и доложить')}</button>`:''}<button class="btn sm danger" data-tx="${tk.id}">${T('Abort','Отменить')}</button></div>`:''}</div>`}).join(''):`<div class="empty">${T('No taskings yet.','Задач пока нет.')}</div>`;
+  $$('[data-tc]',tl).forEach(b=>b.onclick=()=>finishTask(b.dataset.tc,true));
+  $$('[data-tx]',tl).forEach(b=>b.onclick=()=>finishTask(b.dataset.tx,false));
+  al.innerHTML=S.assets.map(a=>`<div class="asset"><div class="ai">${KIND[a.kind][2]}</div><div class="sp"><b>${esc(a.name)}</b><span>${T(KIND[a.kind][0],KIND[a.kind][1])} · <span class="mono">${pos(a.x,a.y)}</span></span></div>${assetPill(a)}</div>`).join('')+
+   `<div class="muted" style="font-size:12px;margin-top:8px">${T('Assets move on the Live map in real time. Arrival switches the tasking to On scene.','Средства движутся по живой карте в реальном времени. По прибытии задача переходит в «На месте».')}</div>`;
+}
+function updTaskProg(){S.tasks.filter(t=>t.st==='enroute').forEach(tk=>{const a=A(tk.aid),p=targetPos(tk);if(!p)return;const rem=distNm(a,p);const e=$(`[data-tp="${tk.id}"]`),r=$(`[data-tr="${tk.id}"]`);if(e)e.style.width=Math.max(2,Math.min(98,100-rem/Math.max(1,tk.d0||rem)*100))+'%';if(r)r.textContent=rem+' nm '+T('to go','осталось')});
+  $$('#assetList .asset .mono').forEach((m,i)=>{const a=S.assets[i];if(a)m.textContent=pos(a.x,a.y)})}
+function finishTask(id,ok){const tk=S.tasks.find(t=>t.id===id),a=A(tk.aid);tk.st=ok?'done':'abort';tk.done=Date.now();a.st='rtb';
+  if(tk.tk==='alert'){const al=AL(tk.ref);if(al){if(ok){al.st='res';al.hist.push({t:Date.now(),en:'Resolved on scene by '+a.name+': vessel identified, report filed',ru:'Закрыто на месте ('+a.name+'): судно опознано, рапорт подан'});const v=V(al.vid);if(v){v.insp.unshift({t:Date.now(),en:'At-sea check by '+a.name,ru:'Проверка в море: '+a.name});if(!v.ais){v.ais=true;v.darkSince=null}}}else{al.st='inv';al.hist.push({t:Date.now(),en:'Tasking aborted',ru:'Задача отменена'})}}}
+  else{const s=SP(tk.ref);if(s)s.st=ok?'closed':'ver'}
+  save();shell();rPatrol();toast(tk.id+' · '+(ok?T('completed, asset returning to base','выполнена, средство возвращается'):T('aborted','отменена')),ok?'':'bad')}
+
+/* ---------- analytics ---------- */
+function rStats(){
+  const el=$('#v-stats');
+  const h=S.hourly,mx=Math.max(...h)*1.1,W=600,H=200,pl=40,pb=24;
+  const px=i=>pl+i*(W-pl-10)/23,py=v=>H-pb-(v/mx)*(H-pb-10);
+  const line=h.map((v,i)=>(i?'L':'M')+px(i).toFixed(1)+' '+py(v).toFixed(1)).join(' ');
+  let grid='';for(let i=0;i<=4;i++){const v=mx/4*i;grid+=`<line x1="${pl}" x2="${W-10}" y1="${py(v)}" y2="${py(v)}" style="stroke:var(--line)"/><text x="${pl-6}" y="${py(v)+4}" text-anchor="end" style="fill:var(--dim);font:10px var(--mono)">${(v/1000).toFixed(1)}k</text>`}
+  for(let i=0;i<24;i+=4)grid+=`<text x="${px(i)}" y="${H-6}" text-anchor="middle" style="fill:var(--dim);font:10px var(--mono)">${String(i).padStart(2,'0')}:00</text>`;
+  const ac=Object.keys(AT).map(k=>[k,S.alerts.filter(a=>a.type===k).length]);const amx=Math.max(1,...ac.map(x=>x[1]));
+  const bw=(W-pl-10)/ac.length;
+  const bars=ac.map((x,i)=>{const hh=(x[1]/amx)*(H-pb-20);return `<rect x="${pl+i*bw+bw*.2}" y="${H-pb-hh}" width="${bw*.6}" height="${hh}" rx="4" style="fill:var(${['--red','--amber','--mal','--violet','--blue'][i]})"/><text x="${pl+i*bw+bw/2}" y="${H-pb-hh-6}" text-anchor="middle" style="fill:var(--text);font:700 11px var(--mono)">${x[1]}</text><text x="${pl+i*bw+bw/2}" y="${H-6}" text-anchor="middle" style="fill:var(--muted);font:10px var(--font)">${T(['Gap','SAR','MPA','Spoof','STS'][i],['Пропуск','SAR','Зона','Подмена','Встреча'][i])}</text>`}).join('');
+  const fleet=Object.keys(TYPES).map(k=>[k,S.vessels.filter(v=>v.type===k).length]);
+  const done=S.tasks.filter(t=>t.st==='done'&&t.arr);const avg=done.length?Math.round(done.reduce((a,t)=>a+(t.arr-t.t),0)/done.length/1000):null;
+  const res=S.alerts.filter(a=>a.st==='res').length;
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Alerts raised (session)','Тревог за сеанс')}</div><div class="v">${S.alerts.length}</div><div class="d">${res} ${T('resolved','закрыто')}</div></div>
+   <div class="card kpi"><div class="l">${T('Resolution rate','Доля закрытых')}</div><div class="v ok-t">${Math.round(res/Math.max(1,S.alerts.length)*100)}%</div><div class="d">${T('target 80%','цель 80%')}</div></div>
+   <div class="card kpi"><div class="l">${T('Avg. time to scene','Ср. время до места')}</div><div class="v gold-t">${avg!=null?avg+T(' s',' с'):'—'}</div><div class="d">${T('demo time, completed taskings','демо-время, выполненные задачи')}</div></div>
+   <div class="card kpi"><div class="l">${T('Sensor uptime','Доступность датчиков')}</div><div class="v">99.2%</div><div class="d">${T('AIS shore + Sat-AIS + SAR','береговой AIS + спутниковый + SAR')}</div></div></div>
+  <div class="grid2e"><div class="card chart"><h3>${T('AIS messages per hour, last 24 h','Сообщения AIS по часам, 24 ч')}</h3><svg viewBox="0 0 ${W} ${H}">${grid}<path d="${line} L ${px(23)} ${H-pb} L ${pl} ${H-pb}Z" style="fill:var(--mal)" fill-opacity=".14"/><path d="${line}" fill="none" style="stroke:var(--mal3)" stroke-width="2.2"/></svg></div>
+   <div class="card chart"><h3>${T('Alerts by type','Тревоги по типам')}</h3><svg viewBox="0 0 ${W} ${H}"><line x1="${pl}" x2="${W-10}" y1="${H-pb}" y2="${H-pb}" style="stroke:var(--line2)"/>${bars}</svg></div>
+   <div class="card"><h3>${T('Traffic by vessel type','Трафик по типам судов')}</h3>${fleet.map(f=>`<div class="hbar"><span>${tname(f[0])}</span><div class="prog"><i style="width:${f[1]/S.vessels.length*100}%;background:var(${TYPES[f[0]][2]})"></i></div><b>${f[1]}</b></div>`).join('')}</div>
+   <div class="card"><h3>${T('Sensor network','Сеть датчиков')}</h3><div class="tw"><table><thead><tr><th>${T('Sensor','Датчик')}</th><th>${T('Coverage','Покрытие')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+    <tr><td>${T('AIS shore stations (14)','Береговые станции AIS (14)')}</td><td>40 nm</td><td><span class="pill ok">${T('Online','В сети')}</span></td></tr>
+    <tr><td>Sat-AIS · Lyra constellation</td><td>${T('whole EEZ','вся ИЭЗ')}</td><td><span class="pill ok">${T('Online','В сети')}</span></td></tr>
+    <tr><td>Orbis-1A SAR</td><td>${T('next pass','след. пролёт')} ${hm(Date.now()+47*60000)}</td><td><span class="pill ok">${T('Scheduled','По плану')}</span></td></tr>
+    <tr><td>Orbis-1B SAR</td><td>${T('next pass','след. пролёт')} ${hm(Date.now()+212*60000)}</td><td><span class="pill ok">${T('Scheduled','По плану')}</span></td></tr>
+    <tr><td>${T('Coastal radar Kessby','Береговой радар Кессбю')}</td><td>32 nm</td><td><span class="pill warn">${T('Degraded','Частично')}</span></td></tr></tbody></table></div></div></div>`;
+}
+
+/* ---------- login / wiring ---------- */
+$$('.role').forEach(b=>b.onclick=()=>{role=b.dataset.role;$$('.role').forEach(x=>x.classList.toggle('on',x===b));$('#lUser').value=role==='cmd'?'patrol.cmdr@msa.vlm':'watch.officer@msa.vlm'});
+$('#loginBtn').onclick=()=>{const u=$('#lUser').value.trim(),p=$('#lPass').value;
+  $('#lUserErr').textContent=u?'':T('Enter your service ID','Введите служебный ID');$('#lUser').classList.toggle('bad',!u);
+  $('#lPassErr').textContent=p?'':T('Enter your password','Введите пароль');$('#lPass').classList.toggle('bad',!p);
+  if(!u||!p)return;AUTH={user:u,role};ls.set('auth',AUTH);render();toast(T('Signed in · ','Вход выполнен · ')+esc(u))};
+$('#logout').onclick=()=>{AUTH=null;try{localStorage.removeItem(P+'auth')}catch(e){}save();render()};
+$('#reset').onclick=()=>{ls.clear();location.reload()};
+$$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.view));
+$('#menuBtn').onclick=()=>{$('#side').classList.toggle('open');$('#scrim').classList.toggle('on')};
+$('#scrim').onclick=()=>{$('#side').classList.remove('open');$('#scrim').classList.remove('on')};
+let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(S.view==='ops'){sizeMap();draw()}},120)});
+PT.onLang(()=>{readColors();render()});
+document.addEventListener('DOMContentLoaded',()=>{if(AUTH)role=AUTH.role;render();requestAnimationFrame(loop)});
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GrantDesk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}.app[hidden],.login[hidden]{display:none}.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:15px;flex:none}.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}.nav:hover{background:var(--panel);color:var(--text)}.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}.nav .ic{width:20px;text-align:center;flex:none}.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}.nav .cnt.r{background:var(--red);color:#fff}.grow{flex:1}.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center}.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;flex:none}.who b{display:block;font-size:13px}main{padding:20px 26px 60px;min-width:0}.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.head h1{font-size:24px;margin:0;letter-spacing:-.01em}.head .sp{flex:1}.crumb{font-size:12px;color:var(--dim)}.menu-btn{display:none}.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}.facts dt{color:var(--muted)}.facts dd{margin:0;font-weight:600}.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.card h3 .sp{flex:1}.view{display:none}.view.on{display:block;animation:fade .2s}@keyframes fade{from{opacity:0;transform:translateY(4px)}}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.btn:disabled{opacity:.42;cursor:not-allowed}.btn.sm{padding:6px 12px;font-size:12.5px}.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}.f .hint{font-size:11.5px;color:var(--dim);margin-top:4px}.f.err .input{border-color:var(--red)}.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.fgrid .full{grid-column:1/-1}textarea.input{min-height:96px;resize:vertical}select.input{appearance:auto}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}.kpi .l{font-size:12px;color:var(--muted);font-weight:600}.kpi .v{font-size:25px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}.kpi .d{font-size:12px;color:var(--muted)}.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:14px;align-items:start}.chart svg{width:100%;height:auto;display:block}.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;margin-top:6px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}table.t{width:100%;border-collapse:collapse;font-size:13px;min-width:620px}.t th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);padding:9px 12px;background:var(--bg2);border-bottom:1px solid var(--line);white-space:nowrap}.t td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}.t tr:last-child td{border-bottom:0}.t td.num,.t th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;font-size:12.5px;cursor:pointer;font-weight:600;color:var(--muted)}.chip.on{background:var(--mal);color:#fff;border-color:var(--mal)}.filters{display:grid;grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}.opp{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;background:var(--panel)}.opp .top{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}.opp .top .ttl{flex:1;min-width:200px}.opp .ttl b{font-size:15.5px;display:block}.opp .meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0 10px;font-size:12.5px}.opp .meta span{display:block;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.05em}.opp .more{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}.star{background:none;border:1px solid var(--line2);border-radius:10px;width:36px;height:34px;cursor:pointer;font-size:16px;color:var(--dim)}.star.on{color:var(--gold);border-color:var(--gold)}.steps{display:flex;margin:4px 0 18px}.step{flex:1;text-align:center;position:relative;font-size:12px;color:var(--muted);min-width:0;background:none;border:0;padding:0;cursor:pointer}.step:before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line2)}.step:first-child:before{display:none}.step .dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800}.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}.step.ok:before,.step.cur:before{background:var(--mal)}.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}.errs{border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 8%,transparent);border-radius:12px;padding:10px 14px;font-size:13px;margin-bottom:12px;color:var(--red)}.errs ul{margin:4px 0 0;padding-left:18px}.sum{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:13px}.sum dt{color:var(--muted)}.sum dd{margin:0;font-weight:600}.budrow{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px}.tot{display:flex;justify-content:space-between;padding:6px 0;font-size:13.5px}.tot.big{font-size:16px;font-weight:800;border-top:1px solid var(--line2);margin-top:6px;padding-top:10px}.file{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}.file .nm{flex:1;min-width:180px;font-size:13.5px}.file .nm small{display:block;color:var(--dim);font-size:11.5px}.tl{display:flex;margin-top:10px}.tl div{flex:1;position:relative;text-align:center;font-size:11px;color:var(--dim);min-width:0}.tl div:before{content:"";position:absolute;top:6px;left:-50%;width:100%;height:2px;background:var(--line2)}.tl div:first-child:before{display:none}.tl i{display:block;width:14px;height:14px;border-radius:50%;margin:0 auto 4px;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1}.tl .ok i{background:var(--mal);border-color:var(--mal)}.tl .ok:before,.tl .cur:before{background:var(--mal)}.tl .cur i{border-color:var(--gold);background:var(--gold)}.tl .ok,.tl .cur{color:var(--text)}.tl .no i{background:var(--red);border-color:var(--red)}.tl span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}.appc{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)}.appc .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.appc .top b{flex:1;min-width:160px}.qi{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--bg2);cursor:pointer}.qi.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}.qi .r1{display:flex;gap:8px;align-items:center;font-size:13px}.qi .r1 b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qi small{color:var(--muted);font-size:12px;display:block;margin-top:3px}.crit{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,180px) 52px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}.crit small{display:block;color:var(--dim);font-size:11.5px}.crit output{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:var(--mal)}.score{font-size:34px;font-weight:800;letter-spacing:-.02em}.prog{height:10px;border-radius:9px;background:var(--line);overflow:hidden;display:flex}.prog i{display:block;height:100%}.aw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}.aw button{text-align:left;border:1px solid var(--line);background:var(--bg2);border-radius:12px;padding:10px 12px;cursor:pointer;min-width:0}.aw button.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}.aw b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.aw small{font-size:11.5px;color:var(--muted)}.mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0}.mini div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}.mini span{display:block;font-size:11.5px;color:var(--muted)}.mini b{font-size:16px}.log{font-size:12.5px;max-height:260px;overflow:auto}.log div{padding:6px 0;border-bottom:1px dashed var(--line);display:flex;gap:10px}.log .tm{color:var(--dim);font-family:var(--mono);font-size:11.5px;flex:none}.ok-t{color:var(--mal3)}.bad-t{color:var(--red)}.warn-t{color:var(--amber)}.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:28px 16px;background:radial-gradient(900px 500px at 15% 0%,color-mix(in srgb,var(--mal) 16%,transparent),transparent),radial-gradient(700px 400px at 100% 100%,color-mix(in srgb,var(--gold) 12%,transparent),transparent)}.lwrap{max-width:440px;width:100%}.lcard{padding:24px}.lcard h2{margin:0 0 4px;font-size:20px}.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.role{border:1px solid var(--line2);background:var(--bg2);border-radius:12px;padding:10px;text-align:left;cursor:pointer}.role.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}.role b{display:block;font-size:13.5px}.role span{font-size:11.5px;color:var(--muted)}.lcard .f{margin-bottom:10px}.wide{width:100%;justify-content:center}.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;cursor:pointer}.chk input{margin-top:3px;accent-color:var(--mal)}.empty{text-align:center;padding:30px 16px;color:var(--muted)}.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.split,.intro{grid-template-columns:minmax(0,1fr)}.filters{grid-template-columns:1fr 1fr}.filters .q{grid-column:1/-1}}@media (max-width:860px){.app{grid-template-columns:minmax(0,1fr)}.side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}.side.open{transform:none}.menu-btn{display:inline-flex}main{padding:14px 14px 50px}.head h1{font-size:20px}.lwrap{grid-template-columns:minmax(0,1fr)}}@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid,.filters,.aw,.mini{grid-template-columns:minmax(0,1fr)}.opp .meta{grid-template-columns:1fr 1fr}.kpi .v{font-size:19px}.kpis{gap:10px}.step span{font-size:10px}.tl span{font-size:9.5px}.crit{grid-template-columns:minmax(0,1fr) 46px}.crit input{grid-column:1/-1;grid-row:2}.budrow{grid-template-columns:minmax(0,1fr) 120px}.roles{grid-template-columns:1fr}.filters .q{grid-column:auto}}</style>
+</head>
+<body data-demo-en="GrantDesk — grants lifecycle management" data-demo-ru="GrantDesk — управление грантами">
+<section class="login" id="login">
+  <div class="lwrap">
+    <div class="card lcard">
+      <div class="brand" style="padding:0 0 10px"><b>GD</b><div>GrantDesk<small data-en="Federal Office of Research &amp; Grants" data-ru="Федеральное управление исследований и грантов"></small></div></div>
+      <h2 data-en="Sign in" data-ru="Вход"></h2>
+      <div class="muted" style="font-size:13px" data-en="Choose a demo account — credentials are prefilled." data-ru="Выберите демо-аккаунт — данные уже подставлены."></div>
+      <div class="roles" id="roles"></div>
+      <div class="f"><label data-en="Email" data-ru="Почта"></label><input class="input" id="lMail" autocomplete="username"></div>
+      <div class="f"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lPw" type="password" autocomplete="current-password"></div>
+      <label class="chk" style="margin:4px 0 14px"><input type="checkbox" id="lMfa" checked><span data-en="Use demo MFA code (PIV / Login.gov simulated)" data-ru="Демо-код MFA (PIV / Login.gov — имитация)"></span></label>
+      <button class="btn pri wide" id="lGo" data-en="Sign in with demo account" data-ru="Войти в демо-аккаунт"></button>
+    </div>
+  </div>
+</section>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>GD</b><div>GrantDesk<small data-en="Federal Office of Research &amp; Grants" data-ru="Фед. управление исследований и грантов"></small></div></div>
+    <div class="sec" data-en="Applicant portal" data-ru="Кабинет заявителя"></div>
+    <div id="navA"></div>
+    <div class="sec" data-en="Agency workspace" data-ru="Рабочее место агентства"></div>
+    <div id="navO"></div>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="switchRole" style="flex:1;justify-content:center"></button>
+      <button class="btn sm" id="logout" data-en="Sign out" data-ru="Выйти"></button>
+    </div>
+    <button class="btn sm danger" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill" id="rolePill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="<b>Find opportunities</b>: filter, save, open details and press <b>Apply</b>." data-ru="<b>Поиск конкурсов</b>: фильтры, избранное, подробности и кнопка <b>Подать</b>."></span></div>
+          <div><b>2</b><span data-en="Build the application step by step — budget checks 2 CFR 200 rules — and submit." data-ru="Соберите заявку по шагам — бюджет проверяется по 2 CFR 200 — и отправьте."></span></div>
+          <div><b>3</b><span data-en="In the agency workspace score it, award, approve drawdowns and accept reports." data-ru="В рабочем месте агентства оцените её, присудите грант, одобрите транши и примите отчёты."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Grants lifecycle management" data-ru="Управление грантами"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $230M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Federal grants agency (fictional: Federal Office of Research &amp; Grants)" data-ru="Федеральное агентство грантов (вымышл.: Фед. управление исследований и грантов)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>Workflow · 2 CFR 200 · SAM.gov</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-opps"></section>
+    <section class="view" id="v-build"></section>
+    <section class="view" id="v-apps"></section>
+    <section class="view" id="v-dash"></section>
+    <section class="view" id="v-review"></section>
+    <section class="view" id="v-awards"></section>
+    <section class="view" id="v-reports"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=o=>o==null?'':(typeof o==='string'?o:(PT.lang==='ru'?(o.ru||o.en):o.en));
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY='pt_grants_state';
+const DAY=864e5;
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const usd=n=>'$'+Math.round(n).toLocaleString(loc());
+const ms=n=>n>=1e6?'$'+(+(n/1e6).toFixed(2)).toLocaleString(loc())+T('M',' млн'):'$'+Math.round(n/1e3).toLocaleString(loc())+T('K',' тыс.');
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const daysTo=d=>Math.ceil((new Date(d)-Date.now())/DAY);
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+const AG={energy:['Office of Energy Science','Управление энергетических исследований'],health:['Health Resources Office','Управление ресурсов здравоохранения'],edu:['Education Innovation Fund','Фонд инноваций в образовании'],ocean:['Ocean & Coastal Programs','Программы по океану и побережью'],trans:['Transport Innovation Office','Управление транспортных инноваций'],hum:['Endowment for the Humanities','Фонд гуманитарных наук'],labor:['Workforce Development Admin.','Администрация развития кадров'],water:['Clean Water Programs','Программы чистой воды'],sci:['National Science Directorate','Национальный научный директорат']};
+const CATS={research:['Research','Наука'],health:['Health','Здравоохранение'],edu:['Education & workforce','Образование и кадры'],climate:['Climate & resilience','Климат и устойчивость'],infra:['Infrastructure','Инфраструктура'],arts:['Arts & humanities','Культура']};
+const CATCOL={research:'--blue',health:'--mal',edu:'--gold',climate:'--violet',infra:'--amber',arts:'--red'};
+/* id, title en, ru, agency, cat, ceiling, floor, awards, closeOffsetDays, forecast?, match%, desc en, desc ru, eligibility en, ru, ALN */
+const OPPS=[
+['FORG-26-014','Advanced Battery Materials Research','Исследования материалов для аккумуляторов','energy','research',2500000,500000,8,34,0,20,'Fundamental and applied research on solid-state electrolytes, sodium-ion cathodes and recycling routes for grid-scale storage.','Фундаментальные и прикладные исследования твердотельных электролитов, натрий-ионных катодов и переработки для сетевых накопителей.','Universities, national labs, non-profit research institutes','Университеты, нацлаборатории, некоммерческие НИИ','81.049'],
+['FORG-26-018','Rural Broadband Workforce Training','Подготовка кадров для сельского ШПД','labor','edu',1200000,250000,15,21,0,0,'Apprenticeships and short courses for fiber splicers, tower climbers and network technicians in rural counties.','Ученичество и короткие курсы для сварщиков оптики, верхолазов и сетевых техников в сельских округах.','Community colleges, workforce boards, tribal governments','Колледжи, кадровые советы, органы коренных народов','17.268'],
+['FORG-26-021','Community Health Worker Expansion','Расширение сети общественных медработников','health','health',900000,200000,30,12,0,0,'Recruit, train and deploy community health workers in medically underserved areas with measurable access outcomes.','Набор, обучение и работа общественных медработников в районах с низкой доступностью медпомощи.','State/local health departments, FQHCs, non-profits','Органы здравоохранения, медцентры, НКО','93.498'],
+['FORG-26-023','Coastal Resilience & Living Shorelines','Устойчивость побережья и «живые берега»','ocean','climate',4000000,1000000,6,48,0,25,'Nature-based shoreline protection, marsh restoration and monitoring networks for vulnerable coastal communities.','Природные решения защиты берега, восстановление маршей и сети мониторинга для уязвимых прибрежных общин.','States, municipalities, universities, NGOs','Штаты, муниципалитеты, университеты, НКО','11.473'],
+['FORG-26-027','STEM Teacher Fellowships','Стипендии для учителей STEM','edu','edu',600000,100000,40,5,0,0,'Two-year fellowships placing mid-career STEM professionals into high-need public schools.','Двухлетние стипендии для специалистов STEM, приходящих в школы с высокой потребностью.','Local education agencies, universities','Органы образования, университеты','84.336'],
+['FORG-26-030','Smart Transit Signal Priority Pilots','Пилоты приоритета светофоров для транспорта','trans','infra',3000000,750000,10,64,1,20,'Connected signal priority for buses and emergency vehicles with open data publishing.','Подключённый приоритет светофоров для автобусов и экстренных служб с открытыми данными.','Transit agencies, metropolitan planning organizations','Транспортные агентства, городские плановые органы','20.530'],
+['FORG-26-009','Rural Opioid Response Program','Программа против опиоидов в сёлах','health','health',1000000,300000,25,-10,0,0,'Prevention, treatment and recovery services with peer support in rural communities.','Профилактика, лечение и реабилитация с поддержкой равных в сельских общинах.','Rural health networks, non-profits','Сельские медсети, НКО','93.912'],
+['FORG-26-033','Humanities Digital Archives','Цифровые архивы гуманитарных наук','hum','arts',350000,50000,20,27,0,10,'Digitization, metadata and public access platforms for at-risk historical collections.','Оцифровка, метаданные и публичный доступ к историческим коллекциям под угрозой.','Libraries, museums, archives, universities','Библиотеки, музеи, архивы, университеты','45.149'],
+['FORG-26-035','AI for Public Health Surveillance','ИИ для эпиднадзора','sci','research',1800000,400000,12,40,0,0,'Privacy-preserving machine learning for early outbreak detection from wastewater and syndromic data.','Машинное обучение с защитой данных для раннего выявления вспышек по сточным водам и синдромным данным.','Universities, research institutes, health agencies','Университеты, НИИ, органы здравоохранения','47.070'],
+['FORG-26-038','Lead Service Line Replacement','Замена свинцовых водопроводных вводов','water','infra',5000000,1000000,20,18,0,20,'Inventory, prioritisation and replacement of lead service lines in disadvantaged communities.','Инвентаризация, приоритизация и замена свинцовых вводов в неблагополучных районах.','Water utilities, municipalities, states','Водоканалы, муниципалитеты, штаты','66.468'],
+];
+const O=id=>{const o=OPPS.find(x=>x[0]===id);return o&&{id:o[0],t:{en:o[1],ru:o[2]},ag:o[3],cat:o[4],ceil:o[5],floor:o[6],n:o[7],off:o[8],fc:o[9],match:o[10],d:{en:o[11],ru:o[12]},el:{en:o[13],ru:o[14]},aln:o[15]}};
+const closeDate=o=>S.t0+o.off*DAY;
+const oppSt=o=>o.fc?'fc':daysTo(closeDate(o))<0?'cl':'open';
+const ST_O={open:['Open','Открыт','ok'],fc:['Forecast','Анонсирован','gold'],cl:['Closed','Закрыт','']};
+const BUD=[['pers','Personnel','Персонал'],['fringe','Fringe benefits','Начисления на ФОТ'],['travel','Travel','Командировки'],['equip','Equipment','Оборудование'],['supp','Supplies','Материалы'],['contr','Contractual / subawards','Договоры / субгранты'],['other','Other direct costs','Прочие прямые']];
+const FILES=[['sf424','SF-424 Application for Federal Assistance','SF-424 Заявка на федеральную помощь',1],['narr','Project narrative (≤ 15 pages)','Описание проекта (≤ 15 стр.)',1],['bj','Budget justification','Обоснование бюджета',1],['bio','Key personnel biosketches','Биографии ключевого персонала',1],['lol','Letters of support','Письма поддержки',0]];
+const CRIT=[['merit','Technical merit','Научно-техническая ценность','Significance, innovation, rigour','Значимость, новизна, строгость',30],['appr','Approach & work plan','Подход и план работ','Feasible milestones and risks','Реалистичные этапы и риски',25],['team','Team & capacity','Команда и потенциал','Key personnel, facilities','Ключевой персонал, база',20],['budget','Budget reasonableness','Обоснованность бюджета','Allowable, allocable (2 CFR 200.403)','Допустимость, относимость (2 CFR 200.403)',15],['impact','Broader impact','Общественный эффект','Communities served, equity','Охват, равный доступ',10]];
+const APP_ST={draft:['Draft','Черновик',''],sub:['Submitted','Подана','gold'],rev:['Under review','Экспертиза','warn'],awd:['Awarded','Грант присуждён','ok'],dec:['Not funded','Отклонена','bad']};
+const USERS={app:{n:'Dana Whitfield',r:['Grants manager · Northbridge Research Institute','Менеджер грантов · Northbridge Research Institute'],mail:'dana.whitfield@northbridge.example',ini:'DW'},po:{n:'Marcus Ortega',r:['Program officer · FORG','Программный специалист · FORG'],mail:'m.ortega@forg.example.gov',ini:'MO'}};
+const ORG={name:'Northbridge Research Institute',uei:'NBRI7Q2K5M1X',contact:'Dana Whitfield',email:'dana.whitfield@northbridge.example'};
+
+function seed(){
+  const t0=Date.now(), r=rng(23);
+  const mk=(id,org,opp,te,tr,ae,ar,req,a,b,own)=>({id,org,opp,t:{en:te,ru:tr},abs:{en:ae,ru:ar},req,others:[{n:'R. Okafor',s:a},{n:'L. Chen',s:b}],mine:null,dec:null,own:!!own});
+  const queue=[
+    mk('GD-26-0388','Gulfport State University','FORG-26-023','Oyster-reef breakwaters for Bayou communities','Устричные рифы-волноломы для общин байю','Pilot 3 km of oyster-reef breakwaters with sensor-based erosion monitoring and community stewardship.','Пилот 3 км устричных рифов-волноломов с датчиками эрозии и участием жителей.',2850000,84,79),
+    mk('GD-26-0391','Cascadia Energy Lab','FORG-26-014','Sodium-ion cathodes from abundant minerals','Натрий-ионные катоды из доступных минералов','Scalable synthesis of layered oxide cathodes with 2,000-cycle target and techno-economic analysis.','Масштабируемый синтез слоистых оксидных катодов с целью 2000 циклов и ТЭО.',2100000,88,91),
+    mk('GD-26-0396','Prairie Health Collaborative','FORG-26-021','Mobile CHW teams for tribal lands','Мобильные бригады медработников для земель коренных народов','Train 40 community health workers; target 12,000 home visits and 30% fewer avoidable ER visits.','Обучение 40 медработников; 12 000 визитов на дом и −30% неотложных обращений.',780000,71,58),
+    mk('GD-26-0402','Riverside Community College','FORG-26-018','FiberPath: rural splicer apprenticeships','FiberPath: ученичество сварщиков оптики','Registered apprenticeship for 120 learners with 4 ISP employer partners.','Зарегистрированное ученичество для 120 слушателей с 4 провайдерами-работодателями.',940000,77,74),
+    mk('GD-26-0407','Metro Data Institute','FORG-26-035','Wastewater signals for early outbreak alerts','Сигналы сточных вод для раннего оповещения','Federated learning across 18 utilities with differential privacy and public dashboard.','Федеративное обучение на данных 18 водоканалов с дифф. приватностью и публичной панелью.',1650000,92,63),
+    mk('GD-26-0410','Old Harbor Historical Society','FORG-26-033','Saving the harbour ledgers 1820–1910','Спасение портовых книг 1820–1910','Digitize 48,000 pages with crowd-sourced transcription and IIIF viewer.','Оцифровка 48 000 страниц с народной расшифровкой и просмотром IIIF.',210000,69,72)];
+  const dd=(aw,months,obl)=>{const a=[];let left=obl*.62;for(let i=months;i>=1;i--){const v=Math.round(obl*(.04+r()*.07)/100)*100;if(v>left)break;left-=v;a.push({id:aw+'-D'+(months-i+1),date:t0-i*30*DAY+Math.floor(r()*8)*DAY,amt:v,p:{en:['Personnel & fringe Q','Field equipment','Subaward invoice','Travel & supplies','Monthly drawdown'][i%5],ru:['Персонал и начисления','Полевое оборудование','Счёт субгранта','Командировки и материалы','Ежемесячный транш'][i%5]},st:'paid'})}return a};
+  const awards=[
+    {id:'AW-25-1187',app:'GD-25-0219',t:{en:'Mobile clinics for river communities',ru:'Мобильные клиники для прибрежных сёл'},org:ORG.name,opp:'FORG-26-021',obl:850000,start:t0-300*DAY,dd:[]},
+    {id:'AW-26-0203',app:'GD-26-0102',t:{en:'Coastal sensor mesh for storm surge',ru:'Сеть датчиков нагонной волны'},org:ORG.name,opp:'FORG-26-023',obl:1640000,start:t0-220*DAY,dd:[]},
+    {id:'AW-26-0311',app:'GD-26-0144',t:{en:'STEM fellows for Eastside schools',ru:'STEM-стипендиаты для школ Истсайда'},org:ORG.name,opp:'FORG-26-027',obl:420000,start:t0-120*DAY,dd:[]}];
+  awards[0].dd=dd('AW-25-1187',9,850000);awards[1].dd=dd('AW-26-0203',7,1640000);awards[2].dd=dd('AW-26-0311',4,420000);
+  awards[1].dd.push({id:'AW-26-0203-D9',date:t0-2*DAY,amt:68000,p:{en:'Sensor buoys batch 3',ru:'Буи с датчиками, партия 3'},st:'pend'});
+  const rep=(id,aw,type,pe,pr,off,st)=>({id,aw,type,per:{en:pe,ru:pr},due:t0+off*DAY,st,data:null,note:''});
+  const reports=[
+    rep('R-1187-Q3','AW-25-1187','ffr','FY26 Q4 (Jul–Sep)','4 кв. ФГ26 (июл–сен)',-6,'due'),
+    rep('R-1187-P2','AW-25-1187','rppr','Annual progress, year 1','Годовой отчёт, год 1',14,'due'),
+    rep('R-0203-Q2','AW-26-0203','ffr','FY26 Q4 (Jul–Sep)','4 кв. ФГ26 (июл–сен)',9,'due'),
+    rep('R-0203-P1','AW-26-0203','rppr','Semi-annual progress','Полугодовой отчёт',37,'due'),
+    rep('R-0311-Q1','AW-26-0311','ffr','FY26 Q3 (Apr–Jun)','3 кв. ФГ26 (апр–июн)',-48,'acc'),
+    rep('R-0311-P1','AW-26-0311','rppr','Interim progress','Промежуточный отчёт',-3,'sub'),
+    rep('R-1187-Q2','AW-25-1187','ffr','FY26 Q3 (Apr–Jun)','3 кв. ФГ26 (апр–июн)',-50,'acc')];
+  return{t0,user:null,role:'app',view:'opps',q:'',f:{cat:'',st:'open',ag:'',sort:'close'},onlySaved:false,saved:['FORG-26-014','FORG-26-038'],open:null,
+    draft:null,apps:[
+      {id:'GD-26-0144',opp:'FORG-26-027',t:{en:'STEM fellows for Eastside schools',ru:'STEM-стипендиаты для школ Истсайда'},req:420000,st:'awd',date:t0-160*DAY},
+      {id:'GD-26-0102',opp:'FORG-26-023',t:{en:'Coastal sensor mesh for storm surge',ru:'Сеть датчиков нагонной волны'},req:1640000,st:'awd',date:t0-250*DAY},
+      {id:'GD-26-0377',opp:'FORG-26-009',t:{en:'Peer recovery coaches for Hill County',ru:'Наставники-реабилитологи для округа Хилл'},req:520000,st:'dec',date:t0-70*DAY}],
+    queue,qSel:queue[0].id,awards,awSel:'AW-26-0203',reports,repTab:'all',repOpen:null,next:431,
+    log:[{t:t0-3600e3,en:'Drawdown AW-26-0203-D9 requested ($68,000)',ru:'Запрошен транш AW-26-0203-D9 ($68 000)'},{t:t0-7200e3*3,en:'Report R-0311-P1 submitted',ru:'Отчёт R-0311-P1 подан'},{t:t0-DAY,en:'6 applications assigned to review panel B',ru:'6 заявок назначены экспертной группе B'}]};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+function logA(en,ru){S.log.unshift({t:Date.now(),en,ru});S.log=S.log.slice(0,30)}
+
+const VIEWS=[['opps','🔎','Find opportunities','Поиск конкурсов','A'],['build','🧩','Application builder','Конструктор заявки','A'],['apps','📁','My applications','Мои заявки','A'],['dash','📊','Program overview','Обзор программы','O'],['review','⚖️','Review & scoring','Экспертиза и оценки','O'],['awards','💳','Awards & payments','Гранты и выплаты','O'],['reports','🗓','Reports due','Отчётность','O']];
+function nav(){
+  const cnt={review:S.queue.filter(q=>!q.mine).length,awards:S.awards.reduce((a,w)=>a+w.dd.filter(d=>d.st==='pend').length,0),reports:S.reports.filter(r=>r.st==='due'&&daysTo(r.due)<0).length,build:S.draft?1:0};
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>`<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${cnt[v[0]]?`<span class="cnt ${v[0]==='reports'?'r':''}">${cnt[v[0]]}</span>`:''}</button>`).join('');
+  $('#navA').innerHTML=mk('A');$('#navO').innerHTML=mk('O');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0})}
+function render(){
+  const logged=!!S.user;$('#login').hidden=logged;$('#app').hidden=!logged;
+  if(!logged){rLogin();return}
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=v[4]==='A'?T('Applicant portal · Northbridge Research Institute','Кабинет заявителя · Northbridge Research Institute'):T('Agency workspace · Program office','Рабочее место агентства · Программный отдел');
+  const u=USERS[S.role];
+  $('#who').innerHTML=`<div class="av">${u.ini}</div><div style="min-width:0"><b>${u.n}</b><span class="muted">${T(u.r[0],u.r[1])}</span></div>`;
+  $('#switchRole').textContent=S.role==='app'?T('Switch to officer','Как специалист'):T('Switch to applicant','Как заявитель');
+  $('#rolePill').className='pill '+(S.role==='app'?'gold':'ok');$('#rolePill').textContent=S.role==='app'?T('Applicant · UEI '+ORG.uei,'Заявитель · UEI '+ORG.uei):T('Program officer · Panel B','Специалист · группа B');
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({opps:rOpps,build:rBuild,apps:rApps,dash:rDash,review:rReview,awards:rAwards,reports:rReports})[v[0]]();
+}
+
+/* ---------- LOGIN ---------- */
+function rLogin(){
+  $('#roles').innerHTML=['app','po'].map(k=>`<button class="role ${S.role===k?'on':''}" data-r="${k}"><b>${k==='app'?T('Applicant','Заявитель'):T('Program officer','Специалист агентства')}</b><span>${USERS[k].n}</span></button>`).join('');
+  $$('#roles .role').forEach(b=>b.onclick=()=>{S.role=b.dataset.r;rLogin()});
+  $('#lMail').value=USERS[S.role].mail;$('#lPw').value='Demo-2026!';
+}
+$('#lGo').onclick=()=>{
+  if(!/@/.test($('#lMail').value)||$('#lPw').value.length<4){toast(T('Enter email and password','Введите почту и пароль'),'bad');return}
+  const b=$('#lGo');b.disabled=true;b.textContent=T('Verifying MFA…','Проверка MFA…');
+  setTimeout(()=>{b.disabled=false;b.textContent=T('Sign in with demo account','Войти в демо-аккаунт');S.user=USERS[S.role].mail;S.view=S.role==='app'?'opps':'dash';save();render();toast(T('Welcome, ','Добро пожаловать, ')+USERS[S.role].n)},450);
+};
+$('#logout').onclick=()=>{S.user=null;save();render();window.scrollTo({top:0})};
+$('#switchRole').onclick=()=>{S.role=S.role==='app'?'po':'app';S.view=S.role==='app'?'opps':'dash';save();render();toast(T('Signed in as ','Вход как ')+USERS[S.role].n)};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();const r=S.role;S=seed();S.user=USERS[r].mail;S.role=r;S.view=r==='app'?'opps':'dash';save();render();toast(T('Demo reset','Демо сброшено'))};
+
+/* ---------- OPPORTUNITIES ---------- */
+function rOpps(){
+  const el=$('#v-opps');
+  el.innerHTML=`<div class="card" style="margin-bottom:12px">
+   <div class="filters">
+    <div class="f q"><label>${T('Keyword, number or ALN','Слово, номер или ALN')}</label><input class="input" id="oq" value="${esc(S.q)}" placeholder="${T('e.g. battery, FORG-26-023, 93.498','напр. battery, FORG-26-023, 93.498')}"></div>
+    <div class="f"><label>${T('Category','Категория')}</label><select class="input" id="ocat"><option value="">${T('All categories','Все категории')}</option>${Object.keys(CATS).map(k=>`<option value="${k}" ${S.f.cat===k?'selected':''}>${T(CATS[k][0],CATS[k][1])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Agency','Ведомство')}</label><select class="input" id="oag"><option value="">${T('All agencies','Все ведомства')}</option>${Object.keys(AG).map(k=>`<option value="${k}" ${S.f.ag===k?'selected':''}>${T(AG[k][0],AG[k][1])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Sort by','Сортировка')}</label><select class="input" id="osort">${[['close','Closing soonest','Скоро закрытие'],['big','Largest award','Крупнейшие'],['new','Number','По номеру']].map(o=>`<option value="${o[0]}" ${S.f.sort===o[0]?'selected':''}>${T(o[1],o[2])}</option>`).join('')}</select></div>
+   </div>
+   <div class="row"><div class="chips" id="ost">${[['open','Open','Открытые'],['fc','Forecast','Анонсы'],['cl','Closed','Закрытые'],['','All','Все']].map(s=>`<button class="chip ${S.f.st===s[0]?'on':''}" data-s="${s[0]}">${T(s[1],s[2])}</button>`).join('')}</div><span class="grow"></span><button class="chip ${S.onlySaved?'on':''}" id="osaved">★ ${T('Saved','Избранное')} (${S.saved.length})</button></div>
+  </div><div class="muted" id="ocount" style="font-size:13px;margin:0 2px 8px"></div><div id="olist"></div>`;
+  $('#oq').oninput=e=>{S.q=e.target.value;save();oList()};
+  $('#ocat').onchange=e=>{S.f.cat=e.target.value;save();oList()};
+  $('#oag').onchange=e=>{S.f.ag=e.target.value;save();oList()};
+  $('#osort').onchange=e=>{S.f.sort=e.target.value;save();oList()};
+  $$('#ost .chip').forEach(b=>b.onclick=()=>{S.f.st=b.dataset.s;save();rOpps()});
+  $('#osaved').onclick=()=>{S.onlySaved=!S.onlySaved;save();rOpps()};
+  oList();
+}
+function oList(){
+  const q=S.q.trim().toLowerCase();
+  let list=OPPS.map(o=>O(o[0])).filter(o=>(!S.f.cat||o.cat===S.f.cat)&&(!S.f.ag||o.ag===S.f.ag)&&(!S.f.st||oppSt(o)===S.f.st)&&(!S.onlySaved||S.saved.includes(o.id))&&(!q||[o.id,o.t.en,o.t.ru,o.d.en,o.d.ru,o.aln,AG[o.ag][0]].join(' ').toLowerCase().includes(q)));
+  list.sort((a,b)=>S.f.sort==='big'?b.ceil-a.ceil:S.f.sort==='new'?a.id.localeCompare(b.id):a.off-b.off);
+  $('#ocount').textContent=T(list.length+' opportunities found',`Найдено конкурсов: ${list.length}`);
+  $('#olist').innerHTML=list.length?list.map(o=>{const st=oppSt(o),d=daysTo(closeDate(o)),sv=S.saved.includes(o.id),applied=S.apps.some(a=>a.opp===o.id&&a.st!=='draft');
+    return `<div class="opp"><div class="top"><div class="ttl"><span class="mono muted" style="font-size:12px">${o.id} · ALN ${o.aln}</span><b>${esc(L(o.t))}</b><span class="muted" style="font-size:13px">${T(AG[o.ag][0],AG[o.ag][1])}</span></div>
+      <span class="pill ${ST_O[st][2]}">${T(ST_O[st][0],ST_O[st][1])}</span><span class="pill">${T(CATS[o.cat][0],CATS[o.cat][1])}</span>
+      <button class="star ${sv?'on':''}" data-save="${o.id}" title="${T('Save','В избранное')}">${sv?'★':'☆'}</button></div>
+      <div class="meta"><div><span>${T('Award ceiling','Макс. сумма')}</span><b>${ms(o.ceil)}</b></div><div><span>${T('Floor','Мин. сумма')}</span><b>${ms(o.floor)}</b></div><div><span>${T('Expected awards','Ожидается грантов')}</span><b>${o.n}</b></div><div><span>${st==='fc'?T('Est. posting','Публикация'):T('Closes','Приём до')}</span><b class="${st==='open'&&d<=7?'warn-t':''}">${fmtD(closeDate(o))}${st==='open'?` · ${d} ${T('d','дн.')}`:''}</b></div></div>
+      ${S.open===o.id?`<div class="more"><p style="margin:0 0 6px">${esc(L(o.d))}</p><p style="margin:0 0 6px"><b>${T('Eligibility','Кто может подать')}:</b> ${esc(L(o.el))}</p><p style="margin:0"><b>${T('Cost share','Софинансирование')}:</b> ${o.match?o.match+'%':T('not required','не требуется')} · <b>${T('Indirect','Косвенные')}:</b> ${T('NICRA or 15% de minimis','NICRA или 15% de minimis')}</p></div>`:''}
+      <div class="row" style="margin-top:10px"><button class="btn sm" data-more="${o.id}">${S.open===o.id?T('Hide details','Скрыть'):T('Details','Подробнее')}</button>
+      ${applied?`<span class="pill ok">${T('Applied','Заявка подана')}</span>`:st==='open'?`<button class="btn sm pri" data-apply="${o.id}">${T('Apply','Подать заявку')} →</button>`:st==='fc'?`<button class="btn sm" data-notify="${o.id}">🔔 ${T('Notify me','Уведомить')}</button>`:''}</div></div>`}).join(''):`<div class="card empty">${T('No opportunities match your filters.','Нет конкурсов по этим фильтрам.')}</div>`;
+  $$('[data-save]').forEach(b=>b.onclick=()=>{const id=b.dataset.save,i=S.saved.indexOf(id);if(i>=0)S.saved.splice(i,1);else S.saved.push(id);save();toast(i>=0?T('Removed from saved','Убрано из избранного'):T('Saved · deadline reminders on','В избранном · напоминания включены'));if(S.view==='opps'){const c=$('#osaved');if(c)c.textContent='★ '+T('Saved','Избранное')+' ('+S.saved.length+')'}oList()});
+  $$('[data-more]').forEach(b=>b.onclick=()=>{S.open=S.open===b.dataset.more?null:b.dataset.more;save();oList()});
+  $$('[data-notify]').forEach(b=>b.onclick=()=>toast(T('You will be notified when it opens','Сообщим, когда приём откроется'),'gold'));
+  $$('[data-apply]').forEach(b=>b.onclick=()=>startApp(b.dataset.apply));
+}
+function startApp(id){
+  if(S.draft&&S.draft.opp!==id&&!confirmSwap())return;
+  if(!S.draft||S.draft.opp!==id)S.draft={opp:id,s:0,org:Object.assign({},ORG),proj:{title:'',sum:'',months:24,start:''},bud:{pers:0,fringe:0,travel:0,equip:0,supp:0,contr:0,other:0},rate:'dm',cs:0,files:{},cert:false,errs:[]};
+  save();go('build');
+}
+function confirmSwap(){toast(T('Previous draft replaced','Прежний черновик заменён'),'gold');return true}
+
+/* ---------- BUILDER ---------- */
+const BSTEPS=[['Applicant','Заявитель'],['Project','Проект'],['Budget','Бюджет'],['Attachments','Вложения'],['Certify & submit','Проверка и отправка']];
+function calc(d){const o=O(d.opp);const direct=BUD.reduce((a,b)=>a+(+d.bud[b[0]]||0),0);const mtdc=Math.max(0,direct-(+d.bud.equip||0)-Math.max(0,(+d.bud.contr||0)-50000));const rate=d.rate==='nicra'?48.5:15;const ind=Math.round(mtdc*rate/100);const req=direct+ind;const csReq=Math.round(req*o.match/100);return{direct,mtdc,rate,ind,req,csReq,o}}
+function validate(d,s){
+  const e=[];const c=calc(d);
+  if(s===0){if(d.org.name.trim().length<3)e.push(T('Organization name is required','Укажите организацию'));if(!/^[A-Z0-9]{12}$/.test(d.org.uei))e.push(T('UEI must be 12 letters/digits (SAM.gov)','UEI — 12 латинских букв/цифр (SAM.gov)'));if(d.org.contact.trim().length<3)e.push(T('Authorized representative is required','Укажите уполномоченное лицо'));if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.org.email))e.push(T('Valid email is required','Нужна корректная почта'))}
+  if(s===1){if(d.proj.title.trim().length<8)e.push(T('Project title — at least 8 characters','Название проекта — от 8 символов'));if(d.proj.sum.trim().length<60)e.push(T('Abstract — at least 60 characters','Аннотация — от 60 символов')+` (${d.proj.sum.trim().length}/60)`);if(!(d.proj.months>=6&&d.proj.months<=60))e.push(T('Period of performance: 6–60 months','Срок проекта: 6–60 месяцев'));if(!d.proj.start)e.push(T('Choose a start date','Выберите дату начала'))}
+  if(s===2){if(c.direct<=0)e.push(T('Enter the budget','Заполните бюджет'));if(c.req>c.o.ceil)e.push(T('Federal request exceeds the award ceiling ','Запрос превышает максимум ')+ms(c.o.ceil));if(c.direct>0&&c.req<c.o.floor)e.push(T('Federal request is below the award floor ','Запрос ниже минимума ')+ms(c.o.floor));if((+d.cs||0)<c.csReq)e.push(T('Cost share must be at least ','Софинансирование не менее ')+usd(c.csReq)+' ('+c.o.match+'%)');if((+d.bud.equip||0)>0&&(+d.bud.equip)<5000)e.push(T('Equipment items under $5,000 belong to Supplies (2 CFR 200.1)','Оборудование дешевле $5 000 относится к материалам (2 CFR 200.1)'))}
+  if(s===3){FILES.filter(f=>f[3]&&!d.files[f[0]]).forEach(f=>e.push(T('Missing: ','Нет файла: ')+T(f[1],f[2])))}
+  if(s===4){if(!d.cert)e.push(T('Certification is required','Нужно подтверждение'))}
+  return e;
+}
+function rBuild(){
+  const el=$('#v-build'),d=S.draft;
+  if(!d){const open=OPPS.map(o=>O(o[0])).filter(o=>oppSt(o)==='open'&&!S.apps.some(a=>a.opp===o.id&&a.st!=='draft'));
+    el.innerHTML=`<div class="card"><h3>${T('Start a new application','Новая заявка')}</h3><p class="muted" style="margin-top:0">${T('Pick an open opportunity. The builder pre-fills your SAM.gov registration.','Выберите открытый конкурс. Данные регистрации SAM.gov подставятся сами.')}</p>
+    <div class="tw"><table class="t"><thead><tr><th>${T('Opportunity','Конкурс')}</th><th class="num">${T('Ceiling','Макс.')}</th><th>${T('Closes','До')}</th><th></th></tr></thead><tbody>${open.map(o=>`<tr><td><b>${esc(L(o.t))}</b><div class="muted mono" style="font-size:11.5px">${o.id}</div></td><td class="num">${ms(o.ceil)}</td><td>${fmtD(closeDate(o))}</td><td><button class="btn sm pri" data-apply="${o.id}">${T('Start','Начать')}</button></td></tr>`).join('')}</tbody></table></div></div>`;
+    $$('[data-apply]',el).forEach(b=>b.onclick=()=>startApp(b.dataset.apply));return}
+  const o=O(d.opp),c=calc(d);
+  let body='';
+  if(d.s===0)body=`<div class="fgrid">
+    <div class="f full"><label>${T('Legal name of organization','Юридическое название')}</label><input class="input" data-k="org.name" value="${esc(d.org.name)}"></div>
+    <div class="f"><label>UEI (SAM.gov)</label><input class="input mono" data-k="org.uei" value="${esc(d.org.uei)}" maxlength="12"><div class="hint">${T('SAM registration active until 14 Aug 2027','Регистрация SAM активна до 14 авг 2027')}</div></div>
+    <div class="f"><label>${T('Organization type','Тип организации')}</label><select class="input" data-k="org.type">${[['np','Non-profit research institute','Некоммерческий НИИ'],['uni','Public university','Гос. университет'],['gov','State / local government','Орган власти']].map(x=>`<option value="${x[0]}" ${d.org.type===x[0]?'selected':''}>${T(x[1],x[2])}</option>`).join('')}</select></div>
+    <div class="f"><label>${T('Authorized representative','Уполномоченное лицо')}</label><input class="input" data-k="org.contact" value="${esc(d.org.contact)}"></div>
+    <div class="f"><label>${T('Email','Почта')}</label><input class="input" data-k="org.email" value="${esc(d.org.email)}"></div></div>`;
+  if(d.s===1)body=`<div class="fgrid">
+    <div class="f full"><label>${T('Project title','Название проекта')}</label><input class="input" data-k="proj.title" value="${esc(d.proj.title)}" placeholder="${T('Descriptive title of applicant’s project','Содержательное название проекта')}"></div>
+    <div class="f full"><label>${T('Project abstract','Аннотация проекта')} <span id="sumc" class="muted">(${d.proj.sum.trim().length}/1000)</span></label><textarea class="input" data-k="proj.sum" maxlength="1000" placeholder="${T('Problem, approach, outcomes, beneficiaries…','Проблема, подход, результаты, выгодоприобретатели…')}">${esc(d.proj.sum)}</textarea></div>
+    <div class="f"><label>${T('Proposed start date','Дата начала')}</label><input class="input" type="date" data-k="proj.start" value="${esc(d.proj.start)}"></div>
+    <div class="f"><label>${T('Period of performance, months','Срок, месяцев')}</label><input class="input" type="number" min="6" max="60" data-k="proj.months" value="${d.proj.months}"></div></div>
+    <div class="row" style="margin-top:12px"><button class="btn sm" id="bFill">✨ ${T('Fill sample text','Заполнить примером')}</button></div>`;
+  if(d.s===2)body=`<div class="split"><div>${BUD.map(b=>`<div class="budrow"><span>${T(b[1],b[2])}</span><input class="input" type="number" min="0" step="100" data-k="bud.${b[0]}" value="${d.bud[b[0]]||''}" placeholder="0"></div>`).join('')}
+     <div class="budrow"><span>${T('Indirect cost rate','Ставка косвенных')}</span><select class="input" data-k="rate"><option value="dm" ${d.rate==='dm'?'selected':''}>15% de minimis</option><option value="nicra" ${d.rate==='nicra'?'selected':''}>48.5% NICRA</option></select></div>
+     <div class="budrow"><span>${T('Cost share (non-federal)','Софинансирование (не фед.)')}</span><input class="input" type="number" min="0" step="100" data-k="cs" value="${d.cs||''}" placeholder="0"></div>
+     <div class="row" style="margin-top:10px"><button class="btn sm" id="bFillB">✨ ${T('Fill sample budget','Пример бюджета')}</button></div></div>
+    <div class="card" style="background:var(--bg2)" id="budSum"></div></div>`;
+  if(d.s===3)body=FILES.map(f=>{const x=d.files[f[0]];return `<div class="file"><div class="nm">${T(f[1],f[2])} ${f[3]?'<span class="bad-t">*</span>':`<span class="muted">(${T('optional','необяз.')})</span>`}<small>${x?`📎 ${esc(x.n)} · ${(x.s/1024).toFixed(0)} KB · ${T('virus scan passed','проверка на вирусы пройдена')}`:T('PDF, max 50 MB','PDF, до 50 МБ')}</small></div>
+    ${x?`<span class="pill ok">✓ ${T('Attached','Прикреплён')}</span><button class="btn sm" data-rm="${f[0]}">${T('Remove','Убрать')}</button>`:`<label class="btn sm" style="cursor:pointer">⬆ ${T('Upload','Загрузить')}<input type="file" accept=".pdf,.doc,.docx" data-up="${f[0]}" hidden></label><button class="btn sm" data-smp="${f[0]}">${T('Use sample','Пример')}</button>`}</div>`}).join('');
+  if(d.s===4)body=`<div class="split"><dl class="sum">
+    <dt>${T('Opportunity','Конкурс')}</dt><dd>${o.id} · ${esc(L(o.t))}</dd><dt>${T('Applicant','Заявитель')}</dt><dd>${esc(d.org.name)} · UEI ${esc(d.org.uei)}</dd>
+    <dt>${T('Project','Проект')}</dt><dd>${esc(d.proj.title)}</dd><dt>${T('Period','Срок')}</dt><dd>${d.proj.start?fmtD(d.proj.start):'—'} · ${d.proj.months} ${T('months','мес.')}</dd>
+    <dt>${T('Federal request','Запрос')}</dt><dd>${usd(c.req)}</dd><dt>${T('Cost share','Софинансирование')}</dt><dd>${usd(+d.cs||0)}</dd>
+    <dt>${T('Attachments','Вложения')}</dt><dd>${Object.keys(d.files).length} / ${FILES.length}</dd></dl>
+    <div><div class="card" style="background:var(--bg2)"><b>${T('Pre-submission checks','Проверки перед отправкой')}</b>${[0,1,2,3].map(i=>{const e=validate(d,i);return `<div style="display:flex;gap:8px;margin-top:8px;font-size:13px"><span class="${e.length?'bad-t':'ok-t'}">${e.length?'✕':'✓'}</span><span>${T(BSTEPS[i][0],BSTEPS[i][1])}${e.length?` — <span class="bad-t">${e.length} ${T('issue(s)','замеч.')}</span>`:''}</span></div>`}).join('')}</div>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" id="bCert" ${d.cert?'checked':''}><span>${T('I certify the statements are true, complete and accurate, and agree to comply with 2 CFR 200 and the award terms (18 U.S.C. 1001).','Подтверждаю достоверность и полноту сведений и соблюдение 2 CFR 200 и условий гранта (18 U.S.C. 1001).')}</span></label></div></div>`;
+  el.innerHTML=`<div class="card"><h3><span>${esc(L(o.t))}</span><span class="pill mono">${o.id}</span><span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('Closes','Приём до')} ${fmtD(closeDate(o))}</span></h3>
+    <div class="steps">${BSTEPS.map((s,i)=>`<button class="step ${i<d.s?'ok':i===d.s?'cur':''}" data-st="${i}"><div class="dot">${i<d.s?'✓':i+1}</div><span>${T(s[0],s[1])}</span></button>`).join('')}</div>
+    ${d.errs&&d.errs.length?`<div class="errs"><b>${T('Please fix:','Исправьте:')}</b><ul>${d.errs.map(e=>`<li>${e}</li>`).join('')}</ul></div>`:''}
+    ${body}
+    <div class="row" style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
+      ${d.s>0?`<button class="btn" id="bBack">← ${T('Back','Назад')}</button>`:''}
+      <button class="btn" id="bSave">💾 ${T('Save draft','Сохранить черновик')}</button>
+      <button class="btn danger sm" id="bDel">${T('Discard','Удалить')}</button><span class="grow"></span>
+      ${d.s<4?`<button class="btn pri" id="bNext">${T('Continue','Далее')} →</button>`:`<button class="btn gold" id="bSubmit">🚀 ${T('Submit application','Отправить заявку')}</button>`}
+    </div></div>`;
+  $$('[data-k]',el).forEach(i=>{const h=()=>{const [a,b]=i.dataset.k.split('.');let v=i.value;if(i.type==='number')v=v===''?0:+v;if(a==='org'&&b==='uei')v=v.toUpperCase();if(b)d[a][b]=v;else d[a]=v;save();if(i.dataset.k==='proj.sum'){const s=$('#sumc');if(s)s.textContent=`(${v.trim().length}/1000)`}if(d.s===2)budSum()};i.oninput=h;i.onchange=h});
+  $$('[data-st]',el).forEach(b=>b.onclick=()=>{const t=+b.dataset.st;if(t<=d.s){d.s=t;d.errs=[];save();rBuild()}else{for(let i=d.s;i<t;i++){const e=validate(d,i);if(e.length){d.s=i;d.errs=e;save();rBuild();return}}d.s=t;d.errs=[];save();rBuild()}});
+  if($('#bBack'))$('#bBack').onclick=()=>{d.s--;d.errs=[];save();rBuild()};
+  $('#bSave').onclick=()=>{save();toast(T('Draft saved','Черновик сохранён'))};
+  $('#bDel').onclick=()=>{S.draft=null;save();toast(T('Draft discarded','Черновик удалён'),'bad');render()};
+  if($('#bNext'))$('#bNext').onclick=()=>{const e=validate(d,d.s);d.errs=e;if(e.length){save();rBuild();toast(T('Some fields need attention','Проверьте поля'),'bad');return}d.s++;save();rBuild();window.scrollTo({top:0})};
+  if($('#bFill'))$('#bFill').onclick=()=>{const t=L(o.t);d.proj.title=T('Northbridge: ','Northbridge: ')+t+T(' — regional pilot',' — региональный пилот');d.proj.sum=T('Northbridge Research Institute will deliver a three-phase regional pilot for '+t.toLowerCase()+', partnering with two universities and four community organisations. We will measure outcomes quarterly against baseline, publish open data, and transition proven practices to state programs by year two.','Northbridge Research Institute проведёт трёхэтапный региональный пилот по теме «'+t+'» вместе с двумя университетами и четырьмя общественными организациями. Результаты измеряются ежеквартально относительно базового уровня, данные публикуются открыто, а лучшие практики передаются в программы штата ко второму году.');d.proj.start=new Date(S.t0+75*DAY).toISOString().slice(0,10);d.proj.months=24;save();rBuild()};
+  if($('#bFillB'))$('#bFillB').onclick=()=>{const k=o.ceil*.55;d.bud={pers:Math.round(k*.42/100)*100,fringe:Math.round(k*.13/100)*100,travel:Math.round(k*.04/100)*100,equip:Math.round(k*.12/100)*100,supp:Math.round(k*.06/100)*100,contr:Math.round(k*.12/100)*100,other:Math.round(k*.03/100)*100};d.rate='dm';const c2=calc(d);d.cs=Math.ceil(c2.csReq/1000)*1000;save();rBuild()};
+  $$('[data-up]',el).forEach(i=>i.onchange=()=>{const f=i.files[0];if(!f)return;if(f.size>50*1048576){toast(T('File exceeds 50 MB','Файл больше 50 МБ'),'bad');return}d.files[i.dataset.up]={n:f.name,s:f.size||1024};save();rBuild();toast(T('Uploaded ','Загружено ')+esc(f.name))});
+  $$('[data-smp]',el).forEach(b=>b.onclick=()=>{const k=b.dataset.smp;d.files[k]={n:{sf424:'SF424_Northbridge.pdf',narr:'Project_Narrative_v3.pdf',bj:'Budget_Justification.pdf',bio:'Biosketches_KeyPersonnel.pdf',lol:'Letters_of_Support.pdf'}[k],s:180000+Math.floor(Math.random()*900000)};save();rBuild()});
+  $$('[data-rm]',el).forEach(b=>b.onclick=()=>{delete d.files[b.dataset.rm];save();rBuild()});
+  if($('#bCert'))$('#bCert').onchange=e=>{d.cert=e.target.checked;save()};
+  if($('#bSubmit'))$('#bSubmit').onclick=submitApp;
+  if(d.s===2)budSum();
+}
+function budSum(){const d=S.draft,c=calc(d),bx=$('#budSum');if(!bx)return;
+  const pct=Math.min(100,c.req/c.o.ceil*100),over=c.req>c.o.ceil;
+  bx.innerHTML=`<b>${T('Budget summary (SF-424A)','Сводка бюджета (SF-424A)')}</b>
+   <div class="tot" style="margin-top:8px"><span>${T('Total direct costs','Прямые расходы')}</span><b>${usd(c.direct)}</b></div>
+   <div class="tot"><span>${T('MTDC base','База MTDC')}</span><span>${usd(c.mtdc)}</span></div>
+   <div class="tot"><span>${T('Indirect','Косвенные')} @ ${c.rate}%</span><b>${usd(c.ind)}</b></div>
+   <div class="tot big"><span>${T('Federal request','Запрос')}</span><span class="${over?'bad-t':''}">${usd(c.req)}</span></div>
+   <div class="prog" style="margin:8px 0 4px"><i style="width:${pct}%;background:${over?'var(--red)':'linear-gradient(90deg,var(--mal2),var(--mal3))'}"></i></div>
+   <div class="muted" style="font-size:12px">${T('of ceiling','от максимума')} ${ms(c.o.ceil)} · ${T('floor','минимум')} ${ms(c.o.floor)}</div>
+   <div class="tot" style="margin-top:8px"><span>${T('Cost share required','Нужно софинансирования')} (${c.o.match}%)</span><span class="${(+d.cs||0)<c.csReq?'warn-t':'ok-t'}">${usd(c.csReq)}</span></div>
+   <div class="muted" style="font-size:11.5px;margin-top:6px">${T('MTDC excludes equipment and subaward amounts above $50,000 (2 CFR 200.1).','MTDC без оборудования и сумм субгрантов свыше $50 000 (2 CFR 200.1).')}</div>`}
+function submitApp(){
+  const d=S.draft;for(let i=0;i<5;i++){const e=validate(d,i);if(e.length){d.s=i;d.errs=e;save();rBuild();toast(T('Cannot submit — fix the highlighted step','Нельзя отправить — исправьте шаг'),'bad');return}}
+  const c=calc(d),id='GD-26-0'+(S.next++);
+  S.apps.unshift({id,opp:d.opp,t:{en:d.proj.title,ru:d.proj.title},req:c.req,st:'sub',date:Date.now()});
+  S.queue.unshift({id,org:d.org.name,opp:d.opp,t:{en:d.proj.title,ru:d.proj.title},abs:{en:d.proj.sum,ru:d.proj.sum},req:c.req,others:[{n:'R. Okafor',s:70+Math.floor(Math.random()*22)},{n:'L. Chen',s:66+Math.floor(Math.random()*26)}],mine:null,dec:null,own:true});
+  S.qSel=id;S.draft=null;logA('Application '+id+' received from '+ORG.name,'Получена заявка '+id+' от '+ORG.name);save();
+  toast(T('Submitted · tracking number ','Отправлено · номер ')+'<b class="mono">'+id+'</b>','gold');go('apps');
+}
+
+/* ---------- MY APPLICATIONS ---------- */
+function rApps(){
+  const el=$('#v-apps');const steps=[['Draft','Черновик'],['Submitted','Подана'],['Review','Экспертиза'],['Decision','Решение']];
+  const idx={draft:0,sub:1,rev:2,awd:3,dec:3};
+  let h='';
+  if(S.draft){const o=O(S.draft.opp);h+=`<div class="appc"><div class="top"><span class="pill">${T('Draft','Черновик')}</span><b>${esc(S.draft.proj.title||L(o.t))}</b><span class="muted" style="font-size:12.5px">${T('Step','Шаг')} ${S.draft.s+1}/5</span><button class="btn sm pri" id="aCont">${T('Continue','Продолжить')}</button></div></div>`}
+  h+=S.apps.map(a=>{const o=O(a.opp),i=idx[a.st],q=S.queue.find(x=>x.id===a.id),aw=S.awards.find(w=>w.app===a.id);
+    return `<div class="appc"><div class="top"><span class="mono muted" style="font-size:12px">${a.id}</span><b>${esc(L(a.t))}</b><span class="pill ${APP_ST[a.st][2]}">${T(APP_ST[a.st][0],APP_ST[a.st][1])}</span></div>
+     <div class="muted" style="font-size:12.5px;margin-top:4px">${o.id} · ${esc(L(o.t))} · ${T('requested','запрошено')} <b>${usd(a.req)}</b> · ${T('submitted','подана')} ${fmtD(a.date)}</div>
+     <div class="tl">${steps.map((s,k)=>`<div class="${k<i?'ok':k===i?(a.st==='dec'?'no':a.st==='awd'?'ok':'cur'):''}"><i></i><span>${k===3&&a.st==='awd'?T('Awarded','Присуждён'):k===3&&a.st==='dec'?T('Not funded','Отклонена'):T(s[0],s[1])}</span></div>`).join('')}</div>
+     ${q&&q.mine&&!q.dec?`<div class="muted" style="font-size:12.5px;margin-top:8px">${T('Panel review complete — awaiting funding decision.','Экспертиза завершена — ждём решения о финансировании.')}</div>`:''}
+     ${aw?`<div class="row" style="margin-top:10px"><span class="pill ok">${aw.id} · ${usd(aw.obl)}</span><button class="btn sm" data-aw="${aw.id}">${T('Open award','Открыть грант')}</button></div>`:''}</div>`}).join('');
+  el.innerHTML=`<div class="kpis">${[[T('Submitted','Подано'),S.apps.length,''],[T('In review','На экспертизе'),S.apps.filter(a=>a.st==='sub'||a.st==='rev').length,''],[T('Awarded','Получено грантов'),S.apps.filter(a=>a.st==='awd').length,'ok-t'],[T('Funding secured','Привлечено'),ms(S.awards.filter(w=>w.org===ORG.name).reduce((a,w)=>a+w.obl,0)),'ok-t']].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v ${k[2]}">${k[1]}</div></div>`).join('')}</div>
+   <div class="card"><h3>${T('Applications','Заявки')}<span class="sp"></span><button class="btn sm pri" id="aNew">+ ${T('New application','Новая заявка')}</button></h3>${h}</div>`;
+  if($('#aCont'))$('#aCont').onclick=()=>go('build');
+  $('#aNew').onclick=()=>go(S.draft?'build':'opps');
+  $$('[data-aw]',el).forEach(b=>b.onclick=()=>{S.awSel=b.dataset.aw;go('awards')});
+}
+
+/* ---------- DASHBOARD ---------- */
+function barsSvg(labels,series,cols,fmt){
+  const W=640,H=220,p={l:52,r:8,t:12,b:26};const max=Math.max(1,...series.flat())*1.12;const n=labels.length,gw=(W-p.l-p.r)/n,bw=Math.min(22,(gw-10)/series.length);
+  let g='';for(let i=0;i<=4;i++){const y=p.t+(H-p.t-p.b)*i/4;g+=`<line x1="${p.l}" x2="${W-p.r}" y1="${y}" y2="${y}" stroke="${cssv('--line')}"/><text x="${p.l-8}" y="${y+4}" text-anchor="end" font-size="11" fill="${cssv('--dim')}">${fmt(max*(1-i/4))}</text>`}
+  labels.forEach((l,i)=>{const x0=p.l+gw*i+(gw-bw*series.length)/2;series.forEach((s,k)=>{const h=(H-p.t-p.b)*s[i]/max;g+=`<rect x="${x0+k*bw}" y="${H-p.b-h}" width="${bw-3}" height="${h}" rx="3" fill="${cssv(cols[k])}"><title>${l}: ${fmt(s[i])}</title></rect>`});g+=`<text x="${p.l+gw*i+gw/2}" y="${H-8}" text-anchor="middle" font-size="11" fill="${cssv('--muted')}">${l}</text>`});
+  return `<svg viewBox="0 0 ${W} ${H}" role="img">${g}</svg>`;
+}
+function donutSvg(parts){const tot=parts.reduce((a,p)=>a+p.v,0)||1;let a=-Math.PI/2,g='';const R=70,r=44,cx=90,cy=90;
+  parts.forEach(p=>{const b=a+p.v/tot*Math.PI*2;const l=b-a>Math.PI?1:0;const P=(ang,rr)=>`${cx+rr*Math.cos(ang)} ${cy+rr*Math.sin(ang)}`;g+=`<path d="M${P(a,R)} A${R} ${R} 0 ${l} 1 ${P(b-.0001,R)} L${P(b-.0001,r)} A${r} ${r} 0 ${l} 0 ${P(a,r)}Z" fill="${cssv(p.c)}"><title>${p.l}</title></path>`;a=b});
+  return `<svg viewBox="0 0 180 180" style="max-width:180px;margin:auto">${g}<text x="90" y="88" text-anchor="middle" font-size="18" font-weight="800" fill="${cssv('--text')}">${ms(tot)}</text><text x="90" y="106" text-anchor="middle" font-size="10" fill="${cssv('--muted')}">${T('portfolio','портфель')}</text></svg>`}
+function rDash(){
+  const el=$('#v-dash');const obl=S.awards.reduce((a,w)=>a+w.obl,0)+148600000,paid=S.awards.reduce((a,w)=>a+w.dd.filter(d=>d.st==='paid').reduce((x,d)=>x+d.amt,0),0)+97350000;
+  const open=OPPS.filter(o=>oppSt(O(o[0]))==='open').length,inRev=S.queue.filter(q=>!q.dec).length,over=S.reports.filter(r=>r.st==='due'&&daysTo(r.due)<0).length;
+  const mon=[];for(let i=7;i>=0;i--){const d=new Date(S.t0);d.setMonth(d.getMonth()-i);mon.push(d)}
+  const labels=mon.map(d=>d.toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-US',{month:'short'}));
+  const r=rng(9);const ob=mon.map((d,i)=>11e6+r()*9e6+(i===7?S.awards.filter(w=>w.start>S.t0-30*DAY).reduce((a,w)=>a+w.obl,0):0));
+  const ds=mon.map((d,i)=>8e6+r()*6e6+S.awards.reduce((a,w)=>a+w.dd.filter(x=>x.st==='paid'&&new Date(x.date).getMonth()===d.getMonth()&&new Date(x.date).getFullYear()===d.getFullYear()).reduce((s,x)=>s+x.amt,0),0));
+  const cats=Object.keys(CATS).map(k=>({l:T(CATS[k][0],CATS[k][1]),c:CATCOL[k],v:{research:62e6,health:41e6,edu:28e6,climate:37e6,infra:48e6,arts:9e6}[k]+S.awards.filter(w=>O(w.opp).cat===k&&w.id>'AW-26-1').reduce((a,w)=>a+w.obl,0)}));
+  el.innerHTML=`<div class="kpis">
+    <div class="card kpi"><div class="l">${T('Open opportunities','Открытые конкурсы')}</div><div class="v">${open}</div><div class="d">${OPPS.length} ${T('in FY26 plan','в плане ФГ26')}</div></div>
+    <div class="card kpi"><div class="l">${T('Applications in review','Заявок на экспертизе')}</div><div class="v">${inRev}</div><div class="d">${S.queue.filter(q=>!q.mine).length} ${T('awaiting your score','ждут вашей оценки')}</div></div>
+    <div class="card kpi"><div class="l">${T('Obligated FY26','Обязательства ФГ26')}</div><div class="v">${ms(obl)}</div><div class="d">${T('of $230M appropriation','из $230 млн ассигнований')}</div></div>
+    <div class="card kpi"><div class="l">${T('Reports overdue','Просрочено отчётов')}</div><div class="v ${over?'bad-t':'ok-t'}">${over}</div><div class="d">${T('disbursed','выплачено')} ${ms(paid)}</div></div></div>
+   <div class="grid2"><div class="card chart"><h3>${T('Obligations vs disbursements','Обязательства и выплаты')}</h3>${barsSvg(labels,[ob,ds],['--mal','--gold'],v=>ms(v))}<div class="legend"><span><i style="background:var(--mal)"></i>${T('Obligated','Обязательства')}</span><span><i style="background:var(--gold)"></i>${T('Disbursed','Выплачено')}</span></div></div>
+    <div class="card chart"><h3>${T('Portfolio by category','Портфель по направлениям')}</h3>${donutSvg(cats)}<div class="legend">${cats.map(c=>`<span><i style="background:var(${c.c})"></i>${c.l}</span>`).join('')}</div></div></div>
+   <div class="card" style="margin-top:14px"><h3>${T('Recent activity','Последние события')}</h3><div class="log">${S.log.map(l=>`<div><span class="tm">${new Date(l.t).toLocaleString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</span><span>${esc(T(l.en,l.ru))}</span></div>`).join('')}</div></div>`;
+}
+
+/* ---------- REVIEW ---------- */
+function rReview(){
+  const el=$('#v-review');let q=S.queue.find(x=>x.id===S.qSel)||S.queue[0];S.qSel=q.id;
+  if(!q.draft)q.draft={sc:Object.fromEntries(CRIT.map(c=>[c[0],Math.round(c[5]*.7)])),cm:'',coi:false};
+  const tot=s=>CRIT.reduce((a,c)=>a+(+s[c[0]]||0),0);
+  const avg=x=>{const a=x.others.map(o=>o.s).concat(x.mine?[x.mine.total]:[]);return a.reduce((p,c)=>p+c,0)/a.length};
+  const o=O(q.opp);const all=q.others.map(o=>o.s).concat(q.mine?[q.mine.total]:[]),spread=Math.max(...all)-Math.min(...all);
+  el.innerHTML=`<div class="split"><div class="card"><h3>${T('Panel B queue','Очередь группы B')}<span class="sp"></span><span class="pill">${S.queue.filter(x=>x.mine).length}/${S.queue.length} ${T('scored','оценено')}</span></h3>
+    ${S.queue.map(x=>`<button class="qi ${x.id===q.id?'on':''}" data-q="${x.id}"><div class="r1"><span class="mono muted" style="font-size:11.5px">${x.id}</span><b>${esc(L(x.t))}</b>${x.dec?`<span class="pill ${x.dec==='awd'?'ok':'bad'}">${x.dec==='awd'?T('Awarded','Грант'):T('Declined','Откл.')}</span>`:x.mine?`<span class="pill ok">${x.mine.total}</span>`:`<span class="pill warn">${T('To score','Оценить')}</span>`}</div><small>${esc(x.org)} · ${usd(x.req)}${x.own?' · <span class="ok-t">'+T('new','новая')+'</span>':''}</small></button>`).join('')}</div>
+   <div class="card"><h3><span>${esc(L(q.t))}</span><span class="sp"></span><span class="pill mono">${q.id}</span></h3>
+    <div class="muted" style="font-size:13px">${esc(q.org)} · ${o.id} · ${esc(L(o.t))}</div>
+    <p style="font-size:13.5px">${esc(L(q.abs))}</p>
+    <div class="mini"><div><span>${T('Requested','Запрошено')}</span><b>${usd(q.req)}</b></div><div><span>${T('Panel average','Средний балл')}</span><b>${avg(q).toFixed(1)}</b></div><div><span>${T('Score spread','Разброс')}</span><b class="${spread>15?'warn-t':''}">${spread}${spread>15?' ⚠':''}</b></div></div>
+    ${q.mine?`<div class="card" style="background:var(--bg2)"><div class="row"><div class="score">${q.mine.total}</div><span class="muted">/ 100 · ${T('your score submitted','ваша оценка отправлена')}</span></div>
+      ${CRIT.map(c=>`<div class="row" style="font-size:12.5px;margin-top:4px"><span>${T(c[1],c[2])}</span><span class="grow"></span><b>${q.mine.sc[c[0]]}/${c[5]}</b></div>`).join('')}
+      <p class="muted" style="font-size:12.5px;margin:8px 0 0">“${esc(q.mine.cm)}”</p></div>
+      <h3 style="margin-top:14px">${T('Panel scores','Оценки экспертов')}</h3>${q.others.concat([{n:USERS.po.n+' ('+T('you','вы')+')',s:q.mine.total}]).map(p=>`<div class="row" style="font-size:13px;margin-bottom:6px"><span style="width:150px">${esc(p.n)}</span><div class="prog" style="flex:1;min-width:80px"><i style="width:${p.s}%;background:var(--mal)"></i></div><b style="width:30px;text-align:right">${p.s}</b></div>`).join('')}
+      ${q.dec?`<div class="pill ${q.dec==='awd'?'ok':'bad'}" style="margin-top:10px">${q.dec==='awd'?T('Funding decision: award issued','Решение: грант присуждён'):T('Funding decision: not funded','Решение: не финансируется')}</div>`:`<div class="row" style="margin-top:12px"><button class="btn pri" id="rAward">🏆 ${T('Recommend & issue award','Рекомендовать и присудить')}</button><button class="btn danger" id="rDecl">${T('Decline','Отклонить')}</button><button class="btn sm" id="rRedo">${T('Revise my score','Изменить оценку')}</button></div>`}`
+    :`<h3 style="margin-top:6px">${T('Your scoresheet','Ваш оценочный лист')}<span class="sp"></span><span class="score" id="rTot" style="font-size:24px">${tot(q.draft.sc)}</span><span class="muted">/100</span></h3>
+      ${CRIT.map(c=>`<div class="crit"><div>${T(c[1],c[2])}<small>${T(c[3],c[4])} · ${T('max','макс.')} ${c[5]}</small></div><input type="range" min="0" max="${c[5]}" value="${q.draft.sc[c[0]]}" data-c="${c[0]}"><output id="o-${c[0]}">${q.draft.sc[c[0]]}</output></div>`).join('')}
+      <div class="f" style="margin-top:12px"><label>${T('Strengths & weaknesses (min. 30 chars, shared with applicant)','Сильные и слабые стороны (от 30 символов, видит заявитель)')}</label><textarea class="input" id="rCm" placeholder="${T('Summarise your rationale…','Кратко обоснуйте оценку…')}">${esc(q.draft.cm)}</textarea></div>
+      <label class="chk" style="margin:10px 0"><input type="checkbox" id="rCoi" ${q.draft.coi?'checked':''}><span>${T('I have no conflict of interest with this applicant (2 CFR 200.112).','У меня нет конфликта интересов с заявителем (2 CFR 200.112).')}</span></label>
+      <div class="row"><button class="btn pri" id="rSub">${T('Submit score','Отправить оценку')}</button><button class="btn sm" id="rCoiY">${T('Declare conflict & recuse','Заявить конфликт и отказаться')}</button></div>`}
+   </div></div>`;
+  $$('[data-q]',el).forEach(b=>b.onclick=()=>{S.qSel=b.dataset.q;save();rReview()});
+  $$('[data-c]',el).forEach(i=>i.oninput=()=>{q.draft.sc[i.dataset.c]=+i.value;$('#o-'+i.dataset.c).textContent=i.value;$('#rTot').textContent=tot(q.draft.sc);save()});
+  if($('#rCm'))$('#rCm').oninput=e=>{q.draft.cm=e.target.value;save()};
+  if($('#rCoi'))$('#rCoi').onchange=e=>{q.draft.coi=e.target.checked;save()};
+  if($('#rSub'))$('#rSub').onclick=()=>{if(q.draft.cm.trim().length<30){toast(T('Add a written rationale (30+ characters)','Добавьте обоснование (от 30 символов)'),'bad');return}if(!q.draft.coi){toast(T('Confirm the conflict-of-interest statement','Подтвердите отсутствие конфликта интересов'),'bad');return}
+    q.mine={sc:Object.assign({},q.draft.sc),total:tot(q.draft.sc),cm:q.draft.cm.trim()};const a=S.apps.find(x=>x.id===q.id);if(a&&a.st==='sub')a.st='rev';logA('Score '+q.mine.total+' submitted for '+q.id,'Оценка '+q.mine.total+' по '+q.id);save();toast(T('Score submitted','Оценка отправлена'));const nx=S.queue.find(x=>!x.mine);if(nx)S.qSel=nx.id;render()};
+  if($('#rCoiY'))$('#rCoiY').onclick=()=>{q.mine={sc:Object.fromEntries(CRIT.map(c=>[c[0],0])),total:Math.round(q.others.reduce((a,o)=>a+o.s,0)/q.others.length),cm:T('Reviewer recused — panel average used.','Эксперт взял самоотвод — использован средний балл.')};logA(q.id+': reviewer recused',q.id+': самоотвод эксперта');save();toast(T('Recusal recorded; replacement reviewer requested','Самоотвод записан; назначен другой эксперт'),'gold');render()};
+  if($('#rRedo'))$('#rRedo').onclick=()=>{q.draft={sc:Object.assign({},q.mine.sc),cm:q.mine.cm,coi:true};q.mine=null;save();rReview()};
+  if($('#rAward'))$('#rAward').onclick=()=>{
+    q.dec='awd';const id='AW-26-0'+(400+S.awards.length);S.awards.unshift({id,app:q.id,t:q.t,org:q.org,opp:q.opp,obl:q.req,start:Date.now(),dd:[]});
+    S.reports.push({id:'R-'+id.slice(-4)+'-Q1',aw:id,type:'ffr',per:{en:'First quarter',ru:'Первый квартал'},due:Date.now()+90*DAY,st:'due',data:null,note:''},{id:'R-'+id.slice(-4)+'-P1',aw:id,type:'rppr',per:{en:'Semi-annual progress',ru:'Полугодовой отчёт'},due:Date.now()+180*DAY,st:'due',data:null,note:''});
+    const a=S.apps.find(x=>x.id===q.id);if(a)a.st='awd';S.awSel=id;logA('Award '+id+' issued: '+usd(q.req),'Присуждён грант '+id+': '+usd(q.req));save();toast(T('Notice of award ','Уведомление о гранте ')+id+T(' sent',' отправлено'),'gold');render()};
+  if($('#rDecl'))$('#rDecl').onclick=()=>{q.dec='dec';const a=S.apps.find(x=>x.id===q.id);if(a)a.st='dec';logA(q.id+' not funded',q.id+' не финансируется');save();toast(T('Decline letter queued','Письмо об отказе поставлено в очередь'),'bad');render()};
+}
+
+/* ---------- AWARDS ---------- */
+function rAwards(){
+  const el=$('#v-awards');let w=S.awards.find(x=>x.id===S.awSel)||S.awards[0];S.awSel=w.id;
+  const paid=w.dd.filter(d=>d.st==='paid').reduce((a,d)=>a+d.amt,0),pend=w.dd.filter(d=>d.st==='pend').reduce((a,d)=>a+d.amt,0),avail=w.obl-paid-pend;
+  const pts=[];let cum=0;const sorted=w.dd.filter(d=>d.st==='paid').slice().sort((a,b)=>a.date-b.date);pts.push([w.start,0]);sorted.forEach(d=>{cum+=d.amt;pts.push([d.date,cum])});pts.push([Date.now(),cum]);
+  const W=640,H=200,p=34,x0=w.start,x1=Math.max(Date.now(),x0+DAY),sx=t=>p+(W-2*p)*(t-x0)/(x1-x0),sy=v=>H-24-(H-44)*v/w.obl;
+  const line=pts.map((q,i)=>`${i?'L':'M'}${sx(q[0]).toFixed(1)} ${sy(q[1]).toFixed(1)}`).join(' ');
+  const svg=`<svg viewBox="0 0 ${W} ${H}"><line x1="${p}" x2="${W-p}" y1="${sy(w.obl)}" y2="${sy(w.obl)}" stroke="${cssv('--gold')}" stroke-dasharray="5 4"/><text x="${W-p}" y="${sy(w.obl)-6}" text-anchor="end" font-size="11" fill="${cssv('--gold')}">${T('Obligated','Обязательство')} ${ms(w.obl)}</text><line x1="${p}" x2="${W-p}" y1="${H-24}" y2="${H-24}" stroke="${cssv('--line2')}"/><path d="${line} L${sx(Date.now())} ${H-24} L${sx(x0)} ${H-24}Z" fill="${cssv('--mal')}" opacity=".15"/><path d="${line}" fill="none" stroke="${cssv('--mal')}" stroke-width="2.5"/>${pts.slice(1,-1).map(q=>`<circle cx="${sx(q[0])}" cy="${sy(q[1])}" r="3.5" fill="${cssv('--mal3')}"/>`).join('')}<text x="${p}" y="${H-6}" font-size="11" fill="${cssv('--muted')}">${fmtD(x0)}</text><text x="${W-p}" y="${H-6}" text-anchor="end" font-size="11" fill="${cssv('--muted')}">${T('Today','Сегодня')}</text></svg>`;
+  const DST={paid:['Paid','Выплачено','ok'],pend:['Pending approval','Ждёт одобрения','warn'],rej:['Rejected','Отклонено','bad']};
+  el.innerHTML=`<div class="aw">${S.awards.map(a=>{const pd=a.dd.filter(d=>d.st==='paid').reduce((s,d)=>s+d.amt,0);return `<button class="${a.id===w.id?'on':''}" data-a="${a.id}"><span class="mono muted" style="font-size:11px">${a.id}</span><b>${esc(L(a.t))}</b><small>${ms(a.obl)} · ${Math.round(pd/a.obl*100)}% ${T('drawn','выбрано')}</small></button>`}).join('')}</div>
+   <div class="grid2"><div class="card"><h3><span>${esc(L(w.t))}</span><span class="sp"></span><span class="pill ok">${T('Active','Действует')}</span></h3>
+     <div class="muted" style="font-size:12.5px">${esc(w.org)} · ${w.opp} · ${T('start','начало')} ${fmtD(w.start)}</div>
+     <div class="mini"><div><span>${T('Disbursed','Выплачено')}</span><b class="ok-t">${usd(paid)}</b></div><div><span>${T('Pending','В обработке')}</span><b class="warn-t">${usd(pend)}</b></div><div><span>${T('Available','Доступно')}</span><b>${usd(avail)}</b></div></div>
+     <div class="prog"><i style="width:${paid/w.obl*100}%;background:var(--mal)"></i><i style="width:${pend/w.obl*100}%;background:var(--amber)"></i></div>
+     <div class="chart" style="margin-top:12px">${svg}</div></div>
+    <div class="card"><h3>${T('Request drawdown','Запрос транша')}</h3>
+     <div class="f"><label>${T('Amount, USD','Сумма, USD')}</label><input class="input" id="dAmt" type="number" min="1" step="100" placeholder="25000"></div>
+     <div class="f" style="margin-top:10px"><label>${T('Purpose / cost category','Назначение / статья')}</label><input class="input" id="dPur" placeholder="${T('e.g. October payroll & fringe','напр. зарплата за октябрь')}"></div>
+     <label class="chk" style="margin:10px 0"><input type="checkbox" id="dCash"><span>${T('Funds needed within 3 business days (cash management, 2 CFR 200.305)','Средства нужны в течение 3 рабочих дней (2 CFR 200.305)')}</span></label>
+     <button class="btn pri wide" id="dGo">${T('Submit drawdown','Отправить запрос')}</button>
+     <div class="muted" style="font-size:12px;margin-top:8px">${T('Requests above 15% of the award require program officer approval.','Запросы свыше 15% суммы гранта одобряет специалист.')}</div></div></div>
+   <div class="card" style="margin-top:14px"><h3>${T('Payment history','История выплат')}</h3><div class="tw"><table class="t"><thead><tr><th>ID</th><th>${T('Date','Дата')}</th><th>${T('Purpose','Назначение')}</th><th class="num">${T('Amount','Сумма')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+     ${w.dd.length?w.dd.slice().sort((a,b)=>b.date-a.date).map(d=>`<tr><td class="mono" style="font-size:12px">${d.id}</td><td>${fmtD(d.date)}</td><td>${esc(L(d.p))}</td><td class="num">${usd(d.amt)}</td><td><span class="pill ${DST[d.st][2]}">${T(DST[d.st][0],DST[d.st][1])}</span></td><td>${d.st==='pend'?`<div class="row" style="flex-wrap:nowrap"><button class="btn sm pri" data-ok="${d.id}">${T('Approve','Одобрить')}</button><button class="btn sm danger" data-no="${d.id}">${T('Reject','Отклонить')}</button></div>`:''}</td></tr>`).join(''):`<tr><td colspan="6" class="muted">${T('No drawdowns yet','Траншей пока нет')}</td></tr>`}
+   </tbody></table></div></div>`;
+  $$('[data-a]',el).forEach(b=>b.onclick=()=>{S.awSel=b.dataset.a;save();rAwards()});
+  $('#dGo').onclick=()=>{const a=+$('#dAmt').value,pu=$('#dPur').value.trim();
+    if(!(a>0)){toast(T('Enter an amount','Введите сумму'),'bad');return}if(a>avail){toast(T('Exceeds available balance ','Больше доступного остатка ')+usd(avail),'bad');return}if(pu.length<4){toast(T('Describe the purpose','Укажите назначение'),'bad');return}
+    const big=a>w.obl*.15;const id=w.id+'-D'+(w.dd.length+1);w.dd.push({id,date:Date.now(),amt:a,p:{en:pu,ru:pu},st:big?'pend':'paid'});logA('Drawdown '+id+' '+usd(a)+(big?' awaiting approval':' paid'),'Транш '+id+' '+usd(a)+(big?' ждёт одобрения':' выплачен'));save();
+    toast(big?T('Sent for approval (above 15% threshold)','Отправлено на одобрение (свыше 15%)'):T('Approved automatically · ACH payment in 1–2 days','Одобрено автоматически · платёж ACH за 1–2 дня'),big?'gold':'');render()};
+  $$('[data-ok]',el).forEach(b=>b.onclick=()=>{const d=w.dd.find(x=>x.id===b.dataset.ok);d.st='paid';d.date=Date.now();logA(d.id+' approved and paid',d.id+' одобрен и выплачен');save();toast(T('Payment released','Платёж проведён'));render()});
+  $$('[data-no]',el).forEach(b=>b.onclick=()=>{const d=w.dd.find(x=>x.id===b.dataset.no);d.st='rej';logA(d.id+' rejected',d.id+' отклонён');save();toast(T('Drawdown rejected','Транш отклонён'),'bad');render()});
+}
+
+/* ---------- REPORTS ---------- */
+const RT={ffr:['SF-425 Federal Financial Report','SF-425 Финансовый отчёт'],rppr:['RPPR Performance progress report','RPPR Отчёт о ходе работ'],close:['Closeout report','Итоговый отчёт']};
+const RST={due:['Due','К сдаче','warn'],over:['Overdue','Просрочен','bad'],sub:['Submitted','Подан','gold'],acc:['Accepted','Принят','ok']};
+function rReports(){
+  const el=$('#v-reports');const stOf=r=>r.st==='due'&&daysTo(r.due)<0?'over':r.st;
+  const list=S.reports.filter(r=>S.repTab==='all'||stOf(r)===S.repTab).sort((a,b)=>a.due-b.due);
+  const W=640,H=96,span=120,x=t=>24+(W-48)*((t-(Date.now()-30*DAY))/((span+30)*DAY));
+  const tlR=S.reports.filter(r=>r.due>Date.now()-30*DAY&&r.due<Date.now()+span*DAY);
+  const svg=`<svg viewBox="0 0 ${W} ${H}"><line x1="24" x2="${W-24}" y1="50" y2="50" stroke="${cssv('--line2')}" stroke-width="2"/>${[0,30,60,90,120].map(d=>`<line x1="${x(Date.now()+d*DAY)}" x2="${x(Date.now()+d*DAY)}" y1="44" y2="56" stroke="${cssv('--line2')}"/><text x="${x(Date.now()+d*DAY)}" y="84" text-anchor="middle" font-size="11" fill="${cssv('--muted')}">${d?'+'+d+T('d','д'):T('today','сегодня')}</text>`).join('')}<line x1="${x(Date.now())}" x2="${x(Date.now())}" y1="16" y2="64" stroke="${cssv('--gold')}" stroke-dasharray="3 3"/>${tlR.map((r,i)=>{const s=stOf(r);const c={due:'--amber',over:'--red',sub:'--gold',acc:'--mal'}[s];return `<circle cx="${x(r.due)}" cy="${i%2?38:62}" r="7" fill="${cssv(c)}"><title>${r.id} · ${fmtD(r.due)}</title></circle>`}).join('')}</svg>`;
+  el.innerHTML=`<div class="card chart" style="margin-bottom:14px"><h3>${T('Due-date timeline (−30 … +120 days)','Сроки отчётов (−30 … +120 дней)')}</h3>${svg}<div class="legend">${Object.keys(RST).map(k=>`<span><i style="background:var(${{due:'--amber',over:'--red',sub:'--gold',acc:'--mal'}[k]})"></i>${T(RST[k][0],RST[k][1])} · ${S.reports.filter(r=>stOf(r)===k).length}</span>`).join('')}</div></div>
+   <div class="card"><div class="tabs">${[['all','All','Все'],['over','Overdue','Просрочены'],['due','Due','К сдаче'],['sub','Submitted','Поданы'],['acc','Accepted','Приняты']].map(t=>`<button class="chip ${S.repTab===t[0]?'on':''}" data-tab="${t[0]}">${T(t[1],t[2])}</button>`).join('')}</div>
+   <div class="tw"><table class="t"><thead><tr><th>${T('Report','Отчёт')}</th><th>${T('Award','Грант')}</th><th>${T('Period','Период')}</th><th>${T('Due','Срок')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+   ${list.map(r=>{const s=stOf(r),d=daysTo(r.due);return `<tr><td><b>${T(RT[r.type][0],RT[r.type][1])}</b><div class="mono muted" style="font-size:11.5px">${r.id}</div></td><td class="mono" style="font-size:12px">${r.aw}</td><td>${esc(L(r.per))}</td><td style="white-space:nowrap">${fmtD(r.due)}${r.st==='due'?`<div class="${d<0?'bad-t':d<=14?'warn-t':'muted'}" style="font-size:11.5px">${d<0?T(-d+' days late',`просрочен на ${-d} дн.`):T('in '+d+' days',`через ${d} дн.`)}</div>`:''}</td><td><span class="pill ${RST[s][2]}">${T(RST[s][0],RST[s][1])}</span>${r.note?`<div class="bad-t" style="font-size:11.5px">${esc(r.note)}</div>`:''}</td>
+     <td>${r.st==='due'?`<button class="btn sm pri" data-open="${r.id}">${S.repOpen===r.id?T('Close','Закрыть'):T('Prepare','Заполнить')}</button>`:r.st==='sub'?`<div class="row" style="flex-wrap:nowrap"><button class="btn sm pri" data-acc="${r.id}">${T('Accept','Принять')}</button><button class="btn sm danger" data-ret="${r.id}">${T('Return','Вернуть')}</button></div>`:''}</td></tr>
+     ${S.repOpen===r.id?`<tr><td colspan="6" style="background:var(--bg2)">${repForm(r)}</td></tr>`:''}`}).join('')||`<tr><td colspan="6" class="muted">${T('Nothing here','Пусто')}</td></tr>`}
+   </tbody></table></div></div>`;
+  $$('[data-tab]',el).forEach(b=>b.onclick=()=>{S.repTab=b.dataset.tab;save();rReports()});
+  $$('[data-open]',el).forEach(b=>b.onclick=()=>{S.repOpen=S.repOpen===b.dataset.open?null:b.dataset.open;save();rReports()});
+  $$('[data-acc]',el).forEach(b=>b.onclick=()=>{const r=S.reports.find(x=>x.id===b.dataset.acc);r.st='acc';logA(r.id+' accepted',r.id+' принят');save();toast(T('Report accepted','Отчёт принят'));render()});
+  $$('[data-ret]',el).forEach(b=>b.onclick=()=>{const r=S.reports.find(x=>x.id===b.dataset.ret);r.st='due';r.note=T('Returned: reconcile line 10e with drawdowns','Возвращён: сверьте строку 10e с траншами');logA(r.id+' returned for correction',r.id+' возвращён на доработку');save();toast(T('Returned to recipient','Возвращён получателю'),'gold');render()});
+  const fs=$('#repSub');if(fs)fs.onclick=()=>{const r=S.reports.find(x=>x.id===S.repOpen);
+    if(r.type==='ffr'){const e=+$('#fExp').value,c=+$('#fCash').value;const w=S.awards.find(a=>a.id===r.aw);if(!(e>0)){toast(T('Enter federal expenditures','Укажите федеральные расходы'),'bad');return}if(w&&e>w.obl){toast(T('Expenditures exceed obligation','Расходы больше обязательства'),'bad');return}if(c<0){toast(T('Cash on hand cannot be negative','Остаток не может быть отрицательным'),'bad');return}r.data={e,c}}
+    else{const t=$('#fAcc').value.trim();if(t.length<40){toast(T('Describe accomplishments (40+ characters)','Опишите результаты (от 40 символов)'),'bad');return}r.data={t,p:+$('#fPct').value}}
+    r.st='sub';r.note='';S.repOpen=null;logA(r.id+' submitted',r.id+' подан');save();toast(T('Report submitted · confirmation sent','Отчёт подан · подтверждение отправлено'),'gold');render()};
+  const pc=$('#fPct');if(pc)pc.oninput=()=>$('#fPctO').textContent=pc.value+'%';
+}
+function repForm(r){
+  const w=S.awards.find(a=>a.id===r.aw),paid=w?w.dd.filter(d=>d.st==='paid').reduce((a,d)=>a+d.amt,0):0;
+  return r.type==='ffr'?`<div class="fgrid" style="padding:6px 0"><div class="f"><label>${T('10e. Federal share of expenditures','10e. Федеральные расходы')}</label><input class="input" id="fExp" type="number" min="0" value="${paid}"><div class="hint">${T('Cash received to date','Получено на дату')}: ${usd(paid)}</div></div>
+     <div class="f"><label>${T('10c. Cash on hand','10c. Остаток средств')}</label><input class="input" id="fCash" type="number" min="0" value="0"></div>
+     <div class="full row"><button class="btn pri" id="repSub">${T('Certify & submit SF-425','Подписать и подать SF-425')}</button></div></div>`
+   :`<div class="fgrid" style="padding:6px 0"><div class="f full"><label>${T('Accomplishments this period','Результаты за период')}</label><textarea class="input" id="fAcc" placeholder="${T('Milestones reached, people served, publications…','Достигнутые этапы, охват, публикации…')}"></textarea></div>
+     <div class="f"><label>${T('Milestones complete','Выполнено этапов')} · <output id="fPctO">50%</output></label><input type="range" id="fPct" min="0" max="100" value="50"></div>
+     <div class="f" style="align-self:end"><button class="btn pri" id="repSub">${T('Submit RPPR','Подать RPPR')}</button></div></div>`;
+}
+
+PT.onLang(()=>render());
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

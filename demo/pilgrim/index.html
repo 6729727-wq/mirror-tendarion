@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pilgrim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app.hide,.loginwrap.hide{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:16px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:13px;display:flex;gap:10px;align-items:center}
+.who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1306;font-weight:800;flex:none;font-size:13px}
+.who small{display:block;color:var(--muted);font-size:11.5px;overflow:hidden;text-overflow:ellipsis}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.input.bad{border-color:var(--red)}
+select.input{appearance:auto}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--text)}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+th{text-align:left;font-size:11.5px;color:var(--muted);font-weight:700;padding:9px 10px;border-bottom:1px solid var(--line);background:var(--bg2);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.line{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.loginwrap{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(900px 500px at 80% -10%,color-mix(in srgb,var(--mal) 18%,transparent),transparent),radial-gradient(800px 500px at 0% 110%,color-mix(in srgb,var(--gold) 12%,transparent),transparent)}
+.lcard{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:26px;box-shadow:var(--shadow)}
+.lcard h2{margin:14px 0 4px;font-size:22px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:4px;margin:16px 0}
+.seg button{border:0;background:none;border-radius:9px;padding:8px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--panel2);color:var(--text);box-shadow:0 1px 0 var(--line2)}
+.hint{font-size:12px;color:var(--muted);background:var(--bg2);border:1px dashed var(--line2);border-radius:10px;padding:8px 10px;margin-top:12px}
+/* booking */
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.day{border:1px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center;background:var(--bg2);cursor:pointer;color:var(--text)}
+.day small{display:block;font-size:10.5px;color:var(--muted);text-transform:uppercase}
+.day b{font-size:18px;display:block}
+.day i{display:block;height:4px;border-radius:4px;margin:4px 6px 0}
+.day.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 16%,transparent)}
+.slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.slot{border:1px solid var(--line);border-radius:12px;padding:9px 10px;background:var(--panel);cursor:pointer;text-align:left;color:var(--text)}
+.slot b{font-size:14px;display:block}
+.slot small{font-size:11.5px;color:var(--muted)}
+.slot .bar{height:5px;border-radius:5px;background:var(--line);margin-top:6px;overflow:hidden}
+.slot .bar i{display:block;height:100%}
+.slot.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.slot:disabled{opacity:.45;cursor:not-allowed}
+.rit{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rit button{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg2);text-align:left;cursor:pointer;color:var(--text)}
+.rit button.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 14%,transparent)}
+.rit button small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.party label{display:flex;gap:9px;align-items:center;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:6px;cursor:pointer;background:var(--bg2)}
+.permit{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--bg2);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.permit .g{flex:1;min-width:150px}
+.permit b{display:block;font-size:13.5px}
+.permit small{color:var(--muted);font-size:12px}
+/* packages */
+.pk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.pcard{border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden;display:flex;flex-direction:column}
+.pcard.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.pcard .hd{padding:14px;color:#fff;position:relative}
+.pcard .hd small{opacity:.85;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.pcard .hd h4{margin:4px 0 0;font-size:17px}
+.pcard .bd{padding:12px 14px;display:flex;flex-direction:column;gap:6px;font-size:13px;flex:1}
+.pcard .pr{font-size:22px;font-weight:800}
+.pcard .ft{padding:12px 14px;border-top:1px solid var(--line);display:flex;gap:6px;flex-wrap:wrap}
+.stars{color:var(--gold);letter-spacing:1px}
+/* digital card */
+.idc{max-width:380px;margin:0 auto;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line2);background:var(--panel)}
+.idc .top{padding:16px 18px;background:linear-gradient(135deg,#0b4c3a,var(--mal2) 60%,#2a6b4f);color:#fff;position:relative;overflow:hidden}
+.idc .top:after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;border:18px solid rgba(255,255,255,.08)}
+.idc .top small{opacity:.8;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
+.idc .bd{display:grid;grid-template-columns:90px minmax(0,1fr);gap:12px;padding:14px 16px}
+.idc .kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px;font-size:12.5px}
+.idc .kv span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.idc .qr{display:flex;gap:14px;align-items:center;padding:12px 16px 16px;border-top:2px dashed var(--line2)}
+.idc .qr .q{background:#fff;padding:6px;border-radius:10px;flex:none}
+.cd{height:4px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:6px}
+.cd i{display:block;height:100%;background:var(--gold);transition:width 1s linear}
+.chk{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.chk .dot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;flex:none}
+/* crowd */
+.map svg{width:100%;height:auto;display:block}
+.map .z{cursor:pointer;transition:opacity .15s}
+.map .z:hover{opacity:.85}
+.map text{pointer-events:none}
+.scale{height:10px;border-radius:6px;background:linear-gradient(90deg,#1fae6b,#9fd23c,#f2c230,#f0802e,#e2403a);margin:6px 0 4px}
+.alert{border-left:4px solid var(--amber);background:var(--bg2);border-radius:10px;padding:8px 12px;font-size:13px;margin-bottom:8px}
+.alert.bad{border-left-color:var(--red)}
+.alert small{color:var(--muted);display:block;font-size:11.5px}
+.livedot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:6px;animation:pl 1s infinite}
+@keyframes pl{50%{opacity:.25}}
+input[type=range]{width:100%;accent-color:var(--mal)}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.intro{grid-template-columns:minmax(0,1fr)}.pk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .slots{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:560px){.how,.rit{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.pk{grid-template-columns:minmax(0,1fr)}.kpi .v{font-size:20px}.kpis{gap:10px}.lcard{padding:20px}.days{gap:4px}.day b{font-size:15px}.idc .bd{grid-template-columns:72px minmax(0,1fr)}}
+</style>
+</head>
+<body data-demo-en="Pilgrim — pilgrimage journey platform" data-demo-ru="Pilgrim — платформа паломничества">
+<div class="loginwrap hide" id="login"></div>
+<div class="app hide" id="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>🕋</b><div>Pilgrim<small data-en="Journey platform · Season 1447" data-ru="Платформа паломника · сезон 1447"></small></div></div>
+    <div class="sec" data-en="Pilgrim" data-ru="Паломник"></div>
+    <div id="navP"></div>
+    <div class="sec" data-en="Authority" data-ru="Ведомство"></div>
+    <div id="navA"></div>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="signout" style="flex:1;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    </div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill ok" id="rolePill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="In <b>Permits</b> pick a day, a ritual and a time slot with free capacity, add companions and book. Then choose a <b>Package</b>." data-ru="В <b>Разрешениях</b> выберите день, обряд и слот со свободными местами, добавьте спутников и забронируйте. Затем выберите <b>Пакет</b>."></span></div>
+          <div><b>2</b><span data-en="Open the <b>Digital card</b>: permits, health checks and a QR that refreshes every 15 s. Press SOS or share your location with the group leader." data-ru="Откройте <b>Цифровую карту</b>: разрешения, медпроверки и QR, обновляемый каждые 15 с. Нажмите SOS или поделитесь местом с руководителем группы."></span></div>
+          <div><b>3</b><span data-en="Watch the live <b>Crowd map</b>, then in <b>Authority dashboard</b> approve or flag permits, close a slot and broadcast an alert." data-ru="Следите за живой <b>Картой толпы</b>, затем в <b>Панели ведомства</b> одобряйте или помечайте разрешения, закрывайте слот и рассылайте оповещение."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Pilgrimage journey platform" data-ru="Платформа паломничества"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $300M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Ministry of Pilgrimage Affairs (fictional)" data-ru="Министерство по делам паломничества (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>permits · crowd management · digital ID</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-book"></section>
+    <section class="view" id="v-pkg"></section>
+    <section class="view" id="v-card"></section>
+    <section class="view" id="v-crowd"></section>
+    <section class="view" id="v-auth"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=a=>a?a[PT.lang==='ru'?1:0]:'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+const KEY='pt_pilgrim_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const num=n=>Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+const usd=n=>'$'+num(n);
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+let timers=[];const clearT=()=>{timers.forEach(clearInterval);timers=[]};
+
+/* ---------- reference data ---------- */
+const BASE=new Date('2026-12-01T00:00:00');
+const dayDate=i=>new Date(BASE.getTime()+i*864e5);
+const fmtDay=i=>dayDate(i).toLocaleDateString(loc(),{weekday:'short',day:'numeric',month:'short'});
+const RITES={umrah:{n:['Umrah','Умра'],d:['Grand Mosque · Tawaf & Sa’i','Заповедная мечеть · таваф и сай'],cap:1800,dur:3},rawdah:{n:['Rawdah visit','Посещение Рауды'],d:['Prophet’s Mosque · 30 min','Мечеть Пророка · 30 мин'],cap:420,dur:.5},prayer:{n:['Friday prayer area','Пятничный намаз'],d:['Reserved courtyard section','Выделенная часть двора'],cap:2600,dur:2}};
+const SLOT_H=['04:00','06:00','08:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00','00:00','02:00'];
+const PKG=[
+ {id:'eco',tier:['Economy','Эконом'],n:['Al-Safa Basic','Аль-Сафа Базовый'],price:1450,hotel:3,dist:1900,room:4,meals:['Breakfast','Завтрак'],bus:['Shared shuttle','Общий шаттл'],nights:7,guide:['Group, AR/EN','Групповой, AR/EN'],c:'#2f7d6a'},
+ {id:'std',tier:['Standard','Стандарт'],n:['Marwa Comfort','Марва Комфорт'],price:2380,hotel:4,dist:850,room:3,meals:['Half board','Полупансион'],bus:['A/C coach','Автобус с кондиционером'],nights:9,guide:['Group, 6 languages','Групповой, 6 языков'],c:'#1d6fa5'},
+ {id:'prm',tier:['Premium','Премиум'],n:['Zamzam Premium','Замзам Премиум'],price:3990,hotel:5,dist:300,room:2,meals:['Full board','Полный пансион'],bus:['Private coach','Отдельный автобус'],nights:10,guide:['Small group, 12 languages','Малая группа, 12 языков'],c:'#7a5ab8'},
+ {id:'vip',tier:['VIP','VIP'],n:['Haram View Royal','Харам Вью Роял'],price:7800,hotel:5,dist:80,room:2,meals:['Full board + suhoor','Полный пансион + сухур'],bus:['Private car','Личный автомобиль'],nights:12,guide:['Personal scholar guide','Личный гид-богослов'],c:'#a8842e'},
+ {id:'fam',tier:['Family','Семейный'],n:['Ajyad Family','Аджьяд Семейный'],price:2950,hotel:4,dist:600,room:5,meals:['Half board','Полупансион'],bus:['A/C coach','Автобус с кондиционером'],nights:9,guide:['Family group','Семейная группа'],c:'#c06a3a'},
+ {id:'acc',tier:['Accessible','Доступный'],n:['Rahma Care','Рахма Забота'],price:2650,hotel:4,dist:400,room:2,meals:['Full board, dietary','Полный пансион, диетич.'],bus:['Wheelchair coach','Автобус для колясок'],nights:9,guide:['Care companion','Сопровождающий'],c:'#3a8fb0'}];
+const PK=id=>PKG.find(p=>p.id===id);
+/* crowd zones: [id, name, shape, capacity persons] — positions on a 640x420 schematic */
+const ZONES=[
+ {id:'mataf',n:['Mataf (Tawaf ring)','Матаф (круг тавафа)'],cap:30000,sh:'c',x:250,y:200,r:62},
+ {id:'masa',n:['Mas’a (Sa’i gallery)','Масаа (галерея сая)'],cap:44000,sh:'r',x:340,y:110,w:200,h:42},
+ {id:'n',n:['North courtyard','Северный двор'],cap:52000,sh:'r',x:150,y:40,w:200,h:56},
+ {id:'s',n:['South courtyard','Южный двор'],cap:52000,sh:'r',x:150,y:304,w:200,h:56},
+ {id:'w',n:['West expansion','Западное расширение'],cap:61000,sh:'r',x:60,y:110,w:72,h:180},
+ {id:'e',n:['East plaza','Восточная площадь'],cap:38000,sh:'r',x:340,y:170,w:110,h:120},
+ {id:'g1',n:['Gate 1 — King’s gate','Ворота 1 — Королевские'],cap:9000,sh:'r',x:470,y:170,w:70,h:52},
+ {id:'g79',n:['Gate 79 — Fatah','Ворота 79 — Фатх'],cap:9000,sh:'r',x:470,y:238,w:70,h:52},
+ {id:'roof',n:['Roof level','Крыша'],cap:24000,sh:'r',x:360,y:304,w:180,h:56},
+ {id:'bus',n:['Ajyad bus terminal','Автовокзал Аджьяд'],cap:15000,sh:'r',x:560,y:110,w:60,h:250}];
+const NAT=[['Indonesia','Индонезия'],['Pakistan','Пакистан'],['India','Индия'],['Egypt','Египет'],['Türkiye','Турция'],['Nigeria','Нигерия'],['Malaysia','Малайзия'],['Other','Другие']];
+const USERS={pil:{name:'Aisha Rahman',mail:'aisha.rahman@mail.demo',role:'pil'},auth:{name:'Yusuf Al-Hamdan',mail:'y.alhamdan@pilgrim.gov.demo',role:'auth'}};
+
+/* ---------- state ---------- */
+function seed(){
+  const r=rng(1447);
+  const nm=[['Ahmad Fauzi','Ахмад Фаузи','Indonesia'],['Bilal Qureshi','Билал Куреши','Pakistan'],['Fatima Zahra','Фатима Захра','Morocco'],['Mehmet Yılmaz','Мехмет Йылмаз','Türkiye'],['Nur Aisyah','Нур Аисья','Malaysia'],['Ibrahim Musa','Ибрагим Муса','Nigeria'],['Omar Farouk','Омар Фарук','Egypt'],['Rashid Khan','Рашид Хан','India'],['Siti Hajar','Сити Хаджар','Indonesia'],['Hassan Ali','Хасан Али','Pakistan']];
+  const rk=Object.keys(RITES);
+  const permits=nm.map((n,i)=>({id:'PM-'+(552100+i*13),name:[n[0],n[1]],nat:n[2],rite:rk[i%3],day:i%5,slot:(i*3)%12,party:1+Math.floor(r()*4),st:i<5?'approved':i===8?'flagged':'pending',risk:i===8?82:Math.round(5+r()*40)}));
+  const book={};for(let d=0;d<14;d++)for(const k of rk)for(let s=0;s<12;s++){const peak=[1,2,7,8,9].includes(s)?.92:.6;book[d+'|'+k+'|'+s]=Math.min(RITES[k].cap,Math.round(RITES[k].cap*(peak*(.55+r()*.5))*(d<3?1.05:.9)))}
+  const dens={};ZONES.forEach(z=>dens[z.id]=+(0.8+r()*3.6).toFixed(2));dens.mataf=4.2;dens.g1=3.8;
+  const hourly=[];for(let h=0;h<24;h++)hourly.push(Math.round(42000+38000*Math.max(0,Math.sin((h-3)/24*Math.PI*2))+(h===4||h===19?30000:0)+r()*8000));
+  return{user:null,view:'book',bk:{day:2,rite:'umrah',slot:null,party:['self']},
+    companions:[{id:'c1',n:'Yusuf Rahman',rel:['Husband','Муж']},{id:'c2',n:'Maryam Rahman',rel:['Daughter, 14','Дочь, 14']},{id:'c3',n:'Khadija Begum',rel:['Mother, 71 · wheelchair','Мать, 71 · коляска']}],
+    my:[{id:'PM-610045',rite:'rawdah',day:4,slot:8,party:['self','c1'],st:'approved'}],
+    pkg:null,cmp:['std','prm'],pkgPaid:false,health:{vac:true,mening:true,decl:false},share:false,
+    permits,book,closed:[],dens,hour:new Date().getHours(),live:true,hourly,alerts:[],nextP:610100,sel:'mataf'}
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+const used=(d,k,s)=>S.book[d+'|'+k+'|'+s]||0;
+const isClosed=(d,k,s)=>S.closed.includes(d+'|'+k+'|'+s);
+
+/* ---------- nav ---------- */
+const VIEWS=[['book','📅','Permits','Разрешения','P'],['pkg','🧳','Packages','Пакеты','P'],['card','🪪','Digital card','Цифровая карта','P'],['crowd','🗺','Crowd map','Карта толпы','A'],['auth','🏛','Authority dashboard','Панель ведомства','A']];
+function nav(){
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';
+    if(v[0]==='book'){const n=S.my.filter(p=>p.st!=='cancelled').length;if(n)x=`<span class="cnt">${n}</span>`}
+    if(v[0]==='auth'){const n=S.permits.filter(p=>p.st==='pending').length;if(n)x=`<span class="cnt">${n}</span>`}
+    if(v[0]==='crowd'){const n=ZONES.filter(z=>S.dens[z.id]>=4).length;if(n)x=`<span class="cnt" style="background:var(--red);color:#fff">${n}</span>`}
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navP').innerHTML=mk('P');$('#navA').innerHTML=mk('A');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  clearT();
+  if(!S.user){$('#app').classList.add('hide');$('#login').classList.remove('hide');rLogin();return}
+  $('#login').classList.add('hide');$('#app').classList.remove('hide');
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);
+  $('#crumb').textContent=v[4]==='P'?T('Pilgrim app · Season 1447 AH','Приложение паломника · сезон 1447 г. х.'):T('Operations centre · Ministry of Pilgrimage Affairs','Оперативный центр · Министерство по делам паломничества');
+  $('#rolePill').textContent=S.user.role==='auth'?T('Authority officer','Сотрудник ведомства'):T('Pilgrim account','Аккаунт паломника');
+  $('#who').innerHTML=`<div class="av">${S.user.name.split(' ').map(x=>x[0]).join('')}</div><div style="min-width:0"><b>${esc(S.user.name)}</b><small>${esc(S.user.mail)}</small></div>`;
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({book:rBook,pkg:rPkg,card:rCard,crowd:rCrowd,auth:rAuth})[v[0]]();
+}
+
+/* ---------- login ---------- */
+let lrole='pil';
+function rLogin(){
+  const u=USERS[lrole];
+  $('#login').innerHTML=`<div class="lcard"><div class="brand" style="padding:0"><b>🕋</b><div>Pilgrim<small>${T('Official pilgrimage journey platform','Официальная платформа паломничества')}</small></div></div>
+   <h2>${T('Sign in','Вход')}</h2><div class="muted" style="font-size:13.5px">${T('Permits, packages, your digital card and live crowd guidance in one place.','Разрешения, пакеты, цифровая карта и живые подсказки о толпе — в одном месте.')}</div>
+   <div class="seg"><button data-r="pil" class="${lrole==='pil'?'on':''}">${T('Pilgrim','Паломник')}</button><button data-r="auth" class="${lrole==='auth'?'on':''}">${T('Authority officer','Сотрудник')}</button></div>
+   <div class="f"><label>${T('Email or visa number','Почта или номер визы')}</label><input class="input" id="lMail" value="${u.mail}" autocomplete="username"></div>
+   <div class="f" style="margin-top:10px"><label>${T('Password','Пароль')}</label><input class="input" id="lPw" type="password" value="pilgrim-demo-47" autocomplete="current-password"></div>
+   <button class="btn pri" id="lGo" style="width:100%;justify-content:center;margin-top:16px">${T('Sign in with demo account','Войти в демо-аккаунт')}</button>
+   <div class="hint">🔑 ${T('Demo credentials are prefilled — just click the button.','Демо-данные уже заполнены — просто нажмите кнопку.')}</div></div>`;
+  $$('#login .seg button').forEach(b=>b.onclick=()=>{lrole=b.dataset.r;rLogin()});
+  $('#lGo').onclick=()=>{const m=$('#lMail').value.trim(),p=$('#lPw').value;
+    if(m.length<5||p.length<4){toast(T('Enter your login and password','Введите логин и пароль'),'bad');return}
+    const b=$('#lGo');b.disabled=true;b.textContent=T('Verifying…','Проверка…');
+    setTimeout(()=>{S.user=Object.assign({},USERS[lrole],{mail:m});S.view=lrole==='auth'?'auth':'book';save();render();toast(T('Assalamu alaikum, ','Ассаляму алейкум, ')+esc(S.user.name.split(' ')[0]),'gold')},500)};
+}
+
+/* ---------- permit booking ---------- */
+const capCol=p=>p>=1?cssv('--line2'):p>.9?cssv('--red'):p>.7?cssv('--amber'):cssv('--mal');
+function rBook(){
+  const el=$('#v-book');const b=S.bk;const R=RITES[b.rite];
+  const dayLoad=d=>{let u=0,c=0;for(let s=0;s<12;s++){u+=used(d,b.rite,s);c+=R.cap}return u/c};
+  const partyN=b.party.length;
+  const active=S.my.filter(p=>p.st!=='cancelled');
+  el.innerHTML=`<div class="grid2"><div class="stack">
+   <div class="card"><h3>1 · ${T('Ritual','Обряд')}</h3><div class="rit">${Object.entries(RITES).map(([k,r])=>`<button data-rite="${k}" class="${b.rite===k?'on':''}"><b>${L(r.n)}</b><small>${L(r.d)}</small></button>`).join('')}</div></div>
+   <div class="card"><h3>2 · ${T('Day','День')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('quiet','свободно')}</span><span><i style="background:var(--amber)"></i>${T('busy','занято')}</span><span><i style="background:var(--red)"></i>${T('almost full','почти полно')}</span></span></h3>
+    <div class="days">${Array.from({length:14},(_,i)=>{const d=dayDate(i);const p=dayLoad(i);return `<button class="day ${b.day===i?'on':''}" data-day="${i}"><small>${d.toLocaleDateString(loc(),{weekday:'short'})}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString(loc(),{month:'short'})}</small><i style="background:${capCol(p)}"></i></button>`}).join('')}</div></div>
+   <div class="card"><h3>3 · ${T('Time slot','Время')} · ${fmtDay(b.day)}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('capacity per slot','вместимость слота')}: ${num(R.cap)}</span></h3>
+    <div class="slots">${SLOT_H.map((h,s)=>{const u=used(b.day,b.rite,s),left=R.cap-u,p=u/R.cap,cl=isClosed(b.day,b.rite,s);const dis=cl||left<partyN;
+      return `<button class="slot ${b.slot===s?'on':''}" data-slot="${s}" ${dis?'disabled':''}><b>${h}</b><small>${cl?T('Closed by authority','Закрыт ведомством'):left<=0?T('Full','Мест нет'):num(left)+' '+T('left','свободно')}</small><div class="bar"><i style="width:${Math.min(100,p*100)}%;background:${capCol(cl?1:p)}"></i></div></button>`}).join('')}</div></div></div>
+   <div class="stack"><div class="card"><h3>4 · ${T('Who is going','Кто идёт')}<span class="sp"></span><span class="pill">${partyN}/4</span></h3>
+     <div class="party"><label><input type="checkbox" checked disabled> <b>${esc(S.user.name)}</b> <span class="muted" style="margin-left:auto;font-size:12px">${T('you','вы')}</span></label>
+     ${S.companions.map(c=>`<label><input type="checkbox" data-cp="${c.id}" ${b.party.includes(c.id)?'checked':''}> ${esc(c.n)} <span class="muted" style="margin-left:auto;font-size:12px">${L(c.rel)}</span></label>`).join('')}</div>
+     <div class="row"><input class="input" id="cpN" style="flex:1;min-width:0" placeholder="${T('Add companion: full name','Добавить спутника: ФИО')}"><button class="btn sm" id="cpAdd">+</button></div>
+     <div class="line" style="margin-top:10px"><span class="muted">${T('Selected','Выбрано')}</span><b>${L(R.n)} · ${fmtDay(b.day)} · ${b.slot==null?'—':SLOT_H[b.slot]}</b></div>
+     <button class="btn pri" id="bkGo" style="width:100%;justify-content:center;margin-top:10px" ${b.slot==null?'disabled':''}>${T('Book permit','Забронировать разрешение')}</button>
+     <div class="muted" style="font-size:11.5px;margin-top:6px">${T('Permits are free. One Umrah permit per 10 days. A no-show releases the slot and lowers your priority.','Разрешения бесплатны. Одна Умра раз в 10 дней. Неявка освобождает слот и снижает приоритет.')}</div></div>
+    <div class="card"><h3>${T('My permits','Мои разрешения')}<span class="sp"></span><span class="pill">${active.length}</span></h3>
+     ${S.my.length?S.my.map(p=>`<div class="permit"><span style="font-size:22px">${p.rite==='umrah'?'🕋':p.rite==='rawdah'?'🌿':'🕌'}</span><div class="g"><b>${L(RITES[p.rite].n)}</b><small>${fmtDay(p.day)} · ${SLOT_H[p.slot]} · ${p.party.length} ${T('people','чел.')} · <span class="mono">${p.id}</span></small></div>
+      <span class="pill ${p.st==='approved'?'ok':p.st==='cancelled'?'bad':'warn'}">${stN(p.st)}</span>${p.st!=='cancelled'?`<button class="btn sm danger" data-cx="${p.id}">${T('Cancel','Отменить')}</button>`:''}</div>`).join(''):`<div class="muted">${T('No permits yet','Разрешений пока нет')}</div>`}</div></div></div>`;
+  $$('[data-rite]',el).forEach(x=>x.onclick=()=>{b.rite=x.dataset.rite;b.slot=null;save();rBook()});
+  $$('[data-day]',el).forEach(x=>x.onclick=()=>{b.day=+x.dataset.day;b.slot=null;save();rBook()});
+  $$('[data-slot]',el).forEach(x=>x.onclick=()=>{if(x.disabled)return;b.slot=+x.dataset.slot;save();rBook()});
+  $$('[data-cp]',el).forEach(x=>x.onchange=()=>{const id=x.dataset.cp;if(x.checked){if(b.party.length>=4){x.checked=false;toast(T('Max 4 people per permit','Не более 4 человек на разрешение'),'bad');return}b.party.push(id)}else b.party=b.party.filter(y=>y!==id);b.slot=null;save();rBook()});
+  $('#cpAdd').onclick=()=>{const n=$('#cpN').value.trim();if(n.split(/\s+/).length<2){$('#cpN').classList.add('bad');toast(T('Enter first and last name','Введите имя и фамилию'),'bad');return}
+    S.companions.push({id:'c'+Date.now(),n,rel:['Companion','Спутник']});save();rBook();toast(T('Companion added','Спутник добавлен'))};
+  $('#bkGo').onclick=()=>{if(b.slot==null)return;
+    if(b.rite==='umrah'&&S.my.some(p=>p.rite==='umrah'&&p.st!=='cancelled'&&Math.abs(p.day-b.day)<10)){toast(T('You already have an Umrah permit within 10 days','У вас уже есть разрешение на Умру в пределах 10 дней'),'bad');return}
+    const btn=$('#bkGo');btn.disabled=true;btn.textContent=T('Checking eligibility…','Проверка права…');
+    setTimeout(()=>{const id='PM-'+(S.nextP++);S.my.unshift({id,rite:b.rite,day:b.day,slot:b.slot,party:b.party.slice(),st:'approved'});S.book[b.day+'|'+b.rite+'|'+b.slot]=used(b.day,b.rite,b.slot)+b.party.length;
+      S.permits.unshift({id,name:[S.user.name,S.user.name],nat:'Malaysia',rite:b.rite,day:b.day,slot:b.slot,party:b.party.length,st:'approved',risk:4});
+      b.slot=null;save();rBook();nav();toast(T('Permit '+id+' issued · added to your digital card','Разрешение '+id+' выдано · добавлено в цифровую карту'),'gold')},800)};
+  $$('[data-cx]',el).forEach(x=>x.onclick=()=>{const p=S.my.find(y=>y.id===x.dataset.cx);p.st='cancelled';S.book[p.day+'|'+p.rite+'|'+p.slot]=Math.max(0,used(p.day,p.rite,p.slot)-p.party.length);const a=S.permits.find(y=>y.id===p.id);if(a)a.st='cancelled';save();rBook();nav();toast(T('Permit cancelled · slot released','Разрешение отменено · слот освобождён'))});
+}
+function stN(s){return({approved:T('Approved','Одобрено'),pending:T('Pending','Ожидает'),flagged:T('Flagged','Помечено'),cancelled:T('Cancelled','Отменено'),revoked:T('Revoked','Отозвано')})[s]}
+
+/* ---------- packages ---------- */
+let pf='all',sortBy='price';
+function rPkg(){
+  const el=$('#v-pkg');
+  let list=PKG.filter(p=>pf==='all'||(pf==='near'?p.dist<=600:pf==='budget'?p.price<=2500:p.id==='fam'||p.id==='acc'));
+  list=list.slice().sort((a,b)=>sortBy==='price'?a.price-b.price:a.dist-b.dist);
+  const cmp=S.cmp.map(PK);const mine=S.pkg&&PK(S.pkg);
+  el.innerHTML=`${mine?`<div class="card" style="margin-bottom:14px;border-color:var(--gold)"><div class="row"><span style="font-size:26px">🧳</span><div style="flex:1;min-width:180px"><b>${L(mine.n)}</b><div class="muted" style="font-size:12.5px">${mine.nights} ${T('nights','ночей')} · ${usd(mine.price)} ${T('per person','на человека')} · ${S.pkgPaid?T('paid','оплачено'):T('awaiting payment','ожидает оплаты')}</div></div>
+     ${S.pkgPaid?`<span class="pill ok">✓ ${T('Confirmed','Подтверждено')}</span>`:`<button class="btn gold sm" id="pPay">${T('Pay','Оплатить')} ${usd(mine.price)}</button>`}<button class="btn sm" id="pDrop">${T('Change','Сменить')}</button></div></div>`:''}
+   <div class="card" style="margin-bottom:14px"><div class="row" style="justify-content:space-between"><div class="chips">${[['all','All','Все'],['budget','Under $2,500','До $2 500'],['near','≤ 600 m to Haram','≤ 600 м до Харама'],['care','Family & care','Семья и уход']].map(c=>`<button class="chip ${pf===c[0]?'on':''}" data-pf="${c[0]}">${T(c[1],c[2])}</button>`).join('')}</div>
+    <div class="chips"><button class="chip ${sortBy==='price'?'on':''}" data-sort="price">${T('Price ↑','Цена ↑')}</button><button class="chip ${sortBy==='dist'?'on':''}" data-sort="dist">${T('Distance ↑','Расстояние ↑')}</button></div></div></div>
+   <div class="pk">${list.map(p=>`<div class="pcard ${S.pkg===p.id?'sel':''}"><div class="hd" style="background:linear-gradient(135deg,${p.c},#123a30)"><small>${L(p.tier)} · ${T('licensed operator','лицензированный оператор')}</small><h4>${L(p.n)}</h4></div>
+     <div class="bd"><div class="pr">${usd(p.price)} <span class="muted" style="font-size:12px;font-weight:500">/ ${T('person','чел.')}</span></div>
+     <div class="line"><span>🏨 <span class="stars">${'★'.repeat(p.hotel)}</span></span><span>${num(p.dist)} ${T('m to Haram','м до Харама')}</span></div>
+     <div class="line"><span>🛏 ${p.room} ${T('per room','в номере')}</span><span>🌙 ${p.nights} ${T('nights','ночей')}</span></div>
+     <div class="line"><span>🍽 ${L(p.meals)}</span></div><div class="line"><span>🚌 ${L(p.bus)}</span></div><div class="line" style="border:0"><span>🧭 ${L(p.guide)}</span></div></div>
+     <div class="ft"><button class="btn sm ${S.cmp.includes(p.id)?'gold':''}" data-cmp="${p.id}">${S.cmp.includes(p.id)?'✓ ':''}${T('Compare','Сравнить')}</button><button class="btn sm pri" data-pick="${p.id}" style="margin-left:auto">${S.pkg===p.id?T('Selected','Выбран'):T('Select','Выбрать')}</button></div></div>`).join('')||`<div class="card muted">${T('No packages match','Нет подходящих пакетов')}</div>`}</div>
+   <div class="card" style="margin-top:14px"><h3>⚖ ${T('Compare packages','Сравнение пакетов')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('pick up to 3','до 3')}</span></h3>
+   ${cmp.length?`<div class="tw"><table><thead><tr><th></th>${cmp.map(p=>`<th>${L(p.n)}</th>`).join('')}</tr></thead><tbody>
+    ${[[T('Price / person','Цена / чел.'),p=>usd(p.price),p=>-p.price],[T('Price per night','Цена за ночь'),p=>usd(p.price/p.nights),p=>-p.price/p.nights],[T('Distance to Haram','До Харама'),p=>num(p.dist)+' m',p=>-p.dist],[T('Hotel','Отель'),p=>'★'.repeat(p.hotel),p=>p.hotel],[T('Per room','В номере'),p=>p.room,p=>-p.room],[T('Nights','Ночей'),p=>p.nights,p=>p.nights],[T('Meals','Питание'),p=>L(p.meals),null],[T('Transport','Транспорт'),p=>L(p.bus),null],[T('Guide','Гид'),p=>L(p.guide),null]].map(r=>{const best=r[2]?Math.max(...cmp.map(r[2])):null;
+      return `<tr><td class="muted">${r[0]}</td>${cmp.map(p=>`<td style="${r[2]&&cmp.length>1&&r[2](p)===best?'color:var(--mal3);font-weight:700':''}">${r[1](p)}</td>`).join('')}</tr>`}).join('')}</tbody></table></div>`:`<div class="muted">${T('Tick “Compare” on two or three packages.','Отметьте «Сравнить» у двух-трёх пакетов.')}</div>`}</div>`;
+  $$('[data-pf]',el).forEach(x=>x.onclick=()=>{pf=x.dataset.pf;rPkg()});
+  $$('[data-sort]',el).forEach(x=>x.onclick=()=>{sortBy=x.dataset.sort;rPkg()});
+  $$('[data-cmp]',el).forEach(x=>x.onclick=()=>{const id=x.dataset.cmp;if(S.cmp.includes(id))S.cmp=S.cmp.filter(y=>y!==id);else{if(S.cmp.length>=3){toast(T('Compare up to 3 packages','Сравнивать можно до 3 пакетов'),'bad');return}S.cmp.push(id)}save();rPkg()});
+  $$('[data-pick]',el).forEach(x=>x.onclick=()=>{if(S.pkg===x.dataset.pick)return;S.pkg=x.dataset.pick;S.pkgPaid=false;save();rPkg();toast(T('Package selected · pay to confirm','Пакет выбран · оплатите для подтверждения'),'gold')});
+  if($('#pPay'))$('#pPay').onclick=()=>{const b=$('#pPay');b.disabled=true;b.textContent=T('Processing…','Оплата…');setTimeout(()=>{S.pkgPaid=true;save();rPkg();toast(T('Payment received · hotel and transport added to your card','Оплата получена · отель и транспорт добавлены в карту'),'gold')},900)};
+  if($('#pDrop'))$('#pDrop').onclick=()=>{S.pkg=null;S.pkgPaid=false;save();rPkg()};
+}
+
+/* ---------- digital card ---------- */
+function qrSvg(seed,px){const n=25,r=rng(hash(seed));let d='';const inF=(x,y)=>(x<8&&y<8)||(x>=n-8&&y<8)||(x<8&&y>=n-8);
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){if(inF(x,y))continue;if((x===6||y===6)?((x+y)%2===0):r()<.5)d+=`M${x} ${y}h1v1h-1z`}
+  const fin=(x,y)=>`M${x} ${y}h7v7h-7zM${x+1} ${y+1}v5h5v-5zM${x+2} ${y+2}h3v3h-3z`;
+  return `<svg width="${px}" height="${px}" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges"><path fill-rule="evenodd" fill="#0b1512" d="${fin(0,0)}${fin(n-7,0)}${fin(0,n-7)}${d}"/></svg>`}
+function rCard(){
+  const el=$('#v-card');const p=S.pkg&&PK(S.pkg);const H=S.health;const act=S.my.filter(x=>x.st==='approved');
+  const nextP=act.slice().sort((a,b)=>a.day-b.day||a.slot-b.slot)[0];
+  const checks=[[H.vac,T('Meningococcal ACWY vaccine','Вакцина от менингококка ACWY'),'vac'],[H.mening,T('Seasonal flu & COVID record','Сезонный грипп и COVID'),'mening'],[H.decl,T('Health self-declaration (today)','Самодекларация о здоровье (сегодня)'),'decl'],[!!p&&S.pkgPaid,T('Package & accommodation confirmed','Пакет и проживание подтверждены'),'pkg'],[act.length>0,T('At least one active permit','Есть активное разрешение'),'pm']];
+  const ready=checks.filter(c=>c[0]).length;
+  el.innerHTML=`<div class="grid2e"><div><div class="idc"><div class="top"><small>${T('Pilgrim digital card','Цифровая карта паломника')} · 1447</small><div style="font-size:19px;font-weight:800;margin-top:4px">${esc(S.user.name)}</div><div style="font-size:12.5px;opacity:.85">${T('Visa','Виза')} UM-4471-0928-31 · 🇲🇾 ${T('Malaysia','Малайзия')}</div></div>
+    <div class="bd"><svg viewBox="0 0 90 108" width="100%" style="border-radius:10px;background:var(--bg2)"><circle cx="45" cy="40" r="20" fill="${cssv('--mal')}" fill-opacity=".55"/><path d="M8 108c4-28 18-38 37-38s33 10 37 38z" fill="${cssv('--mal')}" fill-opacity=".55"/><text x="45" y="46" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">AR</text></svg>
+     <div class="kv"><div><span>${T('Group','Группа')}</span><b>MY-K-118</b></div><div><span>${T('Leader','Руководитель')}</span><b>Ust. Hafiz</b></div><div><span>${T('Package','Пакет')}</span><b>${p?L(p.n):'—'}</b></div><div><span>${T('Blood','Кровь')}</span><b>O+</b></div><div><span>${T('Next permit','След. разрешение')}</span><b>${nextP?SLOT_H[nextP.slot]+' · '+dayDate(nextP.day).getDate():'—'}</b></div><div><span>${T('Readiness','Готовность')}</span><b style="color:${ready===5?'var(--mal3)':'var(--amber)'}">${ready}/5</b></div></div></div>
+    <div class="qr"><div class="q" id="cq"></div><div style="flex:1;min-width:0"><div class="mono" id="ctok" style="font-size:13px;letter-spacing:.06em"></div><div class="cd"><i id="ccd"></i></div><div class="muted" style="font-size:11.5px;margin-top:6px">${T('Show at gates, buses and clinics. Refreshes every 15 s; works offline.','Показывайте на входах, в автобусах и клиниках. Обновляется каждые 15 с, работает офлайн.')}</div></div></div></div>
+    <div class="row" style="justify-content:center;margin-top:12px"><button class="btn sm danger" id="sos">🆘 SOS</button><button class="btn sm ${S.share?'gold':''}" id="shr">📍 ${S.share?T('Sharing with leader','Делюсь с руководителем'):T('Share location','Поделиться местом')}</button><button class="btn sm" id="lost">🧭 ${T('I’m lost','Я заблудился')}</button></div></div>
+   <div class="stack"><div class="card"><h3>✅ ${T('Readiness checklist','Чек-лист готовности')}<span class="sp"></span><span class="pill ${ready===5?'ok':'warn'}">${ready}/5</span></h3>
+     ${checks.map(c=>`<div class="chk"><span class="dot" style="background:${c[0]?'var(--mal)':'var(--line)'};color:#fff">${c[0]?'✓':''}</span><span style="flex:1">${c[1]}</span>${!c[0]&&c[2]==='decl'?`<button class="btn sm" id="decl">${T('Declare','Заполнить')}</button>`:!c[0]&&c[2]==='pkg'?`<button class="btn sm" data-go2="pkg">${T('Open','Открыть')}</button>`:!c[0]&&c[2]==='pm'?`<button class="btn sm" data-go2="book">${T('Book','Бронь')}</button>`:''}</div>`).join('')}</div>
+    <div class="card"><h3>🗓 ${T('Permits on this card','Разрешения на карте')}</h3>${act.length?act.map(x=>`<div class="line"><span>${L(RITES[x.rite].n)} · ${fmtDay(x.day)} ${SLOT_H[x.slot]}</span><span class="mono muted">${x.id}</span></div>`).join(''):`<div class="muted">${T('No active permits','Нет активных разрешений')}</div>`}</div>
+    <div class="card"><h3>☎ ${T('Emergency','Экстренно')}</h3><div class="line"><span>${T('Ambulance / Red Crescent','Скорая / Красный полумесяц')}</span><b class="mono">997</b></div><div class="line"><span>${T('Pilgrim care line','Линия помощи паломникам')}</span><b class="mono">1966</b></div><div class="line" style="border:0"><span>${T('Group leader','Руководитель группы')}</span><b class="mono">+60 12 555 0118</b></div></div></div></div>`;
+  $('#sos').onclick=()=>toast(T('SOS sent · nearest medical team (Gate 79 clinic, 210 m) notified','SOS отправлен · ближайшая медгруппа (клиника у ворот 79, 210 м) оповещена'),'bad');
+  $('#shr').onclick=()=>{S.share=!S.share;save();rCard();toast(S.share?T('Live location shared with Ust. Hafiz for 4 h','Местоположение передаётся Уст. Хафизу на 4 ч'):T('Location sharing stopped','Передача места остановлена'))};
+  $('#lost').onclick=()=>toast(T('Route to your hotel: exit via Gate 1, bus 7 from Ajyad terminal (6 min walk)','Маршрут к отелю: выход через ворота 1, автобус 7 от вокзала Аджьяд (6 мин пешком)'),'gold');
+  if($('#decl'))$('#decl').onclick=()=>{S.health.decl=true;save();rCard();toast(T('Declaration saved: no fever, no cough','Декларация сохранена: нет температуры, нет кашля'))};
+  $$('[data-go2]',el).forEach(x=>x.onclick=()=>go(x.dataset.go2));
+  let last=-1;const tick=()=>{const q=$('#cq');if(!q)return;const now=Date.now()/1000,slot=Math.floor(now/15);
+    if(slot!==last){last=slot;q.innerHTML=qrSvg('pil:'+slot,96);$('#ctok').textContent='PG-'+hash('t'+slot).toString(16).toUpperCase().padStart(8,'0').slice(0,8)}
+    $('#ccd').style.width=((1-(now%15)/15)*100)+'%'};tick();timers.push(setInterval(tick,1000));
+}
+
+/* ---------- crowd map ---------- */
+function heat(d){const st=[[0,[31,174,107]],[1.5,[159,210,60]],[2.5,[242,194,48]],[3.5,[240,128,46]],[4.5,[226,64,58]]];
+  for(let i=1;i<st.length;i++)if(d<=st[i][0]){const a=st[i-1],b=st[i],t=(d-a[0])/(b[0]-a[0]);return 'rgb('+a[1].map((v,k)=>Math.round(v+(b[1][k]-v)*t)).join(',')+')'}return 'rgb(226,64,58)'}
+const lvl=d=>d>=4?T('Critical','Критично'):d>=3?T('High','Высокая'):d>=2?T('Moderate','Средняя'):T('Low','Низкая');
+function crowdMap(){
+  let s=`<svg viewBox="0 0 640 400" role="img" aria-label="map"><rect x="40" y="24" width="590" height="356" rx="18" fill="${cssv('--bg2')}" stroke="${cssv('--line')}"/>`;
+  ZONES.forEach(z=>{const d=S.dens[z.id],c=heat(d),sel=S.sel===z.id;const st=`stroke="${sel?cssv('--text'):cssv('--bg')}" stroke-width="${sel?3:2}"`;
+    if(z.sh==='c')s+=`<circle class="z" data-z="${z.id}" cx="${z.x}" cy="${z.y}" r="${z.r}" fill="${c}" fill-opacity=".85" ${st}><title>${L(z.n)}</title></circle><rect x="${z.x-14}" y="${z.y-14}" width="28" height="28" rx="2" fill="#151515"/>`;
+    else s+=`<rect class="z" data-z="${z.id}" x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" rx="8" fill="${c}" fill-opacity=".85" ${st}><title>${L(z.n)}</title></rect>`;
+    const cx=z.sh==='c'?z.x:z.x+z.w/2,cy=z.sh==='c'?z.y+z.r-14:z.y+z.h/2;
+    const short=L(z.n).split(/[(—]/)[0].trim();const vert=z.sh==='r'&&z.h>z.w*1.8;
+    s+=`<text x="${cx}" y="${cy-2}" text-anchor="middle" font-size="${vert?10:11}" font-weight="700" fill="#111" ${vert?`transform="rotate(-90 ${cx} ${cy})"`:''}>${esc(short.length>18&&!vert?short.slice(0,17)+'…':short)}</text><text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="10" fill="#111" ${vert?`transform="rotate(-90 ${cx} ${cy})"`:''}>${d.toFixed(1)}/m²</text>`});
+  return s+`<text x="610" y="390" text-anchor="end" font-size="10" fill="${cssv('--dim')}">${T('Schematic, not to scale','Схема, не в масштабе')}</text></svg>`}
+function simDens(){const h=S.hour;const prayer=[4,12,15,18,19].includes(h)?1.35:1;
+  ZONES.forEach(z=>{const tgt=(z.id==='mataf'?3.4:z.id.startsWith('g')?2.6:z.id==='bus'?2:2.2)*prayer*(h<3?.6:1);let d=S.dens[z.id]+(tgt-S.dens[z.id])*.25+(Math.random()-.5)*.5;S.dens[z.id]=+Math.max(.3,Math.min(5.6,d)).toFixed(2)});
+  ZONES.forEach(z=>{if(S.dens[z.id]>=4.3&&!S.alerts.some(a=>a.z===z.id&&Date.now()-a.ts<60000)){S.alerts.unshift({z:z.id,ts:Date.now(),t:new Date().toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'}),auto:true});S.alerts=S.alerts.slice(0,12)}})}
+const alt=id=>{const o=ZONES.filter(z=>z.id!==id&&z.id!=='bus').sort((a,b)=>S.dens[a.id]-S.dens[b.id])[0];return o};
+function rCrowd(){
+  const el=$('#v-crowd');const z=ZONES.find(x=>x.id===S.sel)||ZONES[0];const d=S.dens[z.id];const ppl=Math.round(z.cap*Math.min(1.2,d/4));
+  const total=ZONES.reduce((a,x)=>a+x.cap*Math.min(1.2,S.dens[x.id]/4),0);const o=alt(z.id);
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row" style="justify-content:space-between"><div class="row"><b>${T('Grand Mosque & surroundings','Заповедная мечеть и окрестности')}</b><span class="pill">${T('Hour','Час')} ${String(S.hour).padStart(2,'0')}:00</span></div>
+   <button class="btn sm ${S.live?'gold':''}" id="lv">${S.live?'<span class="livedot"></span>'+T('Live · pause','В эфире · пауза'):'▶ '+T('Resume live','Включить онлайн')}</button></div>
+   <div class="f" style="margin-top:10px"><label>${T('Forecast by hour (drag)','Прогноз по часам (потяните)')}</label><input type="range" min="0" max="23" value="${S.hour}" id="hr"></div></div>
+  <div class="kpis"><div class="card kpi"><div class="l">${T('People on site','Людей на территории')}</div><div class="v">${num(total)}</div><div class="d">${T('from 2,140 sensors & cameras','с 2 140 датчиков и камер')}</div></div>
+   <div class="card kpi"><div class="l">${T('Critical zones','Критичные зоны')}</div><div class="v" style="color:var(--red)">${ZONES.filter(x=>S.dens[x.id]>=4).length}</div><div class="d">≥ 4 ${T('persons/m²','чел./м²')}</div></div>
+   <div class="card kpi"><div class="l">${T('Avg density','Средняя плотность')}</div><div class="v">${(ZONES.reduce((a,x)=>a+S.dens[x.id],0)/ZONES.length).toFixed(2)}</div><div class="d">${T('persons/m²','чел./м²')}</div></div>
+   <div class="card kpi"><div class="l">${T('Tawaf time','Время тавафа')}</div><div class="v">${Math.round(28+S.dens.mataf*14)} ${T('min','мин')}</div><div class="d">${T('ground floor estimate','оценка, 1-й этаж')}</div></div></div>
+  <div class="grid2"><div class="card map"><h3>🗺 ${T('Live crowd density','Плотность толпы онлайн')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('tap a zone','нажмите на зону')}</span></h3>${crowdMap()}
+   <div class="scale"></div><div class="legend" style="justify-content:space-between"><span>0</span><span>1.5</span><span>2.5</span><span>3.5</span><span>4.5+ ${T('persons/m²','чел./м²')}</span></div></div>
+   <div class="stack"><div class="card"><h3>${L(z.n)}<span class="sp"></span><span class="pill ${d>=4?'bad':d>=3?'warn':'ok'}">${lvl(d)}</span></h3>
+     <div class="line"><span class="muted">${T('Density','Плотность')}</span><b>${d.toFixed(2)} ${T('persons/m²','чел./м²')}</b></div><div class="line"><span class="muted">${T('Estimated people','Оценка людей')}</span><b>${num(ppl)} / ${num(z.cap)}</b></div>
+     <div class="line"><span class="muted">${T('Advice for pilgrims','Совет паломникам')}</span><b style="text-align:right">${d>=3?T('Use ','Идите в ')+esc(L(o.n)):T('Open — proceed normally','Открыто — проходите')}</b></div>
+     ${S.user.role==='auth'?`<div class="row" style="margin-top:10px"><button class="btn sm danger" id="redir">${T('Redirect flow','Перенаправить поток')}</button><button class="btn sm" id="push">📣 ${T('Push advice','Отправить совет')}</button></div>`:`<button class="btn sm" id="notify" style="margin-top:10px">🔔 ${T('Notify me when quieter','Сообщить, когда станет свободнее')}</button>`}</div>
+    <div class="card"><h3>⚠ ${T('Alerts','Оповещения')}<span class="sp"></span><span class="pill">${S.alerts.length}</span></h3><div id="al">${S.alerts.length?S.alerts.slice(0,6).map(a=>{const zz=ZONES.find(x=>x.id===a.z);return `<div class="alert ${a.auto?'bad':''}"><b>${a.msg?esc(L(a.msg)):L(zz.n)+' — '+T('density above 4.3/m²','плотность выше 4,3/м²')}</b><small>${a.t} · ${a.auto?T('auto-detected by cameras','обнаружено камерами'):T('broadcast by operations','разослано оперцентром')}</small></div>`}).join(''):`<div class="muted" style="font-size:13px">${T('No alerts. Keep the live feed running.','Оповещений нет. Держите живой режим включённым.')}</div>`}</div></div></div></div>`;
+  $$('.z',el).forEach(x=>x.onclick=()=>{S.sel=x.dataset.z;save();rCrowd()});
+  $('#hr').oninput=e=>{S.hour=+e.target.value;S.live=false;for(let i=0;i<4;i++)simDens();save();rCrowd()};
+  $('#lv').onclick=()=>{S.live=!S.live;if(S.live)S.hour=new Date().getHours();save();rCrowd()};
+  if($('#redir'))$('#redir').onclick=()=>{S.dens[z.id]=+(S.dens[z.id]*.7).toFixed(2);S.dens[o.id]=+(S.dens[o.id]+.6).toFixed(2);S.alerts.unshift({z:z.id,ts:Date.now(),t:new Date().toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'}),msg:['Flow from '+L(z.n)+' redirected to '+L(o.n),'Поток из «'+L(z.n)+'» перенаправлен в «'+L(o.n)+'»']});save();rCrowd();toast(T('Stewards notified · signage updated','Распорядители оповещены · табло обновлены'),'gold')};
+  if($('#push'))$('#push').onclick=()=>toast(T('Advice pushed to 18,400 pilgrims within 300 m','Совет отправлен 18 400 паломникам в радиусе 300 м'));
+  if($('#notify'))$('#notify').onclick=()=>toast(T('We’ll notify you when density drops below 2.5/m²','Сообщим, когда плотность упадёт ниже 2,5/м²'));
+  if(S.live)timers.push(setInterval(()=>{simDens();save();nav();if(S.view==='crowd')rCrowd()},2500));
+}
+
+/* ---------- authority dashboard ---------- */
+function hourChart(){const v=S.hourly,W=600,H=200,p=36;const mx=Math.max(...v)*1.1;const bw=(W-p-6)/v.length;const now=new Date().getHours();
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;for(let i=0;i<=4;i++){const y=H-22-(H-36)*i/4;s+=`<line x1="${p}" x2="${W}" y1="${y}" y2="${y}" stroke="${cssv('--line')}"/><text x="${p-5}" y="${y+4}" text-anchor="end" font-size="10" fill="${cssv('--dim')}">${Math.round(mx*i/4/1000)}k</text>`}
+  v.forEach((n,i)=>{const h=(H-36)*n/mx;s+=`<rect x="${p+i*bw+2}" y="${H-22-h}" width="${bw-4}" height="${h}" rx="3" fill="${i===now?cssv('--gold'):cssv('--mal')}" fill-opacity="${i===now?1:.8}"><title>${i}:00 · ${num(n)}</title></rect>`;if(i%3===0)s+=`<text x="${p+i*bw+bw/2}" y="${H-7}" text-anchor="middle" font-size="10" fill="${cssv('--dim')}">${String(i).padStart(2,'0')}</text>`});
+  return s+'</svg>'}
+function natDonut(){const vals=[31,18,15,9,7,6,5,9];const cols=['#17b58a','#d8b46a','#4ea4ff','#a78bfa','#f0a83a','#ef5a5a','#5fd0c5','#8a958f'];const r=48,c=2*Math.PI*r;let off=0;
+  let s=`<svg viewBox="0 0 124 124" width="124" height="124" style="flex:none">`;vals.forEach((v,i)=>{const l=c*v/100;s+=`<circle cx="62" cy="62" r="${r}" fill="none" stroke="${cols[i]}" stroke-width="18" stroke-dasharray="${l} ${c-l}" stroke-dashoffset="${-off}" transform="rotate(-90 62 62)"/>`;off+=l});
+  s+=`<text x="62" y="60" text-anchor="middle" font-size="17" font-weight="800" fill="${cssv('--text')}">1.84M</text><text x="62" y="76" text-anchor="middle" font-size="9" fill="${cssv('--muted')}">${T('pilgrims','паломников')}</text></svg>`;
+  return `<div class="row" style="gap:16px;flex-wrap:nowrap">${s}<div style="flex:1;min-width:0;font-size:12.5px">${NAT.map((n,i)=>`<div class="line" style="padding:3px 0"><span><i style="display:inline-block;width:9px;height:9px;border-radius:3px;background:${cols[i]};margin-right:6px"></i>${L(n)}</span><b>${vals[i]}%</b></div>`).join('')}</div></div>`}
+let af='all';
+function rAuth(){
+  const el=$('#v-auth');const P=S.permits;const list=P.filter(p=>af==='all'||p.st===af);
+  const issued=1284300+P.filter(p=>p.st==='approved').length;
+  const slotsToday=SLOT_H.map((h,s)=>({s,u:used(0,'umrah',s)}));
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Permits issued (season)','Выдано разрешений (сезон)')}</div><div class="v">${num(issued)}</div><div class="d">+${num(18240)} ${T('today','сегодня')}</div></div>
+   <div class="card kpi"><div class="l">${T('Pending review','На проверке')}</div><div class="v" style="color:var(--amber)">${P.filter(p=>p.st==='pending').length}</div><div class="d">${T('auto-approve if risk < 30','автоодобрение при риске < 30')}</div></div>
+   <div class="card kpi"><div class="l">${T('Flagged','Помечено')}</div><div class="v" style="color:var(--red)">${P.filter(p=>p.st==='flagged').length}</div><div class="d">${T('duplicate ID / visa mismatch','дубликат / несоответствие визы')}</div></div>
+   <div class="card kpi"><div class="l">${T('No-show rate','Доля неявок')}</div><div class="v">4.7%</div><div class="d">${T('slots re-released automatically','слоты освобождаются сами')}</div></div></div>
+  <div class="grid2"><div class="stack"><div class="card chart"><h3>${T('Pilgrims on site by hour (today)','Паломники на территории по часам (сегодня)')}</h3>${hourChart()}</div>
+   <div class="card"><h3>${T('Permit queue','Очередь разрешений')}<span class="sp"></span><div class="chips">${[['all','All','Все'],['pending','Pending','Ожидают'],['flagged','Flagged','Помечены'],['approved','Approved','Одобрены']].map(c=>`<button class="chip ${af===c[0]?'on':''}" data-af="${c[0]}">${T(c[1],c[2])}</button>`).join('')}</div></h3>
+    <div class="tw"><table><thead><tr><th>${T('Permit','Разрешение')}</th><th>${T('Pilgrim','Паломник')}</th><th>${T('Ritual · slot','Обряд · слот')}</th><th>${T('Party','Группа')}</th><th>${T('Risk','Риск')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+    ${list.map(p=>`<tr><td class="mono" style="font-size:12px">${p.id}</td><td><b>${esc(L(p.name))}</b><div class="muted" style="font-size:12px">${esc(p.nat)}</div></td><td>${L(RITES[p.rite].n)}<div class="muted" style="font-size:12px">${fmtDay(p.day)} · ${SLOT_H[p.slot]}</div></td><td>${p.party}</td>
+     <td><span class="pill ${p.risk>=60?'bad':p.risk>=30?'warn':'ok'}">${p.risk}</span></td><td><span class="pill ${p.st==='approved'?'ok':p.st==='pending'?'warn':'bad'}">${stN(p.st)}</span></td>
+     <td style="white-space:nowrap">${p.st==='pending'||p.st==='flagged'?`<button class="btn sm pri" data-ok="${p.id}">✓</button> `:''}${p.st==='pending'?`<button class="btn sm" data-fl="${p.id}">⚑</button> `:''}${p.st==='approved'?`<button class="btn sm danger" data-rv="${p.id}">${T('Revoke','Отозвать')}</button>`:''}</td></tr>`).join('')||`<tr><td colspan="7" class="muted">${T('Nothing here','Пусто')}</td></tr>`}</tbody></table></div>
+    <div class="row" style="margin-top:10px"><button class="btn sm" id="bulk">${T('Auto-approve low risk','Одобрить низкий риск')}</button></div></div></div>
+  <div class="stack"><div class="card"><h3>${T('Nationalities','Страны')}</h3>${natDonut()}</div>
+   <div class="card"><h3>${T('Umrah slots today','Слоты Умры сегодня')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${fmtDay(0)}</span></h3>
+    ${slotsToday.map(x=>{const cl=isClosed(0,'umrah',x.s),p=x.u/RITES.umrah.cap;return `<div class="line" style="align-items:center"><span class="mono" style="width:46px">${SLOT_H[x.s]}</span><div style="flex:1;height:7px;border-radius:6px;background:var(--line);overflow:hidden"><i style="display:block;height:100%;width:${Math.min(100,p*100)}%;background:${capCol(cl?1:p)}"></i></div><span style="width:40px;text-align:right;font-size:12px">${Math.round(p*100)}%</span><button class="btn sm ${cl?'gold':''}" data-cl="${x.s}" style="padding:3px 9px">${cl?T('Open','Открыть'):T('Close','Закрыть')}</button></div>`}).join('')}</div>
+   <div class="card"><h3>📣 ${T('Broadcast alert','Разослать оповещение')}</h3><textarea class="input" id="bc" rows="3" style="resize:vertical">${T('Heat advisory: avoid the open courtyards 12:00–15:00. Water points at Gates 1, 79, 94.','Жара: избегайте открытых дворов 12:00–15:00. Вода у ворот 1, 79, 94.')}</textarea>
+    <div class="row" style="margin-top:8px"><select class="input" id="bcA" style="flex:1;min-width:0"><option value="all">${T('All pilgrims on site','Все паломники на месте')}</option><option value="mataf">${T('Within 300 m of Mataf','В 300 м от Матафа')}</option><option value="id">${T('Indonesian groups','Группы из Индонезии')}</option></select><button class="btn pri sm" id="bcGo">${T('Send','Отправить')}</button></div></div></div></div>`;
+  $$('[data-af]',el).forEach(x=>x.onclick=()=>{af=x.dataset.af;rAuth()});
+  const upd=(id,st,m,c)=>{const p=S.permits.find(x=>x.id===id);p.st=st;const mine=S.my.find(x=>x.id===id);if(mine)mine.st=st==='revoked'?'cancelled':st;save();nav();rAuth();toast(id+' '+m,c)};
+  $$('[data-ok]',el).forEach(x=>x.onclick=()=>upd(x.dataset.ok,'approved',T('approved','одобрено'),'gold'));
+  $$('[data-fl]',el).forEach(x=>x.onclick=()=>{const p=S.permits.find(y=>y.id===x.dataset.fl);p.risk=Math.max(p.risk,65);upd(p.id,'flagged',T('flagged for manual check','помечено для ручной проверки'),'bad')});
+  $$('[data-rv]',el).forEach(x=>x.onclick=()=>upd(x.dataset.rv,'revoked',T('revoked · holder notified','отозвано · владелец уведомлён'),'bad'));
+  $('#bulk').onclick=()=>{let n=0;S.permits.forEach(p=>{if(p.st==='pending'&&p.risk<30){p.st='approved';n++}});save();nav();rAuth();toast(n?T(n+' low-risk permits approved',n+' разрешений с низким риском одобрено'):T('No low-risk permits pending','Нет ожидающих с низким риском'),n?'gold':'')};
+  $$('[data-cl]',el).forEach(x=>x.onclick=()=>{const k='0|umrah|'+x.dataset.cl;const was=S.closed.includes(k);S.closed=was?S.closed.filter(y=>y!==k):S.closed.concat(k);save();rAuth();toast(was?T('Slot reopened for booking','Слот снова открыт'):T('Slot closed · new bookings blocked','Слот закрыт · новые брони запрещены'),was?'':'bad')});
+  $('#bcGo').onclick=()=>{const m=$('#bc').value.trim();if(m.length<10){$('#bc').classList.add('bad');toast(T('Message is too short','Сообщение слишком короткое'),'bad');return}
+    const aud=$('#bcA').value;const n=aud==='all'?1284000:aud==='mataf'?18400:236000;
+    S.alerts.unshift({z:'mataf',ts:Date.now(),t:new Date().toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'}),msg:[m,m]});save();toast(T('Alert delivered to '+num(n)+' devices','Оповещение доставлено на '+num(n)+' устройств'),'gold')};
+  timers.push(setInterval(()=>{if(S.view!=='auth')return;const h=new Date().getHours();S.hourly[h]+=Math.round(Math.random()*400);save();const c=$('#v-auth .chart');if(c)c.innerHTML=`<h3>${T('Pilgrims on site by hour (today)','Паломники на территории по часам (сегодня)')}</h3>`+hourChart()},3000));
+}
+
+/* ---------- wiring ---------- */
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+document.addEventListener('click',e=>{const s=$('#side');if(s.classList.contains('open')&&!s.contains(e.target)&&e.target.id!=='menuBtn')s.classList.remove('open')});
+$('#reset').onclick=()=>{store.clear();const u=S.user;S=seed();S.user=u;S.view=u&&u.role==='auth'?'auth':'book';save();render();toast(T('Demo reset','Демо сброшено'))};
+$('#signout').onclick=()=>{S.user=null;save();render();toast(T('Signed out','Вы вышли'))};
+PT.onLang(()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Permit One City</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.top{display:flex;gap:6px;align-items:center;padding:10px 26px;border-bottom:1px solid var(--line);background:var(--bg2);position:sticky;top:45px;z-index:50;overflow-x:auto}
+.top .brand{font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px;margin-right:12px;white-space:nowrap}
+.top .brand b{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,var(--violet),var(--blue));color:#fff;font-size:13px}
+.tb{border:1px solid transparent;background:none;padding:7px 12px;border-radius:9px;font:inherit;font-weight:600;font-size:13.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tb:hover{color:var(--text);background:var(--panel)}
+.tb.on{color:var(--text);background:var(--panel2);border-color:var(--line2)}
+.tb .cnt{font-size:10.5px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 6px;margin-left:4px;font-weight:800}
+.tsep{width:1px;height:22px;background:var(--line2);margin:0 4px;flex:none}
+.role{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:700;white-space:nowrap;padding-left:4px}
+main{padding:20px 26px 60px;max-width:1360px;margin:0 auto}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:12px;margin-bottom:16px}
+.howto{display:flex;gap:10px;flex-wrap:wrap;padding-right:30px !important;background:linear-gradient(135deg,color-mix(in srgb,var(--violet) 15%,var(--panel)),var(--panel));border:1px solid color-mix(in srgb,var(--violet) 35%,var(--line));border-radius:var(--r);padding:14px;position:relative}
+.howto .st{flex:1;min-width:150px;display:flex;gap:10px;font-size:13px}
+.howto .st>b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#1a1306;display:grid;place-items:center;font-size:12px}
+.howto .x{position:absolute;top:6px;right:8px;border:0;background:none;cursor:pointer;color:var(--dim);font-size:16px}
+.facts{font-size:12.5px;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;padding:12px 14px;margin:0}
+.facts dt{color:var(--dim);font-weight:600}.facts dd{margin:0;font-weight:600}
+h1.t{font-size:22px;margin:0 0 14px}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.btn.sm{padding:6px 12px;font-size:12.5px}.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.f{margin-bottom:10px}.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{color:var(--red);font-size:12px;margin-top:4px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.fgrid .full{grid-column:1/-1}
+.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.ty{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel);cursor:pointer;text-align:left;font:inherit;color:var(--text)}
+.ty.on{border-color:var(--violet);box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 20%,transparent)}
+.ty .i{font-size:24px}.ty b{display:block;margin-top:6px}.ty small{color:var(--muted);font-size:12px}
+.pbar{display:flex;gap:4px;margin-bottom:12px}.pbar i{flex:1;height:5px;border-radius:3px;background:var(--line2)}.pbar i.on{background:var(--violet)}
+.bpmn{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg2);padding:8px}
+.bpmn svg{display:block;min-width:720px;width:100%}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;background:none;font-weight:600;color:var(--muted)}
+.chip.on{border-color:var(--violet);color:var(--text);background:color-mix(in srgb,var(--violet) 15%,transparent)}
+.cmap{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);cursor:crosshair}
+.cmap svg{display:block;width:100%;height:auto}
+.photo{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.photo img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.sugg{display:flex;gap:8px;align-items:center;font-size:13px;margin-top:6px;min-height:26px;flex-wrap:wrap}
+.kanban{display:grid;grid-template-columns:repeat(4,minmax(230px,1fr));gap:12px;overflow-x:auto;padding-bottom:6px}
+.col{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:10px;min-height:300px;transition:.15s}
+.col.over{border-color:var(--violet);background:color-mix(in srgb,var(--violet) 8%,var(--bg2))}
+.col h4{margin:2px 4px 10px;font-size:13px;display:flex;gap:6px;align-items:center}
+.col h4 span{margin-left:auto;color:var(--dim);font-family:var(--mono)}
+.kc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;cursor:grab;font-size:13px;user-select:none}
+.kc:hover{border-color:var(--line2)}.kc.drag{opacity:.4}
+.kc .r{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.kc .id{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.sla{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid var(--line2)}
+.sla.late{color:var(--red);border-color:var(--red)}.sla.near{color:var(--amber);border-color:var(--amber)}.sla.ok{color:var(--mal3);border-color:color-mix(in srgb,var(--mal) 50%,transparent)}
+.mv{display:none;gap:4px;margin-top:8px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line)}
+mark{background:color-mix(in srgb,var(--gold) 40%,transparent);color:inherit;border-radius:3px;padding:0 2px}
+.srch{display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px}
+.hit{border-bottom:1px solid var(--line);padding:12px 2px;cursor:pointer}
+.hit:hover{background:color-mix(in srgb,var(--violet) 5%,transparent)}
+.hit b{font-size:14px}.hit p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.facet{margin-bottom:14px}.facet .h{font-size:11px;text-transform:uppercase;color:var(--dim);font-weight:700;letter-spacing:.08em;margin-bottom:6px}
+.facet label{display:flex;gap:8px;font-size:13px;padding:3px 0;cursor:pointer}.facet label span{margin-left:auto;color:var(--dim);font-family:var(--mono);font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}.kpi .v{font-size:26px;font-weight:800;margin:4px 0 2px}.kpi .d{font-size:12px;color:var(--mal3)}
+.ck{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;cursor:pointer;align-items:center}
+.letter{background:#fff;color:#1b1b28;border-radius:6px;padding:22px;font-size:13px;line-height:1.55;font-family:Georgia,serif;border:1px solid var(--line)}
+.letter h4{margin:0 0 4px;font-family:var(--font)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.on{display:flex}
+.modal{width:min(640px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);padding:22px;box-shadow:var(--shadow);animation:pop .18s}
+@keyframes pop{from{transform:scale(.95);opacity:0}}
+.modal h2{margin:0 0 14px;font-size:19px;display:flex;gap:10px;align-items:center}
+.modal h2 .x{margin-left:auto;border:0;background:none;color:var(--dim);font-size:20px;cursor:pointer}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--violet);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--gold);border-radius:50%;animation:rot .7s linear infinite;vertical-align:-2px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+.ap{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--panel)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.live{animation:pulse 1.4s infinite}
+@media (max-width:1100px){.grid2,.intro{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.top{padding:8px 12px}main{padding:14px 16px 50px}.srch{grid-template-columns:minmax(0,1fr)}.types{grid-template-columns:minmax(0,1fr)}.ty{display:flex;gap:12px;align-items:center}.ty b{margin:0}
+ .kanban{grid-template-columns:minmax(0,1fr)}.col{min-height:0}.mv{display:flex}.fgrid{grid-template-columns:minmax(0,1fr)}.kpi .v{font-size:20px}.top .brand span{display:none}}
+</style>
+</head>
+<body data-demo-en="Permit One — e-permits & citizen appeals" data-demo-ru="Permit One — e-разрешения и обращения граждан">
+<nav class="top" id="top">
+  <div class="brand"><b>P1</b><span>Permit One</span></div>
+  <span class="role" data-en="Citizen" data-ru="Житель"></span>
+  <button class="tb" data-v="apply" data-en="Apply" data-ru="Подать"></button>
+  <button class="tb" data-v="mine"><span data-en="My cases" data-ru="Мои дела"></span><span class="cnt" id="cMine"></span></button>
+  <button class="tb" data-v="appeal" data-en="Appeal" data-ru="Обращение"></button>
+  <span class="tsep"></span><span class="role" data-en="Officer" data-ru="Сотрудник"></span>
+  <button class="tb" data-v="board"><span data-en="Board" data-ru="Доска"></span><span class="cnt" id="cBoard"></span></button>
+  <button class="tb" data-v="search" data-en="Search" data-ru="Поиск"></button>
+  <span class="tsep"></span><span class="role" data-en="Public" data-ru="Публично"></span>
+  <button class="tb" data-v="open" data-en="Transparency" data-ru="Открытость"></button>
+  <span style="flex:1"></span><button class="tb" id="reset" data-en="↺ Reset" data-ru="↺ Сброс"></button>
+</nav>
+<main>
+  <div class="intro" id="intro">
+    <div class="howto"><button class="x" id="hideIntro">×</button>
+      <div class="st"><b>1</b><span data-en="<b>Apply</b> for a street-trading, event or building permit — after submitting, the live BPMN diagram shows where it is." data-ru="<b>Подайте</b> заявку на торговлю, мероприятие или стройку — после отправки живая BPMN-схема покажет, где она сейчас."></span></div>
+      <div class="st"><b>2</b><span data-en="On the <b>Board</b>, drag your card to Inspection → Decision, tick the checklist and issue a templated letter." data-ru="На <b>Доске</b> перетащите карточку в «Инспекция» → «Решение», отметьте чек-лист и выпустите письмо по шаблону."></span></div>
+      <div class="st"><b>3</b><span data-en="File an <b>Appeal</b> with a map pin (type «streetlight broken»), then find it in <b>Search</b> and on the <b>Transparency</b> heatmap." data-ru="Подайте <b>Обращение</b> с меткой на карте (напишите «не горит фонарь»), найдите его в <b>Поиске</b> и на карте <b>Открытости</b>."></span></div>
+    </div>
+    <dl class="card facts">
+      <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="City e-permit & appeals platform" data-ru="Городская платформа e-разрешений и обращений"></dd>
+      <dt data-en="Year" data-ru="Год"></dt><dd>2026</dd>
+      <dt data-en="Budget" data-ru="Бюджет"></dt><dd class="mono" style="color:var(--gold2)" data-en="$2.1M" data-ru="$2,1 млн"></dd>
+      <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="City government of Port Aurel (fictional)" data-ru="Мэрия города Порт-Аурель (вымышл.)"></dd>
+      <dt data-en="Stack" data-ru="Стек"></dt><dd class="mono" style="font-size:12px">Next.js · Camunda (BPMN) · OpenSearch</dd>
+    </dl>
+  </div>
+  <h1 class="t" id="title"></h1>
+  <section class="view" id="v-apply"></section>
+  <section class="view" id="v-mine"></section>
+  <section class="view" id="v-appeal"></section>
+  <section class="view" id="v-board"></section>
+  <section class="view" id="v-search"></section>
+  <section class="view" id="v-open"></section>
+</main>
+<div class="modal-bg" id="mbg"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru),L=o=>o?(PT.lang==='ru'?o.ru:o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='permitone-v1',DAY=864e5,HOUR=36e5;
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const fmtT=t=>new Date(t).toLocaleString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+const fmtD=t=>new Date(t).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'2-digit',month:'long',year:'numeric'});
+
+const PT_TYPES={street:{i:'🛒',en:'Street trading',ru:'Уличная торговля',d:{en:'Kiosk, food cart, market stall',ru:'Киоск, фудкорт, лоток'},sla:5},event:{i:'🎪',en:'Public event',ru:'Массовое мероприятие',d:{en:'Concerts, fairs, street closures',ru:'Концерты, ярмарки, перекрытия'},sla:10},build:{i:'🏗',en:'Building works',ru:'Строительные работы',d:{en:'Extensions, renovation, scaffolding',ru:'Пристройки, ремонт, леса'},sla:20}};
+const COLS=[{k:'new',en:'New',ru:'Новые'},{k:'review',en:'In review',ru:'Рассмотрение'},{k:'insp',en:'Inspection',ru:'Инспекция'},{k:'dec',en:'Decision',ru:'Решение'}];
+const DISTR=[{k:'old',en:'Old Harbour',ru:'Старая гавань',x:30,y:30,w:150,h:110},{k:'mkt',en:'Market Hill',ru:'Рыночный холм',x:180,y:30,w:140,h:110},{k:'uni',en:'University',ru:'Университетский',x:320,y:30,w:150,h:110},{k:'lgt',en:'Lighthouse',ru:'Маячный',x:30,y:140,w:150,h:110},{k:'ctr',en:'Centre',ru:'Центр',x:180,y:140,w:140,h:110},{k:'ind',en:'Docklands',ru:'Доки',x:320,y:140,w:150,h:110}];
+const CATS={road:{en:'Roads & potholes',ru:'Дороги и ямы',kw:['pothole','road','asphalt','яма','дорог','асфальт']},light:{en:'Street lighting',ru:'Освещение',kw:['light','lamp','dark','фонар','свет','темно','лампа']},waste:{en:'Waste & cleanliness',ru:'Мусор и чистота',kw:['trash','garbage','waste','litter','bin','мусор','свалк','урн','грязь']},noise:{en:'Noise',ru:'Шум',kw:['noise','loud','music','шум','громк','музык']},green:{en:'Trees & parks',ru:'Деревья и парки',kw:['tree','park','branch','grass','дерев','парк','ветк','газон']},traffic:{en:'Traffic & parking',ru:'Транспорт и парковка',kw:['parking','car','traffic','bus','парков','машин','автобус','пробк']}};
+const INSPECTORS=['Marta Kowal','Diego Arrieta','Lena Moretti','Tomas Brun'];
+const CHECK=[{en:'Site matches submitted plan',ru:'Объект соответствует плану'},{en:'Fire safety & exits',ru:'Пожарная безопасность и выходы'},{en:'Pedestrian access ≥ 1.5 m',ru:'Проход для пешеходов ≥ 1,5 м'},{en:'Noise & waste plan in place',ru:'Есть план по шуму и отходам'},{en:'Insurance certificate valid',ru:'Страховка действительна'}];
+function seed(){
+  const now=Date.now(),r=rng(31);
+  const names=['Aurel Street Food Co.','Harbour Jazz Festival','Moreau Family','Café Bellamar','Port Aurel Marathon Club','Dockside Lofts Ltd','Mariner Flea Market','Lighthouse Book Fair','Silva Renovations','Night Market Assoc.'];
+  const what=[{t:'street',en:'Food truck at Quay Square',ru:'Фудтрак на Набережной площади'},{t:'event',en:'Open-air jazz concert, 2 nights',ru:'Джаз под открытым небом, 2 вечера'},{t:'build',en:'Rear extension, 18 m²',ru:'Пристройка с тыла, 18 м²'},{t:'street',en:'Terrace with 6 tables',ru:'Летняя веранда на 6 столов'},{t:'event',en:'City half-marathon, road closure',ru:'Городской полумарафон, перекрытие'},{t:'build',en:'Facade scaffolding, 4 floors',ru:'Леса на фасаде, 4 этажа'},{t:'street',en:'Weekend flea market, 40 stalls',ru:'Блошиный рынок по выходным, 40 мест'},{t:'event',en:'Book fair in Lighthouse Park',ru:'Книжная ярмарка в Маячном парке'},{t:'build',en:'Roof renovation',ru:'Ремонт кровли'},{t:'street',en:'Night market, Fridays',ru:'Ночной рынок по пятницам'}];
+  const permits=what.map((w,i)=>{const col=['new','review','insp','dec','review','new','insp','dec','review','new'][i];const created=now-Math.round((1+r()*12)*DAY);return{id:'PA-'+(26100+i*7),type:w.t,en:w.en,ru:w.ru,who:names[i],dist:DISTR[i%6].k,col,created,due:created+PT_TYPES[w.t].sla*DAY,insp:col==='insp'||col==='dec'?INSPECTORS[i%4]:null,checks:col==='dec'?[1,1,1,1,1]:[0,0,0,0,0],mine:false,done:null,log:[{t:created,k:'new'}]}});
+  const ap=[{en:'Pothole near the ferry terminal is getting deeper',ru:'Яма у паромного терминала становится глубже',c:'road'},{en:'Streetlight broken on Coral lane for a week',ru:'Неделю не горит фонарь на Коралловом переулке',c:'light'},{en:'Overflowing trash bins at the market',ru:'Переполнены мусорные урны у рынка',c:'waste'},{en:'Loud music after midnight from the bar',ru:'Громкая музыка после полуночи из бара',c:'noise'},{en:'Fallen tree branch blocks the park path',ru:'Упавшая ветка перекрыла дорожку в парке',c:'green'},{en:'Cars parked on the bus lane every morning',ru:'Каждое утро машины стоят на выделенке',c:'traffic'}];
+  const appeals=[];for(let i=0;i<46;i++){const a=ap[i%ap.length],d=DISTR[Math.floor(r()*r()*6)],res=r()<.72;appeals.push({id:'AP-'+(9100+i),en:a.en,ru:a.ru,cat:a.c,dist:d.k,x:d.x+10+r()*(d.w-20),y:d.y+10+r()*(d.h-20),t:now-Math.round(r()*40*DAY),res,days:res?+(1+r()*9).toFixed(1):null,mine:false,photo:null})}
+  return{permits,appeals,nid:26300,aid:9300,draft:{type:'street',step:0,f:{}}};
+}
+let S=store.load()||seed();const save=()=>store.save(S);
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function modal(title,body){$('#modal').innerHTML=`<h2>${title}<button class="x" id="mx">×</button></h2>${body}`;$('#mbg').classList.add('on');$('#mx').onclick=closeModal}
+const closeModal=()=>$('#mbg').classList.remove('on');
+$('#mbg').onclick=e=>{if(e.target.id==='mbg')closeModal()};
+const dname=k=>L(DISTR.find(d=>d.k===k));
+function slaB(p){if(p.done)return`<span class="sla ${p.done==='ok'?'ok':'late'}">${p.done==='ok'?T('Approved','Одобрено'):T('Refused','Отказ')}</span>`;const ms=p.due-Date.now(),d=Math.ceil(ms/DAY);return`<span class="sla ${ms<0?'late':d<=2?'near':'ok'}">${ms<0?T('Overdue ','Просрочено ')+(-d)+T('d','д'):T('SLA ','SLA ')+d+T('d left','д')}</span>`}
+
+const VIEWS={apply:{en:'Apply for a city permit',ru:'Заявка на городское разрешение'},mine:{en:'My cases',ru:'Мои дела'},appeal:{en:'File a citizen appeal',ru:'Подать обращение'},board:{en:'Officer board — permits workflow',ru:'Доска сотрудника — процесс разрешений'},search:{en:'Full-text search',ru:'Полнотекстовый поиск'},open:{en:'Open city — transparency dashboard',ru:'Открытый город — панель прозрачности'}};
+let view='apply';try{view=localStorage.getItem(KEY+'-v')||'apply'}catch(e){}
+function go(v){view=v;try{localStorage.setItem(KEY+'-v',v)}catch(e){}$$('.tb[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));$$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));const b=$(`.tb[data-v="${v}"]`);if(b)b.scrollIntoView({inline:'nearest',block:'nearest'});render()}
+$$('.tb[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
+$('#hideIntro').onclick=()=>$('#intro').style.display='none';
+$('#reset').onclick=()=>{store.clear();S=seed();save();toast(T('Demo data reset','Данные сброшены'));go('apply')};
+function counts(){const m=S.permits.filter(p=>p.mine&&!p.done).length,b=S.permits.filter(p=>!p.done).length;$('#cMine').textContent=m||'';$('#cMine').style.display=m?'':'none';$('#cBoard').textContent=b}
+function render(){$('#title').textContent=L(VIEWS[view]);counts();({apply:rApply,mine:rMine,appeal:rAppeal,board:rBoard,search:rSearch,open:rOpen})[view]()}
+
+// ---------- BPMN ----------
+const NODES=[{k:'start',en:'Submitted',ru:'Подано',x:40,sh:'ev'},{k:'new',en:'Completeness check',ru:'Проверка комплектности',x:150},{k:'review',en:'Technical review',ru:'Техническое рассмотрение',x:300},{k:'gw',en:'Inspection needed?',ru:'Нужна инспекция?',x:440,sh:'gw'},{k:'insp',en:'Site inspection',ru:'Выезд на объект',x:560,y:40},{k:'dec',en:'Decision & letter',ru:'Решение и письмо',x:700},{k:'end',en:'Issued',ru:'Выдано',x:830,sh:'ev'}];
+function bpmn(p){
+  const ord=['new','review','insp','dec'],ci=p.done?5:ord.indexOf(p.col);const W=900,H=170,cy=105;
+  const viol=cssv('--violet'),gold=cssv('--gold'),mal=cssv('--mal'),line=cssv('--line2'),txt=cssv('--text'),dim=cssv('--dim'),pan=cssv('--panel'),red=cssv('--red');
+  const state=k=>{if(k==='start')return'done';if(k==='end')return p.done?(p.done==='ok'?'done':'bad'):'todo';if(k==='gw')return ci>=2?'done':'todo';const i=ord.indexOf(k);if(k==='insp'&&p.type==='street'&&ci>2)return'skip';return i<ci?'done':i===ci?'cur':'todo'};
+  const col=s=>s==='done'?mal:s==='cur'?gold:s==='bad'?red:line;
+  let g=`<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="${dim}"/></marker></defs>`;
+  const ln=(x1,y1,x2,y2,dash)=>`<path d="M${x1} ${y1} L${x2} ${y2}" stroke="${dim}" stroke-width="1.5" fill="none" marker-end="url(#ar)" ${dash?'stroke-dasharray="4 3"':''}/>`;
+  g+=ln(62,cy,148,cy)+ln(262,cy,298,cy)+ln(412,cy,422,cy)+`<path d="M440 ${cy-18} L440 62 L558 62" stroke="${dim}" stroke-width="1.5" fill="none" marker-end="url(#ar)"/><text x="446" y="56" font-size="10" fill="${dim}">${T('yes','да')}</text>`+ln(458,cy,698,cy)+`<text x="560" y="${cy+14}" font-size="10" fill="${dim}">${T('no (street trading)','нет (торговля)')}</text>`+`<path d="M672 62 L760 62 L760 ${cy-22}" stroke="${dim}" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>`+ln(812,cy,818,cy);
+  NODES.forEach(n=>{const s=state(n.k),c=col(s);const y=n.y||cy;
+   if(n.sh==='ev')g+=`<circle cx="${n.x+(n.k==='end'?10:0)}" cy="${y}" r="20" fill="${pan}" stroke="${c}" stroke-width="${n.k==='end'?5:2.5}"/><text x="${n.x+(n.k==='end'?10:0)}" y="${y+38}" font-size="11" fill="${txt}" text-anchor="middle">${L(n)}</text>`;
+   else if(n.sh==='gw')g+=`<path d="M440 ${y-20} L460 ${y} L440 ${y+20} L420 ${y}Z" fill="${pan}" stroke="${c}" stroke-width="2.5"/><text x="440" y="${y+5}" font-size="16" fill="${c}" text-anchor="middle" font-weight="800">×</text><text x="440" y="${y+38}" font-size="10.5" fill="${txt}" text-anchor="middle">${L(n)}</text>`;
+   else{const w=112,h=44;g+=`<rect x="${n.x}" y="${y-h/2}" width="${w}" height="${h}" rx="10" fill="${s==='cur'?`color-mix(in srgb,${gold} 18%,${pan})`:pan}" stroke="${c}" stroke-width="${s==='cur'?3:2}" ${s==='skip'?'stroke-dasharray="4 3" opacity=".5"':''} ${s==='cur'?'class="live"':''}/><foreignObject x="${n.x+4}" y="${y-h/2+2}" width="${w-8}" height="${h-4}"><div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;align-items:center;justify-content:center;height:100%;font-size:11px;text-align:center;line-height:1.15;color:${txt};font-weight:600">${L(n)}</div></foreignObject>${s==='done'?`<circle cx="${n.x+w-4}" cy="${y-h/2+4}" r="8" fill="${mal}"/><text x="${n.x+w-4}" y="${y-h/2+8}" font-size="10" fill="#fff" text-anchor="middle">✓</text>`:''}`}});
+  if(!p.done&&ci>=0){const n=NODES.find(x=>x.k===ord[ci]);g+=`<text x="${n.x+56}" y="${(n.y||cy)-30}" font-size="10" fill="${gold}" text-anchor="middle" font-weight="700">● ${T('now','сейчас')}</text>`}
+  return`<div class="bpmn"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
+}
+
+// ---------- apply ----------
+const FORMS={street:[['name',{en:'Trader / company',ru:'Торговец / компания'},'text','Café Aurora'],['loc',{en:'Exact location',ru:'Точный адрес'},'text','Quay Square, east side'],['area',{en:'Area, m²',ru:'Площадь, м²'},'number','12'],['from',{en:'From',ru:'С'},'date',''],['to',{en:'To',ru:'По'},'date',''],['goods',{en:'Goods sold',ru:'Товары'},'text','Coffee, pastries']],
+ event:[['name',{en:'Organiser',ru:'Организатор'},'text','Aurel Arts Collective'],['loc',{en:'Venue',ru:'Площадка'},'text','Lighthouse Park lawn'],['people',{en:'Expected visitors',ru:'Ожидается гостей'},'number','1200'],['from',{en:'Start',ru:'Начало'},'date',''],['to',{en:'End',ru:'Окончание'},'date',''],['close',{en:'Road closure needed',ru:'Нужно перекрытие'},'select','No;Yes']],
+ build:[['name',{en:'Owner',ru:'Владелец'},'text','Moreau Family'],['loc',{en:'Parcel address',ru:'Адрес участка'},'text','7 Rue des Voiles'],['area',{en:'Built area, m²',ru:'Площадь застройки, м²'},'number','24'],['from',{en:'Works start',ru:'Начало работ'},'date',''],['floors',{en:'Floors',ru:'Этажей'},'number','1'],['arch',{en:'Architect licence no.',ru:'№ лицензии архитектора'},'text','ARC-55120']]};
+function rApply(){
+  const d=S.draft,t=PT_TYPES[d.type];
+  const steps=[T('Permit type','Тип'),T('Details','Сведения'),T('Attachments','Вложения'),T('Review','Проверка')];
+  let body='';
+  if(d.step===0)body=`<div class="types">${Object.keys(PT_TYPES).map(k=>`<button class="ty ${d.type===k?'on':''}" data-ty="${k}"><span class="i">${PT_TYPES[k].i}</span><div><b>${L(PT_TYPES[k])}</b><small>${L(PT_TYPES[k].d)} · SLA ${PT_TYPES[k].sla} ${T('days','дн')}</small></div></button>`).join('')}</div>`;
+  if(d.step===1){const tom=new Date(Date.now()+7*DAY).toISOString().slice(0,10),tm2=new Date(Date.now()+21*DAY).toISOString().slice(0,10);body=`<div class="fgrid">${FORMS[d.type].map(f=>{const v=d.f[f[0]]!=null?d.f[f[0]]:(f[2]==='date'?(f[0]==='to'?tm2:tom):f[2]==='select'?f[3].split(';')[0]:f[3]);d.f[f[0]]=v;return`<div class="f ${f[0]==='loc'?'full':''}"><label>${L(f[1])}</label>${f[2]==='select'?`<select class="input" data-pf="${f[0]}">${f[3].split(';').map(o=>`<option ${v===o?'selected':''}>${o}</option>`).join('')}</select>`:`<input class="input" type="${f[2]}" data-pf="${f[0]}" value="${esc(v)}">`}<div class="err" data-pe="${f[0]}"></div></div>`}).join('')}<div class="f full"><label>${T('District','Район')}</label><div class="chips">${DISTR.map(x=>`<button class="chip ${(d.f.dist||'ctr')===x.k?'on':''}" data-pd="${x.k}">${L(x)}</button>`).join('')}</div></div></div>`}
+  if(d.step===2){const need={street:[T('Site sketch','Схема места'),T('Food hygiene certificate','Санитарный сертификат')],event:[T('Safety & crowd plan','План безопасности'),T('Liability insurance','Страховка ответственности')],build:[T('Architectural drawings','Чертежи'),T('Structural calculation','Расчёт конструкций'),T('Neighbour consent','Согласие соседей')]}[d.type];d.att=d.att||{};
+   body=need.map((n,i)=>`<div class="ap" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="flex:1;min-width:160px"><b>${n}</b><div class="muted mono" style="font-size:11.5px">${d.att[i]?esc(d.att[i])+' · ✓ '+T('virus scan, PDF/A','антивирус, PDF/A'):T('PDF, up to 20 MB','PDF, до 20 МБ')}</div></span><label class="btn sm">${T('Choose file','Выбрать файл')}<input type="file" hidden data-at="${i}"></label><button class="btn sm ${d.att[i]?'':'gold'}" data-ats="${i}">${d.att[i]?'✓':T('Use sample','Образец')}</button></div>`).join('');d.need=need.length}
+  if(d.step===3)body=`<div class="ap"><div style="display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13.5px"><span class="muted">${T('Type','Тип')}</span><b>${t.i} ${L(t)}</b>${FORMS[d.type].map(f=>`<span class="muted">${L(f[1])}</span><span>${esc(d.f[f[0]])}</span>`).join('')}<span class="muted">${T('District','Район')}</span><span>${dname(d.f.dist||'ctr')}</span><span class="muted">${T('Attachments','Вложения')}</span><span>${Object.keys(d.att||{}).length} ✓</span><span class="muted">${T('Fee','Пошлина')}</span><b style="color:var(--gold2)">$${{street:45,event:180,build:320}[d.type]}</b></div></div><label style="display:flex;gap:8px;font-size:13.5px;margin-top:8px"><input type="checkbox" id="agree" checked> ${T('I confirm the information is accurate','Подтверждаю достоверность сведений')}</label>`;
+  $('#v-apply').innerHTML=`<div class="grid2"><div class="card"><div class="pbar">${steps.map((s,i)=>`<i class="${i<=d.step?'on':''}"></i>`).join('')}</div><h3>${T('Step','Шаг')} ${d.step+1}/4 · ${steps[d.step]}</h3>${body}
+   <div class="acts">${d.step?`<button class="btn" id="pb">← ${T('Back','Назад')}</button>`:''}<button class="btn pri" id="pn">${d.step===3?T('Submit & pay','Отправить и оплатить'):T('Continue','Далее')} →</button></div></div>
+   <div class="card"><h3>${T('How your application will flow','Как пойдёт ваша заявка')}<span class="sp"></span><span class="pill">Camunda BPMN</span></h3>${bpmn({col:'new',type:d.type,done:null})}<p class="muted" style="font-size:12.5px">${T('Every officer action moves the token through this model. Street trading skips the site inspection branch.','Каждое действие сотрудника двигает токен по модели. Уличная торговля пропускает ветку выездной инспекции.')}</p></div></div>`;
+  $$('[data-ty]').forEach(b=>b.onclick=()=>{d.type=b.dataset.ty;d.f={};d.att={};save();rApply()});
+  $$('[data-pf]').forEach(i=>i.oninput=i.onchange=()=>{d.f[i.dataset.pf]=i.value;save()});
+  $$('[data-pd]').forEach(b=>b.onclick=()=>{d.f.dist=b.dataset.pd;save();rApply()});
+  $$('[data-at]').forEach(i=>i.onchange=()=>{if(i.files[0]){d.att[i.dataset.at]=i.files[0].name;save();rApply()}});
+  $$('[data-ats]').forEach(b=>b.onclick=()=>{d.att[b.dataset.ats]=['plan','cert','policy'][b.dataset.ats]+'_'+d.type+'.pdf';save();rApply()});
+  if($('#pb'))$('#pb').onclick=()=>{d.step--;save();rApply()};
+  $('#pn').onclick=()=>{
+    if(d.step===1){let ok=true;FORMS[d.type].forEach(f=>{const e=$(`[data-pe="${f[0]}"]`);e.textContent='';if(!String(d.f[f[0]]||'').trim()){e.textContent=T('Required','Обязательно');ok=false}});if(d.f.to&&d.f.from&&d.f.to<d.f.from){$('[data-pe="to"]').textContent=T('End before start','Окончание раньше начала');ok=false}if(!ok)return}
+    if(d.step===2&&Object.keys(d.att||{}).length<d.need){toast(T('Attach all required documents','Приложите все документы'),'bad');return}
+    if(d.step===3){if(!$('#agree').checked)return;$('#pn').disabled=true;$('#pn').innerHTML='<span class="spin"></span> '+T('Starting process instance…','Запуск экземпляра процесса…');
+      setTimeout(()=>{const id='PA-'+(++S.nid);const now=Date.now();S.permits.unshift({id,type:d.type,en:(L(PT_TYPES[d.type]))+': '+d.f.loc,ru:(PT_TYPES[d.type].ru)+': '+d.f.loc,who:d.f.name,dist:d.f.dist||'ctr',col:'new',created:now,due:now+PT_TYPES[d.type].sla*DAY,insp:null,checks:[0,0,0,0,0],mine:true,done:null,log:[{t:now,k:'new'}],f:Object.assign({},d.f)});S.draft={type:'street',step:0,f:{}};save();
+       toast(T('Submitted · ','Подано · ')+id+T(' · fee paid',' · пошлина оплачена'));sel=id;go('mine')},1200);return}
+    d.step++;save();rApply()};
+}
+let sel=null;
+function rMine(){
+  const mine=S.permits.filter(p=>p.mine);
+  if(!mine.length){$('#v-mine').innerHTML=`<div class="card empty">${T('No permit applications yet.','Пока нет заявок.')}<br><button class="btn pri" style="margin-top:10px" id="ga">${T('Apply now','Подать')}</button></div>`+myAppeals();$('#ga').onclick=()=>go('apply');return}
+  if(!sel||!mine.find(p=>p.id===sel))sel=mine[0].id;const p=mine.find(x=>x.id===sel);
+  $('#v-mine').innerHTML=`<div class="chips" style="margin-bottom:12px">${mine.map(m=>`<button class="chip ${m.id===sel?'on':''}" data-sel="${m.id}">${m.id} · ${PT_TYPES[m.type].i}</button>`).join('')}</div>
+  <div class="card"><h3>${esc(L(p))}<span class="sp"></span>${slaB(p)}</h3><div class="muted" style="font-size:13px;margin-bottom:10px">${esc(p.who)} · ${dname(p.dist)} · ${T('submitted','подано')} ${fmtT(p.created)}${p.insp?' · '+T('inspector','инспектор')+' '+p.insp:''}</div>${bpmn(p)}
+  ${p.done&&p.letter?`<div style="margin-top:14px">${p.letter}</div>`:''}
+  <div class="acts" style="justify-content:flex-start">${!p.done?`<button class="btn pri" id="toBoard">${T('Act as officer on the board →','Перейти к доске сотрудника →')}</button>`:''}</div>
+  <div style="margin-top:12px;font-size:12.5px">${p.log.slice().reverse().map(l=>`<div style="display:flex;gap:10px;padding:4px 0;border-bottom:1px dashed var(--line)"><span class="mono muted">${fmtT(l.t)}</span><span>${l.k==='done'?T('Decision issued','Решение выдано'):T('Moved to: ','Этап: ')+L(COLS.find(c=>c.k===l.k)||{})}</span></div>`).join('')}</div></div>`+myAppeals();
+  $$('[data-sel]').forEach(b=>b.onclick=()=>{sel=b.dataset.sel;rMine()});
+  if($('#toBoard'))$('#toBoard').onclick=()=>go('board');
+}
+function myAppeals(){const m=S.appeals.filter(a=>a.mine);return m.length?`<div class="card" style="margin-top:14px"><h3>${T('My appeals','Мои обращения')}</h3>${m.map(a=>`<div class="ap" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">${a.photo?`<img src="${a.photo}" style="width:44px;height:44px;object-fit:cover;border-radius:8px">`:''}<div style="flex:1;min-width:150px"><b style="font-size:13.5px">${esc(L(a))}</b><div class="muted" style="font-size:12px">${a.id} · ${L(CATS[a.cat])} · ${dname(a.dist)}</div></div><span class="pill ${a.res?'ok':'gold'}">${a.res?T('Resolved','Решено'):T('In progress','В работе')}</span></div>`).join('')}</div>`:''}
+
+// ---------- appeal ----------
+let pin=null,photo=null;
+function cityMap(points,heat){
+  const pan=cssv('--panel2'),line=cssv('--line2'),dim=cssv('--dim'),blue=cssv('--blue'),gold=cssv('--gold'),red=cssv('--red');
+  let s=`<rect width="500" height="290" fill="${pan}"/><path d="M0 262 Q120 245 250 268 T500 255 L500 290 L0 290Z" fill="${blue}" opacity=".35"/>`;
+  DISTR.forEach(d=>{const v=heat?heat[d.k]:0;s+=`<rect x="${d.x}" y="${d.y}" width="${d.w}" height="${d.h}" fill="${heat?`color-mix(in srgb,${red} ${Math.round(8+v*72)}%,transparent)`:'none'}" stroke="${line}" stroke-dasharray="${heat?'0':'3 3'}"/><text x="${d.x+8}" y="${d.y+16}" font-size="11" fill="${heat?cssv('--text'):dim}" stroke="${heat?pan:'none'}" stroke-width="3" paint-order="stroke" font-weight="700">${L(d)}</text>`});
+  for(let i=0;i<9;i++)s+=`<line x1="${30+i*55}" y1="30" x2="${30+i*55}" y2="250" stroke="${line}" opacity=".35"/>`;
+  s+=`<path d="M30 140 L470 140 M180 30 L180 250 M320 30 L320 250" stroke="${dim}" stroke-width="3" opacity=".45"/>`;
+  (points||[]).forEach(p=>s+=`<circle cx="${p.x}" cy="${p.y}" r="${p.big?8:3.2}" fill="${p.big?gold:(heat?cssv('--text'):red)}" ${p.big?`stroke="#fff" stroke-width="2"`:'opacity=".7"'}/>`);
+  return`<svg viewBox="0 0 500 290">${s}</svg>`;
+}
+function suggest(txt){const t=txt.toLowerCase();let best=null,bs=0;for(const k in CATS){const sc=CATS[k].kw.filter(w=>t.includes(w)).length;if(sc>bs){bs=sc;best=k}}return best}
+function rAppeal(){
+  $('#v-appeal').innerHTML=`<div class="grid2"><div class="card"><h3>1 · ${T('Click the map to drop a pin','Нажмите на карту, чтобы поставить метку')}</h3><div class="cmap" id="cmap">${cityMap(pin?[Object.assign({big:1},pin)]:[])}</div><div class="muted" style="font-size:12.5px;margin-top:6px" id="pinTxt">${pin?'📍 '+dname(pin.dist)+` · ${pin.x.toFixed(0)}, ${pin.y.toFixed(0)}`:T('No location yet','Место не выбрано')}</div></div>
+  <div class="card"><h3>2 · ${T('Describe the problem','Опишите проблему')}</h3>
+   <div class="f"><label>${T('What happened?','Что случилось?')}</label><textarea class="input" id="atx" rows="4" placeholder="${T('e.g. Streetlight broken on Coral lane, very dark at night','напр. Не горит фонарь на Коралловом переулке, ночью темно')}"></textarea></div>
+   <div class="sugg" id="sug"></div>
+   <div class="f"><label>${T('Category','Категория')}</label><select class="input" id="acat"><option value="">— ${T('auto','авто')} —</option>${Object.keys(CATS).map(k=>`<option value="${k}">${L(CATS[k])}</option>`).join('')}</select></div>
+   <div class="f"><label>${T('Photo (optional)','Фото (необязательно)')}</label><input type="file" accept="image/*" id="aph" class="input"><div class="photo" id="aprev">${photo?`<img src="${photo}">`:''}</div></div>
+   <div class="acts"><button class="btn" id="aex">${T('Example text','Пример текста')}</button><button class="btn pri" id="asend">${T('Send appeal','Отправить')}</button></div></div></div>`;
+  $('#cmap').onclick=e=>{const svg=$('#cmap svg'),r=svg.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*500,y=(e.clientY-r.top)/r.height*290;const d=DISTR.find(q=>x>=q.x&&x<=q.x+q.w&&y>=q.y&&y<=q.y+q.h);if(!d){toast(T('Pick a spot inside the city grid','Выберите точку внутри города'),'bad');return}pin={x,y,dist:d.k};$('#cmap').innerHTML=cityMap([Object.assign({big:1},pin)]);$('#pinTxt').textContent='📍 '+dname(d.k)+` · ${x.toFixed(0)}, ${y.toFixed(0)}`};
+  const upd=()=>{const s=suggest($('#atx').value);$('#sug').innerHTML=s?`🤖 ${T('Suggested category:','Предлагаемая категория:')} <span class="pill gold">${L(CATS[s])}</span><button class="btn sm" id="useS">${T('Use','Применить')}</button>`:$('#atx').value.length>8?`<span class="muted">${T('No keywords matched — choose manually','Ключевые слова не найдены — выберите вручную')}</span>`:'';if($('#useS'))$('#useS').onclick=()=>$('#acat').value=s};
+  $('#atx').oninput=upd;
+  $('#aex').onclick=()=>{$('#atx').value=T('Streetlight broken next to the school, completely dark at night','Не горит фонарь возле школы, ночью совсем темно');upd()};
+  $('#aph').onchange=()=>{const f=$('#aph').files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,320/Math.max(img.width,img.height));c.width=img.width*k;c.height=img.height*k;c.getContext('2d').drawImage(img,0,0,c.width,c.height);photo=c.toDataURL('image/jpeg',.7);$('#aprev').innerHTML=`<img src="${photo}">`};img.src=r.result};r.readAsDataURL(f)};
+  $('#asend').onclick=()=>{const txt=$('#atx').value.trim();const cat=$('#acat').value||suggest(txt);if(!pin){toast(T('Drop a pin on the map first','Сначала поставьте метку на карте'),'bad');return}if(txt.length<8){toast(T('Describe the problem (8+ characters)','Опишите проблему (от 8 символов)'),'bad');return}if(!cat){toast(T('Choose a category','Выберите категорию'),'bad');return}
+   const a={id:'AP-'+(++S.aid),en:txt,ru:txt,cat,dist:pin.dist,x:pin.x,y:pin.y,t:Date.now(),res:false,days:null,mine:true,photo};S.appeals.unshift(a);save();pin=null;photo=null;
+   modal('✓ '+T('Appeal registered','Обращение зарегистрировано'),`<p>${T('No.','№')} <b class="mono">${a.id}</b> · ${L(CATS[cat])} · ${dname(a.dist)}</p><p class="muted">${T('Routed to the city service for ','Направлено в городскую службу: ')}${L(CATS[cat])}. ${T('It is already indexed in search and visible on the public heatmap.','Обращение уже в поиске и на публичной тепловой карте.')}</p><div class="acts"><button class="btn" id="m1">${T('Find in search','Найти в поиске')}</button><button class="btn pri" id="m2">${T('See heatmap','Тепловая карта')}</button></div>`);
+   $('#m1').onclick=()=>{closeModal();q=txt.split(' ').slice(0,2).join(' ');go('search')};$('#m2').onclick=()=>{closeModal();go('open')};setTimeout(()=>{a.res=true;a.days=0.1;save()},20000)};
+}
+
+// ---------- board ----------
+let dragId=null;
+function rBoard(){
+  const open=S.permits.filter(p=>!p.done);
+  $('#v-board').innerHTML=`<div class="chips" style="margin-bottom:12px"><span class="pill ok">${T('Done this session','Готово за сессию')}: ${S.permits.filter(p=>p.done&&p.mine).length}</span><span class="pill warn">${T('Overdue','Просрочено')}: ${open.filter(p=>p.due<Date.now()).length}</span><span class="muted" style="font-size:12.5px;align-self:center">${T('Drag cards between columns (on phone use ← →). Click a card for details.','Перетаскивайте карточки (на телефоне — кнопки ← →). Нажмите карточку для деталей.')}</span></div>
+  <div class="kanban">${COLS.map((c,ci)=>{const items=open.filter(p=>p.col===c.k).sort((a,b)=>b.mine-a.mine||a.due-b.due);return`<div class="col" data-col="${c.k}"><h4>${L(c)}<span>${items.length}</span></h4>${items.map(p=>`<div class="kc" draggable="true" data-card="${p.id}" style="${p.mine?'border-color:var(--gold)':''}"><div class="id">${p.id} ${p.mine?'· ★ '+T('yours','ваша'):''}</div><b>${PT_TYPES[p.type].i} ${esc(L(p))}</b><div class="muted" style="font-size:12px">${esc(p.who)} · ${dname(p.dist)}</div><div class="r">${slaB(p)}${p.insp?`<span class="pill" style="font-size:11px">👷 ${p.insp.split(' ')[0]}</span>`:''}${c.k==='insp'?`<span class="pill ${p.checks.every(Boolean)?'ok':''}" style="font-size:11px">☑ ${p.checks.filter(Boolean).length}/5</span>`:''}</div><div class="mv">${ci?`<button class="btn sm" data-mv="${p.id}" data-d="-1">←</button>`:''}${ci<3?`<button class="btn sm" data-mv="${p.id}" data-d="1">→</button>`:''}</div></div>`).join('')||`<div class="empty" style="padding:14px;font-size:12.5px">${T('Drop here','Перетащите сюда')}</div>`}</div>`}).join('')}</div>`;
+  $$('.kc').forEach(k=>{k.ondragstart=e=>{dragId=k.dataset.card;k.classList.add('drag');try{e.dataTransfer.setData('text/plain',dragId)}catch(x){}};k.ondragend=()=>k.classList.remove('drag');k.onclick=e=>{if(e.target.closest('[data-mv]'))return;cardModal(k.dataset.card)}});
+  $$('.col').forEach(c=>{c.ondragover=e=>{e.preventDefault();c.classList.add('over')};c.ondragleave=()=>c.classList.remove('over');c.ondrop=e=>{e.preventDefault();c.classList.remove('over');if(dragId)move(dragId,c.dataset.col)}});
+  $$('[data-mv]').forEach(b=>b.onclick=()=>{const p=S.permits.find(x=>x.id===b.dataset.mv);const i=COLS.findIndex(c=>c.k===p.col)+ +b.dataset.d;move(p.id,COLS[i].k)});
+}
+function move(id,col){const p=S.permits.find(x=>x.id===id);if(!p||p.col===col)return;
+  if(col==='insp'&&!p.insp){cardModal(id,T('Assign an inspector first','Сначала назначьте инспектора'));return}
+  if(col==='dec'&&p.type!=='street'&&!p.checks.every(Boolean)){cardModal(id,T('Complete the inspection checklist first','Сначала заполните чек-лист инспекции'));return}
+  p.col=col;p.log.push({t:Date.now(),k:col});save();toast(`${id} → ${L(COLS.find(c=>c.k===col))}${p.mine?' · '+T('citizen sees the BPMN step move','житель видит сдвиг на схеме'):''}`);rBoard();counts()}
+function cardModal(id,warn){
+  const p=S.permits.find(x=>x.id===id);
+  modal(`${PT_TYPES[p.type].i} ${p.id}`,`${warn?`<div class="pill warn" style="margin-bottom:10px">⚠ ${warn}</div>`:''}<b>${esc(L(p))}</b><div class="muted" style="font-size:13px;margin:4px 0 10px">${esc(p.who)} · ${dname(p.dist)} · ${slaB(p)}</div>${bpmn(p)}
+  <div class="grid2" style="margin-top:12px"><div><div class="f"><label>${T('Inspector','Инспектор')}</label><select class="input" id="ins"><option value="">—</option>${INSPECTORS.map(n=>`<option ${p.insp===n?'selected':''}>${n}</option>`).join('')}</select></div>
+   <div style="font-weight:700;font-size:13px;margin:8px 0 2px">${T('Inspection checklist','Чек-лист инспекции')}</div>${CHECK.map((c,i)=>`<label class="ck"><input type="checkbox" data-ck="${i}" ${p.checks[i]?'checked':''}> ${L(c)}</label>`).join('')}</div>
+   <div><div class="f"><label>${T('Decision template','Шаблон решения')}</label><select class="input" id="tpl"><option value="ok">${T('Approval','Одобрение')}</option><option value="cond">${T('Approval with conditions','Одобрение с условиями')}</option><option value="no">${T('Refusal','Отказ')}</option></select></div><div id="lprev"></div></div></div>
+  <div class="acts">${p.col!=='dec'?`<button class="btn" id="adv">${T('Move to next stage','Следующий этап')} →</button>`:''}<button class="btn gold" id="issue" ${p.col==='dec'?'':'disabled'}>✉ ${T('Issue decision','Выдать решение')}</button></div>`);
+  const letter=()=>{const t=$('#tpl').value,date=fmtD(Date.now());const body=t==='no'?T(`We regret to inform you that your application ${p.id} for «${L(p)}» is refused because the submitted plan does not meet pedestrian access requirements. You may appeal within 30 days.`,`С сожалением сообщаем, что по заявке ${p.id} «${L(p)}» принят отказ: план не обеспечивает проход для пешеходов. Решение можно обжаловать в течение 30 дней.`):T(`We are pleased to grant permit ${p.id} for «${L(p)}» in ${dname(p.dist)}.`+(t==='cond'?' Conditions: works only 08:00–20:00; keep a 1.5 m pedestrian corridor.':' The permit is valid for the dates stated in the application.'),`Рады сообщить о выдаче разрешения ${p.id} на «${L(p)}» (район ${dname(p.dist)}).`+(t==='cond'?' Условия: работы только 08:00–20:00; сохранять проход 1,5 м.':' Разрешение действует в заявленные сроки.'));
+    return`<div class="letter"><h4>${T('City of Port Aurel · Permits Office','Мэрия Порт-Аурель · Отдел разрешений')}</h4><div style="font-size:11px;color:#667">${date} · ${T('Ref.','Исх.')} ${p.id}/${new Date().getFullYear()}</div><p>${T('Dear','Уважаемый(ая)')} ${esc(p.who)},</p><p>${body}</p><p style="margin-bottom:0">— ${T('Head of Permits Office','Начальник отдела разрешений')}<br><span style="font-family:var(--mono);font-size:10.5px;color:#667">e-sig ${Math.abs(p.id.split('').reduce((a,c)=>a*31+c.charCodeAt(0),7)).toString(16).padStart(10,'0')}</span></p></div>`};
+  const lp=()=>$('#lprev').innerHTML=letter();lp();$('#tpl').onchange=lp;
+  $('#ins').onchange=()=>{p.insp=$('#ins').value||null;save();toast(T('Inspector assigned: ','Назначен инспектор: ')+(p.insp||'—'))};
+  $$('[data-ck]').forEach(c=>c.onchange=()=>{p.checks[+c.dataset.ck]=c.checked?1:0;save()});
+  if($('#adv'))$('#adv').onclick=()=>{const i=COLS.findIndex(c=>c.k===p.col);let nx=COLS[i+1].k;if(nx==='insp'&&p.type==='street')nx='dec';closeModal();move(p.id,nx)};
+  $('#issue').onclick=()=>{const t=$('#tpl').value;p.letter=letter();p.done=t==='no'?'no':'ok';p.log.push({t:Date.now(),k:'done'});save();closeModal();toast(t==='no'?T('Refusal letter sent','Письмо об отказе отправлено'):T('✓ Permit issued & letter e-signed','✓ Разрешение выдано, письмо подписано'));if(p.mine){sel=p.id;go('mine')}else rBoard()};
+}
+
+// ---------- search ----------
+let q='',fac={kind:{},cat:{},dist:{}};
+function rSearch(){
+  const docs=[...S.permits.map(p=>({kind:'permit',id:p.id,title:L(p),body:p.who+' · '+L(PT_TYPES[p.type])+' · '+(L(COLS.find(c=>c.k===p.col))||''),cat:p.type,catL:L(PT_TYPES[p.type]),dist:p.dist,t:p.created})),...S.appeals.map(a=>({kind:'appeal',id:a.id,title:L(a),body:L(CATS[a.cat])+' · '+(a.res?T('resolved','решено'):T('open','открыто')),cat:a.cat,catL:L(CATS[a.cat]),dist:a.dist,t:a.t}))];
+  const terms=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+  const t0=performance.now();
+  let hits=docs.map(d=>{const hay=(d.id+' '+d.title+' '+d.body).toLowerCase();let sc=0;terms.forEach(w=>{const n=hay.split(w).length-1;sc+=n*(d.title.toLowerCase().includes(w)?3:1)});return Object.assign({sc},d)}).filter(d=>!terms.length||d.sc>0);
+  const agg=k=>{const o={};hits.forEach(h=>{const v=k==='kind'?h.kind:k==='cat'?h.cat:h.dist;o[v]=(o[v]||0)+1});return o};
+  const A={kind:agg('kind'),cat:agg('cat'),dist:agg('dist')};
+  const act=k=>Object.keys(fac[k]).filter(x=>fac[k][x]);
+  hits=hits.filter(h=>(!act('kind').length||act('kind').includes(h.kind))&&(!act('cat').length||act('cat').includes(h.cat))&&(!act('dist').length||act('dist').includes(h.dist))).sort((a,b)=>b.sc-a.sc||b.t-a.t);
+  const ms=(performance.now()-t0+3+Math.random()*6).toFixed(0);
+  const hl=s=>{let o=esc(s);terms.forEach(w=>{o=o.replace(new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')});return o};
+  const lab={kind:k=>k==='permit'?T('Permits','Разрешения'):T('Appeals','Обращения'),cat:k=>L(PT_TYPES[k]||CATS[k]),dist:dname};
+  const facetH=(k,title)=>`<div class="facet"><div class="h">${title}</div>${Object.keys(A[k]).sort((a,b)=>A[k][b]-A[k][a]).map(v=>`<label><input type="checkbox" data-fc="${k}" data-fv="${v}" ${fac[k][v]?'checked':''}> ${lab[k](v)}<span>${A[k][v]}</span></label>`).join('')}</div>`;
+  $('#v-search').innerHTML=`<div class="card" style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap"><input class="input" id="sq" style="flex:1;min-width:200px" value="${esc(q)}" placeholder="${T('Search permits & appeals — try «light», «market», «PA-261»','Поиск по разрешениям и обращениям — «фонарь», «рынок», «PA-261»')}"><div class="chips">${[T('streetlight','фонарь'),T('market','рынок'),T('noise','шум'),'PA-261'].map(s=>`<button class="chip" data-qs="${s}">${s}</button>`).join('')}</div></div>
+  <div class="srch"><div class="card">${facetH('kind',T('Type','Тип'))}${facetH('cat',T('Category','Категория'))}${facetH('dist',T('District','Район'))}<button class="btn sm" id="fclr">${T('Clear filters','Сбросить')}</button></div>
+  <div class="card"><div class="muted mono" style="font-size:12px;margin-bottom:6px">${hits.length} ${T('hits','результатов')} · ${ms} ms · OpenSearch BM25</div>${hits.slice(0,40).map(h=>`<div class="hit" data-hit="${h.id}" data-k="${h.kind}"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="pill ${h.kind==='permit'?'gold':''}" style="font-size:11px">${h.kind==='permit'?T('Permit','Разрешение'):T('Appeal','Обращение')}</span><span class="mono muted" style="font-size:12px">${hl(h.id)}</span><span class="muted" style="font-size:12px;margin-left:auto">${dname(h.dist)} · ${fmtT(h.t)}</span></div><b>${hl(h.title)}</b><p>${hl(h.body)}</p></div>`).join('')||`<div class="empty">${T('Nothing found','Ничего не найдено')}</div>`}</div></div>`;
+  const sq=$('#sq');sq.oninput=()=>{q=sq.value;const p=sq.selectionStart;rSearch();const n=$('#sq');n.focus();n.setSelectionRange(p,p)};
+  $$('[data-qs]').forEach(b=>b.onclick=()=>{q=b.dataset.qs;rSearch()});
+  $$('[data-fc]').forEach(c=>c.onchange=()=>{fac[c.dataset.fc][c.dataset.fv]=c.checked;rSearch()});
+  $('#fclr').onclick=()=>{fac={kind:{},cat:{},dist:{}};rSearch()};
+  $$('[data-hit]').forEach(h=>h.onclick=()=>{if(h.dataset.k==='permit')cardModal(h.dataset.hit);else{const a=S.appeals.find(x=>x.id===h.dataset.hit);modal(a.id,`<b>${esc(L(a))}</b><p class="muted">${L(CATS[a.cat])} · ${dname(a.dist)} · ${fmtT(a.t)}</p>${a.photo?`<img src="${a.photo}" style="max-width:100%;border-radius:10px">`:''}<div class="cmap">${cityMap([{x:a.x,y:a.y,big:1}])}</div><div class="acts">${a.res?`<span class="pill ok">${T('Resolved','Решено')}</span>`:`<button class="btn pri" id="resA">${T('Mark resolved','Отметить решённым')}</button>`}</div>`);if($('#resA'))$('#resA').onclick=()=>{a.res=true;a.days=+((Date.now()-a.t)/DAY).toFixed(1);save();closeModal();toast(T('Appeal resolved — citizen notified','Обращение закрыто — житель уведомлён'));rSearch()}}});
+}
+
+// ---------- transparency ----------
+let ocat='';
+function rOpen(){
+  const ap=S.appeals.filter(a=>!ocat||a.cat===ocat);
+  const by={};DISTR.forEach(d=>by[d.k]=ap.filter(a=>a.dist===d.k).length);const mx=Math.max(1,...Object.values(by));const heat=Object.fromEntries(DISTR.map(d=>[d.k,by[d.k]/mx]));
+  const res=ap.filter(a=>a.res),days=res.map(a=>a.days).sort((a,b)=>a-b),med=days.length?days[Math.floor(days.length/2)]:0;
+  const perm=S.permits.filter(p=>p.done).length+214;
+  $('#v-open').innerHTML=`<div class="kpis">${[[T('Appeals (40 days)','Обращений (40 дней)'),ap.length,''],[T('Resolved','Решено'),Math.round(res.length/Math.max(1,ap.length)*100)+'%',res.length+' / '+ap.length],[T('Median days to fix','Медиана, дней'),med.toFixed(1),T('target ≤ 5','цель ≤ 5')],[T('Permits issued YTD','Разрешений с начала года'),perm,T('avg 6.4 days','в среднем 6,4 дня')]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('')}</div>
+  <div class="chips" style="margin-bottom:12px"><button class="chip ${!ocat?'on':''}" data-oc="">${T('All categories','Все категории')}</button>${Object.keys(CATS).map(k=>`<button class="chip ${ocat===k?'on':''}" data-oc="${k}">${L(CATS[k])}</button>`).join('')}</div>
+  <div class="grid2"><div class="card"><h3>${T('Heatmap of appeals by district','Тепловая карта обращений по районам')}</h3><div class="cmap" style="cursor:default">${cityMap(ap.map(a=>({x:a.x,y:a.y,big:a.mine})),heat)}</div><div class="muted" style="font-size:12px;margin-top:6px">${T('Darker = more appeals. Gold pins = yours.','Темнее — больше обращений. Золотые метки — ваши.')}</div></div>
+  <div class="card"><h3>${T('By district','По районам')}</h3><div class="tw"><table><tr><th>${T('District','Район')}</th><th>${T('Appeals','Обращений')}</th><th>${T('Resolved','Решено')}</th><th>${T('Median d','Медиана, дн')}</th></tr>${DISTR.map(d=>{const a=ap.filter(x=>x.dist===d.k),r=a.filter(x=>x.res),dd=r.map(x=>x.days).sort((x,y)=>x-y);const pc=a.length?Math.round(r.length/a.length*100):0;return`<tr><td><b>${L(d)}</b></td><td class="mono">${a.length}</td><td><div style="display:flex;gap:6px;align-items:center"><div style="width:60px;height:6px;border-radius:3px;background:var(--bg2);overflow:hidden"><i style="display:block;height:100%;width:${pc}%;background:var(--mal3)"></i></div><span class="mono" style="font-size:12px">${pc}%</span></div></td><td class="mono">${dd.length?dd[Math.floor(dd.length/2)].toFixed(1):'—'}</td></tr>`}).join('')}</table></div>
+  <p class="muted" style="font-size:12px">${T('Open data: updated every 15 minutes · CSV / JSON via the city open-data API.','Открытые данные: обновление раз в 15 минут · CSV / JSON через API открытых данных.')}</p><button class="btn sm" id="csv">⤓ CSV</button></div></div>`;
+  $$('[data-oc]').forEach(b=>b.onclick=()=>{ocat=b.dataset.oc;rOpen()});
+  $('#csv').onclick=()=>{const rows=[['id','category','district','resolved','days']].concat(ap.map(a=>[a.id,a.cat,a.dist,a.res,a.days==null?'':a.days]));const blob=new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'});const u=URL.createObjectURL(blob);const l=document.createElement('a');l.href=u;l.download='port-aurel-appeals.csv';l.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+}
+PT.onLang(()=>{closeModal();render()});
+go(view);
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

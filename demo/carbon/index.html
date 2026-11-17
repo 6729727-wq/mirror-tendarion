@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CarbonLedger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],#login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:15px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;min-height:42px}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;flex-direction:column;gap:6px}
+.who b{font-size:13px;overflow-wrap:anywhere}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.card+.card{margin-top:14px}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px;overflow-wrap:anywhere}
+.kpi .d{font-size:12px;color:var(--muted)}
+.kpi .bar{height:4px;border-radius:4px;background:var(--line);margin-top:8px;overflow:hidden}.kpi .bar i{display:block;height:100%}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2>.card+.card,.kpis>.card+.card,.intro>.card+.card{margin-top:0}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.mt{margin-top:14px}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .input{min-height:42px}
+select.input{appearance:auto}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{min-height:38px}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px;min-height:32px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.chart svg,.map svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.donut{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.donut svg{width:150px;height:150px;flex:none}
+.donut .legend{flex-direction:column;gap:6px;flex:1;min-width:150px}
+.feed{display:flex;flex-direction:column}
+.feed div{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px;min-width:0}
+.feed div:last-child{border-bottom:none}
+.feed .tx{flex:1;min-width:0;overflow-wrap:anywhere}
+.feed .q{font-family:var(--mono);font-size:12px;flex:none}
+.feed .new{animation:flash 1.6s}
+@keyframes flash{from{background:color-mix(in srgb,var(--gold) 25%,transparent)}}
+.dotlive{width:8px;height:8px;border-radius:50%;background:var(--mal3);display:inline-block;box-shadow:0 0 0 0 var(--mal3);animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.steps{display:flex;margin:6px 0 14px}
+.step{flex:1;text-align:center;position:relative;font-size:11.5px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:11px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step i{width:24px;height:24px;border-radius:50%;margin:0 auto 4px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-style:normal;font-weight:800;font-size:11px}
+.step.ok i{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur i{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:13px;margin:0 0 12px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.ser{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere;word-break:break-all}
+.res{border:1px solid var(--line2);border-radius:12px;padding:12px;background:var(--bg2);font-size:13px;margin-top:12px}
+.res b.big{font-size:24px;display:block;letter-spacing:-.01em}
+.dist{display:flex;height:12px;border-radius:8px;overflow:hidden;margin:10px 0 6px;background:var(--line)}
+.cert{border:2px solid color-mix(in srgb,var(--gold) 60%,transparent);border-radius:16px;padding:20px;background:radial-gradient(circle at 100% 0,color-mix(in srgb,var(--gold) 14%,transparent),transparent 55%),var(--panel);position:relative;overflow:hidden}
+.cert .seal{position:absolute;right:16px;top:16px;width:64px;height:64px;border-radius:50%;border:2px dashed var(--gold);display:grid;place-items:center;color:var(--gold2);font-weight:800;font-size:11px;text-align:center;line-height:1.1;transform:rotate(-12deg)}
+.cert h4{margin:0 0 4px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);padding-right:76px}
+.cert .q{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:8px 0}
+.empty{padding:26px;text-align:center;color:var(--muted);font-size:13.5px}
+.search{display:flex;gap:8px;flex-wrap:wrap}.search .input{flex:1;min-width:0;min-height:44px}
+.ex{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:12px}
+.ex button{border:1px dashed var(--line2);background:none;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:var(--mono);font-size:11.5px;color:var(--muted);max-width:100%;overflow-wrap:anywhere}
+.chain{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.chain i{width:14px;height:14px;border-radius:4px;background:var(--mal)}
+.chain i.bad{background:var(--red)}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:340px;animation:fade .2s;overflow-wrap:anywhere}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.sw{display:flex;align-items:center;gap:10px;cursor:pointer;justify-content:space-between;background:none;border:0;padding:0;text-align:left;width:100%;font-size:12.5px;min-height:28px}
+.sw i{width:36px;height:20px;border-radius:20px;background:var(--line2);position:relative;flex:none;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.sw.on i{background:var(--mal)} .sw.on i:after{left:18px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters .input{width:auto;min-width:0;flex:1 1 150px;min-height:40px}
+/* login */
+#login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:28px 16px;background:radial-gradient(900px 500px at 15% 0,color-mix(in srgb,var(--mal) 14%,transparent),transparent 60%),radial-gradient(700px 400px at 100% 100%,color-mix(in srgb,var(--gold) 10%,transparent),transparent 60%)}
+.lbox{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);max-width:960px;width:100%;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}
+.lhero{padding:34px;background:linear-gradient(160deg,color-mix(in srgb,var(--mal) 16%,var(--panel)),var(--panel2));border-right:1px solid var(--line);display:flex;flex-direction:column;gap:16px;min-width:0}
+.lhero h2{margin:0;font-size:28px;letter-spacing:-.02em;line-height:1.15}
+.lhero p{margin:0;color:var(--muted);font-size:14px}
+.lstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.lstats div{border:1px solid var(--line2);border-radius:12px;padding:10px;background:color-mix(in srgb,var(--panel) 70%,transparent)}
+.lstats b{display:block;font-size:18px;overflow-wrap:anywhere} .lstats span{font-size:11.5px;color:var(--muted)}
+.lform{padding:34px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.lform h3{margin:0;font-size:20px}
+.roles{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.role{border:1px solid var(--line2);border-radius:14px;padding:12px;cursor:pointer;background:var(--bg2);text-align:left;min-width:0}
+.role.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.role b{display:block;font-size:14px} .role span{font-size:12px;color:var(--muted)}
+.lnote{font-size:12px;color:var(--dim)}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.intro{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+.app{grid-template-columns:minmax(0,1fr)}
+.side{position:fixed;left:0;top:45px;z-index:1500;width:270px;max-width:86vw;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+.side.open{transform:none}
+.menu-btn{display:inline-flex}
+main{padding:14px 14px 50px}
+.head h1{font-size:20px}
+.lbox{grid-template-columns:minmax(0,1fr)}
+.lhero{border-right:0;border-bottom:1px solid var(--line);padding:22px}
+.lform{padding:22px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid{grid-template-columns:minmax(0,1fr)}.kpi .v{font-size:20px}.kpis{gap:10px}.lhero h2{font-size:22px}.lstats b{font-size:15px}.step span{font-size:10px}.card{padding:14px}.cert .q{font-size:24px}}
+@media (max-width:380px){.roles{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+</style>
+</head>
+<body data-demo-en="CarbonLedger — National carbon registry (Article 6)" data-demo-ru="CarbonLedger — Национальный реестр углеродных единиц (статья 6)">
+<section id="login">
+<div class="lbox">
+<div class="lhero">
+<div class="brand" style="padding:0"><b>CL</b><div>CarbonLedger<small data-en="Ministry of Climate Change · Republic of Veloria" data-ru="Министерство климата · Республика Велория"></small></div></div>
+<h2 data-en="The national registry for every tonne of mitigation" data-ru="Национальный реестр для каждой тонны сокращений"></h2>
+<p data-en="Register projects under approved methodologies, issue serialised credits, transfer them domestically or as ITMOs with corresponding adjustments, retire them with certificates — all on a tamper-evident ledger with a public explorer." data-ru="Регистрация проектов по утверждённым методологиям, выпуск единиц с серийными номерами, переводы внутри страны и как ITMO с соответствующими корректировками, погашение с сертификатами — на защищённом от подделки журнале с публичным обозревателем."></p>
+<div class="lstats" id="lstats"></div>
+<div class="lnote" data-en="Fictional country and agency. Demo data only." data-ru="Страна и ведомство вымышлены. Только демо-данные."></div>
+</div>
+<div class="lform">
+<h3 data-en="Sign in to the registry" data-ru="Вход в реестр"></h3>
+<div class="roles">
+<button class="role on" data-role="officer"><b data-en="Registry officer" data-ru="Сотрудник реестра"></b><span data-en="Projects, issuance, transfers, retirements" data-ru="Проекты, выпуск, переводы, погашения"></span></button>
+<button class="role" data-role="public"><b data-en="Public visitor" data-ru="Посетитель"></b><span data-en="Totals, public explorer, ledger" data-ru="Итоги, обозреватель, журнал"></span></button>
+</div>
+<div class="f"><label data-en="Username" data-ru="Имя пользователя"></label><input class="input" id="lUser" autocomplete="username"></div>
+<div class="f"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lPass" type="password" value="demo-2026" autocomplete="current-password"></div>
+<button class="btn pri" id="loginBtn" style="justify-content:center;min-height:46px" data-en="Sign in" data-ru="Войти"></button>
+<div class="lnote" data-en="Demo credentials are prefilled. Two-factor step is skipped in the prototype." data-ru="Демо-данные для входа уже заполнены. Второй фактор в прототипе пропущен."></div>
+</div>
+</div>
+</section>
+<div class="app" id="app" hidden>
+<aside class="side" id="side">
+<div class="brand"><b>CL</b><div>CarbonLedger<small data-en="National registry · Veloria" data-ru="Национальный реестр · Велория"></small></div></div>
+<div id="navBox"></div>
+<div class="grow"></div>
+<div class="who">
+<span class="muted" data-en="Signed in as" data-ru="Вы вошли как"></span>
+<b id="whoName"></b>
+<span class="pill gold" id="whoRole" style="align-self:flex-start"></span>
+<button class="sw" id="liveSw"><span data-en="Live market feed" data-ru="Живая лента рынка"></span><i></i></button>
+</div>
+<button class="btn sm" id="logout" style="margin-top:8px;justify-content:center" data-en="Log out" data-ru="Выйти"></button>
+<button class="btn sm" id="reset" style="margin-top:6px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+</aside>
+<main>
+<div class="head">
+<button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+<div style="min-width:0"><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+<div class="sp"></div>
+<span class="pill ok"><span class="dotlive"></span><span data-en="Ledger online" data-ru="Журнал в сети"></span></span>
+</div>
+<section class="view" id="v-dash"></section>
+<section class="view" id="v-projects"></section>
+<section class="view" id="v-meth"></section>
+<section class="view" id="v-issue"></section>
+<section class="view" id="v-accounts"></section>
+<section class="view" id="v-retire"></section>
+<section class="view" id="v-ledger"></section>
+<section class="view" id="v-explorer"></section>
+</main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt_carbon_state';
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const n0=n=>Math.round(n).toLocaleString(loc());
+const tco=n=>n0(n)+' tCO₂e';
+const short=n=>{const a=Math.abs(n);if(a>=1e6)return (n/1e6).toFixed(2)+T('M',' млн');if(a>=1e3)return (n/1e3).toFixed(a>=1e5?0:1)+T('k',' тыс.');return n0(n)};
+const fmtD=d=>new Date(d).toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'});
+const fmtDT=d=>new Date(d).toLocaleString(loc(),{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const pad=(n,l=8)=>String(n).padStart(l,'0');
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function hh(s){let a=0x811c9dc5,b=0x1b873593;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);a=Math.imul(a^c,16777619);b=Math.imul(b^c,2246822507)^(b>>>13)}return (a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0')}
+
+/* ---------- reference data ---------- */
+const REG={nm:['Northmark','Нортмарк',185,78],kh:['Kestrel Highlands','Кестрельское нагорье',292,92],sv:['Serra Valley','Долина Серра',150,148],ac:['Aldencoast','Алденкост',70,170],ld:['Lowmere Delta','Дельта Лоумир',132,232],br:['Brannock','Браннок',236,170],ew:['Eastwold','Иствольд',330,168],pc:['Port Calder','Порт-Колдер',300,238]};
+const SEC={energy:['Renewable energy','Возобновляемая энергетика','--mal'],forestry:['Forestry & land use','Леса и землепользование','--gold'],cook:['Clean cookstoves','Чистые печи','--amber'],methane:['Methane capture','Улавливание метана','--violet'],eff:['Energy efficiency','Энергоэффективность','--blue'],transport:['Low-carbon transport','Низкоуглеродный транспорт','--red']};
+const PST=[['Draft','Черновик',''],['Under validation','На валидации','warn'],['Registered','Зарегистрирован','ok'],['Suspended','Приостановлен','bad']];
+const ATYPE={gov:['Government','Государство'],dev:['Project developer','Разработчик проекта'],buy:['Corporate buyer','Корпоративный покупатель'],intl:['Foreign registry','Зарубежный реестр'],sop:['Adaptation share','Доля на адаптацию'],omge:['OMGE cancellation','Аннулирование OMGE']};
+const PUR={ndc:['NDC achievement','Выполнение ОНУВ'],corsia:['CORSIA compliance','Соответствие CORSIA'],vol:['Voluntary claim','Добровольное заявление'],omp:['Other mitigation purpose','Иные цели смягчения']};
+const TXT={issue:['Issuance','Выпуск'],sop:['Share of proceeds','Доля поступлений'],cancel:['OMGE cancellation','Аннулирование OMGE'],transfer:['Transfer','Перевод'],itmo:['ITMO transfer','Перевод ITMO'],retire:['Retirement','Погашение']};
+const VERIF=['Calloway Verification Ltd','TerraAudit Partners','Meridian DOE Services'];
+const FORM={mul:p=>p[0]*p[1],ar:p=>p[0]*p[1]*(1-p[2]/100),cook:p=>p[0]*p[1]*p[2]*p[3],gwp:p=>p[0]*28,diff:p=>p[0]-p[1]};
+function seedMeth(){return[
+{id:'VL-AM-001',v:'3.2',sec:'energy',st:'ok',n:['Grid-connected renewable electricity','Сетевая генерация из ВИЭ'],f:'mul',p:[['Net electricity exported (MWh/yr)','Отпуск электроэнергии в сеть (МВт·ч/год)',185000],['Combined-margin grid factor (tCO₂/MWh)','Коэффициент выбросов сети (tCO₂/МВт·ч)',0.86]]},
+{id:'VL-AM-002',v:'2.0',sec:'forestry',st:'ok',n:['Afforestation, reforestation & mangrove restoration','Лесоразведение, лесовосстановление и мангры'],f:'ar',p:[['Area planted (ha)','Площадь посадок (га)',9400],['Net removals (tCO₂/ha/yr)','Чистое поглощение (tCO₂/га/год)',11.2],['Non-permanence buffer (%)','Буфер непостоянства (%)',15]]},
+{id:'VL-AM-003',v:'4.1',sec:'cook',st:'ok',n:['Efficient cookstoves in households','Эффективные бытовые печи'],f:'cook',p:[['Stoves in use','Печей в использовании',42000],['Wood saved per stove (t/yr)','Экономия дров на печь (т/год)',0.96],['Emission factor (tCO₂/t wood)','Коэффициент выбросов (tCO₂/т дров)',1.747],['Fraction non-renewable biomass','Доля невозобновляемой биомассы',0.72]]},
+{id:'VL-AM-004',v:'1.5',sec:'methane',st:'ok',n:['Landfill & biogas methane destruction','Уничтожение метана свалок и биогаза'],f:'gwp',p:[['CH₄ destroyed (t/yr)','Уничтожено CH₄ (т/год)',7400]]},
+{id:'VL-AM-005',v:'1.0',sec:'eff',st:'ok',n:['Energy efficiency in public buildings','Энергоэффективность общественных зданий'],f:'diff',p:[['Baseline emissions (tCO₂e/yr)','Базовые выбросы (tCO₂e/год)',41000],['Project emissions (tCO₂e/yr)','Проектные выбросы (tCO₂e/год)',19500]]},
+{id:'VL-AM-006',v:'0.9',sec:'transport',st:'rev',n:['Battery-electric urban bus fleets','Городские электробусы'],f:'diff',p:[['Baseline diesel emissions (tCO₂e/yr)','Базовые выбросы дизеля (tCO₂e/год)',26000],['Project grid emissions (tCO₂e/yr)','Выбросы от сети (tCO₂e/год)',8100]]}]}
+const ACC=[['A-NHA-00','National Holding Account','Национальный счёт хранения','gov'],['A-DEV-01','Solenne Power Co.','Solenne Power Co.','dev'],['A-DEV-02','Greenrow Forestry Trust','Greenrow Forestry Trust','dev'],['A-DEV-03','HearthWorks Cooperative','Кооператив HearthWorks','dev'],['A-DEV-04','Calder Biogas Ltd','Calder Biogas Ltd','dev'],['A-DEV-05','Urbis Efficiency Group','Urbis Efficiency Group','dev'],['A-BUY-01','Aerovel Airways','Авиакомпания Aerovel','buy'],['A-BUY-02','Kestrel Cement Works','Кестрельский цементный завод','buy'],['A-BUY-03','Veloria State Power Utility','Госэнергокомпания Велории','buy'],['A-INT-MR','Marrovia National Registry','Национальный реестр Марровии','intl'],['A-INT-OS','Ostria Climate Registry','Климатический реестр Острии','intl'],['A-SOP-00','Adaptation Fund (share of proceeds)','Фонд адаптации (доля поступлений)','sop'],['A-OMGE-0','OMGE cancellation account','Счёт аннулирования OMGE','omge']].map(a=>({id:a[0],n:[a[1],a[2]],t:a[3]}));
+
+/* ---------- core ledger logic ---------- */
+let S;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const P=id=>S.projects.find(p=>p.id===id);
+const A=id=>S.accounts.find(a=>a.id===id);
+const M=id=>S.meths.find(m=>m.id===id);
+const PN=p=>T(p.n[0],p.n[1]);
+const AN=a=>T(a.n[0],a.n[1]);
+const size=b=>b.e-b.s+1;
+const serial=(b,s,e)=>`VL-${b.v}-${b.p}-${pad(s==null?b.s:s)}${(e==null?b.e:e)!==(s==null?b.s:s)?'–'+pad(e==null?b.e:e):''}`;
+const bal=acc=>S.blocks.filter(b=>b.a===acc&&b.st==='active').reduce((x,b)=>x+size(b),0);
+function addTx(type,p,q,from,to,ser,t,extra){
+const prev=S.tx.length?S.tx[S.tx.length-1].h:'0'.repeat(16);
+const id='TX-'+pad(S.tx.length+1,6);
+const tx=Object.assign({id,t:t||new Date().toISOString(),type,p,q,from,to,ser},extra||{});
+tx.h=hh(prev+'|'+[tx.id,tx.t,type,p,q,from,to,ser].join('|'));S.tx.push(tx);return tx;
+}
+function doIssue(pid,v,q,t,verif){
+const p=P(pid);const sop=Math.round(q*0.02),om=Math.round(q*0.02),dq=q-sop-om;
+let c=S.ctr[pid]||1;const mk=(n,a,st)=>{const b={id:'B'+pad(S.nb++,5),p:pid,v,s:c,e:c+n-1,a,st,ca:false};c+=n;S.blocks.push(b);return b};
+const b1=mk(dq,p.dev,'active'),b2=mk(sop,'A-SOP-00','active'),b3=mk(om,'A-OMGE-0','cancelled');S.ctr[pid]=c;
+addTx('issue',pid,dq,'—',p.dev,serial(b1),t,{verif});addTx('sop',pid,sop,'—','A-SOP-00',serial(b2),t);addTx('cancel',pid,om,'—','A-OMGE-0',serial(b3),t);
+S.issued.push({p:pid,v,q,t,verif});return [b1,b2,b3];
+}
+function split(b,q){if(q>=size(b))return b;const nb=Object.assign({},b,{id:'B'+pad(S.nb++,5),e:b.s+q-1});b.s=b.s+q;S.blocks.push(nb);return nb}
+function doTransfer(bid,q,to,t){
+const b=S.blocks.find(x=>x.id===bid);const from=b.a;const nb=split(b,q);nb.a=to;const intl=A(to).t==='intl';if(intl)nb.ca=true;
+return addTx(intl?'itmo':'transfer',nb.p,q,from,to,serial(nb),t,intl?{ca:true}:null);
+}
+function doRetire(bid,q,pur,ben,t){
+const b=S.blocks.find(x=>x.id===bid);const nb=split(b,q);nb.st='retired';nb.pur=pur;nb.ben=ben;nb.rt=t||new Date().toISOString();
+const tx=addTx('retire',nb.p,q,nb.a,'—',serial(nb),t,{pur});
+const rc={id:'RC-'+pad(S.rets.length+1041,6),t:nb.rt,acc:nb.a,p:nb.p,v:nb.v,s:nb.s,e:nb.e,q,pur,ben,tx:tx.id};S.rets.push(rc);return rc;
+}
+const findB=(p,v,a)=>S.blocks.find(b=>b.p===p&&b.v===v&&b.a===a&&b.st==='active');
+
+function seed(){
+const pr=(id,en,ru,sec,meth,reg,dev,st,est,loa,dx,dy)=>({id,n:[en,ru],sec,meth,reg,dev,st,est,loa,dx,dy,since:2021});
+S={logged:false,role:'officer',view:'dash',live:true,nb:1,ctr:{},blocks:[],tx:[],rets:[],issued:[],sel:'P001',selAcc:'A-DEV-01',cert:null,lastIssue:null,flt:{sec:'',st:''},lflt:'',q:'',meths:seedMeth(),accounts:ACC.map(a=>Object.assign({},a)),
+projects:[
+pr('P001','Serra Valley Solar Park 120 MW','Солнечный парк «Долина Серра» 120 МВт','energy','VL-AM-001','sv','A-DEV-01',2,168000,true,-12,-6),
+pr('P002','Kestrel Ridge Wind Farm 84 MW','Ветропарк «Кестрел-Ридж» 84 МВт','energy','VL-AM-001','kh','A-DEV-01',2,142000,true,8,4),
+pr('P003','Lowmere Mangrove Restoration','Восстановление мангров Лоумира','forestry','VL-AM-002','ld','A-DEV-02',2,96000,true,0,0),
+pr('P004','Northmark Highland Reforestation','Лесовосстановление нагорий Нортмарка','forestry','VL-AM-002','nm','A-DEV-02',2,74000,false,0,0),
+pr('P005','Clean Hearth Cookstove Programme','Программа чистых печей «Чистый очаг»','cook','VL-AM-003','br','A-DEV-03',2,58000,false,0,0),
+pr('P006','Port Calder Landfill Gas Capture','Улавливание свалочного газа Порт-Колдера','methane','VL-AM-004','pc','A-DEV-04',2,210000,true,0,0),
+pr('P007','Eastwold Dairy Biogas Cluster','Кластер биогаза ферм Иствольда','methane','VL-AM-004','ew','A-DEV-04',1,31000,false,0,0),
+pr('P008','Aldencoast Public Buildings Retrofit','Модернизация зданий Алденкоста','eff','VL-AM-005','ac','A-DEV-05',1,22000,false,0,0),
+pr('P009','Brannock Small Hydro Cascade','Каскад малых ГЭС Браннока','energy','VL-AM-001','br','A-DEV-01',0,45000,false,14,-10),
+pr('P010','Serra Electric Bus Fleet','Электробусы долины Серра','transport','VL-AM-006','sv','A-DEV-05',0,18000,false,14,10),
+pr('P011','Kestrel Agroforestry Smallholders','Агролесоводство фермеров Кестрела','forestry','VL-AM-002','kh','A-DEV-02',3,27000,false,-14,-8)],
+reqs:[{id:'IR-2026-031',p:'P001',v:2025,q:161240,verif:VERIF[1],t:'2026-10-02'},{id:'IR-2026-034',p:'P006',v:2025,q:211800,verif:VERIF[0],t:'2026-10-14'},{id:'IR-2026-036',p:'P003',v:2025,q:90150,verif:VERIF[2],t:'2026-10-29'},{id:'IR-2026-039',p:'P005',v:2025,q:54020,verif:VERIF[1],t:'2026-11-06'}],nreq:40};
+const iss=(y,list)=>list.forEach((x,i)=>doIssue(x[0],y-1,x[1],`${y}-03-${pad(10+i,2)}T09:30:00Z`,VERIF[i%3]));
+const tr=(p,v,a,q,to,t)=>doTransfer(findB(p,v,a).id,q,to,t+'T11:00:00Z');
+const rt=(p,v,a,q,pur,ben,t)=>doRetire(findB(p,v,a).id,q,pur,ben,t+'T14:00:00Z');
+iss(2022,[['P001',152000],['P006',188000]]);
+tr('P006',2021,'A-DEV-04',50000,'A-INT-MR','2022-08-18');
+iss(2023,[['P001',158400],['P002',121000],['P005',41000],['P006',196500]]);
+tr('P001',2022,'A-DEV-01',40000,'A-BUY-01','2023-06-07');
+rt('P001',2022,'A-BUY-01',22000,'corsia','Aerovel Airways — 2023 CORSIA offsetting','2023-09-21');
+rt('P006',2021,'A-INT-MR',30000,'ndc','Republic of Marrovia — NDC 2021–2025','2023-11-30');
+iss(2024,[['P001',163000],['P002',134800],['P003',71200],['P005',52300],['P006',203900]]);
+tr('P005',2023,'A-DEV-03',18000,'A-BUY-02','2024-05-14');
+tr('P002',2023,'A-DEV-01',60000,'A-INT-OS','2024-07-02');
+rt('P005',2023,'A-BUY-02',9000,'vol','Kestrel Cement Works — 2024 scope 1','2024-10-09');
+iss(2025,[['P001',166200],['P002',139500],['P003',88400],['P004',61000],['P005',55800],['P006',207300]]);
+tr('P003',2024,'A-DEV-02',25000,'A-BUY-02','2025-06-12');
+tr('P006',2024,'A-DEV-04',80000,'A-BUY-03','2025-09-03');
+rt('P006',2024,'A-BUY-03',45000,'omp','Veloria State Power Utility — 2025 grid pledge','2025-12-15');
+rt('P002',2023,'A-INT-OS',40000,'ndc','Ostria — first NDC period','2026-04-22');
+tr('P004',2024,'A-DEV-02',12000,'A-BUY-01','2026-07-08');
+rt('P004',2024,'A-BUY-01',6000,'vol','Aerovel Airways — passenger offset scheme','2026-09-17');
+return S;
+}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.blocks)return s}catch(e){}return null}
+S=load()||seed();save();
+const tot=()=>{const o={iss:0,act:0,ret:0,can:0};S.blocks.forEach(b=>{const n=size(b);o.iss+=n;if(b.st==='active')o.act+=n;else if(b.st==='retired')o.ret+=n;else o.can+=n});return o};
+const ptot=pid=>{const o={iss:0,ret:0,act:0};S.blocks.forEach(b=>{if(b.p!==pid)return;const n=size(b);o.iss+=n;if(b.st==='retired')o.ret+=n;if(b.st==='active')o.act+=n});return o};
+
+/* ---------- navigation ---------- */
+const VIEWS=[['dash','◎','Overview','Обзор','R',1],['projects','▦','Project registry','Реестр проектов','R',0],['meth','∑','Methodologies','Методологии','R',0],['issue','✦','Issuance','Выпуск единиц','O',0],['accounts','⇄','Accounts & transfers','Счета и переводы','O',0],['retire','✓','Retirements','Погашения','O',0],['ledger','⛓','Transaction ledger','Журнал транзакций','P',1],['explorer','⌕','Public explorer','Публичный обозреватель','P',1]];
+const GRP={R:['Registry','Реестр'],O:['Operations','Операции'],P:['Transparency','Прозрачность']};
+const allowed=v=>S.role==='officer'||v[5];
+function nav(){
+let h='';['R','O','P'].forEach(g=>{const vs=VIEWS.filter(v=>v[4]===g&&allowed(v));if(!vs.length)return;
+h+=`<div class="sec">${T(GRP[g][0],GRP[g][1])}</div>`+vs.map(v=>{let x='';if(v[0]==='issue'&&S.reqs.length)x=`<span class="cnt">${S.reqs.length}</span>`;if(v[0]==='projects'){const n=S.projects.filter(p=>p.st===1).length;if(n)x=`<span class="cnt">${n}</span>`}
+return `<button class="nav ${S.view===v[0]?'on':''}" data-view="${v[0]}"><span class="ic">${v[1]}</span><span>${T(v[2],v[3])}</span>${x}</button>`}).join('')});
+$('#navBox').innerHTML=h;$$('.nav',$('#navBox')).forEach(b=>b.onclick=()=>go(b.dataset.view));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0})}
+const RENDER={};
+function render(){
+$('#lstats').innerHTML=(()=>{const t=tot();return `<div><b>${short(t.iss)}</b><span>${T('units issued','единиц выпущено')}</span></div><div><b>${short(t.ret)}</b><span>${T('retired','погашено')}</span></div><div><b>${S.projects.filter(p=>p.st===2).length}</b><span>${T('registered projects','проектов в реестре')}</span></div>`})();
+$('#lUser').value=S.role==='officer'?'r.adeyemi@climate.gov.vl':'guest@explorer.vl';
+$$('.role').forEach(b=>b.classList.toggle('on',b.dataset.role===S.role));
+$('#login').hidden=S.logged;$('#app').hidden=!S.logged;
+if(!S.logged)return;
+let v=VIEWS.find(x=>x[0]===S.view);if(!v||!allowed(v)){S.view='dash';v=VIEWS[0]}
+nav();
+$('#title').textContent=T(v[2],v[3]);
+$('#crumb').textContent='CarbonLedger · '+T(GRP[v[4]][0],GRP[v[4]][1]);
+$('#whoName').textContent=S.role==='officer'?'R. Adeyemi':T('Public visitor','Посетитель');
+$('#whoRole').textContent=S.role==='officer'?T('Registry officer','Сотрудник реестра'):T('Read-only','Только просмотр');
+$('#liveSw').classList.toggle('on',S.live);
+$$('.view').forEach(s=>{const on=s.id==='v-'+S.view;s.classList.toggle('on',on);if(!on)s.innerHTML=''});
+RENDER[S.view]();
+}
+const opt=(val,txt,sel)=>`<option value="${esc(val)}"${sel?' selected':''}>${esc(txt)}</option>`;
+const stPill=st=>`<span class="pill ${PST[st][2]}">${T(PST[st][0],PST[st][1])}</span>`;
+const secDot=s=>`<i style="display:inline-block;width:9px;height:9px;border-radius:3px;background:var(${SEC[s][2]});margin-right:6px"></i>`;
+const accLbl=id=>{if(id==='—')return '—';const a=A(id);return a?esc(AN(a)):id};
+
+/* ---------- views: overview ---------- */
+function chartVint(){
+const ys=[...new Set(S.blocks.map(b=>b.v))].sort();const d=ys.map(y=>{const o={y,i:0,r:0};S.blocks.forEach(b=>{if(b.v!==y)return;o.i+=size(b);if(b.st==='retired')o.r+=size(b)});return o});
+const W=560,H=230,L=46,B=26,mx=Math.max(...d.map(x=>x.i),1)*1.1,bw=(W-L-10)/d.length;
+let g='';for(let k=0;k<=4;k++){const y=H-B-(H-B-12)*k/4;g+=`<line x1="${L}" x2="${W-6}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${L-6}" y="${y+4}" text-anchor="end" style="fill:var(--dim);font-size:10px">${short(mx*k/4)}</text>`}
+d.forEach((o,i)=>{const x=L+i*bw+bw*.18,w=bw*.3,hi=(H-B-12)*o.i/mx,hr=(H-B-12)*o.r/mx;
+g+=`<rect x="${x}" y="${H-B-hi}" width="${w}" height="${hi}" rx="4" style="fill:var(--mal)"><title>${o.y}: ${n0(o.i)}</title></rect><rect x="${x+w+4}" y="${H-B-hr}" width="${w}" height="${hr}" rx="4" style="fill:var(--gold)"><title>${o.y}: ${n0(o.r)}</title></rect><text x="${x+w+2}" y="${H-8}" text-anchor="middle" style="fill:var(--muted);font-size:11px">${o.y}</text>`});
+return `<svg viewBox="0 0 ${W} ${H}" role="img">${g}</svg>`;
+}
+function donut(){
+const t={};S.blocks.forEach(b=>{if(b.st!=='active')return;const s=P(b.p).sec;t[s]=(t[s]||0)+size(b)});
+const ks=Object.keys(t),sum=ks.reduce((a,k)=>a+t[k],0)||1;let a0=-Math.PI/2,arcs='';
+ks.forEach(k=>{const a1=a0+2*Math.PI*t[k]/sum,lg=a1-a0>Math.PI?1:0,r=60,c=75;
+arcs+=`<path d="M${c+r*Math.cos(a0)},${c+r*Math.sin(a0)} A${r},${r} 0 ${lg} 1 ${c+r*Math.cos(a1-0.001)},${c+r*Math.sin(a1-0.001)}" style="fill:none;stroke:var(${SEC[k][2]});stroke-width:22"/>`;a0=a1});
+return `<div class="donut"><svg viewBox="0 0 150 150">${arcs}<text x="75" y="72" text-anchor="middle" style="fill:var(--text);font-size:17px;font-weight:800">${short(sum)}</text><text x="75" y="90" text-anchor="middle" style="fill:var(--muted);font-size:10px">${T('active units','активных единиц')}</text></svg><div class="legend">${ks.map(k=>`<span><i style="background:var(${SEC[k][2]})"></i>${T(SEC[k][0],SEC[k][1])} · <b>${Math.round(t[k]/sum*100)}%</b></span>`).join('')}</div></div>`;
+}
+function map(){
+let g=`<path d="M58,118 L104,52 L188,30 L268,38 L338,66 L372,118 L352,166 L384,214 L330,268 L246,258 L184,284 L108,256 L56,212 L32,162 Z" style="fill:var(--panel2);stroke:var(--line2);stroke-width:2"/>
+<path d="M104,52 C140,110 120,170 184,284 M188,30 C210,100 220,140 352,166 M58,118 C120,130 170,130 220,140 M268,38 C270,110 300,180 330,268" style="fill:none;stroke:var(--line);stroke-dasharray:4 5"/>
+<path d="M200,34 C190,90 170,150 150,190 C135,215 128,240 120,262" style="fill:none;stroke:var(--blue);stroke-width:2;opacity:.45"/>`;
+Object.values(REG).forEach(r=>g+=`<text x="${r[2]}" y="${r[3]+22}" text-anchor="middle" style="fill:var(--dim);font-size:9.5px">${T(r[0],r[1])}</text>`);
+S.projects.forEach(p=>{const r=REG[p.reg],x=r[2]+p.dx,y=r[3]+p.dy,t=ptot(p.id).iss,rad=5+Math.sqrt(t/1e5)*3.2;
+g+=`<g class="mp" data-p="${p.id}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="${rad+5}" style="fill:var(${SEC[p.sec][2]});opacity:.18"/><circle cx="${x}" cy="${y}" r="${rad}" style="fill:var(${SEC[p.sec][2]});stroke:var(--panel);stroke-width:2;${p.st===2?'':'opacity:.5'}"/><title>${esc(p.id+' · '+PN(p))}</title></g>`});
+return `<svg viewBox="0 0 420 300" role="img">${g}</svg>`;
+}
+function txLine(x){const p=P(x.p);const ty=T(TXT[x.type][0],TXT[x.type][1]);
+const ic={issue:'✦',sop:'◔',cancel:'⊘',transfer:'⇄',itmo:'🌐',retire:'✓'}[x.type];
+return `<span class="pill ${x.type==='retire'?'gold':x.type==='issue'?'ok':''}" style="flex:none">${ic}</span><span class="tx"><b>${ty}</b> · ${esc(p?p.id:'')} · <span class="muted">${accLbl(x.from)} → ${accLbl(x.to)}</span></span><span class="q">${n0(x.q)}</span>`}
+RENDER.dash=function(){
+const el=$('#v-dash'),t=tot(),reg=S.projects.filter(p=>p.st===2).length,itmo=S.tx.filter(x=>x.type==='itmo').reduce((a,x)=>a+x.q,0);
+el.innerHTML=`<div class="intro"><div class="card"><h3>${T('How to try it','Как попробовать')}</h3><div class="how">
+<div><b>1</b><span>${T('Open <b>Project registry</b>: register a project under a methodology and move it through validation.','Откройте <b>Реестр проектов</b>: зарегистрируйте проект по методологии и проведите через валидацию.')}</span></div>
+<div><b>2</b><span>${T('In <b>Issuance</b> issue serialised credits, then transfer them (or send ITMOs abroad) and retire with a certificate.','В <b>Выпуске</b> выпустите единицы с серийными номерами, переведите их (или отправьте ITMO за рубеж) и погасите с сертификатом.')}</span></div>
+<div><b>3</b><span>${T('Check any serial number in the <b>Public explorer</b> and verify the hash chain in the <b>Ledger</b>.','Проверьте любой серийный номер в <b>Публичном обозревателе</b> и цепочку хешей в <b>Журнале</b>.')}</span></div></div></div>
+<div class="card"><dl class="facts"><dt>${T('Tender','Тендер')}</dt><dd>${T('National carbon registry (Article 6)','Национальный реестр углеродных единиц (статья 6)')}</dd><dt>${T('Year · budget','Год · бюджет')}</dt><dd>2025 · $40M</dd><dt>${T('Client','Заказчик')}</dt><dd>${T('Ministry of Climate Change, Republic of Veloria (fictional)','Министерство климата, Республика Велория (вымышл.)')}</dd><dt>${T('Funding','Финансирование')}</dt><dd>${T('Development programme grant','Грант программы развития')}</dd><dt>${T('Stack','Стек')}</dt><dd>registry · serialised units · hash-chained ledger</dd></dl></div></div>
+<div class="kpis">
+<div class="card kpi"><div class="l">${T('Units issued','Выпущено единиц')}</div><div class="v">${short(t.iss)}</div><div class="d">tCO₂e · ${S.issued.length} ${T('issuances','выпусков')}</div><div class="bar"><i style="width:100%;background:var(--mal)"></i></div></div>
+<div class="card kpi"><div class="l">${T('Active in accounts','На счетах')}</div><div class="v">${short(t.act)}</div><div class="d">${Math.round(t.act/t.iss*100)}% ${T('of issued','от выпуска')}</div><div class="bar"><i style="width:${t.act/t.iss*100}%;background:var(--blue)"></i></div></div>
+<div class="card kpi"><div class="l">${T('Retired','Погашено')}</div><div class="v">${short(t.ret)}</div><div class="d">${S.rets.length} ${T('certificates','сертификатов')}</div><div class="bar"><i style="width:${t.ret/t.iss*100}%;background:var(--gold)"></i></div></div>
+<div class="card kpi"><div class="l">${T('ITMOs transferred','Переведено ITMO')}</div><div class="v">${short(itmo)}</div><div class="d">${reg} ${T('registered projects','проектов в реестре')} · OMGE ${short(t.can)}</div><div class="bar"><i style="width:${itmo/t.iss*100}%;background:var(--violet)"></i></div></div></div>
+<div class="grid2"><div class="card chart"><h3>${T('Issuance vs retirement by vintage','Выпуск и погашение по годам')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('issued','выпуск')}</span><span><i style="background:var(--gold)"></i>${T('retired','погашено')}</span></span></h3>${chartVint()}</div>
+<div class="card"><h3>${T('Active units by sector','Активные единицы по секторам')}</h3>${donut()}</div></div>
+<div class="grid2 mt"><div class="card map"><h3>${T('Project map · Republic of Veloria','Карта проектов · Республика Велория')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('size = units issued · tap a dot','размер = выпуск · нажмите точку')}</span></h3>${map()}</div>
+<div class="card"><h3><span class="dotlive"></span>${T('Live ledger feed','Лента журнала')}<span class="sp"></span><span class="pill ${S.live?'ok':''}">${S.live?T('live','в эфире'):T('paused','пауза')}</span></h3><div class="feed" id="feed">${S.tx.slice(-8).reverse().map((x,i)=>`<div class="${i===0&&x.live?'new':''}">${txLine(x)}</div>`).join('')}</div></div></div>`;
+$$('.mp',el).forEach(c=>c.onclick=()=>{S.sel=c.dataset.p;if(S.role==='officer')go('projects');else{S.q=c.dataset.p;go('explorer')}});
+};
+
+/* ---------- views: projects ---------- */
+RENDER.projects=function(){
+const el=$('#v-projects'),f=S.flt;
+const list=S.projects.filter(p=>(!f.sec||p.sec===f.sec)&&(f.st===''||p.st===+f.st));
+const p=P(S.sel)||S.projects[0],pt=ptot(p.id),m=M(p.meth);
+const stp=[['Draft','Черновик'],['Validation','Валидация'],['Registered','Реестр'],['Issuing','Выпуск']];
+const cur=p.st===3?2:p.st+(p.st===2&&pt.iss?1:0);
+let acts='';
+if(p.st===0)acts=`<button class="btn pri sm" data-pa="1">${T('Submit for validation','Отправить на валидацию')}</button>`;
+if(p.st===1)acts=`<button class="btn pri sm" data-pa="2">${T('Approve & register','Одобрить и зарегистрировать')}</button><button class="btn sm danger" data-pa="0">${T('Return to developer','Вернуть разработчику')}</button>`;
+if(p.st===2)acts=`<button class="btn sm" data-pa="loa">${p.loa?T('Revoke Article 6 authorisation','Отозвать разрешение по ст. 6'):T('Issue letter of authorisation','Выдать разрешение (LoA)')}</button><button class="btn sm danger" data-pa="3">${T('Suspend','Приостановить')}</button>`;
+if(p.st===3)acts=`<button class="btn pri sm" data-pa="2">${T('Reinstate','Восстановить')}</button>`;
+const hist=S.issued.filter(x=>x.p===p.id);
+el.innerHTML=`<div class="card"><div class="filters">
+<select class="input" id="fSec">${opt('',T('All sectors','Все секторы'))}${Object.keys(SEC).map(k=>opt(k,T(SEC[k][0],SEC[k][1]),f.sec===k)).join('')}</select>
+<select class="input" id="fSt">${opt('',T('All statuses','Все статусы'))}${PST.map((s,i)=>opt(i,T(s[0],s[1]),f.st===String(i))).join('')}</select></div>
+<div class="tw"><table><thead><tr><th>ID</th><th>${T('Project','Проект')}</th><th>${T('Sector','Сектор')}</th><th>${T('Methodology','Методология')}</th><th>${T('Region','Регион')}</th><th>${T('Status','Статус')}</th><th>${T('Art. 6','Ст. 6')}</th><th class="num">${T('Issued','Выпущено')}</th></tr></thead><tbody>
+${list.map(x=>`<tr class="clk ${x.id===p.id?'sel':''}" data-p="${x.id}"><td class="mono">${x.id}</td><td><b>${esc(PN(x))}</b></td><td>${secDot(x.sec)}${T(SEC[x.sec][0],SEC[x.sec][1])}</td><td class="mono">${x.meth}</td><td>${T(REG[x.reg][0],REG[x.reg][1])}</td><td>${stPill(x.st)}</td><td>${x.loa?'<span class="pill ok">LoA</span>':'<span class="muted">—</span>'}</td><td class="num mono">${n0(ptot(x.id).iss)}</td></tr>`).join('')||`<tr><td colspan="8" class="empty">${T('No projects match the filter','Нет проектов по фильтру')}</td></tr>`}</tbody></table></div></div>
+<div class="grid2 mt"><div class="card"><h3><span class="mono">${p.id}</span> ${esc(PN(p))}</h3>
+<div class="steps">${stp.map((s,i)=>`<div class="step ${i<cur?'ok':i===cur?'cur':''}"><i>${i<cur?'✓':i+1}</i><span>${T(s[0],s[1])}</span></div>`).join('')}</div>
+<dl class="kv"><dt>${T('Status','Статус')}</dt><dd>${stPill(p.st)} ${p.loa?'<span class="pill ok">'+T('Authorised for Article 6.2','Разрешён по статье 6.2')+'</span>':''}</dd>
+<dt>${T('Methodology','Методология')}</dt><dd>${m?`<span class="mono">${m.id} v${m.v}</span> · ${esc(T(m.n[0],m.n[1]))}`:'—'}</dd>
+<dt>${T('Developer account','Счёт разработчика')}</dt><dd>${accLbl(p.dev)} <span class="mono muted">${p.dev}</span></dd>
+<dt>${T('Region','Регион')}</dt><dd>${T(REG[p.reg][0],REG[p.reg][1])}</dd>
+<dt>${T('Est. reductions','Оценка сокращений')}</dt><dd>${tco(p.est)} / ${T('yr','год')}</dd>
+<dt>${T('Units','Единицы')}</dt><dd>${T('issued','выпущено')} ${n0(pt.iss)} · ${T('active','активно')} ${n0(pt.act)} · ${T('retired','погашено')} ${n0(pt.ret)}</dd></dl>
+${S.role==='officer'?`<div class="row">${acts}</div>`:''}
+${hist.length?`<div class="tw mt"><table><thead><tr><th>${T('Vintage','Год')}</th><th class="num">${T('Verified','Верифицировано')}</th><th>${T('Verifier','Верификатор')}</th><th>${T('Issued on','Дата выпуска')}</th></tr></thead><tbody>${hist.map(h=>`<tr><td>${h.v}</td><td class="num mono">${n0(h.q)}</td><td>${esc(h.verif||'—')}</td><td>${fmtD(h.t)}</td></tr>`).join('')}</tbody></table></div>`:`<div class="empty">${T('No issuances yet','Выпусков пока нет')}</div>`}</div>
+<div class="card"><h3>${T('Register a new project','Регистрация нового проекта')}</h3><div class="fgrid">
+<div class="f full"><label>${T('Project name','Название проекта')}</label><input class="input" id="npName" placeholder="${T('e.g. Haldmoor Rooftop Solar 15 MW','напр. Крышные СЭС Халдмура 15 МВт')}"></div>
+<div class="f full"><label>${T('Methodology','Методология')}</label><select class="input" id="npMeth">${S.meths.filter(x=>x.st==='ok').map(x=>opt(x.id,x.id+' · '+T(x.n[0],x.n[1]))).join('')}</select></div>
+<div class="f"><label>${T('Region','Регион')}</label><select class="input" id="npReg">${Object.keys(REG).map(k=>opt(k,T(REG[k][0],REG[k][1]))).join('')}</select></div>
+<div class="f"><label>${T('Developer','Разработчик')}</label><select class="input" id="npDev">${S.accounts.filter(a=>a.t==='dev').map(a=>opt(a.id,AN(a))).join('')}</select></div>
+<div class="f full"><label>${T('Estimated reductions (tCO₂e / year)','Оценка сокращений (tCO₂e в год)')}</label><input class="input" id="npEst" type="number" min="1" placeholder="25000"></div>
+<div class="full row"><button class="btn pri" id="npGo">${T('Create draft','Создать черновик')}</button><span class="muted" style="font-size:12px">${T('Draft → validation by a DOE → registration','Черновик → валидация DOE → регистрация')}</span></div></div></div></div>`;
+$('#fSec').onchange=e=>{S.flt.sec=e.target.value;save();RENDER.projects()};
+$('#fSt').onchange=e=>{S.flt.st=e.target.value;save();RENDER.projects()};
+$$('tr[data-p]',el).forEach(r=>r.onclick=()=>{S.sel=r.dataset.p;save();RENDER.projects()});
+$$('[data-pa]',el).forEach(b=>b.onclick=()=>{const a=b.dataset.pa;
+if(a==='loa'){p.loa=!p.loa;toast(p.loa?T(p.id+': letter of authorisation issued — units may be transferred as ITMOs',p.id+': разрешение выдано — единицы можно переводить как ITMO'):T(p.id+': authorisation revoked',p.id+': разрешение отозвано'),p.loa?'gold':'bad')}
+else{p.st=+a;toast(p.id+' → '+T(PST[p.st][0],PST[p.st][1]),p.st===3?'bad':p.st===2?'gold':'')}
+save();render()});
+$('#npGo').onclick=()=>{const nm=$('#npName').value.trim(),est=+$('#npEst').value;
+if(nm.length<4){toast(T('Enter a project name (4+ characters)','Введите название проекта (от 4 символов)'),'bad');return}
+if(!(est>0)){toast(T('Enter estimated annual reductions','Укажите оценку годовых сокращений'),'bad');return}
+const id='P'+pad(S.projects.length+1,3),meth=$('#npMeth').value;
+S.projects.push({id,n:[nm,nm],sec:M(meth).sec,meth,reg:$('#npReg').value,dev:$('#npDev').value,st:0,est,loa:false,dx:Math.round(Math.random()*20-10),dy:Math.round(Math.random()*16-8),since:2026});
+S.sel=id;S.flt={sec:'',st:''};save();toast(T('Project '+id+' created as draft','Проект '+id+' создан как черновик'),'gold');render()};
+};
+
+/* ---------- views: methodologies ---------- */
+RENDER.meth=function(){
+const el=$('#v-meth');const cm=M(S.calcM||'VL-AM-001')||S.meths[0];
+el.innerHTML=`<div class="card"><div class="tw"><table><thead><tr><th>ID</th><th>${T('Methodology','Методология')}</th><th>${T('Sector','Сектор')}</th><th>${T('Version','Версия')}</th><th>${T('Status','Статус')}</th><th class="num">${T('Projects','Проекты')}</th><th></th></tr></thead><tbody>
+${S.meths.map(m=>`<tr><td class="mono">${m.id}</td><td><b>${esc(T(m.n[0],m.n[1]))}</b></td><td>${secDot(m.sec)}${T(SEC[m.sec][0],SEC[m.sec][1])}</td><td class="mono">v${m.v}</td><td>${m.st==='ok'?`<span class="pill ok">${T('Approved','Утверждена')}</span>`:m.st==='rev'?`<span class="pill warn">${T('Under review','На рассмотрении')}</span>`:`<span class="pill bad">${T('Rejected','Отклонена')}</span>`}</td><td class="num">${S.projects.filter(p=>p.meth===m.id).length}</td><td>${m.st==='rev'&&S.role==='officer'?`<div class="row" style="flex-wrap:nowrap"><button class="btn sm pri" data-ma="ok" data-m="${m.id}">${T('Approve','Утвердить')}</button><button class="btn sm danger" data-ma="rej" data-m="${m.id}">${T('Reject','Отклонить')}</button></div>`:''}</td></tr>`).join('')}</tbody></table></div></div>
+<div class="grid2 mt"><div class="card"><h3>${T('Emission reductions calculator','Калькулятор сокращений выбросов')}</h3>
+<div class="f"><label>${T('Methodology','Методология')}</label><select class="input" id="cM">${S.meths.map(m=>opt(m.id,m.id+' · '+T(m.n[0],m.n[1]),m.id===cm.id)).join('')}</select></div>
+<div class="fgrid mt">${cm.p.map((x,i)=>`<div class="f"><label>${esc(T(x[0],x[1]))}</label><input class="input mono" type="number" step="any" data-cp="${i}" value="${x[2]}"></div>`).join('')}</div>
+<div class="row mt"><button class="btn pri" id="cGo">${T('Calculate','Рассчитать')}</button></div><div id="cRes"></div></div>
+<div class="card"><h3>${T('Propose a methodology','Предложить методологию')}</h3><div class="fgrid">
+<div class="f full"><label>${T('Title','Название')}</label><input class="input" id="pmN" placeholder="${T('e.g. Rice cultivation — alternate wetting & drying','напр. Рисоводство — попеременное орошение')}"></div>
+<div class="f"><label>${T('Sector','Сектор')}</label><select class="input" id="pmS">${Object.keys(SEC).map(k=>opt(k,T(SEC[k][0],SEC[k][1]))).join('')}</select></div>
+<div class="f"><label>${T('Version','Версия')}</label><input class="input" id="pmV" value="1.0"></div>
+<div class="full muted" style="font-size:12.5px">${T('Formula: ER = baseline emissions − project emissions − leakage. Proposals go to the methodology panel for review.','Формула: ER = базовые выбросы − проектные выбросы − утечка. Предложение уходит на рассмотрение панели методологий.')}</div>
+<div class="full"><button class="btn pri" id="pmGo">${T('Submit for review','Отправить на рассмотрение')}</button></div></div></div></div>`;
+$('#cM').onchange=e=>{S.calcM=e.target.value;save();RENDER.meth()};
+$('#cGo').onclick=()=>{const v=$$('[data-cp]',el).map(i=>+i.value);if(v.some(x=>!isFinite(x)||x<0)){toast(T('Enter non-negative numbers','Введите неотрицательные числа'),'bad');return}
+const er=Math.max(0,Math.round(FORM[cm.f](v)));const net=Math.round(er*0.96);
+$('#cRes').innerHTML=`<div class="res"><span class="muted">${T('Annual emission reductions','Годовые сокращения выбросов')}</span><b class="big">${tco(er)}</b><div class="dist"><i style="width:96%;background:var(--mal)"></i><i style="width:2%;background:var(--blue)"></i><i style="width:2%;background:var(--red)"></i></div><div class="legend"><span><i style="background:var(--mal)"></i>${T('to developer','разработчику')} ${n0(net)}</span><span><i style="background:var(--blue)"></i>${T('adaptation 2%','адаптация 2%')}</span><span><i style="background:var(--red)"></i>OMGE 2%</span></div></div>`};
+$$('[data-ma]',el).forEach(b=>b.onclick=()=>{const m=M(b.dataset.m);m.st=b.dataset.ma;save();toast(m.id+' → '+(m.st==='ok'?T('approved','утверждена'):T('rejected','отклонена')),m.st==='ok'?'gold':'bad');render()});
+$('#pmGo').onclick=()=>{const n=$('#pmN').value.trim(),v=$('#pmV').value.trim();
+if(n.length<5){toast(T('Enter a methodology title (5+ characters)','Введите название методологии (от 5 символов)'),'bad');return}
+if(!/^\d+\.\d+$/.test(v)){toast(T('Version format: 1.0','Формат версии: 1.0'),'bad');return}
+const id='VL-AM-'+pad(S.meths.length+1,3);S.meths.push({id,v,sec:$('#pmS').value,st:'rev',n:[n,n],f:'diff',p:[['Baseline emissions (tCO₂e/yr)','Базовые выбросы (tCO₂e/год)',10000],['Project emissions (tCO₂e/yr)','Проектные выбросы (tCO₂e/год)',4000]]});
+save();toast(T(id+' submitted for review',id+' отправлена на рассмотрение'),'gold');RENDER.meth()};
+};
+
+/* ---------- views: issuance ---------- */
+RENDER.issue=function(){
+const el=$('#v-issue'),regd=S.projects.filter(p=>p.st===2),li=S.lastIssue;
+el.innerHTML=`<div class="card"><h3>${T('Verified monitoring reports awaiting issuance','Верифицированные отчёты, ожидающие выпуска')}<span class="sp"></span><span class="pill gold">${S.reqs.length}</span></h3>
+${S.reqs.length?`<div class="tw"><table><thead><tr><th>${T('Request','Заявка')}</th><th>${T('Project','Проект')}</th><th>${T('Vintage','Год')}</th><th class="num">${T('Verified tCO₂e','Верифицировано tCO₂e')}</th><th>${T('Verifier','Верификатор')}</th><th>${T('Received','Получено')}</th><th></th></tr></thead><tbody>
+${S.reqs.map(r=>{const p=P(r.p);return `<tr><td class="mono">${r.id}</td><td><b>${p.id}</b> · ${esc(PN(p))}</td><td>${r.v}</td><td class="num mono">${n0(r.q)}</td><td>${esc(r.verif)}</td><td>${fmtD(r.t)}</td><td><div class="row" style="flex-wrap:nowrap"><button class="btn sm pri" data-iss="${r.id}">${T('Issue','Выпустить')}</button><button class="btn sm danger" data-rej="${r.id}">${T('Reject','Отклонить')}</button></div></td></tr>`}).join('')}</tbody></table></div>`:`<div class="empty">${T('Queue is empty — submit a new request below','Очередь пуста — подайте новую заявку ниже')}</div>`}</div>
+<div class="grid2 mt"><div class="card"><h3>${T('Last issuance · serial allocation','Последний выпуск · серийные номера')}</h3>${li?`<dl class="kv"><dt>${T('Project','Проект')}</dt><dd>${li.p} · ${esc(PN(P(li.p)))}</dd><dt>${T('Vintage','Год')}</dt><dd>${li.v}</dd><dt>${T('Total','Всего')}</dt><dd>${tco(li.q)}</dd></dl>
+<div class="dist"><i style="width:96%;background:var(--mal)"></i><i style="width:2%;background:var(--blue)"></i><i style="width:2%;background:var(--red)"></i></div>
+${li.b.map((b,i)=>`<div class="res" style="margin-top:8px"><span class="muted">${[T('Developer account','Счёт разработчика'),T('Adaptation Fund · share of proceeds 2%','Фонд адаптации · доля 2%'),T('OMGE · cancelled 2%','OMGE · аннулировано 2%')][i]} · ${n0(b.n)}</span><div class="ser">${b.ser}</div></div>`).join('')}`
+:`<div class="empty">${T('Issue a request to see how serial ranges are allocated: 96% to the developer, 2% share of proceeds for adaptation, 2% cancelled for overall mitigation (OMGE).','Выпустите заявку, чтобы увидеть распределение серийных номеров: 96% разработчику, 2% — доля на адаптацию, 2% аннулируется для общего смягчения (OMGE).')}</div>`}</div>
+<div class="card"><h3>${T('New issuance request','Новая заявка на выпуск')}</h3><div class="fgrid">
+<div class="f full"><label>${T('Registered project','Зарегистрированный проект')}</label><select class="input" id="irP">${regd.map(p=>opt(p.id,p.id+' · '+PN(p))).join('')}</select></div>
+<div class="f"><label>${T('Vintage (monitoring year)','Год (период мониторинга)')}</label><select class="input" id="irV">${[2026,2025,2024].map(y=>opt(y,y)).join('')}</select></div>
+<div class="f"><label>${T('Verified reductions (tCO₂e)','Верифицированные сокращения (tCO₂e)')}</label><input class="input" id="irQ" type="number" min="1" placeholder="50000"></div>
+<div class="f full"><label>${T('Verifier (DOE)','Верификатор (DOE)')}</label><select class="input" id="irVer">${VERIF.map(v=>opt(v,v)).join('')}</select></div>
+<div class="full"><button class="btn pri" id="irGo">${T('Submit request','Подать заявку')}</button></div></div></div></div>`;
+$$('[data-iss]',el).forEach(b=>b.onclick=()=>{const r=S.reqs.find(x=>x.id===b.dataset.iss),p=P(r.p);
+if(p.st!==2){toast(T(p.id+' is not registered — issuance blocked',p.id+' не в реестре — выпуск заблокирован'),'bad');return}
+const bs=doIssue(r.p,r.v,r.q,null,r.verif);S.reqs=S.reqs.filter(x=>x!==r);S.lastIssue={p:r.p,v:r.v,q:r.q,b:bs.map(x=>({n:size(x),ser:serial(x)}))};save();
+toast(T('Issued '+n0(r.q)+' units for '+r.p,'Выпущено '+n0(r.q)+' единиц для '+r.p),'gold');render()});
+$$('[data-rej]',el).forEach(b=>b.onclick=()=>{S.reqs=S.reqs.filter(x=>x.id!==b.dataset.rej);save();toast(T('Request '+b.dataset.rej+' rejected and returned to the DOE','Заявка '+b.dataset.rej+' отклонена и возвращена DOE'),'bad');render()});
+$('#irGo').onclick=()=>{const pid=$('#irP').value,v=+$('#irV').value,q=Math.round(+$('#irQ').value),p=P(pid);
+if(!p){toast(T('No registered project available','Нет зарегистрированных проектов'),'bad');return}
+if(!(q>0)){toast(T('Enter verified reductions','Укажите верифицированные сокращения'),'bad');return}
+if(q>p.est*1.5){toast(T('Exceeds 150% of the registered estimate ('+n0(p.est)+') — check the verification report','Больше 150% зарегистрированной оценки ('+n0(p.est)+') — проверьте отчёт'),'bad');return}
+if(S.issued.some(x=>x.p===pid&&x.v===v)||S.reqs.some(x=>x.p===pid&&x.v===v)){toast(T('Vintage '+v+' already issued or pending for '+pid+' — double issuance prevented','Год '+v+' уже выпущен или в очереди для '+pid+' — двойной выпуск предотвращён'),'bad');return}
+const id='IR-2026-'+pad(S.nreq++,3);S.reqs.push({id,p:pid,v,q,verif:$('#irVer').value,t:new Date().toISOString()});save();toast(T('Request '+id+' added to the queue','Заявка '+id+' добавлена в очередь'));render()};
+};
+
+/* ---------- views: accounts & transfers ---------- */
+function blockOpts(acc){return S.blocks.filter(b=>b.a===acc&&b.st==='active'&&size(b)>0).map(b=>opt(b.id,`${b.p} · ${b.v} · ${n0(size(b))}${P(b.p).loa?' · LoA':''}`)).join('')}
+RENDER.accounts=function(){
+const el=$('#v-accounts'),sa=A(S.selAcc)||S.accounts[1],hold=S.blocks.filter(b=>b.a===sa.id&&b.st==='active');
+const srcAcc=S.accounts.filter(a=>a.t!=='omge'&&bal(a.id)>0);
+el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Registry accounts','Счета реестра')}</h3><div class="tw"><table><thead><tr><th>${T('Account','Счёт')}</th><th>${T('Holder','Владелец')}</th><th>${T('Type','Тип')}</th><th class="num">${T('Balance','Остаток')}</th></tr></thead><tbody>
+${S.accounts.map(a=>`<tr class="clk ${a.id===sa.id?'sel':''}" data-a="${a.id}"><td class="mono">${a.id}</td><td><b>${esc(AN(a))}</b></td><td><span class="pill ${a.t==='intl'?'gold':a.t==='dev'?'ok':''}">${T(ATYPE[a.t][0],ATYPE[a.t][1])}</span></td><td class="num mono">${n0(bal(a.id))}</td></tr>`).join('')}</tbody></table></div></div>
+<div class="card"><h3>${T('Transfer units','Перевод единиц')}</h3><div class="fgrid">
+<div class="f full"><label>${T('From account','Со счёта')}</label><select class="input" id="tFrom">${srcAcc.map(a=>opt(a.id,a.id+' · '+AN(a),a.id===sa.id)).join('')}</select></div>
+<div class="f full"><label>${T('Serial block (project · vintage · units)','Блок (проект · год · единиц)')}</label><select class="input" id="tBlk"></select></div>
+<div class="f"><label>${T('Quantity','Количество')}</label><input class="input" id="tQ" type="number" min="1" placeholder="1000"></div>
+<div class="f"><label>${T('To account','На счёт')}</label><select class="input" id="tTo">${S.accounts.filter(a=>a.t!=='omge'&&a.t!=='sop').map(a=>opt(a.id,a.id+' · '+AN(a))).join('')}</select></div>
+<div class="full res" style="margin-top:0" id="tInfo"></div>
+<div class="full"><button class="btn pri" id="tGo">${T('Sign & transfer','Подписать и перевести')}</button></div></div></div></div>
+<div class="card mt"><h3>${T('Holdings','Активы')} · <span class="mono">${sa.id}</span> ${esc(AN(sa))}<span class="sp"></span><span class="pill">${n0(bal(sa.id))} tCO₂e</span></h3>
+${hold.length?`<div class="tw"><table><thead><tr><th>${T('Block','Блок')}</th><th>${T('Serial range','Диапазон номеров')}</th><th>${T('Project','Проект')}</th><th>${T('Vintage','Год')}</th><th class="num">${T('Units','Единиц')}</th><th>${T('Corr. adjustment','Корр. корректировка')}</th></tr></thead><tbody>${hold.map(b=>`<tr><td class="mono">${b.id}</td><td class="mono">${serial(b)}</td><td>${b.p} · ${esc(PN(P(b.p)))}</td><td>${b.v}</td><td class="num mono">${n0(size(b))}</td><td>${b.ca?`<span class="pill ok">${T('applied','применена')}</span>`:'—'}</td></tr>`).join('')}</tbody></table></div>`:`<div class="empty">${T('No active units in this account','На счёте нет активных единиц')}</div>`}</div>`;
+const info=()=>{const b=S.blocks.find(x=>x.id===$('#tBlk').value),to=A($('#tTo').value);if(!b){$('#tInfo').innerHTML=T('No units available in this account','На счёте нет единиц');return}
+$('#tInfo').innerHTML=`<span class="muted">${T('Available','Доступно')}:</span> <b>${n0(size(b))}</b><div class="ser">${serial(b)}</div>${to&&to.t==='intl'?`<div class="${P(b.p).loa?'muted':''}" style="margin-top:6px;${P(b.p).loa?'':'color:var(--red)'}">${P(b.p).loa?T('🌐 International transfer: first transfer of ITMOs — a corresponding adjustment will be applied to Veloria’s emissions balance.','🌐 Международный перевод: первый перевод ITMO — к балансу выбросов Велории будет применена соответствующая корректировка.'):T('⚠ Project has no Article 6 letter of authorisation — ITMO transfer not allowed.','⚠ У проекта нет разрешения по статье 6 — перевод ITMO запрещён.')}</div>`:''}`};
+const fill=()=>{$('#tBlk').innerHTML=blockOpts($('#tFrom').value);info()};fill();
+$('#tFrom').onchange=fill;$('#tBlk').onchange=info;$('#tTo').onchange=info;
+$$('tr[data-a]',el).forEach(r=>r.onclick=()=>{S.selAcc=r.dataset.a;save();RENDER.accounts()});
+$('#tGo').onclick=()=>{const b=S.blocks.find(x=>x.id===$('#tBlk').value),q=Math.round(+$('#tQ').value),to=$('#tTo').value;
+if(!b){toast(T('Select a block with units','Выберите блок с единицами'),'bad');return}
+if(!(q>0)){toast(T('Enter a quantity','Укажите количество'),'bad');return}
+if(q>size(b)){toast(T('Insufficient units in block ('+n0(size(b))+')','Недостаточно единиц в блоке ('+n0(size(b))+')'),'bad');return}
+if(to===b.a){toast(T('Source and destination are the same','Счёт отправителя и получателя совпадают'),'bad');return}
+if(A(to).t==='intl'&&!P(b.p).loa){toast(T('Blocked: '+b.p+' is not authorised under Article 6','Запрещено: '+b.p+' не разрешён по статье 6'),'bad');return}
+const tx=doTransfer(b.id,q,to);S.selAcc=to;save();toast(`${T(TXT[tx.type][0],TXT[tx.type][1])} ${tx.id} · ${n0(q)} → ${esc(AN(A(to)))}`,'gold');render()};
+};
+
+/* ---------- views: retirements ---------- */
+function certHTML(c){const p=P(c.p);return `<div class="cert"><div class="seal">${T('RETIRED','ПОГАШЕНО')}<br>✓</div><h4>${T('Retirement certificate','Сертификат погашения')} · ${c.id}</h4><div class="muted" style="font-size:12.5px">${T('National Carbon Registry of the Republic of Veloria','Национальный углеродный реестр Республики Велория')}</div>
+<div class="q">${tco(c.q)}</div><dl class="kv"><dt>${T('Project','Проект')}</dt><dd>${c.p} · ${esc(PN(p))}</dd><dt>${T('Vintage','Год')}</dt><dd>${c.v}</dd><dt>${T('Serials','Номера')}</dt><dd class="ser">${serial({v:c.v,p:c.p,s:c.s,e:c.e})}</dd><dt>${T('Purpose','Цель')}</dt><dd>${T(PUR[c.pur][0],PUR[c.pur][1])}</dd><dt>${T('Beneficiary','Бенефициар')}</dt><dd>${esc(c.ben)}</dd><dt>${T('Account','Счёт')}</dt><dd>${accLbl(c.acc)}</dd><dt>${T('Date','Дата')}</dt><dd>${fmtD(c.t)} · ${c.tx}</dd></dl>
+<div class="row"><button class="btn sm" id="cDl">${T('Download certificate (.txt)','Скачать сертификат (.txt)')}</button><span class="muted" style="font-size:12px">${T('Verify: ','Проверка: ')}<span class="mono">${hh(c.id+c.s+c.e)}</span></span></div></div>`}
+RENDER.retire=function(){
+const el=$('#v-retire'),src=S.accounts.filter(a=>a.t!=='omge'&&bal(a.id)>0),c=S.rets.find(x=>x.id===S.cert)||S.rets[S.rets.length-1];
+el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Retire units','Погасить единицы')}</h3><div class="fgrid">
+<div class="f full"><label>${T('Account','Счёт')}</label><select class="input" id="rA">${src.map(a=>opt(a.id,a.id+' · '+AN(a),a.id==='A-BUY-01')).join('')}</select></div>
+<div class="f full"><label>${T('Serial block','Блок номеров')}</label><select class="input" id="rB"></select></div>
+<div class="f"><label>${T('Quantity','Количество')}</label><input class="input" id="rQ" type="number" min="1" placeholder="500"></div>
+<div class="f"><label>${T('Purpose','Цель')}</label><select class="input" id="rP">${Object.keys(PUR).map(k=>opt(k,T(PUR[k][0],PUR[k][1]))).join('')}</select></div>
+<div class="f full"><label>${T('Beneficiary / claim statement','Бенефициар / заявление')}</label><input class="input" id="rBen" placeholder="${T('e.g. Aerovel Airways — 2026 flights','напр. Aerovel Airways — рейсы 2026')}"></div>
+<div class="full"><button class="btn gold" id="rGo">${T('Retire permanently','Погасить безвозвратно')}</button></div></div></div>
+<div>${c?certHTML(c):`<div class="card empty">${T('No certificates yet','Сертификатов пока нет')}</div>`}</div></div>
+<div class="card mt"><h3>${T('Retirement register','Реестр погашений')}<span class="sp"></span><span class="pill gold">${n0(tot().ret)} tCO₂e</span></h3><div class="tw"><table><thead><tr><th>${T('Certificate','Сертификат')}</th><th>${T('Date','Дата')}</th><th>${T('Project','Проект')}</th><th>${T('Vintage','Год')}</th><th class="num">${T('Units','Единиц')}</th><th>${T('Purpose','Цель')}</th><th>${T('Beneficiary','Бенефициар')}</th></tr></thead><tbody>
+${S.rets.slice().reverse().map(r=>`<tr class="clk ${c&&r.id===c.id?'sel':''}" data-c="${r.id}"><td class="mono">${r.id}</td><td>${fmtD(r.t)}</td><td>${r.p}</td><td>${r.v}</td><td class="num mono">${n0(r.q)}</td><td>${T(PUR[r.pur][0],PUR[r.pur][1])}</td><td>${esc(r.ben)}</td></tr>`).join('')}</tbody></table></div></div>`;
+const fill=()=>{$('#rB').innerHTML=blockOpts($('#rA').value)};fill();$('#rA').onchange=fill;
+$$('tr[data-c]',el).forEach(r=>r.onclick=()=>{S.cert=r.dataset.c;save();RENDER.retire()});
+if($('#cDl'))$('#cDl').onclick=()=>{const t=$('.cert').innerText;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=c.id+'.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast(T('Certificate downloaded','Сертификат скачан'))};
+$('#rGo').onclick=()=>{const b=S.blocks.find(x=>x.id===$('#rB').value),q=Math.round(+$('#rQ').value),ben=$('#rBen').value.trim();
+if(!b){toast(T('Select a block with units','Выберите блок с единицами'),'bad');return}
+if(!(q>0)||q>size(b)){toast(T('Quantity must be 1–'+n0(size(b)),'Количество от 1 до '+n0(size(b))),'bad');return}
+if(ben.length<3){toast(T('Enter the beneficiary','Укажите бенефициара'),'bad');return}
+const rc=doRetire(b.id,q,$('#rP').value,ben);S.cert=rc.id;save();toast(T('Retired '+n0(q)+' units · certificate '+rc.id,'Погашено '+n0(q)+' единиц · сертификат '+rc.id),'gold');render()};
+};
+
+/* ---------- views: ledger ---------- */
+function verifyChain(){let prev='0'.repeat(16);for(let i=0;i<S.tx.length;i++){const x=S.tx[i];if(hh(prev+'|'+[x.id,x.t,x.type,x.p,x.q,x.from,x.to,x.ser].join('|'))!==x.h)return i;prev=x.h}return -1}
+RENDER.ledger=function(){
+const el=$('#v-ledger'),f=S.lflt,list=S.tx.filter(x=>!f||x.type===f).slice(-60).reverse();
+el.innerHTML=`<div class="card"><h3>${T('Hash-chained transaction ledger','Журнал транзакций с цепочкой хешей')}<span class="sp"></span><span class="pill">${n0(S.tx.length)} ${T('transactions','транзакций')}</span></h3>
+<div class="filters"><select class="input" id="lF">${opt('',T('All types','Все типы'))}${Object.keys(TXT).map(k=>opt(k,T(TXT[k][0],TXT[k][1]),f===k)).join('')}</select><button class="btn" id="lV">${T('Verify chain integrity','Проверить целостность цепочки')}</button></div>
+<div id="lRes"></div>
+<div class="tw"><table><thead><tr><th>${T('Tx','Тx')}</th><th>${T('Time','Время')}</th><th>${T('Type','Тип')}</th><th>${T('Project','Проект')}</th><th class="num">${T('Units','Единиц')}</th><th>${T('From','Откуда')}</th><th>${T('To','Куда')}</th><th>${T('Serial range','Диапазон номеров')}</th><th>${T('Hash','Хеш')}</th></tr></thead><tbody>
+${list.map(x=>`<tr><td class="mono">${x.id}</td><td>${fmtDT(x.t)}</td><td><span class="pill ${x.type==='retire'?'gold':x.type==='issue'?'ok':x.type==='itmo'?'warn':''}">${T(TXT[x.type][0],TXT[x.type][1])}</span>${x.ca?' <span class="pill ok">CA</span>':''}</td><td class="mono">${x.p}</td><td class="num mono">${n0(x.q)}</td><td>${accLbl(x.from)}</td><td>${accLbl(x.to)}</td><td class="mono" style="font-size:12px">${x.ser}</td><td class="mono muted" style="font-size:12px">${x.h}</td></tr>`).join('')}</tbody></table></div></div>`;
+$('#lF').onchange=e=>{S.lflt=e.target.value;save();RENDER.ledger()};
+$('#lV').onclick=()=>{const bad=verifyChain(),n=S.tx.length,sh=Math.min(n,120);
+$('#lRes').innerHTML=`<div class="res" style="margin:0 0 12px"><b>${bad<0?'✓ '+T('Chain intact — '+n0(n)+' transactions verified','Цепочка цела — проверено '+n0(n)+' транзакций'):'✕ '+T('Chain broken at '+S.tx[bad].id,'Цепочка нарушена на '+S.tx[bad].id)}</b><div class="muted" style="font-size:12px">${T('Head hash','Хеш вершины')}: <span class="mono">${S.tx[n-1].h}</span></div><div class="chain">${S.tx.slice(-sh).map((x,i)=>`<i class="${bad>=0&&n-sh+i>=bad?'bad':''}" title="${x.id}"></i>`).join('')}</div></div>`;
+toast(bad<0?T('Ledger integrity verified','Целостность журнала подтверждена'):T('Integrity failure detected','Обнаружено нарушение целостности'),bad<0?'':'bad')};
+};
+
+/* ---------- views: public explorer ---------- */
+function lookup(q){q=q.trim().toUpperCase();if(!q)return null;
+const m=q.match(/^VL-(\d{4})-(P\d{3})-(\d{1,8})/);
+if(m){const v=+m[1],p=m[2],n=+m[3];const b=S.blocks.find(x=>x.p===p&&x.v===v&&x.s<=n&&x.e>=n);return {kind:'ser',b,p,v,n}}
+const p=S.projects.find(x=>x.id===q||PN(x).toUpperCase().includes(q)||x.n[0].toUpperCase().includes(q));return p?{kind:'proj',p}:{kind:'none'}}
+RENDER.explorer=function(){
+const el=$('#v-explorer'),t=tot(),r=lookup(S.q||'');
+const ex=S.blocks.filter(b=>b.st==='retired').slice(-1).concat(S.blocks.filter(b=>b.st==='active'&&A(b.a).t==='intl').slice(-1)).map(b=>`VL-${b.v}-${b.p}-${pad(b.s+7)}`);
+let res='';
+if(r){if(r.kind==='ser'){const b=r.b;res=b?`<div class="res"><div class="row"><b class="mono" style="overflow-wrap:anywhere">VL-${r.v}-${r.p}-${pad(r.n)}</b><span class="pill ${b.st==='active'?'ok':b.st==='retired'?'gold':'bad'}">${b.st==='active'?T('Active','Активна'):b.st==='retired'?T('Retired','Погашена'):T('Cancelled','Аннулирована')}</span>${b.ca?`<span class="pill ok">${T('Corresponding adjustment applied','Соответствующая корректировка применена')}</span>`:''}</div>
+<dl class="kv" style="margin-top:10px"><dt>${T('Project','Проект')}</dt><dd>${b.p} · ${esc(PN(P(b.p)))}</dd><dt>${T('Vintage','Год')}</dt><dd>${b.v}</dd><dt>${T('Block','Блок')}</dt><dd class="ser">${serial(b)}</dd><dt>${T('Holder','Держатель')}</dt><dd>${accLbl(b.a)}</dd>${b.st==='retired'?`<dt>${T('Retired for','Погашена для')}</dt><dd>${T(PUR[b.pur][0],PUR[b.pur][1])} · ${esc(b.ben)}</dd>`:''}</dl></div>`
+:`<div class="res" style="color:var(--red)">${T('Serial not found — it has not been issued','Номер не найден — такая единица не выпускалась')}</div>`}
+else if(r.kind==='proj'){const p=r.p,pt=ptot(p.id);res=`<div class="res"><b>${p.id} · ${esc(PN(p))}</b> ${stPill(p.st)}<div class="muted" style="margin-top:6px">${T(SEC[p.sec][0],SEC[p.sec][1])} · ${T(REG[p.reg][0],REG[p.reg][1])} · ${p.meth}</div><div class="dist"><i style="width:${pt.iss?pt.ret/pt.iss*100:0}%;background:var(--gold)"></i><i style="width:${pt.iss?pt.act/pt.iss*100:0}%;background:var(--mal)"></i></div><div class="legend"><span><i style="background:var(--gold)"></i>${T('retired','погашено')} ${n0(pt.ret)}</span><span><i style="background:var(--mal)"></i>${T('active','активно')} ${n0(pt.act)}</span><span>${T('issued','выпущено')} ${n0(pt.iss)}</span></div></div>`}
+else res=`<div class="res" style="color:var(--red)">${T('Nothing found','Ничего не найдено')}</div>`}
+el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Total issued','Всего выпущено')}</div><div class="v">${n0(t.iss)}</div><div class="d">tCO₂e</div></div><div class="card kpi"><div class="l">${T('Total retired','Всего погашено')}</div><div class="v">${n0(t.ret)}</div><div class="d">tCO₂e</div></div><div class="card kpi"><div class="l">${T('Cancelled (OMGE)','Аннулировано (OMGE)')}</div><div class="v">${n0(t.can)}</div><div class="d">tCO₂e</div></div><div class="card kpi"><div class="l">${T('Outstanding','В обращении')}</div><div class="v">${n0(t.act)}</div><div class="d">tCO₂e</div></div></div>
+<div class="card"><h3>${T('Look up a serial number or project','Поиск по серийному номеру или проекту')}</h3><div class="search"><input class="input mono" id="xQ" value="${esc(S.q||'')}" data-en-ph="VL-2024-P006-00012345 or P003" data-ru-ph="VL-2024-P006-00012345 или P003" placeholder="${T('VL-2024-P006-00012345 or P003','VL-2024-P006-00012345 или P003')}"><button class="btn pri" id="xGo">${T('Search','Найти')}</button></div>
+<div class="ex"><span class="muted">${T('Try:','Примеры:')}</span>${ex.concat(['P002','VL-2019-P001-00000001']).map(x=>`<button data-x="${x}">${x}</button>`).join('')}</div>${res}</div>
+<div class="card mt"><h3>${T('Public project register','Публичный реестр проектов')}<span class="sp"></span><button class="btn sm" id="xCsv">${T('Export CSV','Экспорт CSV')}</button></h3><div class="tw"><table><thead><tr><th>ID</th><th>${T('Project','Проект')}</th><th>${T('Sector','Сектор')}</th><th>${T('Status','Статус')}</th><th class="num">${T('Issued','Выпущено')}</th><th class="num">${T('Retired','Погашено')}</th><th class="num">${T('Outstanding','В обращении')}</th></tr></thead><tbody>
+${S.projects.map(p=>{const pt=ptot(p.id);return `<tr class="clk" data-xp="${p.id}"><td class="mono">${p.id}</td><td><b>${esc(PN(p))}</b></td><td>${secDot(p.sec)}${T(SEC[p.sec][0],SEC[p.sec][1])}</td><td>${stPill(p.st)}</td><td class="num mono">${n0(pt.iss)}</td><td class="num mono">${n0(pt.ret)}</td><td class="num mono">${n0(pt.act)}</td></tr>`}).join('')}</tbody></table></div></div>`;
+const run=v=>{S.q=v;save();RENDER.explorer()};
+$('#xGo').onclick=()=>{const v=$('#xQ').value.trim();if(!v){toast(T('Enter a serial number or project','Введите серийный номер или проект'),'bad');return}run(v)};
+$('#xQ').onkeydown=e=>{if(e.key==='Enter')$('#xGo').click()};
+$$('[data-x]',el).forEach(b=>b.onclick=()=>run(b.dataset.x));
+$$('tr[data-xp]',el).forEach(r=>r.onclick=()=>{run(r.dataset.xp);window.scrollTo({top:0,behavior:'smooth'})});
+$('#xCsv').onclick=()=>{const rows=[['id','project','sector','status','issued','retired','outstanding']].concat(S.projects.map(p=>{const pt=ptot(p.id);return [p.id,p.n[0],p.sec,PST[p.st][0],pt.iss,pt.ret,pt.act]}));
+const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n')],{type:'text/csv'}));a.download='carbonledger-projects.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast(T('CSV exported','CSV выгружен'))};
+};
+
+/* ---------- live market simulation ---------- */
+const BEN=[['Aerovel Airways — route offsets','Aerovel Airways — компенсация рейсов'],['Kestrel Cement Works — kiln line 2','Кестрельский цементный завод — печь 2'],['Veloria State Power Utility — green tariff','Госэнергокомпания Велории — зелёный тариф']];
+setInterval(()=>{
+if(!S.logged||!S.live)return;
+const r=Math.random();
+if(r<0.55){const pool=S.blocks.filter(b=>b.st==='active'&&A(b.a).t==='dev'&&size(b)>3000);if(!pool.length)return;const b=pool[Math.floor(Math.random()*pool.length)];
+const buy=['A-BUY-01','A-BUY-02','A-BUY-03'][Math.floor(Math.random()*3)];const tx=doTransfer(b.id,100*(5+Math.floor(Math.random()*40)),buy);tx.live=true}
+else{const pool=S.blocks.filter(b=>b.st==='active'&&A(b.a).t==='buy'&&size(b)>200);if(!pool.length)return;const b=pool[Math.floor(Math.random()*pool.length)];
+const i=['A-BUY-01','A-BUY-02','A-BUY-03'].indexOf(b.a);doRetire(b.id,50*(2+Math.floor(Math.random()*Math.min(30,size(b)/50-1))),i===0?'corsia':'vol',BEN[Math.max(0,i)][0]);S.tx[S.tx.length-1].live=true}
+save();if(S.view==='dash')RENDER.dash();else if(S.view==='ledger'&&!$('#lRes').innerHTML)RENDER.ledger();
+},6500);
+
+/* ---------- shell ---------- */
+$$('.role').forEach(b=>b.onclick=()=>{S.role=b.dataset.role;save();render()});
+$('#loginBtn').onclick=()=>{if(!$('#lUser').value.trim()||!$('#lPass').value.trim()){toast(T('Enter username and password','Введите имя пользователя и пароль'),'bad');return}
+S.logged=true;S.view='dash';save();render();toast(T('Welcome to CarbonLedger','Добро пожаловать в CarbonLedger'),'gold')};
+$('#logout').onclick=()=>{S.logged=false;save();render();window.scrollTo({top:0})};
+$('#liveSw').onclick=()=>{S.live=!S.live;save();render()};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{try{Object.keys(localStorage).filter(k=>k.startsWith('pt_carbon_')).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()};
+document.addEventListener('click',e=>{const sd=$('#side');if(sd.classList.contains('open')&&!sd.contains(e.target)&&e.target!==$('#menuBtn'))sd.classList.remove('open')});
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

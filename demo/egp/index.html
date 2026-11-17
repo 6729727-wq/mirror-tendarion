@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenBid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.login[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:15px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left;min-height:40px}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .live{margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 0 var(--red);animation:pulse 1.4s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center}
+.who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.mt{margin-top:14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:4px;min-height:0}
+.input.bad{border-color:var(--red)}
+select.input{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:30px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+tr.win td{background:color-mix(in srgb,var(--mal) 9%,transparent)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600;min-height:34px}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.tcard{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--panel);margin-bottom:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;cursor:pointer;transition:.15s}
+.tcard:hover{border-color:var(--mal)}
+.tcard .id{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.tcard .ttl{font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.tcard .meta{font-size:12.5px;color:var(--muted);display:flex;gap:6px 14px;flex-wrap:wrap}
+.tcard .val{text-align:right;font-weight:800;font-size:17px;white-space:nowrap}
+.tcard .val small{display:block;font-size:11.5px;color:var(--muted);font-weight:600}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.log{font-size:13px}
+.log div{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.log div:last-child{border:0}
+.log .t{font-family:var(--mono);font-size:11.5px;color:var(--dim);flex:none;width:44px;padding-top:2px}
+.log span{flex:1;min-width:0;overflow-wrap:anywhere}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;padding:60px 16px 20px;overflow:auto}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);max-width:760px;width:100%;padding:22px;box-shadow:var(--shadow);position:relative}
+.modal .x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-size:16px}
+.dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
+.dl div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.dl span{display:block;font-size:11.5px;color:var(--muted)} .dl b{font-size:14px;overflow-wrap:anywhere}
+.qa{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--bg2);font-size:13.5px}
+.qa .a{margin-top:6px;padding-left:10px;border-left:3px solid var(--mal);color:var(--muted)}
+.docs{display:flex;flex-direction:column;gap:8px}
+.doc{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg2);font-size:13.5px}
+.doc .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--panel2);flex:none;font-size:15px}
+.doc span{flex:1;min-width:0;overflow-wrap:anywhere}
+.doc.ok{border-color:color-mix(in srgb,var(--mal) 50%,transparent)}
+.doc.ok .ic{background:color-mix(in srgb,var(--mal) 20%,transparent);color:var(--mal3)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;cursor:pointer}
+.chk input{width:18px;height:18px;margin-top:2px;accent-color:var(--mal);flex:none}
+.env{display:grid;place-items:center;padding:20px 10px}
+.env svg{width:220px;max-width:100%;height:auto}
+.env .flap{transform-origin:110px 60px;transition:transform .7s cubic-bezier(.5,0,.3,1)}
+.env.sealed .flap{transform:scaleY(-1)}
+.env .seal{opacity:0;transform:scale(2.2);transform-origin:110px 92px;transition:.45s .65s}
+.env.sealed .seal{opacity:1;transform:scale(1)}
+.hash{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;overflow-wrap:anywhere;word-break:break-all}
+.mybid{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--bg2);margin-bottom:10px}
+.mybid .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mybid .top b{flex:1;min-width:160px;overflow-wrap:anywhere}
+.auc{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}
+.clock{font-family:var(--mono);font-size:44px;font-weight:700;letter-spacing:.02em;line-height:1}
+.clock.hot{color:var(--red)}
+.best{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.ladder div{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;font-size:13.5px}
+.ladder div:nth-child(odd){background:var(--bg2)}
+.ladder .rk{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;background:var(--panel2);border:1px solid var(--line2);flex:none}
+.ladder .me .rk{background:var(--gold);color:#1a1306;border-color:var(--gold)}
+.ladder span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ladder .p{font-family:var(--mono);font-weight:700}
+.feed{max-height:220px;overflow:auto;font-size:12.5px}
+.feed div{padding:5px 0;border-bottom:1px dashed var(--line);display:flex;gap:8px}
+.feed .t{font-family:var(--mono);color:var(--dim);flex:none}
+.mx input{width:64px;text-align:right;font-family:var(--mono);background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:6px 8px;outline:none}
+.mx input:focus{border-color:var(--mal)}
+.mx .tot{font-weight:800;font-family:var(--mono)}
+.bar{height:8px;border-radius:9px;background:var(--line);overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3))}
+.steps{display:flex;margin:6px 0 4px}
+.step{flex:1;text-align:center;position:relative;font-size:11.5px;color:var(--muted);min-width:0}
+.step:before{content:"";position:absolute;top:13px;left:-50%;width:100%;height:2px;background:var(--line2)}
+.step:first-child:before{display:none}
+.step .dot{width:28px;height:28px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:var(--panel2);border:2px solid var(--line2);position:relative;z-index:1;font-weight:800;font-size:12px}
+.step.ok .dot{background:var(--mal);border-color:var(--mal);color:#fff}
+.step.ok:before,.step.cur:before{background:var(--mal)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+pre.json{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;margin:0;max-height:520px;white-space:pre}
+pre.json .k{color:var(--blue)} pre.json .s{color:var(--mal3)} pre.json .n{color:var(--gold2)}
+.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+.empty .big{font-size:36px}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(1200px 500px at 70% -10%,color-mix(in srgb,var(--mal) 16%,transparent),transparent),radial-gradient(900px 400px at 0% 110%,color-mix(in srgb,var(--gold) 12%,transparent),transparent)}
+.lbox{width:100%;max-width:960px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:center}
+.lhero h2{font-size:34px;line-height:1.15;margin:12px 0;letter-spacing:-.02em}
+.lhero p{color:var(--muted);margin:0 0 16px}
+.lhero ul{list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:14px}
+.lhero li{display:flex;gap:10px;align-items:flex-start}
+.lhero li b{color:var(--mal3)}
+.lcard{padding:24px;border-radius:var(--r2);box-shadow:var(--shadow)}
+.lcard h3{margin:0 0 4px;font-size:19px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.role{border:1px solid var(--line2);border-radius:12px;padding:10px;cursor:pointer;background:var(--bg2);text-align:left}
+.role b{display:block;font-size:13.5px} .role span{font-size:11.5px;color:var(--muted)}
+.role.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.auc{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+  .lbox{grid-template-columns:minmax(0,1fr)}
+  .lhero h2{font-size:26px}
+  .grid2e{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}.dl{grid-template-columns:1fr 1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.tcard{grid-template-columns:minmax(0,1fr)}.tcard .val{text-align:left}.clock{font-size:34px}.best{font-size:24px}.step span{font-size:9.5px}.modal .box{padding:18px 14px}.lhero ul{display:none}}
+</style>
+</head>
+<body data-demo-en="OpenBid — National e-procurement (e-GP)" data-demo-ru="OpenBid — Национальные электронные закупки (e-GP)">
+<section class="login" id="login">
+  <div class="lbox">
+    <div class="lhero">
+      <span class="pill gold" data-en="Public Procurement Authority · Republic of Veloria" data-ru="Агентство госзакупок · Республика Велория"></span>
+      <h2 data-en="Every public contract — open, sealed, auditable." data-ru="Каждый госконтракт — открыто, запечатано, проверяемо."></h2>
+      <p data-en="OpenBid runs the full tender cycle: notices, sealed electronic bids, live reverse auctions, scored evaluation, award and OCDS open data." data-ru="OpenBid ведёт весь цикл закупки: извещения, запечатанные электронные заявки, онлайн-аукционы на понижение, оценка по баллам, присуждение и открытые данные OCDS."></p>
+      <ul>
+        <li><b>✓</b><span data-en="Bids sealed with a cryptographic hash until the opening time" data-ru="Заявки запечатаны криптографическим хешем до момента вскрытия"></span></li>
+        <li><b>✓</b><span data-en="Reverse auctions with anti-sniping extension" data-ru="Аукционы на понижение с продлением против «последней секунды»"></span></li>
+        <li><b>✓</b><span data-en="Every stage published as OCDS 1.1 releases" data-ru="Каждый этап публикуется как релиз OCDS 1.1"></span></li>
+      </ul>
+    </div>
+    <div class="card lcard">
+      <h3 data-en="Sign in to OpenBid" data-ru="Вход в OpenBid"></h3>
+      <div class="muted" style="font-size:13px" data-en="Demo credentials are prefilled — choose a role and continue." data-ru="Демо-данные уже заполнены — выберите роль и войдите."></div>
+      <div class="roles">
+        <button class="role on" data-role="supplier"><b data-en="Supplier" data-ru="Поставщик"></b><span data-en="Northgate Systems LLC" data-ru="ООО «Нортгейт Системс»"></span></button>
+        <button class="role" data-role="buyer"><b data-en="Procurement officer" data-ru="Закупщик"></b><span data-en="Central Procurement Office" data-ru="Центральное бюро закупок"></span></button>
+      </div>
+      <div class="f" style="margin-bottom:10px"><label data-en="Email" data-ru="Эл. почта"></label><input class="input" id="lEmail" value="demo@northgate.vl" autocomplete="username"><div class="err" id="lEmailE"></div></div>
+      <div class="f" style="margin-bottom:14px"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lPass" type="password" value="openbid-demo" autocomplete="current-password"><div class="err" id="lPassE"></div></div>
+      <button class="btn pri" id="loginBtn" style="width:100%;justify-content:center;padding:12px" data-en="Sign in with demo account" data-ru="Войти в демо-аккаунт"></button>
+      <div class="muted" style="font-size:11.5px;margin-top:10px;text-align:center" data-en="Protected by national e-signature (demo mode)" data-ru="Защищено национальной ЭЦП (демо-режим)"></div>
+    </div>
+  </div>
+</section>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>⚖</b><div>OpenBid<small data-en="e-GP · Republic of Veloria" data-ru="e-GP · Республика Велория"></small></div></div>
+    <div class="sec" data-en="Overview" data-ru="Обзор"></div>
+    <button class="nav" data-view="dash"><span class="ic">◧</span><span data-en="Dashboard" data-ru="Сводка"></span></button>
+    <button class="nav" data-view="notices"><span class="ic">▤</span><span data-en="Tender notices" data-ru="Извещения"></span><span class="cnt" id="cntN"></span></button>
+    <div class="sec" data-en="Supplier" data-ru="Поставщик"></div>
+    <button class="nav" data-view="bid"><span class="ic">✉</span><span data-en="Submit a bid" data-ru="Подать заявку"></span></button>
+    <button class="nav" data-view="mybids"><span class="ic">☰</span><span data-en="My bids" data-ru="Мои заявки"></span><span class="cnt" id="cntB"></span></button>
+    <button class="nav" data-view="auction"><span class="ic">⇣</span><span data-en="Live auction" data-ru="Онлайн-аукцион"></span><i class="live" id="liveDot"></i></button>
+    <div class="sec" data-en="Buyer" data-ru="Заказчик"></div>
+    <button class="nav" data-view="eval"><span class="ic">▦</span><span data-en="Evaluation" data-ru="Оценка заявок"></span></button>
+    <button class="nav" data-view="award"><span class="ic">✔</span><span data-en="Award &amp; contracts" data-ru="Присуждение и контракты"></span></button>
+    <div class="sec" data-en="Public" data-ru="Публично"></div>
+    <button class="nav" data-view="ocds"><span class="ic">{ }</span><span data-en="Open data (OCDS)" data-ru="Открытые данные (OCDS)"></span></button>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="logout" style="flex:1;justify-content:center" data-en="Log out" data-ru="Выйти"></button>
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    </div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <span class="sp"></span>
+      <button class="btn sm" id="roleP" title="Switch role"></button>
+    </div>
+    <section class="view" id="v-dash"></section>
+    <section class="view" id="v-notices"></section>
+    <section class="view" id="v-bid"></section>
+    <section class="view" id="v-mybids"></section>
+    <section class="view" id="v-auction"></section>
+    <section class="view" id="v-eval"></section>
+    <section class="view" id="v-award"></section>
+    <section class="view" id="v-ocds"></section>
+  </main>
+</div>
+<div class="modal" id="modal"><div class="box" id="mbox"></div></div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=o=>o?(o[PT.lang]||o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const P='pt_egp_', KEY=P+'state';
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const D=86400000;
+const fmtD=t=>new Date(t).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtDT=t=>new Date(t).toLocaleString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const hm=t=>new Date(t).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'});
+const hms=t=>new Date(t).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const money=n=>PT.lang==='ru'?Math.round(n).toLocaleString('ru-RU')+' VLD':'VLD '+Math.round(n).toLocaleString('en-US');
+const mShort=n=>PT.lang==='ru'?(n/1e6).toLocaleString('ru-RU',{maximumFractionDigits:2})+' млн VLD':'VLD '+(n/1e6).toLocaleString('en-US',{maximumFractionDigits:2})+'M';
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function hash(s){let h1=0x811c9dc5,h2=0x1b873593,out='';for(let r=0;r<4;r++){for(let i=0;i<s.length;i++){h1^=s.charCodeAt(i)+r;h1=Math.imul(h1,16777619);h2=Math.imul(h2^h1,2246822507)+r}out+=((h1>>>0).toString(16).padStart(8,'0'))+((h2>>>0).toString(16).padStart(8,'0'))}return out}
+
+const CAT={goods:['Goods','Товары'],works:['Works','Работы'],services:['Services','Услуги']};
+const METH={open:['Open tender','Открытый тендер'],auction:['Reverse auction','Аукцион на понижение'],rfq:['Request for quotations','Запрос котировок']};
+const ST={active:['Open for bids','Приём заявок','ok'],opened:['Bids opened','Заявки вскрыты','gold'],evaluation:['Evaluation','Оценка','warn'],awarded:['Awarded','Присуждён','ok'],cancelled:['Cancelled','Отменён','bad']};
+const BST={sealed:['Sealed','Запечатана','gold'],opened:['Opened','Вскрыта','warn'],won:['Won','Победа','ok'],lost:['Not selected','Не выбрана','bad'],withdrawn:['Withdrawn','Отозвана','']};
+const CRIT={price:['Price','Цена'],tech:['Technical quality','Техническое качество'],exp:['Experience','Опыт'],del:['Delivery schedule','Сроки поставки'],local:['Local content','Местное содержание']};
+const REQ=[['tech','Technical proposal','Техническое предложение','Technical_Proposal.pdf'],['reg','Company registration certificate','Свидетельство о регистрации','Registration_Cert.pdf'],['tax','Tax clearance certificate','Справка об отсутствии налоговой задолженности','Tax_Clearance_2025.pdf'],['sec','Bid security (bank guarantee)','Обеспечение заявки (банковская гарантия)','Bank_Guarantee.pdf']];
+
+function seed(){
+  const now=Date.now();
+  const t=(id,en,ru,ben,bru,cat,method,value,dl,status,bids,extra)=>Object.assign({id,title:{en,ru},buyer:{en:ben,ru:bru},cat,method,value,deadline:now+dl*D,published:now-(20-dl>0?20-dl:4)*D,status,bids,qa:[]},extra||{});
+  const tenders=[
+    t('OB-2025-0412','Supply of 120 hybrid city buses','Поставка 120 гибридных городских автобусов','Ministry of Transport','Министерство транспорта','goods','open',18.4e6,9,'active',[{sup:'Helix Motors',price:17.2e6},{sup:'Transvia Group',price:17.9e6},{sup:'Ardent Mobility',price:16.95e6}],{qa:[{q:{en:'Can bidders offer a 12-year battery warranty instead of 10?',ru:'Можно ли предложить гарантию на батареи 12 лет вместо 10?'},a:{en:'Yes. Longer warranties are scored under Technical quality.',ru:'Да. Более длительная гарантия учитывается в техническом качестве.'}}]}),
+    t('OB-2025-0398','Riverside bridge construction, Lot 2','Строительство моста Риверсайд, лот 2','National Roads Authority','Национальное дорожное агентство','works','open',42e6,14,'active',[{sup:'Corvane Construction',price:40.1e6},{sup:'Basalt & Sons',price:41.6e6}]),
+    t('OB-2025-0377','National ERP licences and 3-year support','Лицензии ERP и поддержка на 3 года','Ministry of Finance','Министерство финансов','services','open',6.2e6,-3,'evaluation',[]),
+    t('OB-2025-0361','Medical oxygen concentrators (900 units)','Медицинские концентраторы кислорода (900 шт.)','Ministry of Health','Министерство здравоохранения','goods','auction',3.1e6,0.02,'active',[]),
+    t('OB-2025-0350','School meals catering, 4 districts','Школьное питание в 4 районах','Ministry of Education','Министерство образования','services','open',9.8e6,-21,'awarded',[],{award:{sup:'Greenfield Catering',price:9.12e6,date:now-11*D,contract:{id:'CT-2025-0187',status:'signed',signed:now-2*D}}}),
+    t('OB-2025-0333','Solar mini-grids for 40 villages','Солнечные мини-сети для 40 сёл','Rural Energy Agency','Агентство сельской энергетики','works','open',14.5e6,6,'active',[{sup:'Sunreach Power',price:13.8e6}],{qa:[{q:{en:'Is a site visit mandatory?',ru:'Обязателен ли выезд на объекты?'},a:null}]}),
+    t('OB-2025-0320','Managed security operations centre','Управляемый центр мониторинга безопасности','Digital Government Agency','Агентство цифрового правительства','services','rfq',2.4e6,3,'active',[{sup:'Bastion Cyber',price:2.21e6},{sup:'Kestrel Secure',price:2.35e6}]),
+    t('OB-2025-0301','Office paper and consumables framework','Рамочный договор на бумагу и расходники','Central Purchasing Body','Центральный закупочный орган','goods','auction',0.9e6,-34,'awarded',[],{award:{sup:'Paperline Supplies',price:0.77e6,date:now-30*D,contract:{id:'CT-2025-0161',status:'signed',signed:now-26*D}},auctionStart:0.9e6})
+  ];
+  const evals={'OB-2025-0377':{done:false,weights:{price:40,tech:30,exp:15,del:10,local:5},bidders:[
+    {n:'Northgate Systems',price:5.74e6,s:{tech:86,exp:78,del:90,local:60},me:true},
+    {n:'Quantra Software',price:5.31e6,s:{tech:72,exp:84,del:75,local:40}},
+    {n:'Meridian Digital',price:6.05e6,s:{tech:91,exp:88,del:80,local:70}},
+    {n:'Atlas Business Apps',price:5.58e6,s:{tech:68,exp:62,del:85,local:90}}]}};
+  const myBids=[
+    {tid:'OB-2025-0377',price:5.74e6,validity:120,time:now-8*D,hash:hash('OB-2025-0377|5740000|seed'),status:'opened'},
+    {tid:'OB-2025-0350',price:9.48e6,validity:90,time:now-25*D,hash:hash('OB-2025-0350|9480000|seed'),status:'lost'}];
+  const log=[
+    {t:now-40*60e3,en:'Tender OB-2025-0333 amended: Annex C (village list) updated',ru:'Изменение в OB-2025-0333: обновлено Приложение C (список сёл)'},
+    {t:now-2.2*3600e3,en:'Bids opened for OB-2025-0377 — 4 envelopes, all hashes verified',ru:'Вскрыты заявки по OB-2025-0377 — 4 конверта, все хеши проверены'},
+    {t:now-5*3600e3,en:'Contract CT-2025-0187 signed with Greenfield Catering',ru:'Подписан контракт CT-2025-0187 с Greenfield Catering'},
+    {t:now-26*3600e3,en:'New notice published: OB-2025-0412 hybrid city buses',ru:'Опубликовано извещение OB-2025-0412: гибридные автобусы'}];
+  return{user:null,role:'supplier',view:'dash',tenders,evals,myBids,log,filter:{q:'',cat:'all',st:'all'},evalT:'OB-2025-0377',ocdsT:'OB-2025-0350',bidT:'OB-2025-0412',files:{},auction:newAuction(),nextCt:188};
+}
+function newAuction(){const now=Date.now();return{tid:'OB-2025-0361',start:3.1e6,startAt:now,endAt:now+180e3,ext:0,bids:[{who:'Medilux Trading',price:3.02e6,t:now-1}],done:false,bots:{'Medilux Trading':2.58e6,'Oxyline Ltd':2.64e6,'Vitalair Medical':2.71e6},next:now+4000}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||!S.tenders)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const tById=id=>S.tenders.find(x=>x.id===id);
+function addLog(en,ru){S.log.unshift({t:Date.now(),en,ru});S.log=S.log.slice(0,30)}
+const stPill=s=>`<span class="pill ${ST[s][2]}">${T(ST[s][0],ST[s][1])}</span>`;
+const left=t=>{const d=t-Date.now();if(d<=0)return T('closed','закрыт');const dd=Math.floor(d/D),h=Math.floor(d%D/3600e3),m=Math.floor(d%3600e3/60e3);return dd>0?T(dd+'d '+h+'h left','ещё '+dd+' д '+h+' ч'):T(h+'h '+m+'m left','ещё '+h+' ч '+m+' мин')};
+
+const VIEWS={dash:['Dashboard','Сводка'],notices:['Tender notices','Извещения о закупках'],bid:['Submit a sealed bid','Подача запечатанной заявки'],mybids:['My bids','Мои заявки'],auction:['Live reverse auction','Онлайн-аукцион на понижение'],eval:['Evaluation matrix','Матрица оценки'],award:['Award & contracts','Присуждение и контракты'],ocds:['Open data · OCDS 1.1','Открытые данные · OCDS 1.1']};
+
+function render(){
+  $('#login').hidden=!!S.user;$('#app').hidden=!S.user;
+  if(!S.user)return;
+  $$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.view===S.view));
+  $$('.view').forEach(v=>{const on=v.id==='v-'+S.view;v.classList.toggle('on',on);if(!on)v.innerHTML=''});
+  $('#title').textContent=T(...VIEWS[S.view]);
+  $('#crumb').textContent='OpenBid · '+T('Public Procurement Authority','Агентство госзакупок');
+  $('#roleP').textContent='⇄ '+(S.role==='buyer'?T('Procurement officer','Закупщик'):T('Supplier','Поставщик'));
+  const nOpen=S.tenders.filter(x=>x.status==='active').length;$('#cntN').textContent=nOpen;
+  const nB=S.myBids.filter(b=>b.status==='sealed').length;$('#cntB').textContent=nB||'';$('#cntB').style.display=nB?'':'none';
+  $('#liveDot').style.display=S.auction.done?'none':'';
+  $('#who').innerHTML=S.role==='buyer'?`<div class="av">CP</div><div><b>${T('Irena Kovalt','Ирена Ковальт')}</b>${T('Central Procurement Office','Центральное бюро закупок')}</div>`:`<div class="av">NS</div><div><b>${T('Daniel Arven','Даниэль Арвен')}</b>${T('Northgate Systems LLC','ООО «Нортгейт Системс»')}</div>`;
+  ({dash:rDash,notices:rNotices,bid:rBid,mybids:rMy,auction:rAuction,eval:rEval,award:rAward,ocds:rOcds})[S.view]();
+}
+function go(v){S.view=v;save();render();$('#side').classList.remove('open');window.scrollTo(0,0)}
+
+/* ---------- dashboard ---------- */
+function rDash(){
+  const el=$('#v-dash');const act=S.tenders.filter(x=>x.status==='active');
+  const tot=S.tenders.reduce((a,x)=>a+x.value,0);
+  const aw=S.tenders.filter(x=>x.award);const sav=aw.reduce((a,x)=>a+(x.value-x.award.price),0),base=aw.reduce((a,x)=>a+x.value,0);
+  const bidsN=S.tenders.reduce((a,x)=>a+x.bids.length,0)+S.myBids.length;
+  const cats=['goods','works','services'].map(c=>[c,S.tenders.filter(x=>x.cat===c).reduce((a,x)=>a+x.value,0)]);
+  const m=cssv('--mal'),g=cssv('--gold'),b=cssv('--blue'),ln=cssv('--line'),mu=cssv('--muted'),tx=cssv('--text');
+  // monthly spend chart
+  const months=PT.lang==='ru'?['май','июн','июл','авг','сен','окт','ноя']:['May','Jun','Jul','Aug','Sep','Oct','Nov'];
+  const pub=[31,44,38,52,61,57,64],awd=[22,29,35,33,48,51,46];
+  const W=560,H=210,px=36,py=16,mx=70,sx=(W-px-10)/months.length;
+  let bars='';months.forEach((mo,i)=>{const x=px+i*sx+8,h1=pub[i]/mx*(H-py-28),h2=awd[i]/mx*(H-py-28);bars+=`<rect x="${x}" y="${H-28-h1}" width="${sx/2-8}" height="${h1}" rx="4" fill="${m}"/><rect x="${x+sx/2-6}" y="${H-28-h2}" width="${sx/2-8}" height="${h2}" rx="4" fill="${g}"/><text x="${x+sx/2-7}" y="${H-10}" fill="${mu}" font-size="11" text-anchor="middle">${mo}</text>`});
+  let grid='';[0,20,40,60].forEach(v=>{const y=H-28-v/mx*(H-py-28);grid+=`<line x1="${px}" x2="${W-6}" y1="${y}" y2="${y}" stroke="${ln}"/><text x="${px-6}" y="${y+4}" fill="${mu}" font-size="10" text-anchor="end">${v}</text>`});
+  // donut by category
+  const cs=[m,g,b];let a0=-Math.PI/2,arcs='';const R=62,r0=40;
+  cats.forEach(([c,v],i)=>{const a1=a0+v/tot*Math.PI*2;const p=(a,rr)=>[90+rr*Math.cos(a),90+rr*Math.sin(a)];const [x1,y1]=p(a0,R),[x2,y2]=p(a1,R),[x3,y3]=p(a1,r0),[x4,y4]=p(a0,r0);const lg=a1-a0>Math.PI?1:0;arcs+=`<path d="M${x1} ${y1}A${R} ${R} 0 ${lg} 1 ${x2} ${y2}L${x3} ${y3}A${r0} ${r0} 0 ${lg} 0 ${x4} ${y4}Z" fill="${cs[i]}"/>`;a0=a1});
+  el.innerHTML=`<div class="kpis">
+    <div class="card kpi"><div class="l">${T('Open tenders','Открытые закупки')}</div><div class="v">${act.length}</div><div class="d">${mShort(act.reduce((a,x)=>a+x.value,0))} ${T('estimated','оценочно')}</div></div>
+    <div class="card kpi"><div class="l">${T('Bids received','Получено заявок')}</div><div class="v">${bidsN}</div><div class="d">${T('avg','в среднем')} ${(bidsN/S.tenders.length).toFixed(1)} ${T('per tender','на закупку')}</div></div>
+    <div class="card kpi"><div class="l">${T('Savings vs estimate','Экономия к оценке')}</div><div class="v" style="color:var(--mal3)">${base?(sav/base*100).toFixed(1):0}%</div><div class="d">${mShort(sav)}</div></div>
+    <div class="card kpi"><div class="l">${T('Contracts signed','Подписано контрактов')}</div><div class="v">${S.tenders.filter(x=>x.award&&x.award.contract.status==='signed').length}</div><div class="d">${T('100% published as OCDS','100% опубликовано в OCDS')}</div></div></div>
+  <div class="grid2"><div class="card chart"><h3>${T('Tender volume, VLD million','Объём закупок, млн VLD')}<span class="sp"></span><span class="legend"><span><i style="background:${m}"></i>${T('published','опубликовано')}</span><span><i style="background:${g}"></i>${T('awarded','присуждено')}</span></span></h3><svg viewBox="0 0 ${W} ${H}" role="img">${grid}${bars}</svg></div>
+  <div class="card chart"><h3>${T('Portfolio by category','Портфель по категориям')}</h3><div class="row" style="flex-wrap:nowrap;gap:14px"><svg viewBox="0 0 180 180" style="width:150px;flex:none">${arcs}<text x="90" y="88" text-anchor="middle" fill="${tx}" font-size="17" font-weight="800">${(tot/1e6).toFixed(0)}M</text><text x="90" y="106" text-anchor="middle" fill="${mu}" font-size="10">VLD</text></svg><div class="legend" style="flex-direction:column;gap:8px">${cats.map(([c,v],i)=>`<span><i style="background:${cs[i]}"></i>${T(...CAT[c])} · <b style="color:var(--text)">${(v/tot*100).toFixed(0)}%</b></span>`).join('')}</div></div></div></div>
+  <div class="grid2 mt"><div class="card"><h3>${T('Closing soon','Скоро закрываются')}<span class="sp"></span><button class="btn sm" data-go="notices">${T('All notices','Все извещения')} →</button></h3>${act.sort((a,b)=>a.deadline-b.deadline).slice(0,4).map(x=>`<div class="tcard" data-open="${x.id}" style="margin-bottom:8px"><div><div class="id">${x.id} · ${T(...METH[x.method])}</div><div class="ttl">${esc(L(x.title))}</div></div><div class="val">${mShort(x.value)}<small>${left(x.deadline)}</small></div></div>`).join('')}</div>
+  <div class="card"><h3>${T('Activity','Активность')}</h3><div class="log">${S.log.slice(0,7).map(l=>`<div><span class="t">${hm(l.t)}</span><span>${esc(L(l))}</span></div>`).join('')}</div></div></div>`;
+  bindCommon(el);
+}
+function bindCommon(el){
+  $$('[data-go]',el).forEach(b=>b.onclick=e=>{e.stopPropagation();go(b.dataset.go)});
+  $$('[data-open]',el).forEach(b=>b.onclick=()=>openTender(b.dataset.open));
+}
+
+/* ---------- notices ---------- */
+function rNotices(){
+  const el=$('#v-notices');const f=S.filter;
+  const list=S.tenders.filter(x=>(f.cat==='all'||x.cat===f.cat)&&(f.st==='all'||x.status===f.st)&&(!f.q||(x.id+' '+x.title.en+' '+x.title.ru+' '+x.buyer.en+' '+x.buyer.ru).toLowerCase().includes(f.q.toLowerCase())));
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row"><input class="input" id="nq" style="flex:1;min-width:200px" value="${esc(f.q)}" placeholder="${T('Search by title, buyer or reference…','Поиск по названию, заказчику или номеру…')}">
+  ${S.role==='buyer'?`<button class="btn gold" id="newT">＋ ${T('Publish notice','Опубликовать извещение')}</button>`:''}</div>
+  <div class="chips" style="margin-top:10px">${[['all','All categories','Все категории'],...Object.entries(CAT).map(([k,v])=>[k,...v])].map(c=>`<button class="chip ${f.cat===c[0]?'on':''}" data-cat="${c[0]}">${T(c[1],c[2])}</button>`).join('')}</div>
+  <div class="chips" style="margin-top:8px">${[['all','Any status','Любой статус'],...Object.entries(ST).filter(([k])=>k!=='opened').map(([k,v])=>[k,v[0],v[1]])].map(c=>`<button class="chip ${f.st===c[0]?'on':''}" data-st="${c[0]}">${T(c[1],c[2])}</button>`).join('')}</div></div>
+  <div class="muted" style="font-size:12.5px;margin-bottom:8px">${T(list.length+' notices','Найдено: '+list.length)}</div>
+  ${list.length?list.map(x=>`<div class="tcard" data-open="${x.id}"><div><div class="id">${x.id} · ${T(...CAT[x.cat])} · ${T(...METH[x.method])}</div><div class="ttl">${esc(L(x.title))}</div><div class="meta"><span>🏛 ${esc(L(x.buyer))}</span><span>⏱ ${x.status==='active'?left(x.deadline):fmtD(x.deadline)}</span><span>✉ ${x.bids.length+(S.myBids.some(b=>b.tid===x.id&&b.status==='sealed')?1:0)} ${T('bids','заявок')}</span></div></div><div class="val">${mShort(x.value)}<small>${stPill(x.status)}</small></div></div>`).join(''):`<div class="card empty"><div class="big">∅</div>${T('No notices match the filters','Нет извещений по фильтрам')}</div>`}`;
+  const q=$('#nq');q.oninput=()=>{S.filter.q=q.value;save();clearTimeout(q._t);q._t=setTimeout(()=>{rNotices();const n=$('#nq');n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)};
+  $$('[data-cat]',el).forEach(b=>b.onclick=()=>{S.filter.cat=b.dataset.cat;save();rNotices()});
+  $$('[data-st]',el).forEach(b=>b.onclick=()=>{S.filter.st=b.dataset.st;save();rNotices()});
+  if($('#newT'))$('#newT').onclick=newNotice;
+  bindCommon(el);
+}
+function openModal(html){$('#mbox').innerHTML='<button class="x" id="mx" aria-label="Close">✕</button>'+html;$('#modal').classList.add('on');$('#mx').onclick=closeModal}
+function closeModal(){$('#modal').classList.remove('on')}
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+function openTender(id){
+  const x=tById(id);if(!x)return;const mine=S.myBids.find(b=>b.tid===id&&b.status!=='withdrawn');
+  const stage=x.status==='active'?0:x.status==='evaluation'||x.status==='opened'?2:x.award&&x.award.contract.status==='signed'?4:3;
+  const steps=[['Published','Опубликован'],['Bidding','Приём'],['Evaluation','Оценка'],['Award','Присуждение'],['Contract','Контракт']];
+  openModal(`<div class="id mono muted" style="font-size:12px">${x.id} · ocds-vl7k2-${x.id}</div><h2 style="margin:4px 40px 6px 0;font-size:21px;overflow-wrap:anywhere">${esc(L(x.title))}</h2><div class="row">${stPill(x.status)}<span class="pill">${T(...CAT[x.cat])}</span><span class="pill">${T(...METH[x.method])}</span></div>
+  <div class="steps" style="margin-top:16px">${steps.map((s,i)=>`<div class="step ${i<stage+1&&i<=stage?(i<stage||stage===4?'ok':'cur'):''}"><div class="dot">${i<stage||stage===4?'✓':i+1}</div><span>${T(...s)}</span></div>`).join('')}</div>
+  <div class="dl"><div><span>${T('Buyer','Заказчик')}</span><b>${esc(L(x.buyer))}</b></div><div><span>${T('Estimated value','Оценочная стоимость')}</span><b>${money(x.value)}</b></div><div><span>${T('Submission deadline','Срок подачи')}</span><b>${fmtDT(x.deadline)}</b></div><div><span>${T('Bid security','Обеспечение заявки')}</span><b>${money(x.value*0.02)}</b></div><div><span>${T('Bids received','Заявок получено')}</span><b>${x.bids.length+(mine&&mine.status==='sealed'?1:0)} · ${T('sealed','запечатаны')}</b></div><div><span>${T('Evaluation','Оценка')}</span><b>${x.method==='auction'?T('Lowest price','Минимальная цена'):T('Best value (MEAT)','Лучшее соотношение')}</b></div></div>
+  <h3 style="font-size:14px;margin:14px 0 8px">${T('Tender documents','Документация')}</h3><div class="docs">${[['Bidding document','Тендерная документация','2.4 MB'],['Technical specification','Техническое задание','1.1 MB'],['Draft contract','Проект контракта','380 KB']].map(d=>`<div class="doc"><div class="ic">📄</div><span>${T(d[0],d[1])} · PDF</span><span class="muted" style="flex:none;font-size:12px">${d[2]}</span><button class="btn sm" data-dl="${T(d[0],d[1])}">${T('Download','Скачать')}</button></div>`).join('')}</div>
+  <h3 style="font-size:14px;margin:16px 0 8px">${T('Clarifications','Разъяснения')} (${x.qa.length})</h3><div id="qaList">${x.qa.map((q,i)=>`<div class="qa"><b>Q:</b> ${esc(L(q.q))}${q.a?`<div class="a"><b>A:</b> ${esc(L(q.a))}</div>`:S.role==='buyer'?`<div class="row" style="margin-top:8px"><input class="input" id="ans${i}" style="flex:1;min-width:160px" placeholder="${T('Type an answer…','Ответ…')}"><button class="btn sm pri" data-ans="${i}">${T('Publish answer','Опубликовать ответ')}</button></div>`:`<div class="a">${T('Awaiting answer from the buyer','Ожидает ответа заказчика')}</div>`}</div>`).join('')||`<div class="muted" style="font-size:13px">${T('No questions yet.','Вопросов пока нет.')}</div>`}</div>
+  ${x.status==='active'&&S.role==='supplier'?`<div class="row" style="margin-top:8px"><input class="input" id="qIn" style="flex:1;min-width:180px" placeholder="${T('Ask the buyer a question (published anonymously)…','Задать вопрос заказчику (публикуется анонимно)…')}"><button class="btn sm" id="qAsk">${T('Send question','Отправить вопрос')}</button></div>`:''}
+  <div class="row" style="margin-top:18px">${x.status==='active'&&S.role==='supplier'?(x.method==='auction'?`<button class="btn pri" id="mGo">${T('Join live auction','Войти в аукцион')} →</button>`:mine&&mine.status==='sealed'?`<span class="pill gold">✉ ${T('Your sealed bid is on file','Ваша запечатанная заявка подана')}</span>`:`<button class="btn pri" id="mGo">${T('Prepare sealed bid','Подготовить заявку')} →</button>`):''}
+  ${x.status==='active'&&S.role==='buyer'&&x.method!=='auction'?`<button class="btn gold" id="mOpen">🔓 ${T('Close bidding & open envelopes','Закрыть приём и вскрыть конверты')}</button>`:''}
+  ${x.status==='evaluation'?`<button class="btn" id="mEval">${T('Go to evaluation','К оценке')} →</button>`:''}
+  <button class="btn" id="mOcds">{ } OCDS</button></div>`);
+  $$('[data-dl]',$('#mbox')).forEach(b=>b.onclick=()=>toast('⬇ '+esc(b.dataset.dl)+' · '+x.id));
+  $$('[data-ans]',$('#mbox')).forEach(b=>b.onclick=()=>{const i=+b.dataset.ans,v=$('#ans'+i).value.trim();if(v.length<5){toast(T('Answer is too short','Слишком короткий ответ'),'bad');return}x.qa[i].a={en:v,ru:v};addLog('Clarification answered on '+x.id,'Опубликован ответ на вопрос по '+x.id);save();openTender(id);toast(T('Answer published to all bidders','Ответ опубликован для всех участников'))});
+  if($('#qAsk'))$('#qAsk').onclick=()=>{const v=$('#qIn').value.trim();if(v.length<8){toast(T('Please write a full question (8+ characters)','Сформулируйте вопрос полностью (от 8 символов)'),'bad');return}x.qa.push({q:{en:v,ru:v},a:null});addLog('New clarification question on '+x.id,'Новый вопрос по '+x.id);save();openTender(id);toast(T('Question sent. The answer will be visible to all bidders.','Вопрос отправлен. Ответ увидят все участники.'))};
+  if($('#mGo'))$('#mGo').onclick=()=>{closeModal();if(x.method==='auction')go('auction');else{S.bidT=x.id;go('bid')}};
+  if($('#mOpen'))$('#mOpen').onclick=()=>{openEnvelopes(x);closeModal();go('eval')};
+  if($('#mEval'))$('#mEval').onclick=()=>{S.evalT=x.id;closeModal();go('eval')};
+  $('#mOcds').onclick=()=>{S.ocdsT=x.id;closeModal();go('ocds')};
+}
+function openEnvelopes(x){
+  const mine=S.myBids.find(b=>b.tid===x.id&&b.status==='sealed');
+  const rnd=()=>55+Math.floor(Math.random()*40);
+  const bidders=x.bids.map(b=>({n:b.sup,price:b.price,s:{tech:rnd(),exp:rnd(),del:rnd(),local:rnd()}}));
+  if(mine){mine.status='opened';bidders.push({n:'Northgate Systems',price:mine.price,s:{tech:rnd(),exp:rnd(),del:rnd(),local:rnd()},me:true})}
+  if(!bidders.length){toast(T('No bids received — tender will be re-advertised','Заявок нет — закупка будет объявлена повторно'),'bad');x.status='cancelled';save();return}
+  S.evals[x.id]={done:false,weights:{price:40,tech:30,exp:15,del:10,local:5},bidders};
+  x.status='evaluation';x.deadline=Math.min(x.deadline,Date.now());S.evalT=x.id;
+  addLog(`Bids opened for ${x.id} — ${bidders.length} envelopes, hashes verified`,`Вскрыты заявки по ${x.id} — конвертов: ${bidders.length}, хеши проверены`);
+  save();toast(T(`${bidders.length} envelopes opened · all hashes match`,`Вскрыто конвертов: ${bidders.length} · все хеши совпали`),'gold');
+}
+function newNotice(){
+  openModal(`<h2 style="margin:0 40px 14px 0;font-size:20px">${T('Publish a tender notice','Публикация извещения')}</h2><div class="fgrid">
+  <div class="f full"><label>${T('Title','Название')}</label><input class="input" id="nT" placeholder="${T('e.g. Supply of laboratory equipment','напр. Поставка лабораторного оборудования')}"><div class="err" id="nTE"></div></div>
+  <div class="f"><label>${T('Category','Категория')}</label><select class="input" id="nC">${Object.entries(CAT).map(([k,v])=>`<option value="${k}">${T(...v)}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Method','Способ')}</label><select class="input" id="nM">${Object.entries(METH).map(([k,v])=>`<option value="${k}">${T(...v)}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Estimated value, VLD','Оценочная стоимость, VLD')}</label><input class="input" id="nV" type="number" min="1000" placeholder="1500000"><div class="err" id="nVE"></div></div>
+  <div class="f"><label>${T('Bidding period, days','Срок приёма, дней')}</label><input class="input" id="nD" type="number" value="21" min="7" max="90"><div class="err" id="nDE"></div></div></div>
+  <div class="row" style="margin-top:16px"><button class="btn pri" id="nPub">${T('Publish notice','Опубликовать')}</button><span class="muted" style="font-size:12px">${T('Open tenders require at least 7 days for bidding','Для открытых закупок срок приёма — не менее 7 дней')}</span></div>`);
+  $('#nPub').onclick=()=>{let ok=true;const t=$('#nT').value.trim(),v=+$('#nV').value,d=+$('#nD').value;
+    const err=(id,m)=>{$('#'+id+'E').textContent=m||'';$('#'+id).classList.toggle('bad',!!m);if(m)ok=false};
+    err('nT',t.length<6?T('Enter a descriptive title (6+ characters)','Введите понятное название (от 6 символов)'):'');
+    err('nV',!(v>=1000)?T('Value must be at least VLD 1,000','Стоимость — не менее 1 000 VLD'):'');
+    err('nD',!(d>=7&&d<=90)?T('Between 7 and 90 days','От 7 до 90 дней'):'');
+    if(!ok)return;const id='OB-2025-0'+(413+S.tenders.length);
+    S.tenders.unshift({id,title:{en:t,ru:t},buyer:{en:'Central Procurement Office',ru:'Центральное бюро закупок'},cat:$('#nC').value,method:$('#nM').value,value:v,deadline:Date.now()+d*D,published:Date.now(),status:'active',bids:[],qa:[]});
+    addLog('New notice published: '+id,'Опубликовано извещение '+id);save();closeModal();rNotices();toast(T('Notice '+id+' published and released to OCDS','Извещение '+id+' опубликовано и выгружено в OCDS'))};
+}
+
+/* ---------- bid submission ---------- */
+function rBid(){
+  const el=$('#v-bid');const open=S.tenders.filter(x=>x.status==='active'&&x.method!=='auction');
+  if(!open.find(x=>x.id===S.bidT))S.bidT=open[0]&&open[0].id;
+  const x=tById(S.bidT);const files=S.files[S.bidT]||{};const existing=S.myBids.find(b=>b.tid===S.bidT&&b.status==='sealed');
+  if(!x){el.innerHTML=`<div class="card empty"><div class="big">✉</div>${T('No open tenders accept sealed bids right now.','Сейчас нет открытых закупок для подачи заявок.')}</div>`;return}
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Bid form','Форма заявки')}<span class="sp"></span><span class="pill">${left(x.deadline)}</span></h3>
+  <div class="fgrid"><div class="f full"><label>${T('Tender','Закупка')}</label><select class="input" id="bT">${open.map(o=>`<option value="${o.id}" ${o.id===S.bidT?'selected':''}>${o.id} — ${esc(L(o.title))}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Bid price (incl. taxes), VLD','Цена заявки (с налогами), VLD')}</label><input class="input mono" id="bP" type="number" min="1" placeholder="${Math.round(x.value*0.94)}"><div class="err" id="bPE"></div></div>
+  <div class="f"><label>${T('Bid validity','Срок действия заявки')}</label><select class="input" id="bV"><option value="90">90 ${T('days','дней')}</option><option value="120" selected>120 ${T('days','дней')}</option><option value="180">180 ${T('days','дней')}</option></select></div>
+  <div class="f full"><label>${T('Bid security reference','Номер банковской гарантии')}</label><input class="input mono" id="bS" placeholder="BG-VLB-2025-000000"><div class="err" id="bSE"></div></div></div>
+  <h3 style="font-size:14px;margin:16px 0 8px">${T('Required documents','Обязательные документы')}</h3><div class="docs">${REQ.map(r=>`<div class="doc ${files[r[0]]?'ok':''}"><div class="ic">${files[r[0]]?'✓':'📎'}</div><span>${T(r[1],r[2])}${files[r[0]]?`<br><small class="muted mono">${r[3]} · ${files[r[0]]} KB</small>`:''}</span><button class="btn sm" data-att="${r[0]}">${files[r[0]]?T('Replace','Заменить'):T('Attach','Прикрепить')}</button></div>`).join('')}</div><div class="err f" id="bFE" style="color:var(--red);font-size:12px;margin-top:6px"></div>
+  <label class="chk" style="margin-top:14px"><input type="checkbox" id="bD"><span>${T('I declare no conflict of interest and accept the bidding terms. False declarations lead to debarment.','Подтверждаю отсутствие конфликта интересов и принимаю условия. Ложные сведения ведут к отстранению.')}</span></label>
+  <div class="fgrid" style="margin-top:12px"><div class="f"><label>${T('E-signature PIN','PIN электронной подписи')}</label><input class="input mono" id="bPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••"><div class="err" id="bPinE"></div></div><div class="f" style="display:flex;align-items:flex-end"><button class="btn pri" id="bSub" style="width:100%;justify-content:center">✉ ${T('Sign, seal & submit','Подписать, запечатать и подать')}</button></div></div>
+  <div class="muted" style="font-size:11.5px;margin-top:6px">${T('Demo PIN: any 4–6 digits','Демо-PIN: любые 4–6 цифр')}</div></div>
+  <div class="card"><h3>${T('Sealed envelope','Запечатанный конверт')}</h3><div class="env ${existing?'sealed':''}" id="env"><svg viewBox="0 0 220 150"><rect x="10" y="40" width="200" height="104" rx="8" fill="${cssv('--panel2')}" stroke="${cssv('--line2')}" stroke-width="2"/><path d="M10 48 L110 108 L210 48" fill="none" stroke="${cssv('--line2')}" stroke-width="2"/><path class="flap" d="M10 60 L110 4 L210 60 Z" fill="${cssv('--panel')}" stroke="${cssv('--line2')}" stroke-width="2"/><g class="seal"><circle cx="110" cy="92" r="20" fill="${cssv('--red')}"/><text x="110" y="98" text-anchor="middle" font-size="16" fill="#fff" font-weight="800">OB</text></g></svg></div>
+  <div id="receipt">${existing?receipt(existing,x):`<p class="muted" style="font-size:13px;margin:0">${T('Your bid is encrypted and sealed with a SHA-256 fingerprint. Nobody — including the buyer — can see the price before the public opening at the deadline.','Заявка шифруется и запечатывается отпечатком SHA-256. Никто, включая заказчика, не видит цену до публичного вскрытия в срок подачи.')}</p>`}</div>
+  <div class="dl" style="grid-template-columns:1fr 1fr"><div><span>${T('Estimated value','Оценочная стоимость')}</span><b>${money(x.value)}</b></div><div><span>${T('Opening','Вскрытие')}</span><b>${fmtDT(x.deadline)}</b></div></div></div></div>`;
+  $('#bT').onchange=e=>{S.bidT=e.target.value;save();rBid()};
+  $$('[data-att]',el).forEach(b=>b.onclick=()=>{S.files[S.bidT]=S.files[S.bidT]||{};S.files[S.bidT][b.dataset.att]=120+Math.floor(Math.random()*2400);save();rBid();toast(T('File uploaded and virus-scanned','Файл загружен и проверен антивирусом'))});
+  if(existing){$('#bSub').disabled=true;$('#bSub').textContent=T('Bid already submitted','Заявка уже подана')}
+  $('#bSub').onclick=()=>{let ok=true;const err=(id,m)=>{const e=$('#'+id+'E');if(e)e.textContent=m||'';const i=$('#'+id);if(i&&i.classList)i.classList.toggle('bad',!!m);if(m)ok=false};
+    const p=+$('#bP').value,s=$('#bS').value.trim(),pin=$('#bPin').value.trim();
+    err('bP',!(p>0)?T('Enter your bid price','Укажите цену заявки'):p>x.value*1.25?T('Price exceeds 125% of the estimate — the bid would be non-responsive','Цена выше 125% оценки — заявка будет отклонена'):'');
+    err('bS',!/^BG-[A-Z]{2,4}-\d{4}-\d{4,6}$/.test(s)?T('Format: BG-XXX-YYYY-NNNNNN','Формат: BG-XXX-ГГГГ-NNNNNN'):'');
+    const miss=REQ.filter(r=>!files[r[0]]);$('#bFE').textContent=miss.length?T('Attach: ','Прикрепите: ')+miss.map(r=>T(r[1],r[2])).join(', '):'';if(miss.length)ok=false;
+    if(!$('#bD').checked){ok=false;toast(T('Please accept the declaration','Подтвердите декларацию'),'bad')}
+    err('bPin',!/^\d{4,6}$/.test(pin)?T('PIN must be 4–6 digits','PIN — 4–6 цифр'):'');
+    if(!ok)return;
+    const b={tid:x.id,price:p,validity:+$('#bV').value,sec:s,time:Date.now(),status:'sealed'};b.hash=hash([x.id,p,b.validity,s,b.time].join('|'));
+    S.myBids.unshift(b);addLog('Sealed bid received on '+x.id+' (hash '+b.hash.slice(0,10)+'…)','Получена запечатанная заявка по '+x.id+' (хеш '+b.hash.slice(0,10)+'…)');save();
+    $('#env').classList.add('sealed');$('#bSub').disabled=true;
+    setTimeout(()=>{$('#receipt').innerHTML=receipt(b,x);$('#cntB').textContent=S.myBids.filter(z=>z.status==='sealed').length;$('#cntB').style.display='';toast(T('Bid sealed and submitted. Receipt issued.','Заявка запечатана и подана. Квитанция выдана.'),'gold')},1100);
+  };
+}
+function receipt(b,x){return`<div class="pill ok" style="margin-bottom:8px">✓ ${T('Submitted','Подана')} ${fmtDT(b.time)}</div><div style="font-size:12px;color:var(--muted);margin-bottom:4px">${T('Bid fingerprint (SHA-256)','Отпечаток заявки (SHA-256)')}</div><div class="hash">${b.hash}</div><div style="font-size:12.5px;margin-top:8px" class="muted">${T('Sealed until','Запечатана до')} <b style="color:var(--text)">${fmtDT(x.deadline)}</b>. ${T('You can withdraw it in My bids before the deadline.','До срока её можно отозвать в разделе «Мои заявки».')}</div>`}
+
+function rMy(){
+  const el=$('#v-mybids');
+  el.innerHTML=S.myBids.length?S.myBids.map((b,i)=>{const x=tById(b.tid);return`<div class="mybid"><div class="top"><b>${esc(L(x.title))}</b><span class="pill ${BST[b.status][2]}">${T(...BST[b.status].slice(0,2))}</span></div>
+  <div class="dl" style="margin:10px 0"><div><span>${T('Reference','Номер')}</span><b class="mono">${b.tid}</b></div><div><span>${T('Your price','Ваша цена')}</span><b>${money(b.price)}</b></div><div><span>${T('Submitted','Подана')}</span><b>${fmtDT(b.time)}</b></div></div>
+  <div class="hash">${b.hash}</div><div class="row" style="margin-top:10px">${b.status==='sealed'?`<button class="btn sm danger" data-wd="${i}">${T('Withdraw bid','Отозвать заявку')}</button>`:''}<button class="btn sm" data-open="${b.tid}">${T('View tender','Открыть закупку')}</button>${b.status==='won'?`<button class="btn sm gold" data-go="award">${T('Sign contract','Подписать контракт')} →</button>`:''}</div></div>`}).join(''):`<div class="card empty"><div class="big">✉</div>${T('No bids yet','Заявок пока нет')}<div style="margin-top:12px"><button class="btn pri" data-go="bid">${T('Submit a bid','Подать заявку')}</button></div></div>`;
+  $$('[data-wd]',el).forEach(b=>b.onclick=()=>{const m=S.myBids[+b.dataset.wd];m.status='withdrawn';addLog('Bid withdrawn from '+m.tid,'Отозвана заявка по '+m.tid);save();render();toast(T('Bid withdrawn. Bid security released.','Заявка отозвана. Обеспечение возвращено.'))});
+  bindCommon(el);
+}
+
+/* ---------- live auction ---------- */
+const A=()=>S.auction;
+const bestBid=()=>A().bids.reduce((m,b)=>b.price<m.price?b:m,A().bids[0]);
+function rAuction(){
+  const el=$('#v-auction');const a=A(),x=tById(a.tid);
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row"><div style="flex:1;min-width:200px"><div class="mono muted" style="font-size:12px">${a.tid} · ${T('Reverse auction · lowest price wins','Аукцион на понижение · побеждает минимальная цена')}</div><b style="font-size:16px">${esc(L(x.title))}</b></div><span class="pill" id="aState"></span></div></div>
+  <div class="auc"><div class="card chart"><h3>${T('Price trajectory','Динамика цены')}<span class="sp"></span><span class="legend"><span><i style="background:${cssv('--gold')}"></i>${T('your bids','ваши ставки')}</span><span><i style="background:${cssv('--mal')}"></i>${T('competitors','конкуренты')}</span></span></h3><div id="aChart"></div>
+  <div class="feed mt" id="aFeed"></div></div>
+  <div><div class="card"><div class="row" style="justify-content:space-between;align-items:flex-start"><div><div class="muted" style="font-size:12px">${T('Time remaining','Осталось времени')}</div><div class="clock" id="aClock">--:--</div><div class="muted" style="font-size:11.5px;margin-top:4px">${T('A bid in the last 30 s extends by 30 s','Ставка в последние 30 с продлевает торги на 30 с')}</div></div><div style="text-align:right"><div class="muted" style="font-size:12px">${T('Current best','Лучшая цена')}</div><div class="best" id="aBest"></div><div class="muted" style="font-size:12px" id="aSave"></div></div></div>
+  <div class="f mt" id="aForm"><label>${T('Your bid, VLD (min. step 0.5%)','Ваша ставка, VLD (мин. шаг 0,5%)')}</label><div class="row" style="flex-wrap:nowrap"><input class="input mono" id="aIn" type="number" style="min-width:0"><button class="btn pri" id="aBid" style="flex:none">${T('Place bid','Сделать ставку')}</button></div><div class="err" id="aErr"></div>
+  <div class="chips" style="margin-top:8px"><button class="chip" data-step="0.5">−0.5%</button><button class="chip" data-step="1">−1%</button><button class="chip" data-step="2">−2%</button></div></div>
+  <div id="aDone"></div></div>
+  <div class="card mt"><h3>${T('Ranking','Рейтинг')}</h3><div class="ladder" id="aLadder"></div><div class="muted" style="font-size:11.5px;margin-top:8px">${T('Competitor identities are masked during the auction.','Имена конкурентов скрыты во время торгов.')}</div></div></div></div>`;
+  $$('[data-step]',el).forEach(c=>c.onclick=()=>{$('#aIn').value=Math.floor(bestBid().price*(1-c.dataset.step/100))});
+  $('#aBid').onclick=()=>{const v=+$('#aIn').value,best=bestBid().price,max=Math.floor(best*0.995);
+    if(a.done){return}
+    if(!(v>0)){$('#aErr').textContent=T('Enter an amount','Введите сумму');return}
+    if(v>max){$('#aErr').textContent=T('Must be at most ','Не больше ')+money(max)+T(' (0.5% below the best)',' (на 0,5% ниже лучшей)');return}
+    if(v<a.start*0.6){$('#aErr').textContent=T('Abnormally low — below 60% of the start price','Аномально низкая — ниже 60% стартовой цены');return}
+    $('#aErr').textContent='';placeBid('me',v);$('#aIn').value='';toast(T('Bid accepted — you lead at ','Ставка принята — вы лидируете: ')+money(v),'gold')};
+  updAuction();
+}
+function placeBid(who,price){const a=A(),now=Date.now();a.bids.push({who,price,t:now});if(a.endAt-now<30e3){a.endAt=now+30e3;a.ext++}save()}
+function maskName(w,i){return w==='me'?T('You · Northgate Systems','Вы · Нортгейт Системс'):T('Bidder ','Участник ')+String.fromCharCode(65+i)}
+function updAuction(){
+  const a=A();if(S.view!=='auction'||!$('#aClock'))return;
+  const now=Date.now(),rem=Math.max(0,a.endAt-now),best=bestBid();
+  $('#aClock').textContent=String(Math.floor(rem/60e3)).padStart(2,'0')+':'+String(Math.floor(rem%60e3/1e3)).padStart(2,'0');
+  $('#aClock').classList.toggle('hot',rem<30e3&&!a.done);
+  $('#aBest').textContent=money(best.price);
+  $('#aSave').textContent=T('−','−')+((1-best.price/a.start)*100).toFixed(1)+T('% vs start ','% к старту ')+money(a.start);
+  $('#aState').className='pill '+(a.done?'ok':'bad');$('#aState').textContent=a.done?T('Closed','Завершён'):T('● LIVE','● В ЭФИРЕ')+(a.ext?' · +'+a.ext*30+T('s ext','с'):'');
+  const names=[...new Set(a.bids.map(b=>b.who))].filter(w=>w!=='me');
+  const lastBy={};a.bids.forEach(b=>{if(!lastBy[b.who]||b.price<lastBy[b.who])lastBy[b.who]=b.price});
+  const rank=Object.entries(lastBy).sort((p,q)=>p[1]-q[1]);
+  $('#aLadder').innerHTML=rank.map(([w,p],i)=>`<div class="${w==='me'?'me':''}"><span class="rk">${i+1}</span><span>${maskName(w,names.indexOf(w))}</span><span class="p">${money(p)}</span></div>`).join('');
+  $('#aFeed').innerHTML=a.bids.slice().reverse().slice(0,12).map(b=>`<div><span class="t">${hms(b.t)}</span><span>${maskName(b.who,names.indexOf(b.who))} — <b>${money(b.price)}</b></span></div>`).join('');
+  // chart
+  const W=560,H=220,pl=60,pr=12,pt=12,pb=24,t0=a.bids[0].t-5e3,t1=Math.max(now,a.bids[a.bids.length-1].t)+3e3;
+  const lo=Math.min(...a.bids.map(b=>b.price))*0.99,hi=a.start*1.005;
+  const X=t=>pl+(t-t0)/(t1-t0)*(W-pl-pr),Y=p=>pt+(hi-p)/(hi-lo)*(H-pt-pb);
+  let path=`M${X(t0)} ${Y(a.start)}`,cur=a.start;const pts=[];a.bids.slice().sort((p,q)=>p.t-q.t).forEach(b=>{if(b.price<cur){path+=`H${X(b.t)}V${Y(b.price)}`;cur=b.price}pts.push(b)});path+=`H${X(t1)}`;
+  const g=cssv('--gold'),m=cssv('--mal'),ln=cssv('--line'),mu=cssv('--muted');
+  let grid='';for(let i=0;i<4;i++){const p=lo+(hi-lo)*i/3;grid+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(p)}" y2="${Y(p)}" stroke="${ln}"/><text x="${pl-6}" y="${Y(p)+4}" fill="${mu}" font-size="10" text-anchor="end">${(p/1e6).toFixed(2)}M</text>`}
+  $('#aChart').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${grid}<path d="${path}" fill="none" stroke="${m}" stroke-width="2.5"/>${pts.map(b=>`<circle cx="${X(b.t)}" cy="${Y(b.price)}" r="${b.who==='me'?5.5:4}" fill="${b.who==='me'?g:m}" stroke="${cssv('--panel')}" stroke-width="1.5"/>`).join('')}</svg>`;
+  $('#aIn').disabled=$('#aBid').disabled=a.done;
+  if(a.done){const w=rank[0];$('#aDone').innerHTML=`<div class="card mt" style="border-color:var(--${w[0]==='me'?'mal':'line2'})"><b>${w[0]==='me'?T('🏆 You won the auction','🏆 Вы выиграли аукцион'):T('Auction closed','Аукцион завершён')}</b><div class="muted" style="font-size:13px;margin:6px 0 10px">${T('Final price','Итоговая цена')} ${money(w[1])} · ${T('saving','экономия')} ${((1-w[1]/a.start)*100).toFixed(1)}%</div><button class="btn sm" id="aRe">↻ ${T('Restart auction','Перезапустить аукцион')}</button></div>`;$('#aRe').onclick=()=>{S.auction=newAuction();const x=tById(S.auction.tid);x.status='active';x.award=null;save();render()}}else $('#aDone').innerHTML='';
+}
+function tickAuction(){
+  const a=A();if(!S.user||a.done)return;const now=Date.now();
+  if(now>=a.endAt){a.done=true;const lastBy={};a.bids.forEach(b=>{if(!lastBy[b.who]||b.price<lastBy[b.who])lastBy[b.who]=b.price});const w=Object.entries(lastBy).sort((p,q)=>p[1]-q[1])[0];const x=tById(a.tid);x.status='awarded';x.auctionStart=a.start;x.award={sup:w[0]==='me'?'Northgate Systems':w[0],price:w[1],date:now,contract:{id:'CT-2025-0'+(S.nextCt++),status:'standstill'}};if(w[0]==='me')S.myBids.unshift({tid:a.tid,price:w[1],validity:90,time:now,hash:hash(a.tid+'|'+w[1]+'|auction'),status:'won'});addLog(`Auction ${a.tid} closed at ${Math.round(w[1]).toLocaleString('en-US')} VLD`,`Аукцион ${a.tid} завершён на ${Math.round(w[1]).toLocaleString('ru-RU')} VLD`);save();toast(T('Auction closed','Аукцион завершён'),'gold');render();return}
+  if(now>=a.next){const best=bestBid().price;const cands=Object.entries(a.bots).filter(([n,f])=>best*0.992>f&&bestBid().who!==n);if(cands.length){const [n,f]=cands[Math.floor(Math.random()*cands.length)];const p=Math.max(f,Math.round(best*(1-(0.005+Math.random()*0.009))/100)*100);placeBid(n,p)}a.next=now+3500+Math.random()*5000;save()}
+  updAuction();
+}
+setInterval(tickAuction,1000);
+
+/* ---------- evaluation ---------- */
+function score(ev,b){const minP=Math.min(...ev.bidders.map(x=>x.price));const s={price:minP/b.price*100,...b.s};return Object.keys(ev.weights).reduce((a,k)=>a+s[k]*ev.weights[k]/100,0)}
+function rEval(){
+  const el=$('#v-eval');const ids=Object.keys(S.evals);
+  if(!ids.length){el.innerHTML=`<div class="card empty"><div class="big">▦</div>${T('No tenders in evaluation. Open envelopes from a tender notice (buyer role).','Нет закупок на оценке. Вскройте конверты в извещении (роль закупщика).')}</div>`;return}
+  if(!S.evals[S.evalT])S.evalT=ids[0];
+  const ev=S.evals[S.evalT],x=tById(S.evalT),wsum=Object.values(ev.weights).reduce((a,b)=>a+b,0);
+  const minP=Math.min(...ev.bidders.map(b=>b.price));
+  const ranked=ev.bidders.map((b,i)=>({b,i,t:score(ev,b)})).sort((p,q)=>q.t-p.t);
+  const ro=ev.done||S.role!=='buyer';
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row"><select class="input" id="eT" style="flex:1;min-width:200px">${ids.map(id=>`<option value="${id}" ${id===S.evalT?'selected':''}>${id} — ${esc(L(tById(id).title))}</option>`).join('')}</select>${ev.done?`<span class="pill ok">✓ ${T('Evaluation finalised','Оценка утверждена')}</span>`:`<span class="pill warn">${T('In progress','В работе')}</span>`}</div>
+  ${S.role!=='buyer'?`<div class="muted" style="font-size:12.5px;margin-top:8px">🔒 ${T('Read-only: switch to the Procurement officer role to score bids.','Только просмотр: для выставления баллов войдите как закупщик.')}</div>`:''}</div>
+  <div class="tw mx"><table><thead><tr><th>${T('Bidder','Участник')}</th><th class="num">${T('Price','Цена')}</th>${Object.keys(ev.weights).map(k=>`<th class="num">${T(...CRIT[k])}<br><input data-w="${k}" type="number" min="0" max="100" value="${ev.weights[k]}" ${ro?'disabled':''} aria-label="weight">%</th>`).join('')}<th class="num">${T('Total','Итог')}</th><th>${T('Rank','Место')}</th></tr></thead><tbody>
+  ${ev.bidders.map((b,i)=>{const t=score(ev,b),rk=ranked.findIndex(r=>r.i===i)+1;return`<tr class="${rk===1?'win':''}"><td><b>${esc(b.n)}</b>${b.me?` <span class="pill gold">${T('you','вы')}</span>`:''}</td><td class="num">${(b.price/1e6).toFixed(2)}M</td><td class="num">${(minP/b.price*100).toFixed(1)}</td>${['tech','exp','del','local'].map(k=>`<td class="num"><input data-s="${i}:${k}" type="number" min="0" max="100" value="${b.s[k]}" ${ro?'disabled':''}></td>`).join('')}<td class="num tot" id="tot${i}">${t.toFixed(1)}</td><td><div class="row" style="flex-wrap:nowrap"><span class="pill ${rk===1?'ok':''}">#${rk}</span><div class="bar" style="width:70px"><i style="width:${t}%"></i></div></div></td></tr>`}).join('')}</tbody></table></div>
+  <div class="row mt"><span class="${wsum===100?'ok-t':'bad-t'}" style="font-size:13px;font-weight:700;color:var(--${wsum===100?'mal3':'red'})">${T('Weights total','Сумма весов')}: ${wsum}%</span><span class="sp" style="flex:1"></span>${!ro?`<button class="btn pri" id="eFin" ${wsum!==100?'disabled':''}>${T('Finalise evaluation & recommend','Утвердить оценку и рекомендовать')}</button>`:''}${ev.done?`<button class="btn" data-go="award">${T('Go to award','К присуждению')} →</button>`:''}</div>
+  <div class="grid2e mt"><div class="card"><h3>${T('Recommended award','Рекомендуемый победитель')}</h3><div style="font-size:20px;font-weight:800">${esc(ranked[0].b.n)}</div><div class="muted" style="font-size:13px">${T('Score','Балл')} ${ranked[0].t.toFixed(1)} · ${money(ranked[0].b.price)} · ${T('margin over #2','отрыв от #2')}: ${ranked[1]?(ranked[0].t-ranked[1].t).toFixed(1):'—'}</div></div>
+  <div class="card"><h3>${T('Method','Методика')}</h3><div class="muted" style="font-size:13px">${T('Price score = lowest price ÷ bid price × 100. Other criteria are scored 0–100 by the evaluation committee; weights must total 100%. Scores are signed and published with the award.','Балл цены = минимальная цена ÷ цена заявки × 100. Остальные критерии комиссия оценивает 0–100; сумма весов — 100%. Баллы подписываются и публикуются вместе с итогами.')}</div></div></div>`;
+  $('#eT').onchange=e=>{S.evalT=e.target.value;save();rEval()};
+  $$('[data-w]',el).forEach(i=>i.onchange=()=>{ev.weights[i.dataset.w]=Math.max(0,Math.min(100,+i.value||0));save();rEval()});
+  $$('[data-s]',el).forEach(i=>i.onchange=()=>{const [bi,k]=i.dataset.s.split(':');ev.bidders[+bi].s[k]=Math.max(0,Math.min(100,+i.value||0));save();rEval()});
+  if($('#eFin'))$('#eFin').onclick=()=>{ev.done=true;ev.winner=ranked[0].i;addLog(`Evaluation finalised for ${x.id}: ${ranked[0].b.n} recommended`,`Оценка по ${x.id} утверждена: рекомендован ${ranked[0].b.n}`);save();rEval();toast(T('Evaluation report signed by the committee','Протокол оценки подписан комиссией'),'gold')};
+  bindCommon(el);
+}
+
+/* ---------- award ---------- */
+function rAward(){
+  const el=$('#v-award');
+  const pending=Object.entries(S.evals).filter(([id,ev])=>ev.done&&tById(id).status==='evaluation');
+  const awarded=S.tenders.filter(x=>x.award);
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><h3>${T('Ready for award','Готово к присуждению')}<span class="sp"></span><span class="pill">${pending.length}</span></h3>${pending.length?pending.map(([id,ev])=>{const x=tById(id),w=ev.bidders[ev.winner];return`<div class="mybid"><div class="top"><b>${esc(L(x.title))}</b><span class="pill gold">${id}</span></div><div class="muted" style="font-size:13px;margin:6px 0 10px">${T('Recommended','Рекомендован')}: <b style="color:var(--text)">${esc(w.n)}</b> · ${money(w.price)} · ${T('estimate','оценка')} ${money(x.value)}</div>${S.role==='buyer'?`<button class="btn pri sm" data-aw="${id}">✔ ${T('Approve award & notify bidders','Утвердить и уведомить участников')}</button>`:`<span class="muted" style="font-size:12.5px">${T('Awaiting approval by the procurement officer','Ожидает утверждения закупщиком')}</span>`}</div>`}).join(''):`<div class="muted" style="font-size:13px">${T('Nothing pending. Finalise an evaluation first.','Нет ожидающих. Сначала утвердите оценку.')}</div>`}</div>
+  <div class="tw"><table><thead><tr><th>${T('Contract','Контракт')}</th><th>${T('Tender','Закупка')}</th><th>${T('Supplier','Поставщик')}</th><th class="num">${T('Value','Сумма')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+  ${awarded.map(x=>{const c=x.award.contract,me=x.award.sup==='Northgate Systems';const stl=c.status==='signed'?`<span class="pill ok">${T('Signed','Подписан')}</span>`:c.status==='standstill'?`<span class="pill warn">${T('Standstill','Период ожидания')} · ${Math.max(0,10-Math.floor((Date.now()-x.award.date)/D))} ${T('d','дн')}</span>`:`<span class="pill gold">${T('Awaiting signature','Ожидает подписи')}</span>`;
+   const act=c.status==='standstill'&&S.role==='buyer'?`<button class="btn sm" data-ss="${x.id}">${T('End standstill','Завершить ожидание')}</button>`:c.status==='standstill'&&me?`<button class="btn sm" data-ss="${x.id}">${T('Accept award','Принять')}</button>`:c.status==='pending'?`<button class="btn sm gold" data-sign="${x.id}">✍ ${T('E-sign','Подписать ЭЦП')}</button>`:`<button class="btn sm" data-oc="${x.id}">{ } OCDS</button>`;
+   return`<tr><td class="mono">${c.id}</td><td><span class="mono" style="font-size:12px">${x.id}</span><br>${esc(L(x.title))}</td><td>${esc(x.award.sup)}${me?` <span class="pill gold">${T('you','вы')}</span>`:''}</td><td class="num">${money(x.award.price)}</td><td>${stl}</td><td>${act}</td></tr>`}).join('')}</tbody></table></div>
+  <div class="muted" style="font-size:12px;margin-top:8px">${T('A 10-day standstill lets unsuccessful bidders file a complaint before the contract is signed.','10-дневный период ожидания позволяет проигравшим подать жалобу до подписания контракта.')}</div>`;
+  $$('[data-aw]',el).forEach(b=>b.onclick=()=>{const id=b.dataset.aw,x=tById(id),ev=S.evals[id],w=ev.bidders[ev.winner];x.status='awarded';x.award={sup:w.n,price:w.price,date:Date.now(),contract:{id:'CT-2025-0'+(S.nextCt++),status:'standstill'}};S.myBids.filter(m=>m.tid===id&&m.status==='opened').forEach(m=>m.status=w.me?'won':'lost');addLog(`Award approved for ${id}: ${w.n}`,`Утверждено присуждение по ${id}: ${w.n}`);save();render();toast(T('Award published. All bidders notified; standstill started.','Итоги опубликованы. Участники уведомлены, начат период ожидания.'),'gold')});
+  $$('[data-ss]',el).forEach(b=>b.onclick=()=>{const x=tById(b.dataset.ss);x.award.contract.status='pending';addLog('Standstill ended for '+x.id+' — no complaints','Период ожидания по '+x.id+' завершён — жалоб нет');save();rAward();toast(T('No complaints received. Contract ready for signature.','Жалоб нет. Контракт готов к подписанию.'))});
+  $$('[data-sign]',el).forEach(b=>b.onclick=()=>{const x=tById(b.dataset.sign);x.award.contract.status='signed';x.award.contract.signed=Date.now();addLog(`Contract ${x.award.contract.id} signed with ${x.award.sup}`,`Подписан контракт ${x.award.contract.id} с ${x.award.sup}`);save();rAward();toast(T('Contract signed with qualified e-signatures and published','Контракт подписан квалифицированной ЭЦП и опубликован'),'gold')});
+  $$('[data-oc]',el).forEach(b=>b.onclick=()=>{S.ocdsT=b.dataset.oc;go('ocds')});
+}
+
+/* ---------- OCDS ---------- */
+function release(x){
+  const tags=['tender'];if(x.status==='awarded')tags.push('award');if(x.award&&x.award.contract.status==='signed')tags.push('contract');
+  const r={ocid:'ocds-vl7k2-'+x.id,id:x.id+'-'+tags[tags.length-1]+'-'+new Date(x.published).toISOString().slice(0,10),date:new Date().toISOString().slice(0,19)+'Z',tag:tags,initiationType:'tender',
+   buyer:{id:'VL-GOV-'+x.buyer.en.replace(/[^A-Z]/g,''),name:x.buyer.en},
+   tender:{id:x.id,title:x.title.en,status:x.status==='active'?'active':x.status==='cancelled'?'cancelled':'complete',value:{amount:x.value,currency:'VLD'},procurementMethod:x.method==='rfq'?'limited':'open',procurementMethodDetails:METH[x.method][0],mainProcurementCategory:x.cat,tenderPeriod:{startDate:new Date(x.published).toISOString().slice(0,10),endDate:new Date(x.deadline).toISOString().slice(0,10)},numberOfTenderers:(S.evals[x.id]?S.evals[x.id].bidders.length:x.bids.length)}};
+  if(x.award){r.awards=[{id:x.id+'-AW1',status:'active',date:new Date(x.award.date).toISOString().slice(0,10),value:{amount:x.award.price,currency:'VLD'},suppliers:[{name:x.award.sup}]}];
+   if(x.award.contract.status!=='standstill')r.contracts=[{id:x.award.contract.id,awardID:x.id+'-AW1',status:x.award.contract.status==='signed'?'active':'pending',value:{amount:x.award.price,currency:'VLD'},dateSigned:x.award.contract.signed?new Date(x.award.contract.signed).toISOString().slice(0,10):undefined}]}
+  return r;
+}
+function pkg(rs){return{uri:'https://data.openbid.gov.vl/ocds/'+(rs.length===1?rs[0].ocid:'all'),version:'1.1',publishedDate:new Date().toISOString().slice(0,19)+'Z',publisher:{name:'Public Procurement Authority of Veloria'},license:'https://creativecommons.org/licenses/by/4.0/',releases:rs}}
+function hl(j){return esc(j).replace(/(&quot;[^&]*?&quot;)(\s*:)?|(-?\d+(?:\.\d+)?)/g,(m,s,c,n)=>s?(c?`<span class="k">${s}</span>${c}`:`<span class="s">${s}</span>`):`<span class="n">${n}</span>`)}
+function rOcds(){
+  const el=$('#v-ocds');if(!tById(S.ocdsT))S.ocdsT=S.tenders[0].id;const x=tById(S.ocdsT);
+  const json=JSON.stringify(pkg([release(x)]),null,2);
+  const stages=[['planning',0],['tender',S.tenders.filter(t=>t.status==='active').length],['evaluation',S.tenders.filter(t=>t.status==='evaluation').length],['award',S.tenders.filter(t=>t.status==='awarded').length],['contract',S.tenders.filter(t=>t.award&&t.award.contract.status==='signed').length]];
+  stages[0][1]=3;const mx=Math.max(...stages.map(s=>s[1]),1);const SL={planning:['Planning','Планирование'],tender:['Tender','Тендер'],evaluation:['Evaluation','Оценка'],award:['Award','Присуждение'],contract:['Contract','Контракт']};
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Release package','Пакет релизов')}<span class="sp"></span><button class="btn sm" id="oCopy">${T('Copy','Копировать')}</button><button class="btn sm pri" id="oDl">⬇ JSON</button></h3>
+  <select class="input" id="oT" style="margin-bottom:10px">${S.tenders.map(t=>`<option value="${t.id}" ${t.id===S.ocdsT?'selected':''}>${t.id} — ${esc(L(t.title))}</option>`).join('')}</select><pre class="json">${hl(json)}</pre></div>
+  <div><div class="card"><h3>${T('Published processes by stage','Процедуры по этапам')}</h3>${stages.map(([k,v])=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px"><span style="width:96px;flex:none">${T(...SL[k])}</span><div class="bar" style="flex:1"><i style="width:${v/mx*100}%"></i></div><b class="mono" style="width:22px;text-align:right">${v}</b></div>`).join('')}</div>
+  <div class="card mt"><h3>${T('Bulk download','Массовая выгрузка')}</h3><div class="muted" style="font-size:13px;margin-bottom:10px">${T('All '+S.tenders.length+' contracting processes as one OCDS 1.1 release package. Licence CC BY 4.0.','Все '+S.tenders.length+' процедуры одним пакетом OCDS 1.1. Лицензия CC BY 4.0.')}</div><button class="btn" id="oAll">⬇ ${T('Download full dataset','Скачать весь набор')}</button></div>
+  <div class="card mt"><h3>${T('API endpoint','API-адрес')}</h3><div class="hash">GET https://data.openbid.gov.vl/ocds/releases?ocid=ocds-vl7k2-${x.id}</div><div class="muted" style="font-size:12px;margin-top:8px">${T('Validated against the OCDS 1.1 schema · updated in real time','Проверено по схеме OCDS 1.1 · обновляется в реальном времени')}</div></div></div></div>`;
+  $('#oT').onchange=e=>{S.ocdsT=e.target.value;save();rOcds()};
+  const dl=(name,txt)=>{const u=URL.createObjectURL(new Blob([txt],{type:'application/json'}));const a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+  $('#oDl').onclick=()=>{dl('ocds-vl7k2-'+x.id+'.json',json);toast(T('Release package downloaded','Пакет релизов скачан'))};
+  $('#oAll').onclick=()=>{dl('openbid-ocds-all.json',JSON.stringify(pkg(S.tenders.map(release)),null,2));toast(T('Full dataset downloaded','Весь набор скачан'))};
+  $('#oCopy').onclick=()=>{try{navigator.clipboard.writeText(json).then(()=>toast(T('Copied to clipboard','Скопировано')),()=>toast(T('Copy is not allowed here','Копирование недоступно'),'bad'))}catch(e){toast(T('Copy is not allowed here','Копирование недоступно'),'bad')}};
+}
+
+/* ---------- shell ---------- */
+$$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.view));
+$$('.role').forEach(b=>b.onclick=()=>{$$('.role').forEach(r=>r.classList.toggle('on',r===b));S.role=b.dataset.role;$('#lEmail').value=S.role==='buyer'?'officer@cpo.gov.vl':'demo@northgate.vl'});
+$('#loginBtn').onclick=()=>{const e=$('#lEmail').value.trim(),p=$('#lPass').value;let ok=true;
+  $('#lEmailE').textContent=/^\S+@\S+\.\S+$/.test(e)?'':(ok=false,T('Enter a valid email','Введите корректный адрес'));
+  $('#lPassE').textContent=p.length>=4?'':(ok=false,T('Enter the password','Введите пароль'));
+  if(!ok)return;S.user=e;S.view=S.role==='buyer'?'eval':'dash';save();render();toast(T('Signed in as ','Вход выполнен: ')+esc(e))};
+$('#roleP').onclick=()=>{S.role=S.role==='buyer'?'supplier':'buyer';save();render();toast(T('Role switched: ','Роль: ')+(S.role==='buyer'?T('Procurement officer','Закупщик'):T('Supplier','Поставщик')))};
+$('#logout').onclick=()=>{S.user=null;save();render()};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{Object.keys(localStorage).filter(k=>k.startsWith(P)).forEach(k=>localStorage.removeItem(k));location.reload()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+PT.onLang(()=>{render();if($('#modal').classList.contains('on'))closeModal()});
+$$('.role').forEach(r=>r.classList.toggle('on',r.dataset.role===S.role));
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

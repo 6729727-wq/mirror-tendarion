@@ -1,0 +1,53 @@
+/* Tendarion — shared design tokens. Malachite + gold, dark by default. */
+:root{
+  --bg:#060d0b; --bg2:#0a1612; --panel:#0e1d18; --panel2:#132620; --line:#1f3a31; --line2:#2a4d41;
+  --text:#e8f1ec; --muted:#8fa89d; --dim:#5f786d;
+  --mal:#17b58a; --mal2:#0f7a5c; --mal3:#36e0ae; --gold:#d8b46a; --gold2:#f3d79a;
+  --red:#ef5a5a; --amber:#f0a83a; --blue:#4ea4ff; --violet:#a78bfa;
+  --r:14px; --r2:22px; --shadow:0 20px 60px rgba(0,0,0,.45);
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f7f4; --bg2:#ecf1ed; --panel:#ffffff; --panel2:#f2f6f3; --line:#dbe5df; --line2:#c6d6cd;
+  --text:#0d1f19; --muted:#557064; --dim:#8aa094;
+  --mal:#0e9a72; --mal2:#0b7a5a; --mal3:#0e9a72; --gold:#a8812c; --gold2:#8a6820;
+  --shadow:0 14px 40px rgba(20,50,40,.12); color-scheme:light;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f5f7f4; --bg2:#ecf1ed; --panel:#ffffff; --panel2:#f2f6f3; --line:#dbe5df; --line2:#c6d6cd;
+    --text:#0d1f19; --muted:#557064; --dim:#8aa094;
+    --mal:#0e9a72; --mal2:#0b7a5a; --mal3:#0e9a72; --gold:#a8812c; --gold2:#8a6820;
+    --shadow:0 14px 40px rgba(20,50,40,.12); color-scheme:light;
+  }
+}
+*{box-sizing:border-box} html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--mal3);text-decoration:none} a:hover{text-decoration:underline}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);background:var(--panel2);padding:9px 16px;border-radius:999px;cursor:pointer;transition:.15s;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--mal);text-decoration:none}
+.btn.pri{background:linear-gradient(135deg,var(--mal),var(--mal2));border-color:transparent;color:#fff}
+.btn.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:transparent;color:#1a1306}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line2);color:var(--muted)}
+.pill.ok{color:var(--mal3);border-color:color-mix(in srgb,var(--mal) 50%,transparent);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.pill.warn{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 50%,transparent);background:color-mix(in srgb,var(--amber) 12%,transparent)}
+.pill.bad{color:var(--red);border-color:color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 12%,transparent)}
+.pill.gold{color:var(--gold2);border-color:color-mix(in srgb,var(--gold) 55%,transparent);background:color-mix(in srgb,var(--gold) 12%,transparent)}
+.input{width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;outline:none}
+.input:focus{border-color:var(--mal)}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+/* demo top bar (injected by demo.js) */
+.ptbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:10px;padding:8px 14px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);font-size:13px}
+.ptbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);letter-spacing:.02em}
+.ptbar .logo i{width:22px;height:22px;border-radius:7px;background:conic-gradient(from 210deg,var(--mal),var(--gold),var(--mal));display:inline-block}
+.ptbar .sep{color:var(--dim)} .ptbar .name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptbar .sp{flex:1}
+.ptbar .tg{white-space:nowrap;flex-shrink:0;border:1px solid var(--line2);background:transparent;border-radius:999px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700}
+.ptbar .tg:hover{border-color:var(--mal)}
+.ptbar .badge{font-size:11px;color:var(--gold2);border:1px solid color-mix(in srgb,var(--gold) 50%,transparent);border-radius:999px;padding:2px 8px}
+@media (max-width:640px){.ptbar .badge,.ptbar .sep,.ptbar .hidem{display:none}.ptbar{gap:6px;padding:8px 10px}.ptbar .name{min-width:0;flex:1 1 auto}.ptbar .sp{flex:0 0 0}}

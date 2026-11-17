@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ExamSecure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.app[hidden],.auth[hidden]{display:none}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:3px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 12px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;font-size:16px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:10px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--red);color:#fff;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;margin-top:8px}
+.who i{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 25%,transparent);color:var(--mal3);font-style:normal;font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .er{font-size:12px;color:var(--red);margin-top:4px}
+.input.bad{border-color:var(--red)}
+textarea.input{min-height:80px;resize:vertical}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.btn.warn{border-color:color-mix(in srgb,var(--amber) 55%,transparent);color:var(--amber)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+.split{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+th.srt{cursor:pointer} th.srt:hover{color:var(--text)}
+td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+/* auth */
+.auth{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:28px 16px;background:radial-gradient(900px 500px at 85% 10%,color-mix(in srgb,var(--gold) 14%,transparent),transparent),radial-gradient(700px 400px at 10% 90%,color-mix(in srgb,var(--mal) 14%,transparent),transparent)}
+.acard{width:100%;max-width:440px;padding:28px;box-shadow:var(--shadow)}
+.acard h2{margin:6px 0 4px;font-size:22px}
+.acard .f{margin-top:12px}
+.aerr{color:var(--red);font-size:12.5px;min-height:18px;margin:8px 0}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:14px;font-size:12px}
+.checks div{border:1px solid var(--line);border-radius:10px;padding:7px 9px;background:var(--bg2);color:var(--muted)}
+.checks div b{color:var(--mal3)}
+/* exam */
+.ex{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:14px;align-items:start}
+.qhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.timer{font-family:var(--mono);font-size:22px;font-weight:700;padding:4px 14px;border-radius:12px;border:1px solid var(--line2);background:var(--bg2)}
+.timer.low{color:var(--red);border-color:var(--red);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.55}}
+.qtext{font-size:17px;font-weight:600;line-height:1.5;margin:6px 0 16px}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:1px solid var(--line2);background:var(--bg2);border-radius:12px;padding:12px 14px;margin-bottom:9px;cursor:pointer;font-size:15px;min-height:48px}
+.opt:hover{border-color:var(--mal)}
+.opt b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line2);flex:none;font-size:13px}
+.opt.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,var(--bg2))}
+.opt.on b{background:var(--mal);color:#fff;border-color:var(--mal)}
+.qnav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.qnav button{aspect-ratio:1;border-radius:9px;border:1px solid var(--line2);background:var(--bg2);font-weight:700;font-size:13px;cursor:pointer;position:relative;min-height:36px}
+.qnav button.ans{background:color-mix(in srgb,var(--mal) 22%,transparent);border-color:var(--mal)}
+.qnav button.cur{outline:2px solid var(--gold);outline-offset:1px}
+.qnav button.flg::after{content:'';position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--amber)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .3s}
+.cam{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#0b1512;border:1px solid var(--line2)}
+.cam svg{width:100%;height:100%;display:block}
+.cam .rec{position:absolute;left:8px;top:8px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px}
+.banner{border-radius:12px;padding:10px 14px;font-size:13.5px;margin-bottom:12px;border:1px solid}
+.banner.warn{border-color:color-mix(in srgb,var(--amber) 55%,transparent);background:color-mix(in srgb,var(--amber) 12%,transparent)}
+.banner.bad{border-color:color-mix(in srgb,var(--red) 55%,transparent);background:color-mix(in srgb,var(--red) 12%,transparent)}
+.overlay{position:absolute;inset:0;background:color-mix(in srgb,var(--bg) 88%,transparent);display:grid;place-items:center;z-index:5;border-radius:var(--r);text-align:center;padding:20px}
+.rel{position:relative}
+.modal{position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px}
+.modal .card{max-width:440px;width:100%;box-shadow:var(--shadow)}
+.res{text-align:center;padding:10px 0}
+.res .big{font-size:52px;font-weight:800;letter-spacing:-.03em}
+/* proctor */
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden;cursor:pointer;transition:.15s}
+.tile:hover{border-color:var(--line2)}
+.tile.sel{border-color:var(--gold)}
+.tile.r-high{border-color:color-mix(in srgb,var(--red) 70%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 40%,transparent)}
+.tile.r-med{border-color:color-mix(in srgb,var(--amber) 60%,transparent)}
+.tile .vid{position:relative;aspect-ratio:16/10;background:#0b1512}
+.tile .vid svg{width:100%;height:100%;display:block}
+.tile .vid .st{position:absolute;left:6px;top:6px;display:flex;gap:4px;flex-wrap:wrap}
+.tile .vid .st span{background:rgba(0,0,0,.62);color:#fff;font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 7px}
+.tile .vid .st .r{background:#d63c3c}.tile .vid .st .a{background:#c98a1a}
+.tile .meta{padding:8px 10px;font-size:12.5px}
+.tile .meta b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.risk{height:5px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:6px}
+.risk i{display:block;height:100%}
+.flag{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.flag:last-child{border:0}
+.flag .t{font-family:var(--mono);font-size:11.5px;color:var(--dim);width:44px;flex:none}
+.flag .c{font-family:var(--mono);font-size:11px;color:var(--muted);flex:none}
+.side-panel{position:sticky;top:60px}
+/* items */
+.diff{display:inline-flex;gap:2px}.diff i{width:6px;height:12px;border-radius:2px;background:var(--line2)}.diff i.on{background:var(--gold)}
+.optEd{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.optEd input[type=radio]{width:18px;height:18px;accent-color:var(--mal);flex:none}
+@media (max-width:1180px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.split,.intro,.ex{grid-template-columns:minmax(0,1fr)}.side-panel{position:static}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}.acard{padding:20px}.card{padding:14px}.qtext{font-size:15.5px}.wall{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.qnav{grid-template-columns:repeat(8,minmax(0,1fr))}}
+</style>
+</head>
+<body data-demo-en="ExamSecure — national online exam & proctoring" data-demo-ru="ExamSecure — национальные онлайн-экзамены с прокторингом">
+<section class="auth" id="auth">
+  <div class="card acard">
+    <div class="brand"><b>◈</b><div>ExamSecure<small data-en="National Assessment Authority · Republic of Veloria" data-ru="Национальный центр оценки · Республика Велория"></small></div></div>
+    <h2 data-en="Sign in" data-ru="Вход"></h2>
+    <div class="muted" style="font-size:13.5px" data-en="Secure access for candidates, proctors and exam administrators." data-ru="Защищённый вход для кандидатов, прокторов и администраторов экзаменов."></div>
+    <div class="f"><label data-en="Candidate or staff ID" data-ru="ID кандидата или сотрудника"></label><input class="input mono" id="uid" value="NAA-2025-004817" autocomplete="username"></div>
+    <div class="f"><label data-en="Access code" data-ru="Код доступа"></label><input class="input mono" id="pwd" type="password" value="EXAM-7Q4K" autocomplete="current-password"></div>
+    <div class="aerr" id="aerr"></div>
+    <button class="btn pri" id="login" style="width:100%;justify-content:center" data-en="Sign in with the demo account" data-ru="Войти в демо-аккаунт"></button>
+    <div class="muted" style="font-size:12px;margin-top:10px;text-align:center" data-en="Demo credentials are prefilled. All roles are unlocked." data-ru="Демо-данные заполнены. Открыты все роли."></div>
+    <div class="checks"><div><b>✓</b> <span data-en="Browser lockdown" data-ru="Блокировка браузера"></span></div><div><b>✓</b> <span data-en="Webcam & mic" data-ru="Камера и микрофон"></span></div><div><b>✓</b> <span data-en="ID face match" data-ru="Сверка лица с ID"></span></div><div><b>✓</b> <span data-en="Network 42 Mbps" data-ru="Сеть 42 Мбит/с"></span></div></div>
+  </div>
+</section>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><b>◈</b><div>ExamSecure<small data-en="Session NSE-2025-06 · Mathematics" data-ru="Сессия NSE-2025-06 · Математика"></small></div></div>
+    <div id="navs"></div>
+    <div class="grow"></div>
+    <div class="who"><i id="whoI">AM</i><div><b id="whoN"></b><span class="muted" id="whoR"></span></div></div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    <button class="btn sm" id="logout" style="margin-top:6px;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill" id="sessPill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Start the <b>candidate exam</b>: answer, flag questions for review, jump with the navigator and submit before the timer ends." data-ru="Начните <b>экзамен кандидата</b>: отвечайте, помечайте вопросы, переходите по навигатору и сдайте до конца таймера."></span></div>
+          <div><b>2</b><span data-en="On the <b>proctor wall</b>, review AI flags and <b>warn, pause or terminate</b> a candidate — your own exam reacts too." data-ru="На <b>стене проктора</b> разберите флаги ИИ: <b>предупредите, приостановите или снимите</b> кандидата — ваш экзамен тоже отреагирует."></span></div>
+          <div><b>3</b><span data-en="Add a question to the <b>item bank</b>, then see your score in <b>results</b> and the histogram." data-ru="Добавьте вопрос в <b>банк заданий</b>, затем найдите свой балл в <b>результатах</b> и на гистограмме."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="National online examination & remote proctoring" data-ru="Национальные онлайн-экзамены и удалённый прокторинг"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $48M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="National Assessment Authority, Republic of Veloria (fictional)" data-ru="Национальный центр оценки, Республика Велория (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>CBT · AI proctoring · item bank</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-exam"></section>
+    <section class="view" id="v-proc"></section>
+    <section class="view" id="v-bank"></section>
+    <section class="view" id="v-res"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div id="modalRoot"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt_exam_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const mmss=s=>{s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const fmtT=d=>new Date(d).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3600)}
+const DUR=20*60;
+
+const TOP={alg:['Algebra','Алгебра'],geo:['Geometry','Геометрия'],stat:['Statistics','Статистика'],num:['Number','Числа'],fn:['Functions','Функции']};
+const ITEMS0=[
+ ['alg',2,'Solve for x: 3x − 7 = 11','Решите: 3x − 7 = 11',['4','6','18/3 + 1','−6'],1],
+ ['geo',2,'A triangle has angles 47° and 68°. What is the third angle?','В треугольнике углы 47° и 68°. Чему равен третий угол?',['55°','65°','75°','115°'],1],
+ ['stat',1,'What is the median of 3, 9, 4, 12, 7?','Какова медиана чисел 3, 9, 4, 12, 7?',['4','7','7.0 avg','9'],1],
+ ['num',1,'Which number is prime?','Какое число простое?',['21','27','29','33'],2],
+ ['fn',3,'If f(x) = 2x² − 3, what is f(−2)?','Если f(x) = 2x² − 3, чему равно f(−2)?',['−11','5','11','13'],1],
+ ['alg',3,'Expand (x + 4)(x − 3).','Раскройте скобки: (x + 4)(x − 3).',['x² + x − 12','x² − x − 12','x² + 7x − 12','x² − 12'],0],
+ ['geo',3,'Area of a circle with radius 5 cm (π ≈ 3.14)?','Площадь круга радиусом 5 см (π ≈ 3,14)?',['31.4 cm²','78.5 cm²','15.7 cm²','25 cm²'],1],
+ ['stat',2,'A fair die is rolled. P(even number)?','Бросают кубик. Вероятность чётного числа?',['1/6','1/3','1/2','2/3'],2],
+ ['num',2,'What is 15% of 240?','Сколько составляет 15% от 240?',['24','32','36','40'],2],
+ ['fn',2,'Slope of the line through (1, 2) and (3, 8)?','Угловой коэффициент прямой через (1, 2) и (3, 8)?',['2','3','4','6'],1],
+ ['alg',4,'Solve: x² − 5x + 6 = 0','Решите: x² − 5x + 6 = 0',['x = 1, 6','x = 2, 3','x = −2, −3','x = 5, 6'],1],
+ ['geo',4,'Hypotenuse of a right triangle with legs 9 and 12?','Гипотенуза прямоугольного треугольника с катетами 9 и 12?',['13','15','17','21'],1],
+ ['stat',3,'Mean of 12, 15, 18, 21, 24?','Среднее чисел 12, 15, 18, 21, 24?',['17','18','19','20'],1],
+ ['num',3,'Write 0.000452 in scientific notation.','Запишите 0,000452 в стандартном виде.',['4.52 × 10⁻⁴','45.2 × 10⁻⁵','4.52 × 10⁴','0.452 × 10⁻³'],0],
+ ['fn',4,'Which function is increasing for all x?','Какая функция возрастает при всех x?',['y = −2x + 1','y = x²','y = 3x − 4','y = 5'],2]
+];
+const CAND=[['Amira Mansour','Амира Мансур'],['Daniel Okafor','Даниэль Окафор'],['Sofia Petrova','София Петрова'],['Liam Chen','Лиам Чен'],['Fatima Zahra','Фатима Захра'],['Mateo Ruiz','Матео Руис'],['Hana Sato','Хана Сато'],['Yusuf Demir','Юсуф Демир'],['Elena Rossi','Елена Росси'],['Kwame Mensah','Кваме Менса'],['Priya Nair','Прия Наир'],['Noah Fischer','Ноа Фишер']];
+const CENT=[['Veloria City · Hall A','Велория · зал A'],['Remote · home','Удалённо · дом'],['Port Selin · Hall 2','Порт-Селин · зал 2'],['Remote · home','Удалённо · дом']];
+const FLAGS={gaze:['Gaze off-screen > 6 s','Взгляд вне экрана > 6 с','warn'],face2:['Second face detected','Обнаружено второе лицо','bad'],phone:['Phone detected in frame','В кадре телефон','bad'],tab:['Left exam window','Выход из окна экзамена','bad'],voice:['Speech detected','Обнаружена речь','warn'],noface:['No face in frame','Лица нет в кадре','warn'],light:['Low lighting','Слабое освещение','']};
+const SKIN=['#c99a76','#8d5a3b','#e8c4a4','#b07a55','#6e4127','#d9a882'];
+const HAIR=['#2b1d16','#1a1410','#6b4a2b','#3a2a1c','#0e0b09','#8a5a32'];
+const SHIRT=['#2c4f86','#7a2e3a','#2e6b52','#5b4b8a','#8a6a2e','#36505f'];
+
+function seed(){
+  const r=rng(7);
+  const items=ITEMS0.map((q,i)=>({id:'MTH-'+(1201+i),topic:q[0],diff:q[1],en:q[2],ru:q[3],opts:q[4],ans:q[5],status:'live',used:Math.floor(200+r()*4000),pv:+(.35+r()*.5).toFixed(2)}));
+  items.push({id:'MTH-1216',topic:'stat',diff:2,en:'Range of 4, 11, 7, 19, 2?',ru:'Размах чисел 4, 11, 7, 19, 2?',opts:['15','17','19','21'],ans:1,status:'draft',used:0,pv:null});
+  items.push({id:'MTH-1217',topic:'alg',diff:5,en:'Solve the system: x + y = 10, x − y = 4',ru:'Решите систему: x + y = 10, x − y = 4',opts:['(7, 3)','(6, 4)','(8, 2)','(5, 5)'],ans:0,status:'review',used:0,pv:null});
+  const cands=CAND.map((n,i)=>{const risk=[12,8,74,21,5,46,9,88,15,33,7,18][i];const fl=[];
+    if(risk>40)fl.push({k:i===2?'face2':i===7?'phone':'gaze',t:Date.now()-((5+i)*60e3),c:+(.8+r()*.18).toFixed(2)});
+    if(risk>60)fl.push({k:i===7?'tab':'voice',t:Date.now()-((2+i%3)*60e3),c:+(.75+r()*.2).toFixed(2)});
+    if(risk>25&&risk<=40)fl.push({k:'light',t:Date.now()-9*60e3,c:.71});
+    return{id:'C-'+(4801+i),i,risk,st:'active',prog:Math.floor(3+r()*11),warn:0,cen:i%4,flags:fl}});
+  const hist=[];for(let i=0;i<1840;i++){let s=0;for(let k=0;k<4;k++)s+=r();hist.push(Math.round(Math.min(100,Math.max(0,s/4*100+(r()-.4)*22))))}
+  return{auth:false,view:'exam',ex:{state:'idle',cur:0,ans:{},flag:{},start:0,paused:0,pausedAt:0,warned:0,res:null},
+    items,cands,sel:2,nextId:1218,bq:'',bt:'all',bs:'all',edit:null,hist,results:null,rsort:['score',-1],rq:'',pass:60,log:[]};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+const examItems=()=>S.items.filter(q=>q.status==='live').slice(0,15);
+
+const VIEWS=[['exam','📝','Candidate exam','Экзамен кандидата','C'],['proc','🛡','Proctor wall','Стена проктора','P'],['bank','🗂','Item bank','Банк заданий','A'],['res','📈','Results','Результаты','A']];
+const GROUPS=[['C','Candidate','Кандидат'],['P','Proctoring','Прокторинг'],['A','Administration','Администрирование']];
+const WHO={C:['AM','Amira Mansour','Амира Мансур','Candidate C-4801','Кандидат C-4801'],P:['JK','Jonas Keller','Йонас Келлер','Lead proctor · Hall A','Старший проктор · зал A'],A:['MV','Dr. Mira Varga','Д-р Мира Варга','Exam administrator','Администратор экзаменов']};
+function nav(){
+  const hi=S.cands.filter(c=>c.st!=='terminated'&&c.risk>=60).length;
+  $('#navs').innerHTML=GROUPS.map(g=>`<div class="sec">${T(g[1],g[2])}</div>`+VIEWS.filter(v=>v[4]===g[0]).map(v=>{let x='';
+    if(v[0]==='proc'&&hi)x=`<span class="cnt">${hi}</span>`;
+    if(v[0]==='exam'&&S.ex.state==='running')x=`<span class="cnt" style="background:var(--mal)">${mmss(left())}</span>`;
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('')).join('');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0})}
+function render(){
+  $('#auth').hidden=!!S.auth;$('#app').hidden=!S.auth;if(!S.auth)return;
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0],w=WHO[v[4]],g=GROUPS.find(x=>x[0]===v[4]);
+  $('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=T(g[1],g[2])+' · '+T(w[1],w[2]);
+  $('#whoI').textContent=w[0];$('#whoN').textContent=T(w[1],w[2]);$('#whoR').textContent=T(w[3],w[4]);
+  const act=S.cands.filter(c=>c.st==='active').length+(S.ex.state==='running'?0:0);
+  $('#sessPill').className='pill ok';$('#sessPill').textContent=T(`Session live · ${act} active`,`Сессия идёт · активно ${act}`);
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({exam:rExam,proc:rProc,bank:rBank,res:rRes})[v[0]]();
+}
+
+/* ---------- CANDIDATE EXAM ---------- */
+function left(){const E=S.ex;if(E.state!=='running'&&E.state!=='paused')return DUR;const now=E.state==='paused'?E.pausedAt:Date.now();return DUR-(now-E.start-E.paused)/1000}
+function startExam(){Object.assign(S.ex,{state:'running',cur:0,ans:{},flag:{},start:Date.now(),paused:0,pausedAt:0,warned:0,res:null,qids:examItems().map(q=>q.id)});
+  const me=S.cands[0];me.st='active';me.prog=0;me.warn=0;me.flags=[];me.risk=4;save();render();toast(T('Exam started · 20 minutes · good luck!','Экзамен начат · 20 минут · удачи!'))}
+function qs(){return(S.ex.qids||[]).map(id=>S.items.find(q=>q.id===id)).filter(Boolean)}
+function submitExam(auto){
+  const E=S.ex,Q=qs();let sc=0;Q.forEach(q=>{if(E.ans[q.id]===q.ans)sc++});
+  const pc=Math.round(sc/Q.length*100);E.state='done';E.res={score:sc,n:Q.length,pc,time:Math.min(DUR,DUR-left()),ts:Date.now(),auto:!!auto,by:{}};
+  Q.forEach(q=>{const b=E.res.by[q.topic]||(E.res.by[q.topic]=[0,0]);b[1]++;if(E.ans[q.id]===q.ans)b[0]++});
+  const me=S.cands[0];me.st='submitted';me.prog=Q.length;S.results=null;save();
+  toast(auto?T('Time is up — exam submitted automatically','Время вышло — экзамен сдан автоматически'):'✓ '+T('Exam submitted · result '+pc+'%','Экзамен сдан · результат '+pc+'%'),auto?'gold':'');render()}
+function modal(html,bind){$('#modalRoot').innerHTML=`<div class="modal"><div class="card">${html}</div></div>`;bind($('#modalRoot'));}
+const closeModal=()=>{$('#modalRoot').innerHTML=''};
+function rExam(){
+  const el=$('#v-exam'),E=S.ex;
+  if(E.state==='idle'){
+    el.innerHTML=`<div class="split"><div class="card"><h3>${T('National Secondary Examination · Mathematics','Национальный экзамен за среднюю школу · Математика')}</h3>
+     <dl class="facts"><dt>${T('Candidate','Кандидат')}</dt><dd>${T('Amira Mansour','Амира Мансур')} · C-4801</dd><dt>${T('Questions','Вопросов')}</dt><dd>${examItems().length} · ${T('multiple choice','с выбором ответа')}</dd><dt>${T('Time','Время')}</dt><dd>20:00</dd><dt>${T('Pass mark','Проходной балл')}</dt><dd>${S.pass}%</dd><dt>${T('Mode','Режим')}</dt><dd>${T('Remote · AI + live proctor','Удалённо · ИИ + живой проктор')}</dd></dl>
+     <h3 style="margin-top:16px">${T('Rules','Правила')}</h3><ul style="margin:0;padding-left:18px;font-size:13.5px;line-height:1.7"><li>${T('Stay in frame; no other people or devices.','Оставайтесь в кадре; без других людей и устройств.')}</li><li>${T('Leaving the exam window is logged and flagged.','Выход из окна экзамена фиксируется.')}</li><li>${T('You can flag questions and return to them before submitting.','Можно помечать вопросы и возвращаться к ним до сдачи.')}</li><li>${T('The exam submits automatically when time runs out.','Экзамен сдаётся автоматически по окончании времени.')}</li></ul>
+     <label class="row" style="margin-top:14px;font-size:13.5px;cursor:pointer"><input type="checkbox" id="agree" style="width:18px;height:18px;accent-color:var(--mal)"> ${T('I agree to the exam rules and proctoring','Согласен с правилами и прокторингом')}</label><div class="er" id="agE" style="color:var(--red);font-size:12px"></div>
+     <button class="btn pri" id="go" style="margin-top:12px">▶ ${T('Start exam','Начать экзамен')}</button></div>
+     <div class="card"><h3>${T('System check','Проверка системы')}</h3>${camSvg(0,'ok')}<div style="margin-top:10px;font-size:13px;line-height:1.9">✅ ${T('Face matched to ID photo (98.6%)','Лицо совпадает с фото ID (98,6%)')}<br>✅ ${T('Browser lockdown active','Блокировка браузера включена')}<br>✅ ${T('Microphone level OK','Уровень микрофона в норме')}<br>✅ ${T('Room scan complete','Осмотр комнаты пройден')}</div></div></div>`;
+    $('#go',el).onclick=()=>{if(!$('#agree').checked){$('#agE').textContent=T('Please accept the rules to start','Примите правила, чтобы начать');return}startExam()};return}
+  if(E.state==='terminated'){el.innerHTML=`<div class="card res"><div style="font-size:46px">⛔</div><h2>${T('Exam terminated by the proctor','Экзамен прекращён проктором')}</h2><div class="muted">${T('Reason: integrity violation. The incident has been sent to the appeals board.','Причина: нарушение правил. Инцидент передан в апелляционную комиссию.')}</div><button class="btn" id="again" style="margin-top:14px">${T('Restart demo exam','Начать демо-экзамен заново')}</button></div>`;$('#again',el).onclick=()=>{E.state='idle';save();rExam()};return}
+  if(E.state==='done'){const R=E.res,ok=R.pc>=S.pass;
+    el.innerHTML=`<div class="split"><div class="card res"><div class="muted">${T('Provisional result','Предварительный результат')}</div><div class="big ${ok?'ok-t':'bad-t'}">${R.pc}%</div><div><span class="pill ${ok?'ok':'bad'}">${ok?T('PASS','СДАН'):T('NOT PASSED','НЕ СДАН')}</span></div>
+      <div class="muted" style="margin-top:10px;font-size:13.5px">${R.score} / ${R.n} ${T('correct','верно')} · ${T('time used','затрачено')} ${mmss(R.time)}${R.auto?' · '+T('auto-submitted','сдан автоматически'):''}</div>
+      <div class="row" style="justify-content:center;margin-top:14px"><button class="btn" id="toRes">📈 ${T('See national results','Общие результаты')}</button><button class="btn" id="again">${T('Retake demo','Пройти заново')}</button></div></div>
+      <div class="card"><h3>${T('By topic','По темам')}</h3>${Object.keys(R.by).map(k=>{const b=R.by[k],p=b[0]/b[1]*100;return `<div style="margin-bottom:10px"><div class="row" style="justify-content:space-between;font-size:13px"><b>${T(TOP[k][0],TOP[k][1])}</b><span class="mono">${b[0]}/${b[1]}</span></div><div class="prog"><i style="width:${p}%;${p<50?'background:var(--red)':''}"></i></div></div>`}).join('')}<div class="muted" style="font-size:12px">${T('Final results are released after moderation.','Окончательные результаты — после модерации.')}</div></div></div>`;
+    $('#again',el).onclick=()=>{E.state='idle';save();rExam()};$('#toRes',el).onclick=()=>go('res');return}
+  const Q=qs(),q=Q[E.cur],n=Object.keys(E.ans).length,paused=E.state==='paused';
+  el.innerHTML=`${E.warned?`<div class="banner warn">⚠️ <b>${T('Proctor warning','Предупреждение проктора')}:</b> ${T('Please keep your eyes on the screen and stay in frame.','Смотрите на экран и оставайтесь в кадре.')} (${E.warned})</div>`:''}
+  <div class="ex"><div class="card rel">${paused?`<div class="overlay"><div><div style="font-size:40px">⏸</div><b>${T('Exam paused by the proctor','Экзамен приостановлен проктором')}</b><div class="muted" style="font-size:13px;margin-top:6px">${T('The timer is stopped. Wait for the proctor to resume (Proctor wall → Resume).','Таймер остановлен. Ждите возобновления (Стена проктора → Продолжить).')}</div></div></div>`:''}
+   <div class="qhead"><span class="pill gold">${T('Question','Вопрос')} ${E.cur+1} / ${Q.length}</span><span class="pill">${T(TOP[q.topic][0],TOP[q.topic][1])}</span><span class="grow"></span><span class="timer ${left()<120?'low':''}" id="timer">${mmss(left())}</span></div>
+   <div class="prog"><i style="width:${n/Q.length*100}%"></i></div>
+   <div class="qtext">${esc(T(q.en,q.ru))}</div>
+   ${q.opts.map((o,i)=>`<button class="opt ${E.ans[q.id]===i?'on':''}" data-o="${i}"><b>${'ABCD'[i]}</b>${esc(o)}</button>`).join('')}
+   <div class="row" style="margin-top:12px"><button class="btn sm" id="prev" ${E.cur?'':'disabled'}>← ${T('Previous','Назад')}</button><button class="btn sm ${E.flag[q.id]?'warn':''}" id="flag">🚩 ${E.flag[q.id]?T('Flagged','Помечен'):T('Flag for review','Пометить')}</button><button class="btn sm" id="clr" ${E.ans[q.id]==null?'disabled':''}>${T('Clear answer','Стереть ответ')}</button><span class="grow"></span>${E.cur<Q.length-1?`<button class="btn sm pri" id="next">${T('Next','Далее')} →</button>`:`<button class="btn sm gold" id="fin">${T('Review & submit','Проверить и сдать')}</button>`}</div></div>
+  <div class="side-panel"><div class="card" style="margin-bottom:12px"><h3>${T('Navigator','Навигатор')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${n}/${Q.length}</span></h3>
+   <div class="qnav">${Q.map((x,i)=>`<button class="${E.ans[x.id]!=null?'ans':''} ${i===E.cur?'cur':''} ${E.flag[x.id]?'flg':''}" data-q="${i}">${i+1}</button>`).join('')}</div>
+   <div class="legend" style="margin-top:10px"><span><i style="background:color-mix(in srgb,var(--mal) 40%,transparent)"></i>${T('answered','отвечен')}</span><span><i style="background:var(--amber);border-radius:50%"></i>${T('flagged','помечен')}</span></div>
+   <button class="btn pri" id="sub" style="width:100%;justify-content:center;margin-top:12px">${T('Submit exam','Сдать экзамен')}</button></div>
+   <div class="card"><h3>📹 ${T('Proctoring','Прокторинг')}<span class="sp"></span><span class="pill ok">● ${T('on','вкл.')}</span></h3>${camSvg(0,'ok')}<div class="muted" style="font-size:12px;margin-top:8px">${T('Webcam, microphone and screen are recorded for this session.','Камера, микрофон и экран записываются в этой сессии.')}</div><button class="btn sm" id="sim" style="margin-top:8px">${T('Simulate: look away','Имитация: отвести взгляд')}</button></div></div></div>`;
+  const setQ=i=>{E.cur=i;save();rExam()};
+  $$('[data-o]',el).forEach(b=>b.onclick=()=>{if(paused)return;E.ans[q.id]=+b.dataset.o;S.cands[0].prog=Object.keys(E.ans).length;save();rExam()});
+  $$('[data-q]',el).forEach(b=>b.onclick=()=>setQ(+b.dataset.q));
+  $('#prev',el).onclick=()=>setQ(E.cur-1);const nx=$('#next',el);if(nx)nx.onclick=()=>setQ(E.cur+1);
+  $('#flag',el).onclick=()=>{E.flag[q.id]=!E.flag[q.id];if(!E.flag[q.id])delete E.flag[q.id];save();rExam()};
+  $('#clr',el).onclick=()=>{delete E.ans[q.id];save();rExam()};
+  const confirmSub=()=>{const un=Q.length-Object.keys(E.ans).length,fl=Object.keys(E.flag).length;
+    modal(`<h3>${T('Submit your exam?','Сдать экзамен?')}</h3><div style="font-size:14px;line-height:1.8">${T('Answered','Отвечено')}: <b>${Q.length-un}/${Q.length}</b><br>${un?`<span class="bad-t">${T(un+' unanswered','Без ответа: '+un)}</span><br>`:''}${fl?`<span class="warn-t">${T(fl+' flagged for review','Помечено: '+fl)}</span><br>`:''}${T('Time left','Осталось')}: ${mmss(left())}</div><div class="muted" style="font-size:12.5px;margin:8px 0 14px">${T('After submitting you cannot change answers.','После сдачи ответы изменить нельзя.')}</div><div class="row"><button class="btn pri" id="mOk">${T('Submit now','Сдать')}</button><button class="btn" id="mNo">${T('Keep working','Продолжить')}</button></div>`,
+      m=>{$('#mOk',m).onclick=()=>{closeModal();submitExam(false)};$('#mNo',m).onclick=closeModal})};
+  $('#sub',el).onclick=confirmSub;const fi=$('#fin',el);if(fi)fi.onclick=confirmSub;
+  $('#sim',el).onclick=()=>{const me=S.cands[0];me.flags.unshift({k:'gaze',t:Date.now(),c:.91});me.risk=Math.min(99,me.risk+22);save();toast('👁 '+T('AI flag raised: gaze off-screen — visible on the proctor wall','ИИ поднял флаг: взгляд вне экрана — виден на стене проктора'),'gold');nav()};
+}
+setInterval(()=>{if(!S.auth)return;const E=S.ex;if(E.state==='running'){const l=left();if(l<=0){submitExam(true);return}
+  if(S.view==='exam'){const t=$('#timer');if(t){t.textContent=mmss(l);t.classList.toggle('low',l<120)}}
+  const c=$('.nav[data-v="exam"] .cnt');if(c)c.textContent=mmss(l)}
+  if(S.view==='proc'&&Math.random()<.12)tickProc()},1000);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&S.auth&&S.ex.state==='running'){const me=S.cands[0];me.flags.unshift({k:'tab',t:Date.now(),c:.99});me.risk=Math.min(99,me.risk+30);save()}});
+
+function camSvg(i,mood,small){
+  const sk=SKIN[i%6],hr=HAIR[i%6],sh=SHIRT[i%6];const look=mood==='gaze'?14:0,lowL=mood==='light';
+  return `<div class="${small?'':'cam'}" ${small?'style="height:100%"':''}><svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice"><rect width="160" height="100" fill="${lowL?'#161a18':['#24352f','#2d2a35','#33302a','#26323a'][i%4]}"/><rect x="0" y="70" width="160" height="30" fill="${lowL?'#0d0f0e':'#1a2622'}"/><rect x="112" y="14" width="34" height="26" rx="2" fill="${lowL?'#1c201e':'#3b4a44'}"/>
+  ${mood==='noface'?'':`<path d="M44 100c4-24 18-34 36-34s32 10 36 34z" fill="${sh}" opacity="${lowL?.5:1}"/><circle cx="${80+look/2}" cy="46" r="17" fill="${sk}" opacity="${lowL?.55:1}"/><path d="M${63+look/2} 44c0-15 8-21 17-21s17 6 17 21c-4-7-10-9-17-9s-13 2-17 9z" fill="${hr}"/><circle cx="${74+look}" cy="47" r="1.6" fill="#111"/><circle cx="${86+look}" cy="47" r="1.6" fill="#111"/>`}
+  ${mood==='face2'?`<circle cx="134" cy="52" r="10" fill="${SKIN[(i+3)%6]}" opacity=".85"/><path d="M118 100c2-16 8-24 16-24s14 8 16 24z" fill="#555" opacity=".8"/><rect x="120" y="38" width="28" height="30" fill="none" stroke="#ef5a5a" stroke-width="1.5"/>`:''}
+  ${mood==='phone'?`<rect x="104" y="64" width="11" height="19" rx="2" fill="#0a0a0a" stroke="#888" stroke-width=".6"/><rect x="100" y="60" width="19" height="27" fill="none" stroke="#ef5a5a" stroke-width="1.5"/>`:''}
+  ${mood&&mood!=='ok'&&mood!=='face2'&&mood!=='phone'&&mood!=='noface'?`<rect x="60" y="25" width="44" height="44" fill="none" stroke="#f0a83a" stroke-width="1.3" stroke-dasharray="3 2"/>`:''}
+  ${mood==='ok'?`<rect x="60" y="25" width="40" height="44" fill="none" stroke="#17b58a" stroke-width="1" opacity=".7"/>`:''}</svg>${small?'':'<span class="rec">● REC</span>'}</div>`;
+}
+
+/* ---------- PROCTOR ---------- */
+function moodOf(c){if(c.st==='terminated'||c.st==='submitted')return 'ok';const f=c.flags[0];if(!f)return 'ok';return f.k==='voice'||f.k==='tab'?'gaze':f.k}
+function tickProc(){
+  const act=S.cands.filter(c=>c.st==='active'&&c.i!==0);if(!act.length)return;const c=act[Math.floor(Math.random()*act.length)];
+  if(Math.random()<.6){c.prog=Math.min(15,c.prog+1)}else{const ks=['gaze','voice','noface','gaze','light'];const k=ks[Math.floor(Math.random()*ks.length)];c.flags.unshift({k,t:Date.now(),c:+(.7+Math.random()*.28).toFixed(2)});c.risk=Math.min(99,c.risk+8+Math.floor(Math.random()*10))}
+  save();rProc();
+}
+function act(c,a){
+  const me=c.i===0,E=S.ex,nm=T(CAND[c.i][0],CAND[c.i][1]);
+  S.log.unshift({t:Date.now(),c:c.id,a});
+  if(a==='warn'){c.warn++;if(me&&(E.state==='running'||E.state==='paused'))E.warned++;toast('⚠️ '+T('Warning sent to ','Предупреждение отправлено: ')+nm,'gold')}
+  if(a==='pause'){c.st='paused';if(me&&E.state==='running'){E.state='paused';E.pausedAt=Date.now()}toast('⏸ '+T('Paused: ','Приостановлен: ')+nm,'gold')}
+  if(a==='resume'){c.st='active';if(me&&E.state==='paused'){E.paused+=Date.now()-E.pausedAt;E.state='running'}toast('▶ '+T('Resumed: ','Возобновлён: ')+nm)}
+  if(a==='terminate'){c.st='terminated';if(me&&(E.state==='running'||E.state==='paused'))E.state='terminated';toast('⛔ '+T('Exam terminated: ','Экзамен прекращён: ')+nm,'bad')}
+  if(a==='clear'){c.flags=[];c.risk=Math.max(3,Math.round(c.risk*.3));toast('✓ '+T('Flags dismissed as false positive','Флаги сняты как ложные'))}
+  save();render();
+}
+function rProc(){
+  const el=$('#v-proc');const C=S.cands;
+  const cnt=k=>C.filter(c=>c.st===k).length,hi=C.filter(c=>c.st!=='terminated'&&c.risk>=60).length,nf=C.reduce((a,c)=>a+c.flags.length,0);
+  const sel=C.find(c=>c.i===S.sel)||C[0];const nm=c=>T(CAND[c.i][0],CAND[c.i][1]);
+  const rc=r=>r>=60?'var(--red)':r>=30?'var(--amber)':'var(--mal)';
+  const stP=c=>({active:['ok',T('active','идёт')],paused:['warn',T('paused','пауза')],terminated:['bad',T('terminated','снят')],submitted:['gold',T('submitted','сдал')]})[c.st];
+  const ordered=C.slice().sort((a,b)=>(b.st==='active'||b.st==='paused')-(a.st==='active'||a.st==='paused')||b.risk-a.risk);
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('In progress','Сдают')}</div><div class="v">${cnt('active')}</div><div class="d">${T('of','из')} ${C.length} ${T('in this room · 2,114 nationally','в зале · 2 114 по стране')}</div></div>
+   <div class="card kpi"><div class="l">${T('High-risk','Высокий риск')}</div><div class="v bad-t">${hi}</div><div class="d">${T('risk score ≥ 60','риск ≥ 60')}</div></div>
+   <div class="card kpi"><div class="l">${T('AI flags','Флаги ИИ')}</div><div class="v warn-t">${nf}</div><div class="d">${T('open, this session','открыто за сессию')}</div></div>
+   <div class="card kpi"><div class="l">${T('Paused / terminated','Пауза / сняты')}</div><div class="v">${cnt('paused')} / ${cnt('terminated')}</div><div class="d">${T('actions logged','действия в журнале')}: ${S.log.length}</div></div></div>
+  <div class="split"><div class="wall">${ordered.map(c=>{const p=stP(c),f=c.flags[0];return `<div class="tile ${c.i===S.sel?'sel':''} ${c.st==='active'||c.st==='paused'?(c.risk>=60?'r-high':c.risk>=30?'r-med':''):''}" data-c="${c.i}" role="button" tabindex="0"><div class="vid">${c.st==='terminated'?`<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#1a0d0d"/><text x="80" y="56" text-anchor="middle" fill="#ef5a5a" font-size="13" font-weight="700" font-family="Inter,sans-serif">${T('TERMINATED','СНЯТ')}</text></svg>`:camSvg(c.i,moodOf(c),1)}<div class="st">${c.i===0?`<span>${T('YOU','ВЫ')}</span>`:''}${c.st==='paused'?`<span class="a">⏸ ${T('PAUSED','ПАУЗА')}</span>`:''}${f&&c.st==='active'?`<span class="${FLAGS[f.k][2]==='bad'?'r':'a'}">${esc(T(FLAGS[f.k][0],FLAGS[f.k][1]))}</span>`:''}</div></div>
+     <div class="meta"><b>${esc(nm(c))}</b><div class="row" style="justify-content:space-between"><span class="muted mono" style="font-size:11px">${c.id} · Q${Math.min(15,c.prog+1)}/15</span><span class="pill ${p[0]}" style="font-size:10.5px;padding:1px 7px">${p[1]}</span></div><div class="risk"><i style="width:${c.risk}%;background:${rc(c.risk)}"></i></div></div></div>`}).join('')}</div>
+  <div class="card side-panel"><h3>${esc(nm(sel))}<span class="sp"></span><span class="pill ${stP(sel)[0]}">${stP(sel)[1]}</span></h3>
+   <div style="border-radius:12px;overflow:hidden;aspect-ratio:16/10;margin-bottom:10px">${sel.st==='terminated'?'<div style="background:#1a0d0d;height:100%"></div>':camSvg(sel.i,moodOf(sel),1)}</div>
+   <dl class="facts"><dt>ID</dt><dd class="mono">${sel.id}</dd><dt>${T('Centre','Центр')}</dt><dd>${T(CENT[sel.cen][0],CENT[sel.cen][1])}</dd><dt>${T('Progress','Прогресс')}</dt><dd>${Math.min(15,sel.prog)}/15</dd><dt>${T('Risk score','Оценка риска')}</dt><dd style="color:${rc(sel.risk)}">${sel.risk}/100</dd><dt>${T('Warnings','Предупреждений')}</dt><dd>${sel.warn}</dd></dl>
+   <div class="row" style="margin:12px 0">${sel.st==='active'?`<button class="btn sm warn" data-a="warn">⚠️ ${T('Warn','Предупредить')}</button><button class="btn sm" data-a="pause">⏸ ${T('Pause','Пауза')}</button>`:''}${sel.st==='paused'?`<button class="btn sm pri" data-a="resume">▶ ${T('Resume','Продолжить')}</button>`:''}${sel.st==='active'||sel.st==='paused'?`<button class="btn sm danger" data-a="terminate">⛔ ${T('Terminate','Снять')}</button>`:''}${sel.flags.length&&sel.st!=='terminated'?`<button class="btn sm" data-a="clear">✓ ${T('Dismiss flags','Снять флаги')}</button>`:''}</div>
+   <h3 style="margin-top:6px">${T('AI flags','Флаги ИИ')} <span class="muted" style="font-weight:500;font-size:12px">${T('confidence','уверенность')}</span></h3>
+   ${sel.flags.length?sel.flags.slice(0,6).map(f=>`<div class="flag"><span class="t">${fmtT(f.t)}</span><span style="flex:1"><span class="pill ${FLAGS[f.k][2]}" style="font-size:11px">${esc(T(FLAGS[f.k][0],FLAGS[f.k][1]))}</span></span><span class="c">${Math.round(f.c*100)}%</span></div>`).join(''):`<div class="muted" style="font-size:13px">${T('No flags. Behaviour looks normal.','Флагов нет. Поведение в норме.')}</div>`}
+   ${S.log.filter(l=>l.c===sel.id).length?`<h3 style="margin-top:12px">${T('Proctor actions','Действия проктора')}</h3>`+S.log.filter(l=>l.c===sel.id).slice(0,4).map(l=>`<div class="flag"><span class="t">${fmtT(l.t)}</span><span>${({warn:T('Warning sent','Предупреждение'),pause:T('Paused','Пауза'),resume:T('Resumed','Возобновлено'),terminate:T('Terminated','Снят'),clear:T('Flags dismissed','Флаги сняты')})[l.a]}</span></div>`).join(''):''}</div></div>`;
+  $$('[data-c]',el).forEach(t=>t.onclick=()=>{S.sel=+t.dataset.c;save();rProc()});
+  $$('[data-a]',el).forEach(b=>b.onclick=()=>{const a=b.dataset.a;if(a==='terminate'){modal(`<h3>⛔ ${T('Terminate exam?','Прекратить экзамен?')}</h3><div style="font-size:14px">${T('Candidate','Кандидат')} <b>${esc(nm(sel))}</b> ${T('will be removed from the session. The recording and flags go to the appeals board.','будет снят с сессии. Запись и флаги уйдут в апелляционную комиссию.')}</div><div class="f" style="margin-top:12px"><label>${T('Reason (required)','Причина (обязательно)')}</label><select class="input" id="mR"><option value="">—</option><option>${T('Unauthorised device','Запрещённое устройство')}</option><option>${T('Another person present','Присутствие другого лица')}</option><option>${T('Repeated warnings ignored','Игнорирование предупреждений')}</option></select><div class="er" id="mRE"></div></div><div class="row" style="margin-top:14px"><button class="btn danger" id="mOk">${T('Terminate','Снять')}</button><button class="btn" id="mNo">${T('Cancel','Отмена')}</button></div>`,
+      m=>{$('#mOk',m).onclick=()=>{if(!$('#mR').value){$('#mRE').textContent=T('Choose a reason','Выберите причину');return}closeModal();act(sel,'terminate')};$('#mNo',m).onclick=closeModal});return}act(sel,a)});
+}
+
+/* ---------- ITEM BANK ---------- */
+const STB={live:['Live','В работе','ok'],review:['In review','На проверке','warn'],draft:['Draft','Черновик',''],retired:['Retired','Снят','bad']};
+const diffH=d=>`<span class="diff">${[1,2,3,4,5].map(k=>`<i class="${k<=d?'on':''}"></i>`).join('')}</span>`;
+function rBank(){
+  const el=$('#v-bank');
+  const list=S.items.filter(q=>(S.bt==='all'||q.topic===S.bt)&&(S.bs==='all'||q.status===S.bs)&&(!S.bq||(q.id+' '+q.en+' '+q.ru).toLowerCase().includes(S.bq.toLowerCase())));
+  const E=S.edit;
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Items in bank','Заданий в банке')}</div><div class="v">${S.items.length}</div><div class="d">${T('Mathematics · Form 5','Математика · 5-я ступень')}</div></div><div class="card kpi"><div class="l">${T('Live','В работе')}</div><div class="v ok-t">${S.items.filter(q=>q.status==='live').length}</div><div class="d">${T('first 15 used in exam','первые 15 — в экзамене')}</div></div><div class="card kpi"><div class="l">${T('In review','На проверке')}</div><div class="v warn-t">${S.items.filter(q=>q.status==='review').length}</div><div class="d">${T('needs 2 reviewers','нужно 2 рецензента')}</div></div><div class="card kpi"><div class="l">${T('Avg p-value','Средняя трудность p')}</div><div class="v">${(S.items.filter(q=>q.pv).reduce((a,q)=>a+q.pv,0)/Math.max(1,S.items.filter(q=>q.pv).length)).toFixed(2)}</div><div class="d">${T('share answering correctly','доля верных ответов')}</div></div></div>
+  <div class="split"><div class="card"><h3>${T('Items','Задания')}<span class="sp"></span><button class="btn sm pri" id="newQ">＋ ${T('New item','Новое задание')}</button></h3>
+   <div class="row" style="margin-bottom:10px"><input class="input" id="bq" style="flex:1;min-width:160px" value="${esc(S.bq)}" data-en-ph="Search by ID or text…" data-ru-ph="Поиск по ID или тексту…"><select class="input" id="bt" style="width:auto"><option value="all">${T('All topics','Все темы')}</option>${Object.keys(TOP).map(k=>`<option value="${k}" ${S.bt===k?'selected':''}>${T(TOP[k][0],TOP[k][1])}</option>`).join('')}</select></div>
+   <div class="chips" style="margin-bottom:10px">${['all','live','review','draft','retired'].map(k=>`<button class="chip ${S.bs===k?'on':''}" data-bs="${k}">${k==='all'?T('All','Все'):T(STB[k][0],STB[k][1])} · ${k==='all'?S.items.length:S.items.filter(q=>q.status===k).length}</button>`).join('')}</div>
+   <div class="tw"><table><thead><tr><th>ID</th><th>${T('Question','Вопрос')}</th><th>${T('Topic','Тема')}</th><th>${T('Difficulty','Сложность')}</th><th>p</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+   ${list.map(q=>`<tr class="clk ${E&&E.id===q.id?'sel':''}" data-q="${q.id}"><td class="mono">${q.id}</td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis">${esc(T(q.en,q.ru))}</td><td>${T(TOP[q.topic][0],TOP[q.topic][1])}</td><td>${diffH(q.diff)}</td><td class="mono">${q.pv==null?'—':q.pv}</td><td><span class="pill ${STB[q.status][2]}">${T(STB[q.status][0],STB[q.status][1])}</span></td></tr>`).join('')||`<tr><td colspan="6" class="muted">${T('No items match the filter','Нет заданий по фильтру')}</td></tr>`}</tbody></table></div></div>
+  <div class="card side-panel" id="ed">${E?edForm(E):`<h3>${T('Item editor','Редактор задания')}</h3><div class="muted" style="font-size:13.5px">${T('Select an item to edit it, or create a new one. Every change is versioned and needs review before going live.','Выберите задание для правки или создайте новое. Каждая правка версионируется и проходит проверку перед запуском.')}</div>`}</div></div>`;
+  PT.apply(el);
+  const bq=$('#bq',el);bq.oninput=()=>{S.bq=bq.value;save();clearTimeout(bq._t);bq._t=setTimeout(()=>{rBank();const n=$('#bq');n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)};
+  $('#bt',el).onchange=e=>{S.bt=e.target.value;save();rBank()};
+  $$('[data-bs]',el).forEach(b=>b.onclick=()=>{S.bs=b.dataset.bs;save();rBank()});
+  $$('[data-q]',el).forEach(r=>r.onclick=()=>{const q=S.items.find(x=>x.id===r.dataset.q);S.edit=JSON.parse(JSON.stringify(q));save();rBank();if(innerWidth<1180)$('#ed').scrollIntoView({behavior:'smooth'})});
+  $('#newQ',el).onclick=()=>{S.edit={id:null,topic:'alg',diff:3,en:'',ru:'',opts:['','','',''],ans:0,status:'draft'};save();rBank();if(innerWidth<1180)$('#ed').scrollIntoView({behavior:'smooth'})};
+  if(E)bindEd();
+}
+function edForm(E){return `<h3>${E.id?T('Edit','Правка')+' '+E.id:T('New item','Новое задание')}<span class="sp"></span>${E.id?`<span class="pill ${STB[E.status][2]}">${T(STB[E.status][0],STB[E.status][1])}</span>`:''}</h3>
+  <div class="fgrid"><div class="f"><label>${T('Topic','Тема')}</label><select class="input" id="eT">${Object.keys(TOP).map(k=>`<option value="${k}" ${E.topic===k?'selected':''}>${T(TOP[k][0],TOP[k][1])}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Difficulty (1–5)','Сложность (1–5)')}</label><select class="input" id="eD">${[1,2,3,4,5].map(k=>`<option ${E.diff===k?'selected':''}>${k}</option>`).join('')}</select></div>
+  <div class="f full"><label>${T('Question stem (EN)','Текст вопроса (EN)')}</label><textarea class="input" id="eEn" data-en-ph="At least 10 characters" data-ru-ph="Не короче 10 символов">${esc(E.en)}</textarea><div class="er" id="eEnE"></div></div>
+  <div class="f full"><label>${T('Question stem (RU, optional)','Текст вопроса (RU, необяз.)')}</label><textarea class="input" id="eRu" style="min-height:56px">${esc(E.ru===E.en?'':E.ru)}</textarea></div>
+  <div class="f full"><label>${T('Options — select the correct one','Варианты — отметьте верный')}</label>${E.opts.map((o,i)=>`<div class="optEd"><input type="radio" name="eA" value="${i}" ${E.ans===i?'checked':''} aria-label="correct ${'ABCD'[i]}"><b style="width:16px">${'ABCD'[i]}</b><input class="input" data-op="${i}" value="${esc(o)}"></div>`).join('')}<div class="er" id="eOE"></div></div></div>
+  <div class="row" style="margin-top:12px"><button class="btn pri" id="eSave">${T('Save','Сохранить')}</button>${E.id?`<button class="btn sm" id="eSt">${E.status==='live'?T('Retire','Снять'):E.status==='retired'?T('Restore to draft','В черновик'):E.status==='review'?T('Approve → live','Одобрить → в работу'):T('Send to review','На проверку')}</button>`:''}<button class="btn sm" id="eX">${T('Close','Закрыть')}</button></div>`}
+function bindEd(){
+  const E=S.edit;
+  $('#eSave').onclick=()=>{
+    const en=$('#eEn').value.trim(),ru=$('#eRu').value.trim(),op=$$('[data-op]').map(i=>i.value.trim()),a=+($('input[name=eA]:checked')||{value:0}).value;let ok=true;
+    $('#eEn').classList.remove('bad');$('#eEnE').textContent='';$('#eOE').textContent='';$$('[data-op]').forEach(i=>i.classList.remove('bad'));
+    if(en.length<10){ok=false;$('#eEn').classList.add('bad');$('#eEnE').textContent=T('Question must be at least 10 characters','Вопрос не короче 10 символов')}
+    op.forEach((o,i)=>{if(!o){ok=false;$$('[data-op]')[i].classList.add('bad')}});
+    if(op.some(o=>!o))$('#eOE').textContent=T('All four options are required','Нужны все четыре варианта');
+    else if(new Set(op.map(o=>o.toLowerCase())).size<4){ok=false;$('#eOE').textContent=T('Options must be different','Варианты должны различаться')}
+    if(!ok)return;
+    const rec={topic:$('#eT').value,diff:+$('#eD').value,en,ru:ru||en,opts:op,ans:a};
+    if(E.id){Object.assign(S.items.find(q=>q.id===E.id),rec);toast('✓ '+T('Saved as new version of ','Сохранена новая версия ')+E.id)}
+    else{const id='MTH-'+(S.nextId++);S.items.push({id,...rec,status:'draft',used:0,pv:null});toast('✓ '+T('Item '+id+' created as draft','Задание '+id+' создано как черновик'))}
+    S.edit=null;save();rBank()};
+  const st=$('#eSt');if(st)st.onclick=()=>{const q=S.items.find(x=>x.id===E.id);q.status=q.status==='live'?'retired':q.status==='retired'?'draft':q.status==='review'?'live':'review';S.edit=null;save();toast(T('Status: ','Статус: ')+T(STB[q.status][0],STB[q.status][1]));rBank()};
+  $('#eX').onclick=()=>{S.edit=null;save();rBank()};
+}
+
+/* ---------- RESULTS ---------- */
+function rRes(){
+  const el=$('#v-res'),me=S.ex.state==='done'?S.ex.res.pc:null;
+  const all=S.hist.concat(me!=null?[me]:[]),N=all.length,pass=S.pass;
+  const bins=new Array(10).fill(0);all.forEach(s=>bins[Math.min(9,Math.floor(s/10))]++);
+  const mean=all.reduce((a,b)=>a+b,0)/N,sorted=all.slice().sort((a,b)=>a-b),med=sorted[Math.floor(N/2)],pr=all.filter(s=>s>=pass).length/N*100;
+  const sd=Math.sqrt(all.reduce((a,b)=>a+(b-mean)**2,0)/N);
+  const W=600,H=240,pl=36,pb=28,pt=14,mx=Math.max(...bins),bw=(W-pl-8)/10,y=v=>H-pb-v/mx*(H-pb-pt);
+  const ln=cssv('--line'),mu=cssv('--muted'),g=cssv('--gold');
+  const svg=`<svg viewBox="0 0 ${W} ${H}">${[0,.25,.5,.75,1].map(f=>`<line x1="${pl}" x2="${W-8}" y1="${y(mx*f)}" y2="${y(mx*f)}" stroke="${ln}"/><text x="${pl-6}" y="${y(mx*f)+4}" text-anchor="end" font-size="10" fill="${mu}">${Math.round(mx*f)}</text>`).join('')}
+   ${bins.map((b,i)=>{const x=pl+i*bw,ok=i*10>=pass,mine=me!=null&&Math.min(9,Math.floor(me/10))===i;return `<rect x="${x+3}" y="${y(b)}" width="${bw-6}" height="${H-pb-y(b)}" rx="4" fill="${ok?cssv('--mal'):cssv('--red')}" opacity="${mine?1:.75}" ${mine?`stroke="${g}" stroke-width="3"`:''}><title>${i*10}–${i*10+9}: ${b}</title></rect><text x="${x+bw/2}" y="${H-10}" text-anchor="middle" font-size="10" fill="${mu}">${i*10}</text>`}).join('')}
+   <line x1="${pl+pass/10*bw}" x2="${pl+pass/10*bw}" y1="${pt-4}" y2="${H-pb}" stroke="${g}" stroke-width="2" stroke-dasharray="5 4"/><text x="${pl+pass/10*bw+5}" y="${pt+6}" font-size="11" font-weight="700" fill="${g}">${T('pass','порог')} ${pass}%</text>
+   ${me!=null?`<text x="${pl+Math.min(9,Math.floor(me/10))*bw+bw/2}" y="${y(bins[Math.min(9,Math.floor(me/10))])-6}" text-anchor="middle" font-size="11" font-weight="800" fill="${g}">${T('you','вы')}</text>`:''}</svg>`;
+  if(!S.results){const r=rng(99);S.results=CAND.map((n,i)=>({i,id:'C-'+(4801+i),score:i===0?null:Math.round(35+r()*60),time:Math.round(9+r()*11),flags:S.cands[i].flags.length,st:S.cands[i].st}));save()}
+  const rows=S.results.map(r=>{const c=S.cands[r.i];const o={...r,st:c.st,flags:c.flags.length};if(r.i===0){o.score=me;o.time=S.ex.state==='done'?Math.round(S.ex.res.time/60):null}if(c.st==='terminated')o.score=null;return o});
+  const q=S.rq.toLowerCase();let list=rows.filter(r=>!q||(CAND[r.i][0]+' '+CAND[r.i][1]+' '+r.id).toLowerCase().includes(q));
+  const [sk,sdir]=S.rsort;list.sort((a,b)=>((a[sk]??-1)-(b[sk]??-1))*sdir);
+  el.innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Candidates scored','Оценено кандидатов')}</div><div class="v">${N.toLocaleString(loc())}</div><div class="d">${T('NSE-2025-06 · Mathematics','NSE-2025-06 · Математика')}</div></div>
+   <div class="card kpi"><div class="l">${T('Pass rate','Доля сдавших')}</div><div class="v ${pr>=70?'ok-t':'warn-t'}">${pr.toFixed(1)}%</div><div class="d">${T('at pass mark','при пороге')} ${pass}%</div></div>
+   <div class="card kpi"><div class="l">${T('Mean · median','Среднее · медиана')}</div><div class="v">${mean.toFixed(1)} · ${med}</div><div class="d">SD ${sd.toFixed(1)}</div></div>
+   <div class="card kpi"><div class="l">${T('Your score','Ваш балл')}</div><div class="v ${me==null?'':me>=pass?'ok-t':'bad-t'}">${me==null?'—':me+'%'}</div><div class="d">${me==null?T('take the exam first','сначала сдайте экзамен'):T('percentile ','перцентиль ')+Math.round(all.filter(s=>s<me).length/N*100)}</div></div></div>
+  <div class="grid2" style="margin-bottom:14px"><div class="card chart"><h3>${T('Score distribution','Распределение баллов')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('pass','сдал')}</span><span><i style="background:var(--red)"></i>${T('below pass','ниже порога')}</span></span></h3>${svg}</div>
+   <div class="card"><h3>${T('Pass mark','Проходной балл')}</h3><div class="muted" style="font-size:13px;margin-bottom:8px">${T('Move the cut score to see the effect on the pass rate before publishing.','Сдвиньте порог и посмотрите, как изменится доля сдавших, до публикации.')}</div>
+    <input type="range" id="pm" min="30" max="90" step="5" value="${pass}" style="width:100%;accent-color:var(--mal)"><div class="row" style="justify-content:space-between;font-size:13px"><span>30%</span><b class="mono" style="font-size:18px">${pass}%</b><span>90%</span></div>
+    <dl class="facts" style="margin-top:12px"><dt>${T('Would pass','Сдадут')}</dt><dd>${all.filter(s=>s>=pass).length.toLocaleString(loc())}</dd><dt>${T('Would fail','Не сдадут')}</dt><dd>${all.filter(s=>s<pass).length.toLocaleString(loc())}</dd><dt>${T('Reliability (α)','Надёжность (α)')}</dt><dd>0.87</dd></dl>
+    <button class="btn gold" id="pubR" style="margin-top:12px">${T('Publish results','Опубликовать результаты')}</button>${S.pub?`<div class="muted" style="font-size:12px;margin-top:6px">✓ ${T('Published at ','Опубликовано в ')}${fmtT(S.pub)} · ${T('pass mark','порог')} ${S.pubMark}%</div>`:''}</div></div>
+  <div class="card"><h3>${T('Candidates · Hall A','Кандидаты · зал A')}<span class="sp"></span><input class="input" id="rq" style="max-width:220px" value="${esc(S.rq)}" data-en-ph="Search candidate…" data-ru-ph="Поиск кандидата…"><button class="btn sm" id="csv">⬇ CSV</button></h3>
+   <div class="tw"><table><thead><tr><th>${T('Candidate','Кандидат')}</th>${[['score',T('Score','Балл')],['time',T('Time, min','Время, мин')],['flags',T('Flags','Флаги')]].map(c=>`<th class="srt" data-s="${c[0]}">${c[1]}${sk===c[0]?(sdir>0?' ▲':' ▼'):''}</th>`).join('')}<th>${T('Result','Итог')}</th></tr></thead><tbody>
+   ${list.map(r=>`<tr${r.i===0?' class="sel"':''}><td><b>${T(CAND[r.i][0],CAND[r.i][1])}</b>${r.i===0?' <span class="pill gold">'+T('you','вы')+'</span>':''}<br><span class="muted mono" style="font-size:11px">${r.id}</span></td><td class="mono"><b>${r.score==null?'—':r.score+'%'}</b></td><td class="mono">${r.time??'—'}</td><td>${r.flags?`<span class="pill ${r.flags>1?'bad':'warn'}">${r.flags}</span>`:'<span class="muted">0</span>'}</td><td>${r.st==='terminated'?`<span class="pill bad">${T('Void','Аннулирован')}</span>`:r.score==null?`<span class="pill">${T('In progress','Сдаёт')}</span>`:r.score>=pass?`<span class="pill ok">${T('Pass','Сдал')}</span>`:`<span class="pill bad">${T('Fail','Не сдал')}</span>`}</td></tr>`).join('')||`<tr><td colspan="5" class="muted">${T('No candidates match','Не найдено')}</td></tr>`}</tbody></table></div></div>`;
+  PT.apply(el);
+  $('#pm',el).oninput=e=>{S.pass=+e.target.value;save();rRes()};
+  $('#pubR',el).onclick=()=>{S.pub=Date.now();S.pubMark=S.pass;save();toast('✓ '+T('Results published to candidates and schools','Результаты опубликованы для кандидатов и школ'));rRes()};
+  $$('[data-s]',el).forEach(h=>h.onclick=()=>{const k=h.dataset.s;S.rsort=[k,S.rsort[0]===k?-S.rsort[1]:-1];save();rRes()});
+  const rq=$('#rq',el);rq.oninput=()=>{S.rq=rq.value;save();clearTimeout(rq._t);rq._t=setTimeout(()=>{rRes();const n=$('#rq');n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)};
+  $('#csv',el).onclick=()=>{const t=[['Candidate','ID','Score','Time','Flags','Result']].concat(rows.map(r=>[CAND[r.i][0],r.id,r.score??'',r.time??'',r.flags,r.st==='terminated'?'Void':r.score==null?'In progress':r.score>=pass?'Pass':'Fail']));
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));a.download='results_NSE-2025-06.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast(T('CSV exported','CSV выгружен'))};
+}
+
+/* ---------- AUTH & BOOT ---------- */
+$('#login').onclick=()=>{
+  const u=$('#uid').value.trim(),p=$('#pwd').value.trim();
+  if(!/^NAA-\d{4}-\d{6}$/i.test(u)&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(u)){$('#aerr').textContent=T('ID format: NAA-YYYY-NNNNNN','Формат ID: NAA-ГГГГ-NNNNNN');$('#uid').classList.add('bad');return}
+  if(p.length<6){$('#aerr').textContent=T('Access code must be at least 6 characters','Код доступа не короче 6 символов');$('#pwd').classList.add('bad');return}
+  $('#aerr').textContent='';S.auth=true;save();render();toast('🔐 '+T('Identity verified · all roles unlocked','Личность подтверждена · открыты все роли'));
+};
+['uid','pwd'].forEach(k=>$('#'+k).addEventListener('input',e=>e.target.classList.remove('bad')));
+$('#pwd').onkeydown=e=>{if(e.key==='Enter')$('#login').click()};
+$('#logout').onclick=()=>{S.auth=false;save();render()};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();S=seed();S.auth=true;closeModal();save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

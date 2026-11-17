@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ClaimsHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:17px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center}
+.who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);font-weight:800;flex:none}
+.who div{min-width:0}.who b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .err{font-size:11.5px;color:var(--red);margin-top:3px;min-height:0}
+.input.bad{border-color:var(--red)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2e{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
+table.t{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+table.t th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);padding:9px 10px;background:var(--bg2);border-bottom:1px solid var(--line);white-space:nowrap}
+table.t td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.t tr:last-child td{border-bottom:0}
+table.t tbody tr.ck{cursor:pointer} table.t tbody tr.ck:hover td{background:var(--panel2)}
+table.t tr.sel td{background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip.on{background:color-mix(in srgb,var(--mal) 16%,transparent);border-color:var(--mal);color:var(--text)}
+.lines{display:flex;flex-direction:column;gap:8px}
+.line{display:grid;grid-template-columns:minmax(0,1fr) 70px 110px 36px;gap:8px;align-items:center}
+.line .x{width:36px;height:38px;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer}
+.elig{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg2);font-size:12.5px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.rules{list-style:none;padding:0;margin:0}
+.rules li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13px;opacity:0;animation:pop .25s forwards}
+@keyframes pop{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.rules .ico{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none}
+.rules .pass .ico{background:color-mix(in srgb,var(--mal) 20%,transparent);color:var(--mal3)}
+.rules .warn .ico{background:color-mix(in srgb,var(--amber) 20%,transparent);color:var(--amber)}
+.rules .pend .ico{background:color-mix(in srgb,var(--blue) 20%,transparent);color:var(--blue)}
+.rules .deny .ico{background:color-mix(in srgb,var(--red) 20%,transparent);color:var(--red)}
+.rules .k{font-family:var(--mono);font-size:11px;color:var(--dim);flex:none;width:30px;padding-top:3px}
+.fin{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.fin div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.fin span{display:block;font-size:11.5px;color:var(--muted)} .fin b{font-size:16px}
+pre.x12{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;margin:0;max-height:260px;white-space:pre}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:12px 0 10px;overflow-x:auto}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:8px 10px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab.on{color:var(--text);border-bottom-color:var(--mal)}
+.q{border:1px solid var(--line);border-radius:14px;padding:11px 13px;margin-bottom:8px;background:var(--bg2);cursor:pointer;display:flex;gap:12px;align-items:center}
+.q.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 8%,var(--bg2))}
+.q .sc{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:16px;flex:none}
+.q .bd{flex:1;min-width:0}.q .bd b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q .bd span{font-size:12px;color:var(--muted)}
+.sig{display:grid;grid-template-columns:minmax(0,1fr) 90px 34px;gap:8px;align-items:center;font-size:12.5px;padding:4px 0}
+.bar{height:7px;border-radius:9px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;border-radius:9px}
+.prog{height:9px;border-radius:9px;background:var(--line);overflow:hidden;margin:6px 0 3px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3))}
+.mcard{border-radius:18px;padding:18px;color:#fff;background:linear-gradient(135deg,#0f7a5c,#0b3d33 60%,#1d2a24);position:relative;overflow:hidden;aspect-ratio:1.586;max-width:380px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}
+.mcard:after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(243,215,154,.35),transparent 70%)}
+.mcard .chip2{width:40px;height:30px;border-radius:6px;background:linear-gradient(135deg,#f3d79a,#a8812c)}
+.mcard small{opacity:.75;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.mcard .nm{font-size:19px;font-weight:700}
+.mlist{max-height:520px;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.mi{display:flex;gap:10px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:var(--bg2);text-align:left;width:100%}
+.mi.on{border-color:var(--mal)}
+.mi .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);font-weight:700;font-size:12px;flex:none}
+.mi div{min-width:0;flex:1}.mi b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mi span{font-size:11.5px;color:var(--muted)}
+.hist{font-size:12.5px;border-left:2px solid var(--line2);padding-left:12px;margin-top:8px}
+.hist div{padding:3px 0}.hist .t{color:var(--dim);font-family:var(--mono);font-size:11px;margin-right:6px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(900px 500px at 70% 10%,color-mix(in srgb,var(--mal) 14%,transparent),transparent)}
+.lbox{width:100%;max-width:440px}
+.lbox .card{padding:26px}
+.lbox h2{margin:12px 0 4px;font-size:22px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.role{border:1px solid var(--line2);border-radius:12px;padding:10px;cursor:pointer;background:var(--bg2);text-align:left;font-size:12.5px}
+.role b{display:block;font-size:13.5px}
+.role.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.hint{font-size:12px;color:var(--muted);background:color-mix(in srgb,var(--gold) 10%,transparent);border:1px dashed color-mix(in srgb,var(--gold) 45%,transparent);border-radius:10px;padding:8px 10px;margin-top:12px}
+.empty{text-align:center;color:var(--muted);padding:30px 10px;font-size:13.5px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2e,.intro{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+}
+@media (max-width:560px){.how,.fgrid,.fin{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis{gap:10px}
+  .line{grid-template-columns:minmax(0,1fr) 58px 36px}.line .ch{grid-column:1/3}.line .x{grid-row:1/3;grid-column:3;height:100%}
+  .roles{grid-template-columns:1fr}.sig{grid-template-columns:minmax(0,1fr) 60px 30px}}
+</style>
+</head>
+<body data-demo-en="ClaimsHub — national health insurance claims" data-demo-ru="ClaimsHub — обработка счетов медстрахования">
+<div class="login" id="login"></div>
+<div class="app" id="app" style="display:none">
+  <aside class="side" id="side">
+    <div class="brand"><b>✚</b><div>ClaimsHub<small data-en="National Health Insurance Fund" data-ru="Фонд медстрахования"></small></div></div>
+    <div class="sec" data-en="Provider portal" data-ru="Портал клиники"></div>
+    <div id="navP"></div>
+    <div class="sec" data-en="Fund operations" data-ru="Операции фонда"></div>
+    <div id="navF"></div>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="logout" style="flex:1;justify-content:center" data-en="Sign out" data-ru="Выйти"></button>
+      <button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+    </div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill ok" id="sysPill"></span>
+    </div>
+    <div class="intro" id="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="In <b>Submit claim</b> pick a scenario or fill the form and submit — rules run instantly and show every hit." data-ru="В разделе <b>Подать счёт</b> выберите сценарий или заполните форму — правила сработают сразу и покажут каждое срабатывание."></span></div>
+          <div><b>2</b><span data-en="Open <b>Review queue</b>: suspicious claims sorted by fraud score. Approve, deny, request records or add prior auth." data-ru="Откройте <b>Очередь проверки</b>: подозрительные счета по баллу мошенничества. Одобрите, отклоните, запросите документы или добавьте предавторизацию."></span></div>
+          <div><b>3</b><span data-en="Run a <b>payment cycle</b> to pay approved claims (835 remittance) and check a member's <b>coverage</b>." data-ru="Запустите <b>платёжный цикл</b> по одобренным счетам (реестр 835) и проверьте <b>покрытие</b> застрахованного."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="National health insurance claims" data-ru="Обработка счетов национального медстрахования"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · $150M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="National Health Insurance Fund, Republic of Valdoria (fictional)" data-ru="Фонд обязательного медстрахования, Республика Вальдория (вымышл.)"></dd>
+        <dt data-en="Source" data-ru="Источник"></dt><dd>World Bank</dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>Rules · fraud ML · X12 837/835</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-submit"></section>
+    <section class="view" id="v-claims"></section>
+    <section class="view" id="v-over"></section>
+    <section class="view" id="v-queue"></section>
+    <section class="view" id="v-pay"></section>
+    <section class="view" id="v-mem"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru), L=o=>o?(o[PT.lang]||o.en):'';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='pt_claims_state';
+const DAY=864e5, NOW=Date.now();
+const iso=d=>new Date(d).toISOString().slice(0,10);
+const fmtD=d=>new Date(d).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+const nf=n=>Math.round(n).toLocaleString('en-US');
+const money=n=>'VLD '+Math.round(n).toLocaleString(PT.lang==='ru'?'ru-RU':'en-US');
+const hh=()=>new Date().toTimeString().slice(0,5);
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function hash(s){let x=7;for(const c of s)x=(x*31+c.charCodeAt(0))|0;return Math.abs(x)}
+
+/* ---------- reference data ---------- */
+const PROCS={
+ '99213':{en:'Office visit, established patient (level 3)',ru:'Приём повторного пациента (уровень 3)',fee:85,dx:'*'},
+ '99215':{en:'Office visit, established patient (level 5)',ru:'Приём повторного пациента (уровень 5)',fee:165,dx:'*'},
+ '80053':{en:'Comprehensive metabolic panel',ru:'Расширенная биохимия крови',fee:28,dx:['E11.9','I10','Z00.00','J18.9']},
+ '85025':{en:'Complete blood count',ru:'Общий анализ крови',fee:18,dx:'*'},
+ '71046':{en:'Chest X-ray, 2 views',ru:'Рентген грудной клетки, 2 проекции',fee:62,dx:['J18.9','R05.9','R07.9']},
+ '93000':{en:'Electrocardiogram (ECG)',ru:'Электрокардиограмма (ЭКГ)',fee:34,dx:['I10','R07.9','Z00.00']},
+ '70553':{en:'MRI brain with & without contrast',ru:'МРТ головного мозга с контрастом',fee:690,dx:['R51.9','G43.909'],pa:1,freq:30},
+ '27447':{en:'Total knee arthroplasty',ru:'Эндопротезирование коленного сустава',fee:9800,dx:['M17.11'],pa:1},
+ '90471':{en:'Immunization administration',ru:'Введение вакцины',fee:22,dx:['Z23','Z00.00']},
+ '15780':{en:'Dermabrasion, total face (cosmetic)',ru:'Дермабразия лица (косметология)',fee:410,dx:'*',nc:1}
+};
+const DX={'I10':['Essential hypertension','Эссенциальная гипертензия'],'E11.9':['Type 2 diabetes mellitus','Сахарный диабет 2 типа'],'J18.9':['Pneumonia, unspecified','Пневмония неуточнённая'],'R05.9':['Cough','Кашель'],'R07.9':['Chest pain','Боль в груди'],'R51.9':['Headache','Головная боль'],'G43.909':['Migraine','Мигрень'],'M17.11':['Osteoarthritis, right knee','Остеоартроз правого колена'],'Z00.00':['General adult examination','Общий осмотр взрослого'],'Z23':['Immunization encounter','Вакцинация'],'L70.0':['Acne vulgaris','Акне']};
+const PLANS={basic:{en:'Basic',ru:'Базовый',ded:1000,oop:4000,co:30,ex:['70553']},std:{en:'Standard',ru:'Стандарт',ded:500,oop:3000,co:20,ex:[]},plus:{en:'Plus',ru:'Плюс',ded:250,oop:2000,co:10,ex:[]}};
+const PROV=[
+ {n:{en:'St. Marta Clinic',ru:'Клиника Св. Марты'},npi:'1487220913',net:1,risk:0},
+ {n:{en:'Northgate Imaging',ru:'Нортгейт Имиджинг'},npi:'1730098214',net:1,risk:0},
+ {n:{en:'Lakeview Orthopaedic Centre',ru:'Ортопедический центр Лейквью'},npi:'1902553307',net:1,risk:0},
+ {n:{en:'QuickCare Plus',ru:'QuickCare Plus'},npi:'1066411950',net:0,risk:1},
+ {n:{en:'Riverside Family Practice',ru:'Семейная практика Риверсайд'},npi:'1255804466',net:1,risk:0}];
+const RULES={R01:['Member eligibility','Право на покрытие'],R02:['Provider network','Сеть клиник'],R03:['Benefit coverage','Покрытие услуги'],R04:['Diagnosis ↔ procedure','Диагноз ↔ услуга'],R05:['Duplicate check','Проверка дублей'],R06:['Frequency limit','Лимит частоты'],R07:['Prior authorisation','Предавторизация'],R08:['Timely filing (90 d)','Срок подачи (90 дн.)'],R09:['Fee schedule','Тарифы']};
+const ST={approved:['Approved','Одобрен','ok'],paid:['Paid','Оплачен','ok'],pended:['Pended','Отложен','warn'],fraud:['Fraud review','Проверка СБ','bad'],records:['Records requested','Запрошены документы','warn'],denied:['Denied','Отклонён','bad']};
+const stPill=s=>`<span class="pill ${ST[s][2]}">${T(ST[s][0],ST[s][1])}</span>`;
+
+let S=null;
+/* ---------- engine ---------- */
+function mem(id){return S.members.find(m=>m.id===id)}
+function adjudicate(c,all){
+  const m=mem(c.mem),p=PLANS[m.plan],R=[],dos=new Date(c.dos),hit=new Set();
+  const add=(k,res,en,ru)=>{R.push({k,res,en,ru});if(res!=='pass')hit.add(k)};
+  const elig=c.dos>=m.from&&c.dos<=m.to;
+  add('R01',elig?'pass':'deny',elig?`Covered on ${c.dos} · plan ${p.en}`:`Coverage ended ${m.to}`,elig?`Покрыт на ${c.dos} · план «${p.ru}»`:`Покрытие закончилось ${m.to}`);
+  const pr0=PROV[c.prov];
+  add('R02',pr0.net?'pass':'warn',pr0.net?'In-network provider':'Out-of-network — allowed at 60%',pr0.net?'Клиника в сети':'Вне сети — признаётся 60%');
+  c.lines.forEach(l=>{const pr=PROCS[l.c];
+    if(pr.nc||p.ex.includes(l.c))add('R03','deny',`${l.c} not covered by plan ${p.en}`,`${l.c} не покрывается планом «${p.ru}»`);
+    if(pr.dx!=='*'&&!pr.dx.includes(c.dx))add('R04','deny',`${l.c} not supported by diagnosis ${c.dx}`,`${l.c} не обоснован диагнозом ${c.dx}`);
+    if(pr.pa&&!c.pa)add('R07','pend',`${l.c} requires prior authorisation`,`${l.c} требует предавторизации`);
+    if(pr.freq){const prev=all.find(o=>o.id!==c.id&&o.mem===c.mem&&o.st!=='denied'&&o.lines.some(x=>x.c===l.c)&&Math.abs(new Date(o.dos)-dos)<pr.freq*DAY);
+      if(prev)add('R06','deny',`${l.c}: max 1 per ${pr.freq} days (see ${prev.id})`,`${l.c}: не чаще 1 раза в ${pr.freq} дн. (см. ${prev.id})`)}
+    if(l.ch>pr.fee*1.02)add('R09','warn',`${l.c} billed ${nf(l.ch)} > tariff ${nf(pr.fee)} — repriced`,`${l.c}: выставлено ${nf(l.ch)} > тариф ${nf(pr.fee)} — пересчитано`);
+  });
+  const d=all.find(o=>o.id!==c.id&&o.mem===c.mem&&o.dos===c.dos&&o.st!=='denied'&&o.lines.some(x=>c.lines.some(y=>y.c===x.c)));
+  if(d)add('R05','deny',`Duplicate of ${d.id}`,`Дубль счёта ${d.id}`);
+  const lag=(new Date(c.sub)-dos)/DAY;
+  if(lag>90)add('R08','deny',`Filed ${Math.round(lag)} days after service`,`Подан через ${Math.round(lag)} дн. после услуги`);
+  if(lag<0)add('R08','deny','Date of service is in the future','Дата услуги в будущем');
+  const PASS={R03:['All lines covered by plan','Все услуги покрываются'],R04:['Diagnosis supports all lines','Диагноз обосновывает все услуги'],R05:['No duplicates found','Дублей не найдено'],R06:['Within frequency limits','В пределах лимитов'],R07:['No authorisation needed or on file','Предавторизация не нужна или есть'],R08:['Filed within 90 days','Подан в срок 90 дней'],R09:['Charges within tariff','Суммы в пределах тарифа']};
+  Object.keys(PASS).forEach(k=>{if(!hit.has(k)&&!R.some(r=>r.k===k))add(k,'pass',PASS[k][0],PASS[k][1])});
+  R.sort((a,b)=>a.k.localeCompare(b.k));
+  // fraud model
+  const sig=[];const sg=(w,en,ru)=>sig.push({w,en,ru});
+  const ratio=c.lines.reduce((a,l)=>a+l.ch/PROCS[l.c].fee,0)/c.lines.length;
+  if(ratio>1.6)sg(22,`Charges ${ratio.toFixed(1)}× tariff on average`,`Суммы в среднем ${ratio.toFixed(1)}× тарифа`);
+  if(c.lines.some(l=>l.c==='99215'))sg(16,'Level-5 visit (upcoding pattern)','Приём уровня 5 (завышение уровня)');
+  if(pr0.risk)sg(24,'Provider on watch list (peer outlier)','Клиника в списке наблюдения (выброс)');
+  if(c.lines.some(l=>l.q>3))sg(12,'Unusual unit count on a line','Необычное количество единиц');
+  if([0,6].includes(dos.getDay()))sg(7,'Service on weekend','Услуга в выходной');
+  const recent=all.filter(o=>o.id!==c.id&&o.mem===c.mem&&Math.abs(new Date(o.dos)-dos)<14*DAY).length;
+  if(recent>=2)sg(10,`${recent} other claims for member in 14 days`,`Ещё ${recent} счёта по застрахованному за 14 дн.`);
+  if(c.lines.length>=5)sg(8,'Many lines on one encounter','Много услуг за один визит');
+  const score=Math.min(99,sig.reduce((a,s)=>a+s.w,0)+3+hash(c.id)%9);
+  c.rules=R;c.sig=sig;c.fraud=score;
+  c.st=R.some(r=>r.res==='deny')?'denied':score>=60?'fraud':R.some(r=>r.res==='pend')?'pended':'approved';
+  // financials
+  const allowed=c.lines.reduce((a,l)=>a+Math.min(l.ch,PROCS[l.c].fee)*l.q,0)*(pr0.net?1:.6);
+  c.billed=c.lines.reduce((a,l)=>a+l.ch*l.q,0);c.allowed=allowed;
+  finCalc(c);
+  if(c.st==='approved')accrue(c);
+  return c;
+}
+function finCalc(c){const m=mem(c.mem),p=PLANS[m.plan];
+  if(c.st==='denied'){c.share=0;c.pays=0;return}
+  const dedPart=Math.min(c.allowed,Math.max(0,p.ded-m.ded));const co=(c.allowed-dedPart)*p.co/100;
+  c.share=Math.min(dedPart+co,Math.max(0,p.oop-m.oop));c.dedPart=Math.min(dedPart,c.share);c.pays=c.allowed-c.share}
+function accrue(c){const m=mem(c.mem);if(c.acc)return;finCalc(c);m.ded+=c.dedPart||0;m.oop+=c.share||0;c.acc=1}
+function logc(c,en,ru){(c.log=c.log||[]).push({t:new Date().toISOString(),en,ru})}
+
+/* ---------- seed ---------- */
+function seed(){
+  const r=rng(53);
+  const members=[
+   ['NHF-204-118-37','Elin Varga','1981-03-14','std','2026-01-01','2026-12-31',2,['Valdoria Rail','Железные дороги Вальдории']],
+   ['NHF-317-902-11','Marek Holt','1975-08-02','basic','2026-01-01','2026-12-31',0,['Self-employed','Самозанятый']],
+   ['NHF-118-450-63','Sofia Lindgren','1990-11-27','plus','2026-01-01','2026-12-31',1,['Ministry of Finance','Министерство финансов']],
+   ['NHF-552-034-90','Ivo Brandt','1968-05-19','std','2025-07-01','2026-06-30',0,['Harbour Logistics','Портовая логистика']],
+   ['NHF-640-777-25','Nadia Rossi','1986-01-08','std','2026-01-01','2026-12-31',3,['Valdoria University','Университет Вальдории']],
+   ['NHF-701-213-48','Tomas Weber','1959-09-30','plus','2026-01-01','2026-12-31',1,['Retired','Пенсионер']],
+   ['NHF-822-650-04','Lena Petrova','1994-04-12','basic','2026-01-01','2026-12-31',0,['City Hospital','Городская больница']],
+   ['NHF-913-188-72','Jonas Ekberg','1979-12-03','std','2026-01-01','2026-12-31',2,['Nordwind Energy','Нордвинд Энерджи']]
+  ].map(a=>({id:a[0],n:a[1],dob:a[2],plan:a[3],from:a[4],to:a[5],deps:a[6],emp:{en:a[7][0],ru:a[7][1]},ded:Math.round(r()*200),oop:0,chk:null}));
+  members.forEach(m=>m.oop=m.ded);
+  const TPL=[{dx:'I10',l:[['99213',1],['93000',1]]},{dx:'E11.9',l:[['99213',1],['80053',1],['85025',1]]},{dx:'J18.9',l:[['99213',1],['71046',1],['85025',1]]},{dx:'R51.9',l:[['99215',1],['70553',1]],pa:1},{dx:'M17.11',l:[['27447',1]],pa:1},{dx:'Z00.00',l:[['99213',1],['80053',1],['90471',1]]},{dx:'L70.0',l:[['15780',1]]},{dx:'R51.9',l:[['70553',1]]},{dx:'R07.9',l:[['99215',1],['93000',1],['71046',1]]}];
+  const S0={members,claims:[],batches:[],next:1040};
+  S=S0;
+  for(let i=0;i<30;i++){
+    const t=TPL[Math.floor(r()*TPL.length)];let prov=t.l[0][0]==='27447'?2:t.l.some(x=>x[0]==='70553')?(r()<.5?1:0):Math.floor(r()*5);
+    const m=members[Math.floor(r()*members.length)];
+    const ago=i===4?125:Math.floor(r()*40)+2;const dos=iso(NOW-ago*DAY);
+    const sub=iso(Math.min(NOW,NOW-ago*DAY+(1+Math.floor(r()*4))*DAY));
+    const risky=PROV[prov].risk;
+    const c={id:'CLM-26-'+(S0.next++),mem:m.id,prov,dos,sub,dx:t.dx,pa:t.pa?'PA-'+(70000+Math.floor(r()*9999)):'',
+      lines:t.l.map(x=>({c:x[0],q:risky&&r()<.4?4:x[1],ch:Math.round(PROCS[x[0]].fee*(risky?1.8+r()*.6:1+r()*.08))}))};
+    adjudicate(c,S0.claims);logc(c,'Received via X12 837P · auto-adjudicated','Получен по X12 837P · автоматически обработан');
+    S0.claims.push(c);
+  }
+  // pay old approved claims in last batch
+  const r2=rng(9);
+  for(let w=10;w>=1;w--){S0.batches.push({id:'PAY-'+iso(NOW-w*7*DAY).replace(/-/g,''),date:iso(NOW-w*7*DAY),n:180+Math.floor(r2()*90),amt:410000+Math.floor(r2()*170000),eft:'EFT'+(88100000+Math.floor(r2()*99999)),ids:[]})}
+  const lb=S0.batches[S0.batches.length-1];
+  S0.claims.filter(c=>c.st==='approved'&&(NOW-new Date(c.sub))/DAY>10).forEach(c=>{c.st='paid';c.batch=lb.id;lb.ids.push(c.id);logc(c,'Paid in '+lb.id,'Оплачен в '+lb.id)});
+  return Object.assign(S0,{view:'submit',user:null,role:'prov',draft:blankDraft(),last:null,sel:null,qsel:null,filter:'all',mine:false,q:'',msel:members[0].id,psel:null,tab:'rules'});
+}
+function blankDraft(){return{mem:'',dos:iso(NOW-2*DAY),dx:'',pa:'',lines:[{c:'99213',q:1,ch:85}]}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+S=load()||seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* ---------- shell ---------- */
+const VIEWS=[['submit','📝','Submit claim','Подать счёт','P'],['claims','📂','Claims','Счета','P'],['over','📊','Overview','Обзор','F'],['queue','🛡','Review queue','Очередь проверки','F'],['pay','💳','Payments','Платежи','F'],['mem','🪪','Member coverage','Покрытие застрахованных','F']];
+function nav(){
+  const q=S.claims.filter(c=>['fraud','pended','records'].includes(c.st)).length,rd=S.claims.filter(c=>c.st==='approved').length;
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>`<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${v[0]==='queue'&&q?`<span class="cnt">${q}</span>`:v[0]==='pay'&&rd?`<span class="cnt">${rd}</span>`:''}</button>`).join('');
+  $('#navP').innerHTML=mk('P');$('#navF').innerHTML=mk('F');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  if(!S.user){$('#app').style.display='none';$('#login').style.display='';rLogin();return}
+  $('#login').style.display='none';$('#app').style.display='';
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=v[4]==='P'?T('Provider portal · St. Marta Clinic','Портал клиники · Клиника Св. Марты'):T('Fund operations · Claims department','Операции фонда · отдел счетов');
+  $('#sysPill').textContent=T('Rules engine v4.2 · online','Движок правил v4.2 · онлайн');
+  $('#who').innerHTML=`<span class="av">${S.user.ini}</span><div><b>${esc(S.user.name)}</b><span class="muted">${S.role==='prov'?T('Provider billing officer','Специалист по счетам клиники'):T('Fund claims examiner','Эксперт фонда')}</span></div>`;
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({submit:rSubmit,claims:rClaims,over:rOver,queue:rQueue,pay:rPay,mem:rMem})[v[0]]();
+}
+
+/* ---------- login ---------- */
+function rLogin(){
+  const role=S.role||'prov';
+  const cred=role==='prov'?['billing@stmarta.vd','Demo-2026!']:['examiner@nhf.gov.vd','Demo-2026!'];
+  $('#login').innerHTML=`<div class="lbox"><div class="card">
+   <div class="brand" style="padding:0"><b>✚</b><div>ClaimsHub<small>${T('National Health Insurance Fund · Valdoria','Фонд медстрахования · Вальдория')}</small></div></div>
+   <h2>${T('Sign in','Вход')}</h2><p class="muted" style="margin:0;font-size:13.5px">${T('Secure access for providers and fund staff.','Защищённый вход для клиник и сотрудников фонда.')}</p>
+   <div class="roles">
+    <button class="role ${role==='prov'?'on':''}" data-r="prov"><b>${T('Provider','Клиника')}</b>${T('Submit & track claims','Подача и статусы счетов')}</button>
+    <button class="role ${role==='fund'?'on':''}" data-r="fund"><b>${T('Fund staff','Сотрудник фонда')}</b>${T('Adjudication, fraud, payments','Проверка, СБ, платежи')}</button>
+   </div>
+   <div class="f" style="margin-bottom:10px"><label>${T('Username','Логин')}</label><input class="input" id="lU" value="${cred[0]}" autocomplete="username"></div>
+   <div class="f"><label>${T('Password','Пароль')}</label><input class="input" id="lP" type="password" value="${cred[1]}" autocomplete="current-password"></div>
+   <button class="btn pri" id="lGo" style="width:100%;justify-content:center;margin-top:14px">${T('Sign in with demo account','Войти демо-аккаунтом')}</button>
+   <div class="hint">${T('Demo credentials are prefilled — just press Sign in. Both portals are available after login.','Демо-данные уже введены — просто нажмите «Войти». После входа доступны оба портала.')}</div>
+  </div></div>`;
+  $$('.role').forEach(b=>b.onclick=()=>{S.role=b.dataset.r;save();rLogin()});
+  $('#lGo').onclick=()=>{const u=$('#lU').value.trim(),p=$('#lP').value;
+    if(!/@/.test(u)||p.length<6){toast(T('Enter a valid username and password','Введите корректные логин и пароль'),'bad');return}
+    S.user=S.role==='prov'?{name:'Anna Kovacs',ini:'AK',u}:{name:'Pieter de Wit',ini:'PW',u};S.view=S.role==='prov'?'submit':'over';save();render();toast(T('Signed in as ','Вход выполнен: ')+esc(S.user.name))};
+}
+
+/* ---------- submit ---------- */
+const SCEN=[['clean','Clean claim','Чистый счёт'],['pa','Missing prior auth','Нет предавторизации'],['nc','Not covered','Не покрывается'],['fraud','Suspicious billing','Подозрительный счёт'],['term','Expired coverage','Истёкшее покрытие']];
+function scen(k){const d=blankDraft();
+  if(k==='clean'){d.mem='NHF-118-450-63';d.dx='J18.9';d.lines=[{c:'99213',q:1,ch:85},{c:'71046',q:1,ch:62},{c:'85025',q:1,ch:18}]}
+  if(k==='pa'){d.mem='NHF-640-777-25';d.dx='G43.909';d.lines=[{c:'99213',q:1,ch:85},{c:'70553',q:1,ch:690}]}
+  if(k==='nc'){d.mem='NHF-822-650-04';d.dx='L70.0';d.lines=[{c:'15780',q:1,ch:410}]}
+  if(k==='fraud'){d.mem='NHF-913-188-72';d.dx='R07.9';d.dos=iso(NOW-((new Date().getDay()+1)%7||7)*DAY);d.lines=[{c:'99215',q:1,ch:340},{c:'93000',q:4,ch:75},{c:'71046',q:1,ch:150},{c:'80053',q:1,ch:60},{c:'85025',q:2,ch:44}]}
+  if(k==='term'){d.mem='NHF-552-034-90';d.dx='I10';d.lines=[{c:'99213',q:1,ch:85},{c:'93000',q:1,ch:34}]}
+  S.draft=d;save();rSubmit();toast(T('Scenario loaded — press Submit','Сценарий загружен — нажмите «Отправить»'))}
+function rSubmit(){
+  const d=S.draft,el=$('#v-submit');const m=d.mem?mem(d.mem):null;
+  const tot=d.lines.reduce((a,l)=>a+(+l.ch||0)*(+l.q||0),0);
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('New professional claim (837P)','Новый счёт за услуги (837P)')}<span class="sp"></span><span class="pill">${T('Provider','Клиника')}: ${L(PROV[0].n)} · NPI ${PROV[0].npi}</span></h3>
+   <div class="row" style="margin-bottom:12px"><span class="muted" style="font-size:12.5px">${T('Quick scenarios:','Быстрые сценарии:')}</span><div class="chips">${SCEN.map(s=>`<button class="chip" data-sc="${s[0]}">${T(s[1],s[2])}</button>`).join('')}</div></div>
+   <div class="fgrid">
+    <div class="f full"><label>${T('Member','Застрахованный')} *</label><select class="input" id="dMem"><option value="">${T('— select member —','— выберите —')}</option>${S.members.map(x=>`<option value="${x.id}" ${x.id===d.mem?'selected':''}>${esc(x.n)} · ${x.id}</option>`).join('')}</select><div class="err" id="eMem"></div></div>
+    ${m?`<div class="full elig"><span class="pill ${d.dos>=m.from&&d.dos<=m.to?'ok':'bad'}">${d.dos>=m.from&&d.dos<=m.to?T('Eligible (271)','Покрыт (271)'):T('Not eligible on DOS','Не покрыт на дату')}</span><span>${T('Plan','План')} <b>${L(PLANS[m.plan])}</b></span><span>${T('Deductible left','Остаток франшизы')} <b>${money(Math.max(0,PLANS[m.plan].ded-m.ded))}</b></span><span>${T('Coinsurance','Соплатёж')} <b>${PLANS[m.plan].co}%</b></span></div>`:''}
+    <div class="f"><label>${T('Date of service','Дата услуги')} *</label><input class="input" type="date" id="dDos" value="${d.dos}"><div class="err" id="eDos"></div></div>
+    <div class="f"><label>${T('Diagnosis (ICD-10)','Диагноз (МКБ-10)')} *</label><select class="input" id="dDx"><option value="">—</option>${Object.keys(DX).map(k=>`<option value="${k}" ${k===d.dx?'selected':''}>${k} · ${T(DX[k][0],DX[k][1])}</option>`).join('')}</select><div class="err" id="eDx"></div></div>
+    <div class="f full"><label>${T('Prior authorisation no. (if required)','Номер предавторизации (если нужен)')}</label><input class="input mono" id="dPa" value="${esc(d.pa)}" data-en-ph="PA-00000" data-ru-ph="PA-00000" placeholder="PA-00000"><div class="err" id="ePa"></div></div>
+   </div>
+   <div class="f" style="margin-top:14px"><label>${T('Service lines','Услуги')} *</label>
+    <div class="lines">${d.lines.map((l,i)=>`<div class="line"><select class="input" data-li="${i}" data-k="c">${Object.keys(PROCS).map(k=>`<option value="${k}" ${k===l.c?'selected':''}>${k} · ${T(PROCS[k].en,PROCS[k].ru)}</option>`).join('')}</select>
+     <input class="input" type="number" min="1" max="20" data-li="${i}" data-k="q" value="${l.q}" title="${T('Units','Ед.')}">
+     <input class="input ch" type="number" min="1" step="1" data-li="${i}" data-k="ch" value="${l.ch}" title="${T('Charge per unit','Цена за ед.')}">
+     <button class="x" data-del="${i}" title="${T('Remove','Удалить')}">✕</button></div>`).join('')}</div><div class="err" id="eLines"></div>
+    <div class="row" style="margin-top:10px"><button class="btn sm" id="addLine">＋ ${T('Add line','Добавить услугу')}</button><span class="sp grow"></span><span class="muted" style="font-size:13px">${T('Total billed','Итого выставлено')}: <b id="dTot">${money(tot)}</b></span></div>
+   </div>
+   <div class="row" style="margin-top:16px"><button class="btn pri" id="dSub">${T('Submit claim','Отправить счёт')}</button><button class="btn" id="dClr">${T('Clear form','Очистить')}</button></div>
+  </div>
+  <div class="card" id="result">${S.last?resultCard(S.claims.find(c=>c.id===S.last)):`<div class="empty">⚙️<br>${T('Submit a claim to see real-time adjudication: every rule, the fraud score and the payment split.','Отправьте счёт — увидите проверку в реальном времени: каждое правило, балл мошенничества и расчёт оплаты.')}</div>`}</div></div>`;
+  $$('[data-sc]',el).forEach(b=>b.onclick=()=>scen(b.dataset.sc));
+  $('#dMem').onchange=e=>{d.mem=e.target.value;save();rSubmit()};
+  $('#dDos').onchange=e=>{d.dos=e.target.value;save();rSubmit()};
+  $('#dDx').onchange=e=>{d.dx=e.target.value;save()};
+  $('#dPa').oninput=e=>{d.pa=e.target.value.toUpperCase();save()};
+  $$('[data-li]',el).forEach(inp=>{inp.oninput=inp.onchange=()=>{const l=d.lines[+inp.dataset.li],k=inp.dataset.k;
+    if(k==='c'){l.c=inp.value;l.ch=PROCS[l.c].fee;save();rSubmit();return}l[k]=+inp.value;save();
+    $('#dTot').textContent=money(d.lines.reduce((a,l)=>a+(+l.ch||0)*(+l.q||0),0))}});
+  $$('[data-del]',el).forEach(b=>b.onclick=()=>{if(d.lines.length<2){toast(T('At least one line is required','Нужна хотя бы одна услуга'),'bad');return}d.lines.splice(+b.dataset.del,1);save();rSubmit()});
+  $('#addLine').onclick=()=>{if(d.lines.length>=8){toast(T('Max 8 lines','Максимум 8 услуг'),'bad');return}d.lines.push({c:'85025',q:1,ch:18});save();rSubmit()};
+  $('#dClr').onclick=()=>{S.draft=blankDraft();save();rSubmit()};
+  $('#dSub').onclick=submit;
+  bindResult();
+}
+function submit(){
+  const d=S.draft;let ok=true;const e=(id,inp,msg)=>{$(id).textContent=msg||'';if(inp)$(inp).classList.toggle('bad',!!msg);if(msg)ok=false};
+  e('#eMem','#dMem',d.mem?'':T('Select a member','Выберите застрахованного'));
+  e('#eDos','#dDos',!d.dos?T('Required','Обязательно'):d.dos>iso(NOW)?T('Date cannot be in the future','Дата не может быть в будущем'):'');
+  e('#eDx','#dDx',d.dx?'':T('Select a diagnosis','Выберите диагноз'));
+  e('#ePa','#dPa',d.pa&&!/^PA-\d{5}$/.test(d.pa)?T('Format: PA-00000','Формат: PA-00000'):'');
+  const badL=d.lines.some(l=>!(l.q>=1&&l.q<=20)||!(l.ch>0));
+  e('#eLines',null,badL?T('Units 1–20 and charge > 0 on every line','Единиц 1–20 и цена > 0 в каждой строке'):'');
+  if(!ok){toast(T('Please fix the highlighted fields','Исправьте отмеченные поля'),'bad');return}
+  const c={id:'CLM-26-'+(S.next++),mem:d.mem,prov:0,dos:d.dos,sub:iso(NOW),dx:d.dx,pa:d.pa,lines:d.lines.map(l=>({c:l.c,q:+l.q,ch:+l.ch})),fresh:1};
+  adjudicate(c,S.claims);logc(c,'Submitted by '+S.user.name+' · auto-adjudicated in 0.4 s','Подан: '+S.user.name+' · обработан за 0,4 с');
+  S.claims.unshift(c);S.last=c.id;S.tab='rules';save();render();
+  toast(c.id+' → '+T(ST[c.st][0],ST[c.st][1]),ST[c.st][2]==='ok'?'':ST[c.st][2]==='bad'?'bad':'gold');
+  if(innerWidth<1100)setTimeout(()=>$('#result')&&$('#result').scrollIntoView({behavior:'smooth'}),60);
+}
+function resultCard(c){if(!c)return'';const m=mem(c.mem);
+  return `<h3>${T('Adjudication result','Результат проверки')} <span class="mono" style="font-size:12.5px;color:var(--muted)">${c.id}</span><span class="sp"></span>${stPill(c.st)}</h3>
+  <div class="muted" style="font-size:12.5px">${esc(m.n)} · ${L(PROV[c.prov].n)} · ${fmtD(c.dos)} · ${c.dx}</div>
+  <div class="fin"><div><span>${T('Billed','Выставлено')}</span><b>${money(c.billed)}</b></div><div><span>${T('Plan pays','Платит фонд')}</span><b class="ok-t" style="color:var(--mal3)">${money(c.pays)}</b></div><div><span>${T('Member share','Доля пациента')}</span><b>${money(c.share)}</b></div></div>
+  <div class="row" style="gap:10px;font-size:12.5px"><span>${T('Fraud score','Балл риска')}</span><div class="bar" style="flex:1;min-width:80px"><i style="width:${c.fraud}%;background:${scoreCol(c.fraud)}"></i></div><b>${c.fraud}</b></div>
+  <div class="tabs">${[['rules','Rule hits','Правила'],['sig','Fraud signals','Сигналы риска'],['x12','X12 837','X12 837'],['log','History','История']].map(t=>`<button class="tab ${S.tab===t[0]?'on':''}" data-tab="${t[0]}">${T(t[1],t[2])}</button>`).join('')}</div>
+  <div>${S.tab==='rules'?`<ul class="rules">${c.rules.map((r,i)=>`<li class="${r.res}" style="animation-delay:${i*70}ms"><span class="k">${r.k}</span><span class="ico">${{pass:'✓',warn:'!',pend:'⏸',deny:'✕'}[r.res]}</span><span><b>${T(RULES[r.k][0],RULES[r.k][1])}</b><br><span class="muted">${esc(L(r))}</span></span></li>`).join('')}</ul>`
+   :S.tab==='sig'?(c.sig.length?c.sig.map(s=>`<div class="sig"><span>${esc(L(s))}</span><div class="bar"><i style="width:${s.w*3}%;background:var(--amber)"></i></div><b class="num">+${s.w}</b></div>`).join(''):`<div class="empty">${T('No risk signals — model sees a typical claim.','Сигналов риска нет — типичный счёт.')}</div>`)
+   :S.tab==='x12'?`<pre class="x12">${esc(x837(c))}</pre>`
+   :`<div class="hist">${(c.log||[]).map(h=>`<div><span class="t">${new Date(h.t).toLocaleString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</span>${esc(L(h))}</div>`).join('')}</div>`}</div>`}
+function bindResult(){$$('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;save();render()})}
+const scoreCol=s=>s>=60?'var(--red)':s>=35?'var(--amber)':'var(--mal)';
+function x837(c){const m=mem(c.mem),p=PROV[c.prov],dt=c.dos.replace(/-/g,''),nm=m.n.toUpperCase().split(' ');
+  return [`ISA*00*          *00*          *ZZ*${p.npi}     *ZZ*NHFVALDORIA    *${dt.slice(2)}*1030*^*00501*${String(hash(c.id)).slice(0,9).padStart(9,'0')}*0*P*:~`,`GS*HC*${p.npi}*NHFVALDORIA*${dt}*1030*1*X*005010X222A1~`,'ST*837*0001*005010X222A1~',
+   `NM1*85*2*${p.n.en.toUpperCase()}*****XX*${p.npi}~`,`NM1*IL*1*${nm[1]}*${nm[0]}****MI*${m.id.replace(/-/g,'')}~`,`CLM*${c.id}*${c.billed.toFixed(2)}***11:B:1*Y*A*Y*Y~`,
+   c.pa?`REF*G1*${c.pa}~`:null,`HI*ABK:${c.dx.replace('.','')}~`,...c.lines.flatMap((l,i)=>[`LX*${i+1}~`,`SV1*HC:${l.c}*${(l.ch*l.q).toFixed(2)}*UN*${l.q}***1~`,`DTP*472*D8*${dt}~`]),`SE*${8+c.lines.length*3}*0001~`,'GE*1*1~','IEA*1*000000001~'].filter(Boolean).join('\n')}
+
+/* ---------- claims list ---------- */
+function rClaims(){
+  const el=$('#v-claims');const q=S.q.toLowerCase();
+  const list=S.claims.filter(c=>(S.filter==='all'||c.st===S.filter)&&(!S.mine||c.prov===0)&&(!q||(c.id+' '+mem(c.mem).n+' '+c.dx).toLowerCase().includes(q)));
+  const sel=S.claims.find(c=>c.id===S.sel)||list[0];
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="row"><input class="input" id="cQ" style="max-width:280px" value="${esc(S.q)}" data-en-ph="Search ID, member, diagnosis" data-ru-ph="Поиск: номер, пациент, диагноз" placeholder="${T('Search ID, member, diagnosis','Поиск: номер, пациент, диагноз')}">
+   <div class="chips">${['all',...Object.keys(ST)].map(k=>`<button class="chip ${S.filter===k?'on':''}" data-f="${k}">${k==='all'?T('All','Все'):T(ST[k][0],ST[k][1])} · ${k==='all'?S.claims.length:S.claims.filter(c=>c.st===k).length}</button>`).join('')}</div>
+   <button class="chip ${S.mine?'on':''}" id="cMine">${T('Only my clinic','Только моя клиника')}</button></div></div>
+   <div class="grid2"><div class="card"><h3>${T('Claims','Счета')} <span class="pill">${list.length}</span></h3>
+   ${list.length?`<div class="tw"><table class="t"><thead><tr><th>${T('Claim','Счёт')}</th><th>${T('Member','Пациент')}</th><th>${T('Service','Услуга')}</th><th class="num">${T('Billed','Сумма')}</th><th class="num">${T('Risk','Риск')}</th><th>${T('Status','Статус')}</th></tr></thead><tbody>
+   ${list.map(c=>`<tr class="ck ${sel&&c.id===sel.id?'sel':''}" data-id="${c.id}"><td class="mono" style="white-space:nowrap">${c.id}</td><td>${esc(mem(c.mem).n)}<div class="muted" style="font-size:11.5px">${L(PROV[c.prov].n)}</div></td><td style="white-space:nowrap">${fmtD(c.dos)}<div class="muted" style="font-size:11.5px">${c.lines.map(l=>l.c).join(', ')}</div></td><td class="num">${money(c.billed)}</td><td class="num"><b style="color:${scoreCol(c.fraud)}">${c.fraud}</b></td><td>${stPill(c.st)}</td></tr>`).join('')}</tbody></table></div>`:`<div class="empty">${T('No claims match the filter.','Нет счетов по фильтру.')}</div>`}
+   </div><div class="card">${sel?resultCard(sel):''}</div></div>`;
+  if(sel)S.last=S.last||sel.id;
+  $('#cQ').oninput=e=>{S.q=e.target.value;save();const p=e.target.selectionStart;rClaims();const i=$('#cQ');i.focus();i.setSelectionRange(p,p)};
+  $$('[data-f]',el).forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;save();rClaims()});
+  $('#cMine').onclick=()=>{S.mine=!S.mine;save();rClaims()};
+  $$('tr[data-id]',el).forEach(r=>r.onclick=()=>{S.sel=r.dataset.id;save();rClaims()});
+  bindResult();
+}
+
+/* ---------- overview ---------- */
+function rOver(){
+  const el=$('#v-over'),C=S.claims;
+  const auto=C.filter(c=>['approved','paid','denied'].includes(c.st)&&!(c.log||[]).some(h=>/manual|Manual/.test(h.en))).length;
+  const saved=C.filter(c=>c.st==='denied'||c.st==='fraud').reduce((a,c)=>a+c.billed,0);
+  const paid=C.filter(c=>c.st==='paid');
+  el.innerHTML=`<div class="kpis">
+   <div class="card kpi"><div class="l">${T('Claims (40 days)','Счета (40 дней)')}</div><div class="v">${C.length}</div><div class="d">${money(C.reduce((a,c)=>a+c.billed,0))} ${T('billed','выставлено')}</div></div>
+   <div class="card kpi"><div class="l">${T('Auto-adjudication rate','Авто-обработка')}</div><div class="v" style="color:var(--mal3)">${Math.round(auto/C.length*100)}%</div><div class="d">${T('target ≥ 85%','цель ≥ 85%')}</div></div>
+   <div class="card kpi"><div class="l">${T('In review queue','В очереди проверки')}</div><div class="v" style="color:var(--amber)">${C.filter(c=>['fraud','pended','records'].includes(c.st)).length}</div><div class="d">${T('median wait 1.8 d','медиана ожидания 1,8 дн.')}</div></div>
+   <div class="card kpi"><div class="l">${T('Losses prevented','Предотвращённые потери')}</div><div class="v" style="color:var(--gold2)">${money(saved)}</div><div class="d">${T('denied + held for fraud','отклонено + задержано СБ')}</div></div></div>
+   <div class="grid2"><div class="card chart"><h3>${T('Claims received per day','Счета по дням')}<span class="sp"></span></h3>${dayChart()}
+    <div class="legend" style="margin-top:8px"><span><i style="background:var(--mal)"></i>${T('Approved / paid','Одобрено / оплачено')}</span><span><i style="background:var(--amber)"></i>${T('Pended / records','Отложено / документы')}</span><span><i style="background:var(--violet)"></i>${T('Fraud review','Проверка СБ')}</span><span><i style="background:var(--red)"></i>${T('Denied','Отклонено')}</span></div></div>
+   <div class="card chart"><h3>${T('Outcome mix','Структура решений')}</h3>${donut()}</div></div>
+   <div class="grid2e" style="margin-top:14px"><div class="card"><h3>${T('Top rule hits','Частые срабатывания правил')}</h3>${ruleBars()}</div>
+   <div class="card"><h3>${T('Providers by average risk','Клиники по среднему риску')}</h3>${PROV.map((p,i)=>{const cs=C.filter(c=>c.prov===i);const a=cs.length?Math.round(cs.reduce((s,c)=>s+c.fraud,0)/cs.length):0;return `<div class="sig"><span>${L(p.n)} <span class="muted">· ${cs.length}</span></span><div class="bar"><i style="width:${a}%;background:${scoreCol(a)}"></i></div><b class="num">${a}</b></div>`}).join('')}
+    <p class="muted" style="font-size:12px;margin:10px 0 0">${T('Paid this cycle: ','Оплачено в цикле: ')}<b>${paid.length}</b> · ${money(paid.reduce((a,c)=>a+c.pays,0))}</p></div></div>`;
+}
+function dayChart(){
+  const W=640,H=210,P=28,days=[...Array(14)].map((_,i)=>iso(NOW-(13-i)*DAY));
+  const grp=s=>['approved','paid'].includes(s)?0:['pended','records'].includes(s)?1:s==='fraud'?2:3;const cols=['--mal','--amber','--violet','--red'].map(cssv);
+  const data=days.map(d=>{const a=[0,0,0,0];S.claims.filter(c=>c.sub===d).forEach(c=>a[grp(c.st)]++);return a});
+  const mx=Math.max(3,...data.map(a=>a.reduce((x,y)=>x+y,0)));const bw=(W-P-10)/14;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let g=0;g<=3;g++){const y=H-22-(H-40)*g/3;s+=`<line x1="${P}" x2="${W}" y1="${y}" y2="${y}" stroke="${cssv('--line')}"/><text x="${P-6}" y="${y+4}" text-anchor="end" font-size="10" fill="${cssv('--dim')}">${Math.round(mx*g/3)}</text>`}
+  data.forEach((a,i)=>{let y=H-22;a.forEach((v,k)=>{if(!v)return;const h=(H-40)*v/mx;y-=h;s+=`<rect x="${P+i*bw+4}" y="${y}" width="${bw-8}" height="${h}" rx="3" fill="${cols[k]}"><title>${v}</title></rect>`});
+    if(i%2===0)s+=`<text x="${P+i*bw+bw/2}" y="${H-6}" text-anchor="middle" font-size="10" fill="${cssv('--dim')}">${new Date(days[i]).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'})}</text>`});
+  return s+'</svg>'}
+function donut(){
+  const G=[['approved','paid'],['pended','records'],['fraud'],['denied']],cols=['--mal','--amber','--violet','--red'].map(cssv),lab=[['Approved/paid','Одобрено'],['Pended','Отложено'],['Fraud review','Проверка СБ'],['Denied','Отклонено']];
+  const v=G.map(g=>S.claims.filter(c=>g.includes(c.st)).length),tot=v.reduce((a,b)=>a+b,0)||1,r=60,C=2*Math.PI*r;let off=0;
+  let s=`<div class="row" style="gap:18px;justify-content:center"><svg viewBox="0 0 160 160" style="width:160px;flex:none">`;
+  v.forEach((x,i)=>{const l=C*x/tot;s+=`<circle cx="80" cy="80" r="${r}" fill="none" stroke="${cols[i]}" stroke-width="22" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-off}" transform="rotate(-90 80 80)"/>`;off+=l});
+  s+=`<text x="80" y="78" text-anchor="middle" font-size="26" font-weight="800" fill="${cssv('--text')}">${tot}</text><text x="80" y="98" text-anchor="middle" font-size="11" fill="${cssv('--muted')}">${T('claims','счетов')}</text></svg><div style="font-size:13px">`;
+  v.forEach((x,i)=>s+=`<div style="padding:3px 0"><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${cols[i]};margin-right:6px"></i>${T(lab[i][0],lab[i][1])} <b>${Math.round(x/tot*100)}%</b></div>`);
+  return s+'</div></div>'}
+function ruleBars(){const cnt={};S.claims.forEach(c=>c.rules.forEach(r=>{if(r.res!=='pass')cnt[r.k]=(cnt[r.k]||0)+1}));
+  const a=Object.entries(cnt).sort((x,y)=>y[1]-x[1]),mx=a.length?a[0][1]:1;
+  return a.map(([k,v])=>`<div class="sig"><span><span class="mono muted" style="font-size:11px">${k}</span> ${T(RULES[k][0],RULES[k][1])}</span><div class="bar"><i style="width:${v/mx*100}%;background:var(--blue)"></i></div><b class="num">${v}</b></div>`).join('')||`<div class="empty">—</div>`}
+
+/* ---------- review queue ---------- */
+function rQueue(){
+  const el=$('#v-queue');const list=S.claims.filter(c=>['fraud','pended','records'].includes(c.st)).sort((a,b)=>b.fraud-a.fraud);
+  const c=list.find(x=>x.id===S.qsel)||list[0];
+  if(!list.length){el.innerHTML=`<div class="card empty">✅<br>${T('Queue is empty — all claims are decided.','Очередь пуста — по всем счетам приняты решения.')}</div>`;return}
+  const m=mem(c.mem);const needPA=c.rules.some(r=>r.k==='R07'&&r.res==='pend');
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Claims awaiting decision','Счета на решении')}<span class="sp"></span><span class="pill warn">${list.length}</span></h3>
+   ${list.map(x=>`<div class="q ${x.id===c.id?'on':''}" data-q="${x.id}"><div class="sc" style="background:color-mix(in srgb,${scoreCol(x.fraud)} 20%,transparent);color:${scoreCol(x.fraud)}">${x.fraud}</div><div class="bd"><b>${x.id} · ${esc(mem(x.mem).n)}</b><span>${L(PROV[x.prov].n)} · ${money(x.billed)}</span></div>${stPill(x.st)}</div>`).join('')}</div>
+   <div class="card"><h3>${c.id}<span class="sp"></span>${stPill(c.st)}</h3>
+    <div class="row" style="gap:16px;align-items:center">${gauge(c.fraud)}<div style="font-size:13px;flex:1;min-width:160px"><div><b>${esc(m.n)}</b> · ${m.id}</div><div class="muted">${L(PROV[c.prov].n)} · NPI ${PROV[c.prov].npi}</div><div class="muted">${fmtD(c.dos)} · ${c.dx} ${T(DX[c.dx][0],DX[c.dx][1])}</div><div style="margin-top:4px">${T('Billed','Выставлено')} <b>${money(c.billed)}</b> · ${T('allowed','признано')} <b>${money(c.allowed)}</b></div></div></div>
+    <h3 style="margin-top:14px">${T('Why it was flagged','Почему задержан')}</h3>
+    ${c.sig.map(s=>`<div class="sig"><span>${esc(L(s))}</span><div class="bar"><i style="width:${s.w*3}%;background:var(--amber)"></i></div><b class="num">+${s.w}</b></div>`).join('')}
+    ${c.rules.filter(r=>r.res!=='pass').map(r=>`<div class="sig"><span><span class="mono muted" style="font-size:11px">${r.k}</span> ${esc(L(r))}</span><span class="pill ${r.res==='pend'?'warn':r.res==='deny'?'bad':'gold'}">${r.res.toUpperCase()}</span><span></span></div>`).join('')}
+    ${needPA?`<div class="f" style="margin-top:12px"><label>${T('Attach prior authorisation and re-run rules','Добавить предавторизацию и перепроверить')}</label><div class="row"><input class="input mono" id="qPa" style="flex:1;min-width:140px" placeholder="PA-00000"><button class="btn sm" id="qPaGo">${T('Re-adjudicate','Перепроверить')}</button></div></div>`:''}
+    <div class="row" style="margin-top:14px"><button class="btn pri sm" data-qa="ok">✓ ${T('Approve','Одобрить')}</button><button class="btn danger sm" data-qa="deny">✕ ${T('Deny','Отклонить')}</button>${c.st==='fraud'?`<button class="btn sm" data-qa="rec">📄 ${T('Request records','Запросить документы')}</button>`:''}${c.st==='records'?`<button class="btn gold sm" data-qa="got">📥 ${T('Records received','Документы получены')}</button>`:''}</div>
+    <div class="hist">${(c.log||[]).slice(-4).map(h=>`<div><span class="t">${new Date(h.t).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'2-digit',month:'short'})}</span>${esc(L(h))}</div>`).join('')}</div>
+   </div></div>`;
+  $$('[data-q]',el).forEach(b=>b.onclick=()=>{S.qsel=b.dataset.q;save();rQueue()});
+  const next=()=>{const n=S.claims.filter(x=>['fraud','pended','records'].includes(x.st)).sort((a,b)=>b.fraud-a.fraud)[0];S.qsel=n?n.id:null;save();render()};
+  $$('[data-qa]',el).forEach(b=>b.onclick=()=>{const a=b.dataset.qa,who=S.user.name;
+    if(a==='ok'){c.st='approved';accrue(c);logc(c,'Manually approved by '+who,'Одобрен вручную: '+who);toast(c.id+' · '+T('approved — queued for payment','одобрен — в очереди на оплату'))}
+    if(a==='deny'){c.st='denied';c.share=0;c.pays=0;logc(c,'Denied by '+who+(c.fraud>=60?' · referred to SIU':''),'Отклонён: '+who+(c.fraud>=60?' · передан в СБ':''));toast(c.id+' · '+T('denied','отклонён'),'bad')}
+    if(a==='rec'){c.st='records';logc(c,'Medical records requested from provider','У клиники запрошены медицинские документы');toast(T('Records request sent to provider','Запрос документов отправлен в клинику'),'gold')}
+    if(a==='got'){c.fraud=Math.max(12,c.fraud-38);c.sig=c.sig.slice(0,1);logc(c,'Records reviewed · risk lowered to '+c.fraud,'Документы проверены · риск снижен до '+c.fraud);c.st=c.rules.some(r=>r.res==='pend')?'pended':'approved';if(c.st==='approved')accrue(c);toast(c.id+' → '+T(ST[c.st][0],ST[c.st][1]))}
+    save();next()});
+  if(needPA)$('#qPaGo').onclick=()=>{const v=$('#qPa').value.trim().toUpperCase();if(!/^PA-\d{5}$/.test(v)){toast(T('Format: PA-00000','Формат: PA-00000'),'bad');return}
+    c.pa=v;const prevSig=c.fraud;adjudicate(c,S.claims);logc(c,'Prior auth '+v+' attached · re-adjudicated','Добавлена предавторизация '+v+' · перепроверен');toast(c.id+' → '+T(ST[c.st][0],ST[c.st][1]));save();next()};
+}
+function gauge(v){const r=50,a=Math.PI*v/100,x=60-r*Math.cos(a),y=62-r*Math.sin(a);
+  return `<svg viewBox="0 0 120 74" style="width:130px;flex:none"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" stroke="${cssv('--line')}" stroke-width="12" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)}" fill="none" stroke="${v>=60?cssv('--red'):v>=35?cssv('--amber'):cssv('--mal')}" stroke-width="12" stroke-linecap="round"/><text x="60" y="58" text-anchor="middle" font-size="22" font-weight="800" fill="${cssv('--text')}">${v}</text><text x="60" y="72" text-anchor="middle" font-size="8.5" fill="${cssv('--muted')}">${T('FRAUD SCORE','БАЛЛ РИСКА')}</text></svg>`}
+
+/* ---------- payments ---------- */
+function rPay(){
+  const el=$('#v-pay');const ready=S.claims.filter(c=>c.st==='approved');const amt=ready.reduce((a,c)=>a+c.pays,0);
+  const b=S.batches.find(x=>x.id===S.psel)||S.batches[S.batches.length-1];
+  el.innerHTML=`<div class="kpis">
+   <div class="card kpi"><div class="l">${T('Ready to pay','К оплате')}</div><div class="v">${ready.length}</div><div class="d">${money(amt)}</div></div>
+   <div class="card kpi"><div class="l">${T('Last cycle','Последний цикл')}</div><div class="v" style="font-size:20px">${fmtD(S.batches[S.batches.length-1].date)}</div><div class="d">${S.batches[S.batches.length-1].n} ${T('claims','счетов')}</div></div>
+   <div class="card kpi"><div class="l">${T('Paid · 10 weeks','Оплачено · 10 недель')}</div><div class="v" style="font-size:20px">${money(S.batches.slice(-10).reduce((a,x)=>a+x.amt,0))}</div><div class="d">EFT · ISO 20022</div></div>
+   <div class="card kpi"><div class="l">${T('Avg. days to pay','Средний срок оплаты')}</div><div class="v" style="color:var(--mal3)">6.4</div><div class="d">${T('statutory limit 30','норматив 30')}</div></div></div>
+   <div class="grid2"><div class="card"><h3>${T('Payment cycle','Платёжный цикл')}<span class="sp"></span><button class="btn pri sm" id="payRun" ${ready.length?'':'disabled'}>💳 ${T('Run payment cycle','Запустить цикл')}</button></h3>
+    ${ready.length?`<div class="tw"><table class="t"><thead><tr><th>${T('Claim','Счёт')}</th><th>${T('Provider','Клиника')}</th><th class="num">${T('Allowed','Признано')}</th><th class="num">${T('Member','Пациент')}</th><th class="num">${T('Plan pays','Платит фонд')}</th></tr></thead><tbody>${ready.map(c=>`<tr><td class="mono">${c.id}</td><td>${L(PROV[c.prov].n)}</td><td class="num">${money(c.allowed)}</td><td class="num">${money(c.share)}</td><td class="num"><b>${money(c.pays)}</b></td></tr>`).join('')}</tbody></table></div>`:`<div class="empty">${T('No approved claims waiting. Approve some in the review queue or submit a clean claim.','Нет одобренных счетов. Одобрите в очереди или подайте чистый счёт.')}</div>`}
+    <h3 style="margin-top:16px">${T('Weekly payments','Выплаты по неделям')}</h3><div class="chart">${payChart()}</div></div>
+   <div class="card"><h3>${T('Batches','Платёжные реестры')}</h3><div class="tw"><table class="t" style="min-width:380px"><thead><tr><th>${T('Batch','Реестр')}</th><th>${T('Date','Дата')}</th><th class="num">${T('Claims','Счета')}</th><th class="num">${T('Amount','Сумма')}</th></tr></thead><tbody>
+    ${S.batches.slice().reverse().map(x=>`<tr class="ck ${x.id===b.id?'sel':''}" data-b="${x.id}"><td class="mono">${x.id}</td><td style="white-space:nowrap">${fmtD(x.date)}</td><td class="num">${x.n}</td><td class="num">${money(x.amt)}</td></tr>`).join('')}</tbody></table></div>
+    <h3 style="margin-top:14px">${T('835 remittance','Реестр 835')} · <span class="mono" style="font-size:12px">${b.id}</span></h3><pre class="x12">${esc(x835(b))}</pre></div></div>`;
+  $$('[data-b]',el).forEach(r=>r.onclick=()=>{S.psel=r.dataset.b;save();rPay()});
+  $('#payRun').onclick=()=>{const id='PAY-'+iso(NOW).replace(/-/g,'')+'-'+(S.batches.length+1);
+    const bt={id,date:iso(NOW),n:ready.length,amt:Math.round(amt),eft:'EFT'+(88200000+Math.floor(Math.random()*99999)),ids:ready.map(c=>c.id)};
+    ready.forEach(c=>{c.st='paid';c.batch=id;logc(c,'Paid in '+id+' · '+bt.eft,'Оплачен в '+id+' · '+bt.eft)});S.batches.push(bt);S.psel=id;save();render();
+    toast(T(`Payment cycle ${id}: ${bt.n} claims, ${money(bt.amt)} sent by EFT`,`Цикл ${id}: ${bt.n} счетов, ${money(bt.amt)} отправлено`),'gold')};
+}
+function payChart(){const B=S.batches.slice(-11),W=640,H=180,P=8,mx=Math.max(...B.map(b=>b.amt))*1.1,bw=(W-P*2)/B.length;
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;B.forEach((b,i)=>{const h=(H-36)*b.amt/mx,x=P+i*bw;s+=`<rect x="${x+5}" y="${H-22-h}" width="${bw-10}" height="${h}" rx="4" fill="${i===B.length-1?cssv('--gold'):cssv('--mal')}" opacity="${i===B.length-1?1:.8}"><title>${money(b.amt)}</title></rect><text x="${x+bw/2}" y="${H-7}" text-anchor="middle" font-size="10" fill="${cssv('--dim')}">${new Date(b.date).toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'})}</text>`});
+  return s+'</svg>'}
+function x835(b){const cl=b.ids.map(id=>S.claims.find(c=>c.id===id)).filter(Boolean);const dt=b.date.replace(/-/g,'');
+  const L1=['ST*835*0001~',`BPR*I*${b.amt.toFixed(2)}*C*ACH*CCP*01*999000111*DA*4400172*NHFVALDORIA**01*888777666*DA*${b.eft.slice(3)}*${dt}~`,`TRN*1*${b.eft}*1990012345~`,`DTM*405*${dt}~`,'N1*PR*NATIONAL HEALTH INSURANCE FUND~'];
+  if(!cl.length)L1.push(`* ${T('summary batch',  'сводный реестр')}: ${b.n} ${T('claims','счетов')} *`);
+  cl.forEach(c=>{L1.push(`CLP*${c.id}*1*${c.billed.toFixed(2)}*${c.pays.toFixed(2)}*${c.share.toFixed(2)}*MC*${hash(c.id)}~`);if(c.billed-c.allowed>0.5)L1.push(`CAS*CO*45*${(c.billed-c.allowed).toFixed(2)}~`);if(c.share>0)L1.push(`CAS*PR*${c.dedPart>0?1:2}*${c.share.toFixed(2)}~`)});
+  L1.push(`SE*${L1.length+1}*0001~`);return L1.join('\n')}
+
+/* ---------- members ---------- */
+function rMem(){
+  const el=$('#v-mem');const q=(S.mq||'').toLowerCase();const list=S.members.filter(m=>!q||(m.n+' '+m.id).toLowerCase().includes(q));
+  const m=mem(S.msel)||S.members[0],p=PLANS[m.plan];const act=iso(NOW)>=m.from&&iso(NOW)<=m.to;const cl=S.claims.filter(c=>c.mem===m.id);
+  const BEN=[['Primary care visit','Приём терапевта',p.co+'%','—'],['Laboratory tests','Анализы',p.co+'%','—'],['X-ray & ECG','Рентген и ЭКГ',p.co+'%','—'],['MRI / CT','МРТ / КТ',p.ex.includes('70553')?'✕':p.co+'%',p.ex.includes('70553')?'—':T('required','нужна')],['Inpatient surgery','Стационарная хирургия',p.co+'%',T('required','нужна')],['Preventive & vaccines','Профилактика и прививки','0%','—'],['Cosmetic procedures','Косметология','✕','—']];
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('Members','Застрахованные')}</h3><input class="input" id="mQ" value="${esc(S.mq||'')}" placeholder="${T('Name or member ID','Имя или номер полиса')}" style="margin-bottom:10px">
+   <div class="mlist">${list.map(x=>`<button class="mi ${x.id===m.id?'on':''}" data-m="${x.id}"><span class="av">${x.n.split(' ').map(w=>w[0]).join('')}</span><div><b>${esc(x.n)}</b><span class="mono">${x.id}</span></div><span class="pill ${iso(NOW)<=x.to?'ok':'bad'}">${L(PLANS[x.plan])}</span></button>`).join('')||`<div class="empty">—</div>`}</div></div>
+   <div class="card"><div class="mcard"><div class="row" style="justify-content:space-between"><div class="chip2"></div><b style="letter-spacing:.06em">NHF · ${L(p).toUpperCase()}</b></div>
+    <div><small>${T('Member','Застрахованный')}</small><div class="nm">${esc(m.n)}</div><div class="mono" style="font-size:13px;opacity:.9">${m.id}</div></div>
+    <div class="row" style="justify-content:space-between;font-size:12px"><span><small>${T('Valid','Действует')}</small><br>${m.from} → ${m.to}</span><span><small>${T('Dependents','Иждивенцы')}</small><br>${m.deps}</span></div></div>
+    <div class="row" style="margin:14px 0 6px"><span class="pill ${act?'ok':'bad'}">${act?T('Active','Активен'):T('Terminated','Прекращён')}</span><span class="muted" style="font-size:12.5px">${L(m.emp)} · ${T('born','род.')} ${fmtD(m.dob)}</span><span class="grow"></span><button class="btn sm" id="mChk">⇄ ${T('Eligibility check 270/271','Проверка 270/271')}</button></div>
+    ${m.chk?`<div class="elig" style="margin-bottom:8px"><span class="mono">271</span><span>${m.chk.ok?'✓ '+T('Active coverage confirmed','Покрытие подтверждено'):'✕ '+T('No active coverage','Нет активного покрытия')}</span><span class="muted">${new Date(m.chk.t).toLocaleTimeString(PT.lang==='ru'?'ru-RU':'en-GB',{hour:'2-digit',minute:'2-digit'})} · ${m.chk.ms} ms</span></div>`:''}
+    <div style="font-size:13px;margin-top:8px">${T('Deductible','Франшиза')} <b>${money(Math.min(m.ded,p.ded))}</b> / ${money(p.ded)}<div class="prog"><i style="width:${Math.min(100,m.ded/p.ded*100)}%"></i></div></div>
+    <div style="font-size:13px;margin-top:6px">${T('Out-of-pocket maximum','Лимит личных расходов')} <b>${money(Math.min(m.oop,p.oop))}</b> / ${money(p.oop)}<div class="prog"><i style="width:${Math.min(100,m.oop/p.oop*100)}%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></i></div></div>
+    <h3 style="margin-top:14px">${T('Benefits','Льготы плана')}</h3><div class="tw"><table class="t" style="min-width:320px"><thead><tr><th>${T('Service','Услуга')}</th><th class="num">${T('Member pays','Платит пациент')}</th><th>${T('Prior auth','Предавт.')}</th></tr></thead><tbody>${BEN.map(b=>`<tr><td>${T(b[0],b[1])}</td><td class="num">${b[2]==='✕'?`<span class="bad-t" style="color:var(--red)">${T('not covered','не покрыто')}</span>`:b[2]}</td><td>${b[3]}</td></tr>`).join('')}</tbody></table></div>
+    <h3 style="margin-top:14px">${T('Claims history','История счетов')} <span class="pill">${cl.length}</span></h3>${cl.length?cl.map(c=>`<div class="row" style="padding:6px 0;border-bottom:1px dashed var(--line);font-size:12.5px"><span class="mono">${c.id}</span><span class="muted">${fmtD(c.dos)}</span><span class="grow"></span><b>${money(c.pays)}</b>${stPill(c.st)}</div>`).join(''):`<div class="muted" style="font-size:13px">${T('No claims yet','Счетов пока нет')}</div>`}
+   </div></div>`;
+  $$('[data-m]',el).forEach(b=>b.onclick=()=>{S.msel=b.dataset.m;save();rMem()});
+  $('#mQ').oninput=e=>{S.mq=e.target.value;const p=e.target.selectionStart;rMem();const i=$('#mQ');i.focus();i.setSelectionRange(p,p)};
+  $('#mChk').onclick=()=>{m.chk={ok:act,t:Date.now(),ms:80+Math.floor(Math.random()*120)};save();rMem();toast(act?T('271: coverage active','271: покрытие активно'):T('271: coverage inactive','271: покрытие неактивно'),act?'':'bad')};
+}
+
+/* ---------- wiring ---------- */
+$('#menuBtn').onclick=e=>{e.stopPropagation();$('#side').classList.toggle('open')};
+document.addEventListener('click',e=>{const sd=$('#side');if(sd.classList.contains('open')&&!sd.contains(e.target)&&e.target.id!=='menuBtn')sd.classList.remove('open')});
+$('#reset').onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}const u=S.user,r=S.role;S=seed();S.user=u;S.role=r;save();render();toast(T('Demo reset','Демо сброшено'))};
+$('#logout').onclick=()=>{S.user=null;save();render()};
+PT.onLang(()=>render());
+render();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

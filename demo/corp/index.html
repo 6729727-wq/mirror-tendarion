@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Orbit Bank & Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.wrap{max-width:1320px;margin:0 auto;padding:18px 20px 60px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.top h1{margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
+.top h1 b{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,var(--gold2),var(--gold) 55%,#7a5a1c);color:#1a1306;font-size:16px;box-shadow:0 0 0 3px color-mix(in srgb,var(--mal) 45%,transparent)}
+.top .sp{flex:1}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px;gap:2px;max-width:100%}
+.seg button{border:0;background:none;padding:7px 14px;border-radius:999px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted);white-space:nowrap}
+.seg button.on{background:var(--panel2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line2)}
+.seg.full{display:flex;width:100%}.seg.full button{flex:1;padding:7px 6px}
+.brief{display:none;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}.brief.on{display:flex}
+.brief .sp{flex:1}
+.stack{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px dashed var(--line2);border-radius:999px;padding:3px 10px}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.sm{font-size:12px}.c{text-align:center}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.lnk{border:0;background:none;color:var(--mal3);cursor:pointer;font-weight:600;font-size:12px;padding:0}
+.pos{color:var(--mal3)} .neg{color:var(--text)} .red{color:var(--red)}
+.fresh{animation:fl 1.8s}
+@keyframes fl{0%{background:color-mix(in srgb,var(--gold) 30%,transparent)}100%{background:transparent}}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.spin{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--gold);animation:sp .8s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.prog{height:6px;border-radius:99px;background:var(--bg2);overflow:hidden;border:1px solid var(--line)}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--mal),var(--mal3));border-radius:99px;transition:width .6s}
+.prog.g i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.chips.sc{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chips.sc::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:12.5px;white-space:nowrap}
+.chip.on,.chip:hover{border-color:var(--gold);color:var(--gold2)}
+.f{margin-bottom:10px}.f label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.input.big{font-size:20px;font-weight:700}
+select.input{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:30px}
+.wbtn{width:100%;justify-content:center;margin-top:8px}
+.toasts{position:fixed;right:16px;top:60px;z-index:6000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:330px;animation:pop .2s}
+.toast.bad{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}
+.sw{position:relative;width:40px;height:22px;flex:none;display:inline-block}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line2);transition:.2s;cursor:pointer}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+i{background:var(--mal)} .sw input:checked+i:after{transform:translateX(18px)}
+.sw.frz input:checked+i{background:var(--blue)}
+/* ---------- BANK ---------- */
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+.mtabs{display:none;margin-bottom:12px}
+.kpis4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}.kpi .v{font-size:clamp(16px,1.35vw,20px);font-weight:800;font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .d{font-size:11.5px;color:var(--dim)}
+.igrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.donutw{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.donutw svg{width:170px;height:170px;flex:none;margin:0 auto}
+.donutw svg circle.sg{cursor:pointer;transition:stroke-width .15s}
+.donutw svg circle.sg:hover,.donutw svg circle.sg.hl{stroke-width:24}
+.legend{flex:1;min-width:230px;font-size:12.5px}
+.legend .lr{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:8px;cursor:pointer}
+.legend .lr:hover,.legend .lr.hl{background:var(--panel2)}
+.legend .lr i{width:10px;height:10px;border-radius:3px;flex:none}
+.legend .lr span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.legend .lr b{font-variant-numeric:tabular-nums}
+.legend .lr em{font-style:normal;color:var(--dim);width:34px;text-align:right}
+svg text{font-family:var(--font)}
+#bars{width:100%;height:auto;display:block}
+#bars rect{transition:opacity .15s}#bars rect:hover{opacity:.75}
+pre.xml{font-family:var(--mono);font-size:11px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:340px;margin:0;line-height:1.55}
+.xt{color:var(--mal3)} .xv{color:var(--gold2)}
+.evl .e{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:flex-start}
+.evl .e:last-child{border-bottom:0}
+.evl .e .ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--panel2);flex:none;font-size:13px}
+.evl .e .sp{flex:1;min-width:0}
+.evl{max-height:340px;overflow:auto}
+.phone{border-radius:44px;padding:12px;background:linear-gradient(160deg,#2a3b35,#0b1512);box-shadow:var(--shadow),inset 0 0 0 2px #3a4f47;position:sticky;top:64px}
+.scr{border-radius:34px;overflow:hidden;background:var(--bg);height:720px;display:flex;flex-direction:column;position:relative}
+.notch{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:12px;font-weight:700;flex:none}
+.notch i{width:90px;height:22px;background:#000;border-radius:14px;display:block}
+.ws{flex:1;overflow:auto;padding:6px 16px 16px;display:flex;flex-direction:column;min-height:0}
+.ws>*{flex-shrink:0}
+.bnav{display:flex;border-top:1px solid var(--line);background:var(--panel);padding:6px 4px 12px;flex:none}
+.bnav.hide{display:none}
+.bnav button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:10.5px;font-weight:600;color:var(--dim);cursor:pointer;padding:4px 0}
+.bnav button i{font-style:normal;font-size:18px;line-height:1.2}
+.bnav button.on{color:var(--gold2)}
+.hrow{display:flex;align-items:center;gap:10px;margin:4px 0 12px}
+.hrow .sp{flex:1;min-width:0}
+.avs{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--mal),var(--mal2));display:grid;place-items:center;font-weight:800;color:#fff;font-size:14px;flex:none}
+.ib{width:36px;height:36px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-size:15px;display:grid;place-items:center;flex:none}
+.bal{border-radius:20px;padding:18px;color:#fff;background:radial-gradient(120% 120% at 0 0,#1fc795 0,#0d6e52 55%,#0a3e30 100%);position:relative;overflow:hidden}
+.bal:after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(243,215,154,.55),transparent 70%)}
+.bal .l{font-size:12px;opacity:.85}
+.bal .v{font-size:27px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.bal .c{font-size:11.5px;opacity:.85;margin-top:8px}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 6px}
+.act{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted)}
+.act span{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);font-size:19px;color:var(--text);transition:.15s}
+.act:hover span{border-color:var(--gold)}
+.act.big span{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;border:0}
+.sec{display:flex;align-items:center;font-size:12px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px}
+.sec .sp{flex:1}
+.acc{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;font-size:13.5px}
+.acc .ic{font-size:18px}.acc .sp{flex:1;min-width:0}.acc .a{font-variant-numeric:tabular-nums;white-space:nowrap}
+.hist{font-size:13px}
+.hist .r{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);border-radius:6px}
+.hist .r:last-child{border-bottom:0}
+.hist .ic{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);flex:none;font-size:14px}
+.hist .r .sp{flex:1;min-width:0}
+.hist .r .sp div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist .a{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hday{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--dim);margin:12px 0 2px;text-transform:uppercase;letter-spacing:.05em}
+.back{border:0;background:none;color:var(--muted);cursor:pointer;font-weight:600;padding:4px 0;text-align:left;font-size:13px;align-self:flex-start}
+.wtitle{font-size:20px;font-weight:800;margin:6px 0 12px}
+.lock{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;padding-top:26px}
+.lklogo{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--gold2),var(--gold) 55%,#7a5a1c);display:grid;place-items:center;font-weight:800;font-size:28px;color:#1a1306;box-shadow:0 0 0 5px color-mix(in srgb,var(--mal) 40%,transparent),0 0 40px color-mix(in srgb,var(--mal) 40%,transparent)}
+.face{width:118px;height:118px;margin:26px auto 16px;position:relative}
+.face svg{width:100%;height:100%;stroke:var(--mal3);transition:stroke .2s}
+.face .sl{position:absolute;left:8%;right:8%;height:3px;border-radius:3px;background:var(--mal3);box-shadow:0 0 14px var(--mal3);top:12%;opacity:0}
+.face.scan .sl{opacity:1;animation:scan2 1s ease-in-out infinite}
+@keyframes scan2{0%,100%{top:12%}50%{top:85%}}
+.face.ok svg{stroke:var(--mal)} .face.ok .ff{stroke-dasharray:0}
+.face.ok:after{content:"✓";position:absolute;right:-8px;bottom:-8px;width:36px;height:36px;border-radius:50%;background:var(--mal);color:#fff;display:grid;place-items:center;font-weight:800;animation:pop .3s}
+.face.bad{animation:sh .35s}.face.bad svg{stroke:var(--red)}
+.face.sm{width:70px;height:70px;margin:10px auto}
+.pins{display:flex;gap:14px;justify-content:center;margin:18px 0}
+.pins i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);transition:.15s}
+.pins i.f{background:var(--gold);border-color:var(--gold)}
+.pins.shake{animation:sh .35s}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto;width:100%}
+.pad button{border:0;background:var(--panel2);border-radius:14px;padding:13px 0;font-size:20px;font-weight:700;cursor:pointer}
+.pad button:active{background:var(--line2)}
+.ccard{aspect-ratio:1.586;border-radius:18px;padding:16px 18px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(135deg,#17b58a,#0b5d46 45%,#0a2a22);display:flex;flex-direction:column;box-shadow:0 10px 30px rgba(0,0,0,.3);margin:4px 0 12px;transition:filter .3s}
+.ccard:before{content:"";position:absolute;right:-40px;bottom:-60px;width:200px;height:200px;border-radius:50%;border:24px solid rgba(243,215,154,.18)}
+.ccard.cc{background:linear-gradient(135deg,#5b4a22,#1d170b 50%,#3a2f17);color:#f3d79a}
+.ccard .ct{display:flex;justify-content:space-between;font-size:13px;letter-spacing:.12em}
+.ccard .chipi{width:40px;height:30px;border-radius:7px;background:linear-gradient(135deg,#f3d79a,#b08a3e);margin:14px 0 auto}
+.ccard .cn{font-size:16px;letter-spacing:.08em;margin-bottom:6px}
+.ccard .cb{display:flex;justify-content:space-between;font-size:11.5px;opacity:.9;letter-spacing:.06em}
+.ccard.frz{filter:saturate(.25) brightness(.85)}
+.ccard .frzl{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;background:repeating-linear-gradient(135deg,rgba(160,210,255,.22) 0 10px,rgba(160,210,255,.08) 10px 20px);backdrop-filter:blur(2px);animation:pop .3s;letter-spacing:.04em}
+.trow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.trow .sp{flex:1;min-width:0}
+.lim{padding:6px 0}.lim .ll{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:2px;gap:8px}
+.lim input{width:100%;accent-color:var(--mal)}
+.cres{margin-top:10px;border-radius:12px;padding:10px 12px;font-size:13px;border:1px solid var(--line2);animation:pop .2s}
+.cres.ok{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 12%,transparent)}
+.cres.no{border-color:var(--red);background:color-mix(in srgb,var(--red) 10%,transparent)}
+.nm{font-size:12.5px;margin:-4px 0 10px;min-height:18px}
+.vf{aspect-ratio:1;border-radius:22px;background:radial-gradient(circle at 50% 40%,#1b2a25,#000);position:relative;overflow:hidden;display:grid;place-items:center;margin-bottom:12px}
+.vf:before{content:"";position:absolute;inset:18%;border:3px solid var(--gold);border-radius:18px;box-shadow:0 0 0 999px rgba(0,0,0,.45)}
+.vf .ln{position:absolute;left:18%;right:18%;height:2px;background:var(--mal3);box-shadow:0 0 12px var(--mal3);animation:scan 1.8s ease-in-out infinite}
+@keyframes scan{0%,100%{top:20%}50%{top:78%}}
+.vf .tx{position:relative;color:#fff;font-size:12px;text-align:center;padding:0 26%;opacity:.85}
+.merch{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px;animation:pop .25s}
+.merch .mi{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:var(--panel2);flex:none}
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.bgrid button{border:1px solid var(--line2);background:var(--panel2);border-radius:14px;padding:10px 4px;cursor:pointer;font-size:11px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted)}
+.bgrid button b{font-size:20px;font-weight:400}
+.bgrid button.on{border-color:var(--gold);color:var(--gold2)}
+.sum{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:13px}
+.sum .row{display:flex;justify-content:space-between;padding:5px 0;gap:10px}
+.sum .row span:first-child{color:var(--muted);flex:none}
+.sum .row span:last-child{text-align:right;min-width:0;overflow-wrap:anywhere}
+.sum .row.t{border-top:1px solid var(--line);margin-top:4px;padding-top:9px;font-weight:800}
+.okmark{width:86px;height:86px;margin:20px auto 8px;border-radius:50%;background:var(--mal);display:grid;place-items:center;animation:pop .4s cubic-bezier(.2,1.6,.4,1);flex:none}
+.okmark svg{width:46px;stroke:#fff;stroke-width:4;fill:none;stroke-dasharray:60;stroke-dashoffset:60;animation:dr .5s .25s forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.ramt{font-size:28px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
+.goal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:10px}
+.goal .gh{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13.5px}
+.goal .ge{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--panel2);font-size:20px;flex:none}
+.goal .gh .sp{flex:1;min-width:0}
+.goal .chips{margin:8px 0 0}
+.goal.done{border-color:color-mix(in srgb,var(--gold) 60%,transparent)}
+.gsum{display:flex;gap:10px;margin-bottom:12px}
+.gsum div{flex:1;background:var(--panel2);border-radius:14px;padding:10px 12px}
+.gsum b{display:block;font-variant-numeric:tabular-nums;font-size:15px}
+.bioov{text-align:center;font-size:13px;color:var(--muted);min-height:0}
+/* ---------- ACADEMY ---------- */
+.prof{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.av{width:54px;height:54px;border-radius:17px;background:linear-gradient(135deg,var(--mal),var(--mal2));display:grid;place-items:center;font-weight:800;color:#fff;font-size:18px;flex:none}
+.pinfo{min-width:150px}
+.lvbox{flex:1;min-width:230px;display:flex;align-items:center;gap:12px}
+.lvb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:19px;color:#1a1306;background:radial-gradient(circle at 35% 30%,var(--gold2),var(--gold));flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 30%,transparent)}
+.lvb.pulse{animation:pulse 1s 2}
+@keyframes pulse{50%{transform:scale(1.18);box-shadow:0 0 0 10px color-mix(in srgb,var(--gold) 0%,transparent)}}
+.lvbox .sp{flex:1;min-width:0}
+.xpbar{height:10px;border-radius:99px;background:var(--bg2);border:1px solid var(--line);overflow:hidden;margin:5px 0 3px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal),var(--gold));width:0;transition:width .9s cubic-bezier(.2,.8,.2,1);border-radius:99px}
+.stat{display:flex;flex-direction:column;min-width:76px}
+.stat span{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.stat b{font-size:21px;font-variant-numeric:tabular-nums;font-family:var(--mono)}
+.agrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start;margin-top:14px}
+.atabs{margin-bottom:12px;overflow-x:auto;scrollbar-width:none}
+.atabs::-webkit-scrollbar{display:none}
+.apane{display:none}.apane.on{display:block;animation:fade .2s}
+.cgrid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.course{display:flex;flex-direction:column;gap:10px;transition:.15s}
+.course:hover{border-color:var(--line2)}
+.course .ch{display:flex;gap:12px;align-items:flex-start}
+.course .ci{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:24px;background:var(--panel2);flex:none}
+.course .ch .sp{flex:1;min-width:0}
+.course b.t{font-size:15px;display:block}
+.course .meta{font-size:12px;color:var(--muted)}
+.course .cf{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.course .cf .sp{flex:1}
+.player .steps{display:flex;gap:6px;margin:10px 0 18px}
+.player .steps i{flex:1;height:5px;border-radius:9px;background:var(--line2)}
+.player .steps i.d{background:var(--mal)}.player .steps i.c{background:var(--gold)}
+.lesson{max-width:640px}
+.lesson h2{font-size:22px;margin:10px 0 10px;letter-spacing:-.01em}
+.lesson p{font-size:15.5px;line-height:1.7;margin:0 0 14px}
+.tip{border-left:3px solid var(--gold);background:color-mix(in srgb,var(--gold) 8%,transparent);padding:10px 14px;border-radius:0 10px 10px 0;font-size:14px}
+.pnav{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.qq{font-size:18px;font-weight:700;margin:8px 0 6px;max-width:640px}
+.opt{display:flex;gap:10px;align-items:center;width:100%;max-width:640px;text-align:left;border:1px solid var(--line2);background:var(--panel2);border-radius:12px;padding:12px 14px;margin:8px 0;cursor:pointer;font-weight:500;font-size:14.5px}
+.opt i{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--bg2);font-style:normal;font-weight:700;font-size:12px;flex:none;font-family:var(--mono)}
+.opt:hover:not(:disabled){border-color:var(--mal)}
+.opt.ok{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 15%,transparent)}
+.opt.ok i{background:var(--mal);color:#fff}
+.opt.no{border-color:var(--red);background:color-mix(in srgb,var(--red) 12%,transparent);animation:sh .35s}
+.opt.no i{background:var(--red);color:#fff}
+.opt:disabled{cursor:default;color:inherit}
+.expl{max-width:640px;font-size:13.5px;padding:10px 14px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);margin-top:6px;animation:pop .2s}
+.res{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{width:130px;height:130px;flex:none}
+.ring circle{fill:none;stroke-width:12}
+.xpl{font-size:13.5px;min-width:220px;flex:1}
+.xpl .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--line)}
+.xpl .row.t{font-weight:800;color:var(--gold2);border-bottom:0}
+.xpfly{position:fixed;z-index:5500;font-weight:800;color:var(--gold2);font-size:24px;pointer-events:none;text-shadow:0 2px 12px rgba(0,0,0,.45);transition:transform 1s cubic-bezier(.5,0,.3,1),opacity 1s ease-in;white-space:nowrap;font-family:var(--mono)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.week div{text-align:center;font-size:11px;color:var(--muted)}
+.week i{display:grid;place-items:center;height:34px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);font-style:normal;margin-bottom:4px;font-size:15px}
+.week i.on{background:linear-gradient(135deg,var(--amber),var(--gold));border-color:transparent}
+.week i.td{border:2px dashed var(--gold)}
+.lb .r{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;font-size:13.5px;transition:background .3s}
+.lb .r.me{background:color-mix(in srgb,var(--gold) 14%,transparent);box-shadow:inset 3px 0 0 var(--gold)}
+.lb .rk{width:24px;text-align:center;font-weight:800;color:var(--muted);font-family:var(--mono);flex:none}
+.lb .r .ini{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);font-size:11px;font-weight:700;flex:none}
+.lb .r .sp{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb .r b{font-family:var(--mono);font-size:13px;white-space:nowrap}
+.lb .up{color:var(--mal3);font-size:11px;font-weight:800;animation:pop .3s}
+.lb .bar{height:4px;border-radius:9px;background:var(--bg2);margin-top:3px;overflow:hidden}
+.lb .bar i{display:block;height:100%;background:var(--mal);transition:width .8s}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.bdg{text-align:center;padding:14px 10px}
+.bdg .bi{font-size:30px;width:62px;height:62px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,color-mix(in srgb,var(--gold) 38%,transparent),transparent 70%)}
+.bdg b{display:block;font-size:13.5px}
+.bdg .sm{color:var(--muted);margin-top:3px}
+.bdg.lock .bi{filter:grayscale(1);opacity:.4}
+.bdg.lock b{color:var(--muted)}
+.bdg.new{animation:pop .4s;border-color:var(--gold)}
+.mini{display:flex;gap:6px;flex-wrap:wrap}
+.mini span{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);font-size:17px}
+.store{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.item{display:flex;flex-direction:column;gap:6px}
+.item .ii{font-size:30px;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:var(--panel2)}
+.item .cost{font-family:var(--mono);font-weight:700;color:var(--gold2)}
+.item .btn{margin-top:auto;justify-content:center}
+.item.got{border-color:var(--mal)}
+.rlist .r{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;flex-wrap:wrap}
+.rlist .r:last-child{border-bottom:0}
+.rlist .r .sp{flex:1;min-width:120px}
+.code{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px dashed var(--gold);border-radius:8px;padding:3px 8px;color:var(--gold2)}
+.mk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.dbar{display:grid;grid-template-columns:150px minmax(0,1fr) 54px;gap:10px;align-items:center;font-size:13px;padding:6px 0}
+.dbar .tr{position:relative;height:20px;background:var(--bg2);border-radius:6px;overflow:visible;border:1px solid var(--line)}
+.dbar .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;transition:width .8s}
+.dbar .tr u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--gold);text-decoration:none}
+.dbar b{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.dbar .dn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{background:var(--panel2);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);padding:8px 10px;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.me td{background:color-mix(in srgb,var(--gold) 9%,transparent)}
+#wau{width:100%;height:auto;display:block}
+.feed .e{display:flex;gap:8px;font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--line)}
+.feed .e:last-child{border-bottom:0}
+.feed .e .t{color:var(--dim);font-family:var(--mono);font-size:11px;flex:none;width:42px}
+.modal{position:fixed;inset:0;z-index:5800;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:16px;animation:fade .2s;overflow:hidden}
+.modal .box{max-width:360px;width:100%;text-align:center;position:relative;z-index:2;animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+.modal h2{margin:6px 0}
+.burst{width:120px;height:120px;border-radius:50%;margin:6px auto 12px;display:grid;place-items:center;background:conic-gradient(var(--gold),var(--mal),var(--gold2),var(--mal3),var(--gold));animation:sp 6s linear infinite}
+.burst span{width:96px;height:96px;border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:44px;font-weight:800;color:var(--gold2);animation:sp 6s linear infinite reverse}
+.cf{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards;z-index:1}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media (max-width:1100px){.igrid{grid-template-columns:minmax(0,1fr)}.mk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:980px){.agrid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .flow{grid-template-columns:minmax(0,1fr)}
+  .mtabs{display:flex}
+  .flow>.pane{display:none}.flow>.pane.on{display:block}
+  .phone{position:static;padding:0;background:none;box-shadow:none;border-radius:0;max-width:440px;margin:0 auto}
+  .scr{border-radius:20px;border:1px solid var(--line);height:auto;min-height:640px}
+  .notch{display:none}
+  .wrap{padding:14px 16px 50px}
+  .kpis4{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:620px){.cgrid2{grid-template-columns:minmax(0,1fr)}.dbar{grid-template-columns:96px minmax(0,1fr) 50px;font-size:12px}.prof{gap:12px}.stat{min-width:64px}.stat b{font-size:18px}.top h1{font-size:20px}}
+@media (max-width:420px){.kpi .v{font-size:17px}.mk .kpi .v{font-size:17px}.seg button{padding:7px 10px;font-size:12.5px}.ws{padding:6px 12px 14px}.act span{width:44px;height:44px}}
+</style>
+</head>
+<body data-demo-en="Orbit — bank & academy" data-demo-ru="Orbit — банк и академия">
+<div class="wrap">
+  <div class="top">
+    <h1><b>O</b>Orbit</h1>
+    <span class="pill gold" data-en="Two enterprise builds · one platform team" data-ru="Два корпоративных проекта · одна команда"></span>
+    <span class="sp"></span>
+    <div class="seg" id="proj"><button data-v="bank" class="on">🏦 Orbit Bank</button><button data-v="acad">🎓 Orbit Academy</button></div>
+  </div>
+  <div class="brief on" id="br-bank">
+    <span class="pill ok" data-en="State-owned bank (BUMN) · retail mobile banking" data-ru="Госбанк (BUMN) · розничный мобильный банк"></span>
+    <span class="pill gold mono">$1.9M</span>
+    <span class="stack">Flutter</span><span class="stack" data-en="Biometrics" data-ru="Биометрия"></span><span class="stack">ISO 20022</span><span class="stack">BI-FAST · QR</span>
+    <span class="sp"></span><button class="btn sm" data-reset="bank" data-en="↺ Reset demo" data-ru="↺ Сбросить демо"></button>
+  </div>
+  <div class="brief" id="br-acad">
+    <span class="pill ok" data-en="National telecom operator · 4,800 staff" data-ru="Национальный оператор связи · 4 800 сотрудников"></span>
+    <span class="pill gold mono">$420k</span>
+    <span class="stack" data-en="Gamification" data-ru="Геймификация"></span><span class="stack" data-en="Loyalty points" data-ru="Баллы лояльности"></span><span class="stack" data-en="Analytics" data-ru="Аналитика"></span><span class="stack">Flutter Web</span>
+    <span class="sp"></span><button class="btn sm" data-reset="acad" data-en="↺ Reset demo" data-ru="↺ Сбросить демо"></button>
+  </div>
+
+  <section class="view on" id="v-bank">
+    <div class="seg mtabs" id="bmtabs"><button data-p="app" class="on" data-en="📱 Mobile app" data-ru="📱 Приложение"></button><button data-p="ins" data-en="📊 Insights & core" data-ru="📊 Аналитика и ядро"></button></div>
+    <div class="flow">
+      <div class="pane" id="p-ins">
+        <div class="kpis4" id="bk"></div>
+        <div class="igrid">
+          <div class="card"><h3><span>📊</span><span data-en="Spending by category" data-ru="Расходы по категориям"></span><span class="sp"></span><span class="pill" data-en="Last 30 days" data-ru="30 дней"></span></h3>
+            <div class="donutw"><svg id="donut" viewBox="0 0 170 170"></svg><div class="legend" id="legend"></div></div>
+            <div class="sm muted" style="margin-top:8px" data-en="Tap a category to filter the history in the app." data-ru="Нажмите на категорию — история в приложении отфильтруется."></div></div>
+          <div class="card"><h3><span>📅</span><span data-en="Daily spending" data-ru="Расходы по дням"></span><span class="sp"></span><span class="pill mono" id="avgDay"></span></h3><svg id="bars" viewBox="0 0 600 170"></svg><div class="sm muted" id="barsNote" style="margin-top:6px"></div></div>
+          <div class="card" id="isoCard"><h3><span>🧾</span><span data-en="ISO 20022 · last outgoing message" data-ru="ISO 20022 · последнее исходящее"></span><span class="sp"></span><span class="pill ok mono">pacs.008.001.08</span></h3><pre class="xml" id="xml"></pre></div>
+          <div class="card"><h3><span>🛡️</span><span data-en="Security & core events" data-ru="События безопасности и ядра"></span><span class="sp"></span><span class="pill mono" id="evCount"></span></h3><div class="evl" id="ev"></div></div>
+        </div>
+      </div>
+      <div class="pane on" id="p-app">
+        <div class="phone"><div class="scr"><div class="notch"><span id="clock">9:41</span><i></i><span>5G ▮▮▮</span></div><div class="ws" id="ws"></div><nav class="bnav hide" id="bnav"></nav></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="v-acad">
+    <div class="card prof">
+      <div class="av">RA</div>
+      <div class="pinfo"><b>Rizky Aditya</b><div class="sm muted" data-en="Retail Sales · Jakarta store #14" data-ru="Розничные продажи · магазин №14, Джакарта"></div></div>
+      <div class="lvbox"><span class="lvb" id="lvNum">3</span><div class="sp"><b id="lvName"></b><div class="xpbar"><i id="xpfill"></i></div><div class="sm muted mono" id="xpTxt"></div></div></div>
+      <div class="stat"><span data-en="🔥 Streak" data-ru="🔥 Серия"></span><b id="stk"></b></div>
+      <div class="stat"><span data-en="◆ Points" data-ru="◆ Баллы"></span><b id="pts"></b></div>
+      <div class="stat"><span data-en="🏅 Badges" data-ru="🏅 Значки"></span><b id="bcount"></b></div>
+    </div>
+    <div class="agrid">
+      <div>
+        <div class="seg atabs" id="atabs"><button data-t="courses" class="on" data-en="📚 Courses" data-ru="📚 Курсы"></button><button data-t="store" data-en="🎁 Rewards" data-ru="🎁 Награды"></button><button data-t="badges" data-en="🏅 Badges" data-ru="🏅 Значки"></button><button data-t="mgr" data-en="📈 Manager analytics" data-ru="📈 Аналитика руководителя"></button></div>
+        <div class="apane on" id="a-courses"></div>
+        <div class="apane" id="a-store"></div>
+        <div class="apane" id="a-badges"></div>
+        <div class="apane" id="a-mgr"></div>
+      </div>
+      <aside>
+        <div class="card"><h3><span data-en="🔥 This week" data-ru="🔥 Эта неделя"></span><span class="sp"></span><span class="pill gold" id="stkPill"></span></h3><div class="week" id="week"></div><div class="sm muted" id="weekNote" style="margin-top:10px"></div></div>
+        <div class="card lb" style="margin-top:14px"><h3><span data-en="🏆 Leaderboard" data-ru="🏆 Рейтинг"></span><span class="sp"></span><span class="seg" id="lbMode" style="padding:3px"><button data-m="people" class="on" style="padding:4px 10px;font-size:12px" data-en="My team" data-ru="Команда"></button><button data-m="teams" style="padding:4px 10px;font-size:12px" data-en="Teams" data-ru="Команды"></button></span></h3><div id="lb"></div><div class="sm muted" style="margin-top:8px" data-en="Weekly XP · resets every Monday" data-ru="Опыт за неделю · обнуляется по понедельникам"></div></div>
+        <div class="card" style="margin-top:14px"><h3><span data-en="🏅 Recent badges" data-ru="🏅 Последние значки"></span></h3><div class="mini" id="miniB"></div></div>
+      </aside>
+    </div>
+  </section>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const L=o=>o?(PT.lang==='ru'&&o.ru!=null?o.ru:o.en):'';
+const LA=a=>PT.lang==='ru'?a[1]:a[0];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-US';
+const grp=v=>Math.round(v).toLocaleString('id-ID');
+const idr=v=>'Rp '+grp(Math.abs(v));
+const num=v=>Math.round(v).toLocaleString(loc());
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const DAY=864e5;
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+function dayKey(ts){const d=new Date(ts);d.setHours(0,0,0,0);return d.getTime()}
+const fDate=ts=>new Date(ts).toLocaleDateString(loc(),{day:'numeric',month:'short'});
+const fTime=ts=>new Date(ts).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});
+const rid=(p,n)=>p+Array.from({length:n||10},()=>'0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.floor(Math.random()*34)]).join('');
+const short=v=>v>=1e6?(v/1e6)+T('M',' млн'):(v/1e3)+T('k',' тыс');
+function countTo(el,from,to,fmt){if(!el)return;const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/850);el.textContent=fmt(from+(to-from)*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const FACE='<svg viewBox="0 0 100 100" fill="none" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 30V18A10 10 0 0 1 18 8h12M70 8h12a10 10 0 0 1 10 10v12M92 70v12a10 10 0 0 1-10 10H70M30 92H18A10 10 0 0 1 8 82V70"/><path class="ff" d="M35 37v7M65 37v7M50 39v15h-5M37 66c7 6 19 6 26 0"/></svg><div class="sl"></div>';
+
+/* =================== BANK DATA =================== */
+const CATS={food:{en:'Food & dining',ru:'Еда и кафе',ic:'🍜',c:'--gold'},transport:{en:'Transport',ru:'Транспорт',ic:'🛵',c:'--blue'},shop:{en:'Shopping',ru:'Покупки',ic:'🛍️',c:'--violet'},bills:{en:'Bills & utilities',ru:'Счета и ЖКХ',ic:'💡',c:'--amber'},health:{en:'Health',ru:'Здоровье',ic:'💊',c:'--red'},fun:{en:'Entertainment',ru:'Развлечения',ic:'🎬',c:'--mal3'},transfer:{en:'Transfers',ru:'Переводы',ic:'↗',c:'--muted'},income:{en:'Income',ru:'Поступления',ic:'⬇',c:'--mal'},save:{en:'Savings goals',ru:'Цели',ic:'🎯',c:'--gold2'}};
+const SPEND=['food','transport','shop','bills','health','fun','transfer'];
+const BANKS=[{id:'orb',n:'Orbit Bank',bic:'ORBKIDJA'},{id:'mdl',n:'Bank Mandala',bic:'MDLAIDJA'},{id:'nus',n:'Bank Nusantara Raya',bic:'NSRYIDJA'},{id:'kot',n:'Kota Bank',bic:'KOTAIDJA'},{id:'sya',n:'Orbit Syariah',bic:'ORBSIDJA'}];
+const NAMES=['Siti Rahmawati','Budi Santoso','Dewi Lestari','Andi Wijaya','Rina Kusuma','Agus Pratama','Nurul Hidayah','Eko Saputra'];
+const MERCH=[{n:'Kopi Senja',city:'Jakarta Selatan',ic:'☕',cat:'food',mcc:'5814',dyn:38000},{n:'Warung Bu Tini',city:'Jakarta Pusat',ic:'🍛',cat:'food',mcc:'5812',dyn:0},{n:'Mitra Mart 24',city:'Depok',ic:'🛒',cat:'shop',mcc:'5411',dyn:127500},{n:'Apotek Sehat Sentosa',city:'Bekasi',ic:'💊',cat:'health',mcc:'5912',dyn:0},{n:'Ojek Kilat',city:'Jakarta',ic:'🛵',cat:'transport',mcc:'4121',dyn:22000}];
+const BILLERS=[{id:'pln',en:'Electricity',ru:'Электричество',ic:'⚡',len:11,cat:'bills'},{id:'pdam',en:'Water',ru:'Вода',ic:'💧',len:8,cat:'bills'},{id:'tel',en:'Mobile postpaid',ru:'Мобильная связь',ic:'📱',len:10,cat:'bills'},{id:'ins',en:'Health insurance',ru:'Медстраховка',ic:'🩺',len:11,cat:'health'},{id:'net',en:'Home internet',ru:'Домашний интернет',ic:'🌐',len:10,cat:'bills'},{id:'edu',en:'School fees',ru:'Оплата школы',ic:'🎓',len:9,cat:'bills'}];
+const SEED=[[0,8,'food','Kopi Senja',0,-38000],[0,7,'transport','Ojek Kilat ride','Поездка Ojek Kilat',-22000],[1,19,'shop','Tokoline marketplace','Маркетплейс Tokoline',-459000],[1,12,'food','Warung Bu Tini',0,-45000],[2,20,'fun','Cinema XII · 2 tickets','Кинотеатр XII · 2 билета',-120000],[3,9,'bills','Electricity token','Электричество (токен)',-500000],[3,13,'food','Sate Pak Kumis',0,-64000],[4,18,'transfer','To Dewi Lestari','Перевод: Dewi Lestari',-750000],[5,8,'transport','Fuel · Petra station','Топливо · АЗС Petra',-150000],[5,21,'food','Antar Makan delivery','Доставка Antar Makan',-96000],[6,10,'income','From Siti Rahmawati','От Siti Rahmawati',250000],[6,16,'health','Apotek Sehat Sentosa',0,-185000],[7,11,'bills','Mobile postpaid','Мобильная связь',-215000],[8,19,'shop','Mitra Mart 24',0,-127500],[9,20,'fun','Streamly subscription','Подписка Streamly',-65000],[10,7,'transport','Commuter rail top-up','Пополнение проездного',-100000],[11,13,'food','Bakmi Gang Kelinci',0,-58000],[12,9,'income','Salary · PT Orbit Persero','Зарплата · PT Orbit Persero',14500000],[12,18,'bills','Home internet','Домашний интернет',-385000],[13,15,'shop','Batik Kencana',0,-680000],[14,12,'health','Klinik Pratama · check-up','Клиника Pratama · осмотр',-350000],[15,19,'food','Kopi Senja',0,-42000],[16,8,'transport','Commuter rail top-up','Пополнение проездного',-100000],[17,21,'fun','Bowling Kemang',0,-180000],[18,10,'bills','Water utility','Водоканал',-142000],[19,13,'transfer','To Budi Santoso','Перевод: Budi Santoso',-300000],[21,19,'food','Antar Makan delivery','Доставка Antar Makan',-112000],[23,17,'shop','Tokoline marketplace','Маркетплейс Tokoline',-239000],[25,12,'food','Warung Bu Tini',0,-41000],[27,9,'transport','Fuel · Petra station','Топливо · АЗС Petra',-150000]];
+function freshBank(){
+  const now=Date.now(),t0=dayKey(now);
+  const tx=SEED.map((s,i)=>({id:'S'+i,ts:Math.min(t0-s[0]*DAY+s[1]*36e5,now-(i+1)*9e5),cat:s[2],en:s[3],ru:s[4]||s[3],amt:s[5],acct:'cur'})).sort((a,b)=>b.ts-a.ts);
+  const iso={msg:'ORBKIDJA'+rid('',12),ref:'E2E'+rid('',13),ts:now-4*DAY+18*36e5,amt:750000,acctFrom:'124000875521',bic:'MDLAIDJA',to:'Dewi Lestari',toAcct:'3307118842',purp:'OTHR',note:'Arisan November'};
+  return{accts:{cur:{en:'Payroll current',ru:'Зарплатный счёт',no:'1240 0087 5521',bal:18452300},sav:{en:'Orbit Saver',ru:'Накопительный',no:'1240 0087 9034',bal:42300000}},
+    cards:{deb:{frozen:false,online:true,contactless:true,atm:5000000,pos:15000000,web:5000000},cc:{frozen:false,online:true,contactless:true,atm:2000000,pos:25000000,web:10000000,used:3240000,limit:25000000}},
+    tx,goals:[{id:'g1',ic:'🏍️',en:'New scooter',ru:'Новый скутер',target:28000000,saved:16400000},{id:'g2',ic:'✈️',en:'Bali holiday',ru:'Отпуск на Бали',target:12000000,saved:10600000},{id:'g3',ic:'🛡️',en:'Emergency fund',ru:'Подушка безопасности',target:30000000,saved:7500000}],
+    iso,ev:[{ts:now-4*DAY+18*36e5,k:'pay',en:'BI-FAST credit transfer accepted · Rp 750.000',ru:'Перевод BI-FAST принят · Rp 750.000'},{ts:now-DAY-3*36e5,k:'sec',en:'Login · Face ID · device bound (iPhone 15)',ru:'Вход · Face ID · привязанное устройство (iPhone 15)'},{ts:now-2*DAY,k:'sec',en:'Device binding re-verified by SIM check',ru:'Привязка устройства подтверждена по SIM'}]};
+}
+let B=store.get('orbit-bank-v1');if(!B||!B.accts)B=freshBank();
+const saveB=()=>store.set('orbit-bank-v1',B);
+const UI={authed:false,scr:'lock',pin:'',payTab:'acct',d:{from:'cur',bank:'mdl',acct:'',amt:0,note:''},qr:{i:-1,n:0,amt:0,busy:false},bill:{b:'pln',id:'',info:null,busy:false},pend:null,last:null,hq:'',hc:'all',card:'deb',hide:false,gform:false,gic:'🏠',cardRes:null,busy:false,failNext:false,hl:null};
+function ev(k,en,ru){B.ev.unshift({ts:Date.now(),k,en,ru});B.ev=B.ev.slice(0,40)}
+const money=v=>UI.hide?'Rp ••••••':idr(v);
+
+/* =================== PHONE SCREENS =================== */
+function greet(){const h=new Date().getHours();return h<11?T('Good morning','Доброе утро'):h<15?T('Good afternoon','Добрый день'):h<19?T('Good evening','Добрый вечер'):T('Good night','Доброй ночи')}
+function txRow(t){const c=CATS[t.cat];return `<div class="r ${t.fresh?'fresh':''}"><div class="ic">${c.ic}</div><div class="sp"><div>${esc(L(t))}</div><div class="sm muted">${L(c)} · ${fDate(t.ts)}, ${fTime(t.ts)}${t.acct==='cc'?' · Platinum':''}</div></div><div class="a ${t.amt>0?'pos':'neg'}">${t.amt>0?'+':'−'}${UI.hide?'••••':idr(t.amt)}</div></div>`}
+function sLock(){
+  if(UI.lockMode==='pin')return `<div class="lock"><div class="lklogo">O</div><div style="margin-top:14px;font-weight:700">${T('Enter your PIN','Введите PIN-код')}</div><div class="sm muted">${T('Demo PIN: 2468','Демо-PIN: 2468')}</div><div class="pins" id="pins">${[0,1,2,3].map(i=>`<i class="${i<UI.pin.length?'f':''}"></i>`).join('')}</div>
+  <div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-act="pin" data-v="${n}">${n}</button>`).join('')}<button data-act="lockmode" data-v="bio" style="font-size:22px">🙂</button><button data-act="pin" data-v="0">0</button><button data-act="pin" data-v="del">⌫</button></div></div>`;
+  return `<div class="lock"><div class="lklogo">O</div><div style="margin-top:16px;font-size:20px;font-weight:800">${greet()}, Rizky</div><div class="sm muted">${T('Orbit Bank · device bound · iPhone 15','Orbit Bank · устройство привязано · iPhone 15')}</div>
+  <div class="face" id="face">${FACE}</div><div class="sm muted" id="faceMsg" style="min-height:18px">${T('Look at the screen to unlock','Посмотрите на экран для входа')}</div>
+  <div style="width:100%;margin-top:auto"><button class="btn pri wbtn" data-act="bio">🙂 ${T('Unlock with Face ID','Войти по Face ID')}</button><button class="btn wbtn" data-act="lockmode" data-v="pin">🔢 ${T('Use PIN instead','Войти по PIN-коду')}</button>
+  <label class="sm muted" style="display:flex;gap:8px;align-items:center;justify-content:center;margin-top:12px;cursor:pointer"><input type="checkbox" id="failNext" ${UI.failNext?'checked':''} style="accent-color:var(--red)">${T('Simulate a failed face match','Смоделировать несовпадение лица')}</label></div></div>`}
+function act(go,ic,label,tab,big){return `<button class="act ${big?'big':''}" data-act="go" data-v="${go}" ${tab?`data-t="${tab}"`:''}><span>${ic}</span>${label}</button>`}
+function sHome(){const tot=B.accts.cur.bal+B.accts.sav.bal;
+  return `<div class="hrow"><div class="avs">RA</div><div class="sp"><div class="sm muted">${greet()}</div><b>Rizky Aditya</b></div><button class="ib" data-act="hide" title="${T('Hide balances','Скрыть суммы')}">${UI.hide?'👁':'◉'}</button><button class="ib" data-act="lock" title="${T('Lock','Заблокировать')}">🔒</button></div>
+  <div class="bal"><div class="l">${T('Total balance','Всего на счетах')}</div><div class="v">${money(tot)}</div><div class="c">${T('2 accounts · 2 cards · updated','2 счёта · 2 карты · обновлено')} ${fTime(Date.now())}</div></div>
+  <div class="acts">${act('pay','↗',T('Transfer','Перевод'),'acct')}${act('pay','⌗',T('Scan QR','QR-код'),'qr',1)}${act('pay','⚡',T('Bills','Счета'),'bill')}${act('goals','🎯',T('Goals','Цели'))}</div>
+  <div class="sec">${T('Accounts','Счета')}</div>
+  ${['cur','sav'].map(k=>{const a=B.accts[k];return `<div class="acc"><div class="ic">${k==='cur'?'💳':'🏦'}</div><div class="sp"><b>${L(a)}</b><div class="mono sm muted">${a.no}</div></div><b class="a">${money(a.bal)}</b></div>`}).join('')}
+  <div class="sec">${T('Recent','Последние операции')}<span class="sp"></span><button class="lnk" data-act="go" data-v="hist">${T('See all →','Все →')}</button></div>
+  <div class="hist">${B.tx.slice(0,5).map(txRow).join('')}</div>`}
+function sw(key,on,cls){return `<label class="sw ${cls||''}"><input type="checkbox" data-sw="${key}" ${on?'checked':''}><i></i></label>`}
+function sCards(){const k=UI.card,c=B.cards[k],cc=k==='cc';
+  const lim=(key,label,max,step)=>`<div class="lim"><div class="ll"><span>${label}</span><b class="mono" id="lv-${key}">${idr(c[key])}</b></div><input type="range" min="0" max="${max}" step="${step}" value="${c[key]}" data-lim="${key}" aria-label="${label}"></div>`;
+  return `<div class="wtitle">${T('Cards','Карты')}</div>
+  <div class="seg full" style="margin-bottom:10px"><button data-act="card" data-v="deb" class="${!cc?'on':''}">Debit · 2290</button><button data-act="card" data-v="cc" class="${cc?'on':''}">Platinum · 8812</button></div>
+  <div class="ccard ${cc?'cc':''} ${c.frozen?'frz':''}"><div class="ct"><b>ORBIT</b><span>${cc?'PLATINUM CREDIT':'DEBIT'}</span></div><div class="chipi"></div><div class="cn mono">${cc?'5521 •••• •••• 8812':'4417 •••• •••• 2290'}</div><div class="cb"><span>RIZKY ADITYA</span><span class="mono">09/29</span></div>${c.frozen?`<div class="frzl">❄ ${T('FROZEN','ЗАМОРОЖЕНА')}</div>`:''}</div>
+  ${cc?`<div style="margin-bottom:6px"><div class="sm muted" style="display:flex;justify-content:space-between"><span>${T('Credit used','Использовано')}</span><b class="mono">${idr(c.used)} / ${idr(c.limit)}</b></div><div class="prog g"><i style="width:${Math.min(100,c.used/c.limit*100)}%"></i></div></div>`:`<div class="sm muted" style="margin-bottom:6px">${T('Linked to','Привязана к')} ${L(B.accts.cur)} · ${money(B.accts.cur.bal)}</div>`}
+  <div class="trow"><span>❄️</span><div class="sp"><b>${T('Freeze card','Заморозить карту')}</b><div class="sm muted">${T('Instantly blocks all new payments','Мгновенно блокирует новые платежи')}</div></div>${sw('frozen',c.frozen,'frz')}</div>
+  <div class="trow"><span>🌐</span><div class="sp"><b>${T('Online payments','Оплата онлайн')}</b></div>${sw('online',c.online)}</div>
+  <div class="trow"><span>📶</span><div class="sp"><b>${T('Contactless','Бесконтактная оплата')}</b></div>${sw('contactless',c.contactless)}</div>
+  <div class="sec">${T('Daily limits','Дневные лимиты')}</div>
+  ${lim('atm',T('ATM withdrawal','Снятие наличных'),cc?5e6:10e6,250000)}${lim('pos',T('In-store purchases','Покупки в магазинах'),cc?c.limit:50e6,500000)}${lim('web',T('Online purchases','Покупки онлайн'),20e6,250000)}
+  <button class="btn wbtn" data-act="testcard">🛒 ${T('Test online payment','Тестовая онлайн-оплата')} · Rp 1.250.000</button>
+  <div id="cardRes">${UI.cardRes&&UI.cardRes.k===k?`<div class="cres ${UI.cardRes.ok?'ok':'no'}"><b>${UI.cardRes.ok?'✓ '+T('Approved','Одобрено'):'✕ '+T('Declined','Отклонено')}</b> · Tokoline · ${fTime(UI.cardRes.ts)}<div class="sm">${LA(UI.cardRes.why)}</div></div>`:''}</div>`}
+function lookup(bank,acct){return acct.length===10?NAMES[hash(bank+acct)%NAMES.length]:''}
+function nameHtml(){const d=UI.d,n=lookup(d.bank,d.acct);if(!n)return `<span class="muted">${d.acct.length?T(`${10-d.acct.length} more digits…`,`ещё ${10-d.acct.length} цифр…`):T('Enter 10 digits to look up the recipient','Введите 10 цифр — найдём получателя')}</span>`;
+  return `<span class="pos">✓ <b>${n}</b></span> <span class="muted">· ${d.bank==='orb'?T('Orbit customer','клиент Orbit'):T('verified via BI-FAST proxy','проверено через BI-FAST')}</span>`}
+const feeOf=b=>b==='orb'||b==='sya'?0:2500;
+function feeLine(){const d=UI.d,f=feeOf(d.bank);return (f?T('BI-FAST fee','Комиссия BI-FAST')+': '+idr(f):T('Free · internal book transfer','Бесплатно · внутренний перевод'))+(d.amt?' · '+T('total','итого')+' <b>'+idr(d.amt+f)+'</b>':'')}
+function pAcct(){const d=UI.d;
+  return `<div class="f"><label>${T('From','Откуда')}</label><select class="input" id="dFrom">${['cur','sav'].map(k=>`<option value="${k}" ${d.from===k?'selected':''}>${L(B.accts[k])} · ${money(B.accts[k].bal)}</option>`).join('')}</select></div>
+  <div class="f"><label>${T('Recipient bank','Банк получателя')}</label><select class="input" id="dBank">${BANKS.map(b=>`<option value="${b.id}" ${d.bank===b.id?'selected':''}>${b.n}</option>`).join('')}</select></div>
+  <div class="f"><label><span>${T('Account number','Номер счёта')}</span><button class="lnk" data-act="sample">${T('use sample','подставить пример')}</button></label><input class="input mono" id="dAcct" inputmode="numeric" maxlength="10" autocomplete="off" value="${d.acct}" placeholder="0000000000"></div>
+  <div class="nm" id="dName">${nameHtml()}</div>
+  <div class="f"><label>${T('Amount','Сумма')}</label><input class="input mono big" id="dAmt" inputmode="numeric" autocomplete="off" value="${d.amt?grp(d.amt):''}" placeholder="Rp 0"></div>
+  <div class="chips">${[50000,250000,1000000,5000000].map(v=>`<button class="chip" data-act="amt" data-v="${v}">${short(v)}</button>`).join('')}</div>
+  <div class="f"><label>${T('Note (optional)','Комментарий (необяз.)')}</label><input class="input" id="dNote" maxlength="40" value="${esc(d.note)}" placeholder="${T('e.g. Rent November','напр. Аренда, ноябрь')}"></div>
+  <div class="sm muted" id="dFee">${feeLine()}</div>
+  <button class="btn pri wbtn" data-act="contAcct">${T('Continue','Далее')}</button>`}
+function pQR(){const q=UI.qr;
+  if(q.i<0)return `<div class="vf"><div class="ln"></div><div class="tx">${q.busy?'<span class="spin"></span> '+T('Decoding…','Распознаём…'):T('Point the camera at a merchant QR code','Наведите камеру на QR-код продавца')}</div></div>
+  <button class="btn gold wbtn" data-act="scan" ${q.busy?'disabled':''}>⌗ ${T('Simulate scan','Смоделировать сканирование')}</button><div class="sm muted c" style="margin-top:8px">${T('Each scan picks the next demo merchant — static and dynamic codes.','Каждое сканирование — следующий продавец: статические и динамические коды.')}</div>`;
+  const m=MERCH[q.i];
+  return `<div class="merch"><div class="mi">${m.ic}</div><div style="flex:1;min-width:0"><b>${m.n}</b><div class="sm muted">${m.city} · MCC ${m.mcc}</div><div class="sm mono muted">NMID ID10${(hash(m.n)%1e9).toString().padStart(9,'0')}</div></div><span class="pill ${m.dyn?'gold':''}">${m.dyn?T('Dynamic','Динамич.'):T('Static','Статич.')}</span></div>
+  <div class="f"><label>${T('Amount','Сумма')}${m.dyn?' · '+T('set by merchant','задана продавцом'):''}</label><input class="input mono big" id="qAmt" inputmode="numeric" autocomplete="off" value="${q.amt?grp(q.amt):''}" placeholder="Rp 0" ${m.dyn?'readonly':''}></div>
+  <div class="sm muted">${T('Paid from','Списание с')} ${L(B.accts.cur)} · ${money(B.accts.cur.bal)} · ${T('no fee','без комиссии')}</div>
+  <button class="btn pri wbtn" data-act="contQR">${T('Continue','Далее')}</button><button class="btn wbtn" data-act="rescan">⌗ ${T('Scan another code','Сканировать другой')}</button>`}
+function pBill(){const b=BILLERS.find(x=>x.id===UI.bill.b),bi=UI.bill.info;
+  return `<div class="bgrid">${BILLERS.map(x=>`<button data-act="biller" data-v="${x.id}" class="${x.id===b.id?'on':''}"><b>${x.ic}</b>${L(x)}</button>`).join('')}</div>
+  <div class="f"><label><span>${T('Customer ID','Номер клиента')} · ${b.len} ${T('digits','цифр')}</span><button class="lnk" data-act="bsample">${T('use sample','подставить пример')}</button></label><input class="input mono" id="bId" inputmode="numeric" autocomplete="off" maxlength="${b.len}" value="${UI.bill.id}" placeholder="${'0'.repeat(b.len)}"></div>
+  ${bi?`<div class="sum" style="animation:pop .2s"><div class="row"><span>${T('Customer','Клиент')}</span><span>${bi.name}</span></div><div class="row"><span>${T('Period','Период')}</span><span>${new Date(bi.per).toLocaleDateString(loc(),{month:'long',year:'numeric'})}</span></div><div class="row"><span>${T('Bill amount','Сумма счёта')}</span><span class="mono">${idr(bi.amt)}</span></div><div class="row"><span>${T('Admin fee','Сбор')}</span><span class="mono">${idr(2500)}</span></div><div class="row t"><span>${T('Total','Итого')}</span><span class="mono">${idr(bi.amt+2500)}</span></div></div>
+  <button class="btn pri wbtn" data-act="contBill">${T('Continue','Далее')}</button>`:`<button class="btn gold wbtn" data-act="checkBill" ${UI.bill.busy?'disabled':''}>${UI.bill.busy?'<span class="spin"></span> ':''}${T('Check bill','Проверить счёт')}</button>`}`}
+function sPay(){const t=UI.payTab;
+  return `<div class="wtitle">${T('Pay & transfer','Платежи и переводы')}</div>
+  <div class="seg full" style="margin-bottom:12px">${['acct','qr','bill'].map(x=>`<button data-act="ptab" data-v="${x}" class="${t===x?'on':''}">${{acct:T('To account','На счёт'),qr:'⌗ QR',bill:T('Bills','Счета')}[x]}</button>`).join('')}</div>
+  <div id="pbody">${t==='acct'?pAcct():t==='qr'?pQR():pBill()}</div>`}
+function sConfirm(){const p=UI.pend;
+  return `<button class="back" data-act="cancelPend">← ${T('Back','Назад')}</button><div class="wtitle">${T('Confirm payment','Подтвердите платёж')}</div>
+  <div class="ramt">${idr(p.amt+p.fee)}</div><div class="c sm muted" style="margin-bottom:12px">${T('to','получатель:')} <b style="color:var(--text)">${esc(p.to)}</b></div>
+  <div class="sum"><div class="row"><span>${T('Recipient','Получатель')}</span><span>${esc(p.to)}</span></div><div class="row"><span>${T('Details','Реквизиты')}</span><span class="mono">${esc(p.sub)}</span></div><div class="row"><span>${T('From','Откуда')}</span><span>${L(B.accts[p.from])}</span></div><div class="row"><span>${T('Amount','Сумма')}</span><span class="mono">${idr(p.amt)}</span></div><div class="row"><span>${T('Fee','Комиссия')}</span><span class="mono">${p.fee?idr(p.fee):T('free','бесплатно')}</span></div>${p.note?`<div class="row"><span>${T('Note','Комментарий')}</span><span>${esc(p.note)}</span></div>`:''}<div class="row"><span>${T('Rail','Канал')}</span><span>${p.rail}</span></div><div class="row t"><span>${T('Total','Итого')}</span><span class="mono">${idr(p.amt+p.fee)}</span></div></div>
+  <div class="bioov" id="bioov"></div>
+  <div style="margin-top:auto"><button class="btn pri wbtn" data-act="confirm" ${UI.busy?'disabled':''}>🙂 ${T('Confirm with Face ID','Подтвердить по Face ID')}</button><div class="sm muted c" style="margin-top:8px">${T('Signed on device · sent as ISO 20022 pacs.008','Подпись на устройстве · отправка как ISO 20022 pacs.008')}</div></div>`}
+function sReceipt(){const r=UI.last;
+  return `<div class="okmark"><svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-17"/></svg></div><div class="c" style="font-weight:700">${T('Payment successful','Платёж выполнен')}</div><div class="ramt" style="margin:4px 0 14px">${idr(r.amt+r.fee)}</div>
+  <div class="sum"><div class="row"><span>${T('To','Кому')}</span><span>${esc(r.to)}</span></div><div class="row"><span>${T('Details','Реквизиты')}</span><span class="mono">${esc(r.sub)}</span></div><div class="row"><span>${T('Date','Дата')}</span><span>${fDate(r.ts)}, ${fTime(r.ts)}</span></div><div class="row"><span>${T('Rail','Канал')}</span><span>${r.rail}</span></div><div class="row"><span>${T('Reference','Референс')}</span><span class="mono">${r.ref}</span></div><div class="row"><span>ISO MsgId</span><span class="mono" style="font-size:11px">${r.msg}</span></div>${r.voucher?`<div class="row"><span>${T('Token','Токен')}</span><span class="mono" style="color:var(--gold2)">${r.voucher}</span></div>`:''}</div>
+  <div style="margin-top:auto;display:flex;flex-direction:column"><button class="btn wbtn" data-act="share">⤴ ${T('Share receipt','Поделиться чеком')}</button><button class="btn wbtn" data-act="showIso">🧾 ${T('View ISO 20022 message','Показать сообщение ISO 20022')}</button><button class="btn pri wbtn" data-act="go" data-v="home">${T('Done','Готово')}</button></div>`}
+function histFilter(){const q=UI.hq.trim().toLowerCase();return B.tx.filter(t=>(UI.hc==='all'||t.cat===UI.hc)&&(!q||(t.en+' '+t.ru+' '+CATS[t.cat].en+' '+CATS[t.cat].ru+' '+Math.abs(t.amt)).toLowerCase().includes(q.replace(/\./g,''))))}
+function histList(){const list=histFilter();if(!list.length)return `<div class="c muted" style="padding:40px 0">🔍 ${T('Nothing found','Ничего не найдено')}</div>`;
+  const today=dayKey(Date.now());let out='',cur=null;const sums={};list.forEach(t=>{const k=dayKey(t.ts);sums[k]=(sums[k]||0)+(t.amt<0&&t.cat!=='save'?-t.amt:0)});
+  list.forEach(t=>{const k=dayKey(t.ts);if(k!==cur){cur=k;out+=`<div class="hday"><span>${k===today?T('Today','Сегодня'):k===today-DAY?T('Yesterday','Вчера'):fDate(k)}</span><span>${sums[k]?'−'+(UI.hide?'••••':idr(sums[k])):''}</span></div>`}out+=txRow(t)});
+  const out2=list.filter(t=>t.amt<0&&t.cat!=='save').reduce((a,t)=>a-t.amt,0);
+  return `<div class="sm muted" style="margin-top:4px">${list.length} ${T('transactions','операций')} · ${T('spent','расходы')} <b style="color:var(--text)">${UI.hide?'••••':idr(out2)}</b></div><div class="hist">${out}</div>`}
+function sHist(){return `<div class="wtitle">${T('History','История')}</div><input class="input" id="hq" value="${esc(UI.hq)}" placeholder="${T('Search merchant, category, amount','Поиск: продавец, категория, сумма')}" autocomplete="off">
+  <div class="chips sc">${['all',...SPEND,'income','save'].map(c=>`<button class="chip ${UI.hc===c?'on':''}" data-act="hcat" data-v="${c}">${c==='all'?T('All','Все'):CATS[c].ic+' '+L(CATS[c])}</button>`).join('')}</div><div id="hlist">${histList()}</div>`}
+function sGoals(){const tot=B.goals.reduce((a,g)=>a+g.saved,0);
+  return `<div class="wtitle">${T('Savings goals','Цели накоплений')}</div>
+  <div class="gsum"><div><span class="sm muted">${T('In goals','В целях')}</span><b>${money(tot)}</b></div><div><span class="sm muted">${T('Available in Saver','Доступно в Saver')}</span><b>${money(B.accts.sav.bal)}</b></div></div>
+  ${B.goals.map(g=>{const p=Math.min(100,Math.round(g.saved/g.target*100));return `<div class="goal ${p>=100?'done':''}" id="goal-${g.id}"><div class="gh"><span class="ge">${g.ic}</span><div class="sp"><b>${esc(L(g))}</b><div class="sm muted mono">${money(g.saved)} / ${idr(g.target)}</div></div><b class="${p>=100?'pos':''}">${p}%</b></div><div class="prog ${p>=100?'g':''}"><i style="width:${p}%"></i></div>
+  <div class="chips">${p>=100?`<span class="pill gold">🎉 ${T('Goal reached!','Цель достигнута!')}</span>`:[100000,500000,1000000].map(v=>`<button class="chip" data-act="gadd" data-g="${g.id}" data-v="${v}">+ ${short(v)}</button>`).join('')}</div></div>`}).join('')}
+  ${UI.gform?`<div class="goal" style="animation:pop .2s"><div class="f"><label>${T('Goal name','Название цели')}</label><input class="input" id="gName" maxlength="28" placeholder="${T('e.g. New laptop','напр. Новый ноутбук')}"></div><div class="f"><label>${T('Target amount','Сколько накопить')}</label><input class="input mono" id="gTarget" inputmode="numeric" placeholder="Rp 0"></div>
+  <div class="chips">${['🏠','💻','🎓','💍','📱','🚗'].map(e=>`<button class="chip ${UI.gic===e?'on':''}" data-act="gic" data-v="${e}" style="font-size:16px">${e}</button>`).join('')}</div><button class="btn pri wbtn" data-act="gcreate">${T('Create goal','Создать цель')}</button></div>`:`<button class="btn wbtn" data-act="gform">＋ ${T('New goal','Новая цель')}</button>`}`}
+const SCR={lock:sLock,home:sHome,cards:sCards,pay:sPay,hist:sHist,goals:sGoals,confirm:sConfirm,receipt:sReceipt};
+const NAV=[['home','⌂',['Home','Главная']],['cards','▭',['Cards','Карты']],['pay','↗',['Pay','Платежи']],['hist','☰',['History','История']],['goals','◎',['Goals','Цели']]];
+function renderPhone(){const ws=$('#ws');ws.innerHTML=SCR[UI.scr]();
+  const nav=$('#bnav');const show=UI.authed&&NAV.some(n=>n[0]===UI.scr);nav.classList.toggle('hide',!show);
+  nav.innerHTML=NAV.map(n=>`<button data-nav="${n[0]}" class="${UI.scr===n[0]?'on':''}"><i>${n[1]}</i>${LA(n[2])}</button>`).join('');}
+function go(s){UI.scr=s;renderPhone();$('#ws').scrollTop=0}
+$('#bnav').addEventListener('click',e=>{const b=e.target.closest('[data-nav]');if(b)go(b.dataset.nav)});
+
+/* ---------- phone actions ---------- */
+async function bio(el,msgEl){const fail=UI.failNext;el.className='face scan'+(el.classList.contains('sm')?' sm':'');await sleep(1100);
+  if(fail){el.classList.remove('scan');el.classList.add('bad');if(msgEl)msgEl.innerHTML='<span class="red">'+T('Face not recognised. Try again or use PIN.','Лицо не распознано. Повторите или войдите по PIN.')+'</span>';ev('sec','Face ID mismatch · attempt logged','Несовпадение Face ID · попытка записана');UI.failNext=false;const cb=$('#failNext');if(cb)cb.checked=false;saveB();renderIns();return false}
+  el.classList.remove('scan');el.classList.add('ok');await sleep(550);return true}
+async function enter(method){UI.authed=true;UI.pin='';ev('sec',`Login · ${method} · device bound`,`Вход · ${method==='PIN'?'PIN-код':method} · привязанное устройство`);saveB();renderIns();go('home')}
+const A1={
+  bio:async b=>{if(UI.busy)return;UI.busy=true;b.disabled=true;$('#faceMsg').textContent=T('Scanning…','Сканирование…');const ok=await bio($('#face'),$('#faceMsg'));UI.busy=false;if(ok)enter('Face ID');else b.disabled=false},
+  lockmode:b=>{UI.lockMode=b.dataset.v;UI.pin='';renderPhone()},
+  pin:b=>{const v=b.dataset.v;if(v==='del')UI.pin=UI.pin.slice(0,-1);else if(UI.pin.length<4)UI.pin+=v;renderPhone();
+    if(UI.pin.length===4){if(UI.pin==='2468')setTimeout(()=>enter('PIN'),180);else{setTimeout(()=>{const p=$('#pins');p.classList.add('shake');p.querySelectorAll('i').forEach(i=>i.style.borderColor='var(--red)');ev('sec','Wrong PIN attempt','Неверный PIN');saveB();renderIns();setTimeout(()=>{UI.pin='';renderPhone()},420)},150)}}},
+  lock:()=>{UI.authed=false;UI.lockMode='bio';go('lock')},
+  hide:()=>{UI.hide=!UI.hide;renderPhone()},
+  go:b=>{if(b.dataset.t)UI.payTab=b.dataset.t;go(b.dataset.v)},
+  card:b=>{UI.card=b.dataset.v;renderPhone()},
+  testcard:()=>{const k=UI.card,c=B.cards[k],amt=1250000;let why=null;
+    if(c.frozen)why=['Card is frozen — unfreeze it to pay.','Карта заморожена — разморозьте её для оплаты.'];
+    else if(!c.online)why=['Online payments are switched off for this card.','Онлайн-платежи по карте выключены.'];
+    else if(amt>c.web)why=[`Over your online limit of ${idr(c.web)}.`,`Превышен онлайн-лимит ${idr(c.web)}.`];
+    else if(k==='deb'&&B.accts.cur.bal<amt)why=['Insufficient funds.','Недостаточно средств.'];
+    else if(k==='cc'&&c.used+amt>c.limit)why=['Credit limit reached.','Кредитный лимит исчерпан.'];
+    const ok=!why;UI.cardRes={k,ok,ts:Date.now(),why:why||['3-D Secure passed · charged '+idr(amt),'3-D Secure пройден · списано '+idr(amt)]};
+    if(ok){if(k==='deb')B.accts.cur.bal-=amt;else c.used+=amt;B.tx.unshift({id:rid('C',8),ts:Date.now(),cat:'shop',en:'Tokoline marketplace',ru:'Маркетплейс Tokoline',amt:-amt,acct:k==='cc'?'cc':'cur',fresh:1})}
+    ev('card',`Card ${k==='cc'?'8812':'2290'} online auth ${ok?'APPROVED':'DECLINED'}${ok?'':' · '+why[0]}`,`Карта ${k==='cc'?'8812':'2290'}: онлайн-авторизация ${ok?'ОДОБРЕНА':'ОТКЛОНЕНА'}${ok?'':' · '+why[1]}`);
+    saveB();renderPhone();renderIns();const r=$('#cardRes');if(r)r.scrollIntoView({block:'nearest',behavior:'smooth'})},
+  ptab:b=>{UI.payTab=b.dataset.v;renderPhone()},
+  sample:()=>{UI.d.acct=UI.d.bank==='orb'?'1240044817':'3307118842';renderPhone()},
+  amt:b=>{UI.d.amt=+b.dataset.v;const i=$('#dAmt');i.value=grp(UI.d.amt);$('#dFee').innerHTML=feeLine()},
+  contAcct:()=>{const d=UI.d,f=feeOf(d.bank),n=lookup(d.bank,d.acct),bal=B.accts[d.from].bal,bank=BANKS.find(x=>x.id===d.bank);
+    if(!n)return toast(T('Enter a valid 10-digit account number','Введите номер счёта из 10 цифр'),'bad');
+    if(d.amt<10000)return toast(T('Minimum transfer is Rp 10.000','Минимальный перевод — Rp 10.000'),'bad');
+    if(f&&d.amt>250000000)return toast(T('BI-FAST maximum is Rp 250.000.000 per transfer','Максимум BI-FAST — Rp 250.000.000 за перевод'),'bad');
+    if(d.amt+f>bal)return toast(T('Insufficient funds on the selected account','Недостаточно средств на выбранном счёте'),'bad');
+    UI.pend={kind:'acct',from:d.from,amt:d.amt,fee:f,to:n,sub:bank.n+' · '+d.acct,cat:'transfer',en:'To '+n,ru:'Перевод: '+n,note:d.note,rail:f?'BI-FAST':T('Internal','Внутренний'),bic:bank.bic,toAcct:d.acct,purp:'OTHR'};go('confirm')},
+  scan:async()=>{UI.qr.busy=true;renderPhone();await sleep(800);UI.qr.busy=false;UI.qr.i=UI.qr.n%MERCH.length;UI.qr.n++;UI.qr.amt=MERCH[UI.qr.i].dyn;renderPhone()},
+  rescan:()=>{UI.qr.i=-1;UI.qr.amt=0;renderPhone()},
+  contQR:()=>{const m=MERCH[UI.qr.i],a=UI.qr.amt;if(a<1000)return toast(T('Enter the amount','Введите сумму'),'bad');if(a>B.accts.cur.bal)return toast(T('Insufficient funds','Недостаточно средств'),'bad');
+    UI.pend={kind:'qr',from:'cur',amt:a,fee:0,to:m.n,sub:m.city+' · MCC '+m.mcc,cat:m.cat,en:m.n,ru:m.n,rail:'QR · '+(m.dyn?T('dynamic','динамич.'):T('static','статич.')),bic:'ORBKIDJA',toAcct:'ID10'+(hash(m.n)%1e9).toString().padStart(9,'0'),purp:'GDDS'};go('confirm')},
+  biller:b=>{UI.bill={b:b.dataset.v,id:'',info:null,busy:false};renderPhone()},
+  bsample:()=>{const b=BILLERS.find(x=>x.id===UI.bill.b);UI.bill.id=('5'+String(hash(b.id)).repeat(2)).slice(0,b.len);UI.bill.info=null;renderPhone()},
+  checkBill:async()=>{const b=BILLERS.find(x=>x.id===UI.bill.b);if(UI.bill.id.length!==b.len)return toast(T(`Customer ID must have ${b.len} digits`,`Номер клиента — ${b.len} цифр`),'bad');
+    UI.bill.busy=true;renderPhone();await sleep(700);const h=hash(b.id+UI.bill.id),d=new Date();d.setDate(1);d.setMonth(d.getMonth()-1);
+    UI.bill.info={name:NAMES[h%NAMES.length].toUpperCase(),per:d.getTime(),amt:Math.round((95000+h%640000)/100)*100};UI.bill.busy=false;renderPhone()},
+  contBill:()=>{const b=BILLERS.find(x=>x.id===UI.bill.b),i=UI.bill.info;if(i.amt+2500>B.accts.cur.bal)return toast(T('Insufficient funds','Недостаточно средств'),'bad');
+    UI.pend={kind:'bill',from:'cur',amt:i.amt,fee:2500,to:L(b),sub:UI.bill.id+' · '+i.name,cat:b.cat,en:b.en+' · '+UI.bill.id.slice(-4),ru:b.ru+' · '+UI.bill.id.slice(-4),rail:T('Biller switch','Биллинговый шлюз'),bic:'ORBKIDJA',toAcct:'BLR-'+b.id.toUpperCase()+'-'+UI.bill.id,purp:'UBIL',voucher:b.id==='pln'?Array.from({length:5},(_,k)=>String(hash(UI.bill.id+k)%10000).padStart(4,'0')).join('-'):null};go('confirm')},
+  cancelPend:()=>{UI.pend=null;go('pay')},
+  confirm:async b=>{if(UI.busy)return;UI.busy=true;b.disabled=true;const ov=$('#bioov');ov.innerHTML=`<div class="face sm" id="face2">${FACE}</div><div id="bmsg">${T('Scanning…','Сканирование…')}</div>`;
+    const ok=await bio($('#face2'),$('#bmsg'));if(!ok){UI.busy=false;b.disabled=false;return}
+    $('#bmsg').innerHTML='<span class="spin"></span> '+T('Sending · '+UI.pend.rail+'…','Отправка · '+UI.pend.rail+'…');await sleep(900);
+    const p=UI.pend,now=Date.now();B.accts[p.from].bal-=p.amt+p.fee;
+    const ref=rid('ORB',9),msg='ORBKIDJA'+new Date(now).toISOString().slice(0,10).replace(/-/g,'')+rid('',8);
+    B.tx.unshift({id:ref,ts:now,cat:p.cat,en:p.en,ru:p.ru,amt:-(p.amt+p.fee),acct:p.from,fresh:1});
+    B.iso={msg,ref:'E2E'+ref,ts:now,amt:p.amt,acctFrom:B.accts[p.from].no.replace(/\s/g,''),bic:p.bic,to:p.to,toAcct:p.toAcct,purp:p.purp,note:p.note||p.sub};
+    ev('pay',`${p.rail} ${p.kind==='qr'?'QR payment':p.kind==='bill'?'bill payment':'credit transfer'} settled · ${idr(p.amt)} → ${p.to}`,`${p.rail}: ${p.kind==='qr'?'оплата по QR':p.kind==='bill'?'оплата счёта':'перевод'} проведён · ${idr(p.amt)} → ${p.to}`);
+    UI.last=Object.assign({},p,{ts:now,ref,msg});UI.pend=null;UI.busy=false;
+    if(p.kind==='acct')UI.d=Object.assign(UI.d,{acct:'',amt:0,note:''});if(p.kind==='qr')UI.qr.i=-1;if(p.kind==='bill')UI.bill={b:UI.bill.b,id:'',info:null,busy:false};
+    saveB();renderIns(true);go('receipt')},
+  share:()=>{const r=UI.last,txt=`Orbit Bank — ${T('receipt','чек')}\n${idr(r.amt+r.fee)} → ${r.to}\n${r.sub}\n${fDate(r.ts)} ${fTime(r.ts)}\nRef ${r.ref}`;
+    try{navigator.clipboard.writeText(txt).then(()=>toast('📋 '+T('Receipt copied to clipboard','Чек скопирован в буфер обмена')),()=>toast('📋 '+T('Receipt ready to share','Чек готов к отправке')))}catch(e){toast('📋 '+T('Receipt ready to share','Чек готов к отправке'))}},
+  showIso:()=>{showPane('ins');const c=$('#isoCard');c.scrollIntoView({behavior:'smooth',block:'center'});c.classList.remove('fresh');void c.offsetWidth;c.classList.add('fresh')},
+  hcat:b=>{UI.hc=b.dataset.v;$$('#ws [data-act="hcat"]').forEach(x=>x.classList.toggle('on',x===b));$('#hlist').innerHTML=histList();UI.hl=UI.hc==='all'?null:UI.hc;renderDonut()},
+  gadd:b=>{const g=B.goals.find(x=>x.id===b.dataset.g),v=Math.min(+b.dataset.v,g.target-g.saved);if(v>B.accts.sav.bal)return toast(T('Not enough money in Orbit Saver','Недостаточно средств на накопительном'),'bad');
+    g.saved+=v;B.accts.sav.bal-=v;B.tx.unshift({id:rid('G',8),ts:Date.now(),cat:'save',en:'Goal · '+g.en,ru:'Цель · '+g.ru,amt:-v,acct:'sav',fresh:1});
+    if(g.saved>=g.target){toast('🎉 '+T(`Goal “${g.en}” reached!`,`Цель «${g.ru}» достигнута!`),'gold');ev('goal',`Goal reached · ${g.en}`,`Цель достигнута · ${g.ru}`)}else toast('🎯 +'+idr(v)+' → '+esc(L(g)));
+    saveB();renderPhone();renderIns()},
+  gform:()=>{UI.gform=true;renderPhone();setTimeout(()=>{const i=$('#gName');if(i){i.focus();i.scrollIntoView({block:'center'})}},50)},
+  gic:b=>{UI.gic=b.dataset.v;$$('#ws [data-act="gic"]').forEach(x=>x.classList.toggle('on',x===b))},
+  gcreate:()=>{const n=$('#gName').value.trim(),t=+$('#gTarget').value.replace(/\D/g,'');if(!n)return toast(T('Name your goal','Назовите цель'),'bad');if(t<100000)return toast(T('Target must be at least Rp 100.000','Цель — от Rp 100.000'),'bad');
+    B.goals.push({id:rid('g',6),ic:UI.gic,en:n,ru:n,target:t,saved:0});UI.gform=false;ev('goal','New goal · '+n,'Новая цель · '+n);saveB();renderPhone();renderIns();toast('🎯 '+T('Goal created','Цель создана'))}
+};
+const ws=$('#ws');
+ws.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&A1[b.dataset.act])A1[b.dataset.act](b)});
+ws.addEventListener('input',e=>{const t=e.target,id=t.id;
+  const digits=()=>+t.value.replace(/\D/g,'')||0;
+  if(id==='dAcct'){t.value=t.value.replace(/\D/g,'').slice(0,10);UI.d.acct=t.value;$('#dName').innerHTML=nameHtml()}
+  else if(id==='dAmt'){UI.d.amt=Math.min(digits(),999999999);t.value=UI.d.amt?grp(UI.d.amt):'';$('#dFee').innerHTML=feeLine()}
+  else if(id==='dNote')UI.d.note=t.value;
+  else if(id==='qAmt'){UI.qr.amt=Math.min(digits(),99999999);t.value=UI.qr.amt?grp(UI.qr.amt):''}
+  else if(id==='bId'){t.value=t.value.replace(/\D/g,'');UI.bill.id=t.value;if(UI.bill.info){UI.bill.info=null;renderPhone();const i=$('#bId');i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
+  else if(id==='hq'){UI.hq=t.value;$('#hlist').innerHTML=histList()}
+  else if(id==='gTarget'){const v=digits();t.value=v?grp(v):''}
+  else if(t.dataset.lim){$('#lv-'+t.dataset.lim).textContent=idr(+t.value)}});
+ws.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='dFrom')UI.d.from=t.value;
+  else if(t.id==='dBank'){UI.d.bank=t.value;$('#dName').innerHTML=nameHtml();$('#dFee').innerHTML=feeLine()}
+  else if(t.id==='failNext')UI.failNext=t.checked;
+  else if(t.dataset.sw){const c=B.cards[UI.card],k=t.dataset.sw,n=UI.card==='cc'?'8812':'2290';c[k]=t.checked;
+    const lab={frozen:['frozen','unfrozen','заморожена','разморожена'],online:['online payments on','online payments off','онлайн-платежи включены','онлайн-платежи выключены'],contactless:['contactless on','contactless off','бесконтакт включён','бесконтакт выключен']}[k];
+    ev('card',`Card ${n} ${t.checked?lab[0]:lab[1]}`,`Карта ${n}: ${t.checked?lab[2]:lab[3]}`);toast((k==='frozen'?'❄️ ':'💳 ')+T(`Card ${n} ${t.checked?lab[0]:lab[1]}`,`Карта ${n}: ${t.checked?lab[2]:lab[3]}`),k==='frozen'&&t.checked?'gold':'');UI.cardRes=null;saveB();renderPhone();renderIns()}
+  else if(t.dataset.lim){const c=B.cards[UI.card],k=t.dataset.lim;c[k]=+t.value;const nm={atm:['ATM','банкомат'],pos:['in-store','магазины'],web:['online','онлайн']}[k];ev('card',`Card ${UI.card==='cc'?'8812':'2290'} ${nm[0]} limit → ${idr(c[k])}`,`Карта ${UI.card==='cc'?'8812':'2290'}: лимит «${nm[1]}» → ${idr(c[k])}`);saveB();renderIns()}});
+
+/* =================== INSIGHTS =================== */
+function spendBy(){const from=Date.now()-30*DAY,s={};SPEND.forEach(c=>s[c]=0);let inc=0;B.tx.forEach(t=>{if(t.ts<from)return;if(t.amt<0&&s[t.cat]!=null)s[t.cat]-=t.amt;if(t.amt>0)inc+=t.amt});return{s,inc}}
+function renderKpis(){const {s,inc}=spendBy(),tot=Object.values(s).reduce((a,b)=>a+b,0),gs=B.goals.reduce((a,g)=>a+g.saved,0),gt=B.goals.reduce((a,g)=>a+g.target,0);
+  const k=(l,v,d)=>`<div class="card kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
+  $('#bk').innerHTML=k(T('Total balance','Баланс'),idr(B.accts.cur.bal+B.accts.sav.bal),T('2 accounts','2 счёта'))+k(T('Spent · 30 days','Расходы · 30 дн.'),idr(tot),`${B.tx.filter(t=>t.amt<0&&t.ts>Date.now()-30*DAY).length} ${T('payments','платежей')}`)+k(T('Income · 30 days','Доход · 30 дн.'),idr(inc),T('salary + transfers','зарплата + переводы'))+k(T('Saved in goals','Накоплено в целях'),Math.round(gs/gt*100)+'%',idr(gs)+' / '+short(gt))}
+function renderDonut(){const {s}=spendBy(),tot=Object.values(s).reduce((a,b)=>a+b,0)||1,R=62,C=2*Math.PI*R;let acc=0;
+  const cats=SPEND.filter(c=>s[c]>0).sort((a,b)=>s[b]-s[a]);
+  let svg=`<circle cx="85" cy="85" r="${R}" fill="none" style="stroke:var(--bg2)" stroke-width="18"/>`;
+  cats.forEach(c=>{const len=s[c]/tot*C;svg+=`<circle class="sg ${UI.hl===c?'hl':''}" data-c="${c}" cx="85" cy="85" r="${R}" fill="none" stroke-width="18" style="stroke:var(${CATS[c].c})" stroke-dasharray="${Math.max(0,len-1.5)} ${C}" stroke-dashoffset="${-acc}" transform="rotate(-90 85 85)"><title>${L(CATS[c])}: ${idr(s[c])}</title></circle>`;acc+=len});
+  const hc=UI.hl&&s[UI.hl]!=null?UI.hl:null;
+  svg+=`<text x="85" y="78" text-anchor="middle" style="fill:var(--muted)" font-size="10" font-weight="600">${hc?L(CATS[hc]).toUpperCase().slice(0,16):T('SPENT','ПОТРАЧЕНО')}</text><text x="85" y="96" text-anchor="middle" style="fill:var(--text)" font-size="14.5" font-weight="800">${idr(hc?s[hc]:tot).replace('Rp ','Rp ')}</text><text x="85" y="111" text-anchor="middle" style="fill:var(--dim)" font-size="9.5">${hc?Math.round(s[hc]/tot*100)+'%':cats.length+' '+T('categories','категорий')}</text>`;
+  $('#donut').innerHTML=svg;
+  $('#legend').innerHTML=cats.map(c=>`<div class="lr ${UI.hl===c?'hl':''}" data-c="${c}"><i style="background:var(${CATS[c].c})"></i><span>${CATS[c].ic} ${L(CATS[c])}</span><b>${idr(s[c])}</b><em>${Math.round(s[c]/tot*100)}%</em></div>`).join('')}
+function renderBars(){const days=30,now=dayKey(Date.now()),v=Array(days).fill(0);B.tx.forEach(t=>{if(t.amt>=0||t.cat==='save')return;const i=Math.round((now-dayKey(t.ts))/DAY);if(i>=0&&i<days)v[days-1-i]-=t.amt});
+  const max=Math.max(...v,1),W=600,H=170,pl=4,pb=22,bw=(W-pl*2)/days;let svg='';
+  [0.5,1].forEach(f=>{const y=(H-pb)-(H-pb-14)*f;svg+=`<line x1="0" x2="${W}" y1="${y}" y2="${y}" style="stroke:var(--line)" stroke-dasharray="3 4"/><text x="${W}" y="${y-3}" text-anchor="end" font-size="10" style="fill:var(--dim)">${short(Math.round(max*f/1000)*1000)}</text>`});
+  v.forEach((x,i)=>{const h=x?Math.max(3,(H-pb-14)*x/max):0,X=pl+i*bw+bw*.18,d=new Date(now-(days-1-i)*DAY);
+    svg+=`<rect x="${X}" y="${H-pb-h}" width="${bw*.64}" height="${h}" rx="3" style="fill:var(${i===days-1?'--gold':'--mal'})"><title>${fDate(d)}: ${idr(x)}</title></rect>`;
+    if(i%5===4||i===days-1)svg+=`<text x="${X+bw*.32}" y="${H-6}" text-anchor="middle" font-size="10" style="fill:var(--dim)">${d.getDate()}</text>`});
+  svg+=`<line x1="0" x2="${W}" y1="${H-pb}" y2="${H-pb}" style="stroke:var(--line2)"/>`;
+  $('#bars').innerHTML=svg;const tot=v.reduce((a,b)=>a+b,0),peak=v.indexOf(max);
+  $('#avgDay').textContent='Ø '+idr(tot/days)+T('/day','/день');
+  $('#barsNote').textContent=T(`Peak: ${fDate(now-(days-1-peak)*DAY)} · ${idr(max)}. Today is highlighted in gold.`,`Пик: ${fDate(now-(days-1-peak)*DAY)} · ${idr(max)}. Сегодня — золотым.`)}
+function isoXml(p){const x=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08">
+  <FIToFICstmrCdtTrf>
+    <GrpHdr>
+      <MsgId>${p.msg}</MsgId>
+      <CreDtTm>${new Date(p.ts).toISOString().slice(0,19)}+07:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <SttlmInf><SttlmMtd>CLRG</SttlmMtd></SttlmInf>
+    </GrpHdr>
+    <CdtTrfTxInf>
+      <PmtId><EndToEndId>${p.ref}</EndToEndId></PmtId>
+      <IntrBkSttlmAmt Ccy="IDR">${p.amt.toFixed(2)}</IntrBkSttlmAmt>
+      <ChrgBr>DEBT</ChrgBr>
+      <Dbtr><Nm>RIZKY ADITYA</Nm></Dbtr>
+      <DbtrAcct><Id><Othr><Id>${p.acctFrom}</Id></Othr></Id></DbtrAcct>
+      <DbtrAgt><FinInstnId><BICFI>ORBKIDJA</BICFI></FinInstnId></DbtrAgt>
+      <CdtrAgt><FinInstnId><BICFI>${p.bic}</BICFI></FinInstnId></CdtrAgt>
+      <Cdtr><Nm>${x(String(p.to).toUpperCase())}</Nm></Cdtr>
+      <CdtrAcct><Id><Othr><Id>${x(p.toAcct)}</Id></Othr></Id></CdtrAcct>
+      <Purp><Cd>${p.purp}</Cd></Purp>
+      <RmtInf><Ustrd>${x(p.note||'-')}</Ustrd></RmtInf>
+    </CdtTrfTxInf>
+  </FIToFICstmrCdtTrf>
+</Document>`}
+function hlXml(s){return esc(s).replace(/(&gt;)([^&\n]+)(&lt;)/g,'$1<span class="xv">$2</span>$3').replace(/(&lt;\/?)([\w:?]+)/g,'$1<span class="xt">$2</span>')}
+function renderEv(){const IC={sec:'🛡️',card:'💳',pay:'↗',goal:'🎯'};$('#evCount').textContent=B.ev.length;
+  $('#ev').innerHTML=B.ev.map((e,i)=>`<div class="e ${i===0&&e.ts>Date.now()-4000?'fresh':''}"><div class="ic">${IC[e.k]||'•'}</div><div class="sp">${esc(L(e))}<div class="sm muted">${fDate(e.ts)}, ${fTime(e.ts)}</div></div></div>`).join('')}
+function renderIns(isoFresh){renderKpis();renderDonut();renderBars();$('#xml').innerHTML=hlXml(isoXml(B.iso));if(isoFresh){const c=$('#isoCard');c.classList.remove('fresh');void c.offsetWidth;c.classList.add('fresh')}renderEv()}
+function pickCat(c){UI.hl=UI.hl===c?null:c;UI.hc=UI.hl||'all';renderDonut();
+  if(UI.authed){UI.hq='';go('hist');if(innerWidth<=860)showPane('app')}else toast(T('Filter set — unlock the app to see the history','Фильтр задан — разблокируйте приложение, чтобы увидеть историю'))}
+$('#donut').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)pickCat(c.dataset.c)});
+$('#legend').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)pickCat(c.dataset.c)});
+function showPane(p){$$('#bmtabs button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));$$('#v-bank .flow>.pane').forEach(x=>x.classList.toggle('on',x.id==='p-'+p))}
+$$('#bmtabs button').forEach(b=>b.onclick=()=>showPane(b.dataset.p));
+function tick(){const d=new Date();$('#clock').textContent=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
+
+/* =================== ACADEMY DATA =================== */
+const C=(en,ru)=>({en,ru});
+const COURSES=[
+ {id:'c5g',ic:'📡',t:C('5G & network basics','Основы 5G и сети'),cat:C('Product','Продукт'),lessons:[
+  {t:C('Three superpowers of 5G','Три суперсилы 5G'),b:C('5G brings three things customers notice: much higher speed for streaming and downloads, very low latency for real-time apps and gaming, and the ability to connect huge numbers of devices at once.','5G даёт клиенту три заметные вещи: гораздо более высокую скорость для видео и загрузок, очень низкую задержку для игр и приложений реального времени и возможность подключать огромное число устройств сразу.'),tip:C('Explain 5G through the customer’s use case, not the acronym.','Объясняйте 5G через задачу клиента, а не через аббревиатуры.')},
+  {t:C('Coverage and devices','Покрытие и устройства'),b:C('5G works only when both the area and the phone support it. Before selling a 5G plan, check the coverage map in the CRM and confirm that the handset supports our 5G bands.','5G работает, только если его поддерживают и район, и телефон. Прежде чем продавать тариф 5G, проверьте карту покрытия в CRM и убедитесь, что телефон поддерживает наши диапазоны 5G.'),tip:C('Two checks before every 5G sale: coverage map and handset model.','Две проверки перед продажей 5G: карта покрытия и модель телефона.')},
+  {t:C('Troubleshooting slow data','Если интернет медленный'),b:C('Most “slow 5G” complaints come from a phone set to 4G-only, an exhausted data quota or weak indoor coverage. Check these three first, in that order, before escalating a network ticket.','Большинство жалоб на «медленный 5G» — из-за режима «только 4G» в телефоне, закончившегося пакета трафика или слабого сигнала в помещении. Проверьте эти три пункта по порядку, прежде чем открывать заявку в сеть.'),tip:C('Network mode → quota → indoor coverage → ticket.','Режим сети → пакет → сигнал в помещении → заявка.')}],
+  quiz:[{q:C('Which 5G capability matters most for a remote-controlled factory robot?','Какое свойство 5G важнее всего для робота на заводе с дистанционным управлением?'),o:[C('Huge download speed','Огромная скорость загрузки'),C('Ultra-low latency','Сверхнизкая задержка'),C('Massive device count','Большое число устройств')],a:1,x:C('Real-time control needs responses within milliseconds — that is low latency.','Управление в реальном времени требует ответа за миллисекунды — это низкая задержка.')},
+   {q:C('A customer with a 5G plan sees “4G” at home. What do you check first?','У клиента тариф 5G, но дома он видит «4G». Что проверить первым?'),o:[C('Open a network ticket','Открыть заявку в сеть'),C('The phone’s network mode setting','Режим сети в настройках телефона'),C('Offer a bigger data quota','Предложить пакет побольше')],a:1,x:C('A phone locked to 4G-only is the most common cause and takes seconds to fix.','Телефон в режиме «только 4G» — самая частая причина, и исправляется за секунды.')},
+   {q:C('What must both support 5G for it to work?','Что должно поддерживать 5G, чтобы он работал?'),o:[C('The area coverage and the handset','Покрытие в районе и телефон'),C('The SIM colour and the plan price','Цвет SIM-карты и цена тарифа'),C('The router and the laptop','Роутер и ноутбук')],a:0,x:C('No coverage or no 5G bands on the phone — no 5G.','Нет покрытия или нет диапазонов 5G в телефоне — нет и 5G.')},
+   {q:C('The best way to explain 5G to a customer is to…','Лучше всего объяснять клиенту 5G так:'),o:[C('List the technical standards','Перечислить технические стандарты'),C('Start from what they want to do','Начать с того, что он хочет делать'),C('Compare frequency bands','Сравнить частотные диапазоны')],a:1,x:C('Customers buy outcomes: smoother video, lag-free games, a stable video call.','Клиенты покупают результат: плавное видео, игры без задержек, стабильный видеозвонок.')}]},
+ {id:'ccare',ic:'🤝',t:C('Customer care excellence','Сервис мирового уровня'),cat:C('Soft skills','Навыки общения'),lessons:[
+  {t:C('The first 30 seconds','Первые 30 секунд'),b:C('Greet the customer by name, restate the reason for contact in your own words and say how long it will take. Customers judge the whole conversation by how it starts.','Поприветствуйте клиента по имени, перескажите своими словами причину обращения и скажите, сколько это займёт. Клиенты оценивают весь разговор по его началу.'),tip:C('Name → reason in your words → time expectation.','Имя → причина своими словами → сколько займёт.')},
+  {t:C('Empathy without empty promises','Сочувствие без пустых обещаний'),b:C('Acknowledge the feeling — “I understand how frustrating a lost signal is” — but never promise what you can’t control, like an exact repair time. Promise the next concrete step instead.','Признайте чувства клиента — «Понимаю, как неприятно остаться без связи», — но не обещайте того, что не контролируете, например точного времени ремонта. Обещайте конкретный следующий шаг.'),tip:C('Promise actions you own, not outcomes you don’t.','Обещайте свои действия, а не чужие результаты.')},
+  {t:C('First-contact resolution','Решить с первого раза'),b:C('Every repeat contact costs us and the customer. Before closing, ask “Is there anything else?” and check the account for other open issues you can solve right now.','Каждое повторное обращение стоит денег и нам, и клиенту. Перед завершением спросите «Могу ли я помочь чем-то ещё?» и проверьте, нет ли других открытых вопросов, которые можно решить сейчас.'),tip:C('Scan the account for open issues before you say goodbye.','Перед прощанием проверьте аккаунт на открытые вопросы.')}],
+  quiz:[{q:C('“My internet has been down for two days!” Best first response?','«У меня два дня нет интернета!» Лучший первый ответ?'),o:[C('“That’s not our fault.”','«Это не наша вина».'),C('“I understand how frustrating that is — let me check right now.”','«Понимаю, как это неприятно, — сейчас проверю».'),C('“Please call back tomorrow.”','«Перезвоните завтра».')],a:1,x:C('Acknowledge, then act immediately.','Признайте проблему и сразу действуйте.')},
+   {q:C('You don’t control the repair time. What do you promise?','Время ремонта не зависит от вас. Что вы обещаете?'),o:[C('An exact hour','Точный час'),C('The next step and when you’ll update them','Следующий шаг и когда сообщите новости'),C('Nothing at all','Ничего')],a:1,x:C('A concrete next step keeps trust without risking a broken promise.','Конкретный шаг сохраняет доверие и не грозит нарушенным обещанием.')},
+   {q:C('What improves first-contact resolution most?','Что сильнее всего помогает решить вопрос с первого раза?'),o:[C('Ending calls quickly','Короткие звонки'),C('Checking for other open issues before closing','Проверка других открытых вопросов перед завершением'),C('Transferring to a supervisor','Перевод на руководителя')],a:1,x:C('Solving the next problem before it becomes a new call.','Решить следующую проблему до того, как она станет новым звонком.')},
+   {q:C('When do customers form most of their opinion of a call?','Когда клиент составляет основное мнение о разговоре?'),o:[C('In the first 30 seconds','В первые 30 секунд'),C('During hold music','Во время ожидания'),C('In the survey afterwards','В опросе после звонка')],a:0,x:C('First impressions anchor the rest of the conversation.','Первое впечатление задаёт тон всему разговору.')}]},
+ {id:'pdp',ic:'🔐',t:C('Personal data protection','Защита персональных данных'),cat:C('Compliance','Комплаенс'),mand:true,lessons:[
+  {t:C('What counts as personal data','Что такое персональные данные'),b:C('Name, national ID number, phone number, location history and call records are all personal data. For a telecom operator, call records and location are especially sensitive.','Имя, номер удостоверения личности, номер телефона, история перемещений и записи звонков — всё это персональные данные. Для оператора связи особенно чувствительны записи звонков и геолокация.'),tip:C('If it can identify or track a person, protect it.','Если по данным можно узнать или отследить человека — их надо защищать.')},
+  {t:C('Verify before you share','Сначала проверка, потом данные'),b:C('Never read account details to a caller until they pass verification: the registered number plus two security answers. Family members are not the account holder.','Не сообщайте данные аккаунта звонящему, пока он не прошёл проверку: зарегистрированный номер и два контрольных ответа. Члены семьи — не владелец аккаунта.'),tip:C('Registered number + two security answers. No exceptions.','Зарегистрированный номер + два контрольных ответа. Без исключений.')},
+  {t:C('Reporting an incident','Как сообщить об инциденте'),b:C('If personal data goes to the wrong person or a laptop is lost, report it to the privacy team within one hour using the incident form. Speed limits the damage.','Если данные ушли не тому человеку или потерян ноутбук, сообщите команде по защите данных в течение часа через форму инцидента. Скорость ограничивает ущерб.'),tip:C('One hour. Report first, investigate later.','Один час. Сначала сообщить, потом разбираться.')}],
+  quiz:[{q:C('Which of these is personal data?','Что из этого — персональные данные?'),o:[C('Store opening hours','Часы работы магазина'),C('A customer’s location history','История перемещений клиента'),C('The tariff price list','Прайс-лист тарифов')],a:1,x:C('Location history identifies and tracks a person.','По истории перемещений можно опознать и отследить человека.')},
+   {q:C('A caller says she is the account holder’s wife and wants the call log.','Звонящая говорит, что она жена владельца, и просит детализацию звонков.'),o:[C('Share it — they are family','Сообщить — это семья'),C('Refuse until the account holder is verified','Отказать, пока не проверен владелец'),C('Email it to her','Отправить ей на почту')],a:1,x:C('Only the verified account holder can receive account data.','Данные получает только проверенный владелец аккаунта.')},
+   {q:C('You emailed a bill to the wrong address. Report it within…','Вы отправили счёт не на тот адрес. Сообщить нужно в течение…'),o:[C('1 hour','1 часа'),C('1 week','1 недели'),C('Only if the customer complains','Только если клиент пожалуется')],a:0,x:C('One hour — the faster we act, the smaller the harm.','Одного часа — чем быстрее, тем меньше ущерб.')},
+   {q:C('Minimum verification before sharing account details?','Минимальная проверка перед раскрытием данных?'),o:[C('Name only','Только имя'),C('Registered number + two security answers','Номер + два контрольных ответа'),C('Date of birth','Дата рождения')],a:1,x:C('Two independent factors on top of the registered number.','Два независимых фактора плюс зарегистрированный номер.')}]},
+ {id:'sell',ic:'📦',t:C('Selling home & mobile bundles','Продажа пакетов «дом + мобильный»'),cat:C('Sales','Продажи'),lessons:[
+  {t:C('Needs before products','Сначала потребности'),b:C('Ask how the household uses the internet: streaming, gaming, work calls, school. Two good questions beat ten product features.','Спросите, как семья пользуется интернетом: видео, игры, рабочие звонки, учёба. Два хороших вопроса лучше десяти характеристик тарифа.'),tip:C('Ask about the family, not the phone.','Спрашивайте о семье, а не о телефоне.')},
+  {t:C('Bundle maths in one number','Выгода одним числом'),b:C('Show the monthly total, not item prices: “Home fibre 50 Mbps plus family mobile for Rp 399k instead of Rp 520k separately.” A single saving convinces faster.','Показывайте итог в месяц, а не цены по отдельности: «Домашний интернет 50 Мбит/с и семейная мобильная связь за Rp 399 тыс. вместо Rp 520 тыс. по отдельности». Одна цифра выгоды убеждает быстрее.'),tip:C('One total, one saving.','Один итог, одна выгода.')},
+  {t:C('Handling “too expensive”','Ответ на «слишком дорого»'),b:C('Agree, then reframe the value per day or per person and offer a smaller tier. Never pressure: a customer who leaves in month two costs more than no sale.','Согласитесь, затем пересчитайте ценность в день или на человека и предложите тариф поменьше. Не давите: клиент, ушедший на второй месяц, обходится дороже, чем отсутствие продажи.'),tip:C('Agree → reframe → smaller tier.','Согласиться → пересчитать → тариф поменьше.')}],
+  quiz:[{q:C('Best opening for a bundle conversation?','Лучшее начало разговора о пакете?'),o:[C('“We have a promo!”','«У нас акция!»'),C('“How does your family use the internet at home?”','«Как ваша семья пользуется интернетом дома?»'),C('“Here is our price list.”','«Вот наш прайс».')],a:1,x:C('Needs first — then the bundle sells itself.','Сначала потребности — тогда пакет продаёт себя сам.')},
+   {q:C('How should you present a bundle price?','Как показывать цену пакета?'),o:[C('Each item separately','Каждую позицию отдельно'),C('One monthly total with the saving','Один итог в месяц и выгода'),C('Only the discount percentage','Только процент скидки')],a:1,x:C('One total plus one saving is easiest to decide on.','Один итог и одна выгода — проще всего решиться.')},
+   {q:C('The customer says “too expensive”. A good reply?','Клиент говорит «слишком дорого». Хороший ответ?'),o:[C('“It’s the cheapest on the market.”','«Это самое дешёвое на рынке».'),C('Reframe the value and offer a smaller tier','Пересчитать ценность и предложить тариф поменьше'),C('Insist on the full bundle','Настаивать на полном пакете')],a:1,x:C('Respect the budget and keep the customer.','Уважайте бюджет — и клиент останется.')},
+   {q:C('Why avoid pressure selling?','Почему нельзя давить при продаже?'),o:[C('It takes longer','Это дольше'),C('Early churn costs more than no sale','Ранний уход клиента дороже, чем отсутствие продажи'),C('Managers dislike it','Руководители не любят')],a:1,x:C('Acquisition costs are lost when the customer leaves early.','Затраты на привлечение теряются, если клиент быстро уходит.')}]}];
+const LV=[0,300,700,1200,1800,2500,3300,4200,5200,6300,7500];
+const LVN=[C('Newcomer','Новичок'),C('Learner','Ученик'),C('Specialist','Специалист'),C('Senior specialist','Старший специалист'),C('Expert','Эксперт'),C('Mentor','Наставник'),C('Master','Мастер'),C('Champion','Чемпион'),C('Legend','Легенда'),C('Orbit icon','Икона Orbit')];
+const BADGES=[{id:'first',ic:'🚀',t:C('First steps','Первые шаги'),d:C('Complete your first lesson','Пройти первый урок')},{id:'perfect',ic:'🎯',t:C('Perfect score','Без ошибок'),d:C('Answer every quiz question right','Ответить верно на все вопросы теста')},{id:'streak7',ic:'🔥',t:C('Week on fire','Неделя в огне'),d:C('Learn 7 days in a row','Учиться 7 дней подряд')},{id:'lvl4',ic:'⭐',t:C('Rising star','Восходящая звезда'),d:C('Reach level 4','Достичь 4-го уровня')},{id:'top3',ic:'🏆',t:C('Podium','Пьедестал'),d:C('Reach top 3 in your team','Войти в тройку лучших в команде')},{id:'privacy',ic:'🔐',t:C('Privacy guardian','Страж данных'),d:C('Pass the mandatory data protection course','Сдать обязательный курс по данным')},{id:'scholar',ic:'🎓',t:C('Scholar','Эрудит'),d:C('Complete 3 courses','Завершить 3 курса')},{id:'shop',ic:'🎁',t:C('Treat yourself','Порадуй себя'),d:C('Redeem your first reward','Обменять баллы на первую награду')}];
+const REWARDS=[{id:'tree',ic:'🌱',t:C('Plant 5 mangroves','Посадить 5 мангров'),d:C('With our coastal partner','С нашим прибрежным партнёром'),cost:150,stock:500},{id:'coffee',ic:'☕',t:C('Coffee voucher','Ваучер на кофе'),d:C('Any drink at Kopi Senja','Любой напиток в Kopi Senja'),cost:250,stock:200},{id:'data',ic:'📶',t:C('10 GB data bundle','Пакет 10 ГБ'),d:C('Added to your line instantly','Сразу на ваш номер'),cost:400,stock:999},{id:'cinema',ic:'🎬',t:C('Cinema for two','Кино на двоих'),d:C('Any session, any weekday','Любой сеанс в будни'),cost:600,stock:80},{id:'head',ic:'🎧',t:C('Wireless headphones','Беспроводные наушники'),d:C('Delivered to your store','Доставка в ваш магазин'),cost:2200,stock:12},{id:'off',ic:'🏖️',t:C('Extra day off','Дополнительный выходной'),d:C('Approved by your manager','Согласуется с руководителем'),cost:3000,stock:5}];
+const TEAM=[['Putri Anggraini',610],['Fajar Nugroho',540],['Wulan Sari',480],['Yoga Prasetyo',350],['Sari Dewanti',300],['Hendra Gunawan',220],['Maya Lestari',180]];
+const TEAMS=[[C('Customer Care · Jakarta','Обслуживание · Джакарта'),3820],[C('Network Ops · Surabaya','Эксплуатация · Сурабая'),3410],[C('Retail Sales · Bandung','Продажи · Бандунг'),3150],[C('Enterprise B2B','Корпоративные клиенты'),2960],[C('Retail Sales · Medan','Продажи · Медан'),2700]];
+const TEAM_BASE=TEAM.reduce((a,t)=>a+t[1],0);
+const DEPTS=[{id:'rs',t:C('Retail Sales','Розничные продажи'),n:1240},{id:'cc',t:C('Customer Care','Обслуживание клиентов'),n:1630},{id:'no',t:C('Network Operations','Эксплуатация сети'),n:860},{id:'b2b',t:C('Enterprise B2B','Корпоративные клиенты'),n:410},{id:'fin',t:C('Finance','Финансы'),n:290},{id:'hr',t:C('HR & Legal','Кадры и право'),n:382}];
+const MG={c5g:{rs:[78,82],cc:[64,79],no:[92,90],b2b:[71,84],fin:[38,76],hr:[41,74]},ccare:{rs:[69,81],cc:[88,87],no:[35,72],b2b:[62,83],fin:[29,78],hr:[47,80]},pdp:{rs:[54,77],cc:[73,82],no:[66,79],b2b:[81,88],fin:[77,86],hr:[91,92]},sell:{rs:[61,76],cc:[44,74],no:[12,70],b2b:[58,81],fin:[9,72],hr:[15,75]}};
+const WAU=[2410,2560,2790,2650,2980,3120,3340,3290,3510,3680,3720,3866];
+function freshAcad(){return{xp:1080,pts:1850,week:390,streak:6,today:false,day:dayKey(Date.now()),badges:['first','perfect'],prog:{c5g:{les:3,best:4,done:true},ccare:{les:2,best:-1,done:false},pdp:{les:0,best:-1,done:false},sell:{les:0,best:-1,done:false}},red:[],stock:{},extra:{},nudged:[],feed:[]}}
+let A=store.get('orbit-acad-v1');if(!A||!A.prog)A=freshAcad();
+if(A.day!==dayKey(Date.now())){const gap=(dayKey(Date.now())-A.day)/DAY;if(gap>1||!A.today)A.streak=A.today?A.streak:Math.max(A.streak,0);A.today=false;A.day=dayKey(Date.now())}
+const saveA=()=>store.set('orbit-acad-v1',A);
+const AU={tab:'courses',open:null,step:0,qi:0,ans:[],picked:null,lb:'people',confirm:null,mc:'pdp',prevRank:null,rankUp:0,shown:{xp:A.xp,pts:A.pts},result:null};
+const level=x=>LV.filter(v=>v<=x).length;
+const CRS=id=>COURSES.find(c=>c.id===id);
+function feed(en,ru){A.feed.unshift({ts:Date.now(),en,ru});A.feed=A.feed.slice(0,12)}
+
+/* ---------- profile & side ---------- */
+function renderProf(anim){const lv=level(A.xp),lo=LV[lv-1],hi=LV[lv]||lo+1500;
+  $('#lvNum').textContent=lv;$('#lvName').textContent=L(LVN[lv-1]);$('#xpfill').style.width=Math.min(100,(A.xp-lo)/(hi-lo)*100)+'%';
+  $('#xpTxt').textContent=`${num(A.xp)} / ${num(hi)} XP · ${T('next','до')} ${L(LVN[lv]||LVN[lv-1])}`;
+  if(anim){countTo($('#pts'),AU.shown.pts,A.pts,num)}else $('#pts').textContent=num(A.pts);
+  AU.shown={xp:A.xp,pts:A.pts};
+  $('#stk').textContent=A.streak+T(' d',' дн');$('#bcount').textContent=A.badges.length+'/'+BADGES.length}
+function myRank(){const all=TEAM.map(t=>t[1]).concat([A.week]).sort((a,b)=>b-a);return all.indexOf(A.week)+1}
+function renderSide(){
+  const td=new Date(),prev=A.streak-(A.today?1:0);
+  $('#week').innerHTML=[6,5,4,3,2,1,0].map(i=>{const d=new Date(td.getTime()-i*DAY),on=i===0?A.today:prev>=i;return `<div><i class="${on?'on':''} ${i===0&&!A.today?'td':''}">${on?'🔥':''}</i>${d.toLocaleDateString(loc(),{weekday:'short'}).slice(0,2)}</div>`}).join('');
+  $('#stkPill').textContent=A.streak+' '+T('days','дн.');
+  $('#weekNote').innerHTML=A.today?'✅ '+T('Today’s learning done — streak safe.','Сегодня уже учились — серия сохранена.'):'⏳ '+T('Finish any lesson today to keep your streak.','Пройдите любой урок сегодня, чтобы сохранить серию.');
+  let rows;
+  if(AU.lb==='people'){const all=TEAM.map(t=>({n:t[0],x:t[1]})).concat([{n:'Rizky Aditya',x:A.week,me:1}]).sort((a,b)=>b.x-a.x),max=all[0].x;
+    rows=all.map((p,i)=>`<div class="r ${p.me?'me fresh':''}" style="${p.me&&!AU.rankUp?'animation:none':''}"><span class="rk">${i<3?['🥇','🥈','🥉'][i]:i+1}</span><span class="ini">${p.n.split(' ').map(s=>s[0]).join('')}</span><div class="sp">${p.me?'<b style="font-family:var(--font)">'+T('You','Вы')+'</b>':p.n} ${p.me&&AU.rankUp?`<span class="up">▲${AU.rankUp}</span>`:''}<div class="bar"><i style="width:${p.x/max*100}%"></i></div></div><b>${num(p.x)}</b></div>`).join('')}
+  else{const all=TEAMS.map(t=>({n:L(t[0]),x:t[1]})).concat([{n:T('Retail Sales · Jakarta (you)','Продажи · Джакарта (вы)'),x:TEAM_BASE+A.week,me:1}]).sort((a,b)=>b.x-a.x),max=all[0].x;
+    rows=all.map((p,i)=>`<div class="r ${p.me?'me':''}"><span class="rk">${i+1}</span><div class="sp">${p.n}<div class="bar"><i style="width:${p.x/max*100}%"></i></div></div><b>${num(p.x)}</b></div>`).join('')}
+  $('#lb').innerHTML=rows;
+  $('#miniB').innerHTML=A.badges.slice().reverse().map(id=>{const b=BADGES.find(x=>x.id===id);return `<span title="${L(b.t)}">${b.ic}</span>`}).join('')}
+$('#lbMode').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;AU.lb=b.dataset.m;$$('#lbMode button').forEach(x=>x.classList.toggle('on',x===b));AU.rankUp=0;renderSide()});
+
+/* ---------- XP / badges / level ---------- */
+function unlock(id){if(A.badges.includes(id))return false;A.badges.push(id);const b=BADGES.find(x=>x.id===id);setTimeout(()=>toast(`🏅 ${T('Badge unlocked','Новый значок')}: <b>${b.ic} ${L(b.t)}</b>`,'gold'),1200);feed(`Rizky Aditya earned “${b.t.en}”`,`Rizky Aditya получил значок «${b.t.ru}»`);return true}
+function checkBadges(){if(A.streak>=7)unlock('streak7');if(level(A.xp)>=4)unlock('lvl4');if(myRank()<=3)unlock('top3');if(A.red.length)unlock('shop');if(Object.values(A.prog).filter(p=>p.done).length>=3)unlock('scholar');if(A.prog.pdp.done)unlock('privacy');if(Object.values(A.prog).some(p=>p.les>0))unlock('first')}
+function fly(src,text){const r=src.getBoundingClientRect(),t=$('#xpfill').parentNode.getBoundingClientRect();const f=document.createElement('div');f.className='xpfly';f.textContent=text;document.body.append(f);
+  const x0=r.left+r.width/2-40,y0=r.top-10;f.style.left=x0+'px';f.style.top=y0+'px';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const tx=t.top>-40&&t.top<innerHeight?t.left+t.width*.6-x0:0,ty=t.top>-40&&t.top<innerHeight?t.top-y0:-120;f.style.transform=`translate(${tx}px,${ty}px) scale(.7)`;f.style.opacity='0'}));setTimeout(()=>f.remove(),1100)}
+function award(xp,src){if(xp<=0)return;const lvB=level(A.xp),rB=myRank();A.xp+=xp;A.pts+=xp;A.week+=xp;
+  if(!A.today){A.today=true;A.streak++;setTimeout(()=>toast(`🔥 ${T('Streak','Серия')}: <b>${A.streak} ${T('days','дн.')}</b>`,'gold'),900)}
+  if(src)fly(src,`+${xp} XP`);const rA=myRank();AU.rankUp=rB-rA;
+  if(AU.rankUp>0)setTimeout(()=>toast(`🏆 ${T(`You climbed to #${rA} in your team`,`Вы поднялись на ${rA}-е место в команде`)}`),1500);
+  checkBadges();saveA();
+  setTimeout(()=>{const lv=level(A.xp);if(lv>lvB){const f=$('#xpfill');f.style.width='100%';setTimeout(()=>{f.style.transition='none';f.style.width='0';void f.offsetWidth;f.style.transition='';renderProf(true);levelUp(lv)},700)}else renderProf(true);
+    if(lv>lvB)$('#lvNum').classList.add('pulse');renderSide();if(AU.tab==='badges')renderBadges();if(AU.tab==='mgr')renderMgr();if(AU.tab==='store')renderStore();setTimeout(()=>{AU.rankUp=0;$('#lvNum').classList.remove('pulse')},4000)},850)}
+function levelUp(lv){A.pts+=100;saveA();const m=document.createElement('div');m.className='modal';
+  const cols=['var(--gold)','var(--mal)','var(--gold2)','var(--mal3)','var(--violet)','var(--blue)'];
+  m.innerHTML=Array.from({length:36},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${cols[i%6]};animation-duration:${1.6+Math.random()*1.6}s;animation-delay:${Math.random()*.6}s"></i>`).join('')+
+  `<div class="box card"><div class="burst"><span>${lv}</span></div><h2>${T('Level up!','Новый уровень!')}</h2><p class="muted">${T('You are now a','Теперь вы —')} <b style="color:var(--text)">${L(LVN[lv-1])}</b>.<br>${T('Bonus','Бонус')}: <b style="color:var(--gold2)">+100 ◆</b></p><button class="btn gold">${T('Awesome!','Отлично!')}</button></div>`;
+  document.body.append(m);const close=()=>{m.remove();renderProf(true);if(AU.tab==='store')renderStore()};m.querySelector('.btn').onclick=close;m.onclick=e=>{if(e.target===m)close()};
+  feed(`Rizky Aditya reached level ${lv}`,`Rizky Aditya достиг ${lv}-го уровня`)}
+
+/* ---------- courses ---------- */
+function courseState(c){const p=A.prog[c.id];if(p.done)return['done',T('Completed','Пройден'),'ok'];if(p.les>0)return['prog',T('In progress','В процессе'),'gold'];return['new',c.mand?T('Mandatory · due 30 Nov','Обязательный · до 30 ноя'):T('Not started','Не начат'),c.mand?'warn':'']}
+function renderCourses(){const el=$('#a-courses');if(AU.open){el.innerHTML=player();return}
+  const done=Object.values(A.prog).filter(p=>p.done).length;
+  el.innerHTML=`<div class="sm muted" style="margin-bottom:10px">${done}/${COURSES.length} ${T('courses completed · each lesson ~2 min · pass mark 3 of 4','курсов пройдено · урок ~2 мин · проходной балл 3 из 4')}</div><div class="cgrid2">${COURSES.map(c=>{const p=A.prog[c.id],st=courseState(c),pct=Math.round(((p.les)+(p.done?1:0))/4*100);
+    return `<div class="card course"><div class="ch"><div class="ci">${c.ic}</div><div class="sp"><span class="pill" style="font-size:11px">${L(c.cat)}</span><b class="t" style="margin-top:4px">${L(c.t)}</b><div class="meta">3 ${T('lessons','урока')} · 4 ${T('questions','вопроса')} · ${T('up to','до')} +170 XP</div></div></div>
+    <div class="prog ${p.done?'g':''}"><i style="width:${pct}%"></i></div>
+    <div class="cf"><span class="pill ${st[2]}">${st[1]}</span>${p.best>=0?`<span class="sm muted">${T('best','лучший')} ${p.best}/4</span>`:''}<span class="sp"></span><button class="btn sm ${st[0]==='done'?'':'pri'}" data-open="${c.id}">${st[0]==='done'?T('Review','Повторить'):st[0]==='prog'?T('Continue','Продолжить'):T('Start','Начать')}</button></div></div>`}).join('')}</div>`}
+function player(){const c=CRS(AU.open),p=A.prog[c.id],s=AU.step;
+  const head=`<button class="back" data-pa="close">← ${T('All courses','Все курсы')}</button><div style="display:flex;align-items:center;gap:10px;margin-top:6px"><span style="font-size:24px">${c.ic}</span><b style="font-size:17px">${L(c.t)}</b></div><div class="steps">${[0,1,2,3].map(i=>`<i class="${i<s?'d':i===s?'c':''}" title="${i<3?T('Lesson','Урок')+' '+(i+1):T('Quiz','Тест')}"></i>`).join('')}</div>`;
+  if(s<3){const l=c.lessons[s],first=s>=p.les;
+    return `<div class="card player">${head}<div class="lesson"><span class="pill">${T('Lesson','Урок')} ${s+1}/3 · ~2 ${T('min','мин')}</span><h2>${L(l.t)}</h2><p>${L(l.b)}</p><div class="tip">💡 <b>${T('Key takeaway','Главное')}:</b> ${L(l.tip)}</div></div>
+    <div class="pnav">${s>0?`<button class="btn" data-pa="prev">← ${T('Back','Назад')}</button>`:''}<button class="btn pri" data-pa="next">${first?T('Complete lesson','Завершить урок')+' · +10 XP':s<2?T('Next lesson →','Следующий урок →'):T('Go to quiz →','К тесту →')}</button></div></div>`}
+  if(s===3){const q=c.quiz[AU.qi],pk=AU.picked;
+    return `<div class="card player">${head}<span class="pill gold">${T('Quiz','Тест')} · ${T('question','вопрос')} ${AU.qi+1}/4</span> <span class="sm muted">${T('correct so far','верно')}: ${AU.ans.filter(Boolean).length}</span><div class="qq">${L(q.q)}</div>
+    ${q.o.map((o,i)=>`<button class="opt ${pk!=null?(i===q.a?'ok':i===pk?'no':''):''}" data-pick="${i}" ${pk!=null?'disabled':''}><i>${'ABC'[i]}</i><span>${L(o)}</span></button>`).join('')}
+    ${pk!=null?`<div class="expl">${pk===q.a?'✅ <b>'+T('Correct!','Верно!')+'</b> +25 XP':'❌ <b>'+T('Not quite.','Не совсем.')+'</b>'} ${L(q.x)}</div><div class="pnav"><button class="btn pri" data-pa="qnext">${AU.qi<3?T('Next question →','Следующий вопрос →'):T('See results','Результаты')}</button></div>`:''}</div>`}
+  const r=AU.result,R=52,Cc=2*Math.PI*R,pass=r.score>=3;
+  return `<div class="card player">${head}<div class="res"><svg class="ring" viewBox="0 0 130 130"><circle cx="65" cy="65" r="${R}" style="stroke:var(--bg2)"/><circle cx="65" cy="65" r="${R}" style="stroke:var(${pass?'--mal':'--amber'});transition:stroke-dashoffset 1s" stroke-linecap="round" stroke-dasharray="${Cc}" stroke-dashoffset="${Cc}" id="ringArc" transform="rotate(-90 65 65)"/><text x="65" y="64" text-anchor="middle" font-size="28" font-weight="800" style="fill:var(--text)">${r.score}/4</text><text x="65" y="84" text-anchor="middle" font-size="11" style="fill:var(--muted)">${pass?T('PASSED','СДАН'):T('TRY AGAIN','ЕЩЁ РАЗ')}</text></svg>
+  <div class="xpl"><b style="font-size:18px">${pass?(r.score===4?T('Flawless! 🎯','Безупречно! 🎯'):T('Well done! 🎉','Отлично! 🎉')):T('Almost there — 3 of 4 to pass','Почти — нужно 3 из 4')}</b>${r.lines.map(l=>`<div class="row"><span>${LA(l[0])}</span><span class="mono">+${l[1]} XP</span></div>`).join('')}<div class="row t"><span>${T('Total earned','Всего')}</span><span class="mono" id="xpTotal">+${r.xp} XP · +${r.xp} ◆</span></div></div></div>
+  <div class="pnav"><button class="btn" data-pa="retake">↺ ${T('Retake quiz','Пройти тест заново')}</button><button class="btn pri" data-pa="close">${T('Back to courses','К курсам')}</button>${pass?`<button class="btn gold" data-pa="store">🎁 ${T('Spend points','Потратить баллы')}</button>`:''}</div></div>`}
+function finishQuiz(){const c=CRS(AU.open),p=A.prog[c.id],score=AU.ans.filter(Boolean).length,first=p.best<0,lines=[];
+  if(first)lines.push([[`${score} correct × 25`,`${score} верных × 25`],score*25]);else{const imp=Math.max(0,score-p.best)*25;if(imp)lines.push([['Improvement bonus','Бонус за улучшение'],imp]);lines.push([[`Practice · ${score} × 5`,`Повторение · ${score} × 5`],score*5])}
+  const pass=score>=3;if(pass&&!p.done){lines.push([['Course completion','Завершение курса'],40]);p.done=true;A.extra[c.id]=(A.extra[c.id]||0)+1;feed(`Rizky Aditya completed “${c.t.en}” · ${score}/4`,`Rizky Aditya прошёл «${c.t.ru}» · ${score}/4`)}
+  if(score===4)unlock('perfect');p.best=Math.max(p.best,score);
+  const xp=lines.reduce((a,l)=>a+l[1],0);AU.result={score,xp,lines};AU.step=4;saveA();renderCourses();
+  requestAnimationFrame(()=>{const a=$('#ringArc');if(a)setTimeout(()=>a.style.strokeDashoffset=2*Math.PI*52*(1-score/4),50);const s=$('#xpTotal');if(s){s.scrollIntoView({block:'nearest',behavior:'smooth'});setTimeout(()=>award(xp,s),350)}})}
+$('#a-courses').addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o){const id=o.dataset.open,p=A.prog[id];AU.open=id;AU.step=p.done?0:Math.min(p.les,3);AU.qi=0;AU.ans=[];AU.picked=null;renderCourses();$('#a-courses').scrollIntoView({block:'start',behavior:'smooth'});return}
+  const pk=e.target.closest('[data-pick]');if(pk&&AU.picked==null){AU.picked=+pk.dataset.pick;const q=CRS(AU.open).quiz[AU.qi];AU.ans.push(AU.picked===q.a);renderCourses();return}
+  const b=e.target.closest('[data-pa]');if(!b)return;const a=b.dataset.pa,c=AU.open&&CRS(AU.open),p=c&&A.prog[c.id];
+  if(a==='close'){AU.open=null;renderCourses()}
+  else if(a==='prev'){AU.step--;renderCourses()}
+  else if(a==='next'){if(AU.step>=p.les){p.les=AU.step+1;feed(`Rizky Aditya finished a lesson in “${c.t.en}”`,`Rizky Aditya прошёл урок курса «${c.t.ru}»`);award(10,b)}AU.step++;AU.qi=0;AU.ans=[];AU.picked=null;saveA();renderCourses()}
+  else if(a==='qnext'){if(AU.qi<3){AU.qi++;AU.picked=null;renderCourses()}else finishQuiz()}
+  else if(a==='retake'){AU.step=3;AU.qi=0;AU.ans=[];AU.picked=null;renderCourses()}
+  else if(a==='store'){AU.open=null;renderCourses();setTab('store')}});
+
+/* ---------- store ---------- */
+function renderStore(){const el=$('#a-store');
+  el.innerHTML=`<div class="card" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px"><span style="font-size:28px">◆</span><div style="flex:1;min-width:160px"><div class="sm muted">${T('Your balance','Ваш баланс')}</div><b class="mono" style="font-size:24px;color:var(--gold2)" id="stBal">${num(A.pts)}</b> <span class="muted">${T('points','баллов')}</span></div><div class="sm muted" style="max-width:320px">${T('Earn 1 point for every XP. Level-ups add a +100 bonus. Points never expire while you’re employed.','1 балл за каждый XP. Новый уровень — +100 бонусом. Баллы не сгорают, пока вы в компании.')}</div></div>
+  <div class="store">${REWARDS.map(r=>{const st=(A.stock[r.id]!=null?A.stock[r.id]:r.stock),can=A.pts>=r.cost&&st>0,cf=AU.confirm===r.id,got=A.red.some(x=>x.id===r.id);
+    return `<div class="card item ${got?'got':''}"><div class="ii">${r.ic}</div><b>${L(r.t)}</b><div class="sm muted">${L(r.d)}</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="cost">◆ ${num(r.cost)}</span><span class="sm muted">${st<50?st+' '+T('left','осталось'):''}</span></div>
+    <button class="btn sm ${cf?'gold':can?'pri':''}" data-redeem="${r.id}" ${can?'':'disabled'}>${!can?(st<=0?T('Out of stock','Нет в наличии'):T(`Need ${num(r.cost-A.pts)} more`,`Не хватает ${num(r.cost-A.pts)}`)):cf?T(`Confirm −${num(r.cost)} ◆`,`Подтвердить −${num(r.cost)} ◆`):T('Redeem','Обменять')}</button></div>`}).join('')}</div>
+  <div class="card rlist" style="margin-top:14px"><h3>🧾 ${T('Redeemed','Полученные награды')}<span class="sp"></span><span class="pill">${A.red.length}</span></h3>${A.red.length?A.red.map((x,i)=>{const r=REWARDS.find(y=>y.id===x.id);return `<div class="r ${i===0&&x.ts>Date.now()-3000?'fresh':''}"><span style="font-size:20px">${r.ic}</span><div class="sp"><b>${L(r.t)}</b><div class="sm muted">${fDate(x.ts)}, ${fTime(x.ts)} · −${num(r.cost)} ◆</div></div><span class="code">${x.code}</span></div>`}).join(''):`<div class="muted sm">${T('Nothing yet — pick a reward above.','Пока пусто — выберите награду выше.')}</div>`}</div>`}
+let cfT=null;
+$('#a-store').addEventListener('click',e=>{const b=e.target.closest('[data-redeem]');if(!b)return;const r=REWARDS.find(x=>x.id===b.dataset.redeem);
+  if(AU.confirm!==r.id){AU.confirm=r.id;clearTimeout(cfT);cfT=setTimeout(()=>{AU.confirm=null;if(AU.tab==='store')renderStore()},4000);renderStore();return}
+  clearTimeout(cfT);AU.confirm=null;if(A.pts<r.cost)return;const from=A.pts;A.pts-=r.cost;A.stock[r.id]=(A.stock[r.id]!=null?A.stock[r.id]:r.stock)-1;
+  const code='ORB-'+r.id.toUpperCase().slice(0,3)+'-'+rid('',6);A.red.unshift({id:r.id,ts:Date.now(),code});feed(`Rizky Aditya redeemed “${r.t.en}”`,`Rizky Aditya обменял баллы на «${r.t.ru}»`);
+  checkBadges();saveA();renderStore();countTo($('#stBal'),from,A.pts,num);renderProf(true);renderSide();toast(`🎁 ${L(r.t)} · <span class="mono">${code}</span>`,'gold')});
+
+/* ---------- badges ---------- */
+function renderBadges(){$('#a-badges').innerHTML=`<div class="sm muted" style="margin-bottom:10px">${A.badges.length}/${BADGES.length} ${T('unlocked','получено')}</div><div class="badges">${BADGES.map(b=>{const has=A.badges.includes(b.id);return `<div class="card bdg ${has?'':'lock'}"><div class="bi">${b.ic}</div><b>${L(b.t)}</b><div class="sm">${L(b.d)}</div><div style="margin-top:8px">${has?`<span class="pill ok">✓ ${T('Unlocked','Получен')}</span>`:`<span class="pill">🔒 ${T('Locked','Закрыт')}</span>`}</div></div>`}).join('')}</div>`}
+
+/* ---------- manager analytics ---------- */
+function deptStats(cid){const ids=cid==='all'?COURSES.map(c=>c.id):[cid];
+  return DEPTS.map(d=>{let done=0,sc=0;ids.forEach(id=>{done+=Math.round(d.n*MG[id][d.id][0]/100)+(d.id==='rs'?(A.extra[id]||0):0);sc+=MG[id][d.id][1]});const tot=d.n*ids.length;return{d,done,tot,pct:done/tot*100,score:sc/ids.length}})}
+function renderMgr(){const el=$('#a-mgr'),cid=AU.mc,st=deptStats(cid),target=cid==='pdp'?90:80;
+  const tot=st.reduce((a,s)=>a+s.tot,0),done=st.reduce((a,s)=>a+s.done,0),avg=st.reduce((a,s)=>a+s.score*s.d.n,0)/st.reduce((a,s)=>a+s.d.n,0);
+  const k=(l,v,d)=>`<div class="card kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
+  const W=600,H=170,mx=4200,pts=WAU.map((v,i)=>[20+i*(W-40)/(WAU.length-1),H-24-(H-44)*v/mx]);
+  const line=pts.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ');
+  el.innerHTML=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><select class="input" id="mc" style="max-width:300px"><option value="all">${T('All courses','Все курсы')}</option>${COURSES.map(c=>`<option value="${c.id}" ${cid===c.id?'selected':''}>${c.ic} ${L(c.t)}${c.mand?' · '+T('mandatory','обязательный'):''}</option>`).join('')}</select><span class="sp" style="flex:1"></span><button class="btn sm" id="csv">⬇ ${T('Export CSV','Экспорт CSV')}</button></div>
+  <div class="mk">${k(T('Learners','Учащиеся'),num(DEPTS.reduce((a,d)=>a+d.n,0)),T('6 departments','6 подразделений'))}${k(T('Completion','Прохождение'),(done/tot*100).toFixed(1)+'%',num(done)+' / '+num(tot))}${k(T('Avg quiz score','Средний балл'),avg.toFixed(0)+'%',T('first attempt','с первой попытки'))}${k(T('Active this week','Активны за неделю'),num(WAU[WAU.length-1]),'▲ '+(((WAU[11]/WAU[10])-1)*100).toFixed(1)+'% '+T('vs last week','к прошлой'))}</div>
+  <div class="card"><h3>🏢 ${T('Completion by department','Прохождение по подразделениям')}<span class="sp"></span><span class="pill gold">${T('target','цель')} ${target}%</span></h3>
+  ${st.map(s=>{const c=s.pct>=target?'--mal':s.pct>=60?'--amber':'--red';return `<div class="dbar"><span class="dn" title="${L(s.d.t)}">${L(s.d.t)}</span><div class="tr"><i style="width:${s.pct}%;background:var(${c})"></i><u style="left:${target}%"></u></div><b>${s.pct.toFixed(1)}%</b></div>`}).join('')}</div>
+  <div class="igrid" style="margin-top:14px"><div class="card"><h3>📈 ${T('Weekly active learners','Активные за неделю')}</h3><svg id="wau" viewBox="0 0 ${W} ${H}"><polygon points="${pts[0][0]},${H-24} ${line} ${pts[pts.length-1][0]},${H-24}" style="fill:var(--mal);fill-opacity:.14"/><polyline points="${line}" fill="none" style="stroke:var(--mal3)" stroke-width="2.5" stroke-linejoin="round"/>${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${i===pts.length-1?5:3}" style="fill:var(${i===pts.length-1?'--gold':'--mal3'})"><title>${T('Week','Неделя')} ${i+1}: ${num(WAU[i])}</title></circle>`).join('')}<line x1="0" x2="${W}" y1="${H-24}" y2="${H-24}" style="stroke:var(--line2)"/>${pts.map((p,i)=>i%2===1?`<text x="${p[0]}" y="${H-8}" text-anchor="middle" font-size="10.5" style="fill:var(--dim)">${T('W','Н')}${i+1}</text>`:'').join('')}<text x="${pts[11][0]-8}" y="${pts[11][1]-12}" text-anchor="end" font-size="12" font-weight="700" style="fill:var(--gold2)">${num(WAU[11])}</text></svg></div>
+  <div class="card"><h3>⚡ ${T('Live activity','Активность')}</h3><div class="feed">${(A.feed.length?A.feed:[]).concat([{ts:Date.now()-6e5,en:'Wulan Sari completed “Customer care excellence” · 4/4',ru:'Wulan Sari прошла «Сервис мирового уровня» · 4/4'},{ts:Date.now()-14e5,en:'Network Ops · Surabaya reached 90% on 5G basics',ru:'Эксплуатация · Сурабая: 90% по курсу 5G'},{ts:Date.now()-31e5,en:'Fajar Nugroho redeemed “Cinema for two”',ru:'Fajar Nugroho обменял баллы на «Кино на двоих»'}]).slice(0,7).map(f=>`<div class="e"><span class="t">${fTime(f.ts)}</span><span>${esc(L(f))}</span></div>`).join('')}</div></div></div>
+  <div class="card" style="margin-top:14px"><h3>📋 ${T('Departments','Подразделения')}<span class="sp"></span><span class="sm muted" style="font-weight:500">${T('Nudge sends a push + email reminder to everyone not yet done','«Напомнить» — пуш и письмо всем, кто ещё не прошёл')}</span></h3><div class="tw"><table><thead><tr><th>${T('Department','Подразделение')}</th><th class="num">${T('Learners','Учащихся')}</th><th class="num">${T('Done','Прошли')}</th><th class="num">%</th><th class="num">${T('Score','Балл')}</th><th>${T('Status','Статус')}</th><th></th></tr></thead><tbody>
+  ${st.map(s=>{const ok=s.pct>=target,warn=s.pct>=60,key=cid+':'+s.d.id,sent=A.nudged.includes(key);return `<tr class="${s.d.id==='rs'?'me':''}"><td>${L(s.d.t)}${s.d.id==='rs'?' · '+T('your dept','ваш отдел'):''}</td><td class="num">${num(s.d.n)}</td><td class="num">${num(s.done)}</td><td class="num"><b>${s.pct.toFixed(1)}</b></td><td class="num">${s.score.toFixed(0)}%</td><td><span class="pill ${ok?'ok':warn?'warn':'bad'}">${ok?T('On track','В норме'):warn?T('Behind','Отстаёт'):T('At risk','Под угрозой')}</span></td><td>${ok?'':`<button class="btn sm" data-nudge="${key}" data-n="${s.tot-s.done}" data-d="${s.d.id}" ${sent?'disabled':''}>${sent?'✓ '+T('Sent','Отправлено'):'🔔 '+T('Nudge','Напомнить')}</button>`}</td></tr>`}).join('')}</tbody></table></div></div>`;
+  $('#mc').onchange=e=>{AU.mc=e.target.value;renderMgr()};
+  $('#csv').onclick=()=>{const rows=[['department','learners','completed','completion_pct','avg_score_pct']].concat(st.map(s=>[s.d.t.en,s.d.n,s.done,s.pct.toFixed(1),s.score.toFixed(0)]));const blob=new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='orbit-academy-'+cid+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('⬇ '+T('CSV exported','CSV выгружен'))}}
+$('#a-mgr').addEventListener('click',e=>{const b=e.target.closest('[data-nudge]');if(!b)return;A.nudged.push(b.dataset.nudge);const d=DEPTS.find(x=>x.id===b.dataset.d);feed(`Manager nudged ${d.t.en} · ${b.dataset.n} learners`,`Руководитель напомнил: ${d.t.ru} · ${b.dataset.n} чел.`);saveA();renderMgr();toast('🔔 '+T(`Reminder sent to ${num(+b.dataset.n)} learners in ${d.t.en}`,`Напоминание отправлено: ${num(+b.dataset.n)} чел. · ${d.t.ru}`))});
+
+/* ---------- tabs / project switch ---------- */
+function setTab(t){AU.tab=t;$$('#atabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));$$('.apane').forEach(p=>p.classList.toggle('on',p.id==='a-'+t));renderAcadTab()}
+function renderAcadTab(){({courses:renderCourses,store:renderStore,badges:renderBadges,mgr:renderMgr})[AU.tab]()}
+$$('#atabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.t));
+function setProj(v){$$('#proj button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));$('#v-bank').classList.toggle('on',v==='bank');$('#v-acad').classList.toggle('on',v==='acad');$('#br-bank').classList.toggle('on',v==='bank');$('#br-acad').classList.toggle('on',v==='acad');store.set('orbit-proj',v)}
+$$('#proj button').forEach(b=>b.onclick=()=>setProj(b.dataset.v));
+$$('[data-reset]').forEach(b=>b.onclick=()=>{if(b.dataset.reset==='bank'){B=freshBank();saveB();Object.assign(UI,{authed:false,scr:'lock',pend:null,last:null,hc:'all',hq:'',hl:null,cardRes:null,gform:false,lockMode:'bio'});renderPhone();renderIns()}else{A=freshAcad();saveA();Object.assign(AU,{open:null,confirm:null,rankUp:0,shown:{xp:A.xp,pts:A.pts}});renderProf();renderSide();renderAcadTab()}toast('↺ '+T('Demo reset','Демо сброшено'))});
+
+function renderAll(){renderPhone();renderIns();renderProf();renderSide();renderAcadTab()}
+PT.onLang(renderAll);
+tick();setInterval(tick,30000);
+setProj(store.get('orbit-proj')==='acad'?'acad':'bank');
+renderAll();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

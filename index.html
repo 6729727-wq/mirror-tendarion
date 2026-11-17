@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tendarion — working systems for the largest IT tenders</title>
+<meta name="description" content="Tendarion: working prototypes of solutions for the world's largest government and enterprise IT tenders — e-services portals, digital ID, super-apps, ERP, national payments, AI assistants, SOC and data platforms. Open and use.">
+<meta property="og:title" content="Tendarion — not slides. Working systems.">
+<meta property="og:description" content="Open and use working prototypes for large government and enterprise IT tenders.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#071A16">
+<meta property="og:type" content="website">
+<meta property="og:url" content="/">
+<meta property="og:image" content="/brand/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="/brand/og.jpg">
+<meta name="description" content="Tendarion builds working systems for the world's largest government and enterprise IT tenders — 76 live prototypes across 13 sectors. Dubai · DMCC.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/pt.css">
+<style>
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+@media(max-width:640px){.wrap{padding:0 16px}}
+/* nav */
+nav.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+nav.top .wrap{display:flex;align-items:center;gap:22px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:19px;letter-spacing:-.01em;color:var(--text)}
+.brand:hover{text-decoration:none}
+.brand i{width:28px;height:28px;border-radius:9px;background:conic-gradient(from 210deg,var(--mal),var(--gold),var(--mal3),var(--mal));box-shadow:0 0 24px color-mix(in srgb,var(--mal) 50%,transparent);position:relative}
+.brand i::after{content:"";position:absolute;inset:7px;border-radius:4px;background:var(--bg)}
+nav.top .links{display:flex;gap:20px;font-size:14px;font-weight:500}
+nav.top .links a{color:var(--muted)} nav.top .links a:hover{color:var(--text);text-decoration:none}
+nav.top .sp{flex:1}
+.tg{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700}
+.tg:hover{border-color:var(--mal)}
+@media(max-width:860px){nav.top .links{display:none}}
+/* hero */
+.hero{position:relative;overflow:hidden;padding:92px 0 70px;border-bottom:1px solid var(--line)}
+#net{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,transparent 0,var(--bg) 78%);pointer-events:none}
+.hero .wrap{position:relative;z-index:2}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--gold2);border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);background:color-mix(in srgb,var(--gold) 9%,transparent);padding:6px 14px;border-radius:999px}
+.eyebrow b{width:7px;height:7px;border-radius:50%;background:var(--mal3);box-shadow:0 0 10px var(--mal3);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35}}
+h1{font-size:clamp(40px,7.2vw,92px);line-height:.98;letter-spacing:-.045em;font-weight:900;margin:24px 0 22px;max-width:14ch}
+h1 .g{background:linear-gradient(100deg,var(--mal3) 10%,var(--gold2) 55%,var(--mal3) 90%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 6s linear infinite}
+@keyframes sheen{to{background-position:200% center}}
+.lead{font-size:clamp(17px,2vw,21px);color:var(--muted);max-width:60ch;margin:0 0 32px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.cta .btn{padding:13px 22px;font-size:15px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;margin-top:60px}
+.stat{background:color-mix(in srgb,var(--panel) 88%,transparent);padding:22px;backdrop-filter:blur(8px)}
+.stat .n{font-size:clamp(26px,3.4vw,40px);font-weight:900;letter-spacing:-.03em}
+.stat .n span{color:var(--gold2)}
+.stat .l{color:var(--muted);font-size:13px;margin-top:2px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+/* sections */
+section{padding:88px 0}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:34px}
+.sh h2{font-size:clamp(30px,4.2vw,50px);letter-spacing:-.035em;line-height:1.04;margin:10px 0 0;font-weight:850;max-width:20ch}
+.kick{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mal3)}
+.sh p{color:var(--muted);max-width:52ch;margin:0}
+/* showcase (live previews) */
+.show{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:1000px){.show{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.show{grid-template-columns:1fr}}
+.appsg{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:1100px){.appsg{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.appsg{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.appsg{grid-template-columns:1fr}}
+.app{display:flex;flex-direction:column;gap:10px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:16px;transition:transform .25s,border-color .25s,box-shadow .25s}
+.app:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--mal) 60%,var(--line));box-shadow:var(--shadow);text-decoration:none}
+.app .ph2{position:relative;margin:0 auto;width:176px;height:362px;border-radius:30px;border:6px solid #0b0f0e;background:var(--bg2);overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.app .ph2 iframe{position:absolute;top:0;left:0;width:390px;height:804px;border:0;transform:scale(.4205);transform-origin:0 0;pointer-events:none}
+.app .ph2 .ic{position:absolute;inset:0;display:grid;place-items:center;font-size:48px;background:radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--mal) 25%,transparent),transparent 60%)}
+.app h3{margin:0;font-size:18px} .app p{margin:0;color:var(--muted);font-size:13.5px} .app .go{color:var(--mal3);font-weight:600;font-size:14px}
+.tile{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s;color:var(--text)}
+.tile:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--mal) 60%,var(--line));box-shadow:var(--shadow);text-decoration:none}
+.tile .pv{position:relative;height:220px;overflow:hidden;background:var(--bg2);border-bottom:1px solid var(--line)}
+.tile .pv iframe{position:absolute;top:0;left:0;width:1280px;height:880px;border:0;transform:scale(.3);transform-origin:0 0;pointer-events:none}
+.tile .pv .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:54px;background:radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--mal) 25%,transparent),transparent 60%),radial-gradient(circle at 80% 90%,color-mix(in srgb,var(--gold) 20%,transparent),transparent 55%)}
+.tile .pv .live{position:absolute;left:12px;top:12px;z-index:2}
+.tile .bd{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.tile h3{margin:0;font-size:21px;letter-spacing:-.02em}
+.tile .cat{font-size:12px;color:var(--gold2);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tile p{margin:0;color:var(--muted);font-size:14px}
+.tile .go{margin-top:auto;padding-top:10px;font-weight:700;color:var(--mal3);font-size:14px}
+/* catalog */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.searchrow{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.searchrow .input{max-width:420px;border-radius:999px;padding:11px 18px}
+.count{color:var(--muted);font-size:14px;align-self:center}
+.list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:860px){.list{grid-template-columns:1fr}}
+.tc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;transition:border-color .2s}
+.tc:hover{border-color:var(--line2)}
+.tc .top{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tc h4{grid-column:1/-1;margin:6px 0 0;font-size:19px;letter-spacing:-.015em}
+.tc h4 small{display:block;font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:2px}
+.tc .meta{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 4px}
+.tc .meta div{background:var(--bg2);border-radius:10px;padding:8px 10px}
+.tc .meta b{display:block;font-size:15px}
+.tc .meta span{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.tc .meta .amt b{color:var(--gold2)}
+.tc .stack{grid-column:1/-1;font-size:12px;color:var(--dim)}
+.tc .row{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;flex-wrap:wrap}
+.done{font-size:13px;font-weight:600;color:var(--mal3);display:flex;align-items:center;gap:6px}
+/* mega tenders */
+.mega{border:1px solid var(--line);border-radius:var(--r2);overflow:hidden}
+.mrow{display:grid;grid-template-columns:110px 1.5fr 1fr 1fr 170px;gap:16px;align-items:center;padding:16px 20px;border-top:1px solid var(--line);background:var(--panel)}
+.mrow:first-child{border-top:0;background:var(--panel2);font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.mrow .big{font-size:22px;font-weight:900;color:var(--gold2);letter-spacing:-.02em}
+.mrow .t b{display:block} .mrow .t span{font-size:13px;color:var(--muted)}
+.mrow .w{font-size:13px;color:var(--muted)}
+@media(max-width:860px){.mrow{grid-template-columns:1fr 1fr}.mrow:first-child{display:none}.mrow .t{grid-column:1/-1;order:-1}}
+.note{font-size:13px;color:var(--dim);margin-top:14px}
+/* tech */
+.tech{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.tech{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.tech{grid-template-columns:1fr}}
+.tech .card h5{margin:0 0 10px;font-size:15px}
+.tech .tags{display:flex;flex-wrap:wrap;gap:6px}
+.tech .tags span{font-size:12px;font-family:var(--mono);padding:3px 8px;border-radius:6px;background:var(--bg2);border:1px solid var(--line);color:var(--muted)}
+/* process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:s}
+@media(max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{counter-increment:s;position:relative;padding:22px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.step::before{content:"0" counter(s);font-family:var(--mono);font-size:13px;color:var(--gold2);font-weight:700}
+.step h5{margin:8px 0 6px;font-size:17px}
+.step p{margin:0;color:var(--muted);font-size:14px}
+/* cta block */
+.final{position:relative;overflow:hidden;border-radius:28px;padding:56px 40px;border:1px solid color-mix(in srgb,var(--gold) 40%,var(--line));background:radial-gradient(circle at 15% 0%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 55%),radial-gradient(circle at 100% 100%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 50%),var(--panel)}
+.final h2{font-size:clamp(30px,4.4vw,54px);letter-spacing:-.035em;margin:0 0 14px;line-height:1.02}
+.final p{color:var(--muted);max-width:56ch;margin:0 0 26px;font-size:17px}
+@media(max-width:640px){.final{padding:36px 22px}}
+footer{border-top:1px solid var(--line);padding:30px 0 40px;color:var(--dim);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}h1 .g{animation:none}}
+
+/* premium 17.11 */
+.brand img{width:32px;height:32px;filter:drop-shadow(0 0 14px color-mix(in srgb,var(--mal3) 45%,transparent))}
+.brand em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.16em;color:var(--gold2);border-left:1px solid var(--line2);padding-left:10px;margin-left:2px}
+@media(max-width:420px){.brand em{display:none}}
+.hgrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);gap:40px;align-items:center}
+.emb{position:relative;aspect-ratio:1;max-width:420px;justify-self:end;width:100%}
+.emb img{position:relative;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 30px 60px rgba(0,0,0,.45));animation:float 7s ease-in-out infinite}
+.emb::before{content:"";position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--mal3) 38%,transparent),transparent 65%);filter:blur(20px)}
+.emb::after{content:"";position:absolute;inset:-2%;border-radius:50%;border:1px dashed color-mix(in srgb,var(--gold) 45%,transparent);animation:spin 60s linear infinite}
+@keyframes float{50%{transform:translateY(-12px)}}@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.emb img,.emb::after{animation:none}}
+@media(max-width:900px){.hgrid{grid-template-columns:1fr}.emb{order:-1;max-width:140px;justify-self:start;margin-bottom:-6px}.emb::after{display:none}}
+.hq{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;font-size:13px;color:var(--muted)}
+.hq b{color:var(--text);font-weight:700}
+.trust{border-bottom:1px solid var(--line);background:var(--bg2);padding:18px 0;overflow:hidden}
+.trust .wrap{display:flex;align-items:center;gap:22px}
+.trust .lb{flex:none;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.marq{flex:1;min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marq div{display:flex;gap:34px;width:max-content;animation:mq 40s linear infinite}
+.marq span{font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap}
+.marq span::before{content:"◆ ";color:var(--gold)}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.marq div{animation:none}}
+@media(max-width:640px){.trust .lb{display:none}}
+.glob{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.gcard{border:1px solid var(--line);border-radius:var(--r2);background:var(--panel);padding:22px;position:relative;overflow:hidden;min-width:0}
+.gcard.hq1{grid-column:span 2;background:radial-gradient(circle at 100% 0%,color-mix(in srgb,var(--gold) 22%,transparent),transparent 60%),radial-gradient(circle at 0% 100%,color-mix(in srgb,var(--mal) 30%,transparent),transparent 60%),var(--panel);border-color:color-mix(in srgb,var(--gold) 40%,var(--line))}
+.gcard .k{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2)}
+.gcard h3{margin:8px 0 6px;font-size:22px;letter-spacing:-.02em}
+.gcard.hq1 h3{font-size:clamp(26px,3.4vw,40px)}
+.gcard p{margin:0;color:var(--muted);font-size:14px}
+.gcard .pp{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+@media(max-width:900px){.glob{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.glob{grid-template-columns:1fr}.gcard.hq1{grid-column:auto}}
+@media(max-width:640px){.filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-overflow-scrolling:touch}.filters::-webkit-scrollbar{display:none}.chip{flex:none}}
+#sort{border:1px solid var(--line2);background:var(--panel);color:var(--text);border-radius:999px;padding:9px 14px;font:inherit;font-size:13px;font-weight:600}
+footer .fg{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px;width:100%;padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:16px}
+footer .fg h6{margin:0 0 10px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+footer .fg a,footer .fg div{display:block;color:var(--muted);font-size:13.5px;margin:4px 0}
+footer .fb{display:flex!important;align-items:center;gap:10px;font-weight:900;color:var(--text)!important;font-size:18px!important}
+footer .fb img{width:34px;height:34px}
+@media(max-width:760px){footer .fg{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<nav class="top"><div class="wrap">
+  <a class="brand" href="#"><img src="brand/emblem-64.png" width="32" height="32" alt="">Tendarion<em>DUBAI · DMCC</em></a>
+  <div class="links">
+    <a href="#live" data-en="Live demos" data-ru="Живые демо"></a>
+    <a href="#apps" data-en="Apps" data-ru="Приложения"></a>
+    <a href="#catalog" data-en="Tenders" data-ru="Тендеры"></a>
+    <a href="#mega" data-en="Largest worldwide" data-ru="Крупнейшие в мире"></a>
+    <a href="#global" data-en="Company" data-ru="Компания"></a>
+    <a href="#tech" data-en="Technology" data-ru="Технологии"></a>
+  </div>
+  <span class="sp"></span>
+  <button class="tg" id="themeBtn" title="Theme">◐</button>
+  <button class="tg" id="langBtn">RU</button>
+</div></nav>
+
+<header class="hero">
+  <canvas id="net"></canvas>
+  <div class="wrap"><div class="hgrid"><div>
+    <span class="eyebrow"><b></b><span data-en="76 systems live right now — open any of them" data-ru="76 систем работают прямо сейчас — откройте любую"></span></span>
+    <h1><span data-en="Not slides." data-ru="Не слайды."></span><br><span class="g" data-en="Working systems." data-ru="Работающие системы."></span></h1>
+    <p class="lead" data-en="Tendarion is an international GovTech company headquartered in Dubai (DMCC). We build solutions for the world's largest government and enterprise IT tenders — and every project below is a working prototype you can open, click through and use — e-services portals, digital ID, super-apps, ERP, national payments, AI assistants, SOC and data platforms." data-ru="Tendarion — международная GovTech-компания со штаб-квартирой в Дубае (DMCC). Мы строим решения для крупнейших государственных и корпоративных IT-тендеров мира, и каждый проект ниже — рабочий прототип: его можно открыть, пройти и пользоваться. Порталы госуслуг, цифровой ID, суперприложения, ERP, национальные платежи, ИИ-ассистенты, SOC и платформы данных."></p>
+    <div class="cta">
+      <a class="btn pri" href="#live" data-en="Open the live demos →" data-ru="Открыть живые демо →"></a>
+      <a class="btn" href="#catalog" data-en="Browse 71 tenders" data-ru="71 тендер в каталоге"></a>
+    </div>
+    <div class="hq"><span>🏛 <b>Dubai · DMCC</b> HQ</span><span data-en="Middle East · Europe · Americas · Asia-Pacific" data-ru="Ближний Восток · Европа · Америка · Азия"></span><span>UNGM · World Bank · SAM.gov · TED · Etimad</span></div>
+  </div>
+  <div class="emb"><img src="brand/emblem-512.png" width="512" height="512" alt="Tendarion emblem"></div>
+  </div>
+    <div class="stats">
+      <div class="stat"><div class="n" data-count="76">0</div><div class="l" data-en="working prototypes" data-ru="рабочих прототипов"></div></div>
+      <div class="stat"><div class="n"><span data-count="71">0</span></div><div class="l" data-en="tender projects in catalogue" data-ru="тендерных проектов в каталоге"></div></div>
+      <div class="stat"><div class="n">$<span data-count="160">0</span>B+</div><div class="l" data-en="combined ceilings of the largest tenders we map to" data-ru="суммарный потолок крупнейших тендеров, под которые есть решение"></div></div>
+      <div class="stat"><div class="n" data-count="13">0</div><div class="l" data-en="sectors · 8 regions of the world" data-ru="отраслей · 8 регионов мира"></div></div>
+    </div>
+  </div>
+</header>
+<div class="trust"><div class="wrap"><span class="lb" data-en="Built to" data-ru="По стандартам"></span><div class="marq"><div><span>ISO/IEC 27001</span><span>SOC 2 Type II</span><span>NIST SP 800-63</span><span>WCAG 2.2 AA</span><span>PCI DSS 4.0</span><span>GDPR · PDPL</span><span>ISO 20022</span><span>FIDO2 / passkeys</span><span>OpenID Connect</span><span>HL7 FHIR</span><span>ICAO 9303</span><span>EMVCo QR</span><span>TOGAF</span><span>ITIL 4</span><span>ISO/IEC 27001</span><span>SOC 2 Type II</span><span>NIST SP 800-63</span><span>WCAG 2.2 AA</span><span>PCI DSS 4.0</span><span>GDPR · PDPL</span><span>ISO 20022</span><span>FIDO2 / passkeys</span><span>OpenID Connect</span><span>HL7 FHIR</span><span>ICAO 9303</span><span>EMVCo QR</span><span>TOGAF</span><span>ITIL 4</span></div></div></div></div>
+
+<section id="live"><div class="wrap">
+  <div class="sh reveal">
+    <div><div class="kick" data-en="Live demos" data-ru="Живые демо"></div><h2 data-en="Flagship platforms. Every button works." data-ru="Флагманские платформы. Каждая кнопка работает."></h2></div>
+    <p data-en="Previews below are the real apps running in your browser. Open one — sign in, file an application, pay by QR, ask the AI, stop an attack." data-ru="Превью ниже — настоящие приложения, они работают прямо в браузере. Откройте любое: войдите, подайте заявление, оплатите по QR, спросите ИИ, остановите атаку."></p>
+  </div>
+  <div class="show" id="show"></div>
+</div></section>
+
+<section id="apps" style="background:var(--bg2);border-block:1px solid var(--line)"><div class="wrap">
+  <div class="sh reveal">
+    <div><div class="kick" data-en="Apps" data-ru="Приложения"></div><h2 data-en="Mobile apps you can hold in your hand" data-ru="Мобильные приложения — как в руке"></h2></div>
+    <p data-en="Citizen and enterprise apps built for phone first. Each one opens as a real app in a phone frame — onboarding, offline mode, QR, push, biometrics." data-ru="Приложения для граждан и компаний, сделанные под телефон. Каждое открывается как настоящее приложение в рамке телефона — первый вход, офлайн, QR, уведомления, биометрия."></p>
+  </div>
+  <div class="appsg" id="appsG"></div>
+</div></section>
+
+<section id="catalog"><div class="wrap">
+  <div class="sh reveal">
+    <div><div class="kick" data-en="Tender catalogue" data-ru="Каталог тендеров"></div><h2 data-en="Tenders we have built solutions for" data-ru="Тендеры, под которые решение уже построено"></h2></div>
+    <p data-en="Each card is a real tender type from public procurement markets — scope, year and budget — with our working implementation one click away." data-ru="Каждая карточка — реальный тип тендера с открытых площадок: предмет, год и бюджет. Наша рабочая реализация — в один клик."></p>
+  </div>
+  <div class="filters" id="fcat"></div>
+  <div class="searchrow">
+    <div class="filters" id="freg" style="margin:0"></div>
+    <input class="input" id="q" data-en-ph="Search: EHR, eVisa, tolling, CBDC…" data-ru-ph="Поиск: медкарта, eVisa, проезд, CBDC…">
+    <select id="sort" aria-label="Sort"></select>
+    <span class="count" id="cnt"></span>
+  </div>
+  <div class="list" id="list"></div>
+</div></section>
+
+<section id="mega"><div class="wrap">
+  <div class="sh reveal">
+    <div><div class="kick" data-en="Scale" data-ru="Масштаб"></div><h2 data-en="The largest IT tenders in the world — and our answer" data-ru="Крупнейшие IT-тендеры мира — и наш ответ"></h2></div>
+    <p data-en="Reference contracts from public award data. We did not win these — they show the scale of the market our prototypes are built for." data-ru="Эталонные контракты по открытым данным о победителях. Их выигрывали другие компании — они показывают масштаб рынка, под который построены наши прототипы."></p>
+  </div>
+  <div class="mega reveal" id="megaT"></div>
+  <p class="note" data-en="Sources: SAM.gov, USAspending, NHS England, India Ministry of Power, FAA, agency press releases. Amounts are contract or programme ceilings." data-ru="Источники: SAM.gov, USAspending, NHS England, Минэнерго Индии, FAA, пресс-релизы ведомств. Суммы — потолок контракта или программы."></p>
+</div></section>
+
+<section id="global"><div class="wrap">
+  <div class="sh reveal">
+    <div><div class="kick" data-en="Company" data-ru="Компания"></div><h2 data-en="An international company built around the tender" data-ru="Международная компания, построенная вокруг тендера"></h2></div>
+    <p data-en="We track the world's public procurement portals every day and answer the largest tenders with a working system — not a slide deck." data-ru="Каждый день следим за площадками госзакупок мира и отвечаем на крупнейшие тендеры работающей системой, а не презентацией."></p>
+  </div>
+  <div class="glob reveal">
+    <div class="gcard hq1"><div class="k" data-en="Headquarters" data-ru="Штаб-квартира"></div><h3>Dubai · DMCC</h3><p data-en="Jumeirah Lakes Towers free zone — the hub for GCC government programmes and for international delivery across three continents." data-ru="Свободная зона Jumeirah Lakes Towers — центр для государственных программ стран Залива и международных проектов на трёх континентах."></p><div class="pp"><span class="pill gold">UAE</span><span class="pill">KSA · Etimad</span><span class="pill">Qatar · Oman · Bahrain</span><span class="pill">Tejari · Dubai eSupply</span></div></div>
+    <div class="gcard"><div class="k" data-en="Europe & UK" data-ru="Европа и Великобритания"></div><h3>TED · Find a Tender</h3><p data-en="Border systems, rail, health data, digital euro, parliaments." data-ru="Границы, железные дороги, данные здравоохранения, цифровой евро, парламенты."></p></div>
+    <div class="gcard"><div class="k" data-en="Americas" data-ru="Америка"></div><h3>SAM.gov</h3><p data-en="Federal cloud, health records, air traffic, tax, grants, EV charging." data-ru="Федеральное облако, медкарты, управление воздушным движением, налоги, гранты, зарядка электромобилей."></p></div>
+    <div class="gcard"><div class="k" data-en="Asia-Pacific" data-ru="Азия"></div><h3>GeM · GeBIZ · LKPP</h3><p data-en="Smart metering, e-courts, social transfers, water utilities, Indonesia SPBE." data-ru="Умные счётчики, электронные суды, соцвыплаты, водоканалы, СПБЭ Индонезии."></p></div>
+    <div class="gcard"><div class="k" data-en="International" data-ru="Международные"></div><h3>UNGM · World Bank · UNDP</h3><p data-en="Census, elections, e-procurement, early warning, carbon registries." data-ru="Переписи, выборы, электронные закупки, раннее оповещение, реестры углерода."></p></div>
+  </div>
+</div></section>
+
+<section id="tech" style="background:var(--bg2);border-block:1px solid var(--line)"><div class="wrap">
+  <div class="sh reveal">
+    <div><div class="kick" data-en="Technology" data-ru="Технологии"></div><h2 data-en="Built on the standards tenders ask for" data-ru="На стандартах, которые требуют тендеры"></h2></div>
+  </div>
+  <div class="tech reveal" id="techG"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sh reveal"><div><div class="kick" data-en="How we work" data-ru="Как работаем"></div><h2 data-en="From tender documents to a working system" data-ru="От документации тендера — к работающей системе"></h2></div></div>
+  <div class="steps reveal">
+    <div class="step"><h5 data-en="Read the tender" data-ru="Разбор тендера"></h5><p data-en="Requirements, SLAs, security and integration matrix mapped line by line." data-ru="Требования, SLA, безопасность и интеграции — построчно в матрицу соответствия."></p></div>
+    <div class="step"><h5 data-en="Show, not tell" data-ru="Показываем, а не рассказываем"></h5><p data-en="The commission gets a working prototype on day one of evaluation — not a slide deck." data-ru="Комиссия получает рабочий прототип в первый день оценки, а не презентацию."></p></div>
+    <div class="step"><h5 data-en="Harden" data-ru="Боевая версия"></h5><p data-en="Production stack: Kubernetes, Postgres, Kafka, Keycloak, observability, pentest, WCAG 2.2." data-ru="Боевой стек: Kubernetes, Postgres, Kafka, Keycloak, мониторинг, пентест, WCAG 2.2."></p></div>
+    <div class="step"><h5 data-en="Operate" data-ru="Сопровождение"></h5><p data-en="SLA 99.9 %+, 24/7 support, local hosting and data residency in the client's country." data-ru="SLA 99,9 %+, поддержка 24/7, размещение и хранение данных в стране заказчика."></p></div>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="final reveal">
+    <h2 data-en="Have a tender? We'll show it working." data-ru="Есть тендер? Покажем его работающим."></h2>
+    <p data-en="Send the tender documents — we come back with a matching working prototype and a compliance matrix." data-ru="Пришлите документацию тендера — вернёмся с подходящим рабочим прототипом и матрицей соответствия."></p>
+    <div class="cta"><a class="btn gold" href="https://rasnex.com" target="_blank" rel="noopener" data-en="Contact Rasnex →" data-ru="Связаться с Rasnex →"></a><a class="btn" href="#live" data-en="Try the demos" data-ru="Попробовать демо"></a></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap" style="flex-direction:column;align-items:stretch">
+  <div class="fg">
+    <div><div class="fb"><img src="brand/emblem-64.png" alt="">Tendarion</div><div data-en="Working systems for the world's largest government and enterprise IT tenders." data-ru="Работающие системы для крупнейших государственных и корпоративных IT-тендеров мира."></div><div>Dubai · DMCC · UAE</div></div>
+    <div><h6 data-en="Solutions" data-ru="Решения"></h6><a href="#live" data-en="Live demos" data-ru="Живые демо"></a><a href="#apps" data-en="Mobile apps" data-ru="Приложения"></a><a href="#catalog" data-en="Tender catalogue" data-ru="Каталог тендеров"></a><a href="#mega" data-en="Largest worldwide" data-ru="Крупнейшие в мире"></a></div>
+    <div><h6 data-en="Company" data-ru="Компания"></h6><a href="#global" data-en="Global presence" data-ru="Где работаем"></a><a href="#tech" data-en="Technology" data-ru="Технологии"></a><a href="https://rasnex.com" target="_blank" rel="noopener">Rasnex</a></div>
+    <div><h6 data-en="Standards" data-ru="Стандарты"></h6><div>ISO 27001 · SOC 2</div><div>NIST 800-63 · WCAG 2.2</div><div>PCI DSS · GDPR · PDPL</div></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>© 2026 Tendarion · Dubai · DMCC</span><span data-en="All prototypes use fictional data and organisations." data-ru="Во всех прототипах вымышленные данные и организации."></span></div>
+</div></footer>
+
+<script src="assets/demo.js"></script>
+<script src="assets/t50.js"></script>
+<script>
+const DEMOS=[
+ {s:'civic',i:'🏛',n:'CivicOne',c:['Government portal','Госпортал'],d:['National e-services portal: smart search, life situations, application wizards, personal cabinet, payments.','Единый портал госуслуг: умный поиск, жизненные ситуации, мастер заявлений, личный кабинет, оплата.']},
+ {s:'id',i:'🪪',n:'IDentra',c:['Digital identity','Цифровой ID'],d:['Single sign-on with passkeys, OTP and QR; document + liveness proofing; credential wallet.','Единый вход: ключи доступа, код, QR; проверка документа и лица; кошелёк удостоверений.']},
+ {s:'superapp',i:'📱',n:'Warga+',c:['Gov super-app','Госсуперприложение'],d:['Citizen mobile app: ID, e-queue, doctor booking, transport, wallet, offline mode.','Мобильное приложение гражданина: ID, электронная очередь, запись к врачу, транспорт, кошелёк, офлайн.']},
+ {s:'erp',i:'🧩',n:'Ledgera',c:['ERP / SPBE','ERP / СПБЭ'],d:['Government ERP: budget execution, procurement approvals, HR, warehouse, inter-agency bus.','ГосERP: исполнение бюджета, согласование закупок, кадры, склад, межведомственная шина.']},
+ {s:'pay',i:'💳',n:'Paynusa',c:['National payments','Нацплатежи'],d:['National QR payments: merchant terminal, wallet, taxes and fines, ISO 20022 console, antifraud.','Национальные QR-платежи: терминал, кошелёк, налоги и штрафы, консоль ISO 20022, антифрод.']},
+ {s:'ai',i:'🤖',n:'Lexa',c:['AI assistant','ИИ-ассистент'],d:['Government AI assistant with retrieval over legislation, citations, appeals analytics and voice.','Госассистент на ИИ: поиск по законам с цитатами, аналитика обращений, голос.']},
+ {s:'soc',i:'🛡',n:'Sentinel Grid',c:['Cybersecurity','Кибербезопасность'],d:['National SOC / SIEM: live attack map, event stream, alerts with MITRE ATT&CK, playbooks, Zero Trust.','Национальный SOC / SIEM: карта атак, поток событий, инциденты MITRE ATT&CK, плейбуки, Zero Trust.']},
+ {s:'data',i:'🗄',n:'Atlas',c:['Data platform','Платформа данных'],d:['National data platform: open data catalogue, BI builder, SQL console, streaming pipeline, quality checks.','Нацплатформа данных: каталог открытых данных, конструктор BI, SQL-консоль, потоковый конвейер.']},
+ {s:'corp',i:'🎮',n:'Orbit',c:['Enterprise','Корпоративные'],d:['Mobile bank, loyalty programme with rewards and gamified corporate learning with XP and leaderboards.','Мобильный банк, программа лояльности и обучение-игра с опытом и рейтингом.']},
+ {s:'oss',i:'🏢',n:'Satu Pintu',c:['Business licensing','Лицензирование бизнеса'],d:['One-stop licensing: 6-step wizard, risk-based approval, e-sign, certificate with QR, officer queue.','«Одно окно»: мастер из 6 шагов, оценка риска, подпись, сертификат с QR, очередь сотрудника.']},
+ {s:'region',i:'🏙',n:'Region.Online',c:['Regional portal','Региональный портал'],d:['Regional services: meters, kindergarten queue, booking, payments, consents and an admin form builder.','Региональные услуги: счётчики, очередь в детсад, запись, оплата, согласия и конструктор форм.']},
+ {s:'permit',i:'📝',n:'Permit One',c:['E-permits','E-разрешения'],d:['Permits with live BPMN, citizen appeals on a map, inspector kanban and a transparency page.','Разрешения с живой BPMN-схемой, обращения на карте, канбан инспектора и страница прозрачности.']},
+ {s:'treasury',i:'🏦',n:'Kazna-Pro',c:['Treasury','Казначейство'],d:['Budget execution: budget codes with limits, payment orders with 10 checks, cash plan, e-auction.','Исполнение бюджета: КБК с лимитами, платёжки с 10 проверками, кассовый план, аукцион.']},
+ {s:'taxpay',i:'🧾',n:'TaxPay Gateway',c:['Payment gateway','Платёжный шлюз'],d:['Find and pay taxes and fines by card, bank or QR; agency console with reconciliation and ISO 8583.','Поиск и оплата налогов и штрафов картой, банком, QR; пульт ведомства со сверкой и ISO 8583.']},
+ {s:'appeals',i:'📨',n:'Appeals 360',c:['AI analytics','ИИ-аналитика'],d:['AI triage of citizen appeals: classification, hot spots, incidents, SLA and response drafting.','ИИ-разбор обращений граждан: классификация, очаги, инциденты, SLA и черновики ответов.']},
+ {s:'kii',i:'⚡',n:'KII-Shield',c:['OT / ICS security','Безопасность АСУ ТП'],d:['Critical infrastructure monitoring: OT network map, Modbus/IEC 104 anomalies, incident response.','Мониторинг объектов КИИ: карта сети АСУ ТП, аномалии Modbus/МЭК 104, реагирование.']},
+ {s:'protects',i:'🧱',n:'Bastion',c:['Vulnerability & GRC','Уязвимости и GRC'],d:['Vulnerability and compliance management: scans, risk scoring, patch campaigns, control frameworks.','Управление уязвимостями и соответствием: сканы, оценка риска, кампании патчей, контроли.']},
+ {s:'dmdc',i:'🔐',n:'Gatekeeper',c:['Identity & access','Идентификация и доступ'],d:['Enterprise IAM: access requests, approvals, certification campaigns, privileged sessions.','Корпоративный IAM: заявки на доступ, согласования, пересмотр прав, привилегированные сессии.']},
+ {s:'piv',i:'💳',n:'CardWorks',c:['Federal credentials','Федеральные удостоверения'],d:['PIV smart card lifecycle: enrolment, biometrics, issuance, PIN reset, revocation and PKI status.','Жизненный цикл смарт-карт PIV: запись, биометрия, выдача, сброс PIN, отзыв и статус PKI.']},
+ {s:'sewp',i:'🛒',n:'Procura',c:['IT marketplace','ИТ-маркетплейс'],d:['Government IT marketplace: catalogue, RFQ with live vendor quotes, weighted scoring, e-signed order.','ИТ-маркетплейс для ведомств: каталог, запрос котировок, оценка по весам, заказ с подписью.']},
+ {s:'opendata',i:'📊',n:'Open Data Hub',c:['Open data','Открытые данные'],d:['Publisher wizard with DCAT-AP and PII checks, portal with charts, API keys and a request board.','Мастер издателя с DCAT-AP и проверкой ПДн, портал с графиками, ключи API и доска запросов.']}
+];
+const APPS=[
+ {s:'superapp',i:'📱',n:'Warga+',d:['Citizen super-app: ID, queues, doctor, transport, wallet','Суперприложение гражданина: ID, очереди, врач, транспорт']},
+ {s:'wallet',i:'🪪',n:'Wallet-ID',d:['Mobile driver licence: share only “18+”, verifier app, revocation','Мобильные права: показать только «18+», проверка, отзыв']},
+ {s:'city',i:'🏙',n:'My City',d:['City services: report a problem, transport, parking, events','Городские услуги: сообщить о проблеме, транспорт, парковка']},
+ {s:'health',i:'🩺',n:'Vitalia',d:['Health app: records, lab results, booking, e-prescriptions','Медприложение: карта, анализы, запись, электронные рецепты']},
+ {s:'vaid',i:'🎖',n:'Valor ID',d:['Veterans identity & benefits access with proofing','ID ветерана и доступ к льготам с проверкой личности']},
+ {s:'corp',i:'🏦',n:'Orbit Bank',d:['State bank mobile banking and loyalty','Мобильный банк госбанка и лояльность']},
+ {s:'academy',i:'🎮',n:'Orbit Academy',d:['Gamified learning: XP, quizzes, team battles, certificates','Обучение-игра: опыт, квизы, битвы команд, сертификаты']}
+];
+const CATS=[['all','All sectors','Все отрасли'],['portal','Government & e-services','Госуслуги и порталы'],['id','Identity & borders','ID и границы'],['app','Gov apps','Госприложения'],['health','Health','Здравоохранение'],['pay','Payments & finance','Платежи и финансы'],['erp','ERP, tax & procurement','ERP, налоги, закупки'],['transport','Transport & trade','Транспорт и торговля'],['energy','Energy, climate & agri','Энергетика, климат, агро'],['edu','Education','Образование'],['cyber','Security & defence','Безопасность и оборона'],['data','Data, cloud & telecom','Данные, облако, связь'],['ai','AI assistants','ИИ-ассистенты'],['corp','Enterprise','Корпоративные']];
+const SECT={gov:'portal',city:'portal',justice:'portal',events:'portal',religion:'portal',tourism:'portal',border:'id',finance:'pay',social:'pay',tax:'erp',proc:'erp',hr:'erp',trade:'transport',climate:'energy',agri:'energy',defense:'cyber',safety:'cyber',cloud:'data',tel:'data'};
+const sec=k=>SECT[k]||k;
+const REGS=[['all','All regions','Все регионы'],['me','Middle East','Ближний Восток'],['us','USA','США'],['uk','UK','Великобритания'],['eu','Europe','Европа'],['as','Asia','Азия'],['id','Indonesia','Индонезия'],['w','International','Международные'],['ru','Russia','Россия']];
+// [cat, region, demo, name, title EN, title RU, year, amount, client EN, client RU, platform, stack]
+const T=[
+ ['portal','w','civic','CivicOne','National single e-services portal','Единый национальный портал госуслуг',2025,'$4.8M','Ministry of digital affairs','Министерство цифрового развития','UNGM / World Bank','Next.js · Postgres · K8s · WCAG 2.2'],
+ ['portal','id','oss','Satu Pintu','One-stop business licensing portal (OSS)','Портал «одного окна» для лицензирования бизнеса (OSS)',2025,'Rp 38 bn','Investment coordination agency','Агентство по инвестициям','INAPROC / LPSE','React · Go · Postgres · e-sign'],
+ ['portal','ru','region','Регион.Онлайн','Regional public services portal (44-FZ)','Региональный портал госуслуг (44-ФЗ)',2024,'₽ 180 M','Regional digital ministry','Региональный минцифры','zakupki.gov.ru','React · Postgres · ЕСИА · СМЭВ'],
+ ['portal','w','permit','Permit One','E-permit and citizen appeals platform','Платформа e-разрешений и обращений граждан',2026,'$2.1M','City government','Правительство города','TED / GeBIZ','Next.js · Camunda · OpenSearch'],
+ ['id','w','id','IDentra','National digital identity & single sign-on','Национальный цифровой ID и единый вход',2025,'$163M','Federal identity agency','Федеральное агентство идентификации','SAM.gov (Login.gov class)','OIDC · FIDO2 · NIST 800-63 IAL2'],
+ ['id','w','wallet','Wallet-ID','Mobile driver licence & verifiable credentials','Мобильные права и цифровые удостоверения',2026,'$12M','Transport authority','Транспортное ведомство','SAM.gov / TED','ISO 18013-5 · W3C VC · OpenID4VP'],
+ ['app','id','superapp','Warga+','Citizen super-app: ID, health, transport, queues','Суперприложение гражданина: ID, здоровье, транспорт, очереди',2025,'$3.0M','National digital agency','Нацагентство цифровизации','INAPROC / SiRUP','Flutter · OIDC · offline-first'],
+ ['app','ru','city','Мой город','City services mobile app','Мобильное приложение городских услуг',2024,'₽ 95 M','City IT department','Департамент ИТ города','zakupki.gov.ru 223-ФЗ','Flutter · Kotlin · push · ЕСИА'],
+ ['app','w','health','Vitalia','National health app: records, labs, e-prescriptions','Национальное медприложение: карта, анализы, e-рецепты',2026,'$7.5M','Ministry of health','Министерство здравоохранения','TED / UNGM','Flutter · HL7 FHIR R4 · SMART on FHIR'],
+ ['erp','id','erp','Ledgera','Government ERP under SPBE','ГосERP по программе СПБЭ',2025,'$48M','Ministry of finance','Министерство финансов','INAPROC / e-Katalog','Odoo · Kafka · Postgres · SSO'],
+ ['erp','ru','treasury','Казна-Про','Budget execution & procurement system','Система исполнения бюджета и закупок',2024,'₽ 1.2 bn','Regional treasury','Региональное казначейство','zakupki.gov.ru','1С:Предприятие · СМЭВ · Postgres'],
+ ['pay','id','pay','Paynusa','National QR payments & e-wallet (QRIS class)','Национальные QR-платежи и кошелёк (класс QRIS)',2025,'$18M','Central bank consortium','Консорциум ЦБ и банков','BUMN procurement','EMVCo QR · ISO 20022 · antifraud ML'],
+ ['pay','w','taxpay','TaxPay Gateway','Tax, fines and fees payment gateway','Платёжный шлюз налогов, штрафов и пошлин',2024,'$6.4M','Revenue service','Налоговая служба','World Bank / ADB','ISO 8583 · PCI DSS · open banking'],
+ ['ai','w','ai','Lexa','Government AI assistant RU / ID / EN','Госассистент на ИИ RU / ID / EN',2026,'$2.6M','Government contact centre','Госконтакт-центр','UNGM / TED','LLM + RAG · pgvector · Whisper · TTS'],
+ ['ai','ru','appeals','Обращения 360','Citizen appeals AI analytics','ИИ-аналитика обращений граждан',2025,'₽ 140 M','Regional administration','Администрация региона','zakupki.gov.ru','LLM · классификация · ПОС'],
+ ['cyber','w','soc','Sentinel Grid','National SOC / SIEM','Национальный SOC / SIEM',2025,'$42M','National cyber agency','Национальное киберагентство','SAM.gov (PROTECTS class)','Wazuh · OpenSearch · SOAR · MITRE'],
+ ['cyber','ru','kii','КИИ-Щит','Critical infrastructure monitoring centre','Центр мониторинга объектов КИИ',2025,'₽ 900 M','Energy holding','Энергохолдинг','zakupki.gov.ru 223-ФЗ','SIEM · ГосСОПКА · Zero Trust'],
+ ['data','id','data','Atlas','National data platform (Satu Data class)','Национальная платформа данных (класс Satu Data)',2025,'$65M','National planning agency','Агентство нацпланирования','INAPROC','Kafka · ClickHouse · Superset · lake'],
+ ['data','w','opendata','Open Data Hub','Open data portal & BI for ministries','Портал открытых данных и BI министерств',2024,'€ 9M','EU member state','Страна — член ЕС','TED','CKAN · Trino · Superset · DCAT-AP'],
+ ['corp','id','corp','Orbit Bank','State bank mobile banking','Мобильный банк госбанка',2025,'$1.9M','State-owned bank (BUMN)','Госбанк (BUMN)','BUMN procurement','Flutter · biometrics · ISO 20022'],
+ ['corp','w','academy','Orbit Academy','Gamified corporate learning & loyalty','Обучение-игра и лояльность для корпорации',2025,'$420k','Telecom operator','Телеком-оператор','Corporate RFP','Flutter · gamification · analytics']
+];
+if(typeof T50!=='undefined')T.unshift(...T50);
+const FX={'$':1,'€':1.08,'£':1.27};
+const usd=b=>{const m=String(b).match(/([$€£₹])\s?([\d.,]+)\s*(lakh cr|cr|B|M|k)?/);if(!m)return 0;let v=parseFloat(m[2].replace(/,/g,''));const u=m[3];if(m[1]==='₹')return v*(u==='lakh cr'?1e12:u==='cr'?1e7:1)/84;v*=u==='B'?1e9:u==='M'?1e6:u==='k'?1e3:1;return v*(FX[m[1]]||1)};
+let sort='budget';
+const MEGA=[
+ ['$60B','NASA SEWP VI','Government-wide IT products & services, 2025–2036','ИТ-продукты и услуги для всех ведомств, 2025–2036','Multiple awardees','Несколько победителей','sewp','Procura'],
+ ['≈$36B','India RDSS smart metering','₹3.03 lakh crore distribution reform: 250M prepaid smart meters','Реформа электросетей на ₹3,03 трлн: 250 млн умных счётчиков','Multiple AMISPs (Adani, Genus…)','Несколько подрядчиков AMISP (Adani, Genus…)','meters','GridMeter'],
+ ['$20B','US Treasury PROTECTS','Cybersecurity BPA, 2025','Кибербезопасность (BPA), 2025','Multiple awardees','Несколько победителей','protects','Bastion'],
+ ['$16.1B','US VA EHR Modernization','Federal electronic health record for 9M veterans','Единая электронная медкарта для 9 млн ветеранов','Cerner (Oracle Health)','Cerner (Oracle Health)','ehr','EHR'],
+ ['$12.5B','FAA air traffic control','New national air traffic control system','Новая национальная система управления воздушным движением','Congress-funded programme','Программа, финансирование Конгресса','atc','ATC'],
+ ['$9B','US DoD JWCC','Joint Warfighting Cloud Capability, multi-cloud','Мультиоблако Минобороны (JWCC)','AWS · Google · Microsoft · Oracle','AWS · Google · Microsoft · Oracle','jwcc','JWCC'],
+ ['$5B','US NEVI','National electric vehicle charging network','Национальная сеть зарядки электромобилей','Formula funds to 50 states','Средства штатам по формуле','ev','EV'],
+ ['$1.4B','US DoD DMDC','Identity & access management','Управление идентификацией и доступом','Dignari','Dignari','dmdc','Gatekeeper'],
+ ['£330M','NHS Federated Data Platform','Shared data platform for English hospitals','Общая платформа данных для больниц Англии','Palantir','Palantir','fdp','FDP'],
+ ['$199.9M','US VA Digital ID','Veterans identity services','Сервисы идентификации ветеранов','Deloitte','Deloitte','vaid','Valor ID'],
+ ['$177M','GSA USAccess','Federal credentials (PIV)','Федеральные удостоверения (PIV)','XTec','XTec','piv','CardWorks'],
+ ['$163M','GSA Login.gov','National sign-on & identity proofing','Единый вход и проверка личности','Socure','Socure','id','IDentra']
+];
+const TECH=[
+ ['Front-end & apps','Фронтенд и приложения',['Next.js','React','Flutter','Swift','Kotlin','WCAG 2.2','PWA']],
+ ['Identity & security','Идентификация и защита',['OIDC','FIDO2 / passkeys','Keycloak','Zero Trust','Wazuh','ISO 27001','NIST 800-63']],
+ ['Payments','Платежи',['EMVCo QR','ISO 20022','ISO 8583','PCI DSS','Open Banking','Antifraud ML']],
+ ['Data & AI','Данные и ИИ',['Kafka','ClickHouse','Postgres','pgvector','LLM + RAG','Whisper','Superset']]
+];
+const L=(a)=>PT.lang==='ru'?a[1]:a[0];
+let cat='all',reg='all',q='';
+function renderShow(){
+  const el=document.getElementById('show');
+  if(!el.dataset.built){
+    el.innerHTML=DEMOS.map(d=>`<a class="tile reveal" href="demo/${d.s}/"><div class="pv"><div class="ph">${d.i}</div><span class="pill ok live">● LIVE</span><iframe data-src="demo/${d.s}/" tabindex="-1" aria-hidden="true" title="${d.n}"></iframe></div><div class="bd"><div class="cat" data-c></div><h3>${d.n}</h3><p data-d></p><div class="go" data-g></div></div></a>`).join('');
+    el.dataset.built=1;
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const f=e.target.querySelector('iframe');if(f&&!f.src&&innerWidth>640){f.src=f.dataset.src;f.onload=()=>{const ph=f.parentNode.querySelector('.ph');if(ph)ph.style.display='none'}}io.unobserve(e.target)}}),{rootMargin:'200px'});
+    el.querySelectorAll('.tile').forEach(t=>io.observe(t));
+  }
+  el.querySelectorAll('.tile').forEach((t,i)=>{const d=DEMOS[i];t.querySelector('[data-c]').textContent=L(d.c);t.querySelector('[data-d]').textContent=L(d.d);t.querySelector('[data-g]').textContent=PT.t('Open and use →','Открыть и пользоваться →')});
+}
+function renderApps(){
+  const el=document.getElementById('appsG');
+  if(!el.dataset.built){
+    el.innerHTML=APPS.map(d=>`<a class="app reveal" href="demo/${d.s}/"><div class="ph2"><div class="ic">${d.i}</div><iframe data-src="demo/${d.s}/" tabindex="-1" aria-hidden="true" title="${d.n}"></iframe></div><h3>${d.n}</h3><p data-d></p><div class="go" data-g></div></a>`).join('');
+    el.dataset.built=1;
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const f=e.target.querySelector('iframe');if(f&&!f.src&&innerWidth>640){f.src=f.dataset.src;f.onload=()=>{const ic=f.parentNode.querySelector('.ic');if(ic)ic.style.display='none'}}io.unobserve(e.target)}}),{rootMargin:'200px'});
+    el.querySelectorAll('.app').forEach(t=>io.observe(t));
+  }
+  el.querySelectorAll('.app').forEach((t,i)=>{t.querySelector('[data-d]').textContent=L(APPS[i].d);t.querySelector('[data-g]').textContent=PT.t('Open the app →','Открыть приложение →')});
+}
+function renderFilters(){
+  document.getElementById('fcat').innerHTML=CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-k="${c[0]}">${PT.lang==='ru'?c[2]:c[1]}</button>`).join('');
+  document.getElementById('freg').innerHTML=REGS.map(c=>`<button class="chip ${c[0]===reg?'on':''}" data-k="${c[0]}">${PT.lang==='ru'?c[2]:c[1]}</button>`).join('');
+  const so=document.getElementById('sort');so.innerHTML=[['budget','Largest budget','Крупнейший бюджет'],['year','Newest','Новые'],['name','A–Z','А–Я']].map(o=>`<option value="${o[0]}" ${o[0]===sort?'selected':''}>${PT.lang==='ru'?o[2]:o[1]}</option>`).join('');so.onchange=()=>{sort=so.value;renderList()};
+  document.querySelectorAll('#fcat .chip').forEach(b=>b.onclick=()=>{cat=b.dataset.k;renderFilters();renderList()});
+  document.querySelectorAll('#freg .chip').forEach(b=>b.onclick=()=>{reg=b.dataset.k;renderFilters();renderList()});
+}
+const REGN={w:['International','Международный'],ru:['Russia','Россия'],id:['Indonesia','Индонезия'],us:['USA','США'],uk:['UK','Великобритания'],eu:['Europe','Европа'],me:['Middle East','Ближний Восток'],as:['Asia','Азия']};
+function renderList(){
+  const s=q.toLowerCase();
+  const r=T.filter(t=>(cat==='all'||sec(t[0])===cat)&&(reg==='all'||t[1]===reg)&&(!s||t.join(' ').toLowerCase().includes(s)));
+  if(sort==='budget')r.sort((a,b)=>usd(b[7])-usd(a[7]));else if(sort==='year')r.sort((a,b)=>b[6]-a[6]);else if(sort==='name')r.sort((a,b)=>a[3].localeCompare(b[3]));
+  document.getElementById('cnt').textContent=PT.t(`${r.length} projects`,`${r.length} проектов`);
+  const cn=k=>{const c=CATS.find(x=>x[0]===sec(k))||CATS[0];return PT.lang==='ru'?c[2]:c[1]};
+  document.getElementById('list').innerHTML=r.map(t=>`<article class="tc">
+    <div class="top"><span class="pill gold">${cn(t[0])}</span><span class="pill">${L(REGN[t[1]])}</span><span class="pill">${t[10]}</span></div>
+    <h4>${t[3]}<small>${PT.lang==='ru'?t[5]:t[4]}</small></h4>
+    <div class="meta"><div><span>${PT.t('Year','Год')}</span><b>${t[6]}</b></div><div class="amt"><span>${PT.t('Budget','Бюджет')}</span><b>${t[7]}</b></div><div><span>${PT.t('Client','Заказчик')}</span><b style="font-size:12.5px;line-height:1.3">${PT.lang==='ru'?t[9]:t[8]}</b></div></div>
+    <div class="stack mono">${t[11]}</div>
+    <div class="row"><span class="done">✓ ${PT.t('Implemented by Tendarion — working prototype','Реализовано Tendarion — рабочий прототип')}</span><a class="btn pri" href="demo/${t[2]}/">${PT.t('Open and use','Открыть и пользоваться')}</a></div>
+  </article>`).join('')||`<p class="muted">${PT.t('Nothing found','Ничего не найдено')}</p>`;
+}
+function renderMega(){
+  document.getElementById('megaT').innerHTML=`<div class="mrow"><div>${PT.t('Ceiling','Потолок')}</div><div>${PT.t('Tender','Тендер')}</div><div>${PT.t('Awarded to','Победитель')}</div><div>${PT.t('Our prototype','Наш прототип')}</div><div></div></div>`+
+  MEGA.map(m=>`<div class="mrow"><div class="big">${m[0]}</div><div class="t"><b>${m[1]}</b><span>${PT.lang==='ru'?m[3]:m[2]}</span></div><div class="w">${PT.lang==='ru'?m[5]:m[4]}</div><div><span class="pill ok">${(T.find(t=>t[2]===m[6])||[])[3]||m[7]}</span></div><div><a class="btn" href="demo/${m[6]}/">${PT.t('Open prototype →','Открыть прототип →')}</a></div></div>`).join('');
+}
+function renderTech(){document.getElementById('techG').innerHTML=TECH.map(t=>`<div class="card"><h5>${PT.lang==='ru'?t[1]:t[0]}</h5><div class="tags">${t[2].map(x=>`<span>${x}</span>`).join('')}</div></div>`).join('')}
+function all(){renderShow();renderApps();renderFilters();renderList();renderMega();renderTech();document.getElementById('langBtn').textContent=PT.lang==='ru'?'EN':'RU';observe()}
+PT.onLang(all);
+document.getElementById('langBtn').onclick=()=>PT.setLang(PT.lang==='ru'?'en':'ru');
+document.getElementById('themeBtn').onclick=()=>{const cur=document.documentElement.getAttribute('data-theme');const dark=cur?cur==='dark':!matchMedia('(prefers-color-scheme: light)').matches;PT.theme(dark?'light':'dark')};
+document.getElementById('q').addEventListener('input',e=>{q=e.target.value;renderList()});
+// reveal + counters
+let ro;function observe(){ro=ro||new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.reveal:not(.in)').forEach(x=>ro.observe(x))}
+document.querySelectorAll('[data-count]').forEach(el=>{const to=+el.dataset.count,t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/1600);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)});
+// hero network
+(function(){
+  const c=document.getElementById('net'),x=c.getContext('2d');let W,H,P=[],DPR=Math.min(2,devicePixelRatio||1),mx=-999,my=-999;
+  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*DPR;c.height=H*DPR;x.setTransform(DPR,0,0,DPR,0,0);const n=Math.min(110,Math.floor(W*H/11000));P=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,g:Math.random()<.18}))}
+  size();addEventListener('resize',size);
+  c.parentNode.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});
+  const cs=()=>getComputedStyle(document.documentElement);
+  let col=cs();setInterval(()=>col=cs(),1500);
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function frame(){
+    const m=col.getPropertyValue('--mal3').trim()||'#36e0ae',g=col.getPropertyValue('--gold').trim()||'#d8b46a';
+    x.clearRect(0,0,W,H);
+    for(const p of P){if(!reduce){p.x+=p.vx;p.y+=p.vy}if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);if(d<120){p.x+=dx/d*.8;p.y+=dy/d*.8}}
+    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<130){x.globalAlpha=(1-d/130)*.35;x.strokeStyle=(a.g||b.g)?g:m;x.lineWidth=1;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke()}}
+    x.globalAlpha=1;for(const p of P){x.fillStyle=p.g?g:m;x.beginPath();x.arc(p.x,p.y,p.g?2.4:1.6,0,7);x.fill()}
+    requestAnimationFrame(frame)}
+  frame();
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Appeals 360</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--mal));color:#fff;font-size:15px}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--red);color:#fff;border-radius:999px;padding:0 7px;font-weight:700}
+.nav .cnt.g{background:var(--mal)}
+.grow{flex:1}
+.mini{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12px;color:var(--muted);line-height:1.6}
+.mini b{color:var(--text)}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--mal) 22%,transparent);color:var(--mal3);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.xs{padding:3px 9px;font-size:11.5px}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:14px;align-items:start}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:5px 11px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text)}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.kpi{padding:14px}
+.kpi .l{font-size:11.5px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:3px 0 1px}
+.kpi .d{font-size:11.5px;color:var(--muted)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap;font-weight:500}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:330px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+/* inbox */
+.tb{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 12px 8px}
+.tb .input{flex:1;min-width:140px;padding:7px 11px;font-size:13px}
+.fl{padding:0 12px 10px;border-bottom:1px solid var(--line)}
+.feed{max-height:640px;overflow:auto}
+.ap{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
+.ap:hover{background:color-mix(in srgb,var(--mal) 5%,transparent)}
+.ap.sel{background:color-mix(in srgb,var(--mal) 11%,transparent);box-shadow:inset 3px 0 0 var(--mal)}
+.ap.nw{animation:slide .6s}
+@keyframes slide{from{opacity:0;transform:translateY(-10px);background:color-mix(in srgb,var(--gold) 22%,transparent)}}
+.ap .chn{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line2);font-size:14px}
+.ap .tx{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13.5px;line-height:1.38}
+.ap .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;font-size:11.5px;color:var(--muted);align-items:center}
+.ap .meta .pill{padding:1px 8px;font-size:11px}
+.ap.closed .tx{opacity:.55}
+.ud{width:8px;height:8px;border-radius:50%;display:inline-block}
+.ud.hi{background:var(--red);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 25%,transparent)} .ud.md{background:var(--amber)} .ud.lo{background:var(--mal)}
+.more{width:100%;justify-content:center;border-radius:0;border:0;border-top:1px solid var(--line)}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--mal3)}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--mal3);animation:pulse 1.4s infinite}
+.live.off{color:var(--muted)} .live.off i{background:var(--dim);animation:none}
+@keyframes pulse{50%{opacity:.3}}
+.alert{border:1px solid color-mix(in srgb,var(--gold) 60%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--gold) 14%,var(--panel)),var(--panel));margin-bottom:12px;padding:14px 16px}
+.alert.new{animation:glow 1.6s 3}
+@keyframes glow{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--gold) 25%,transparent)}}
+.alert .ttl{font-weight:800;font-size:14.5px}
+.inc{border-color:color-mix(in srgb,var(--red) 50%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--red) 10%,var(--panel)),var(--panel))}
+.inc.done{border-color:color-mix(in srgb,var(--mal) 55%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--mal) 12%,var(--panel)),var(--panel))}
+.stg{display:flex;gap:4px;margin:10px 0}
+.stg span{flex:1;height:6px;border-radius:6px;background:var(--line2)}
+.stg span.on{background:var(--mal3)}
+.stgl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);gap:6px}
+.txt{font-size:14.5px;line-height:1.6;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+mark{border-radius:4px;padding:0 2px;color:inherit}
+mark.hk{background:color-mix(in srgb,var(--gold) 32%,transparent)}
+mark.hu{background:color-mix(in srgb,var(--red) 30%,transparent)}
+mark.hn{background:color-mix(in srgb,var(--amber) 26%,transparent);text-decoration:underline dotted}
+mark.hp{background:color-mix(in srgb,var(--mal) 28%,transparent)}
+mark.hd{background:color-mix(in srgb,var(--blue) 28%,transparent)}
+.lg{display:flex;gap:6px;flex-wrap:wrap;font-size:11px}
+.lg mark{font-weight:600}
+.lbl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.lbl label{display:block;font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.lbl select{padding:7px 9px;font-size:13px}
+.lbl .w2{grid-column:span 2}
+.cb{display:grid;grid-template-columns:minmax(0,1fr) 120px 44px;gap:8px;align-items:center;font-size:12.5px;padding:3px 0}
+.bar{height:7px;border-radius:7px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mal2),var(--mal3));border-radius:7px;transition:width .4s}
+.bar.g i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.bar.r i{background:linear-gradient(90deg,var(--amber),var(--red))}
+textarea.input{resize:vertical;min-height:120px;font-family:var(--font);font-size:13.5px;line-height:1.5}
+.ent{display:inline-flex;gap:5px;align-items:center;font-size:12px;border:1px solid var(--line2);border-radius:8px;padding:2px 8px;background:var(--panel2)}
+.cl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px;cursor:pointer}
+.cl:last-child{border-bottom:0}
+.cl small{display:block;color:var(--muted);font-size:11.5px}
+.cnum{font-family:var(--mono);font-weight:700;font-size:15px}
+.empty{color:var(--muted);text-align:center;padding:30px 10px;font-size:13.5px}
+.cm{display:grid;grid-template-columns:72px repeat(5,minmax(0,1fr));gap:3px;font-size:11px}
+.cm div{padding:6px 2px;text-align:center;border-radius:5px;font-family:var(--mono)}
+.cm .h{font-family:var(--font);color:var(--muted);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tok{display:flex;flex-wrap:wrap;gap:6px}
+.tok span{font-family:var(--mono);font-size:11.5px;border:1px solid var(--line2);border-radius:7px;padding:2px 7px;background:var(--panel2)}
+.tok span b{color:var(--gold2)}
+.map svg{width:100%;height:auto;display:block}
+.map path{cursor:pointer;transition:opacity .2s}
+.map path:hover{opacity:.82}
+.out{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0}
+.out div{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg2)}
+.out small{display:block;font-size:11px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.out b{font-size:14px}
+@media (max-width:1180px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.split,.grid2,.intro{grid-template-columns:minmax(0,1fr)}.feed{max-height:460px}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+}
+@media (max-width:560px){.how{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.kpi .v{font-size:19px}.lbl,.out{grid-template-columns:repeat(2,minmax(0,1fr))}.lbl .w2{grid-column:1/-1}.cb{grid-template-columns:minmax(0,1fr) 80px 40px}.cm{grid-template-columns:52px repeat(5,minmax(0,1fr));font-size:10px}}
+</style>
+</head>
+<body data-demo-en="Appeals 360 — citizen appeals analytics &amp; incident centre" data-demo-ru="Обращения 360 — аналитика обращений граждан">
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><b>◎</b><div><span data-en="Appeals 360" data-ru="Обращения 360"></span><small data-en="Severnaya Governorate" data-ru="Северная губерния"></small></div></div>
+    <div class="sec" data-en="Operations" data-ru="Операции"></div>
+    <div id="navA"></div>
+    <div class="sec" data-en="Insight & model" data-ru="Аналитика и модель"></div>
+    <div id="navB"></div>
+    <div class="grow"></div>
+    <div class="mini" id="mini"></div>
+    <button class="btn sm" id="reset" style="margin-top:8px;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="live" id="livePill"><i></i><span></span></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Appeals stream into the <b>Inbox</b>, each auto-tagged. Open a low-confidence one, fix the sub-topic and press <b>Confirm</b> — the model re-weights and accuracy moves." data-ru="Обращения идут во <b>Входящие</b> и сами размечаются. Откройте неуверенное, исправьте подтему и нажмите <b>Подтвердить</b> — модель переобучится, точность изменится."></span></div>
+          <div><b>2</b><span data-en="Wait ~15 s (or press <b>⚡ Simulate spike</b>): an emerging-issue alert fires. Open an incident, advance it and notify all residents." data-ru="Подождите ~15 с (или нажмите <b>⚡ Всплеск</b>): сработает сигнал о новой проблеме. Откройте инцидент, проведите его и оповестите всех жителей."></span></div>
+          <div><b>3</b><span data-en="Generate and send a reply, check <b>SLA</b> and <b>Analytics</b>, and paste your own text in the <b>Classifier lab</b>." data-ru="Сформируйте и отправьте ответ, загляните в <b>SLA</b> и <b>Аналитику</b>, вставьте свой текст в <b>Лабораторию</b>."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="Citizen appeals analytics" data-ru="Аналитика обращений граждан"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · ₽ 140 M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Administration of «Severnaya Governorate» (fictional)" data-ru="Администрация «Северной губернии» (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>LLM · classification · incident centre</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-inbox"></section>
+    <section class="view" id="v-sla"></section>
+    <section class="view" id="v-an"></section>
+    <section class="view" id="v-lab"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const KEY='appeals360-v1';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),4200)}
+/*ENGINE*/
+const TOP=[{id:'roads',en:'Roads',ru:'Дороги',ic:'🛣',c:'--amber',ag:'road'},{id:'util',en:'Utilities',ru:'ЖКХ',ic:'🚰',c:'--blue',ag:'hcs'},{id:'health',en:'Healthcare',ru:'Здравоохранение',ic:'🏥',c:'--violet',ag:'hlt'},{id:'trans',en:'Transport',ru:'Транспорт',ic:'🚌',c:'--mal',ag:'trn'},{id:'school',en:'Schools',ru:'Образование',ic:'🏫',c:'--gold',ag:'edu'}];
+const SUB={pothole:['roads','Potholes & surface','Ямы и покрытие'],snow:['roads','Snow & ice','Снег и гололёд'],light:['roads','Street lighting','Уличное освещение'],
+water:['util','Water supply','Водоснабжение'],heat:['util','Heating & hot water','Отопление и ГВС'],waste:['util','Waste collection','Вывоз мусора'],
+queue:['health','Appointments & queues','Запись и очереди'],drugs:['health','Subsidised medicines','Льготные лекарства'],ambul:['health','Ambulance response','Скорая помощь'],
+late:['trans','Delays & intervals','Задержки и интервалы'],route:['trans','Route network','Маршрутная сеть'],stop:['trans','Stops & shelters','Остановки'],
+enrol:['school','Enrolment','Зачисление'],build:['school','School buildings','Здания школ'],food:['school','School meals','Школьное питание']};
+const SUBS=Object.keys(SUB);
+const topOf=s=>TOP.find(t=>t.id===SUB[s][0]);
+const AGN={road:['Road Management Directorate','Управление дорожного хозяйства'],hcs:['Housing & Utilities Committee','Комитет ЖКХ'],hlt:['Regional Health Department','Департамент здравоохранения'],ems:['Emergency Medical Service','Станция скорой помощи'],trn:['Transport Department','Департамент транспорта'],edu:['Education Department','Департамент образования']};
+const agOf=s=>s==='ambul'?'ems':topOf(s).ag;
+const DIST=[['zar','Заречный','Zarechny',84,[['Речная','Rechnaya'],['Мостовая','Mostovaya']]],['cen','Центральный','Tsentralny',121,[['Соборная','Sobornaya'],['Театральная','Teatralnaya']]],
+['sev','Северный','Severny',96,[['Полярная','Polyarnaya'],['Северная','Severnaya']]],['les','Лесной','Lesnoy',52,[['Лесная','Lesnaya'],['Кедровая','Kedrovaya']]],
+['ozr','Озёрный','Ozyorny',47,[['Озёрная','Ozyornaya'],['Береговая','Beregovaya']]],['prm','Промышленный','Promyshlenny',73,[['Заводская','Zavodskaya'],['Литейная','Liteynaya']]],
+['sos','Сосновка','Sosnovka',38,[['Сосновая','Sosnovaya'],['Хвойная','Khvoynaya']]],['pri','Приморский','Primorsky',66,[['Приморская','Primorskaya'],['Маячная','Mayachnaya']]],
+['kam','Каменный','Kamenny',58,[['Каменная','Kamennaya'],['Гранитная','Granitnaya']]]];
+const DI=id=>DIST.findIndex(d=>d[0]===id);
+const dName=id=>{const d=DIST[DI(id)];return d?T(d[2],d[1]):T('not detected','не определён')};
+const norm=w=>w.toLowerCase().replace(/ё/g,'е');
+const RU_END=/(иями|ями|ами|ого|его|ому|ему|ыми|ими|ией|ия|ие|ий|ый|ой|ая|яя|ое|ее|ые|ых|их|ую|юю|ам|ям|ах|ях|ом|ем|ов|ев|ей|а|я|ы|и|у|ю|е|о|ь|й)$/;
+function stem(w){w=norm(w);if(/[а-я]/.test(w)){if(w.length>=3){const s=w.replace(RU_END,'');if(s.length>=2)w=s}return w.slice(0,6)}if(w.length>4)w=w.replace(/(ing|ed|es|s)$/,'');return w.slice(0,6)}
+const toks=s=>(s.match(/[A-Za-zА-Яа-яЁё]+/g)||[]).filter(w=>w.length>=3||/^gp$/i.test(w));
+const KW={pothole:'яма:3 ямы:3 ямочный:3 асфальт:2.5 дорога:1.5 дороги:1.5 колеса:2 проезжей:1.5 залатать:2.5 провалилось:1.5 встречке:1.5 pothole:3 asphalt:2.5 road:1.5 tyre:2 surface:1.5 swerve:1.5',
+snow:'снег:3 снега:3 сугробы:3 гололед:3 каток:2 сосульки:3 песком:2 чистят:2 снегоуборочная:3 тротуар:1.5 snow:3 ice:2.5 grit:2.5 cleared:2 sidewalk:1.5 slippery:2',
+light:'фонари:3 фонарь:3 освещение:3 темнота:2 горят:2 мигает:2.5 гаснет:2.5 light:2.5 lamp:3 dark:2 flickering:2.5 night:1',
+water:'вода:2.5 кран:2 крана:2 напор:3 трубы:2.5 прорыв:3 хлещет:2.5 затопило:1.5 подвал:1.5 ржавая:3 пить:1.5 люка:1.5 water:2.5 tap:2 pipe:2.5 burst:3 rusty:3 brown:1.5 drink:1.5 supply:1.5',
+heat:'отопление:3 батареи:3 холодные:1.2 горячей:1.5 мерзнут:2 теплые:1.5 radiators:3 heating:3 cold:1.2 hot:1',
+waste:'мусор:3 свалка:3 баки:2.5 контейнерной:2.5 вывозят:2.5 вывоз:2.5 запах:1.5 крысы:2 garbage:3 bins:2.5 waste:2.5 dumped:2 smell:1.5 rubbish:3 trash:3 emptied:2',
+queue:'записаться:2.5 запись:2.5 терапевту:3 кардиологу:3 кардиолог:3 врачу:1.5 очередь:1.5 регистратуре:3 поликлинику:1.2 телефону:1 appointment:3 book:1.5 gp:3 cardiologist:3 slot:1.5 polyclinic:1.2 phone:1',
+drugs:'аптеке:3 аптеку:3 лекарства:3 льготных:2.5 льготному:2.5 рецепту:2.5 инсулин:3 препарата:3 pharmacy:3 insulin:3 prescription:3 medicine:3 subsidised:2.5',
+ambul:'скорую:3 скорая:3 бригаду:2 вызову:2.5 диспетчер:2.5 инсульт:2.5 ambulance:3 crew:2 stroke:2.5 врачам:1 arrived:1',
+late:'автобус:1.5 расписанию:2 ждали:2 задерживается:3 интервал:2.5 опаздывают:2.5 троллейбус:1.5 раз:0.8 час:1 утром:1 минут:1 late:2.5 minutes:1 bus:1.5 once:1 hour:1 delayed:2.5',
+route:'маршрут:1.5 вернуть:2.5 отмены:2.5 продлить:3 схему:2.5 микрорайон:2 центр:1 объявления:1 предлагаю:1.5 restore:3 cancelled:2.5 extend:3 downtown:2 estate:1.5 route:1.5 proposal:1.5',
+stop:'остановки:1.5 остановке:1.2 павильон:3 скамейки:3 табло:3 бордюр:2.5 колясок:2.5 крыши:1 мокнут:2 shelter:3 bench:3 stop:1.2 display:2.5 timetable:2 board:2 smashed:2',
+enrol:'зачислении:3 класс:1 мест:1.5 детском:2 саду:2.5 enrolment:3 grade:2.5 form:1.5 online:1.5 error:1.5 сайт:1.5 ошибку:1.5 электронная:1.2 отказали:1.2',
+build:'крыша:2.5 течет:2.5 лужи:2 спортзале:2.5 окна:2.5 закрываются:2 туалеты:3 ремонт:1 куртках:1.5 roof:2.5 leaking:2.5 gym:2.5 windows:2.5 classroom:1.5 coats:1.5',
+food:'столовой:3 кормят:2.5 едой:2.5 порции:3 обеда:2.5 отравился:3 поварам:3 меню:2.5 canteen:3 meals:2.5 portions:3 menu:2.5 food:2.5 poisoned:3'};
+const W={};
+for(const s in KW)KW[s].split(' ').forEach(p=>{const[w,v]=p.split(':');const st=stem(w);(W[st]=W[st]||{})[s]=Math.max(+v,W[st][s]||0)});
+['школа','школы','school'].forEach(w=>{const st=stem(w);W[st]=W[st]||{};['enrol','build','food'].forEach(s=>W[st][s]=1)});
+const lex=s=>{const o={};s.split(' ').forEach(p=>{const[w,v]=p.split(':');o[stem(w)]=+(v||1)});return o};
+const NEG=lex('безобразие ужасный ужас невозможно опасно плохо грубил отказали опять снова сколько страшно болеют мерзнут жалоба крысы отравился никто awful terrible dangerous again refused unacceptable impossible damaged smashed poisoned never');
+const POS=lex('спасибо благодарю довольны быстро thank thanks great quickly happy');
+const UHI=lex('опасно:2 опасность:2 дети:1 детей:1 ребенок:1 ребенка:1 ребенку:1 инсульт:2 прорыв:2 хлещет:2 затопило:2 бьет:1.5 отравился:2 заболели:1 минус:1.5 инсулин:2 инвалида:1.5 падают:1.5 stroke:2 burst:2 flooded:2 danger:2 dangerous:2 children:1 child:1 poisoned:2 insulin:2 fell:1.5');
+const UMD=lex('третий неделю неделя месяц второй два года week month days opposite:0 часа hour');
+const STOP=new Set(['ул','дом','уже','нет','что','это','как','когда','так','все','просим','please','the','and','for','was','has','not','are','our','with','this','since','there','from','have','been','its','нас','наш','мы','вы','они','его','только','еще','очень','при','для','над','под','без','was','who','but','yesterday','someone'].map(stem));
+const GZ=[];DIST.forEach((D,i)=>{const ru=w=>{w=norm(w);GZ.push([w.slice(0,Math.max(4,w.length-2)),i])},en=w=>GZ.push([norm(w).slice(0,5),i]);ru(D[1]);en(D[2]);D[4].forEach(s=>{ru(s[0]);en(s[1])})});
+const gzOf=w=>{w=norm(w);const g=GZ.find(g=>w.startsWith(g[0]));return g?g[1]:-1};
+function wt(st){const b=W[st],d=S&&S.dw[st];if(!b&&!d)return null;const o=Object.assign({},b);if(d)for(const k in d)o[k]=(o[k]||0)+d[k];return o}
+function classify(text){
+  const tk=toks(text),sc={},contrib={};SUBS.forEach(s=>sc[s]=0);const seen=new Set();let sent=0,urg=0;const dv={};
+  tk.forEach(w=>{const st=stem(w);const g=gzOf(w);if(g>=0){dv[g]=(dv[g]||0)+1;return}if(seen.has(st))return;seen.add(st);const row=wt(st);if(row)for(const s in row){sc[s]+=row[s];(contrib[s]=contrib[s]||[]).push([w,row[s]])}
+    if(NEG[st])sent-=1;if(POS[st])sent+=1.5;if(UHI[st])urg+=UHI[st];else if(UMD[st])urg+=1});
+  const arr=SUBS.map(s=>[s,sc[s]]).sort((a,b)=>b[1]-a[1]);const mx=arr[0][1];
+  const ex=arr.map(a=>Math.exp((a[1]-mx)/1.1)),Z=ex.reduce((a,b)=>a+b,0);const probs=arr.map((a,i)=>[a[0],ex[i]/Z,a[1]]);
+  const sub=arr[0][0];let conf=probs[0][1];if(mx<1)conf=Math.min(conf,.15);
+  const tconf=probs.filter(p=>SUB[p[0]][0]===SUB[sub][0]).reduce((a,p)=>a+p[1],0);
+  const ex1=(text.match(/!/g)||[]).length;if(sent<0)sent-=Math.min(ex1,2)*.5;
+  if(sub==='ambul'&&mx>=2)urg+=1;if(sent<-1.5)urg+=.5;
+  let dist=null,best=0;for(const k in dv)if(dv[k]>best){best=dv[k];dist=DIST[k][0]}
+  return{sub,topic:SUB[sub][0],conf,tconf:Math.min(1,tconf),probs:probs.slice(0,3),sent:sent<=-.5?'neg':sent>=1?'pos':'neu',sraw:sent,urg:urg>=2?'hi':urg>=1?'md':'lo',dist,ag:agOf(sub),known:mx>=1,contrib:(contrib[sub]||[]).sort((a,b)=>b[1]-a[1])};
+}
+function learn(text,from,to){if(from===to)return 0;let n=0;new Set(toks(text).filter(w=>gzOf(w)<0).map(stem)).forEach(st=>{if(STOP.has(st)||st.length<3)return;const d=S.dw[st]||(S.dw[st]={});const b=W[st]||{};
+  d[to]=+((d[to]||0)+(b[to]!=null||d[to]!=null?.5:.4)).toFixed(2);if(from&&(b[from]||0)+(d[from]||0)>0)d[from]=+((d[from]||0)-.3).toFixed(2);n++});S.model++;return n}
+/* corpus */
+const TPL=`pothole|ru|На ул. {st}, {n} огромная яма посреди дороги, уже два колеса пробили. Когда отремонтируют асфальт?
+pothole|ru|Ямы на проезжей части возле дома {n} по ул. {st} — невозможно проехать, машины объезжают по встречке. Опасно!
+pothole|ru|Просим залатать дорогу у дома {n} на ул. {st}. После зимы асфальт разрушен полностью.
+pothole|ru|Ямочный ремонт на ул. {st} сделали плохо, через неделю всё снова провалилось. Сколько можно?
+pothole|en|Huge pothole on {st} St near no. {n}, I damaged a tyre yesterday. Please repair the road surface.
+pothole|en|The asphalt on {st} St is breaking apart after the winter, cars swerve into the oncoming lane.
+snow|ru|Двор дома {n} на ул. {st} не чистят от снега третий день, машины не могут выехать.
+snow|ru|Тротуар на ул. {st} превратился в каток, гололёд, пожилые люди падают. Посыпьте песком!
+snow|ru|Снегоуборочная техника не приезжала на ул. {st} с начала недели, сугробы по колено.
+snow|ru|Сосульки свисают с крыши над входом в дом {n} по ул. {st}, опасно для детей.
+snow|en|Snow has not been cleared on {st} St for three days, the bus can't get through.
+snow|en|The sidewalk on {st} St is pure ice, my neighbour fell this morning. Please grit it.
+light|ru|Не горят фонари на ул. {st} от дома {n} до перекрёстка, вечером полная темнота.
+light|ru|Уличное освещение во дворе на ул. {st} не работает уже месяц. Страшно ходить вечером.
+light|ru|Мигает и гаснет фонарь у пешеходного перехода на ул. {st}, водители не видят людей.
+light|en|Street lights are out along {st} St, the whole block is dark at night.
+light|en|The lamp post at the crossing on {st} St keeps flickering, pedestrians are invisible.
+water|ru|В доме {n} по ул. {st} нет холодной воды с утра, никого не предупредили.
+water|ru|Из крана течёт ржавая вода, ул. {st}, {n}. Пить невозможно, дети болеют.
+water|ru|Слабый напор воды на верхних этажах дома {n}, ул. {st}, уже неделю.
+water|ru|Прорыв трубы во дворе на ул. {st}, вода хлещет, затопило подвал!
+water|en|No water supply at {st} St, {n} since this morning, no warning was given.
+water|en|Brown rusty water from the tap at {st} St, {n}. It is not safe to drink.
+heat|ru|В квартире +14, батареи холодные, ул. {st}, {n}. Отопление так и не дали!
+heat|ru|Нет горячей воды и отопления в доме {n} по ул. {st}. На улице минус, дети мёрзнут.
+heat|ru|Батареи еле тёплые, управляющая компания не отвечает. Ул. {st}, {n}.
+heat|en|Radiators are cold in our building at {st} St, {n}. It is 14°C inside, the heating is still off.
+heat|en|No hot water and no heating at {st} St for two days, we have small children.
+waste|ru|Мусор не вывозят с контейнерной площадки на ул. {st} уже неделю, запах ужасный.
+waste|ru|Переполнены мусорные баки у дома {n}, ул. {st}, вокруг бегают крысы.
+waste|ru|Стихийная свалка строительного мусора у гаражей на ул. {st}. Просим убрать.
+waste|en|Garbage bins at {st} St have not been emptied for a week, the smell is awful.
+waste|en|Someone dumped construction rubbish behind the garages on {st} St.
+queue|ru|Невозможно записаться к терапевту в поликлинику №{pol}, по телефону никто не отвечает.
+queue|ru|Запись к кардиологу в поликлинике №{pol} только через месяц. Это нормально?
+queue|ru|Очередь в регистратуре поликлиники №{pol} на два часа, работает одно окно.
+queue|en|Impossible to book a GP appointment at Polyclinic No. {pol}, the phone line is always busy.
+queue|en|The next available cardiologist slot at Polyclinic No. {pol} is in a month.
+drugs|ru|В аптеке нет льготных лекарств по рецепту уже второй месяц, инсулин не выдают.
+drugs|ru|Отказали в выдаче бесплатного препарата по льготному рецепту в поликлинике №{pol}.
+drugs|ru|Лекарства для ребёнка-инвалида не поступают в аптеку на ул. {st}.
+drugs|en|The pharmacy has had no subsidised insulin on prescription for two months.
+drugs|en|I was refused my free prescription medicine at Polyclinic No. {pol}.
+ambul|ru|Скорую ждали 1 час 40 минут на ул. {st}, {n}, у отца инсульт!
+ambul|ru|Скорая не приехала по вызову к пожилой соседке на ул. {st}, диспетчер грубил.
+ambul|ru|Благодарю бригаду скорой помощи, которая быстро приехала на ул. {st}. Спасибо врачам!
+ambul|en|The ambulance took 95 minutes to reach {st} St, {n}. My father had a stroke.
+ambul|en|Thank you to the ambulance crew who arrived so quickly at {st} St. Great job!
+late|ru|Автобус №{r} опять не пришёл по расписанию, ждали 40 минут на остановке ул. {st}.
+late|ru|Маршрут №{r} утром ходит раз в час, люди опаздывают на работу.
+late|ru|Троллейбус №{r} постоянно задерживается, интервал движения не соблюдается.
+late|en|Bus {r} was 40 minutes late again at the {st} St stop.
+late|en|Route {r} runs once an hour in the morning, people are late for work.
+route|ru|Просим вернуть маршрут №{r}, после его отмены из района {d} не уехать в центр.
+route|ru|Предлагаю продлить маршрут №{r} до ул. {st}, там новый микрорайон.
+route|ru|Изменили схему маршрута №{r} без объявления, пассажиры не знают, где садиться.
+route|en|Please restore bus route {r}, since it was cancelled there is no way to get downtown.
+route|en|Proposal: extend route {r} to {st} St, a new housing estate has opened there.
+stop|ru|Разбит павильон остановки на ул. {st}, нет скамейки и крыши, люди мокнут.
+stop|ru|Нет табло и расписания на остановке ул. {st}.
+stop|ru|Остановка на ул. {st} не приспособлена для колясок, высокий бордюр.
+stop|en|The bus shelter on {st} St is smashed, no roof and no bench.
+stop|en|No timetable or display board at the {st} St stop.
+enrol|ru|Ребёнку отказали в зачислении в первый класс школы №{sch} по месту жительства.
+enrol|ru|Нет мест в детском саду, очередь на зачисление не двигается год.
+enrol|ru|Электронная запись в 1 класс школы №{sch} не работает, сайт выдаёт ошибку.
+enrol|en|My child was refused enrolment in grade 1 at School No. {sch} although we live nearby.
+enrol|en|The online enrolment form for School No. {sch} returns an error.
+build|ru|В школе №{sch} течёт крыша, в спортзале лужи, занятия отменяют.
+build|ru|Окна в классах школы №{sch} не закрываются, дети сидят в куртках.
+build|ru|В школе №{sch} не работают туалеты на втором этаже, ремонт обещают год.
+build|en|The roof of School No. {sch} is leaking, the gym floor is flooded.
+build|en|Classroom windows at School No. {sch} don't close, children sit in coats.
+food|ru|В столовой школы №{sch} детей кормят холодной едой, порции маленькие.
+food|ru|Ребёнок отравился после обеда в школьной столовой №{sch}, ещё трое заболели!
+food|ru|Спасибо поварам школы №{sch} за новое меню, дети довольны.
+food|en|Children at School No. {sch} get cold meals in the canteen, portions are tiny.
+food|en|Thank you to the canteen staff at School No. {sch} for the new menu!
+heat|ru|Прорыв трубы отопления в подъезде дома {n}, ул. {st}, в квартирах холодно.
+stop|ru|На остановке ул. {st} снова гололёд и сугробы, люди падают, павильона нет.
+late|en|The bus never came because {st} St was not cleared of snow again.
+build|ru|В школе №{sch} холодные батареи, дети мёрзнут на уроках.
+light|ru|Из-за темноты на ул. {st} не видно ям на дороге, опасно.
+drugs|ru|Чтобы выписать льготный рецепт, надо записаться к терапевту, а запись закрыта, поликлиника №{pol}.
+waste|en|Overflowing bins block the bus stop on {st} St, the shelter is full of trash.
+route|ru|После отмены маршрута №{r} дети идут в школу №{sch} пешком вдоль дороги.`.split('\n').map(l=>l.split('|'));
+const NM={ru:['Ирина Ковалёва','Сергей Миронов','Ольга Белова','Дмитрий Орлов','Наталья Зуева','Алексей Гусев','Елена Фомина','Павел Титов','Марина Котова','Игорь Лапин','Анна Рябова','Виктор Седов'],en:['Mark Peters','Anna Clarke','David Owen','Laura Bennett','Tom Hughes','Sofia Reyes','Omar Haddad','Kate Lin']};
+const CH=[['web','🌐','Portal','Портал'],['phone','☎','Call centre','Колл-центр'],['social','💬','Social','Соцсети'],['email','✉','Email','Почта']];
+function fill(tp,di,r){const D=DIST[di],ru=tp[1]==='ru',s=D[4][Math.floor(r()*2)];let x=tp[2].replace('{st}',ru?s[0]:s[1]).replace('{n}',1+Math.floor(r()*58)).replace('{r}',[3,7,12,15,21,27,33,41,52][Math.floor(r()*9)]).replace('{sch}',1+Math.floor(r()*48)).replace('{pol}',1+Math.floor(r()*14)).replace('{d}',ru?D[1]:D[2]);
+  const has=/\{st\}|\{d\}/.test(tp[2]);if(r()<(has?.25:.6))x+=ru?` (${D[1]} р-н)`:` (${D[2]} district)`;const det=has||/р-н\)|district\)$/.test(x);
+  const q=r();return{x,lang:tp[1],sub:tp[0],d:det?D[0]:null,dt:D[0],ch:q<.45?'web':q<.65?'phone':q<.85?'social':'email',nm:NM[tp[1]][Math.floor(r()*NM[tp[1]].length)]}}
+const POPW=DIST.map(d=>d[3]),POPT=POPW.reduce((a,b)=>a+b,0);
+const pickD=r=>{let q=r()*POPT;for(let i=0;i<DIST.length;i++){q-=POPW[i];if(q<0)return i}return 0};
+const POOL=(()=>{const r=rng(77),RU=TPL.filter(t=>t[1]==='ru'),EN=TPL.filter(t=>t[1]==='en'),o=[];let a=0,b=0;const ro=RU.map((_,i)=>i).sort(()=>r()-.5),eo=EN.map((_,i)=>i).sort(()=>r()-.5);
+  for(let i=0;i<172;i++){const tp=r()<.7?RU[ro[a++%RU.length]]:EN[eo[b++%EN.length]];o.push(fill(tp,pickD(r),r))}return o})();
+const BURST=[['ru','Прорыв трубы на ул. Речная, вода хлещет прямо из-под асфальта!'],['ru','На ул. Мостовая нет воды во всех домах, что случилось?'],['ru','Ул. Речная, 22 — нет холодной воды, во дворе фонтан из-под земли.'],['en','No water at Rechnaya St, 5 — a pipe burst outside and the road is flooded.'],['ru','Затопило подвал дома 9 по ул. Мостовая, вода прибывает!'],['ru','Заречный р-н, ул. Речная: вода бьёт из люка, машины не проедут. Опасно!'],['ru','Нет воды с 8 утра, ул. Мостовая, 31. Когда дадут воду?']];
+/*END*/
+const SLA={hi:4,md:24,lo:72};
+const UR={hi:['High','Высокая','bad'],md:['Medium','Средняя','warn'],lo:['Low','Низкая','ok']};
+const SE={neg:['Negative','Негатив','bad'],neu:['Neutral','Нейтрально',''],pos:['Positive','Позитив','ok']};
+const STN={new:['New','Новое','gold'],routed:['In work','В работе','warn'],incident:['Incident','Инцидент','bad'],closed:['Answered','Отвечено','ok']};
+const now=()=>Date.now()+(S?S.off:0);
+const ago=t=>{const m=Math.max(0,Math.round((now()-t)/6e4));return m<1?T('now','сейчас'):m<60?m+T(' min',' мин'):m<1440?Math.floor(m/60)+T(' h',' ч'):Math.floor(m/1440)+T(' d',' дн')};
+const fmtT=t=>new Date(t).toLocaleString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const cno=it=>'A-25-'+String(4100+it.id).padStart(5,'0');
+let pc={};
+function pred(it){const k=it.id+'|'+S.model;return pc[k]||(pc[k]=classify(it.x))}
+function lbl(it){const p=pred(it);return it.lab?Object.assign({},p,it.lab,{topic:SUB[it.lab.sub][0]}):p}
+const dueOf=it=>it.t+SLA[lbl(it).urg]*36e5;
+function mkItem(p,t){return{id:S.nid++,x:p.x,lang:p.lang,sub:p.sub,d:p.d,dt:p.dt,ch:p.ch,nm:p.nm,t,st:'new',lab:null,rep:null,ct:null,inc:null,esc:false}}
+let S=null;
+function seed(){
+  S={view:'inbox',items:[],ptr:40,live:0,nid:1,speed:1,paused:false,sel:null,dw:{},model:0,stat:{ok:0,fix:0},accH:[],alerts:{},incs:[],off:0,flt:'all',q:'',cl:null,anT:'all',anD:'zar',lab:'',lim:60,sim:0};
+  const r=rng(11),n0=Date.now();
+  for(let i=0;i<40;i++){const it=mkItem(POOL[i],n0-(40-i)*72*6e4-Math.floor(r()*30)*6e4);const age=(n0-it.t)/36e5,q=r();
+    if(age>18&&q<.6){it.st='closed';it.ct=it.t+SLA[classify(it.x).urg]*36e5*(.25+r()*.95);it.rep=T('Answered by operator','Ответ направлен оператором')}else if(age>3&&q<.8)it.st='routed';
+    S.items.push(it)}
+  S.accH=[acc().sub];return S;
+}
+let accC={};
+S=store.load();if(!S||!S.items)seed();
+const save=()=>store.save();
+function acc(){if(accC.m===S.model)return accC;let a=0,b=0;const cm=TOP.map(()=>TOP.map(()=>0));POOL.forEach(p=>{const c=classify(p.x);if(c.sub===p.sub)a++;if(c.topic===SUB[p.sub][0])b++;cm[TOP.findIndex(t=>t.id===SUB[p.sub][0])][TOP.findIndex(t=>t.id===c.topic)]++});
+  accC={m:S.model,sub:a/POOL.length*100,top:b/POOL.length*100,cm};return accC}
+/* history for analytics */
+const SH={pothole:.1,snow:.09,light:.05,water:.1,heat:.12,waste:.08,queue:.09,drugs:.05,ambul:.03,late:.08,route:.04,stop:.03,enrol:.04,build:.05,food:.05};
+const HOT={'heat|sev':1.8,'waste|prm':1.6,'pothole|kam':1.5,'queue|cen':1.4,'late|les':1.5};
+const HIST=(()=>{const r=rng(314),H=[];for(let d=0;d<14;d++){const day={c:{},neg:0,pos:0,tot:0},wk=(d%7===5||d%7===6)?.72:1;SUBS.forEach(s=>{day.c[s]={};DIST.forEach(D=>{let lam=380*SH[s]*D[3]/POPT*wk;const h=HOT[s+'|'+D[0]];if(h)lam*=1+(h-1)*(d/13);if(s==='pothole')lam*=.7+d*.05;const v=Math.round(lam*(.65+r()*.7));day.c[s][D[0]]=v;day.tot+=v})});
+  day.neg=Math.round(day.tot*(.49+r()*.12+(d>9?.04:0)));day.pos=Math.round(day.tot*(.05+r()*.04));H.push(day)}return H})();
+const BASE={};(()=>{let tot=0;HIST.forEach(d=>{SUBS.forEach(s=>DIST.forEach(D=>{const k=s+'|'+D[0];BASE[k]=(BASE[k]||0)+d.c[s][D[0]];tot+=d.c[s][D[0]]}))});for(const k in BASE)BASE[k]/=tot})();
+
+/* --- views --- */
+const VIEWS=[['inbox','📥','Appeals inbox','Входящие обращения','A'],['sla','⏱','SLA control','Контроль сроков','A'],['an','📊','Analytics','Аналитика','B'],['lab','🧪','Classifier lab','Лаборатория модели','B']];
+function nav(){
+  const nNew=S.items.filter(i=>i.st==='new').length,nOv=S.items.filter(i=>i.st!=='closed'&&dueOf(i)<now()).length;
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';if(v[0]==='inbox'&&nNew)x=`<span class="cnt g">${nNew}</span>`;if(v[0]==='sla'&&nOv)x=`<span class="cnt">${nOv}</span>`;
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navA').innerHTML=mk('A');$('#navB').innerHTML=mk('B');
+  $$('.nav').forEach(b=>b.onclick=()=>{go(b.dataset.v);$('#side').classList.remove('open')});
+  const a=acc();$('#mini').innerHTML=`${T('Model accuracy','Точность модели')}: <b>${a.sub.toFixed(1)}%</b><br>${T('Corrections learned','Учтено исправлений')}: <b>${S.stat.fix}</b><br>${T('Open incidents','Открытых инцидентов')}: <b>${S.incs.filter(i=>i.st!=='closed').length}</b>`;
+  const lp=$('#livePill');lp.classList.toggle('off',S.paused);lp.querySelector('span').textContent=S.paused?T('Stream paused','Поток на паузе'):T('Live stream','Поток в реальном времени')+(S.speed>1?' ×'+S.speed:'');
+}
+function go(v){S.view=v;save();render();window.scrollTo(0,0)}
+function render(){
+  const v=VIEWS.find(x=>x[0]===S.view);$('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=T('Regional Management Centre','Центр управления регионом')+' · '+T(v[4]==='A'?'Operations':'Insight','Аналитика');
+  $$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+S.view));
+  ({inbox:rInbox,sla:rSla,an:rAn,lab:rLab})[S.view]();nav();
+}
+/* INBOX */
+function rInbox(){
+  $('#v-inbox').innerHTML=`<div class="kpis" id="ik"></div><div id="alerts"></div>
+  <div class="split"><div class="card" style="padding:0;overflow:hidden">
+    <div class="tb"><button class="btn sm" id="pp"></button><button class="btn sm" id="spd"></button><button class="btn sm gold" id="spike">⚡ ${T('Simulate spike','Всплеск')}</button><input class="input" id="q" placeholder="${T('Search text, case no., street…','Поиск по тексту, номеру, улице…')}" value="${esc(S.q)}"></div>
+    <div class="chips fl" id="flt"></div><div class="feed" id="feed"></div></div>
+  <div><div class="card" id="det"></div><div class="card" id="clus" style="margin-top:14px"></div></div></div>`;
+  $('#pp').onclick=()=>{S.paused=!S.paused;save();rTb();nav()};
+  $('#spd').onclick=()=>{S.speed=S.speed===1?3:S.speed===3?6:1;save();rTb();nav();startStream()};
+  $('#spike').onclick=simSpike;
+  $('#q').oninput=e=>{S.q=e.target.value;rFeed()};
+  if(S.sel==null||!S.items.find(i=>i.id===S.sel)){const lc=[...S.items].reverse().find(i=>i.st==='new'&&pred(i).conf<.6)||S.items[S.items.length-1];S.sel=lc&&lc.id}
+  rTb();rLive();rDet();
+}
+function rTb(){$('#pp').innerHTML=S.paused?'▶ '+T('Resume','Пуск'):'❚❚ '+T('Pause','Пауза');$('#spd').textContent=T('Speed','Скорость')+' ×'+S.speed}
+function rLive(){if(S.view!=='inbox')return;rIK();rAlerts();rFeed();rClus()}
+function rIK(){
+  const a=acc(),open=S.items.filter(i=>i.st!=='closed'),urg=open.filter(i=>lbl(i).urg==='hi'),today=HIST[13].tot+S.live;
+  const avgC=S.items.slice(-40).reduce((s,i)=>s+pred(i).conf,0)/Math.min(40,S.items.length)*100;
+  const dA=S.accH.length>1?a.sub-S.accH[0]:0;
+  $('#ik').innerHTML=`<div class="card kpi"><div class="l">${T('Received today','Поступило сегодня')}</div><div class="v">${today}</div><div class="d">+${S.live} ${T('live in this session','в этой сессии')}</div></div>
+  <div class="card kpi"><div class="l">${T('Open appeals','Открытых')}</div><div class="v">${open.length}</div><div class="d">${S.items.filter(i=>i.st==='new').length} ${T('untriaged','без разбора')}</div></div>
+  <div class="card kpi"><div class="l">${T('Urgent open','Срочных открытых')}</div><div class="v bad-t">${urg.length}</div><div class="d">SLA 4 ${T('h','ч')}</div></div>
+  <div class="card kpi"><div class="l">${T('Model accuracy','Точность модели')}</div><div class="v ok-t">${a.sub.toFixed(1)}%</div><div class="d">${dA?`<span class="${dA>0?'ok-t':'bad-t'}">${dA>0?'▲':'▼'} ${Math.abs(dA).toFixed(1)} pp</span> `:''}${T('sub-topic, 172 labelled','подтема, 172 размеч.')}</div></div>
+  <div class="card kpi"><div class="l">${T('Avg confidence','Ср. уверенность')}</div><div class="v">${avgC.toFixed(0)}%</div><div class="d">${T('last 40 appeals','последние 40')}</div></div>`;
+}
+function rFlt(){
+  const F=[['all','All','Все'],['new','New','Новые'],['low','Low confidence','Неуверенные'],['hi','Urgent','Срочные'],['incident','Incidents','Инциденты'],['closed','Answered','Отвеченные']];
+  $('#flt').innerHTML=F.map(f=>`<button class="chip ${S.flt===f[0]&&!S.cl?'on':''}" data-f="${f[0]}">${T(f[1],f[2])}</button>`).join('')+(S.cl?`<button class="chip on" data-f="clx">${esc(clName(S.cl))} ✕</button>`:'');
+  $$('#flt .chip').forEach(b=>b.onclick=()=>{if(b.dataset.f==='clx')S.cl=null;else{S.flt=b.dataset.f;S.cl=null}S.lim=60;save();rFeed()});
+}
+const clName=k=>{const[s,d]=k.split('|');return T(SUB[s][1],SUB[s][2])+' · '+dName(d)};
+function rFeed(){
+  rFlt();const q=S.q.trim().toLowerCase();
+  let L=[...S.items].reverse().filter(i=>{const p=lbl(i);if(S.cl)return i.st!=='closed'&&p.sub+'|'+p.dist===S.cl;
+    if(S.flt==='new'&&i.st!=='new')return false;if(S.flt==='low'&&(pred(i).conf>=.6||i.lab))return false;if(S.flt==='hi'&&(p.urg!=='hi'||i.st==='closed'))return false;if(S.flt==='incident'&&i.st!=='incident')return false;if(S.flt==='closed'&&i.st!=='closed')return false;
+    return !q||i.x.toLowerCase().includes(q)||cno(i).toLowerCase().includes(q)});
+  const tot=L.length;L=L.slice(0,S.lim);
+  $('#feed').innerHTML=L.length?L.map(i=>{const p=lbl(i),c=CH.find(c=>c[0]===i.ch),tp=topOf(p.sub),st=STN[i.st];const low=!i.lab&&pred(i).conf<.6;
+    return `<div class="ap ${S.sel===i.id?'sel':''} ${i.id===lastNew?'nw':''} ${i.st==='closed'?'closed':''}" data-id="${i.id}"><div class="chn" title="${T(c[2],c[3])}">${c[1]}</div><div style="min-width:0"><div class="tx">${esc(i.x)}</div>
+    <div class="meta"><span class="ud ${p.urg}"></span><span class="pill">${tp.ic} ${T(SUB[p.sub][1],SUB[p.sub][2])}</span>${low?`<span class="pill warn">${Math.round(pred(i).conf*100)}% ?</span>`:''}${i.lab?'<span class="pill ok">✓</span>':''}<span class="pill ${st[2]}">${T(st[0],st[1])}</span><span>${p.dist?'📍 '+dName(p.dist):''}</span><span>· ${ago(i.t)}</span></div></div></div>`}).join('')+(tot>L.length?`<button class="btn sm more" id="more">${T('Show more','Показать ещё')} (${tot-L.length})</button>`:''):`<div class="empty">${T('Nothing matches this filter','Нет обращений под этот фильтр')}</div>`;
+  $$('#feed .ap').forEach(r=>r.onclick=()=>{S.sel=+r.dataset.id;save();$$('#feed .ap').forEach(x=>x.classList.toggle('sel',x===r));rDet();if(innerWidth<1180)$('#det').scrollIntoView({behavior:'smooth',block:'start'})});
+  const m=$('#more');if(m)m.onclick=()=>{S.lim+=60;rFeed()};
+}
+function hl(text,p){return text.split(/([A-Za-zА-Яа-яЁё]+)/).map((w,i)=>{if(i%2===0)return esc(w);const st=stem(w);let c='';
+  if(gzOf(w)>=0)c='hd';else if(UHI[st])c='hu';else if(((wt(st)||{})[p.sub]||0)>=.9&&!STOP.has(st))c='hk';else if(NEG[st])c='hn';else if(POS[st])c='hp';return c?`<mark class="${c}">${esc(w)}</mark>`:esc(w)}).join('')}
+function ents(x){const e=[];let m;
+  if(m=x.match(/ул\.\s*([А-ЯЁ][а-яё]+)(?:,\s*(\d+))?/))e.push(['📍','ул. '+m[1]+(m[2]?', '+m[2]:'')]);else if(m=x.match(/([A-Z][a-z]+) St(?:,\s*(\d+))?/))e.push(['📍',m[1]+' St'+(m[2]?', '+m[2]:'')]);
+  if(m=x.match(/дом[а]?\s+(\d+)/)||x.match(/no\.\s*(\d+)/))if(!/school|polyclinic/i.test(x))e.push(['🏠',T('house ','дом ')+m[1]]);
+  if(m=x.match(/(?:автобус|троллейбус|маршрут)\w*\s*№\s*(\d+)/i)||x.match(/(?:bus|route)\s+(\d+)/i))e.push(['🚌',T('route ','маршрут ')+m[1]]);
+  if(m=x.match(/(?:школ|столов)\w*\s*№\s*(\d+)/i)||x.match(/school no\.\s*(\d+)/i))e.push(['🏫',T('school №','школа №')+m[1]]);
+  if(m=x.match(/поликлиник\w*\s*№\s*(\d+)/i)||x.match(/polyclinic no\.\s*(\d+)/i))e.push(['🏥',T('polyclinic №','поликлиника №')+m[1]]);
+  return e}
+const ACT={pothole:['The section has been added to the patching schedule; a road crew will inspect it within 3 working days.','Участок включён в график ямочного ремонта; дорожная бригада проведёт обследование в течение 3 рабочих дней.'],
+snow:['The maintenance contractor has been ordered to clear snow and grit the area within 24 hours.','Подрядчику выдано предписание: уборка снега и обработка противогололёдными материалами в течение 24 часов.'],
+light:['The street-lighting service will replace the lamps and test the line within 5 days.','Заявка передана в службу наружного освещения; замена ламп и проверка линии — в течение 5 дней.'],
+water:['An emergency water-utility crew has been dispatched; drinking water delivery is arranged until supply is restored.','На место направлена аварийная бригада водоканала; до восстановления подачи организован подвоз питьевой воды.'],
+heat:['The managing company has received an order; the heat supplier will measure the temperature in your flat.','Управляющей компании выдано предписание; теплоснабжающая организация проведёт замер температуры в квартире.'],
+waste:['The regional waste operator must carry out an unscheduled collection; the site is under control.','Региональному оператору направлено требование о внеплановом вывозе; площадка взята на контроль.'],
+queue:['The chief physician will contact you with the nearest available appointment; booking is also open on the portal.','Главному врачу поручено связаться с вами и предложить ближайшую дату приёма; запись также доступна на портале.'],
+drugs:['A request has been sent to the pharmacy network and the authorised warehouse; supply is under Department control.','Запрос направлен в аптечную сеть и на уполномоченный склад; обеспечение препаратом взято на контроль Департамента.'],
+ambul:['An internal review of this call has been opened at the ambulance station; you will be informed of the outcome.','По факту вызова назначена служебная проверка станции скорой помощи; о результатах вам сообщат.'],
+late:['The operator of this route has been required to keep to the timetable; vehicle tracking data is being reviewed.','Перевозчику выставлено требование о соблюдении расписания; анализируются данные спутникового трекинга.'],
+route:['Your proposal is included in the passenger-flow study for the route network review.','Предложение включено в анализ пассажиропотока при пересмотре маршрутной сети.'],
+stop:['The stop has been added to the repair and equipment plan.','Остановочный пункт включён в план ремонта и оснащения.'],
+enrol:['The Education Department will review the refusal and contact you to find a place.','Департамент образования проверит основания отказа и свяжется с вами для подбора места.'],
+build:['The school has been added to the urgent repairs plan; a building survey has been ordered.','Школа включена в план срочного текущего ремонта; назначено обследование здания.'],
+food:['An unscheduled inspection of school catering has been ordered together with the sanitary service.','Назначена внеплановая проверка организации питания совместно с санитарной службой.']};
+function draft(it,tone){const p=lbl(it),ru=it.lang==='ru',L=(e,r)=>ru?r:e,ag=AGN[p.ag][ru?1:0],sb=SUB[p.sub][ru?2:1],e=ents(it.x),addr=e.filter(x=>/[📍🏫🏥🚌]/u.test(x[0])).map(x=>x[1]).join(', ')||L('the address given','указанному адресу'),dd=DI(p.dist),dn=dd>=0?(ru?DIST[dd][1]+' р-н':DIST[dd][2]+' district'):'',due=new Date(dueOf(it)).toLocaleString(ru?'ru-RU':'en-GB',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+  if(p.sent==='pos')return L(`Dear ${it.nm},\n\nthank you for your kind words (appeal ${cno(it)}). Your feedback has been passed to the management of the ${ag}.\n\nRegional Management Centre, Severnaya Governorate`,`Уважаемый(ая) ${it.nm}!\n\nБлагодарим за добрые слова (обращение ${cno(it)}). Ваш отзыв передан руководству: ${ag}.\n\nЦентр управления регионом Северной губернии`);
+  if(tone==='short')return L(`${cno(it)}: received and assigned to the ${ag}. ${ACT[p.sub][0]} Deadline: ${due}.`,`${cno(it)}: принято, передано в ${ag}. ${ACT[p.sub][1]} Срок — до ${due}.`);
+  return L(`Dear ${it.nm},\n\nyour appeal ${cno(it)} of ${fmtT(it.t)} regarding "${sb}" at ${addr}${dn?' ('+dn+')':''} has been registered and assigned to the ${ag}.\n\n${ACT[p.sub][0]}\n\nResponse deadline: ${due}. You can track the status with your case number on the governorate portal.\n\nKind regards,\nRegional Management Centre, Severnaya Governorate`,
+  `Уважаемый(ая) ${it.nm}!\n\nВаше обращение ${cno(it)} от ${fmtT(it.t)} по теме «${sb}» (${addr}${dn?', '+dn:''}) зарегистрировано и направлено: ${ag}.\n\n${ACT[p.sub][1]}\n\nСрок рассмотрения — до ${due}. Статус можно отслеживать по номеру обращения на портале губернии.\n\nС уважением,\nЦентр управления регионом Северной губернии`)}
+function opt(list,v){return list.map(o=>`<option value="${o[0]}" ${o[0]===v?'selected':''}>${o[1]}</option>`).join('')}
+function rDet(){
+  const el=$('#det'),it=S.items.find(i=>i.id===S.sel);if(!it){el.innerHTML=`<div class="empty">${T('Select an appeal on the left','Выберите обращение слева')}</div>`;return}
+  const p=pred(it),L=lbl(it),c=CH.find(c=>c[0]===it.ch),st=STN[it.st],rem=dueOf(it)-now(),E=ents(it.x);
+  const remTxt=it.st==='closed'?(it.ct<=dueOf(it)?T('answered on time','отвечено в срок'):T('answered late','отвечено с опозданием')):rem<0?T('overdue ','просрочено ')+ago(now()+rem):T('due in ','осталось ')+ago(now()-rem);
+  const subOpts=TOP.map(t=>`<optgroup label="${T(t.en,t.ru)}">${SUBS.filter(s=>SUB[s][0]===t.id).map(s=>`<option value="${s}" ${s===L.sub?'selected':''}>${T(SUB[s][1],SUB[s][2])}</option>`).join('')}</optgroup>`).join('');
+  el.innerHTML=`<h3><span class="mono">${cno(it)}</span><span class="pill ${st[2]}">${T(st[0],st[1])}</span><span class="sp"></span><span class="pill ${rem<0&&it.st!=='closed'?'bad':''}">⏱ ${remTxt}</span></h3>
+  <div class="row muted" style="font-size:12.5px">${c[1]} ${T(c[2],c[3])} · ${esc(it.nm)} · ${fmtT(it.t)} · ${it.lang.toUpperCase()}${it.esc?' · <span class="bad-t">'+T('escalated','эскалировано')+'</span>':''}</div>
+  <div class="txt">${hl(it.x,L)}</div>
+  <div class="lg"><mark class="hk">${T('topic keyword','ключевое слово')}</mark><mark class="hu">${T('urgency','срочность')}</mark><mark class="hn">${T('negative','негатив')}</mark><mark class="hp">${T('positive','позитив')}</mark><mark class="hd">${T('location','локация')}</mark></div>
+  ${E.length?`<div class="row" style="margin-top:10px">${E.map(e=>`<span class="ent">${e[0]} ${esc(e[1])}</span>`).join('')}</div>`:''}
+  <div style="margin-top:14px;font-size:12px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.06em">${T('Model output','Ответ модели')} · ${T('topic','тема')} ${Math.round(p.tconf*100)}%</div>
+  ${p.probs.map((q,i)=>`<div class="cb"><span>${topOf(q[0]).ic} ${T(SUB[q[0]][1],SUB[q[0]][2])}</span><div class="bar ${i?'':'g'}"><i style="width:${q[1]*100}%"></i></div><span class="mono">${Math.round(q[1]*100)}%</span></div>`).join('')}
+  ${!p.known?`<div class="warn-t" style="font-size:12.5px;margin-top:4px">${T('Weak signal — please label manually.','Слабый сигнал — разметьте вручную.')}</div>`:''}
+  <div class="lbl"><div class="w2"><label>${T('Sub-topic','Подтема')}</label><select class="input" id="dSub">${subOpts}</select></div>
+   <div><label>${T('Sentiment','Тональность')}</label><select class="input" id="dSe">${opt(Object.keys(SE).map(k=>[k,T(SE[k][0],SE[k][1])]),L.sent)}</select></div>
+   <div><label>${T('Urgency','Срочность')}</label><select class="input" id="dUr">${opt(Object.keys(UR).map(k=>[k,T(UR[k][0],UR[k][1])]),L.urg)}</select></div>
+   <div><label>${T('District','Район')}</label><select class="input" id="dDi">${opt([['',T('— not detected','— не определён')]].concat(DIST.map(d=>[d[0],T(d[2],d[1])])),L.dist||'')}</select></div>
+   <div><label>${T('Agency','Ведомство')}</label><select class="input" id="dAg">${opt(Object.keys(AGN).map(k=>[k,T(AGN[k][0],AGN[k][1])]),L.ag)}</select></div></div>
+  <div class="row"><button class="btn sm pri" id="dOk">✓ ${T('Confirm labels','Подтвердить разметку')}</button>${it.st==='new'?`<button class="btn sm" id="dRt">➜ ${T('Route to agency','Передать в ведомство')}</button>`:''}</div>
+  <div style="border-top:1px solid var(--line);margin:16px 0 12px"></div>
+  ${it.st==='closed'?`<h3>✉ ${T('Reply sent','Ответ отправлен')} <span class="pill ok">${fmtT(it.ct)}</span></h3><div class="txt" style="white-space:pre-wrap;font-size:13px">${esc(it.rep)}</div>`:
+  `<h3>✉ ${T('Reply draft','Черновик ответа')}<span class="sp"></span><button class="btn xs" data-tone="full">${T('Formal','Официально')}</button><button class="btn xs" data-tone="short">${T('Brief','Кратко')}</button></h3>
+  <textarea class="input" id="dRep" placeholder="${T('Press Formal or Brief to generate a draft from the template','Нажмите «Официально» или «Кратко», чтобы собрать черновик по шаблону')}">${esc(S.drafts&&S.drafts[it.id]||'')}</textarea>
+  <div class="row" style="margin-top:10px"><button class="btn sm gold" id="dSend">➤ ${T('Send reply & close','Отправить и закрыть')}</button><span class="muted" style="font-size:12px">${T('Channel','Канал')}: ${T(c[2],c[3])} · ${T('language','язык')} ${it.lang.toUpperCase()}</span></div>`}`;
+  $('#dSub').onchange=e=>{$('#dAg').value=agOf(e.target.value)};
+  $('#dOk').onclick=()=>{const sub=$('#dSub').value,a0=acc().sub;it.lab={sub,sent:$('#dSe').value,urg:$('#dUr').value,dist:$('#dDi').value||null,ag:$('#dAg').value};
+    if(sub!==p.sub){const n=learn(it.x,p.sub,sub);pc={};const a1=acc().sub;S.stat.fix++;S.accH.push(a1);const d=a1-a0;
+      toast(`🧠 ${T('Model updated','Модель обновлена')}: ${n} ${T('features re-weighted','признаков перевзвешено')}. ${T('Accuracy','Точность')} ${a0.toFixed(1)}% → <b class="${d>=0?'ok-t':'bad-t'}">${a1.toFixed(1)}%</b>`,'gold')}
+    else{S.stat.ok++;toast(T('Labels confirmed','Разметка подтверждена'))}
+    save();rDet();rLive();nav()};
+  const rt=$('#dRt');if(rt)rt.onclick=()=>{it.st='routed';save();toast(T('Routed to ','Передано: ')+T(AGN[lbl(it).ag][0],AGN[lbl(it).ag][1]));rDet();rLive();nav()};
+  $$('[data-tone]',el).forEach(b=>b.onclick=()=>{const ta=$('#dRep');ta.value='';const txt=draft(it,b.dataset.tone);let i=0;const iv=setInterval(()=>{i+=Math.ceil(txt.length/40);ta.value=txt.slice(0,i);if(i>=txt.length){clearInterval(iv);(S.drafts=S.drafts||{})[it.id]=txt;save()}},25)});
+  const ta=$('#dRep');if(ta)ta.oninput=()=>{(S.drafts=S.drafts||{})[it.id]=ta.value;save()};
+  const sd=$('#dSend');if(sd)sd.onclick=()=>{const v=$('#dRep').value.trim();if(v.length<20){toast(T('Generate or write a reply first','Сначала сформируйте или напишите ответ'),'bad');return}
+    sd.disabled=true;sd.innerHTML='<span class="live"><i></i></span> '+T('Sending…','Отправка…');setTimeout(()=>{it.st='closed';it.rep=v;it.ct=now();if(S.drafts)delete S.drafts[it.id];save();
+      toast('✓ '+T('Reply sent via ','Ответ отправлен: ')+T(c[2],c[3])+' · '+cno(it));rDet();rLive();nav()},700)};
+}
+function rClus(){
+  const g={};S.items.forEach(i=>{if(i.st==='closed')return;const p=lbl(i);if(!p.dist)return;const k=p.sub+'|'+p.dist;(g[k]=g[k]||[]).push(i)});
+  const L=Object.entries(g).filter(e=>e[1].length>=2).sort((a,b)=>b[1].length-a[1].length).slice(0,7);
+  $('#clus').innerHTML=`<h3>🧩 ${T('Open clusters','Открытые кластеры')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${T('same problem · same district','одна проблема · один район')}</span></h3>`+(L.length?L.map(([k,a])=>{const b=BASE[k]*25;
+    return `<div class="cl" data-k="${k}"><div>${topOf(k.split('|')[0]).ic} <b>${esc(clName(k))}</b><small>${T('latest','последнее')} ${ago(Math.max(...a.map(i=>i.t)))} · ${T('expected','ожидаемо')} ≈${b.toFixed(1)}</small></div><span class="cnum ${a.length>=4?'warn-t':''}">${a.length}</span></div>`}).join(''):`<div class="empty">${T('No clusters yet','Кластеров пока нет')}</div>`);
+  $$('#clus .cl').forEach(c=>c.onclick=()=>{S.cl=c.dataset.k;S.lim=60;save();rFeed();$('#feed').scrollTop=0});
+}
+function rAlerts(){
+  const A=Object.values(S.alerts).filter(a=>a.st==='new'),I=S.incs.filter(i=>i.st!=='closed'||now()-i.ct<6e5);
+  const STG=[['Opened','Открыт'],['Crew dispatched','Бригада выехала'],['Repair in progress','Идёт ремонт'],['Resolved','Устранено']];
+  $('#alerts').innerHTML=A.map(a=>`<div class="card alert ${a.fresh?'new':''}"><div class="row"><span class="ttl">⚡ ${T('Emerging issue','Новая проблема')}: ${esc(clName(a.k))}</span><span class="sp" style="flex:1"></span><span class="pill gold">×${(a.n/Math.max(a.b,.4)).toFixed(0)} ${T('vs baseline','к норме')}</span></div>
+    <div class="muted" style="font-size:13px;margin:6px 0 10px">${a.n} ${T('appeals in the last 25 (expected','обращений из последних 25 (ожидалось')} ≈${a.b.toFixed(1)}). ${T('Detected','Обнаружено')} ${ago(a.t)} ${T('ago','назад')}.</div>
+    <div class="row"><button class="btn sm pri" data-inc="${a.k}">🚨 ${T('Open incident','Открыть инцидент')}</button><button class="btn sm" data-view="${a.k}">${T('Show appeals','Показать обращения')}</button><button class="btn sm" data-dis="${a.k}">${T('Dismiss','Отклонить')}</button></div></div>`).join('')+
+  I.map(i=>{const n=S.items.filter(x=>x.inc===i.id).length,done=i.st==='closed';return `<div class="card alert ${done?'inc done':'inc'}"><div class="row"><span class="ttl">${done?'✅':'🚨'} ${i.id} · ${esc(clName(i.k))}</span><span class="sp" style="flex:1"></span><span class="pill ${done?'ok':'bad'}">${n} ${T('linked appeals','связанных обращений')}</span></div>
+    <div class="stg">${STG.map((_,j)=>`<span class="${j<=i.stage?'on':''}"></span>`).join('')}</div><div class="stgl">${STG.map(s=>`<span>${T(s[0],s[1])}</span>`).join('')}</div>
+    <div class="row" style="margin-top:10px">${done?`<span class="ok-t" style="font-size:13px;font-weight:600">${T('Closed — all residents notified','Закрыт — все жители оповещены')} · ${fmtT(i.ct)}</span>`:i.stage<3?`<button class="btn sm pri" data-adv="${i.id}">→ ${T(STG[i.stage+1][0],STG[i.stage+1][1])}</button><span class="muted" style="font-size:12px">${T('New matching appeals are linked automatically','Новые похожие обращения привязываются автоматически')}</span>`:`<button class="btn sm gold" data-res="${i.id}">📣 ${T('Notify all','Оповестить всех')} ${n} ${T('residents & close','жителей и закрыть')}</button>`}</div></div>`}).join('');
+  A.forEach(a=>a.fresh=false);
+  $$('[data-inc]').forEach(b=>b.onclick=()=>{const k=b.dataset.inc,id='INC-'+(2051+S.incs.length);S.alerts[k].st='inc';S.incs.push({id,k,stage:0,st:'open',t:now()});
+    let n=0;S.items.forEach(x=>{const p=lbl(x);if(x.st!=='closed'&&p.sub+'|'+p.dist===k){x.st='incident';x.inc=id;n++}});save();toast(`🚨 ${id}: ${n} ${T('appeals linked, duty dispatcher notified','обращений связано, дежурный диспетчер оповещён')}`,'bad');rLive();nav()});
+  $$('[data-view]').forEach(b=>b.onclick=()=>{S.cl=b.dataset.view;save();rFeed()});
+  $$('[data-dis]').forEach(b=>b.onclick=()=>{S.alerts[b.dataset.dis].st='dis';save();rAlerts()});
+  $$('[data-adv]').forEach(b=>b.onclick=()=>{const i=S.incs.find(x=>x.id===b.dataset.adv);i.stage++;save();toast(i.id+': '+T(STG[i.stage][0],STG[i.stage][1]));rAlerts()});
+  $$('[data-res]').forEach(b=>b.onclick=()=>{const i=S.incs.find(x=>x.id===b.dataset.res);b.disabled=true;b.textContent=T('Sending notifications…','Рассылка уведомлений…');
+    setTimeout(()=>{let n=0;S.items.forEach(x=>{if(x.inc===i.id&&x.st!=='closed'){x.st='closed';x.ct=now();x.rep=x.lang==='ru'?`Уважаемый(ая) ${x.nm}! Авария, о которой вы сообщили (${cno(x)}), устранена. Инцидент ${i.id} закрыт. Спасибо за обращение.`:`Dear ${x.nm}, the failure you reported (${cno(x)}) has been fixed. Incident ${i.id} is closed. Thank you.`;n++}});
+      i.st='closed';i.ct=now();i.stage=3;save();toast(`✅ ${i.id} ${T('closed','закрыт')}. ${n} ${T('residents notified via their own channel','жителей оповещены по своему каналу')}`,'gold');rLive();rDet();nav()},900)});
+}
+/* stream */
+let lastNew=null,timer=null;
+function push(p){const it=mkItem(p,now());S.items.push(it);S.live++;lastNew=it.id;const k=lbl(it).sub+'|'+lbl(it).dist;const inc=S.incs.find(i=>i.st!=='closed'&&i.k===k);if(inc){it.st='incident';it.inc=inc.id}
+  if(S.items.length>420){const ix=S.items.findIndex(i=>i.st==='closed');if(ix>=0)S.items.splice(ix,1)}return it}
+function spikeCheck(){const win=S.items.slice(-25),cnt={};win.forEach(i=>{if(i.st==='closed')return;const p=lbl(i);if(!p.dist)return;const k=p.sub+'|'+p.dist;cnt[k]=(cnt[k]||0)+1});
+  for(const k in cnt){const b=(BASE[k]||0)*25;if(cnt[k]>=4&&cnt[k]>3*Math.max(b,.4)){const a=S.alerts[k];if(!a||(a.st==='dis'&&cnt[k]>=a.n+3)){S.alerts[k]={k,n:cnt[k],b,t:now(),st:'new',fresh:true};toast('⚡ '+T('Emerging issue detected: ','Обнаружена новая проблема: ')+esc(clName(k)),'gold')}else if(a.st==='new')a.n=Math.max(a.n,cnt[k])}}}
+function tick(){if(S.paused)return;let p;const L=S.live;const bi=[6,7,9,10,12,13,15].indexOf(L);
+  if(bi>=0&&!S.burstDone){const b=BURST[bi];p={x:b[1],lang:b[0],sub:'water',d:'zar',dt:'zar',ch:['phone','web','social'][bi%3],nm:NM[b[0]][(bi*3)%NM[b[0]].length]};if(bi===6)S.burstDone=true}
+  else{p=POOL[S.ptr%POOL.length];S.ptr++}
+  push(p);spikeCheck();save();rLive();nav()}
+function startStream(){clearInterval(timer);timer=setInterval(tick,Math.round(2200/S.speed))}
+const SPK=[['heat','sev'],['waste','prm'],['light','les'],['late','kam'],['pothole','pri']];
+function simSpike(){const[s,d]=SPK[S.sim%SPK.length];S.sim++;const r=rng(900+S.sim),di=DI(d),tps=TPL.filter(t=>t[0]===s);let k=0;
+  toast('⚡ '+T('Injecting a burst: ','Имитация всплеска: ')+clName(s+'|'+d),'gold');
+  const iv=setInterval(()=>{const tp=tps[k%tps.length],p=fill(tp,di,r);if(!/\{st\}|\{d\}/.test(tp[2])&&!/р-н\)|district\)$/.test(p.x))p.x+=tp[1]==='ru'?` (${DIST[di][1]} р-н)`:` (${DIST[di][2]} district)`;
+    push(p);k++;if(k>=5){clearInterval(iv);spikeCheck()}save();rLive();nav()},300)}
+/* SLA */
+function rSla(){
+  const open=S.items.filter(i=>i.st!=='closed').sort((a,b)=>dueOf(a)-dueOf(b)),cl=S.items.filter(i=>i.st==='closed'),ot=cl.filter(i=>i.ct<=dueOf(i)).length,ov=open.filter(i=>dueOf(i)<now()),soon=open.filter(i=>{const r=dueOf(i)-now();return r>=0&&r<2*36e5});
+  const avg=cl.length?cl.reduce((s,i)=>s+(i.ct-i.t),0)/cl.length/36e5:0;
+  const ags=Object.keys(AGN).map(k=>{const a=S.items.filter(i=>lbl(i).ag===k),c=a.filter(i=>i.st==='closed'),o=c.filter(i=>i.ct<=dueOf(i)).length+a.filter(i=>i.st!=='closed'&&dueOf(i)>=now()).length;return[k,a.length,a.length?o/a.length*100:100]});
+  const m=cssv('--mal'),am=cssv('--amber'),rd=cssv('--red'),tx=cssv('--text'),mu=cssv('--muted'),ln=cssv('--line');
+  const W=560,rh=30;let sv=`<svg viewBox="0 0 ${W} ${ags.length*rh+6}">`;ags.forEach((g,i)=>{const y=i*rh+4,w=(W-260)*g[2]/100,col=g[2]>=90?m:g[2]>=75?am:rd;
+    sv+=`<text x="0" y="${y+15}" font-size="11.5" fill="${tx}">${esc(T(AGN[g[0]][0],AGN[g[0]][1]).slice(0,30))}</text><rect x="210" y="${y+3}" width="${W-260}" height="16" rx="5" fill="${ln}"/><rect x="210" y="${y+3}" width="${w}" height="16" rx="5" fill="${col}"/><text x="${W-4}" y="${y+15}" font-size="11.5" fill="${mu}" text-anchor="end">${g[2].toFixed(0)}% · ${g[1]}</text>`});sv+='</svg>';
+  $('#v-sla').innerHTML=`<div class="kpis"><div class="card kpi"><div class="l">${T('Answered on time','Отвечено в срок')}</div><div class="v ${cl.length&&ot/cl.length<.85?'warn-t':'ok-t'}">${cl.length?(ot/cl.length*100).toFixed(1):'—'}%</div><div class="d">${ot} / ${cl.length}</div></div>
+   <div class="card kpi"><div class="l">${T('Overdue now','Просрочено сейчас')}</div><div class="v bad-t">${ov.length}</div></div><div class="card kpi"><div class="l">${T('Due within 2 h','Истекает за 2 ч')}</div><div class="v warn-t">${soon.length}</div></div>
+   <div class="card kpi"><div class="l">${T('Avg time to answer','Ср. время ответа')}</div><div class="v">${avg.toFixed(1)} ${T('h','ч')}</div></div><div class="card kpi"><div class="l">${T('SLA policy','Нормативы')}</div><div class="v" style="font-size:15px;margin-top:8px">4 / 24 / 72 ${T('h','ч')}</div><div class="d">${T('high / medium / low','высокая / средняя / низкая')}</div></div></div>
+  <div class="card" style="margin-bottom:14px"><div class="row"><b>🕒 ${T('Demo clock','Часы демо')}:</b><span class="mono">${fmtT(now())}</span>${S.off?`<span class="pill gold">+${Math.round(S.off/36e5)} ${T('h','ч')}</span>`:''}<span style="flex:1"></span><button class="btn sm" data-off="1">+1 ${T('h','ч')}</button><button class="btn sm" data-off="6">+6 ${T('h','ч')}</button><button class="btn sm" data-off="24">+24 ${T('h','ч')}</button><button class="btn sm" data-off="0">${T('Real time','Реальное время')}</button></div></div>
+  <div class="grid2"><div class="card"><h3>${T('Open appeals by deadline','Открытые по сроку')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">${open.length}</span></h3><div class="tw"><table><thead><tr><th>${T('Case','Номер')}</th><th>${T('Problem','Проблема')}</th><th>${T('Urgency','Срочн.')}</th><th>${T('Remaining','Осталось')}</th><th></th></tr></thead><tbody>
+  ${open.slice(0,40).map(i=>{const p=lbl(i),d=dueOf(i),r=d-now(),fr=Math.max(0,Math.min(1,r/(SLA[p.urg]*36e5)));return `<tr class="clk" data-open="${i.id}"><td class="mono">${cno(i)}</td><td>${topOf(p.sub).ic} ${T(SUB[p.sub][1],SUB[p.sub][2])}</td><td><span class="pill ${UR[p.urg][2]}">${T(UR[p.urg][0],UR[p.urg][1])}</span></td>
+   <td style="min-width:140px"><div class="row" style="flex-wrap:nowrap"><div class="bar ${r<0?'r':fr<.25?'g':''}" style="flex:1;min-width:60px"><i style="width:${r<0?100:fr*100}%"></i></div><span class="mono ${r<0?'bad-t':''}" style="font-size:11.5px">${r<0?'−':''}${ago(now()-Math.abs(r))}</span></div></td>
+   <td>${i.esc?`<span class="pill bad">${T('escalated','эскалир.')}</span>`:r<36e5*2?`<button class="btn xs" data-esc="${i.id}">↑ ${T('Escalate','Эскалировать')}</button>`:''}</td></tr>`}).join('')}</tbody></table></div></div>
+  <div class="card chart"><h3>${T('SLA compliance by agency','Соблюдение сроков по ведомствам')}</h3>${sv}<p class="muted" style="font-size:12px;margin:8px 0 0">${T('Use the demo clock to fast-forward and watch deadlines expire.','Переведите часы демо вперёд — и увидите, как истекают сроки.')}</p></div></div>`;
+  $$('[data-off]').forEach(b=>b.onclick=()=>{const v=+b.dataset.off;S.off=v?S.off+v*36e5:0;save();rSla();nav()});
+  $$('[data-esc]').forEach(b=>b.onclick=e=>{e.stopPropagation();const i=S.items.find(x=>x.id===+b.dataset.esc);i.esc=true;save();toast('↑ '+cno(i)+' '+T('escalated to deputy governor\'s office','эскалировано в аппарат вице-губернатора'),'bad');rSla()});
+  $$('[data-open]').forEach(r=>r.onclick=()=>{S.sel=+r.dataset.open;S.flt='all';S.cl=null;go('inbox')});
+}
+/* ANALYTICS */
+const hx=c=>{c=c.replace('#','');if(c.length===3)c=[...c].map(x=>x+x).join('');return[0,2,4].map(i=>parseInt(c.slice(i,i+2),16))};
+const mixc=(a,b,t)=>{const A=hx(a),B=hx(b);return'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')+')'};
+const ramp=t=>{const p=cssv('--panel2'),g=cssv('--gold'),r=cssv('--red');return t<.5?mixc(p,g,t*2):mixc(g,r,(t-.5)*2)};
+const POLY=(()=>{const r=rng(5),P=[];for(let y=0;y<4;y++){P.push([]);for(let x=0;x<4;x++)P[y].push([x*100+(x>0&&x<3?(r()-.5)*40:0)+10,y*72+(y>0&&y<3?(r()-.5)*30:0)+10])}
+  const ord=['sev','les','sos','zar','cen','ozr','prm','kam','pri'],o={};ord.forEach((id,i)=>{const y=Math.floor(i/3),x=i%3;o[id]=[P[y][x],P[y][x+1],P[y+1][x+1],P[y+1][x]]});return o})();
+function dayCounts(d){const day=HIST[d],o={};SUBS.forEach(s=>DIST.forEach(D=>{o[s+'|'+D[0]]=day.c[s][D[0]]}));if(d===13)S.items.forEach(i=>{if(now()-i.t<864e5){const p=lbl(i),k=p.sub+'|'+(p.dist||i.dt);o[k]=(o[k]||0)+1}});return o}
+function rAn(){
+  const tx=cssv('--text'),mu=cssv('--muted'),ln=cssv('--line'),rd=cssv('--red'),m3=cssv('--mal3'),bg=cssv('--bg2');
+  const days=HIST.map((_,d)=>dayCounts(d)),lab=d=>{const x=new Date(now()-(13-d)*864e5);return x.toLocaleDateString(PT.lang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short'})};
+  const byT=days.map(o=>TOP.map(t=>Object.entries(o).filter(([k])=>SUB[k.split('|')[0]][0]===t.id).reduce((a,[,v])=>a+v,0)));
+  const mxT=Math.max(...byT.map(a=>a.reduce((x,y)=>x+y,0)));const W=640,H=230,pl=34,bw=(W-pl)/14;
+  let s1=`<svg viewBox="0 0 ${W} ${H}">`;for(let i=0;i<=3;i++){const y=10+i*(H-40)/3;s1+=`<line x1="${pl}" x2="${W}" y1="${y}" y2="${y}" stroke="${ln}"/><text x="${pl-5}" y="${y+4}" font-size="10" fill="${mu}" text-anchor="end">${Math.round(mxT*(1-i/3))}</text>`}
+  byT.forEach((a,d)=>{let y=H-30;a.forEach((v,j)=>{const h=v/mxT*(H-40);y-=h;s1+=`<rect x="${pl+d*bw+3}" y="${y}" width="${bw-6}" height="${h}" fill="${cssv(TOP[j].c)}" opacity="${S.anT==='all'||S.anT===TOP[j].id?.9:.15}"><title>${T(TOP[j].en,TOP[j].ru)}: ${v}</title></rect>`});if(d%2===1||bw>40)s1+=`<text x="${pl+d*bw+bw/2}" y="${H-12}" font-size="9.5" fill="${mu}" text-anchor="middle">${lab(d)}</text>`});s1+='</svg>';
+  const inT=k=>S.anT==='all'||SUB[k.split('|')[0]][0]===S.anT;
+  const dv={};DIST.forEach(D=>dv[D[0]]=0);days.forEach(o=>{for(const k in o)if(inT(k))dv[k.split('|')[1]]+=o[k]});
+  const per=DIST.map(D=>[D[0],dv[D[0]]/D[3]*10]),mxP=Math.max(...per.map(p=>p[1])),mnP=Math.min(...per.map(p=>p[1]));
+  let s2=`<svg viewBox="0 0 320 236">`;per.forEach(([id,v])=>{const pts=POLY[id],t=(v-mnP)/Math.max(mxP-mnP,1e-6),cx=pts.reduce((a,p)=>a+p[0],0)/4,cy=pts.reduce((a,p)=>a+p[1],0)/4;
+    s2+=`<path data-d="${id}" d="M${pts.map(p=>p.join(',')).join('L')}Z" fill="${ramp(t)}" stroke="${S.anD===id?tx:bg}" stroke-width="${S.anD===id?3:2}" stroke-linejoin="round"><title>${dName(id)}: ${v.toFixed(1)}</title></path><text x="${cx}" y="${cy-2}" font-size="10.5" font-weight="700" fill="${tx}" text-anchor="middle" pointer-events="none">${dName(id)}</text><text x="${cx}" y="${cy+12}" font-size="10" fill="${tx}" opacity=".8" text-anchor="middle" pointer-events="none">${v.toFixed(0)}</text>`});s2+='</svg>';
+  const dSel=S.anD,dSub=SUBS.map(s=>[s,days.reduce((a,o)=>a+(o[s+'|'+dSel]||0),0)]).filter(x=>S.anT==='all'||SUB[x[0]][0]===S.anT).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const sn=HIST.map((d,i)=>{let n=d.neg,p=d.pos,t=d.tot;if(i===13)S.items.forEach(x=>{if(now()-x.t<864e5){const s=lbl(x).sent;t++;if(s==='neg')n++;if(s==='pos')p++}});return[n/t*100,p/t*100]});
+  const W3=640,H3=200;const X=i=>40+i*(W3-50)/13,Y=v=>10+(1-v/80)*(H3-40);let s3=`<svg viewBox="0 0 ${W3} ${H3}">`;[0,20,40,60,80].forEach(v=>{s3+=`<line x1="40" x2="${W3}" y1="${Y(v)}" y2="${Y(v)}" stroke="${ln}"/><text x="34" y="${Y(v)+4}" font-size="10" fill="${mu}" text-anchor="end">${v}%</text>`});
+  [[0,rd],[1,m3]].forEach(([j,c])=>{s3+=`<path d="${sn.map((v,i)=>(i?'L':'M')+X(i)+','+Y(v[j])).join('')}" fill="none" stroke="${c}" stroke-width="2.5" stroke-linejoin="round"/>`+sn.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v[j])}" r="${i===13?4.5:2.5}" fill="${c}"><title>${v[j].toFixed(1)}%</title></circle>`).join('')});
+  sn.forEach((_,i)=>{if(i%3===1)s3+=`<text x="${X(i)}" y="${H3-12}" font-size="9.5" fill="${mu}" text-anchor="middle">${lab(i)}</text>`});s3+='</svg>';
+  const cur={},prv={};days.forEach((o,d)=>{for(const k in o){if(!inT(k))continue;if(d>=7)cur[k]=(cur[k]||0)+o[k];else prv[k]=(prv[k]||0)+o[k]}});
+  const top=Object.keys(cur).sort((a,b)=>cur[b]-cur[a]).slice(0,10),mxC=cur[top[0]]||1;
+  $('#v-an').innerHTML=`<div class="chips" style="margin-bottom:14px" id="anT">${[['all','All topics','Все темы','📋']].concat(TOP.map(t=>[t.id,t.en,t.ru,t.ic])).map(t=>`<button class="chip ${S.anT===t[0]?'on':''}" data-t="${t[0]}">${t[3]} ${T(t[1],t[2])}</button>`).join('')}</div>
+  <div class="grid2"><div class="card chart"><h3>${T('Appeals by topic · 14 days','Обращения по темам · 14 дней')}</h3>${s1}<div class="legend" style="margin-top:6px">${TOP.map(t=>`<span><i style="background:${cssv(t.c)}"></i>${T(t.en,t.ru)}</span>`).join('')}</div></div>
+  <div class="card map"><h3>${T('Districts · appeals per 10k residents','Районы · обращений на 10 тыс. жителей')}</h3>${s2}
+   <div class="row" style="margin-top:8px;font-size:12.5px"><b>${dName(dSel)}</b><span class="muted">${T('top problems','главные проблемы')}:</span>${dSub.map(x=>`<span class="pill">${topOf(x[0]).ic} ${T(SUB[x[0]][1],SUB[x[0]][2])} · ${x[1]}</span>`).join('')}</div></div>
+  <div class="card chart"><h3>${T('Sentiment trend','Динамика тональности')}<span class="sp"></span><span class="legend"><span><i style="background:${rd}"></i>${T('negative','негатив')}</span><span><i style="background:${m3}"></i>${T('positive','позитив')}</span></span></h3>${s3}</div>
+  <div class="card"><h3>${T('Top problems · last 7 days','Топ проблем · 7 дней')}</h3><div class="tw"><table><thead><tr><th>#</th><th>${T('Problem · district','Проблема · район')}</th><th>${T('Appeals','Обращ.')}</th><th>Δ</th></tr></thead><tbody>
+  ${top.map((k,i)=>{const d=prv[k]?(cur[k]-prv[k])/prv[k]*100:100;return `<tr><td class="mono">${i+1}</td><td>${topOf(k.split('|')[0]).ic} ${esc(clName(k))}<div class="bar ${i<3?'g':''}" style="margin-top:4px;max-width:220px"><i style="width:${cur[k]/mxC*100}%"></i></div></td><td class="mono">${cur[k]}</td><td class="mono ${d>15?'bad-t':d<-10?'ok-t':''}">${d>0?'▲':'▼'} ${Math.abs(d).toFixed(0)}%</td></tr>`}).join('')}</tbody></table></div></div></div>`;
+  $$('#anT .chip').forEach(b=>b.onclick=()=>{S.anT=b.dataset.t;save();rAn()});
+  $$('#v-an path[data-d]').forEach(p=>p.onclick=()=>{S.anD=p.dataset.d;save();rAn()});
+}
+/* LAB */
+const EX=[['ru','Третий день нет горячей воды и отопления на ул. Полярная, 12, дети мёрзнут, управляющая компания трубку не берёт!'],['ru','Автобус №27 снова не пришёл, на остановке ул. Литейная нет даже расписания.'],['en','Huge potholes on Granitnaya St again, my car tyre burst. This is dangerous!'],['ru','Огромное спасибо врачам скорой помощи за спасение мамы!'],['en','The canteen at School No. 12 serves cold food and the roof in the gym is leaking.'],['ru','Почему в Сосновке до сих пор не вывозят мусор? Свалка уже у детской площадки.']];
+function rLab(){
+  const a=acc(),voc=new Set(Object.keys(W).concat(Object.keys(S.dw))).size,mxc=Math.max(...a.cm.flat());
+  const spk=S.accH.slice(-20),sMin=Math.min(...spk)-1,sMax=Math.max(...spk)+1;const sp=spk.length>1?`<svg viewBox="0 0 200 40" style="width:100%;height:40px"><path d="${spk.map((v,i)=>(i?'L':'M')+(i/(spk.length-1)*196+2)+','+(36-(v-sMin)/(sMax-sMin)*32)).join('')}" fill="none" stroke="${cssv('--mal3')}" stroke-width="2"/></svg>`:`<div class="muted" style="font-size:12px">${T('Correct a label in the Inbox to see the learning curve.','Исправьте разметку во Входящих — появится кривая обучения.')}</div>`;
+  $('#v-lab').innerHTML=`<div class="grid2"><div class="card"><h3>🧪 ${T('Paste any appeal','Вставьте любое обращение')}<span class="sp"></span><span class="muted" style="font-size:12px;font-weight:500">RU / EN</span></h3>
+   <textarea class="input" id="lt" data-en-ph="" placeholder="${T('Type or paste a citizen appeal…','Введите или вставьте текст обращения…')}">${esc(S.lab)}</textarea>
+   <div class="chips" style="margin-top:8px">${EX.map((e,i)=>`<button class="chip" data-ex="${i}">${e[0].toUpperCase()} · ${esc(e[1].slice(0,26))}…</button>`).join('')}</div><div id="lo"></div></div>
+  <div class="card"><h3>📇 ${T('Model card','Карточка модели')}</h3>
+   <div class="out"><div><small>${T('Sub-topic acc.','Точн. подтемы')}</small><b class="ok-t">${a.sub.toFixed(1)}%</b></div><div><small>${T('Topic acc.','Точн. темы')}</small><b>${a.top.toFixed(1)}%</b></div><div><small>${T('Vocabulary','Словарь')}</small><b>${voc} ${T('stems','основ')}</b></div><div><small>${T('Corrections','Исправлений')}</small><b>${S.stat.fix}</b></div><div><small>${T('Confirmed','Подтверждено')}</small><b>${S.stat.ok}</b></div><div><small>${T('Latency','Задержка')}</small><b>&lt; 1 ms</b></div></div>
+   <div style="font-size:12px;color:var(--muted);margin-bottom:4px">${T('Accuracy after each correction','Точность после каждого исправления')}</div>${sp}
+   <div style="font-size:12px;color:var(--muted);margin:12px 0 6px">${T('Confusion matrix (topic), rows = truth','Матрица ошибок (тема), строки — эталон')}</div>
+   <div class="cm"><div></div>${TOP.map(t=>`<div class="h">${t.ic}</div>`).join('')}${a.cm.map((r,i)=>`<div class="h" style="text-align:left">${TOP[i].ic} ${T(TOP[i].en,TOP[i].ru)}</div>`+r.map((v,j)=>`<div style="background:${i===j?`color-mix(in srgb,var(--mal) ${Math.round(v/mxc*70)+8}%,transparent)`:v?`color-mix(in srgb,var(--red) ${Math.min(60,v*12)}%,transparent)`:'var(--bg2)'}">${v}</div>`).join('')).join('')}</div>
+   <p class="muted" style="font-size:12px;margin:12px 0">${T('Fast pre-tagger: weighted bilingual lexicon with stemming and softmax confidence; learns online from operator corrections (+0.5 to the right class, −0.3 to the wrong one). Reply drafts are template-filled with extracted entities; the full system adds an LLM for free-form drafting.','Быстрый предразметчик: взвешенный двуязычный словарь со стеммингом и softmax-уверенностью; дообучается онлайн на исправлениях оператора (+0,5 верному классу, −0,3 ошибочному). Черновики ответов собираются из шаблонов с извлечёнными сущностями; в полной системе к этому добавляется LLM для свободного текста.')}</p>
+   <button class="btn sm" id="rstM">↺ ${T('Reset learned weights','Сбросить обучение')}</button></div></div>`;
+  const lt=$('#lt');let db;lt.oninput=()=>{S.lab=lt.value;clearTimeout(db);db=setTimeout(()=>{save();labOut()},120)};
+  $$('[data-ex]').forEach(b=>b.onclick=()=>{lt.value=S.lab=EX[+b.dataset.ex][1];save();labOut()});
+  $('#rstM').onclick=()=>{S.dw={};S.model++;S.stat.fix=0;S.accH=[acc().sub];pc={};save();toast(T('Model reset to baseline weights','Модель сброшена к базовым весам'));rLab();nav()};
+  labOut();
+}
+function labOut(){
+  const el=$('#lo'),x=S.lab.trim();if(!x){el.innerHTML=`<div class="empty">${T('Pick an example or start typing — classification is instant.','Выберите пример или начните печатать — классификация мгновенная.')}</div>`;return}
+  const p=classify(x),E=ents(x);
+  el.innerHTML=`<div class="out"><div><small>${T('Topic','Тема')}</small><b>${topOf(p.sub).ic} ${T(topOf(p.sub).en,topOf(p.sub).ru)}</b><div class="muted mono" style="font-size:11px">${Math.round(p.tconf*100)}%</div></div><div><small>${T('Sub-topic','Подтема')}</small><b>${p.known?T(SUB[p.sub][1],SUB[p.sub][2]):'—'}</b><div class="muted mono" style="font-size:11px">${Math.round(p.conf*100)}%</div></div>
+   <div><small>${T('Sentiment','Тональность')}</small><b class="${p.sent==='neg'?'bad-t':p.sent==='pos'?'ok-t':''}">${T(SE[p.sent][0],SE[p.sent][1])}</b></div><div><small>${T('Urgency','Срочность')}</small><b class="${p.urg==='hi'?'bad-t':p.urg==='md'?'warn-t':''}">${T(UR[p.urg][0],UR[p.urg][1])}</b></div>
+   <div><small>${T('District','Район')}</small><b>${dName(p.dist)}</b></div><div><small>${T('Route to','Ведомство')}</small><b style="font-size:12.5px">${T(AGN[p.ag][0],AGN[p.ag][1])}</b></div></div>
+   ${!p.known?`<div class="warn-t" style="font-size:13px">${T('Not enough signal for a confident topic — a human should label this one.','Недостаточно сигнала — это обращение лучше разметить человеку.')}</div>`:''}
+   <div class="txt">${hl(x,p)}</div>
+   ${E.length?`<div class="row">${E.map(e=>`<span class="ent">${e[0]} ${esc(e[1])}</span>`).join('')}</div>`:''}
+   ${p.probs.map((q,i)=>`<div class="cb"><span>${topOf(q[0]).ic} ${T(SUB[q[0]][1],SUB[q[0]][2])}</span><div class="bar ${i?'':'g'}"><i style="width:${q[1]*100}%"></i></div><span class="mono">${Math.round(q[1]*100)}%</span></div>`).join('')}
+   <div style="font-size:12px;color:var(--muted);margin:10px 0 6px">${T('Why: strongest features for the predicted class','Почему: самые весомые признаки для класса')}</div>
+   <div class="tok">${p.contrib.length?p.contrib.slice(0,10).map(c=>`<span>${esc(c[0])} <b>+${c[1].toFixed(1)}</b></span>`).join(''):'<span>—</span>'}</div>
+   <div class="row" style="margin-top:12px"><span class="muted" style="font-size:12.5px">${T('Wrong? Teach it:','Ошибка? Научите:')}</span><select class="input" id="lTeach" style="width:auto;max-width:100%;padding:6px 9px;font-size:13px">${SUBS.map(s=>`<option value="${s}" ${s===p.sub?'selected':''}>${T(SUB[s][1],SUB[s][2])}</option>`).join('')}</select><button class="btn sm pri" id="lGo">${T('Learn','Обучить')}</button></div>`;
+  $('#lGo').onclick=()=>{const to=$('#lTeach').value;if(to===p.sub&&p.known){toast(T('Already predicted correctly','Модель уже отвечает верно'));return}const a0=acc().sub,n=learn(x,p.known?p.sub:null,to);pc={};const a1=acc().sub;S.stat.fix++;S.accH.push(a1);save();
+    toast(`🧠 ${n} ${T('features updated','признаков обновлено')} · ${T('accuracy','точность')} ${a0.toFixed(1)}% → ${a1.toFixed(1)}%`,'gold');rLab();nav()};
+}
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#reset').onclick=()=>{store.clear();seed();pc={};accC={};lastNew=null;render();startStream();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>{render();startStream()});
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pension Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/pt.css">
+<script src="../../assets/demo.js"></script>
+<style>
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 45px)}
+.side{position:sticky;top:45px;height:calc(100vh - 45px);border-right:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;padding:16px 12px;gap:4px;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:800;font-size:17px}
+.brand b{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mal3),var(--mal2));color:#fff;font-size:16px;flex:none}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:700;padding:12px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav:hover{background:var(--panel);color:var(--text)}
+.nav.on{background:var(--panel2);color:var(--text);border-color:var(--line2)}
+.nav .ic{width:20px;text-align:center;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;background:var(--gold);color:#1a1306;border-radius:999px;padding:0 7px;font-weight:700}
+.grow{flex:1}
+.who{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);font-size:12.5px;display:flex;gap:10px;align-items:center}
+.who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold2);font-weight:800;flex:none}
+.who b{display:block;font-size:13px}
+main{padding:20px 26px 60px;min-width:0}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.01em}
+.head .sp{flex:1}
+.crumb{font-size:12px;color:var(--dim)}
+.menu-btn{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-bottom:16px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.how div{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.4}
+.how>div>b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--gold2);flex:none;font-size:13px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:12.5px;margin:0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;font-weight:600}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.view{display:none}.view.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 55%,transparent);color:var(--red)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.f .er{font-size:11.5px;color:var(--red);min-height:0;margin-top:4px}
+.f.bad .input{border-color:var(--red)}
+.ok-t{color:var(--mal3)} .bad-t{color:var(--red)} .warn-t{color:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:14px;align-items:start}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:color-mix(in srgb,var(--mal) 18%,transparent);border-color:var(--mal);color:var(--mal3)}
+.prog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mal2),var(--mal3));transition:width .4s}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.clk{cursor:pointer} tbody tr.clk:hover td,tbody tr.sel td{background:color-mix(in srgb,var(--mal) 7%,transparent)}
+.chart svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toasts{position:fixed;right:16px;top:60px;z-index:3000;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:var(--panel2);border:1px solid var(--line2);border-left:4px solid var(--mal);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:13.5px;max-width:320px;animation:fade .2s}
+.toast.bad{border-left-color:var(--red)} .toast.gold{border-left-color:var(--gold)}
+/* login */
+.login{min-height:calc(100vh - 45px);display:grid;place-items:center;padding:24px 16px;background:radial-gradient(900px 500px at 20% 10%,color-mix(in srgb,var(--mal) 14%,transparent),transparent),radial-gradient(700px 400px at 90% 90%,color-mix(in srgb,var(--gold) 10%,transparent),transparent)}
+.lbox{width:100%;max-width:440px}
+.lbox .card{padding:26px}
+.lbox h2{margin:6px 0 4px;font-size:22px}
+.gate{display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--muted);margin:14px 0}
+.gate b{color:var(--text)}
+/* pensions */
+.pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pc{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--panel);display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:.15s;text-align:left;width:100%}
+.pc:hover{border-color:var(--mal)}
+.pc .t{display:flex;gap:10px;align-items:flex-start}
+.pc .lg{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff;flex:none}
+.pc .t b{display:block;font-size:14px;line-height:1.3}
+.pc .t span{font-size:12px;color:var(--muted)}
+.pc .val{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.pc .val small{font-size:12px;color:var(--muted);font-weight:600}
+.pc.poss{border-style:dashed;border-color:var(--amber)}
+.pc.pend{opacity:.85;border-style:dashed}
+.prov{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.pv{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:9px 11px;background:var(--bg2);font-size:13px;min-width:0}
+.pv b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.pv .st{font-size:11.5px;font-weight:700;flex:none}
+.spin{width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--mal3);border-radius:50%;animation:sp .7s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
+.ck{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);margin-bottom:8px;cursor:pointer;font-size:13.5px}
+.ck input{margin-top:3px;accent-color:var(--mal);width:16px;height:16px;flex:none}
+.ck small{display:block;color:var(--muted);font-size:12px}
+.rng{width:100%;accent-color:var(--mal)}
+.ctl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.ctl .l{font-size:12px;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;gap:6px}
+.ctl .l b{color:var(--text);font-family:var(--mono)}
+.big{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.bar2{display:flex;height:12px;border-radius:9px;overflow:hidden;background:var(--line)}
+.bar2 i{display:block;height:100%}
+.dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.dl div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.dl span{display:block;font-size:11.5px;color:var(--muted)} .dl b{font-size:14px;overflow-wrap:anywhere}
+.lst{display:flex;flex-direction:column;gap:6px}
+.li{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);cursor:pointer;text-align:left;width:100%}
+.li.on{border-color:var(--mal);background:color-mix(in srgb,var(--mal) 10%,transparent)}
+.li b{display:block;font-size:13px} .li span{font-size:11.5px;color:var(--muted)}
+.li .lg{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:11px;color:#fff;flex:none}
+.log{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;max-height:260px;overflow:auto}
+.log div{padding:3px 0;border-bottom:1px dashed var(--line)} .log .t{color:var(--dim)}
+.doc{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.doc span{flex:1;min-width:0}
+.tip{font-family:var(--font)}
+.empty{text-align:center;padding:36px 16px;color:var(--muted)}
+.empty .e{font-size:40px}
+.sel{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:4px 6px;font-size:12.5px}
+@media (max-width:1100px){.kpis,.ctl{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.intro,.split{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:45px;z-index:1500;width:260px;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  main{padding:14px 14px 50px}
+  .head h1{font-size:20px}
+}
+@media (max-width:560px){.how,.fgrid{grid-template-columns:1fr}.kpi .v{font-size:20px}.kpis,.ctl{gap:10px}.big{font-size:24px}.dl{grid-template-columns:1fr}.pcards{grid-template-columns:minmax(0,1fr)}.lbox .card{padding:18px}}
+</style>
+</head>
+<body data-demo-en="Pension Dashboard — find all your pensions in one place" data-demo-ru="Pension Dashboard — все ваши пенсии в одном месте">
+<div class="login" id="loginWrap" style="display:none">
+  <div class="lbox"><div class="card">
+    <div class="brand" style="padding:0"><b>£</b><div>Pension Dashboard<small data-en="Money and Pensions Service · Albion" data-ru="Служба денег и пенсий · Альбион"></small></div></div>
+    <h2 data-en="Sign in to see your pensions" data-ru="Войдите, чтобы увидеть свои пенсии"></h2>
+    <div class="muted" style="font-size:13.5px" data-en="We use Albion Verify to confirm who you are. Your identity is only shared with pension providers when you ask us to search." data-ru="Мы подтверждаем личность через Albion Verify. Данные передаются пенсионным провайдерам только по вашему запросу на поиск."></div>
+    <div class="gate"><span style="font-size:20px">🛡</span><span data-en="Identity assurance: <b>GPG45 medium</b> · Federated find across <b>16</b> providers" data-ru="Уровень проверки: <b>GPG45 medium</b> · Федеративный поиск по <b>16</b> провайдерам"></span></div>
+    <div class="f" style="margin-bottom:10px"><label data-en="Email" data-ru="Эл. почта"></label><input class="input" id="lMail" value="alex.morgan@mail.al"></div>
+    <div class="f" style="margin-bottom:14px"><label data-en="Password" data-ru="Пароль"></label><input class="input" id="lPw" type="password" value="Pensions-2026!"></div>
+    <button class="btn pri" id="login" style="width:100%;justify-content:center" data-en="Sign in with demo account" data-ru="Войти с демо-аккаунтом"></button>
+    <div class="muted" style="font-size:12px;margin-top:10px;text-align:center" data-en="Demo credentials are prefilled — just click." data-ru="Демо-данные уже заполнены — просто нажмите."></div>
+  </div></div>
+</div>
+<div class="app" id="app" style="display:none">
+  <aside class="side" id="side">
+    <div class="brand"><b>£</b><div>Pension Dashboard<small data-en="Money and Pensions Service" data-ru="Служба денег и пенсий"></small></div></div>
+    <div class="sec" data-en="My pensions" data-ru="Мои пенсии"></div>
+    <div id="navU"></div>
+    <div class="sec" data-en="Operations · MaPS" data-ru="Операции · MaPS"></div>
+    <div id="navO"></div>
+    <div class="grow"></div>
+    <div class="who"><div class="av">AM</div><div style="min-width:0"><b>Alex Morgan</b><span class="muted mono" style="font-size:11px">QQ 12 34 56 C</span></div></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="logout" style="flex:1;justify-content:center" data-en="Sign out" data-ru="Выйти"></button><button class="btn sm" id="reset" style="flex:1;justify-content:center" data-en="Reset demo" data-ru="Сбросить демо"></button></div>
+  </aside>
+  <main>
+    <div class="head">
+      <button class="btn sm menu-btn" id="menuBtn">☰</button>
+      <div><div class="crumb" id="crumb"></div><h1 id="title"></h1></div>
+      <div class="sp"></div>
+      <span class="pill" id="sumPill"></span>
+    </div>
+    <div class="intro">
+      <div class="card"><h3><span data-en="How to try it" data-ru="Как попробовать"></span></h3>
+        <div class="how">
+          <div><b>1</b><span data-en="Give consent and run <b>Find my pensions</b> — 16 providers are queried live; confirm the possible match." data-ru="Дайте согласие и запустите <b>Найти мои пенсии</b> — 16 провайдеров опрашиваются вживую; подтвердите возможное совпадение."></span></div>
+          <div><b>2</b><span data-en="Open <b>Projection</b>: move retirement age and contributions, compare income with your target." data-ru="Откройте <b>Прогноз</b>: двигайте возраст выхода и взносы, сравните доход с целью."></span></div>
+          <div><b>3</b><span data-en="In <b>Provider connections</b> take a provider offline, then search again — see how the dashboard reacts." data-ru="В <b>Подключениях провайдеров</b> отключите провайдера и повторите поиск — посмотрите, как реагирует панель."></span></div>
+        </div></div>
+      <div class="card"><dl class="facts">
+        <dt data-en="Tender" data-ru="Тендер"></dt><dd data-en="National pensions dashboard" data-ru="Национальная панель пенсий"></dd>
+        <dt data-en="Year · budget" data-ru="Год · бюджет"></dt><dd>2025 · £290M</dd>
+        <dt data-en="Client" data-ru="Заказчик"></dt><dd data-en="Money and Pensions Service, Kingdom of Albion (fictional)" data-ru="Служба денег и пенсий, Королевство Альбион (вымышл.)"></dd>
+        <dt data-en="Stack" data-ru="Стек"></dt><dd>Federated find · consent · UMA 2.0</dd>
+      </dl></div>
+    </div>
+    <section class="view" id="v-find"></section>
+    <section class="view" id="v-mine"></section>
+    <section class="view" id="v-proj"></section>
+    <section class="view" id="v-detail"></section>
+    <section class="view" id="v-consent"></section>
+    <section class="view" id="v-prov"></section>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const T=(en,ru)=>PT.t(en,ru);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const KEY='pt_pensions_state';
+const store={load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},clear(){try{localStorage.removeItem(KEY)}catch(e){}}};
+const loc=()=>PT.lang==='ru'?'ru-RU':'en-GB';
+const gbp=n=>'£'+Math.round(n).toLocaleString(loc());
+const fmtD=d=>new Date(d).toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'});
+const nowT=()=>new Date().toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});
+function toast(m,c){const t=document.createElement('div');t.className='toast '+(c||'');t.innerHTML=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3800)}
+const AGE=47, SPA=68;
+
+/* provider registry */
+const PROVS=[
+ ['aps','Albion Pension Service','Пенсионная служба Альбиона','#4ea4ff',0],
+ ['mer','Meridian Life','Meridian Life','#17b58a',1],['har','Harbour Trustees','Harbour Trustees','#a78bfa',1],['lum','Lumen Workplace','Lumen Workplace','#d8b46a',1],
+ ['fer','Fernhill Invest','Fernhill Invest','#ef7a5a',2],['amu','Albion Mutual','Albion Mutual','#36b3c9',2],['coa','Coastline Pensions','Coastline Pensions','#e0609a',2],
+ ['orc','Orchard Master Trust','Orchard Master Trust','#7bc96f',1],['key','Keystone Annuities','Keystone Annuities','#c9a227',2],['nor','Northern Lights Pensions','Northern Lights Pensions','#5b8def',3],
+ ['civ','Civil Service Scheme','Пенсионная схема госслужбы','#4a9b8e',1],['tea','Teachers’ Scheme of Albion','Схема учителей Альбиона','#9c6ade',1],['uni','Unity Master Trust','Unity Master Trust','#3fb68b',3],
+ ['pin','Pinewood SIPP','Pinewood SIPP','#b07d48',3],['atl','Atlas Life','Atlas Life','#d65a5a',2],['gra','Granite Pension Partners','Granite Pension Partners','#8a94a6',4]];
+const PROV=Object.fromEntries(PROVS.map(p=>[p[0],p]));
+/* pensions held by the demo user */
+const PENS={
+ p1:{prov:'aps',kind:'state',name:['State Pension','Государственная пенсия'],emp:['—','—'],from:'1997',to:null,weekly:221.2,nra:SPA,ref:'SP-QQ123456C'},
+ p2:{prov:'mer',kind:'dc',name:['Northgate Retail Group Pension','Пенсионный план Northgate Retail'],emp:['Northgate Retail Group plc','Northgate Retail Group plc'],from:'2003',to:'2011',value:48320,fee:0.62,ref:'MER-88412-07'},
+ p3:{prov:'har',kind:'db',name:['Harbour Engineering Final Salary Scheme','Схема Harbour Engineering (от зарплаты)'],emp:['Harbour Engineering Ltd','Harbour Engineering Ltd'],from:'2011',to:'2016',accrued:6840,nra:65,ref:'HE-DB-031977'},
+ p4:{prov:'lum',kind:'dc',name:['Cobalt Analytics Workplace Pension','Корпоративная пенсия Cobalt Analytics'],emp:['Cobalt Analytics Ltd','Cobalt Analytics Ltd'],from:'2016',to:null,value:71900,fee:0.38,active:true,ref:'LUM-4471902'},
+ p5:{prov:'fer',kind:'dc',name:['Fernhill Self-Invested Personal Pension','Личная пенсия SIPP Fernhill'],emp:['Personal','Личная'],from:'2014',to:null,value:22450,fee:0.45,ref:'FH-SIPP-20514'},
+ p6:{prov:'amu',kind:'dc',name:['Brightwell Foods Staff Pension','Пенсия сотрудников Brightwell Foods'],emp:['Brightwell Foods Ltd','Brightwell Foods Ltd'],from:'2001',to:'2003',value:3210,fee:0.75,ref:'AM-77310',possible:true},
+ p7:{prov:'coa',kind:'dc',name:['Seaview Hospitality Pension Plan','Пенсионный план Seaview Hospitality'],emp:['Seaview Hotels Group','Seaview Hotels Group'],from:'1998',to:'2001',value:12780,fee:0.55,ref:'CP-2201-SV',pending:true}};
+const BY_PROV=Object.fromEntries(Object.entries(PENS).map(([id,p])=>[p.prov,id]));
+const ST={live:['Connected','Подключён','ok'],degr:['Degraded','С перебоями','warn'],down:['Offline','Недоступен','bad'],onb:['Onboarding','Подключается','gold']};
+
+function seed(){
+  const r=rng(31);
+  const providers=PROVS.map((p,i)=>{const st=p[0]==='atl'?'down':p[0]==='key'?'degr':p[4]===4?'onb':'live';const base=st==='degr'?900:220+Math.floor(r()*260);
+    return{id:p[0],st,cohort:p[4]||1,req:st==='onb'?0:1200+Math.floor(r()*18000),match:st==='onb'?0:+(58+r()*30).toFixed(1),up:st==='down'?96.4:st==='degr'?98.9:+(99.5+r()*.49).toFixed(2),lat:Array.from({length:24},()=>st==='onb'?0:Math.round(base*(.75+r()*.6)))}});
+  return{auth:false,view:'find',consent:{search:false,share:false,keep:true},searched:false,found:{},prov:providers,provSel:'mer',sel:'p4',
+    proj:{age:67,contrib:650,growth:'mid',lump:25,target:'mod'},
+    delegates:[{id:'D-1001',name:'Priya Shah',mail:'p.shah@thamesadvice.al',role:'adv',fca:'604218',days:90,from:'2026-10-02'}],
+    req:{},log:[{t:'2026-11-12 09:14',en:'Signed in with Albion Verify (GPG45 medium)',ru:'Вход через Albion Verify (GPG45 medium)'}],seq:1002};
+}
+let S=store.load()||seed();
+const save=()=>store.save();
+function logA(en,ru){const d=new Date();S.log.unshift({t:d.toISOString().slice(0,10)+' '+d.toTimeString().slice(0,5),en,ru});S.log=S.log.slice(0,40);save()}
+
+const VIEWS=[['find','🔎','Find my pensions','Найти мои пенсии','U'],['mine','💼','My pensions','Мои пенсии','U'],['proj','📈','Retirement projection','Прогноз на пенсии','U'],['detail','📄','Scheme details','Детали схемы','U'],['consent','🔐','Consent & access','Согласия и доступ','U'],['prov','🔌','Provider connections','Подключения провайдеров','O']];
+const foundIds=()=>Object.keys(S.found).filter(k=>S.found[k]!=='rejected');
+const okIds=()=>Object.keys(S.found).filter(k=>S.found[k]==='ok');
+function nav(){
+  const mk=g=>VIEWS.filter(v=>v[4]===g).map(v=>{let x='';
+    if(v[0]==='mine'){const n=Object.values(S.found).filter(s=>s==='possible'||s==='pending').length;if(n)x=`<span class="cnt">${n}</span>`}
+    if(v[0]==='prov'){const n=S.prov.filter(p=>p.st==='down'||p.st==='degr').length;if(n)x=`<span class="cnt" style="background:var(--red);color:#fff">${n}</span>`}
+    return `<button class="nav ${S.view===v[0]?'on':''}" data-v="${v[0]}"><span class="ic">${v[1]}</span>${T(v[2],v[3])}${x}</button>`}).join('');
+  $('#navU').innerHTML=mk('U');$('#navO').innerHTML=mk('O');
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){S.view=v;save();$('#side').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  $('#loginWrap').style.display=S.auth?'none':'grid';$('#app').style.display=S.auth?'grid':'none';
+  if(!S.auth)return;
+  nav();const v=VIEWS.find(x=>x[0]===S.view)||VIEWS[0];
+  $('#title').textContent=T(v[2],v[3]);$('#crumb').textContent=v[4]==='U'?T('Your dashboard · Alex Morgan','Ваша панель · Alex Morgan'):T('Operations · ecosystem monitoring','Операции · мониторинг экосистемы');
+  const n=foundIds().length;$('#sumPill').className='pill '+(n?'ok':'warn');$('#sumPill').textContent=n?T(n+' pensions found','Найдено пенсий: '+n):T('Not searched yet','Поиск ещё не выполнен');
+  $$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v[0]));
+  ({find:rFind,mine:rMine,proj:rProj,detail:rDetail,consent:rConsent,prov:rProv})[v[0]]();
+}
+const logo=(pid,cls)=>{const p=PROV[pid];return `<span class="${cls||'lg'}" style="background:${p[3]}">${p[1].split(/\s+/).map(w=>w[0]).join('').slice(0,2)}</span>`};
+const pname=pid=>T(PROV[pid][1],PROV[pid][2]);
+const kindT=k=>({state:T('State pension','Госпенсия'),dc:T('Defined contribution','Накопительная (DC)'),db:T('Defined benefit','С установленной выплатой (DB)')})[k];
+function annualOf(id){const p=PENS[id];if(p.kind==='state')return p.weekly*52;if(p.kind==='db')return p.accrued;return null}
+
+/* ---------- FIND ---------- */
+let running=false;
+function rFind(){
+  const el=$('#v-find');const c=S.consent;const ready=c.search&&c.share;
+  el.innerHTML=`<div class="grid2"><div class="card"><h3>${T('1 · Your consent','1 · Ваше согласие')}<span class="sp"></span><span class="pill ${ready?'ok':'warn'}">${ready?T('Ready to search','Можно искать'):T('Consent required','Нужно согласие')}</span></h3>
+   <label class="ck"><input type="checkbox" id="cS" ${c.search?'checked':''}><span><b>${T('Search for my pensions','Искать мои пенсии')}</b><small>${T('We send your name, date of birth, NI number and past addresses to every connected provider.','Мы отправим ваши ФИО, дату рождения, номер NI и прошлые адреса всем подключённым провайдерам.')}</small></span></label>
+   <label class="ck"><input type="checkbox" id="cH" ${c.share?'checked':''}><span><b>${T('Let providers show me their data','Разрешить провайдерам показывать мне данные')}</b><small>${T('Providers return values and estimates straight to your dashboard — we don’t store them.','Провайдеры передают суммы и оценки прямо в вашу панель — мы их не храним.')}</small></span></label>
+   <label class="ck"><input type="checkbox" id="cK" ${c.keep?'checked':''}><span><b>${T('Keep looking for 12 months (optional)','Продолжать поиск 12 месяцев (необязательно)')}</b><small>${T('New providers joining the ecosystem will be searched automatically.','Новые провайдеры, подключившиеся к экосистеме, будут опрошены автоматически.')}</small></span></label>
+   <div class="row" style="margin-top:12px"><button class="btn pri" id="fGo" ${ready&&!running?'':'disabled'}>${S.searched?T('Search again','Искать снова'):T('Find my pensions','Найти мои пенсии')}</button>
+   ${S.searched?`<button class="btn sm" id="fSee">${T('View results','Смотреть результаты')} →</button>`:''}<span class="muted" style="font-size:12.5px" id="fMsg"></span></div></div>
+   <div class="card"><h3>${T('What we’ll search with','По каким данным ищем')}</h3><div class="dl">
+    <div><span>${T('Name','Имя')}</span><b>Alexandra J. Morgan</b></div><div><span>${T('Date of birth','Дата рождения')}</span><b>${fmtD('1979-05-14')}</b></div>
+    <div><span>${T('NI number','Номер NI')}</span><b class="mono">QQ 12 34 56 C</b></div><div><span>${T('Verified by','Проверено')}</span><b>Albion Verify</b></div>
+    <div style="grid-column:1/-1"><span>${T('Addresses (last 3)','Адреса (последние 3)')}</span><b>14 Elm Row, Castlebridge · 2 Quay St, Portwyn · 88 Mill Lane, Harrowfield</b></div></div></div></div>
+   <div class="card" style="margin-top:14px"><h3>${T('2 · Federated find across the ecosystem','2 · Федеративный поиск по экосистеме')}<span class="sp"></span><span class="legend"><span><i style="background:var(--mal)"></i>${T('match','найдено')}</span><span><i style="background:var(--amber)"></i>${T('possible','возможно')}</span><span><i style="background:var(--line2)"></i>${T('no match','нет')}</span><span><i style="background:var(--red)"></i>${T('not reached','недоступен')}</span></span></h3>
+   <div class="prog" style="margin-bottom:12px"><i id="fBar" style="width:${S.searched?100:0}%"></i></div>
+   <div class="prov" id="fProv">${S.prov.map(p=>provCell(p.id,S.searched?(S.res&&S.res[p.id])||'idle':'idle')).join('')}</div></div>`;
+  const upd=()=>{S.consent={search:$('#cS').checked,share:$('#cH').checked,keep:$('#cK').checked};save();rFind()};
+  ['#cS','#cH','#cK'].forEach(s=>$(s).onchange=upd);
+  $('#fGo').onclick=runFind;if($('#fSee'))$('#fSee').onclick=()=>go('mine');
+}
+function provCell(id,st){
+  const m={idle:['','—','var(--dim)'],q:['spin','',''],match:['dot',T('match','найдено'),'var(--mal3)'],possible:['dot',T('possible','возможно'),'var(--amber)'],pending:['dot',T('preparing','готовит данные'),'var(--gold2)'],none:['dot',T('no match','нет'),'var(--dim)'],down:['dot',T('not reached','недоступен'),'var(--red)'],onb:['dot',T('not live yet','ещё не подключён'),'var(--dim)']}[st]||['','—',''];
+  const ic=m[0]==='spin'?'<span class="spin"></span>':m[0]==='dot'?`<span class="dot" style="background:${m[2]}"></span>`:'<span class="dot" style="background:var(--line2)"></span>';
+  return `<div class="pv" id="pv-${id}">${ic}<b>${pname(id)}</b><span class="st" style="color:${m[2]}">${m[1]}</span></div>`;
+}
+async function runFind(){
+  if(running)return;running=true;S.res={};const prev=S.found;S.found={};save();rFind();
+  const order=S.prov.map(p=>p.id);let done=0;
+  await Promise.all(order.map(async(id,i)=>{
+    const p=S.prov.find(x=>x.id===id);const c=$('#pv-'+id);if(c)c.outerHTML=provCell(id,'q');
+    await wait(250+i*70+(p.st==='degr'?900:0)+Math.random()*350);
+    let res='none';
+    if(p.st==='down')res='down';else if(p.st==='onb')res='onb';
+    else if(BY_PROV[id]){const pid=BY_PROV[id];const pe=PENS[pid];res=pe.possible?'possible':pe.pending?'pending':'match';
+      let st=res==='match'?'ok':res;if(prev[pid]==='ok')st='ok';if(prev[pid]==='rejected')st='rejected';S.found[pid]=st}
+    S.res[id]=res;done++;
+    const c2=$('#pv-'+id);if(c2)c2.outerHTML=provCell(id,res);const b=$('#fBar');if(b)b.style.width=(done/order.length*100)+'%';
+  }));
+  running=false;S.searched=true;
+  const n=foundIds().length,dn=Object.values(S.res).filter(x=>x==='down').length;
+  logA(`Federated find: ${n} pensions from ${order.length} providers${dn?`, ${dn} not reached`:''}`,`Федеративный поиск: пенсий ${n} у ${order.length} провайдеров${dn?`, недоступно ${dn}`:''}`);
+  toast(T(`Search complete — <b>${n}</b> pensions found`,`Поиск завершён — найдено пенсий: <b>${n}</b>`)+(dn?'<br>'+T(dn+' provider(s) not reached — we’ll retry automatically',`Недоступно провайдеров: ${dn} — повторим автоматически`):''),dn?'gold':'');
+  if(S.view==='find')render();else nav();
+}
+
+/* ---------- MINE ---------- */
+function potAtNow(){return okIds().filter(i=>PENS[i].kind==='dc').reduce((a,i)=>a+PENS[i].value,0)}
+function rMine(){
+  const el=$('#v-mine');
+  if(!S.searched){el.innerHTML=`<div class="card empty"><div class="e">🔎</div><h3 style="justify-content:center">${T('No pensions to show yet','Пока нечего показать')}</h3><p>${T('Give consent and run a search — it takes a few seconds.','Дайте согласие и запустите поиск — это займёт несколько секунд.')}</p><button class="btn pri" id="mGo">${T('Find my pensions','Найти мои пенсии')}</button></div>`;$('#mGo').onclick=()=>go('find');return}
+  const ids=Object.keys(PENS).filter(i=>S.found[i]&&S.found[i]!=='rejected');
+  const pot=potAtNow(),db=okIds().filter(i=>PENS[i].kind==='db').reduce((a,i)=>a+PENS[i].accrued,0),sp=S.found.p1==='ok'?PENS.p1.weekly:0;
+  const attn=ids.filter(i=>S.found[i]!=='ok').length;
+  const parts=okIds().filter(i=>PENS[i].kind==='dc').map(i=>[PROV[PENS[i].prov][3],PENS[i].value]);
+  el.innerHTML=`<div class="kpis">
+   <div class="card kpi"><div class="l">${T('Pensions found','Найдено пенсий')}</div><div class="v">${ids.length}</div><div class="d">${T('across','у')} ${new Set(ids.map(i=>PENS[i].prov)).size} ${T('providers','провайдеров')}</div></div>
+   <div class="card kpi"><div class="l">${T('Total pot value (DC)','Накоплено (DC)')}</div><div class="v ok-t">${gbp(pot)}</div><div class="bar2" style="margin-top:6px">${parts.map(p=>`<i style="background:${p[0]};width:${p[1]/pot*100}%"></i>`).join('')}</div></div>
+   <div class="card kpi"><div class="l">${T('Guaranteed income','Гарантированный доход')}</div><div class="v">${gbp(db+sp*52)}<small style="font-size:13px;color:var(--muted)">/${T('yr','год')}</small></div><div class="d">${T('defined benefit + State Pension','DB + госпенсия')}</div></div>
+   <div class="card kpi"><div class="l">${T('Needs your attention','Требуют внимания')}</div><div class="v ${attn?'warn-t':''}">${attn}</div><div class="d">${T('possible matches & pending data','возможные совпадения и ожидание')}</div></div></div>
+   <div class="pcards">${ids.map(card).join('')}</div>
+   ${Object.values(S.found).includes('rejected')?`<div class="muted" style="font-size:12.5px;margin-top:12px">${T('You marked one result as “not mine”.','Один результат вы отметили как «не мой».')} <button class="btn sm" id="mUndo">${T('Undo','Вернуть')}</button></div>`:''}`;
+  $$('[data-open]',el).forEach(b=>b.onclick=e=>{if(e.target.closest('[data-act]'))return;S.sel=b.dataset.open;go('detail')});
+  $$('[data-act]',el).forEach(b=>b.onclick=async e=>{e.stopPropagation();const id=b.dataset.id,a=b.dataset.act;
+    if(a==='yes'){S.found[id]='ok';logA('Confirmed possible match: '+PENS[id].name[0],'Подтверждено совпадение: '+PENS[id].name[1]);toast(T('Confirmed — data now shown','Подтверждено — данные показаны'))}
+    if(a==='no'){S.found[id]='rejected';logA('Rejected possible match: '+PENS[id].name[0],'Отклонено совпадение: '+PENS[id].name[1]);toast(T('Removed from your dashboard','Убрано из панели'),'gold')}
+    if(a==='fetch'){b.disabled=true;b.textContent=T('Requesting…','Запрос…');await wait(1200);S.found[id]='ok';logA('View data received from Coastline Pensions','Данные получены от Coastline Pensions');toast(T('Coastline Pensions returned your data','Coastline Pensions прислал данные'))}
+    save();render()});
+  if($('#mUndo'))$('#mUndo').onclick=()=>{Object.keys(S.found).forEach(k=>{if(S.found[k]==='rejected')S.found[k]='possible'});save();render()};
+}
+function card(id){
+  const p=PENS[id],st=S.found[id];let val='',foot='';
+  if(st==='ok'){
+    if(p.kind==='dc')val=`<div class="val">${gbp(p.value)} <small>${T('pot value','накоплено')}</small></div>`;
+    else if(p.kind==='db')val=`<div class="val">${gbp(p.accrued)} <small>/${T('yr from age','год с')} ${p.nra}</small></div>`;
+    else val=`<div class="val">£${p.weekly.toFixed(2)} <small>/${T('week from age','нед. с')} ${p.nra}</small></div>`;
+    foot=`<div class="row"><span class="pill ok">${T('Data available','Данные доступны')}</span><span class="muted" style="font-size:12px">${T('as of','на')} ${fmtD('2026-11-01')}</span></div>`;
+  }else if(st==='possible'){
+    val=`<div class="muted" style="font-size:13px">${T('This provider found a record that might be yours. Check the employer and dates.','Провайдер нашёл запись, которая может быть вашей. Проверьте работодателя и даты.')}</div>`;
+    foot=`<div class="row"><span class="pill warn">${T('Possible match','Возможное совпадение')}</span><span class="sp" style="flex:1"></span><button class="btn sm pri" data-act="yes" data-id="${id}">${T('This is mine','Это моё')}</button><button class="btn sm" data-act="no" data-id="${id}">${T('Not mine','Не моё')}</button></div>`;
+  }else{
+    val=`<div class="muted" style="font-size:13px">${T('Match confirmed. The provider is preparing your values — usually within 3 working days.','Совпадение подтверждено. Провайдер готовит данные — обычно до 3 рабочих дней.')}</div>`;
+    foot=`<div class="row"><span class="pill gold">${T('Data pending','Ожидаем данные')}</span><span class="sp" style="flex:1"></span><button class="btn sm" data-act="fetch" data-id="${id}">${T('Request now (demo)','Запросить сейчас (демо)')}</button></div>`;
+  }
+  return `<div class="pc ${st==='possible'?'poss':st==='pending'?'pend':''}" data-open="${id}" role="button" tabindex="0"><div class="t">${logo(p.prov)}<div style="min-width:0"><b>${T(p.name[0],p.name[1])}</b><span>${pname(p.prov)} · ${kindT(p.kind)}</span></div></div>
+   <div class="muted" style="font-size:12px">${T(p.emp[0],p.emp[1])} · ${p.from}–${p.to||T('now','н.в.')}</div>${val}${foot}</div>`;
+}
+
+/* ---------- PROJECTION ---------- */
+const G={low:.02,mid:.04,high:.06};
+const TARGETS={min:[14400,'Minimum','Минимальный'],mod:[31300,'Moderate','Средний'],com:[43100,'Comfortable','Комфортный']};
+function project(){
+  const P=S.proj,g=G[P.growth],R=P.age,yrs=Math.max(0,R-AGE);
+  const dcs=okIds().filter(i=>PENS[i].kind==='dc');
+  const potSeries=[];for(let y=0;y<=yrs;y++){let v=0;dcs.forEach(i=>{const p=PENS[i];v+=p.value*Math.pow(1+g,y);if(p.active)v+=P.contrib*12*(g?(Math.pow(1+g,y)-1)/g:y)});potSeries.push(v)}
+  const pot=potSeries[potSeries.length-1]||0,lump=pot*P.lump/100,rate=Math.min(.075,.045+(R-60)*.002),dcInc=(pot-lump)*rate;
+  const dbInc=S.found.p3==='ok'?PENS.p3.accrued*Math.max(.6,1+.05*(R-PENS.p3.nra)):0;
+  const spInc=S.found.p1==='ok'?PENS.p1.weekly*52:0;
+  const ages=[];for(let a=AGE;a<=90;a++)ages.push({a,dc:a>=R?dcInc:0,db:a>=R?dbInc:0,sp:a>=SPA?spInc:0});
+  return{pot,lump,dcInc,dbInc,spInc,ages,potSeries,R,target:TARGETS[P.target][0]};
+}
+function rProj(){
+  const el=$('#v-proj');
+  if(!okIds().length){el.innerHTML=`<div class="card empty"><div class="e">📈</div><p>${T('Find your pensions first — the projection uses the values providers return.','Сначала найдите пенсии — прогноз строится на данных провайдеров.')}</p><button class="btn pri" id="pGo">${T('Find my pensions','Найти мои пенсии')}</button></div>`;$('#pGo').onclick=()=>go('find');return}
+  const P=S.proj;
+  el.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="ctl">
+   <div><div class="l">${T('Retire at age','Выход на пенсию в')} <b id="oAge">${P.age}</b></div><input type="range" class="rng" id="rAge" min="55" max="75" value="${P.age}"></div>
+   <div><div class="l">${T('Monthly contribution','Взнос в месяц')} <b id="oCon">${gbp(P.contrib)}</b></div><input type="range" class="rng" id="rCon" min="0" max="2000" step="25" value="${P.contrib}"></div>
+   <div><div class="l">${T('Investment growth (real)','Доходность (реальная)')}</div><div class="chips">${['low','mid','high'].map(k=>`<button class="chip ${P.growth===k?'on':''}" data-g="${k}">${G[k]*100}%</button>`).join('')}</div></div>
+   <div><div class="l">${T('Tax-free lump sum','Безналоговая сумма')}</div><div class="chips">${[0,10,25].map(k=>`<button class="chip ${P.lump===k?'on':''}" data-l="${k}">${k}%</button>`).join('')}</div></div></div>
+   <div class="row"><span class="muted" style="font-size:12.5px">${T('Target lifestyle:','Целевой уровень жизни:')}</span>${Object.keys(TARGETS).map(k=>`<button class="chip ${P.target===k?'on':''}" data-t="${k}">${T(TARGETS[k][1],TARGETS[k][2])} · ${gbp(TARGETS[k][0])}</button>`).join('')}</div></div>
+   <div class="kpis" id="pK"></div>
+   <div class="grid2"><div class="card chart"><h3>${T('Estimated yearly income by age','Ожидаемый доход в год по возрасту')}<span class="sp"></span><span class="legend"><span><i style="background:var(--blue)"></i>${T('State','Госпенсия')}</span><span><i style="background:var(--violet)"></i>DB</span><span><i style="background:var(--mal)"></i>DC</span><span><i style="background:var(--gold)"></i>${T('target','цель')}</span></span></h3><div id="pC"></div></div>
+   <div class="card chart"><h3>${T('Pot growth until retirement','Рост накоплений до пенсии')}</h3><div id="pP"></div><div class="muted" style="font-size:12px;margin-top:8px">${T('Estimates in today’s money. Not advice — speak to a regulated adviser before deciding.','Оценки в сегодняшних деньгах. Это не совет — перед решением обратитесь к лицензированному консультанту.')}</div></div></div>`;
+  const draw=()=>{const R=project();
+    const tot=R.dcInc+R.dbInc+R.spInc,pct=Math.round(tot/R.target*100);
+    $('#pK').innerHTML=`<div class="card kpi"><div class="l">${T('Projected pot at','Накопления к')} ${R.R}</div><div class="v">${gbp(R.pot)}</div><div class="d">${T('lump sum','разово')} ${gbp(R.lump)}</div></div>
+     <div class="card kpi"><div class="l">${T('Yearly income from','Доход в год с')} ${Math.max(R.R,SPA)}</div><div class="v ok-t">${gbp(tot)}</div><div class="d">${gbp(tot/12)} / ${T('month','мес.')}</div></div>
+     <div class="card kpi"><div class="l">${T('Versus target','К цели')}</div><div class="v ${pct>=100?'ok-t':pct>=75?'warn-t':'bad-t'}">${pct}%</div><div class="prog"><i style="width:${Math.min(100,pct)}%"></i></div></div>
+     <div class="card kpi"><div class="l">${T('Gap before State Pension','Разрыв до госпенсии')}</div><div class="v">${R.R<SPA?(SPA-R.R)+' '+T('yrs','г.'):'—'}</div><div class="d">${T('State Pension age','Возраст госпенсии')} ${SPA}</div></div>`;
+    $('#pC').innerHTML=incomeSvg(R);$('#pP').innerHTML=potSvg(R);bindTip(R)};
+  draw();
+  $('#rAge').oninput=e=>{P.age=+e.target.value;$('#oAge').textContent=P.age;save();draw()};
+  $('#rCon').oninput=e=>{P.contrib=+e.target.value;$('#oCon').textContent=gbp(P.contrib);save();draw()};
+  $$('[data-g]',el).forEach(b=>b.onclick=()=>{P.growth=b.dataset.g;save();rProj()});
+  $$('[data-l]',el).forEach(b=>b.onclick=()=>{P.lump=+b.dataset.l;save();rProj()});
+  $$('[data-t]',el).forEach(b=>b.onclick=()=>{P.target=b.dataset.t;save();rProj()});
+}
+const W=720,H=280,pl=54,pr=12,pt=14,pb=30;
+function incomeSvg(R){
+  const A=R.ages,max=Math.max(R.target,...A.map(x=>x.dc+x.db+x.sp))*1.12;
+  const x=a=>pl+(a-AGE)/(90-AGE)*(W-pl-pr),y=v=>H-pb-v/max*(H-pt-pb);
+  const layer=(f0,f1,col)=>{let top='',bot='';A.forEach((d,i)=>{top+=(i?'L':'M')+x(d.a).toFixed(1)+','+y(f1(d)).toFixed(1)});A.slice().reverse().forEach(d=>{bot+='L'+x(d.a).toFixed(1)+','+y(f0(d)).toFixed(1)});return `<path d="${top+bot}Z" style="fill:${col};opacity:.78"/>`};
+  let g='';for(let i=0;i<=4;i++){const v=max/4*i;g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end" style="fill:var(--dim);font-size:11px">£${Math.round(v/1000)}k</text>`}
+  for(let a=50;a<=90;a+=5)g+=`<text x="${x(a)}" y="${H-10}" text-anchor="middle" style="fill:var(--dim);font-size:11px">${a}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" id="incSvg">${g}
+   ${layer(d=>0,d=>d.sp,'var(--blue)')}${layer(d=>d.sp,d=>d.sp+d.db,'var(--violet)')}${layer(d=>d.sp+d.db,d=>d.sp+d.db+d.dc,'var(--mal)')}
+   <line x1="${pl}" x2="${W-pr}" y1="${y(R.target)}" y2="${y(R.target)}" style="stroke:var(--gold);stroke-width:2;stroke-dasharray:6 5"/>
+   <text x="${W-pr-4}" y="${y(R.target)-6}" text-anchor="end" style="fill:var(--gold2);font-size:11px;font-weight:700">${T('target','цель')} ${gbp(R.target)}</text>
+   <line x1="${x(R.R)}" x2="${x(R.R)}" y1="${pt}" y2="${H-pb}" style="stroke:var(--text);opacity:.35;stroke-dasharray:3 4"/>
+   <text x="${x(R.R)+4}" y="${pt+10}" style="fill:var(--muted);font-size:11px">${T('retire','пенсия')} ${R.R}</text>
+   <g id="tipG" style="display:none"><line id="tipL" y1="${pt}" y2="${H-pb}" style="stroke:var(--text);opacity:.5"/><rect id="tipR" width="150" height="74" rx="8" style="fill:var(--panel2);stroke:var(--line2)"/><text id="tipT" class="tip" style="fill:var(--text);font-size:11.5px"></text></g>
+   <rect x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="transparent" id="hit"/></svg>`;
+}
+function bindTip(R){
+  const svg=$('#incSvg');if(!svg)return;const hit=$('#hit');
+  const mv=e=>{const b=svg.getBoundingClientRect();const px=(e.clientX-b.left)/b.width*W;const a=Math.round(AGE+(px-pl)/(W-pl-pr)*(90-AGE));const d=R.ages.find(z=>z.a===a);if(!d)return;
+    const X=pl+(a-AGE)/(90-AGE)*(W-pl-pr);$('#tipG').style.display='';$('#tipL').setAttribute('x1',X);$('#tipL').setAttribute('x2',X);
+    const bx=X>W-170?X-158:X+8;$('#tipR').setAttribute('x',bx);$('#tipR').setAttribute('y',pt+4);
+    const lines=[T('Age ','Возраст ')+a,'DC '+gbp(d.dc),'DB '+gbp(d.db),T('State ','Гос. ')+gbp(d.sp)];
+    $('#tipT').innerHTML=lines.map((l,i)=>`<tspan x="${bx+10}" y="${pt+22+i*15}" style="${i?'':'font-weight:700'}">${l}</tspan>`).join('')};
+  hit.addEventListener('pointermove',mv);hit.addEventListener('pointerdown',mv);hit.addEventListener('pointerleave',()=>$('#tipG').style.display='none');
+}
+function potSvg(R){
+  const s=R.potSeries,n=s.length,w=420,h=260,l=52,b=28,max=Math.max(...s)*1.1||1;
+  const x=i=>l+(n>1?i/(n-1):0)*(w-l-10),y=v=>h-b-v/max*(h-14-b);
+  let path='',area='';s.forEach((v,i)=>{path+=(i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1)});area=path+`L${x(n-1)},${h-b}L${x(0)},${h-b}Z`;
+  let g='';for(let i=0;i<=4;i++){const v=max/4*i;g+=`<line x1="${l}" x2="${w-10}" y1="${y(v)}" y2="${y(v)}" style="stroke:var(--line)"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end" style="fill:var(--dim);font-size:11px">£${Math.round(v/1000)}k</text>`}
+  const step=Math.max(1,Math.ceil(n/6));for(let i=0;i<n;i+=step)g+=`<text x="${x(i)}" y="${h-9}" text-anchor="middle" style="fill:var(--dim);font-size:11px">${AGE+i}</text>`;
+  return `<svg viewBox="0 0 ${w} ${h}"><defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--mal);stop-opacity:.45"/><stop offset="1" style="stop-color:var(--mal);stop-opacity:0"/></linearGradient></defs>${g}<path d="${area}" fill="url(#pg)"/><path d="${path}" style="fill:none;stroke:var(--mal3);stroke-width:2.5"/><circle cx="${x(n-1)}" cy="${y(s[n-1])}" r="5" style="fill:var(--gold)"/><text x="${x(n-1)-8}" y="${y(s[n-1])-10}" text-anchor="end" style="fill:var(--text);font-size:12px;font-weight:700">${gbp(s[n-1])}</text></svg>`;
+}
+
+/* ---------- DETAIL ---------- */
+function rDetail(){
+  const el=$('#v-detail');const ids=foundIds();
+  if(!ids.length){el.innerHTML=`<div class="card empty"><div class="e">📄</div><p>${T('No schemes yet — run a search first.','Схем пока нет — сначала выполните поиск.')}</p><button class="btn pri" id="dGo">${T('Find my pensions','Найти мои пенсии')}</button></div>`;$('#dGo').onclick=()=>go('find');return}
+  if(!ids.includes(S.sel))S.sel=ids[0];
+  const id=S.sel,p=PENS[id],st=S.found[id],pr=S.prov.find(x=>x.id===p.prov),rq=S.req[id];
+  let facts=[[T('Provider','Провайдер'),pname(p.prov)],[T('Type','Тип'),kindT(p.kind)],[T('Employer','Работодатель'),T(p.emp[0],p.emp[1])],[T('Membership','Участие'),p.from+' – '+(p.to||T('active','активно'))],[T('Reference','Номер'),`<span class="mono">${p.ref}</span>`],[T('Status','Статус'),st==='ok'?T('Data available','Данные доступны'):st==='possible'?T('Possible match','Возможное совпадение'):T('Data pending','Ожидаем данные')]];
+  if(st==='ok'){if(p.kind==='dc')facts.push([T('Current value','Текущая сумма'),gbp(p.value)],[T('Annual charges','Комиссия в год'),p.fee+'%'],[T('Contributions','Взносы'),p.active?T(`${gbp(S.proj.contrib)}/mo (employee 5% + employer 8%)`,`${gbp(S.proj.contrib)}/мес. (работник 5% + работодатель 8%)`):T('none — deferred','нет — отложенная')]);
+    if(p.kind==='db')facts.push([T('Accrued yearly pension','Начисленная пенсия в год'),gbp(p.accrued)],[T('Normal pension age','Обычный возраст выхода'),p.nra],[T('Revaluation','Индексация'),'CPI, cap 5%'],[T('Spouse’s pension','Пенсия супругу'),'50%']);
+    if(p.kind==='state')facts.push([T('Forecast','Прогноз'),'£'+p.weekly.toFixed(2)+' / '+T('week','нед.')],[T('State Pension age','Возраст госпенсии'),p.nra],[T('Qualifying years','Стажевые годы'),'29 / 35'],[T('Years to fill','Можно добрать'),'6']);}
+  const hist=p.kind==='dc'&&st==='ok'?valHist(id):'';
+  el.innerHTML=`<div class="split"><div class="card"><h3>${T('Your schemes','Ваши схемы')}</h3><div class="lst">${ids.map(i=>`<button class="li ${i===id?'on':''}" data-s="${i}">${logo(PENS[i].prov)}<span style="min-width:0;flex:1"><b>${T(PENS[i].name[0],PENS[i].name[1])}</b><span>${pname(PENS[i].prov)}</span></span><span class="dot" style="background:${S.found[i]==='ok'?'var(--mal)':'var(--amber)'}"></span></button>`).join('')}</div></div>
+   <div><div class="card" style="margin-bottom:14px"><h3>${logo(p.prov)}<span style="min-width:0">${T(p.name[0],p.name[1])}</span><span class="sp"></span><span class="pill ${ST[pr.st][2]}"><span class="dot" style="background:currentColor"></span>${T('Provider','Провайдер')}: ${T(ST[pr.st][0],ST[pr.st][1])}</span></h3>
+    <div class="dl">${facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join('')}</div>
+    ${hist?`<div class="chart" style="margin-top:14px"><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">${T('Value over the last 10 years','Сумма за последние 10 лет')}</div>${hist}</div>`:''}
+    <div class="row" style="margin-top:14px">${p.kind!=='state'?`<button class="btn sm pri" id="dTv" ${rq||st!=='ok'?'disabled':''}>${rq?T('Transfer value requested','Сумма перевода запрошена'):T('Request transfer value','Запросить сумму перевода')}</button>`:`<button class="btn sm pri" id="dGap">${T('Check NI gaps','Проверить пробелы NI')}</button>`}
+     <button class="btn sm" id="dCt">${T('Contact provider','Связаться с провайдером')}</button><button class="btn sm" id="dCsv">${T('Download summary','Скачать сводку')}</button></div>
+    ${rq?`<div class="muted" style="font-size:12.5px;margin-top:8px">✓ ${T('Requested on','Запрошено')} ${fmtD(rq)} · ${T('provider must reply within 10 working days','провайдер ответит в течение 10 рабочих дней')}</div>`:''}</div>
+    <div class="card"><h3>${T('Documents from the provider','Документы провайдера')}</h3>
+     ${[[T('Annual benefit statement 2026','Ежегодная выписка 2026'),'PDF · 212 KB'],[T('Statement of investment principles','Принципы инвестирования'),'PDF · 640 KB'],[T('Costs and charges illustration','Расчёт затрат и комиссий'),'PDF · 98 KB']].map(d=>`<div class="doc">📄<span>${d[0]}</span><span class="muted mono" style="flex:none;font-size:11.5px">${d[1]}</span></div>`).join('')}
+     <div class="muted" style="font-size:12px;margin-top:8px">${T('Documents open from the provider’s system — the dashboard never stores them.','Документы открываются из системы провайдера — панель их не хранит.')}</div></div></div></div>`;
+  $$('[data-s]',el).forEach(b=>b.onclick=()=>{S.sel=b.dataset.s;save();rDetail()});
+  if($('#dTv'))$('#dTv').onclick=()=>{S.req[id]=new Date().toISOString().slice(0,10);logA('Transfer value requested: '+p.name[0],'Запрошена сумма перевода: '+p.name[1]);toast(T('Request sent to ','Запрос отправлен: ')+pname(p.prov));rDetail()};
+  if($('#dGap'))$('#dGap').onclick=()=>toast(T('6 incomplete years (2004–2009). Filling them adds ≈ £37.80/week.','6 неполных лет (2004–2009). Доплата даст ≈ £37.80/нед.'),'gold');
+  $('#dCt').onclick=()=>toast(T('Secure message opened with ','Открыт защищённый чат с ')+pname(p.prov));
+  $('#dCsv').onclick=()=>{const rows=facts.map(f=>`"${String(f[0])}","${String(f[1]).replace(/<[^>]+>/g,'')}"`).join('\n');try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows],{type:'text/csv'}));a.download=p.ref+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}catch(e){}toast(T('Summary downloaded','Сводка скачана'))};
+}
+function valHist(id){
+  const p=PENS[id],r=rng(id.charCodeAt(1)*97),pts=[];let v=p.value;for(let i=10;i>=0;i--){pts.unshift(v);v=v/(1.03+r()*.07)-(p.active?7000:0);if(v<500)v=500}
+  const w=600,h=120,max=Math.max(...pts)*1.05,x=i=>8+i/10*(w-16),y=v=>h-18-v/max*(h-28);
+  let d='';pts.forEach((v,i)=>d+=(i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1));
+  return `<svg viewBox="0 0 ${w} ${h}"><path d="${d}L${x(10)},${h-18}L${x(0)},${h-18}Z" style="fill:var(--mal);opacity:.15"/><path d="${d}" style="fill:none;stroke:var(--mal3);stroke-width:2"/>${pts.map((v,i)=>i%2===0?`<text x="${x(i)}" y="${h-4}" text-anchor="middle" style="fill:var(--dim);font-size:10px">${2016+i}</text>`:'').join('')}</svg>`;
+}
+
+/* ---------- CONSENT ---------- */
+const ROLES={adv:['Regulated financial adviser','Лицензированный финансовый консультант'],gui:['Pension guidance service','Служба пенсионных консультаций'],fam:['Family member (view only)','Член семьи (только просмотр)']};
+function rConsent(){
+  const el=$('#v-consent');const c=S.consent;
+  el.innerHTML=`<div class="grid2"><div>
+   <div class="card" style="margin-bottom:14px"><h3>${T('Active consents','Действующие согласия')}</h3>
+    ${S.searched?`<div class="doc">🔎<span><b>${T('Find and view my pensions','Поиск и просмотр пенсий')}</b><br><span class="muted" style="font-size:12px">${T('All connected providers','Все подключённые провайдеры')} · ${c.keep?T('ongoing for 12 months','продолжается 12 месяцев'):T('one-off search','разовый поиск')}</span></span><button class="btn sm danger" id="cRev">${T('Revoke','Отозвать')}</button></div>`:`<div class="muted" style="font-size:13px">${T('No active consent. Searching creates one.','Нет действующих согласий. Поиск создаст согласие.')}</div>`}
+   </div>
+   <div class="card"><h3>${T('People who can see my dashboard','Кто видит мою панель')}<span class="sp"></span><span class="pill">${S.delegates.length}</span></h3>
+    ${S.delegates.length?S.delegates.map(d=>{const end=new Date(new Date(d.from).getTime()+d.days*864e5);return `<div class="doc">👤<span><b>${esc(d.name)}</b> · ${T(ROLES[d.role][0],ROLES[d.role][1])}${d.fca?` · FCA <span class="mono">${esc(d.fca)}</span>`:''}<br><span class="muted" style="font-size:12px">${esc(d.mail)} · ${T('until','до')} ${fmtD(end)}</span></span><button class="btn sm danger" data-rv="${d.id}">${T('Revoke','Отозвать')}</button></div>`}).join(''):`<div class="muted" style="font-size:13px">${T('Nobody else has access.','Больше ни у кого нет доступа.')}</div>`}
+   </div></div>
+   <div class="card"><h3>${T('Give someone access','Дать доступ')}</h3><form id="dForm" novalidate><div class="fgrid">
+    <div class="f" id="fN"><label>${T('Full name','ФИО')}</label><input class="input" id="dN" data-en-ph="e.g. Sam Patel" data-ru-ph="напр. Sam Patel" placeholder="${T('e.g. Sam Patel','напр. Sam Patel')}"><div class="er"></div></div>
+    <div class="f" id="fM"><label>${T('Email','Эл. почта')}</label><input class="input" id="dM" type="email" placeholder="name@firm.al"><div class="er"></div></div>
+    <div class="f"><label>${T('Role','Роль')}</label><select class="input" id="dR">${Object.keys(ROLES).map(k=>`<option value="${k}">${T(ROLES[k][0],ROLES[k][1])}</option>`).join('')}</select></div>
+    <div class="f" id="fF"><label>${T('FCA firm reference (6 digits)','Номер FCA (6 цифр)')}</label><input class="input mono" id="dF" maxlength="6" placeholder="123456"><div class="er"></div></div>
+    <div class="f"><label>${T('Access for','Срок доступа')}</label><select class="input" id="dD"><option value="30">30 ${T('days','дней')}</option><option value="90" selected>90 ${T('days','дней')}</option><option value="365">12 ${T('months','месяцев')}</option></select></div>
+    <div class="f full" id="fC"><label class="ck" style="margin:0"><input type="checkbox" id="dC"><span>${T('I understand this person will see all my pension values and can’t make changes.','Я понимаю, что этот человек увидит все мои пенсии и не сможет ничего менять.')}</span></label><div class="er"></div></div>
+   </div><div class="row" style="margin-top:12px"><button class="btn pri" type="submit">${T('Grant access','Дать доступ')}</button><button class="btn sm" type="button" id="dFill">${T('Fill demo adviser','Заполнить демо-консультанта')}</button></div></form>
+   <h3 style="margin-top:18px">${T('Access log','Журнал доступа')}</h3><div class="log">${S.log.map(l=>`<div><span class="t">${l.t}</span> ${esc(T(l.en,l.ru))}</div>`).join('')}</div></div></div>`;
+  const syncF=()=>{$('#fF').style.display=$('#dR').value==='adv'?'':'none'};$('#dR').onchange=syncF;syncF();
+  $('#dFill').onclick=()=>{$('#dN').value='Tom Okafor';$('#dM').value='tom.okafor@greenleafwealth.al';$('#dR').value='adv';$('#dF').value='731905';$('#dC').checked=true;syncF()};
+  $('#dForm').onsubmit=e=>{e.preventDefault();let ok=true;
+    const set=(id,msg)=>{const f=$(id);f.classList.toggle('bad',!!msg);f.querySelector('.er').textContent=msg||'';if(msg)ok=false};
+    const n=$('#dN').value.trim(),m=$('#dM').value.trim(),r=$('#dR').value,fc=$('#dF').value.trim();
+    set('#fN',n.length<3?T('Enter the person’s full name','Введите полное имя'):'');
+    set('#fM',!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(m)?T('Enter a valid email','Введите корректную почту'):S.delegates.some(d=>d.mail===m)?T('Already has access','Уже имеет доступ'):'');
+    set('#fF',r==='adv'&&!/^\d{6}$/.test(fc)?T('FCA reference must be 6 digits','Номер FCA — 6 цифр'):'');
+    set('#fC',!$('#dC').checked?T('Please confirm','Подтвердите'):'');
+    if(!ok){toast(T('Please fix the highlighted fields','Исправьте выделенные поля'),'bad');return}
+    const d={id:'D-'+(S.seq++),name:n,mail:m,role:r,fca:r==='adv'?fc:'',days:+$('#dD').value,from:new Date().toISOString().slice(0,10)};
+    S.delegates.push(d);logA('Delegate access granted to '+n,'Доступ выдан: '+n);toast(T('Invitation sent to ','Приглашение отправлено: ')+esc(m));rConsent();nav()};
+  $$('[data-rv]',el).forEach(b=>b.onclick=()=>{const d=S.delegates.find(x=>x.id===b.dataset.rv);S.delegates=S.delegates.filter(x=>x!==d);logA('Delegate access revoked: '+d.name,'Доступ отозван: '+d.name);toast(T('Access revoked','Доступ отозван'),'gold');rConsent()});
+  if($('#cRev'))$('#cRev').onclick=()=>{S.searched=false;S.found={};S.res={};S.consent={search:false,share:false,keep:true};logA('Consent to find and view revoked — data cleared','Согласие на поиск отозвано — данные удалены');toast(T('Consent revoked. Your dashboard has been cleared.','Согласие отозвано. Панель очищена.'),'gold');render()};
+}
+
+/* ---------- PROVIDERS ---------- */
+function rProv(){
+  const el=$('#v-prov');const P=S.prov;const live=P.filter(p=>p.st==='live'||p.st==='degr');
+  const sel=P.find(p=>p.id===S.provSel)||P[0];
+  const req=P.reduce((a,p)=>a+p.req,0),mr=live.reduce((a,p)=>a+p.match,0)/(live.length||1),p95=Math.round(live.reduce((a,p)=>a+Math.max(...p.lat),0)/(live.length||1));
+  el.innerHTML=`<div class="kpis">
+   <div class="card kpi"><div class="l">${T('Providers live','Подключено')}</div><div class="v">${live.length}<span style="font-size:15px;color:var(--muted)"> / ${P.length}</span></div><div class="d">${P.filter(p=>p.st==='down').length} ${T('offline','недоступно')} · ${P.filter(p=>p.st==='onb').length} ${T('onboarding','подключаются')}</div></div>
+   <div class="card kpi"><div class="l">${T('Find requests · 24 h','Запросы поиска · 24 ч')}</div><div class="v">${req.toLocaleString(loc())}</div><div class="d">${T('peak 14:00–15:00','пик 14:00–15:00')}</div></div>
+   <div class="card kpi"><div class="l">${T('Average match rate','Средняя доля совпадений')}</div><div class="v ok-t">${mr.toFixed(1)}%</div><div class="d">${T('target ≥ 70%','цель ≥ 70%')}</div></div>
+   <div class="card kpi"><div class="l">${T('Worst-hour p95 latency','p95 в худший час')}</div><div class="v ${p95>800?'warn-t':''}">${p95} ms</div><div class="d">SLA 2 000 ms</div></div></div>
+   <div class="grid2"><div class="tw"><table><thead><tr><th>${T('Provider','Провайдер')}</th><th>${T('Status','Статус')}</th><th>${T('Cohort','Волна')}</th><th>${T('Requests','Запросы')}</th><th>${T('Match','Совпад.')}</th><th>${T('Uptime 30d','Аптайм 30д')}</th><th>${T('Set status','Статус')}</th></tr></thead><tbody>
+    ${P.map(p=>`<tr class="clk ${p.id===sel.id?'sel':''}" data-p="${p.id}"><td><div class="row" style="flex-wrap:nowrap">${logo(p.id,'lg" style="width:24px;height:24px;border-radius:7px;font-size:10px;display:grid;place-items:center;color:#fff;background:'+PROV[p.id][3])}<b style="font-size:13px">${pname(p.id)}</b></div></td>
+     <td><span class="pill ${ST[p.st][2]}">${T(ST[p.st][0],ST[p.st][1])}</span></td><td class="mono">${p.cohort}</td><td class="mono">${p.req.toLocaleString(loc())}</td><td class="mono">${p.st==='onb'?'—':p.match+'%'}</td><td class="mono ${p.up<99?'warn-t':''}">${p.st==='onb'?'—':p.up+'%'}</td>
+     <td><select class="sel" data-ps="${p.id}">${Object.keys(ST).map(k=>`<option value="${k}" ${p.st===k?'selected':''}>${T(ST[k][0],ST[k][1])}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table></div>
+   <div><div class="card chart" style="margin-bottom:14px"><h3>${logo(sel.id,'lg" style="width:24px;height:24px;border-radius:7px;font-size:10px;display:grid;place-items:center;color:#fff;background:'+PROV[sel.id][3])}${pname(sel.id)}<span class="sp"></span><button class="btn sm" id="pPing" ${sel.st==='onb'?'disabled':''}>${T('Ping endpoint','Пинг')}</button></h3>
+    <div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">${T('Find API latency, last 24 checks (ms)','Задержка Find API, последние 24 проверки (мс)')}</div>${latSvg(sel)}
+    <div class="dl" style="margin-top:12px"><div><span>${T('Endpoint','Адрес')}</span><b class="mono" style="font-size:12px">https://find.${sel.id}.pensions.al/v1</b></div><div><span>${T('Security profile','Профиль безопасности')}</span><b>FAPI · mTLS · UMA 2.0</b></div><div><span>${T('Last check','Последняя проверка')}</span><b>${sel.last||nowT()}</b></div><div><span>${T('Connection deadline','Срок подключения')}</span><b>${fmtD(['2026-04-30','2026-09-30','2027-01-31','2027-04-30'][sel.cohort-1])}</b></div></div></div>
+   <div class="card"><h3>${T('Staged connection by cohort','Подключение по волнам')}</h3>${[1,2,3,4].map(c=>{const g=P.filter(p=>p.cohort===c),l=g.filter(p=>p.st!=='onb').length;return `<div style="display:flex;gap:10px;align-items:center;font-size:12.5px;margin-bottom:8px"><span style="width:84px">${T('Cohort','Волна')} ${c}</span><div class="prog" style="flex:1"><i style="width:${l/g.length*100}%"></i></div><span class="mono" style="width:40px;text-align:right">${l}/${g.length}</span></div>`}).join('')}</div></div></div>`;
+  $$('[data-p]',el).forEach(r=>r.onclick=e=>{if(e.target.closest('select'))return;S.provSel=r.dataset.p;save();rProv()});
+  $$('[data-ps]',el).forEach(s=>s.onchange=()=>{const p=P.find(x=>x.id===s.dataset.ps);const old=p.st;p.st=s.value;
+    if(p.st==='onb'){p.req=0;p.match=0}else if(old==='onb'){p.req=800;p.match=64.0;p.lat=p.lat.map(()=>300)}
+    if(p.st==='down')p.up=+(p.up-0.3).toFixed(2);
+    logA(`Provider ${PROV[p.id][1]}: ${ST[old][0]} → ${ST[p.st][0]}`,`Провайдер ${PROV[p.id][2]}: ${ST[old][1]} → ${ST[p.st][1]}`);
+    toast(pname(p.id)+': '+T(ST[p.st][0],ST[p.st][1])+(BY_PROV[p.id]&&S.searched?'<br>'+T('Run “Search again” to see the effect on the dashboard','Запустите «Искать снова», чтобы увидеть эффект'):''),p.st==='down'?'bad':'');save();render()});
+  if($('#pPing'))$('#pPing').onclick=async()=>{const b=$('#pPing');b.disabled=true;b.innerHTML='<span class="spin"></span>';await wait(500);
+    const base=sel.st==='down'?0:sel.st==='degr'?1100:250;const v=sel.st==='down'?0:Math.round(base*(.7+Math.random()*.7));sel.lat.push(v);sel.lat=sel.lat.slice(-24);sel.last=nowT();save();
+    toast(sel.st==='down'?T('Timeout after 5 000 ms — endpoint unreachable','Тайм-аут 5 000 мс — адрес недоступен'):T(`200 OK in ${v} ms`,`200 OK за ${v} мс`),sel.st==='down'?'bad':'');if(S.view==='prov')rProv()};
+}
+function latSvg(p){
+  const a=p.lat,w=460,h=150,l=40,b=20,max=Math.max(1200,...a)*1.1,bw=(w-l-8)/a.length;
+  let g='';[0,500,1000].forEach(v=>{const y=h-b-v/max*(h-10-b);g+=`<line x1="${l}" x2="${w-4}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${l-5}" y="${y+4}" text-anchor="end" style="fill:var(--dim);font-size:10px">${v}</text>`});
+  const sla=h-b-2000/max*(h-10-b);
+  return `<svg viewBox="0 0 ${w} ${h}">${g}${a.map((v,i)=>{const bh=v/max*(h-10-b);const col=v===0?'var(--red)':v>800?'var(--amber)':'var(--mal)';return v===0?`<rect x="${l+i*bw+2}" y="${h-b-6}" width="${bw-4}" height="6" rx="2" style="fill:${col}"/>`:`<rect x="${l+i*bw+2}" y="${h-b-bh}" width="${bw-4}" height="${bh}" rx="2" style="fill:${col};opacity:.85"/>`}).join('')}${sla>8?`<line x1="${l}" x2="${w-4}" y1="${sla}" y2="${sla}" style="stroke:var(--red);stroke-dasharray:4 4"/>`:''}</svg>`;
+}
+
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#login').onclick=async()=>{const b=$('#login');if(!/@/.test($('#lMail').value)||$('#lPw').value.length<6){toast(T('Enter email and password','Введите почту и пароль'),'bad');return}
+  b.disabled=true;b.textContent=T('Verifying identity…','Проверяем личность…');await wait(120);S.auth=true;logA('Signed in with Albion Verify (GPG45 medium)','Вход через Albion Verify (GPG45 medium)');b.disabled=false;PT.apply($('#loginWrap'));render()};
+$('#logout').onclick=()=>{S.auth=false;save();render()};
+$('#reset').onclick=()=>{store.clear();S=seed();S.auth=true;save();render();toast(T('Demo reset','Демо сброшено'))};
+PT.onLang(()=>render());
+document.addEventListener('DOMContentLoaded',()=>render());
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bb2531d4800740278568587ecc13ce44","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
