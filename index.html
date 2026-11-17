@@ -18,10 +18,11 @@
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="/brand/og.jpg">
-<meta name="description" content="Tendarion builds working systems for the world's largest government and enterprise IT tenders — 76 live prototypes across 13 sectors. Dubai · DMCC.">
+<meta name="description" content="Tendarion builds working systems for the world's largest government and enterprise IT tenders — 76 live prototypes across 13 sectors. Headquartered in Indonesia.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/pt.css">
+<script>try{var p=localStorage.getItem("pt-pal");if(p&&p!=="mono")document.documentElement.setAttribute("data-pal",p);var t=localStorage.getItem("pt-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <style>
 .wrap{max-width:1240px;margin:0 auto;padding:0 20px}
 @media(max-width:640px){.wrap{padding:0 16px}}
@@ -70,13 +71,21 @@ section{padding:88px 0}
 .appsg{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 @media(max-width:1100px){.appsg{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.appsg{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:420px){.appsg{grid-template-columns:1fr}}
+
 .app{display:flex;flex-direction:column;gap:10px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:16px;transition:transform .25s,border-color .25s,box-shadow .25s}
 .app:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--mal) 60%,var(--line));box-shadow:var(--shadow);text-decoration:none}
+.achips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}.achips button{font:inherit;font-size:13px;font-weight:650;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}.achips button.on{background:var(--text);color:var(--bg);border-color:var(--text)}.achips button span{opacity:.6;margin-left:5px}
+.app .meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--dim);flex-wrap:wrap}.app .meta b{color:var(--mal3);font-weight:700}
+.app[hidden]{display:none!important}
 .app .ph2{position:relative;margin:0 auto;width:176px;height:362px;border-radius:30px;border:6px solid #0b0f0e;background:var(--bg2);overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .app .ph2 iframe{position:absolute;top:0;left:0;width:390px;height:804px;border:0;transform:scale(.4205);transform-origin:0 0;pointer-events:none}
 .app .ph2 .ic{position:absolute;inset:0;display:grid;place-items:center;font-size:48px;background:radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--mal) 25%,transparent),transparent 60%)}
 .app h3{margin:0;font-size:18px} .app p{margin:0;color:var(--muted);font-size:13.5px} .app .go{color:var(--mal3);font-weight:600;font-size:14px}
+@media(max-width:640px){.appsg{grid-template-columns:1fr;gap:10px}
+ .app{display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:14px;row-gap:4px;padding:14px;align-items:start}
+ .app .ph2{grid-row:1/span 4;width:56px;height:56px;border-radius:16px;border:0;box-shadow:none;margin:0}.app .ph2 iframe{display:none}.app .ph2 .ic{font-size:28px;display:grid!important}
+ .app h3{font-size:16px}.app p{font-size:13px}.app .go{font-size:13px}
+ .achips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px}.achips::-webkit-scrollbar{display:none}.achips button{flex:none}}
 .tile{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s;color:var(--text)}
 .tile:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--mal) 60%,var(--line));box-shadow:var(--shadow);text-decoration:none}
 .tile .pv{position:relative;height:220px;overflow:hidden;background:var(--bg2);border-bottom:1px solid var(--line)}
@@ -203,7 +212,7 @@ footer .fb .lgm{width:34px;height:34px}
 </head>
 <body>
 <nav class="top"><div class="wrap">
-  <a class="brand" href="#"><i class="lgm" aria-hidden="true"></i>Tendarion<em>DUBAI · DMCC</em></a>
+  <a class="brand" href="#"><i class="lgm" aria-hidden="true"></i>Tendarion<em>INDONESIA · HQ</em></a>
   <div class="links">
     <a href="#live" data-en="Prototypes" data-ru="Прототипы"></a>
     <a href="#apps" data-en="Apps" data-ru="Приложения"></a>
@@ -222,18 +231,18 @@ footer .fb .lgm{width:34px;height:34px}
   <div class="wrap"><div class="hgrid"><div>
     <span class="eyebrow"><b></b><span data-en="76 systems live right now — open any of them" data-ru="76 систем работают прямо сейчас — откройте любую"></span></span>
     <h1><span data-en="Not slides." data-ru="Не слайды."></span><br><span class="g" data-en="Working systems." data-ru="Работающие системы."></span></h1>
-    <p class="lead" data-en="Tendarion is an international GovTech company headquartered in Dubai (DMCC). We build solutions for the world's largest government and enterprise IT tenders — and every project below is a working prototype you can open, click through and use — e-services portals, digital ID, super-apps, ERP, national payments, AI assistants, SOC and data platforms." data-ru="Tendarion — международная GovTech-компания со штаб-квартирой в Дубае (DMCC). Мы строим решения для крупнейших государственных и корпоративных IT-тендеров мира, и каждый проект ниже — рабочий прототип: его можно открыть, пройти и пользоваться. Порталы госуслуг, цифровой ID, суперприложения, ERP, национальные платежи, ИИ-ассистенты, SOC и платформы данных."></p>
+    <p class="lead" data-en="Tendarion is an international GovTech company headquartered in Indonesia. We build solutions for the world's largest government and enterprise IT tenders — and every project below is a working prototype you can open, click through and use — e-services portals, digital ID, super-apps, ERP, national payments, AI assistants, SOC and data platforms." data-ru="Tendarion — международная GovTech-компания со штаб-квартирой в Индонезии. Мы строим решения для крупнейших государственных и корпоративных IT-тендеров мира, и каждый проект ниже — рабочий прототип: его можно открыть, пройти и пользоваться. Порталы госуслуг, цифровой ID, суперприложения, ERP, национальные платежи, ИИ-ассистенты, SOC и платформы данных."></p>
     <div class="cta">
       <a class="btn pri" href="#live" data-en="Open the working prototypes →" data-ru="Открыть рабочие прототипы →"></a>
-      <a class="btn" href="#catalog" data-en="Browse 71 tenders" data-ru="71 тендер в каталоге"></a>
+      <a class="btn" href="#catalog" data-en="Browse 113 tenders" data-ru="113 тендеров в каталоге"></a>
     </div>
-    <div class="hq"><span>🏛 <b>Dubai · DMCC</b> HQ</span><span data-en="Middle East · Europe · Americas · Asia-Pacific" data-ru="Ближний Восток · Европа · Америка · Азия"></span><span>UNGM · World Bank · SAM.gov · TED · Etimad</span></div>
+    <div class="hq"><span>🏛 <b>Indonesia</b> HQ</span><span data-en="Asia-Pacific · Middle East · Europe · Americas" data-ru="Азия · Ближний Восток · Европа · Америка"></span><span>UNGM · World Bank · SAM.gov · TED · Etimad</span></div>
   </div>
   <div class="emb"><i class="lgm" role="img" aria-label="Tendarion"></i></div>
   </div>
     <div class="stats">
       <div class="stat"><div class="n" data-count="76">0</div><div class="l" data-en="working prototypes" data-ru="рабочих прототипов"></div></div>
-      <div class="stat"><div class="n"><span data-count="71">0</span></div><div class="l" data-en="tender projects in catalogue" data-ru="тендерных проектов в каталоге"></div></div>
+      <div class="stat"><div class="n"><span data-count="113">0</span></div><div class="l" data-en="tender projects in catalogue" data-ru="тендерных проектов в каталоге"></div></div>
       <div class="stat"><div class="n">$<span data-count="160">0</span>B+</div><div class="l" data-en="combined ceilings of the largest tenders we map to" data-ru="суммарный потолок крупнейших тендеров, под которые есть решение"></div></div>
       <div class="stat"><div class="n" data-count="13">0</div><div class="l" data-en="sectors · 8 regions of the world" data-ru="отраслей · 8 регионов мира"></div></div>
     </div>
@@ -252,8 +261,9 @@ footer .fb .lgm{width:34px;height:34px}
 <section id="apps" style="background:var(--bg2);border-block:1px solid var(--line)"><div class="wrap">
   <div class="sh reveal">
     <div><div class="kick" data-en="Apps" data-ru="Приложения"></div><h2 data-en="Mobile apps you can hold in your hand" data-ru="Мобильные приложения — как в руке"></h2></div>
-    <p data-en="Citizen and enterprise apps built for phone first. Each one opens as a real app in a phone frame — onboarding, offline mode, QR, push, biometrics." data-ru="Приложения для граждан и компаний, сделанные под телефон. Каждое открывается как настоящее приложение в рамке телефона — первый вход, офлайн, QR, уведомления, биометрия."></p>
+    <p data-en="36 citizen, business and consumer apps across sectors — the most commissioned and highest-budget app orders worldwide. Each one opens as a real app in a phone frame — onboarding, offline mode, QR, push, biometrics." data-ru="36 приложений для граждан, бизнеса и покупателей из разных сфер — самые частые и самые дорогие заказы по всему миру. Каждое открывается как настоящее приложение в рамке телефона — первый вход, офлайн, QR, уведомления, биометрия."></p>
   </div>
+  <div class="achips" id="appsF"></div>
   <div class="appsg" id="appsG"></div>
 </div></section>
 
@@ -287,10 +297,10 @@ footer .fb .lgm{width:34px;height:34px}
     <p data-en="We track the world's public procurement portals every day and answer the largest tenders with a working system — not a slide deck." data-ru="Каждый день следим за площадками госзакупок мира и отвечаем на крупнейшие тендеры работающей системой, а не презентацией."></p>
   </div>
   <div class="glob reveal">
-    <div class="gcard hq1"><div class="k" data-en="Headquarters" data-ru="Штаб-квартира"></div><h3>Dubai · DMCC</h3><p data-en="Jumeirah Lakes Towers free zone — the hub for GCC government programmes and for international delivery across three continents." data-ru="Свободная зона Jumeirah Lakes Towers — центр для государственных программ стран Залива и международных проектов на трёх континентах."></p><div class="pp"><span class="pill gold">UAE</span><span class="pill">KSA · Etimad</span><span class="pill">Qatar · Oman · Bahrain</span><span class="pill">Tejari · Dubai eSupply</span></div></div>
+    <div class="gcard hq1"><div class="k" data-en="Headquarters" data-ru="Штаб-квартира"></div><h3>Indonesia</h3><p data-en="Our headquarters and engineering centre — the base for South-East Asian government programmes and for international delivery across four continents." data-ru="Штаб-квартира и инженерный центр — база для государственных программ Юго-Восточной Азии и международных проектов на четырёх континентах."></p><div class="pp"><span class="pill gold">Indonesia</span><span class="pill">LKPP · INAPROC</span><span class="pill">SPBE</span><span class="pill">ASEAN</span></div></div>
     <div class="gcard"><div class="k" data-en="Europe & UK" data-ru="Европа и Великобритания"></div><h3>TED · Find a Tender</h3><p data-en="Border systems, rail, health data, digital euro, parliaments." data-ru="Границы, железные дороги, данные здравоохранения, цифровой евро, парламенты."></p></div>
     <div class="gcard"><div class="k" data-en="Americas" data-ru="Америка"></div><h3>SAM.gov</h3><p data-en="Federal cloud, health records, air traffic, tax, grants, EV charging." data-ru="Федеральное облако, медкарты, управление воздушным движением, налоги, гранты, зарядка электромобилей."></p></div>
-    <div class="gcard"><div class="k" data-en="Asia-Pacific" data-ru="Азия"></div><h3>GeM · GeBIZ · LKPP</h3><p data-en="Smart metering, e-courts, social transfers, water utilities, Indonesia SPBE." data-ru="Умные счётчики, электронные суды, соцвыплаты, водоканалы, СПБЭ Индонезии."></p></div>
+    <div class="gcard"><div class="k" data-en="Asia &amp; Middle East" data-ru="Азия и Ближний Восток"></div><h3>GeM · GeBIZ · Etimad</h3><p data-en="Smart metering, e-courts, social transfers, water utilities, GCC smart-government programmes." data-ru="Умные счётчики, электронные суды, соцвыплаты, водоканалы, программы «умного правительства» стран Залива."></p></div>
     <div class="gcard"><div class="k" data-en="International" data-ru="Международные"></div><h3>UNGM · World Bank · UNDP</h3><p data-en="Census, elections, e-procurement, early warning, carbon registries." data-ru="Переписи, выборы, электронные закупки, раннее оповещение, реестры углерода."></p></div>
   </div>
 </div></section>
@@ -322,16 +332,18 @@ footer .fb .lgm{width:34px;height:34px}
 
 <footer><div class="wrap" style="flex-direction:column;align-items:stretch">
   <div class="fg">
-    <div><div class="fb"><i class="lgm" aria-hidden="true"></i>Tendarion</div><div data-en="Working systems for the world's largest government and enterprise IT tenders." data-ru="Работающие системы для крупнейших государственных и корпоративных IT-тендеров мира."></div><div>Dubai · DMCC · UAE</div></div>
+    <div><div class="fb"><i class="lgm" aria-hidden="true"></i>Tendarion</div><div data-en="Working systems for the world's largest government and enterprise IT tenders." data-ru="Работающие системы для крупнейших государственных и корпоративных IT-тендеров мира."></div><div>Headquarters · Indonesia</div></div>
     <div><h6 data-en="Solutions" data-ru="Решения"></h6><a href="#live" data-en="Prototypes" data-ru="Прототипы"></a><a href="#apps" data-en="Mobile apps" data-ru="Приложения"></a><a href="#catalog" data-en="Tender catalogue" data-ru="Каталог тендеров"></a><a href="#mega" data-en="Largest worldwide" data-ru="Крупнейшие в мире"></a></div>
     <div><h6 data-en="Company" data-ru="Компания"></h6><a href="#global" data-en="Global presence" data-ru="Где работаем"></a><a href="#tech" data-en="Technology" data-ru="Технологии"></a><a href="https://rasnex.com" target="_blank" rel="noopener">Rasnex</a></div>
     <div><h6 data-en="Standards" data-ru="Стандарты"></h6><div>ISO 27001 · SOC 2</div><div>NIST 800-63 · WCAG 2.2</div><div>PCI DSS · GDPR · PDPL</div></div>
   </div>
-  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>© 2026 Tendarion · Dubai · DMCC</span><span data-en="All prototypes use fictional data and organisations." data-ru="Во всех прототипах вымышленные данные и организации."></span></div>
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>© 2026 Tendarion · Indonesia</span><span data-en="All prototypes use fictional data and organisations." data-ru="Во всех прототипах вымышленные данные и организации."></span></div>
 </div></footer>
 
 <script src="assets/demo.js"></script>
 <script src="assets/t50.js"></script>
+<script src="assets/t42.js"></script>
+<script src="demo/mapp/apps.js"></script>
 <script>
 const DEMOS=[
  {s:'civic',i:'🏛',n:'CivicOne',c:['Government portal','Госпортал'],d:['National e-services portal: smart search, life situations, application wizards, personal cabinet, payments.','Единый портал госуслуг: умный поиск, жизненные ситуации, мастер заявлений, личный кабинет, оплата.']},
@@ -393,9 +405,9 @@ const T=[
  ['corp','id','corp','Orbit Bank','State bank mobile banking','Мобильный банк госбанка',2025,'$1.9M','State-owned bank (BUMN)','Госбанк (BUMN)','BUMN procurement','Flutter · biometrics · ISO 20022'],
  ['corp','w','academy','Orbit Academy','Gamified corporate learning & loyalty','Обучение-игра и лояльность для корпорации',2025,'$420k','Telecom operator','Телеком-оператор','Corporate RFP','Flutter · gamification · analytics']
 ];
-if(typeof T50!=='undefined')T.unshift(...T50);
+if(typeof T50!=='undefined')T.unshift(...T50);if(typeof T42!=='undefined')T.push(...T42);
 const FX={'$':1,'€':1.08,'£':1.27};
-const usd=b=>{const m=String(b).match(/([$€£₹])\s?([\d.,]+)\s*(lakh cr|cr|B|M|k)?/);if(!m)return 0;let v=parseFloat(m[2].replace(/,/g,''));const u=m[3];if(m[1]==='₹')return v*(u==='lakh cr'?1e12:u==='cr'?1e7:1)/84;v*=u==='B'?1e9:u==='M'?1e6:u==='k'?1e3:1;return v*(FX[m[1]]||1)};
+const usd=b=>{const x=String(b),r=x.match(/(Rp|₽)\s?([\d.,]+)\s*(T|bn|B|M)?/);if(r){const v=parseFloat(r[2].replace(/,/g,''))*({T:1e12,bn:1e9,B:1e9,M:1e6}[r[3]]||1);return r[1]==='Rp'?v/16000:v/95}const m=x.match(/([$€£₹])\s?([\d.,]+)\s*(lakh cr|cr|B|M|k)?/);if(!m)return 0;let v=parseFloat(m[2].replace(/,/g,''));const u=m[3];if(m[1]==='₹')return v*(u==='lakh cr'?1e12:u==='cr'?1e7:1)/84;v*=u==='B'?1e9:u==='M'?1e6:u==='k'?1e3:1;return v*(FX[m[1]]||1)};
 let sort='budget';
 const MEGA=[
  ['$60B','NASA SEWP VI','Government-wide IT products & services, 2025–2036','ИТ-продукты и услуги для всех ведомств, 2025–2036','Multiple awardees','Несколько победителей','sewp','Procura'],
@@ -429,15 +441,24 @@ function renderShow(){
   }
   el.querySelectorAll('.tile').forEach((t,i)=>{const d=DEMOS[i];t.querySelector('[data-c]').textContent=L(d.c);t.querySelector('[data-d]').textContent=L(d.d);t.querySelector('[data-g]').textContent=PT.t('Open and use →','Открыть и пользоваться →')});
 }
+const AGR={gov:['Government & ID','Госуслуги и ID'],mob:['Mobility & travel','Транспорт и поездки'],com:['Commerce & food','Торговля и еда'],fin:['Finance','Финансы'],hea:['Health & wellbeing','Здоровье'],home:['Home, utilities, telecom','Дом, ЖКХ, связь'],work:['Work, learning, social','Работа, обучение, общество']};
+const AG={ride:'mob',carshare:'mob',ev:'mob',park:'mob',transit:'mob',airline:'mob',hotel:'mob',courier:'mob',food:'com',grocery:'com',pharma:'com',shop:'com',tickets:'com',coffee:'com',bank:'fin',broker:'fin',insure:'fin',tele:'hea',fit:'hea',mind:'hea',realty:'home',smarthome:'home',telco:'home',utility:'home',field:'work',hr:'work',lang:'work',farm:'work',church:'work'};
+const GOVB={superapp:'$1M – $6M',wallet:'$800k – $4M',city:'$400k – $2.5M',health:'$600k – $3M',vaid:'$500k – $2M',corp:'$300k – $1.5M',academy:'$200k – $1.2M'};
+let appF='all';
+if(typeof MAPPS!=='undefined'&&!APPS.mapp){MAPPS.forEach(a=>APPS.push({s:'mapp/?a='+a.id,i:a.i,n:a.n,d:a.d,g:AG[a.id]||'work',sec:a.sec,b:a.b}));APPS.mapp=1}
+APPS.forEach(a=>{if(!a.g){a.g='gov';a.b=a.b||GOVB[a.s]||'$300k – $2M'}});
 function renderApps(){
   const el=document.getElementById('appsG');
   if(!el.dataset.built){
-    el.innerHTML=APPS.map(d=>`<a class="app reveal" href="demo/${d.s}/"><div class="ph2"><div class="ic">${d.i}</div><iframe data-src="demo/${d.s}/" tabindex="-1" aria-hidden="true" title="${d.n}"></iframe></div><h3>${d.n}</h3><p data-d></p><div class="go" data-g></div></a>`).join('');
+    el.innerHTML=APPS.map(d=>`<a class="app reveal" data-g="${d.g}" href="demo/${d.s}"><div class="ph2"><div class="ic">${d.i}</div><iframe data-src="demo/${d.s}" tabindex="-1" aria-hidden="true" title="${d.n}"></iframe></div><h3>${d.n}</h3><div class="meta"><span data-sec></span><b>${d.b}</b></div><p data-d></p><div class="go" data-go></div></a>`).join('');
     el.dataset.built=1;
     const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const f=e.target.querySelector('iframe');if(f&&!f.src&&innerWidth>640){f.src=f.dataset.src;f.onload=()=>{const ic=f.parentNode.querySelector('.ic');if(ic)ic.style.display='none'}}io.unobserve(e.target)}}),{rootMargin:'200px'});
     el.querySelectorAll('.app').forEach(t=>io.observe(t));
   }
-  el.querySelectorAll('.app').forEach((t,i)=>{t.querySelector('[data-d]').textContent=L(APPS[i].d);t.querySelector('[data-g]').textContent=PT.t('Open the app →','Открыть приложение →')});
+  el.querySelectorAll('.app').forEach((t,i)=>{const a=APPS[i];t.querySelector('[data-d]').textContent=L(a.d);t.querySelector('[data-sec]').textContent=L(a.sec||AGR[a.g]);t.querySelector('[data-go]').textContent=PT.t('Open the app →','Открыть приложение →');t.hidden=!(appF==='all'||a.g===appF)});
+  const f=document.getElementById('appsF');
+  f.innerHTML=[['all',['All','Все']],...Object.entries(AGR)].map(([k,v])=>`<button data-k="${k}" class="${k===appF?'on':''}">${L(v)}<span>${k==='all'?APPS.length:APPS.filter(a=>a.g===k).length}</span></button>`).join('');
+  f.querySelectorAll('button').forEach(b=>b.onclick=()=>{appF=b.dataset.k;renderApps()});
 }
 function renderFilters(){
   document.getElementById('fcat').innerHTML=CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-k="${c[0]}">${PT.lang==='ru'?c[2]:c[1]}</button>`).join('');
@@ -469,7 +490,7 @@ function renderTech(){document.getElementById('techG').innerHTML=TECH.map(t=>`<d
 function all(){renderShow();renderApps();renderFilters();renderList();renderMega();renderTech();document.getElementById('langBtn').textContent=PT.lang==='ru'?'EN':'RU';observe()}
 PT.onLang(all);
 document.getElementById('langBtn').onclick=()=>PT.setLang(PT.lang==='ru'?'en':'ru');
-document.getElementById('themeBtn').onclick=()=>{const cur=document.documentElement.getAttribute('data-theme');const dark=cur?cur==='dark':!matchMedia('(prefers-color-scheme: light)').matches;PT.theme(dark?'light':'dark')};
+document.getElementById('themeBtn').before(PT.palButton());document.getElementById('themeBtn').onclick=()=>{const cur=document.documentElement.getAttribute('data-theme');const dark=cur?cur==='dark':!matchMedia('(prefers-color-scheme: light)').matches;PT.theme(dark?'light':'dark')};
 document.getElementById('q').addEventListener('input',e=>{q=e.target.value;renderList()});
 // reveal + counters
 let ro;function observe(){ro=ro||new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.reveal:not(.in)').forEach(x=>ro.observe(x))}

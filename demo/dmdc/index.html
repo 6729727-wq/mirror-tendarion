@@ -37,7 +37,7 @@ main{padding:20px 24px 60px;min-width:0}
 .tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)} .tw.tall{max-height:560px;overflow:auto}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:700;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2);position:sticky;top:0;z-index:1}
-td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap} tr:last-child td{border-bottom:none}
+td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap} .g3 td{white-space:normal;padding:8px 9px} .g3 td.mono{overflow-wrap:anywhere} .g3 td:not(.mono):not(:first-child){white-space:nowrap} @media (min-width:1181px){.g3.dash{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr)}} tr:last-child td{border-bottom:none}
 tbody tr.clk{cursor:pointer} tbody tr.clk:hover td{background:color-mix(in srgb,var(--mal) 6%,transparent)}
 tr.new td{animation:fl 1.6s} @keyframes fl{from{background:color-mix(in srgb,var(--gold) 28%,transparent)}}
 tr.dim td{opacity:.5}
@@ -265,7 +265,7 @@ function vDash(){const a=act(),orph=S.orph.filter(o=>!o.off),dor=a.filter(dorman
   ${kpi(T('Open SoD conflicts','Конфликты SoD'),cf.length,`${T('identity risk','риск')} ${risk}/100`,cf.length?'bad':'','sod')}</div>
   <div class="g2"><div class="card"><h3>${T('Accounts by system','Учётки по системам')}<span class="sp"></span><span class="pill">${T('privileged share in gold','доля привилегий — золотом')}</span></h3><div class="chartw" id="chSys"></div></div>
   <div class="card"><h3>${T('Workforce mix','Состав персонала')}</h3><div class="chartw" id="chMix"></div></div></div>
-  <div class="g3 mt">
+  <div class="g3 dash mt">
    <div class="card"><h3>${T('Orphan accounts','Сиротские учётки')}<span class="sp"></span>${orph.length?`<button class="btn xs danger" id="offAll">${T('Disable all','Отключить все')}</button>`:''}</h3>
     <div class="tw"><table><thead><tr><th>${T('System','Система')}</th><th>${T('Account','Учётка')}</th><th>${T('Last use','Исп.')}</th><th></th></tr></thead><tbody>${orph.map(o=>`<tr><td class="mono">${o.sys}</td><td class="mono">${esc(o.acct)}</td><td>${o.last} ${T('d','дн.')}</td><td><button class="btn xs danger" data-orph="${o.id}">${T('Disable','Отключить')}</button></td></tr>`).join('')||`<tr><td colspan="4" class="muted">✓ ${T('No orphan accounts','Сиротских учёток нет')}</td></tr>`}</tbody></table></div></div>
    <div class="card"><h3>${T('Dormant accounts','Неактивные учётки')}</h3>

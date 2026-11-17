@@ -57,3 +57,32 @@ button,input,select,textarea{font:inherit;color:inherit}
 .pill.live .ld{width:7px;height:7px;border-radius:50%;background:#2ee6a0;animation:ldp 1.8s ease-out infinite}
 @keyframes ldp{0%{box-shadow:0 0 0 0 rgba(46,230,160,.7)}70%{box-shadow:0 0 0 7px rgba(46,230,160,0)}100%{box-shadow:0 0 0 0 rgba(46,230,160,0)}}
 @media(prefers-reduced-motion:reduce){.pill.live .ld{animation:none}}
+
+/* ===== Оформления (palettes). По умолчанию — чёрно-белое (без data-pal). ===== */
+:root[data-pal="classic"]{--bg:#060d0b;--bg2:#0a1612;--panel:#0e1d18;--panel2:#132620;--line:#1f3a31;--line2:#2a4d41;--text:#e8f1ec;--muted:#8fa89d;--dim:#5f786d;--mal:#17b58a;--mal2:#0f7a5c;--mal3:#36e0ae;--gold:#d8b46a;--gold2:#f3d79a;--on:#04120d;color-scheme:dark}
+:root[data-pal="classic"][data-theme="light"]{--bg:#f5f7f4;--bg2:#ecf1ed;--panel:#ffffff;--panel2:#f2f6f3;--line:#dbe5df;--line2:#c6d6cd;--text:#0d1f19;--muted:#557064;--dim:#8aa094;--mal:#0e9a72;--mal2:#0b7a5a;--mal3:#0e9a72;--gold:#a8812c;--gold2:#8a6820;--on:#fff;color-scheme:light}
+@media (prefers-color-scheme: light){:root[data-pal="classic"]:not([data-theme="dark"]){--bg:#f5f7f4;--bg2:#ecf1ed;--panel:#ffffff;--panel2:#f2f6f3;--line:#dbe5df;--line2:#c6d6cd;--text:#0d1f19;--muted:#557064;--dim:#8aa094;--mal:#0e9a72;--mal2:#0b7a5a;--mal3:#0e9a72;--gold:#a8812c;--gold2:#8a6820;--on:#fff;color-scheme:light}}
+
+:root[data-pal="ocean"]{--bg:#050b18;--bg2:#081226;--panel:#0b1730;--panel2:#0f1e3d;--line:#1c2c4d;--line2:#273b63;--text:#e8eefc;--muted:#93a3c4;--dim:#5d6d8f;--mal:#2f7cf6;--mal2:#1d5fd0;--mal3:#6aa8ff;--gold:#7dd3fc;--gold2:#bae6fd;--on:#fff;color-scheme:dark}
+:root[data-pal="ocean"][data-theme="light"]{--bg:#f5f8ff;--bg2:#eaf0fb;--panel:#ffffff;--panel2:#f1f5fd;--line:#d9e2f2;--line2:#c3d0e8;--text:#0b1530;--muted:#4e5f82;--dim:#8a98b5;--mal:#1d5fd0;--mal2:#164bb0;--mal3:#1d5fd0;--gold:#0b7fb3;--gold2:#0a6a96;--on:#fff;color-scheme:light}
+@media (prefers-color-scheme: light){:root[data-pal="ocean"]:not([data-theme="dark"]){--bg:#f5f8ff;--bg2:#eaf0fb;--panel:#ffffff;--panel2:#f1f5fd;--line:#d9e2f2;--line2:#c3d0e8;--text:#0b1530;--muted:#4e5f82;--dim:#8a98b5;--mal:#1d5fd0;--mal2:#164bb0;--mal3:#1d5fd0;--gold:#0b7fb3;--gold2:#0a6a96;--on:#fff;color-scheme:light}}
+
+:root[data-pal="sand"]{--bg:#0f0b06;--bg2:#16100a;--panel:#1c150d;--panel2:#241b11;--line:#3a2c1b;--line2:#4d3a24;--text:#f6efe4;--muted:#b8a68c;--dim:#7d6c55;--mal:#e0a84a;--mal2:#b47f2a;--mal3:#f3c776;--gold:#e8875a;--gold2:#f2a27c;--on:#1a1206;color-scheme:dark}
+:root[data-pal="sand"][data-theme="light"]{--bg:#fbf7f0;--bg2:#f4ecdf;--panel:#ffffff;--panel2:#f8f2e8;--line:#eadfcc;--line2:#dccbb0;--text:#22180c;--muted:#6e5c44;--dim:#a8957a;--mal:#a86e14;--mal2:#8a5a10;--mal3:#a86e14;--gold:#b4542a;--gold2:#934420;--on:#fff;color-scheme:light}
+@media (prefers-color-scheme: light){:root[data-pal="sand"]:not([data-theme="dark"]){--bg:#fbf7f0;--bg2:#f4ecdf;--panel:#ffffff;--panel2:#f8f2e8;--line:#eadfcc;--line2:#dccbb0;--text:#22180c;--muted:#6e5c44;--dim:#a8957a;--mal:#a86e14;--mal2:#8a5a10;--mal3:#a86e14;--gold:#b4542a;--gold2:#934420;--on:#fff;color-scheme:light}}
+
+/* цветные оформления: кнопка и знак — в цвет акцента; «Классика» — изначальный золотой знак */
+:root[data-pal] .btn.pri{background:linear-gradient(135deg,var(--mal3),var(--mal));color:var(--on);border-color:transparent}
+:root[data-pal] .lgm,:root[data-pal] .ptbar .logo i{background:linear-gradient(135deg,var(--mal3),var(--mal) 55%,var(--gold))}
+:root[data-pal="classic"] .lgm,:root[data-pal="classic"] .ptbar .logo i{-webkit-mask:none!important;mask:none!important;background:url(../brand/classic-256.png) center/contain no-repeat}
+:root[data-pal] .emb::before{background:radial-gradient(circle,color-mix(in srgb,var(--mal) 26%,transparent),transparent 65%)!important}
+
+/* выбор оформления */
+.palwrap{position:relative;display:inline-flex}
+.palbtn .palsw{display:inline-block;width:14px;height:14px;border-radius:50%;background:conic-gradient(#f5f5f5 0 25%,#17b58a 0 50%,#2f7cf6 0 75%,#e0a84a 0);vertical-align:-2px}
+.palpop{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:220px;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:6px;box-shadow:var(--shadow)}
+.palpop button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:0;background:none;border-radius:10px;cursor:pointer;text-align:left;font-size:14px;color:var(--text)}
+.palpop button:hover{background:var(--panel2)}
+.palpop button.on{background:var(--panel2);font-weight:700}
+.palpop button.on::after{content:"✓";margin-left:auto;color:var(--mal3)}
+.palpop i{width:22px;height:22px;border-radius:50%;flex:none;border:1px solid var(--line2)}
